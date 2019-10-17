@@ -111,8 +111,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_room_max_members";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_room_wait_mod";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -172,6 +170,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "conference_session_detail_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
 
 	//schema details
 		$y=0;

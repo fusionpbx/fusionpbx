@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015
+	Portions created by the Initial Developer are Copyright (C) 2015 - 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_file_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('fax_file_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -41,26 +45,25 @@ else {
 	}
 
 //get the id
-	if (isset($_REQUEST["id"])) {
-		$fax_file_uuid = check_str($_REQUEST["id"]);
-	}
+	$fax_file_uuid = $_REQUEST["id"];
 
 //validate the id
-	if (strlen($fax_file_uuid) > 0) {
+	if (is_uuid($fax_file_uuid)) {
 		//get the fax file data
 			$sql = "select * from v_fax_files ";
-			$sql .= "where fax_file_uuid = '".$fax_file_uuid."' ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
+			$sql .= "where fax_file_uuid = :fax_file_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['fax_file_uuid'] = $fax_file_uuid;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
 				$fax_uuid = $row["fax_uuid"];
 				$fax_mode = $row["fax_mode"];
 				$fax_file_path = $row["fax_file_path"];
 				$fax_file_type = $row["fax_file_type"];
 			}
-			unset($prep_statement);
+			unset($sql, $parameters, $row);
 
 		//set the type
 			if ($fax_mode == 'rx') { $type = 'inbox'; }
@@ -87,17 +90,21 @@ else {
 			}
 
 		//delete fax file record
-			$sql = "delete from v_fax_files ";
-			$sql .= "where fax_file_uuid = '".$fax_file_uuid."' ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($prep_statement);
+			$array['fax_files'][0]['fax_file_uuid'] = $fax_file_uuid;
+			$array['fax_files'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-		message::add($text['message-delete']);
+			$database = new database;
+			$database->app_name = 'fax';
+			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
 	header('Location: fax_files.php?id='.$fax_uuid.'&box='.$type);
+	exit;
 
 ?>

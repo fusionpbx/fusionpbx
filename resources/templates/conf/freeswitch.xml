@@ -63,5 +63,6 @@
     <X-PRE-PROCESS cmd="include" data="languages/fr/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/ru/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/he/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/pt/*.xml"/>
   </section>
 </document>

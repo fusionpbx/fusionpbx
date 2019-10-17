@@ -55,6 +55,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 
+	//cache details
+		$apps[$x]['cache']['key'] = "configuration.acl.conf";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_access_controls";
@@ -93,7 +96,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_access_control";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_access_controls";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "access_control_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "node_type";

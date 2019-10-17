@@ -136,8 +136,7 @@
 
 		//define a leg - set source to display the defined caller id name and number
 			$source_common = "{";
-			$source_common .= "origination_uuid=".$origination_uuid;
-			$source_common .= ",click_to_call=true";
+			$source_common .= "click_to_call=true";
 			$source_common .= ",origination_caller_id_name='".$src_cid_name."'";
 			$source_common .= ",origination_caller_id_number=".$src_cid_number;
 			$source_common .= ",instant_ringback=true";
@@ -177,16 +176,16 @@
 				//local extension (source) > external number (destination)
 				if (strlen($src) < 7 && strlen($dest_cid_number) == 0) {
 					//retrieve outbound caller id from the (source) extension
-					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = '".$_SESSION['domain_uuid']."' and extension = '".$src."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['src'] = $src;
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
 					foreach ($result as &$row) {
 						$dest_cid_name = $row["outbound_caller_id_name"];
 						$dest_cid_number = $row["outbound_caller_id_number"];
 						break; //limit to 1 row
 					}
-					unset ($prep_statement);
 				}
 				if (permission_exists('click_to_call_call')) {
 					if (strpbrk($dest, '@') != FALSE) { //sip-uri
@@ -405,6 +404,12 @@
 	}
 	else {
 		echo "    <option value='it-ring'>".$text['opt-itring']."</option>\n";
+	}
+	if ($ringback == "de-ring") {
+		echo "    <option value='de-ring' selected='selected'>".$text['opt-dering']."</option>\n";
+	}
+	else {
+		echo "    <option value='de-ring'>".$text['opt-dering']."</option>\n";
 	}
 	if ($ringback == "music") {
 		echo "    <option value='music' selected='selected'>".$text['opt-moh']."</option>\n";

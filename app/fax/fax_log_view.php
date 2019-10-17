@@ -1,31 +1,61 @@
 <?php
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('fax_log_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('fax_log_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//pre-populate the form
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["fax_uuid"])) {
-		$fax_log_uuid = check_str($_REQUEST["id"]);
-		$fax_uuid = check_str($_REQUEST["fax_uuid"]);
+//get ids
+	$fax_log_uuid = $_REQUEST["id"];
+	$fax_uuid = $_REQUEST["fax_uuid"];
 
+//pre-populate the form
+	if (is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
 		$sql = "select * from v_fax_logs ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and fax_log_uuid = '".$fax_log_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and fax_log_uuid = :fax_log_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['fax_log_uuid'] = $fax_log_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_log_uuid = $row["fax_log_uuid"];
 			$fax_success = $row["fax_success"];
 			$fax_result_code = $row["fax_result_code"];
@@ -45,9 +75,8 @@ else {
 			$fax_uri = $row["fax_uri"];
 			$fax_date = $row["fax_date"];
 			$fax_epoch = $row["fax_epoch"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //show the header
@@ -157,4 +186,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

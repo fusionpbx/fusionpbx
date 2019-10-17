@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,13 +43,13 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		if (isset($_POST["id"])) {
-			$gateway_uuid = check_str($_REQUEST["id"]);
+		if (is_uuid($_POST["id"])) {
+			$gateway_uuid = $_REQUEST["id"];
 		}
-		if (isset($_POST["gateway_uuid"])) {
-			$gateway_uuid = check_str($_POST["gateway_uuid"]);
+		if (is_uuid($_POST["gateway_uuid"])) {
+			$gateway_uuid = $_POST["gateway_uuid"];
 		}
 	}
 	else {
@@ -59,59 +59,52 @@
 
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add') {
-		if ($_SESSION['limit']['gateways']['numeric'] != '') {
-			$sql = "select count(gateway_uuid) as num_rows from v_gateways ";
-			$sql .= "where ( domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			if (permission_exists('gateway_domain')) {
-				$sql .= "or domain_uuid is null ";
-			}
-			$sql .= ");";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$total_gateways = $row['num_rows'];
-			}
-			unset($prep_statement, $row);
+		if (is_numeric($_SESSION['limit']['gateways']['numeric'])) {
+			$sql = "select count(gateway_uuid) from v_gateways ";
+			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$total_gateways = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
 				message::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
 				header('Location: gateways.php');
-				return;
+				exit;
 			}
 		}
 	}
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
-		$domain_uuid = check_str($_POST["domain_uuid"]);
-		$gateway = check_str($_POST["gateway"]);
-		$username = check_str($_POST["username"]);
-		$password = check_str($_POST["password"]);
-		$distinct_to = check_str($_POST["distinct_to"]);
-		$auth_username = check_str($_POST["auth_username"]);
-		$realm = check_str($_POST["realm"]);
-		$from_user = check_str($_POST["from_user"]);
-		$from_domain = check_str($_POST["from_domain"]);
-		$proxy = check_str($_POST["proxy"]);
-		$register_proxy = check_str($_POST["register_proxy"]);
-		$outbound_proxy = check_str($_POST["outbound_proxy"]);
-		$expire_seconds = check_str($_POST["expire_seconds"]);
-		$register = check_str($_POST["register"]);
-		$register_transport = check_str($_POST["register_transport"]);
-		$retry_seconds = check_str($_POST["retry_seconds"]);
-		$extension = check_str($_POST["extension"]);
-		$ping = check_str($_POST["ping"]);
-		$channels = check_str($_POST["channels"]);
-		$caller_id_in_from = check_str($_POST["caller_id_in_from"]);
-		$supress_cng = check_str($_POST["supress_cng"]);
-		$sip_cid_type = check_str($_POST["sip_cid_type"]);
-		$codec_prefs = check_str($_POST["codec_prefs"]);
-		$extension_in_contact = check_str($_POST["extension_in_contact"]);
-		$context = check_str($_POST["context"]);
-		$profile = check_str($_POST["profile"]);
-		$hostname = check_str($_POST["hostname"]);
-		$enabled = check_str($_POST["enabled"]);
-		$description = check_str($_POST["description"]);
+		$domain_uuid = $_POST["domain_uuid"];
+		$gateway = $_POST["gateway"];
+		$username = $_POST["username"];
+		$password = $_POST["password"];
+		$distinct_to = $_POST["distinct_to"];
+		$auth_username = $_POST["auth_username"];
+		$realm = $_POST["realm"];
+		$from_user = $_POST["from_user"];
+		$from_domain = $_POST["from_domain"];
+		$proxy = $_POST["proxy"];
+		$register_proxy = $_POST["register_proxy"];
+		$outbound_proxy = $_POST["outbound_proxy"];
+		$expire_seconds = $_POST["expire_seconds"];
+		$register = $_POST["register"];
+		$register_transport = $_POST["register_transport"];
+		$retry_seconds = $_POST["retry_seconds"];
+		$extension = $_POST["extension"];
+		$ping = $_POST["ping"];
+		$channels = $_POST["channels"];
+		$caller_id_in_from = $_POST["caller_id_in_from"];
+		$supress_cng = $_POST["supress_cng"];
+		$sip_cid_type = $_POST["sip_cid_type"];
+		$codec_prefs = $_POST["codec_prefs"];
+		$extension_in_contact = $_POST["extension_in_contact"];
+		$context = $_POST["context"];
+		$profile = $_POST["profile"];
+		$hostname = $_POST["hostname"];
+		$enabled = $_POST["enabled"];
+		$description = $_POST["description"];
 	}
 
 //prevent the domain_uuid from not being set by someone without this permission
@@ -122,41 +115,32 @@
 //process the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: gateways.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
-			//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
 			if ($register == "true") {
 				if (strlen($username) == 0) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
 				if (strlen($password) == 0) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
 			}
-			//if (strlen($distinct_to) == 0) { $msg .= $text['message-required']." ".$text['label-distinct_to']."<br>\n"; }
-			//if (strlen($auth_username) == 0) { $msg .= $text['message-required']." ".$text['label-auth_username']."<br>\n"; }
-			//if (strlen($realm) == 0) { $msg .= $text['message-required']." ".$text['label-realm']."<br>\n"; }
-			//if (strlen($from_user) == 0) { $msg .= $text['message-required']." ".$text['label-from_user']."<br>\n"; }
-			//if (strlen($from_domain) == 0) { $msg .= $text['message-required']." ".$text['label-from_domain']."<br>\n"; }
 			if (strlen($proxy) == 0) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
-			//if (strlen($register_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-register_proxy']."<br>\n"; }
-			//if (strlen($outbound_proxy) == 0) { $msg .= $text['message-required']." ".$text['label-outbound_proxy']."<br>\n"; }
 			if (strlen($expire_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
 			if (strlen($register) == 0) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
-			//if (strlen($register_transport) == 0) { $msg .= $text['message-required']." ".$text['label-register_transport']."<br>\n"; }
 			if (strlen($retry_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
-			//if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
-			//if (strlen($ping) == 0) { $msg .= $text['message-required']." ".$text['label-ping']."<br>\n"; }
 			if (strlen($channels) == 0) {
 				//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
 				$channels = 0;
 			}
-			//if (strlen($caller_id_in_from) == 0) { $msg .= $text['message-required']." ".$text['label-caller_id_in_from']."<br>\n"; }
-			//if (strlen($supress_cng) == 0) { $msg .= $text['message-required']." ".$text['label-supress_cng']."<br>\n"; }
-			//if (strlen($sip_cid_type) == 0) { $msg .= $text['message-required']." ".$text['label-sip_cid_type']."<br>\n"; }
-			//if (strlen($codec_prefs) == 0) { $msg .= $text['message-required']." ".$text['label-codec_prefs']."<br>\n"; }
-			//if (strlen($extension_in_contact) == 0) { $msg .= $text['message-required']." ".$text['label-extension_in_contact']."<br>\n"; }
 			if (strlen($context) == 0) { $msg .= $text['message-required']." ".$text['label-context']."<br>\n"; }
 			if (strlen($profile) == 0) { $msg .= $text['message-required']." ".$text['label-profile']."<br>\n"; }
 			if (strlen($enabled) == 0) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
-			//if (strlen($description) == 0) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -175,12 +159,7 @@
 
 				//build the gateway array
 					$x = 0;
-					if (strlen($domain_uuid) == 0) {
-						$array['gateways'][$x]["domain_uuid"] = null;
-					}
-					else {
-						$array['gateways'][$x]["domain_uuid"] = $domain_uuid;
-					}
+					$array['gateways'][$x]["domain_uuid"] = is_uuid($domain_uuid) ? $domain_uuid : null;
 					$array['gateways'][$x]["gateway_uuid"] = $gateway_uuid;
 					$array['gateways'][$x]["gateway"] = $gateway;
 					$array['gateways'][$x]["username"] = $username;
@@ -207,12 +186,7 @@
 					$array['gateways'][$x]["extension_in_contact"] = $extension_in_contact;
 					$array['gateways'][$x]["context"] = $context;
 					$array['gateways'][$x]["profile"] = $profile;
-					if (strlen($hostname) == 0) {
-						$array['gateways'][$x]["hostname"] = null;
-					}
-					else {
-						$array['gateways'][$x]["hostname"] = $hostname;
-					}
+					$array['gateways'][$x]["hostname"] = strlen($hostname) != 0 ? $hostname : null;
 					$array['gateways'][$x]["enabled"] = $enabled;
 					$array['gateways'][$x]["description"] = $description;
 
@@ -228,7 +202,7 @@
 					$database = new database;
 					$database->app_name = 'gateways';
 					$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
-					if (strlen($gateway_uuid) > 0) {
+					if (is_uuid($gateway_uuid)) {
 						$database->uuid($gateway_uuid);
 					}
 					$database->save($array);
@@ -241,16 +215,16 @@
 							unlink($gateway_xml_file);
 						}
 					}
-	
+
 				//syncrhonize configuration
 					save_gateway_xml();
-	
+
 				//clear the cache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					$hostname = trim(event_socket_request($fp, 'api switchname'));
 					$cache = new cache;
 					$cache->delete("configuration:sofia.conf:".$hostname);
-	
+
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -263,8 +237,8 @@
 					//clear the apply settings reminder
 						$_SESSION["reload_xml"] = false;
 
-			} //if ($_POST["persistformvar"] != "true")
-	
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -274,19 +248,19 @@
 					message::add($text['message-update']);
 				}
 				header("Location: gateways.php");
-				return;
+				exit;
 			}
-	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$gateway_uuid = check_str($_GET["id"]);
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+		$gateway_uuid = $_GET["id"];
 		$sql = "select * from v_gateways ";
-		$sql .= "where gateway_uuid = '".$gateway_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where gateway_uuid = :gateway_uuid ";
+		$parameters['gateway_uuid'] = $gateway_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			$gateway = $row["gateway"];
 			$username = $row["username"];
@@ -317,22 +291,25 @@
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_enabled = 'true' ";
 	$sql .= "order by sip_profile_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$sip_profiles = $prep_statement->fetchAll();
-	unset ($prep_statement, $sql);
+	$database = new database;
+	$sip_profiles = $database->select($sql, null, 'all');
+	unset($sql);
 
 //set defaults
 	if (strlen($enabled) == 0) { $enabled = "true"; }
 	if (strlen($register) == 0) { $register = "true"; }
 	if (strlen($retry_seconds) == 0) { $retry_seconds = "30"; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -399,6 +376,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"".escape($username)."\">\n";
+	echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
 	echo $text['description-username']."\n";
 	echo "</td>\n";
@@ -409,7 +387,8 @@
 	echo "    ".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
+	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";
@@ -864,6 +843,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";

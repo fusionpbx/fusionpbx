@@ -859,7 +859,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P32>60</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- # Subscribe Expiration. Default is 60.  -->
 <!-- # Number: 1-64800  -->
@@ -1538,7 +1538,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P412>60</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- # Subscribe Expiration. Default is 60.  -->
 <!-- # Number: 1-64800  -->
@@ -2206,7 +2206,7 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-<P512>60</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- # Subscribe Expiration. Default is 60.  -->
 <!-- # Number: 1-64800  -->
@@ -6027,7 +6027,13 @@
 
 <!-- # Config Server Path -->
 <!-- # String -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
 
 <!-- # Config HTTP/HTTPS User Name -->
 <!-- # String -->

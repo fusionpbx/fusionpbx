@@ -38,7 +38,7 @@ class destinations {
 	}
 
 	/**
-	 * Get the destination menu
+	 * Build the destination select list
 	 * @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
 	 * @var string $destination_name - current name
 	 * @var string $destination_value - current value
@@ -75,6 +75,7 @@ class destinations {
 			$x = 0;
 			foreach ($this->destinations as $row) {
 				if ($row['type'] = 'sql') {
+					$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 					if (isset($row['sql'])) {
 						if (is_array($row['sql'])) {
 							$sql = trim($row['sql'][$db_type])." ";
@@ -88,29 +89,29 @@ class destinations {
 						$fields = '';
 						$c = 1;
 						foreach ($row['field'] as $key => $value) {
+							$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
+							$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
 							if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
 							$fields .= $value." as ".$key.$delimiter." ";
 							$c++;
 						}
 						$sql = "select ".$fields;
-						$sql .= " from v_".$row['name']." ";
+						$sql .= " from v_".$table_name." ";
 					}
 					if (isset($row['where'])) {
 						$sql .= trim($row['where'])." ";
 					}
 					$sql .= "order by ".trim($row['order_by']);
 					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
-					$sql = trim($sql);
-					$statement = $this->db->prepare($sql);
-					$statement->execute();
-					$result = $statement->fetchAll(PDO::FETCH_NAMED);
-					unset($statement);
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
 
 					$this->destinations[$x]['result']['sql'] = $sql;
 					$this->destinations[$x]['result']['data'] = $result;
 				}
 				$x++;
 			}
+
 			$this->destinations[$x]['type'] = 'array';
 			$this->destinations[$x]['label'] = 'other';
 			$this->destinations[$x]['name'] = 'dialplans';
@@ -259,9 +260,9 @@ class destinations {
 					$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
 					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
 					$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
-					$select_label = str_replace("&#9993", '{email-icon}', $select_label);
+					$select_label = str_replace("&#9993", 'email-icon', $select_label);
 					$select_label = escape(trim($select_label));
-					$select_label = str_replace('{email-icon}', '&#9993', $select_label);
+					$select_label = str_replace('email-icon', '&#9993', $select_label);
 					if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 					if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 					$response .= "			<option value='".escape($select_value)."' ".$selected.">".$select_label."</option>\n";
@@ -307,21 +308,24 @@ class destinations {
 			}
 			$i = 0;
 			foreach ($apps as $x => &$app) {
-				if (isset($app['destinations'])) foreach ($app['destinations'] as &$row) {
-					$this->destinations[] = $row;
+				if (isset($app['destinations'])) {
+					foreach ($app['destinations'] as &$row) {
+						$this->destinations[] = $row;
+					}
 				}
 			}
-	
+
 			//put the array in order
 			foreach ($this->destinations as $row) {
 				$option_groups[] = $row['label'];
 			}
 			array_multisort($option_groups, SORT_ASC, $this->destinations);
-	
+
 			//add the sql and data to the array
 			$x = 0;
 			foreach ($this->destinations as $row) {
 				if ($row['type'] = 'sql') {
+					$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 					if (isset($row['sql'])) {
 						if (is_array($row['sql'])) {
 							$sql = trim($row['sql'][$db_type])." ";
@@ -335,23 +339,22 @@ class destinations {
 						$fields = '';
 						$c = 1;
 						foreach ($row['field'] as $key => $value) {
+							$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
+							$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
 							if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
 							$fields .= $value." as ".$key.$delimiter." ";
 							$c++;
 						}
 						$sql = "select ".$fields;
-						$sql .= " from v_".$row['name']." ";
+						$sql .= " from v_".$table_name." ";
 					}
 					if (isset($row['where'])) {
 						$sql .= trim($row['where'])." ";
 					}
 					$sql .= "order by ".trim($row['order_by']);
 					$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
-					$sql = trim($sql);
-					$statement = $this->db->prepare($sql);
-					$statement->execute();
-					$result = $statement->fetchAll(PDO::FETCH_NAMED);
-					unset($statement);
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
 
 					$this->destinations[$x]['result']['sql'] = $sql;
 					$this->destinations[$x]['result']['data'] = $result;
@@ -433,7 +436,6 @@ class destinations {
 										}
 									}
 								}
-
 							}
 							else {
 								$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
@@ -456,9 +458,9 @@ class destinations {
 					$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
 					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
 					$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
-					$select_label = str_replace("&#9993", '{email-icon}', $select_label);
+					$select_label = str_replace("&#9993", 'email-icon', $select_label);
 					$select_label = escape(trim($select_label));
-					$select_label = str_replace('{email-icon}', '&#9993', $select_label);
+					$select_label = str_replace('email-icon', '&#9993', $select_label);
 					if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 					if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 					$array[$label][$select_label] = $select_value;
@@ -479,7 +481,7 @@ class destinations {
 	}
 
 	/**
-	 * delete destinations
+	 * delete destinations and related dialplan
 	 */
 	public function delete($destinations) {
 		if (permission_exists('destination_delete')) {
@@ -496,36 +498,46 @@ class destinations {
 
 				//delete the checked rows
 				if ($action == 'delete') {
+
+					//add the dialplan permission
+					$p = new permissions;
+					$p->add('dialplan_delete', 'temp');
+					$p->add('dialplan_detail_delete', 'temp');
+
+					//loop through selected destinations
 					foreach($destinations as $row) {
 						if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-							//get the list destinations
-							$sql = "select * from v_destinations ";
-							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-							$prep_statement = $this->db->prepare($sql);
-							$prep_statement->execute();
-							$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							$row = $destinations[0];
 
-							//delete th dialplan
-							$sql = "delete from v_dialplan_details ";
-							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//get the dialplan uuid and context
+								$sql = "select * from v_destinations ";
+								$sql .= "where destination_uuid = :destination_uuid ";
+								$database = new database;
+								$parameters['destination_uuid'] = $row['destination_uuid'];
+								$destinations = $database->select($sql,$parameters);
+								$row = $destinations[0];
 
-							//delete th dialplan
-							$sql = "delete from v_dialplans ";
-							$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//prepare and then delete the selected data
+								if (isset($row["dialplan_uuid"]) && is_uuid($row["dialplan_uuid"])) {
+									$array['dialplan_details'][]['dialplan_uuid'] = $row["dialplan_uuid"];
+									$array['dialplans'][]['dialplan_uuid'] = $row["dialplan_uuid"];
+								}
+								$array['destinations'][]['destination_uuid'] = $row['destination_uuid'];
+								$database->app_name = 'destinations';
+								$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
+								$database->delete($array);
+								//$message = $database->message;
 
-							//delete the destinations
-							$sql = "delete from v_destinations ";
-							$sql .= "where destination_uuid = '".$row['destination_uuid']."';";
-							$this->db->query($sql);
-							unset($sql);
+							//clear the cache
+								$cache = new cache;
+								$cache->delete("dialplan:".$row['destination_context']);
+
 						}
 					}
-					unset($destinations);
+					unset($destinations, $row);
+
+					//remove the temporary permission
+					$p->delete('dialplan_delete', 'temp');
+					$p->delete('dialplan_detail_delete', 'temp');
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get the text for the correct translation
  *
@@ -102,7 +103,7 @@ class text {
 		//reduce to specific language
 			if ($language_code != 'all') {
 				if (is_array($text)) foreach ($text as $key => $value) {
-					if (strlen($value[$language_code]) > 0) {
+					if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
 						$text[$key] = $value[$language_code];
 					}
 					else {
@@ -140,15 +141,15 @@ class text {
 				throw new Exception("failed to import text data from '$app_path'");
 			}
 
-        //collect existing comments
-            $comment = array();
-            $file_handle = fopen($lang_path, "r");
-            while (!feof($file_handle)) {
-                if(preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)){
-                    $comment[$matches[0]][$matches[1]] = $matches[2];
-                }
-            }
-            fclose($file_handle);
+		//collect existing comments
+			$comment = array();
+			$file_handle = fopen($lang_path, "r");
+			while (!feof($file_handle)) {
+				if(preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)){
+					$comment[$matches[0]][$matches[1]] = $matches[2];
+				}
+			}
+			fclose($file_handle);
 
 		//open the language file for writing
 			$lang_file = fopen($lang_path, 'w');
@@ -170,11 +171,11 @@ class text {
 					$text = array_merge($temp_A, $temp_B, $text);
 					unset($temp_A, $temp_B, $temp_C);
 				}
-                else {
+				else {
 					ksort($text);
 				}
 			}
-            else {
+			else {
 				if ($app_path == 'resources') {
 					foreach($this->languages as $language) {
 						$label = array_shift($text["language-$language"]);
@@ -205,7 +206,7 @@ class text {
 							$language_name = $this->escape_str($target_lang);
 						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
 					}
-                    else {
+					else {
 
 						//put a line break in between the last tag if it has changed
 							if ($last_lang_label != $lang_label)
@@ -244,9 +245,9 @@ class text {
 											}
 										}
 									}
-                                    if(strlen($append) == 0 and array_key_exists($comment, $lang_label) and array_key_exists($comment[$lang_label], $lang_code)) {
-                                        $append = " //$comment[$lang_label][$lang_code]";
-                                    }
+									if(strlen($append) == 0 && array_key_exists($comment, $lang_label) && array_key_exists($comment[$lang_label], $lang_code)) {
+										$append = " //$comment[$lang_label][$lang_code]";
+									}
 									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
 								}
 					}
@@ -264,13 +265,13 @@ class text {
 			$text = array();
 			$languages = array();
 
-		//fetch all the languages
+		//retrieve all the languages
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
 				include $file;
 			}
 			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
-	
+
 		//check every tag
 			foreach($text as $lang_codes) {
 				foreach($lang_codes as $language_code => $value) {
@@ -282,7 +283,7 @@ class text {
 					$languages[$language_code] = 1;
 				}
 			}
-		
+
 		//set $this->languages up according to what we found
 			unset($languages['en-us']);
 			$languages = array_keys($languages);
@@ -308,14 +309,14 @@ class text {
 				$language_totals[$language_code] = 0;
 			}
 
-		//fetch all the languages
+		//retrieve all the languages
 			$text = array();
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
 				include $file;
 			}
 			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
-	
+
 		//check every tag
 			foreach($text as $label_name => $values) {
 				$language_totals['languages']['total']++;
@@ -326,7 +327,7 @@ class text {
 			}
 			unset($text);
 
-		//fetch all the menus
+		//retrieve all the menus
 			$x = 0;
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
 			foreach($files as $file) {
@@ -348,8 +349,9 @@ class text {
 					}
 				}
 				foreach ($this->languages as $language_code) {
-                    if (strlen($app['description'][$language_code]) > 0)
-                        $language_totals['app_descriptions'][$language_code]++;
+					if (strlen($app['description'][$language_code]) > 0) {
+						$language_totals['app_descriptions'][$language_code]++;
+					}
 				}
 			}
 			

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,101 +49,76 @@
 	$text = $language->get();
 
 //get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$search = $_GET["search"];
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //handle search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$search = strtolower($search);
 		$sql_search = "and ( ";
-		$sql_search .= "lower(extension) like '%".$search."%' ";
-		$sql_search .= "or lower(call_group) like '%".$search."%' ";
-		$sql_search .= "or lower(user_context) like '%".$search."%' ";
-		$sql_search .= "or lower(enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(description) like '%".$search."%' ";
+		$sql_search .= "	lower(extension) like :search ";
+		$sql_search .= "	or lower(call_group) like :search ";
+		$sql_search .= "	or lower(user_context) like :search ";
+		$sql_search .= "	or lower(enabled) like :search ";
+		$sql_search .= "	or lower(description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
+//get total extension count
+	$sql = "select count(extension_uuid) from v_extensions ";
+	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search;
+	$database = new database;
+	$total_extensions = $database->select($sql, $parameters, 'column');
+
 //additional includes
-	require_once "resources/header.php";
 	$document['title'] = $text['title-extensions'];
 	require_once "resources/paging.php";
 
-//get total extension count from the database
-	$sql = "select ";
-	$sql .= "(select count(*) from v_extensions ";
-	$sql .= "where 1 = 1 ";
-	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-		//show all extensions
-	} else {
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	}
-	$sql .= " ".$sql_search.") as num_rows ";
-	if ($db_type == "pgsql") {
-		$sql .= ", (select count(*) as count from v_extensions ";
-		$sql .= "where 1 = 1 ";
-		if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-			//show all extensions
-		} else {
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		}
-		$sql .= "and extension ~ '^[0-9]+$') as numeric_extensions ";
-	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_extensions = $row['num_rows'];
-		if (($db_type == "pgsql") or ($db_type == "mysql")) {
-			$numeric_extensions = $row['numeric_extensions'];
-		}
-	}
-	unset($prep_statement, $row);
-
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".escape($search);
-	if (!isset($_GET['page'])) { $_GET['page'] = 0; }
-	$_GET['page'] = check_str($_GET['page']);
+	$param = "&search=".urlencode($search);
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls_mini, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page, true); //top
 	list($paging_controls, $rows_per_page, $var_3) = paging($total_extensions, $param, $rows_per_page); //bottom
-	$offset = $rows_per_page * $_GET['page'];
-
-//to cast or not to cast
-	if ($db_type == "pgsql") {
-		$order_text = ($total_extensions == $numeric_extensions) ? "cast(extension as bigint)" : "extension";
-	}
-	else {
-		$order_text = "extension";
-	}
+	$offset = $rows_per_page * $page;
 
 //get the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where 1 = 1 ";
-	if ($_GET['show'] == "all" && permission_exists('extension_all')) {
-		//show all gateways
-	} else {
-		$sql .= "and domain_uuid = '$domain_uuid' ";
+	if (!($_GET['show'] == "all" && permission_exists('extension_all'))) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search; //add search mod from above
-	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
+	$sql .= $sql_search;
+	if ($order_by == '' || $order_by == 'extension') {
+		if ($db_type == 'pgsql') {
+			$sql .= 'order by natural_sort(extension) '.$order; //function in app_defaults.php
+		}
+		else {
+			$sql .= 'order by extension '.$order;
+		}
 	}
 	else {
-		$sql .= "order by $order_text $order";
+		$sql .= order_by($order_by, $order);
 	}
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the alternating styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//include the header
+	require_once "resources/header.php";
 
 //show the content
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
@@ -195,9 +170,11 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	//echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
-	echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+	if (permission_exists("extension_user_context")) {
+		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+	}
 	if (permission_exists('extension_registered')) {
- 		echo th_order_by('description', $text['label-is_registered'], $order_by, $order);
+		echo "<th>".$text['label-is_registered']."</th>\n";
  	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
@@ -215,9 +192,10 @@
 	echo "</tr>\n";
 
 	if (is_array($extensions)) {
-
 		foreach($extensions as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
+			if (permission_exists('extension_edit')) {
+				$tr_link = "href='extension_edit.php?id=".urlencode($row['extension_uuid']).(is_numeric($page) ? '&page='.$page : null)."'";
+			}
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('extension_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
@@ -230,7 +208,7 @@
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
+				echo "<a ".$tr_link.">".escape($row['extension'])."</a>";
 			}
 			else {
 				echo escape($row['extension']);
@@ -238,8 +216,9 @@
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_group'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
-
+			if (permission_exists("extension_user_context")) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['user_context'])."</td>\n";
+			}
 			if (permission_exists('extension_registered')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				$extension_number = $row['extension'].'@'.$_SESSION['domain_name'];
@@ -248,14 +227,16 @@
 					$extension_number_alias .= '@'.$_SESSION['domain_name'];
 				}
 				$found_count = 0;
-				foreach ($registrations as $array) {
-					if (
-						($extension_number == $array['user']) ||
-						($extension_number_alias != '' &&
-							$extension_number_alias == $array['user']
-						)
-					) {
-						$found_count++;
+				if (is_array($registrations)) {
+					foreach ($registrations as $array) {
+						if (
+							($extension_number == $array['user']) ||
+							($extension_number_alias != '' &&
+								$extension_number_alias == $array['user']
+							)
+						) {
+							$found_count++;
+						}
 					}
 				}
 				if ($found_count > 0) {
@@ -267,21 +248,20 @@
 				echo "&nbsp;</td>\n";
 			}
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(ucwords($row['enabled']))."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['enabled'] == 'true' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".escape($row['description'])."&nbsp;</td>\n";
 
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('extension_edit')) {
-				echo "<a href='extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a ".$tr_link." alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='extension_delete.php?id[]=".escape($row['extension_uuid']).(is_numeric($page) ? '&page='.$page : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		}
-		unset($extensions, $row);
 	}
 
 	if (is_array($extensions)) {
@@ -298,6 +278,8 @@
 		echo "	</td>\n";
 		echo "</tr>\n";
 	}
+
+	unset($extensions, $row);
 
 	echo "</table>";
 	echo "</form>";

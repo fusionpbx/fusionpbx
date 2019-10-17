@@ -24,9 +24,8 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/call_centers/call_center_queues.php";
-	$apps[$x]['menu'][$y]['groups'][] = "agent";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Agent Status";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";

@@ -41,20 +41,24 @@ else {
 
 // retrieve software uuid
 	$sql = "select software_uuid, software_url, software_version from v_software";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$software_uuid = $row["software_uuid"];
-			$software_url = $row["software_url"];
-			$software_version = $row["software_version"];
-			break; // limit to 1 row
-		}
+	$database = new database;
+	$row = $database->select($sql, null, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
+		$software_uuid = $row["software_uuid"];
+		$software_url = $row["software_url"];
+		$software_version = $row["software_version"];
 	}
-	unset($sql, $prep_statement);
+	unset($sql, $row);
 
 	if (count($_REQUEST) > 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: notification_edit.php');
+				exit;
+			}
 
 		// prepare demographic information **********************************************
 
@@ -76,21 +80,13 @@ else {
 
 			// database name & version
 			switch ($db_type) {
-				case "pgsql" :	$db_ver_query = "select version() as db_ver;";			break;
-				case "mysql" :	$db_ver_query = "select version() as db_ver;";			break;
-				case "sqlite" :	$db_ver_query = "select sqlite_version() as db_ver;";	break;
+				case "pgsql" :	$sql = "select version();";			break;
+				case "mysql" :	$sql = "select version();";			break;
+				case "sqlite" :	$sql = "select sqlite_version();";	break;
 			}
-			$prep_statement = $db->prepare($db_ver_query);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$database_version = $row["db_ver"];
-					break; // limit to 1 row
-				}
-			}
-			unset($db_ver_query, $prep_statement);
-			$db_ver = $database_version;
+			$database = new database;
+			$db_ver = $database->select($sql, null, 'column');
+			unset($sql);
 
 			// operating system name & version
 			$os_platform = PHP_OS;
@@ -157,16 +153,9 @@ else {
 
 		// get local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$current_project_notifications = $row["project_notifications"];
-				break; // limit to 1 row
-			}
-		}
-		unset($sql, $prep_statement);
+		$database = new database;
+		$current_project_notifications = $database->select($sql, null, 'row');
+		unset($sql);
 
 		// check if remote record should be removed
 		if ($project_notifications == 'false') {
@@ -191,7 +180,8 @@ else {
 				if ($response['result'] == 'deleted') {
 					// set local project notification participation flag to false
 					$sql = "update v_notifications set project_notifications = 'false'";
-					$db->exec(check_sql($sql));
+					$database = new database;
+					$database->execute($sql);
 					unset($sql);
 				}
 			}
@@ -250,7 +240,8 @@ else {
 		if ($response['result'] == 'updated' || $response['result'] == 'inserted') {
 			// set local project notification participation flag to true
 			$sql = "update v_notifications set project_notifications = 'true'";
-			$db->exec(check_sql($sql));
+			$database = new database;
+			$database->execute($sql);
 			unset($sql);
 			// set message
 			if (
@@ -276,16 +267,12 @@ else {
 
 		// check local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$setting["project_notifications"] = $row["project_notifications"];
-				break; // limit to 1 row
-			}
+		$database = new database;
+		$row = $database->select($sql, null, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
+			$setting["project_notifications"] = $row["project_notifications"];
 		}
-		unset($sql, $prep_statement);
+		unset($sql, $row);
 
 		// if participation enabled
 		if ($setting["project_notifications"] == 'true') {
@@ -316,6 +303,10 @@ else {
 		unset($_SESSION["postback"]);
 
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 require_once "resources/header.php";
 $document['title'] = $text['title-notifications'];
@@ -447,6 +438,7 @@ $document['title'] = $text['title-notifications'];
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='right'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

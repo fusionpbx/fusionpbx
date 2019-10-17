@@ -30,15 +30,8 @@ include "root.php";
 	class switch_recordings {
 
 		public $domain_uuid;
-		private $db;
 
 		public function __construct() {
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
 			$this->domain_uuid = $_SESSION['domain_uuid'];
 		}
 
@@ -49,15 +42,18 @@ include "root.php";
 		}
 
 		public function list_recordings() {
-			$sql = "select recording_uuid, recording_filename, recording_base64 from v_recordings ";
-			$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
+			$sql = "select recording_uuid, recording_filename, recording_base64 ";
+			$sql .= "from v_recordings ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
+				foreach ($result as &$row) {
+					$recordings[$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']."/".$row['recording_filename']] = $row['recording_filename'];
+				}
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $result, $row);
 			return $recordings;
 		}
 	

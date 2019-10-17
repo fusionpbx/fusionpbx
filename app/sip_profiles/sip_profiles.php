@@ -43,16 +43,17 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(sip_profile_name) like '%".$search."%' ";
-		$sql_search .= "or lower(sip_profile_hostname) like '%".$search."%' ";
+		$sql_search = "where (";
+		$sql_search .= "lower(sip_profile_name) like :search ";
+		$sql_search .= "or lower(sip_profile_hostname) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -60,21 +61,9 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(sip_profile_uuid) as num_rows from v_sip_profiles ";
-	$sql .= "where 1 = 1 ";
-	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$sql = "select count(*) from v_sip_profiles ";
+	$database = new database;
+	$num_rows = $database->select($sql, null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -85,16 +74,13 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_sip_profiles ";
-	$sql .= "where 1 = 1 ";
+	$sql = str_replace('count(*)', '*', $sql);
 	$sql .= $sql_search;
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$sip_profiles = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($sip_profiles as $key => $row) { $sip_profiles[$key] = array_map("escape", $row); }
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$sip_profiles = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //escape the search
 	$search = escape($search);
@@ -139,28 +125,28 @@
 	echo "<tr>\n";
 
 	if (is_array($sip_profiles)) {
-		foreach($sip_profiles as $row) {
+		foreach ($sip_profiles as $row) {
 			if (permission_exists('sip_profile_edit')) {
-				$tr_link = "href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."'";
+				$tr_link = "href='sip_profile_edit.php?id=".escape($row['sip_profile_uuid'])."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_hostname']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['sip_profile_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['sip_profile_hostname'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['sip_profile_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['sip_profile_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('sip_profile_edit')) {
-				echo "<a href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='sip_profile_edit.php?id=".escape($row['sip_profile_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('sip_profile_delete')) {
-				echo "<a href='sip_profile_delete.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='sip_profile_delete.php?id=".escape($row['sip_profile_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $sip_profiles);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($sip_profiles, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='6' align='left'>\n";

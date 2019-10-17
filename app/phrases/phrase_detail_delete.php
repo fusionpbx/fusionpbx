@@ -17,56 +17,70 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/functions/save_phrases_xml.php";
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/functions/save_phrases_xml.php";
 
-if (permission_exists('phrase_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//check permissions
+	if (permission_exists('phrase_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get values
-	$phrase_detail_uuid = check_str($_GET["pdid"]);
-	$phrase_uuid = check_str($_GET["pid"]);
-	$phrase_language = check_str($_GET["lang"]);
+	$phrase_detail_uuid = $_GET["pdid"];
+	$phrase_uuid = $_GET["pid"];
+	$phrase_language = $_GET["lang"];
 
 //delete the detail entry
-	if ($phrase_detail_uuid != '' && $phrase_uuid != '') {
-		$sql = "delete from v_phrase_details ";
-		$sql .= " where phrase_detail_uuid = '".$phrase_detail_uuid."'";
-		$sql .= " and phrase_uuid = '".$phrase_uuid."' ";
-		$sql .= " and domain_uuid = '".$domain_uuid."' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
-	}
+	if (is_uuid($phrase_detail_uuid) && is_uuid($phrase_uuid)) {
+		//build array
+			$array['phrase_details'][0]['phrase_detail_uuid'] = $phrase_detail_uuid;
+			$array['phrase_details'][0]['phrase_uuid'] = $phrase_uuid;
+			$array['phrase_details'][0]['domain_uuid'] = $domain_uuid;
 
-//save the xml to the file system if the phrase directory is set
-	save_phrases_xml();
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add('phrase_detail_delete', 'temp');
 
-//delete the phrase from memcache
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$switch_cmd .= "memcache delete languages:".$phrase_language;
-		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		//execute delete
+			$database = new database;
+			$database->app_name = 'phrases';
+			$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+			$database->delete($array);
+			unset($array);
+
+		//revoke temporary permissions
+			$p->delete('phrase_detail_delete', 'temp');
+
+		//save the xml to the file system if the phrase directory is set
+			save_phrases_xml();
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("languages:".$phrase_language);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header('Location: phrase_edit.php?id='.$phrase_uuid);
+	exit;
 
 ?>

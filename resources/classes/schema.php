@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2016
+	Copyright (C) 2013 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -348,8 +348,14 @@ if (!class_exists('schema')) {
 			public function db_create_table ($apps, $db_type, $table) {
 				if (is_array($apps)) foreach ($apps as $x => &$app) {
 					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
-						if ($row['table']['name'] == $table) {
-							$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
+						if (is_array($row['table']['name'])) {
+							$table_name = $row['table']['name']['text'];
+						}
+						else {
+							$table_name = $row['table']['name'];
+						}
+						if ($table_name == $table) {
+							$sql = "CREATE TABLE " . $table_name . " (\n";
 							$field_count = 0;
 							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
@@ -558,7 +564,7 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen(field_name) > 0) {
+											if (strlen($field_name) > 0) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
@@ -585,19 +591,26 @@ if (!class_exists('schema')) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
-								if (!$this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
-									$row['exists'] = "true"; //testing
-									//if (db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
-										if ($db_type == "pgsql") {
-											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-										}
-										if ($db_type == "mysql") {
-											$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
-										}
-										if ($db_type == "sqlite") {
-											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-										}
-									//}
+								if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
+									$row['exists'] = "false"; //testing
+									if ($db_type == "pgsql") {
+										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+									}
+									if ($db_type == "mysql") {
+										$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
+									}
+									if ($db_type == "sqlite") {
+										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+									}
+								}
+								else {
+									if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
+										$row['exists'] = "true";
+									}
+									else {
+										$row['exists'] = "false";
+										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
+									}
 								}
 							}
 							else {
@@ -621,37 +634,35 @@ if (!class_exists('schema')) {
 												//get the field name
 													if (is_array($field['name'])) {
 														$field_name = $field['name']['text'];
+														if (!$this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
+															$field['exists'] == "false";
+														}
 													}
 													else {
 														$field_name = $field['name'];
 													}
-												//find missing fields and add them
-													if ($field['deprecated'] == "true") {
-														//skip this row
+
+												//add or rename fields
+													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
+														if ($db_type == "pgsql") {
+															$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
+														}
+														if ($db_type == "mysql") {
+															$field_type = str_replace("AUTO_INCREMENT PRIMARY KEY", "", $field_type);
+															$sql_update .= "ALTER TABLE ".$table_name." CHANGE ".$field['name']['deprecated']." ".$field['name']['text']." ".$field_type.";\n";
+														}
+														if ($db_type == "sqlite") {
+															//a change has been made to the field name
+															$apps[$x]['db'][$y]['rebuild'] = 'true';
+														}
 													}
 													else {
-														if (!is_array($field['name'])) {
-															if ($field['exists'] == "false") {
-																$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']." ".$field_type.";\n";
-															}
+														//find missing fields and add them
+														if ($field['exists'] == "false") {
+															$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field_name." ".$field_type.";\n";
 														}
 													}
-												//rename fields where the name has changed
-													if (is_array($field['name'])) {
-														if ($this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
-															if ($db_type == "pgsql") {
-																$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
-															}
-															if ($db_type == "mysql") {
-																$field_type = str_replace("AUTO_INCREMENT PRIMARY KEY", "", $field_type);
-																$sql_update .= "ALTER TABLE ".$table_name." CHANGE ".$field['name']['deprecated']." ".$field['name']['text']." ".$field_type.";\n";
-															}
-															if ($db_type == "sqlite") {
-																//a change has been made to the field name
-																$apps[$x]['db'][$y]['rebuild'] = 'true';
-															}
-														}
-													}
+
 												//change the data type if it has been changed
 													//if the data type in the app db array is different than the type in the database then change the data type
 													if ($upgrade_data_types) {
@@ -671,6 +682,8 @@ if (!class_exists('schema')) {
 																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
 																		//field type has not changed
 																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
+																		//field type has not changed
+																	} elseif ($db_field_type = "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
 																		//field type has not changed
 																	} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
 																		//field type has not changed

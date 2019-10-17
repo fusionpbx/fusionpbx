@@ -104,7 +104,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_conference_control";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_conference_controls";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "conference_control_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_digits";

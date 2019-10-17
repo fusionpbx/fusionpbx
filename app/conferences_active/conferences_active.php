@@ -17,30 +17,38 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('conference_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('conference_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-?><script type="text/javascript">
+//include the header
+	require_once "resources/header.php";
+
+?>
+
+<script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
 	f.xmlHttp = null;
@@ -72,13 +80,13 @@ function loadXmlHttp(url, id) {
 loadXmlHttp.prototype.stateChanged=function () {
 if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 	//this.el.innerHTML = this.xmlHttp.responseText;
-	document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+	document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 }
 
 var requestTime = function() {
 	var url = 'conferences_active_inc.php';
-	new loadXmlHttp(url, 'ajax_reponse');
-	setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1777);
+	new loadXmlHttp(url, 'ajax_response');
+	setInterval(function(){new loadXmlHttp(url, 'ajax_response');}, 1777);
 }
 
 if (window.addEventListener) {
@@ -91,19 +99,24 @@ else if (window.attachEvent) {
 </script>
 
 <?php
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-echo "  <tr>\n";
-echo "	<td align='left'>";
-echo "		<b>".$text['label-active']."</b>";
-echo "		<br><br>\n";
-echo "		".$text['description-active']."\n";
-echo "	</td>\n";
-echo "  </tr>\n";
-echo "</table>\n";
-echo "<br>\n";
 
-echo "<div id=\"ajax_reponse\"></div>";
-echo "<br><br>";
+//page header
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "  <tr>\n";
+	echo "	<td align='left'>";
+	echo "		<b>".$text['label-active']."</b>";
+	echo "		<br><br>\n";
+	echo "		".$text['description-active']."\n";
+	echo "	</td>\n";
+	echo "  </tr>\n";
+	echo "</table>\n";
+	echo "<br>\n";
 
-require_once "resources/footer.php";
+//show the content
+	echo "<div id=\"ajax_response\"></div>";
+	echo "<br><br>";
+
+//include the footer
+	require_once "resources/footer.php";
+
 ?>

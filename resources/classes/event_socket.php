@@ -108,7 +108,7 @@ class event_socket {
 		if ($port == '') { $port = '8021'; }
 		if ($password == '') { $password = 'ClueCon'; }
 
-		$fp = fsockopen($host, $port, $errno, $errdesc, 3);
+		$fp = @fsockopen($host, $port, $errno, $errdesc, 3);
 
 		if (!$fp) {
 			return false;
@@ -198,3 +198,5 @@ function event_socket_request($fp, $cmd) {
 
 // $fp = event_socket_create('127.0.0.1', 8021, 'ClueCon');
 // print(event_socket_request($fp, 'api sofia status'));
+
+?>

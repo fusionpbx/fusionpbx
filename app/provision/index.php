@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -39,16 +39,16 @@
 	$device_template = '';
 
 //define PHP variables from the HTTP values
-	$mac = check_str($_REQUEST['mac']);
-	$file = check_str($_REQUEST['file']);
-	$ext = check_str($_REQUEST['ext']);
-	//if (strlen(check_str($_REQUEST['template'])) > 0) {
-	//	$device_template = check_str($_REQUEST['template']);
+	$mac = $_REQUEST['mac'];
+	$file = $_REQUEST['file'];
+	$ext = $_REQUEST['ext'];
+	//if (strlen($_REQUEST['template']) > 0) {
+	//	$device_template = $_REQUEST['template'];
 	//}
 
 //get the mac address for Cisco 79xx in the URL as &name=SEP000000000000
-	if (empty($mac)){
-		$name = check_str($_REQUEST['name']);
+	if (empty($mac)) {
+		$name = $_REQUEST['name'];
 		if (substr($name, 0, 3) == "SEP") {
 			$mac = strtolower(substr($name, 3, 12));
 			unset($name);
@@ -58,11 +58,11 @@
 // Escence make request based on UserID for Memory keys
 	// The file name is fixed to `Account1_Extern.xml`.
 	// (Account1 is the first account you register)
-	if(empty($mac) && !empty($ext)){
+	if (empty($mac) && !empty($ext)) {
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
-		$device = device_by_ext($db, $ext, $domain_name);
-		if(($device !== false)&&(($device['device_vendor']=='escene')||($device['device_vendor']=='grandstream'))){
+		$device = device_by_ext($ext, $domain_name);
+		if ($device !== false && ($device['device_vendor'] == 'escene' || $device['device_vendor'] == 'grandstream')) {
 			$mac = $device['device_mac_address'];
 		}
 	}
@@ -79,11 +79,11 @@
 			echo "</body>\n";
 			echo "</html>\n";
 		}
-		exit();
+		exit;
 	}
 
 //check alternate MAC source
-	if (empty($mac)){
+	if (empty($mac)) {
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
@@ -137,109 +137,97 @@
 	}
 
 //get the domain_name and domain_uuid
-	if ((!isset($_SESSION['provision']['http_domain_filter'])) or $_SESSION['provision']['http_domain_filter']['text'] == "false") {
+	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
 		//get the domain_uuid
-			$sql = "SELECT domain_uuid FROM v_devices ";
-			$sql .= "WHERE device_mac_address = :mac ";
-			//$sql .= "WHERE device_mac_address = '".$mac."' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->bindParam(':mac', $mac);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$domain_uuid = $row["domain_uuid"];
-			}
-			unset($result, $prep_statement);
+			$sql = "select domain_uuid from v_devices ";
+			$sql .= "where device_mac_address = :mac ";
+			$parameters['mac'] = $mac;
+			$database = new database;
+			$domain_uuid = $database->select($sql, $parameters, 'column');
 			$_SESSION['domain_uuid'] = $domain_uuid;
+			unset($sql, $parameters);
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
 
-		//set the PDO error mode
-			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 		//get the default settings
 			$sql = "select * from v_default_settings ";
 			$sql .= "where default_setting_enabled = 'true' ";
-			try {
-				$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
-				$prep_statement->execute();
-			}
-			catch(PDOException $e) {
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
-			}
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$sql .= "order by default_setting_order asc ";
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
 			//unset the previous settings
-			foreach ($result as $row) {
-				unset($_SESSION[$row['default_setting_category']]);
-			}
-			//set the settings as a session
-			foreach ($result as $row) {
-				$name = $row['default_setting_name'];
-				$category = $row['default_setting_category'];
-				$subcategory = $row['default_setting_subcategory'];
-				if (strlen($subcategory) == 0) {
-					if ($name == "array") {
-						$_SESSION[$category][] = $row['default_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$name] = $row['default_setting_value'];
-					}
-				} else {
-					if ($name == "array") {
-						$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-					}
-					else {
-						$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-						$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-					}
-				}
-			}
-
-		//get the domains settings
-			if (strlen($domain_uuid) > 0 && is_uuid($domain_uuid)) {
-				$sql = "select * from v_domain_settings ";
-				$sql .= "where domain_uuid = '" . $domain_uuid . "' ";
-				$sql .= "and domain_setting_enabled = 'true' ";
-				try {
-					$prep_statement = $db->prepare($sql . " order by domain_setting_order asc ");
-					$prep_statement->execute();
-				}
-				catch(PDOException $e) {
-					$prep_statement = $db->prepare($sql);
-					$prep_statement->execute();
-				}
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				//unset the arrays that domains are overriding
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as $row) {
-					$name = $row['domain_setting_name'];
-					$category = $row['domain_setting_category'];
-					$subcategory = $row['domain_setting_subcategory'];
-					if ($name == "array") {
-						unset($_SESSION[$category][$subcategory]);
-					}
+					unset($_SESSION[$row['default_setting_category']]);
 				}
 				//set the settings as a session
 				foreach ($result as $row) {
-					$name = $row['domain_setting_name'];
-					$category = $row['domain_setting_category'];
-					$subcategory = $row['domain_setting_subcategory'];
+					$name = $row['default_setting_name'];
+					$category = $row['default_setting_category'];
+					$subcategory = $row['default_setting_subcategory'];
 					if (strlen($subcategory) == 0) {
-						//$$category[$name] = $row['domain_setting_value'];
 						if ($name == "array") {
-							$_SESSION[$category][] = $row['domain_setting_value'];
+							$_SESSION[$category][] = $row['default_setting_value'];
 						}
 						else {
-							$_SESSION[$category][$name] = $row['domain_setting_value'];
+							$_SESSION[$category][$name] = $row['default_setting_value'];
 						}
-					} else {
-						//$$category[$subcategory][$name] = $row['domain_setting_value'];
+					}
+					else {
 						if ($name == "array") {
-							$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 						}
 						else {
-							$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+						}
+					}
+				}
+			}
+			unset($sql, $result, $row);
+
+		//get the domains settings
+			if (is_uuid($domain_uuid)) {
+				$sql = "select * from v_domain_settings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and domain_setting_enabled = 'true' ";
+				$sql .= "order by domain_setting_order asc ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$result = $database->select($sql, $parameters, 'all');
+				//unset the arrays that domains are overriding
+				if (is_array($result) && @sizeof($result) != 0) {
+					foreach ($result as $row) {
+						$name = $row['domain_setting_name'];
+						$category = $row['domain_setting_category'];
+						$subcategory = $row['domain_setting_subcategory'];
+						if ($name == "array") {
+							unset($_SESSION[$category][$subcategory]);
+						}
+					}
+					//set the settings as a session
+					foreach ($result as $row) {
+						$name = $row['domain_setting_name'];
+						$category = $row['domain_setting_category'];
+						$subcategory = $row['domain_setting_subcategory'];
+						if (strlen($subcategory) == 0) {
+							//$$category[$name] = $row['domain_setting_value'];
+							if ($name == "array") {
+								$_SESSION[$category][] = $row['domain_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$name] = $row['domain_setting_value'];
+							}
+						}
+						else {
+							//$$category[$subcategory][$name] = $row['domain_setting_value'];
+							if ($name == "array") {
+								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+							}
 						}
 					}
 				}
@@ -251,17 +239,12 @@
 			$domain_name = $domain_array[0];
 
 		//get the domain_uuid
-			$sql = "SELECT * FROM v_domains ";
-			$sql .= "WHERE domain_name = :domain_name ";
-			//$sql .= "WHERE domain_name = '".$domain_name."' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->bindParam(':domain_name', $domain_name);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				$domain_uuid = $row["domain_uuid"];
-			}
-			unset($result, $prep_statement);
+			$sql = "select domain_uuid from v_domains ";
+			$sql .= "where domain_name = :domain_name ";
+			$parameters['domain_name'] = $domain_name;
+			$database = new database;
+			$domain_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 	}
 
 //build the provision array
@@ -314,14 +297,14 @@
 
 //http authentication - digest
 	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_type"]) == 0) { $provision["http_auth_type"] = "digest"; }
-	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "digest" && $provision["http_auth_enabled"] === "true") {
 		//function to parse the http auth header
 			function http_digest_parse($txt) {
 				//protect against missing data
 				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
 				$data = array();
 				$keys = implode('|', array_keys($needed_parts));
-				preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
+				preg_match_all('@('.$keys.')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
 				foreach ($matches as $m) {
 					$data[$m[1]] = $m[3] ? $m[3] : $m[4];
 					unset($needed_parts[$m[1]]);
@@ -364,7 +347,7 @@
 			$authorized = false;
 			if (!$authorized && is_array($_SESSION['provision']["http_auth_password"])) {
 				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
-					$A1 = md5($provision["http_auth_username"] . ':' . $realm . ':' . $password);
+					$A1 = md5($provision["http_auth_username"].':'.$realm.':'.$password);
 					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
 					if ($data['response'] == $valid_response) {
@@ -385,7 +368,7 @@
 	}
 
 //http authentication - basic
-	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_disable"] !== "true") {
+	if (strlen($provision["http_auth_username"]) > 0 && $provision["http_auth_type"] === "basic" && $provision["http_auth_enabled"] === "true") {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name'].'"');
 			header('HTTP/1.0 401 Authorization Required');
@@ -394,7 +377,8 @@
 			header("Content-Length: ".strval(strlen($content)));
 			echo $content;
 			exit;
-		} else {
+		}
+		else {
 			$authorized = false;
 			if (is_array($_SESSION['provision']["http_auth_password"])) {
 				foreach ($_SESSION['provision']["http_auth_password"] as $password) {
@@ -432,7 +416,7 @@
 			return;
 		}
 	}
-	
+
 //output template to string for header processing
 	$prov = new provision;
 	$prov->domain_uuid = $domain_uuid;
@@ -457,26 +441,30 @@
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: ' . strlen($file_contents));
+			header('Content-Length: '.strlen($file_contents));
 	}
 	else {
 		$cfg_ext = ".cfg";
 		if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
 			header("Content-Type: text/plain");
 			header("Content-Length: ".strlen($file_contents));
-		} else if ($device_vendor === "yealink") {
+		}
+		else if ($device_vendor === "yealink") {
 			header("Content-Type: text/plain");
 			header("Content-Length: ".strval(strlen($file_contents)));
-		} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
+		}
+		else if ($device_vendor === "snom" && $device_template === "snom/m3") {
 			$file_contents = utf8_decode($file_contents);
 			header("Content-Type: text/plain; charset=iso-8859-1");
 			header("Content-Length: ".strlen($file_contents));
-		} else {
+		}
+		else {
 			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
 			if (false == $result){
 				header("Content-Type: text/plain");
 				header("Content-Length: ".strval(strlen($file_contents)));
-			} else {
+			}
+			else {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
 			}

@@ -1,0 +1,6 @@
+<configuration name="post_load_switch.conf" description="Core Configuration">
+	<settings>
+		<!--<param name="events-use-dispatch" value="false"/>-->
+		<!--<param name="initial-event-threads" value="1"/>-->
+	</settings>
+</configuration>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,9 +30,8 @@ if ($domains_processed == 1) {
 	//set the database driver
 		$sql = "select * from v_databases ";
 		$sql .= "where database_driver is null ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$database = new database;
+		$result = $database->select($sql, null, 'all');
 		foreach ($result as &$row) {
 			$database_uuid = $row["database_uuid"];
 			$database_type = $row["database_type"];
@@ -44,11 +43,15 @@ if ($domains_processed == 1) {
 				$database_driver = $database_type_array[0];
 			}
 			$sql = "update v_databases set ";
-			$sql .= "database_driver = '$database_driver' ";
-			$sql .= "where database_uuid = '$database_uuid' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$sql .= "database_driver = :database_driver ";
+			$sql .= "where database_uuid = :database_uuid ";
+			$parameters['database_driver'] = $database_driver;
+			$parameters['database_uuid'] = $database_uuid;
+			$database = new database;
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
 		}
-		unset($prep_statement, $result);
+		unset($result);
 }
+
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,7 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
+//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if(!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
@@ -54,14 +54,9 @@
 		}
 	}
 
-//set the max php execution time
-	ini_set(max_execution_time,7200);
-
 //get the http get values and set them as php variables
 	$action = check_str($_POST["action"]);
 	$from_row = check_str($_POST["from_row"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
 	$delimiter = check_str($_POST["data_delimiter"]);
 	$enclosure = check_str($_POST["data_enclosure"]);
 
@@ -74,7 +69,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('user_imports')) {
+	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('user_imports')) {
 		if (check_str($_POST['type']) == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -126,15 +121,12 @@
 					$i++;	
 				}
 			}
-			$schema[$i]['table'] = 'group_users';
+			$schema[$i]['table'] = 'user_groups';
 			$schema[$i]['parent'] = 'users';
 			$schema[$i]['fields'][] = 'group_name';
 
 		//debug info
-			//echo "<pre>\n";
-			//print_r($schema);
-			//echo "</pre>\n";
-			//exit;
+			//view_array($schema);
 	}
 
 //match the column names to the field names
@@ -252,9 +244,9 @@
 
 		//get the groups
 			$sql = "select * from v_groups where domain_uuid is null ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$groups = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$database = new database;
+			$groups = $database->select($sql, null, 'all');
+			unset($sql);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
@@ -310,18 +302,18 @@
 												foreach ($groups as $field) {
 													if ($field['group_name'] == $result[$key]) {
 														$group_name = $field['group_name'];
-														$array['group_users'][$row_id]['group_user_uuid'] = uuid();
-														$array['group_users'][$row_id]['domain_uuid'] = $domain_uuid;
-														$array['group_users'][$row_id]['group_name'] = $field['group_name'];
-														$array['group_users'][$row_id]['group_uuid'] = $field['group_uuid'];
-														$array['group_users'][$row_id]['user_uuid'] = $user_uuid;
+														$array['user_groups'][$row_id]['user_group_uuid'] = uuid();
+														$array['user_groups'][$row_id]['domain_uuid'] = $domain_uuid;
+														$array['user_groups'][$row_id]['group_name'] = $field['group_name'];
+														$array['user_groups'][$row_id]['group_uuid'] = $field['group_uuid'];
+														$array['user_groups'][$row_id]['user_uuid'] = $user_uuid;
 													}
 												}
 	
 												//remove superadmin if not the correct permission
 												if ($group_name == 'superadmin') {
 													if (!permission_exists('group_domain')) {
-														unset($array['group_users'][$row_id]);
+														unset($array['user_groups'][$row_id]);
 													}
 												}
 										}
@@ -384,6 +376,7 @@
 						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						//$message = $database->message;
+						unset($array);
 					}
 
 				//send the redirect header
@@ -403,7 +396,7 @@
 	echo "		".$text['description-import']."\n";
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='users.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>\n";
 	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";

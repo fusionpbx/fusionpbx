@@ -17,82 +17,102 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_flow_delete')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_flow_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//delete the user data
+	if (is_uuid($_GET["id"])) {
 
-if (strlen($id)>0) {
+		$call_flow_uuid = $_GET["id"];
 
-	//get the dialplan uuid
-		$sql = "select * from v_call_flows ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and call_flow_uuid = '$id' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-			$dialplan_uuid = $row['dialplan_uuid'];
-		}
+		//get the dialplan uuid
+			$sql = "select * from v_call_flows ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_flow_uuid = :call_flow_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_flow_uuid'] = $call_flow_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && sizeof($row) != 0) {
+				$dialplan_uuid = $row['dialplan_uuid'];
+				$call_flow_context = $row['call_flow_context'];
+			}
+			unset($sql, $parameters, $row);
 
-	//delete call_flow
-		$sql = "delete from v_call_flows ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and call_flow_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete call_flow
+			$array['call_flows'][0]['call_flow_uuid'] = $call_flow_uuid;
+			$array['call_flows'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
 
-	//delete the dialplan entry
-		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//delete the dialplan entry
+			$p = new permissions;
+			$p->add('dialplan_delete', 'temp');
 
-	//delete the dialplan details
-		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
 
-	//syncrhonize configuration
-		save_dialplan_xml();
+			$p->delete('dialplan_delete', 'temp');
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
+		//delete the dialplan details
+			$p = new permissions;
+			$p->add('dialplan_detail_delete', 'temp');
 
-	//delete the dialplan context from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
-}
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$database->app_name = 'call_flows';
+			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+			$database->delete($array);
+			unset($array);
 
+			$p->delete('dialplan_detail_delete', 'temp');
 
-message::add($text['message-delete']);
-header("Location: call_flows.php");
-return;
+		//syncrhonize configuration
+			save_dialplan_xml();
+
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$call_flow_context);
+
+		//set message
+			message::add($text['message-delete']);
+	}
+
+//redirect the browser
+	header("Location: call_flows.php");
+	return;
 
 ?>

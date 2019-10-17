@@ -38,39 +38,49 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	//clear the menu session so it will rebuild with the update
-		$_SESSION["menu"] = "";
+//delete the data
+	if (is_uuid($_GET["id"]) && is_uuid($_GET["menu_item_uuid"])) {
+		//get the menu uuid
+			$menu_uuid = $_GET["id"];
+			$menu_item_uuid = $_GET["menu_item_uuid"];
 
-	//get the menu uuid
-		$menu_uuid = check_str($_GET["id"]);
-		$menu_item_uuid = check_str($_GET["menu_item_uuid"]);
+		//clear the menu session so it will rebuild with the update
+			$_SESSION["menu"] = "";
 
-	//delete the item in the menu
-		$sql  = "delete from v_menu_items ";
-		$sql .= "where menu_item_uuid = '$menu_item_uuid' ";
-		$sql .= "and menu_uuid = '$menu_uuid' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		//delete the item in the menu
+			$array['menu_items'][0]['menu_item_uuid'] = $menu_item_uuid;
+			$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
+			$database = new database;
+			$database->app_name = 'menu';
+			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+			$database->delete($array);
 
-	//delete the menu item groups
-		$sql  = "delete from v_menu_item_groups ";
-		$sql .= "where menu_item_uuid = '$menu_item_uuid' ";
-		$sql .= "and menu_uuid = '$menu_uuid' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		//delete the menu item groups
+			$sql  = "delete from v_menu_item_groups ";
+			$sql .= "where menu_item_uuid = :menu_item_uuid ";
+			$sql .= "and menu_uuid = :menu_uuid ";
+			$parameters['menu_item_uuid'] = $menu_item_uuid;
+			$parameters['menu_uuid'] = $menu_uuid;
+			$database = new database;
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
 
-	//delete the menu item language
-		$sql  = "delete from v_menu_languages ";
-		$sql .= "where menu_uuid = '$menu_uuid' ";
-		$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+		//delete the menu item language
+			$sql  = "delete from v_menu_languages ";
+			$sql .= "where menu_uuid = :menu_uuid ";
+			$sql .= "and menu_item_uuid = :menu_item_uuid ";
+			$parameters['menu_uuid'] = $menu_uuid;
+			$parameters['menu_item_uuid'] = $menu_item_uuid;
+			$database = new database;
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
 
-	//redirect the user
-		message::add($text['message-delete']);
-		header("Location: menu_edit.php?id=".$menu_uuid);
-		return;
-}
+		//set message
+			message::add($text['message-delete']);
+	}
+
+//redirect the user
+	header("Location: menu_edit.php?id=".$menu_uuid);
+	exit;
 
 ?>

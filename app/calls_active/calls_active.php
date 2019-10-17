@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('call_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('call_active_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -46,16 +50,12 @@ else {
 	require_once "resources/header.php";
 
 //load gateways into a session variable
-	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as $row) {
-			$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
-		}
+	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
+	$database = new database;
+	$gateways = $database->select($sql, $parameters, 'all');
+	foreach ($gateways as $row) {
+		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 	}
-	unset($sql, $prep_statement, $result, $row);
 
 //ajax for refresh
 	?>
@@ -97,7 +97,7 @@ else {
 	//call controls
 		function hangup(uuid) {
 			if (confirm("<?php echo $text['confirm-hangup']?>")) {
-				send_cmd('calls_exec.php?cmd=uuid_kill%20'+uuid);
+				send_cmd('calls_exec.php?command=hangup&uuid='+uuid);
 			}
 		}
 

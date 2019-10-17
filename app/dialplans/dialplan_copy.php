@@ -52,8 +52,8 @@
 	$log = new Logging();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"])) {
-		$id = check_str($_REQUEST["id"]);
+	if (is_uuid($_REQUEST["id"])) {
+		$id = $_REQUEST["id"];
 		$log->log("debug", "isset id.");
 		$log->log("debug", $id);
 	}
@@ -61,60 +61,62 @@
 //get the dialplan data
 	if (is_uuid($id)) {
 		$sql = "select * from v_dialplans ";
-		$sql .= "where dialplan_uuid = '$id' ";
-		$log->log("debug", check_sql($sql));
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$dialplans = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$log->log("debug", $result);
-		foreach ($dialplans as &$row) {
-			//create a new primary key for the new row
-				$dialplan_uuid = uuid();
-				$row['dialplan_uuid'] = $dialplan_uuid;
+		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$parameters['dialplan_uuid'] = $id;
+		$database = new database;
+		$dialplans = $database->select($sql, $parameters, 'all');
+		if (is_array($dialplans) && @sizeof($dialplans) != 0) {
+			foreach ($dialplans as &$row) {
+				//create a new primary key for the new row
+					$dialplan_uuid = uuid();
+					$row['dialplan_uuid'] = $dialplan_uuid;
 
-			//get the app_uuid
-				if (is_uuid($row["app_uuid"])) {
-					//get the app uuid
-						$app_uuid = $row["app_uuid"];
-					//create a new app_uuid when copying a dialplan except for these exceptions
-						switch ($app_uuid) {
-							case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": break; //inbound routes
-							case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": break; //outbound routes
-							case "4b821450-926b-175a-af93-a03c441818b1": break; //time conditions
-							default:
-								$app_uuid = uuid();
-						}
-					//set the app uuid
-						$row['app_uuid'] = $app_uuid;
-				}
+				//get the app_uuid
+					if (is_uuid($row["app_uuid"])) {
+						//get the app uuid
+							$app_uuid = $row["app_uuid"];
+						//create a new app_uuid when copying a dialplan except for these exceptions
+							switch ($app_uuid) {
+								case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": break; //inbound routes
+								case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": break; //outbound routes
+								case "4b821450-926b-175a-af93-a03c441818b1": break; //time conditions
+								default:
+									$app_uuid = uuid();
+							}
+						//set the app uuid
+							$row['app_uuid'] = $app_uuid;
+					}
 
-			//add copy to the name and description
-				//$row['dialplan_name'] = $row['dialplan_name'].'-copy';
-				if (strlen($row['dialplan_description']) == 0) {
-					$dialplan_description = 'copy';
-				}
-				else {
-					$dialplan_description = $row['dialplan_description'].'-copy';
-				}
-				$row['dialplan_description'] = $dialplan_description;
+				//add copy to the name and description
+					//$row['dialplan_name'] = $row['dialplan_name'].'-copy';
+					if (strlen($row['dialplan_description']) == 0) {
+						$dialplan_description = 'copy';
+					}
+					else {
+						$dialplan_description = $row['dialplan_description'].'-copy';
+					}
+					$row['dialplan_description'] = $dialplan_description;
+			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //get the the dialplan details
 	if (is_uuid($id)) {
 		$sql = "select * from v_dialplan_details ";
-		$sql .= "where dialplan_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($dialplan_details as &$row) {
-			//create a new primary key for the new row
-				$row['dialplan_detail_uuid'] = uuid();
-			//update the foreign relation uuid
-				$row['dialplan_uuid'] = $dialplan_uuid;
+		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$parameters['dialplan_uuid'] = $id;
+		$database = new database;
+		$dialplan_details = $database->select($sql, $parameters, 'all');
+		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
+			foreach ($dialplan_details as &$row) {
+				//create a new primary key for the new row
+					$row['dialplan_detail_uuid'] = uuid();
+				//update the foreign relation uuid
+					$row['dialplan_uuid'] = $dialplan_uuid;
+			}
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters);
 	}
 
 //build the array
@@ -123,17 +125,13 @@
 		$array['dialplans'][0]['dialplan_details'] = $dialplan_details;
 	}
 
-//debug info
-	//echo "<pre>".print_r($array, true)."</pre>\n";
-	//exit;
-
 //add or update the database
 	$database = new database;
 	$database->app_name = 'dialplans';
 	$database->app_uuid = $app_uuid;
 	$database->uuid($dialplan_uuid);
 	$database->save($array);
-	//$message = $database->message;
+	unset($array);
 
 //update the dialplan xml
 	$dialplans = new dialplan;

@@ -43,24 +43,37 @@
 	$text = $language->get();
 
 //handle enable toggle
-	$dialplan_uuid = check_str($_REQUEST['id']);
-	$dialplan_enabled = check_str($_REQUEST['enabled']);
-	if ($dialplan_uuid != '' && $dialplan_enabled != '') {
-		$sql = "update v_dialplans set ";
-		$sql .= "dialplan_enabled = '".$dialplan_enabled."' ";
-		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-		$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
-		message::add($text['message-update']);
+	$dialplan_uuid = $_REQUEST['id'];
+	$dialplan_enabled = $_REQUEST['enabled'];
+	if (is_uuid($dialplan_uuid) && $dialplan_enabled != '') {
+		//build array
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
+			$array['dialplans'][0]['app_uuid'] = '4b821450-926b-175a-af93-a03c441818b1';
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add('dialplan_edit', 'temp');
+		//execute update
+			$database = new database;
+			$database->app_name = 'time_conditions';
+			$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+			$database->save($array);
+			unset($array);
+		//revoke temporary permissions
+			$p->delete('dialplan_edit', 'temp');
+		//set message
+			message::add($text['message-update']);
+		//redirect
+			header('Location: time_conditions.php');
+			exit;
 	}
 
 //set the http values as php variables
-	$search = check_str($_REQUEST["search"]);
-	$order_by = check_str($_REQUEST["order_by"]);
-	$order = check_str($_REQUEST["order"]);
-	$dialplan_context = check_str($_REQUEST["dialplan_context"]);
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
+	$search = $_REQUEST["search"];
+	$order_by = $_REQUEST["order_by"];
+	$order = $_REQUEST["order"];
+	$dialplan_context = $_REQUEST["dialplan_context"];
+	$app_uuid = $_REQUEST["app_uuid"];
 
 //includes
 	require_once "resources/header.php";
@@ -73,35 +86,28 @@
 	$row_style["1"] = "row_style1";
 
 //get the number of rows in the dialplan
-	$sql = "select count(*) as num_rows from v_dialplans ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	$sql = "select count(*) from v_dialplans ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= " 	dialplan_context like '%".$search."%' ";
-		$sql .= " 	or dialplan_name like '%".$search."%' ";
-		$sql .= " 	or dialplan_number like '%".$search."%' ";
-		$sql .= " 	or dialplan_continue like '%".$search."%' ";
+		$sql .= " 	lower(dialplan_context) like :search ";
+		$sql .= " 	or lower(dialplan_name) like :search ";
+		$sql .= " 	or lower(dialplan_number) like :search ";
+		$sql .= " 	or lower(dialplan_continue) like :search ";
 		if (is_numeric($search)) {
-			$sql .= " 	or dialplan_order = '".$search."' ";
+			$sql .= " 	or dialplan_order = :search ";
 		}
-		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
-		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= " 	or lower(dialplan_enabled) like :search ";
+		$sql .= " 	or lower(dialplan_description) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
-	unset($prep_statement, $result);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
+//prepare to page data
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
 	if (strlen($app_uuid) > 0) { $param = "&app_uuid=".$app_uuid; }
@@ -111,29 +117,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the data
-	$sql = "select * from v_dialplans ";
-	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= " 	dialplan_context like '%".$search."%' ";
-		$sql .= " 	or dialplan_name like '%".$search."%' ";
-		$sql .= " 	or dialplan_number like '%".$search."%' ";
-		$sql .= " 	or dialplan_continue like '%".$search."%' ";
-		if (is_numeric($search)) {
-			$sql .= " 	or dialplan_order = '".$search."' ";
-		}
-		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
-		$sql .= " 	or dialplan_description like '%".$search."%' ";
-		$sql .= ") ";
-	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; } else { $sql .= "order by dialplan_order asc, dialplan_name asc "; }
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by dialplan_order asc, dialplan_name asc ";
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$dialplans = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -147,7 +136,7 @@
 	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
 	echo "		<form name='frm_search' method='get' action=''>\n";
 	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
-	if (strlen($app_uuid) > 0) {
+	if (is_uuid($app_uuid)) {
 		echo "		<input type='hidden' class='txt' name='app_uuid' value='".escape($app_uuid)."'>";
 	}
 	if (strlen($order_by) > 0) {
@@ -173,12 +162,14 @@
 	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('dialplan_delete') && $result_count > 0) {
+	if (permission_exists('time_condition_delete') && is_array($dialplans)) {
 		echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
 	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
-	echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	if (permission_exists('time_condition_context')) {
+		echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	}
 	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, $app_uuid, "style='text-align: center;'", (($search != '') ? "search=".$search : null));
 	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, $app_uuid, "style='text-align: center;'", (($search != '') ? "search=".$search : null));
 	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
@@ -192,8 +183,8 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
+	if (is_array($dialplans)) {
+		foreach($dialplans as $row) {
 			$app_uuid = $row['app_uuid'];
 
 			$tr_link = "href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."'";
@@ -212,7 +203,9 @@
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".((strlen($row['dialplan_number']) > 0) ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['dialplan_context'])."</td>\n";
+			if (permission_exists('time_condition_context')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['dialplan_context'])."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['dialplan_order'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>";
 			echo "		<a href='?id=".$row['dialplan_uuid']."&enabled=".(($row['dialplan_enabled'] == 'true') ? 'false' : 'true').(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null).(($search != '') ? "&search=".$search : null).(($order_by != '') ? "&order_by=".escape($order_by)."&order=".escape($order) : null)."'>".ucwords(escape($row['dialplan_enabled']))."</a>\n";
@@ -227,10 +220,10 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($dialplans, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='8'>\n";

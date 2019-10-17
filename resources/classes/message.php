@@ -27,29 +27,33 @@
 
 if (!class_exists('message')) {
 	class message {
-		
+
 		static function add($message, $mood = NULL, $delay = NULL) {
 			$mood = $mood ?: 'positive';
 			$delay = $delay ?: (1000 * (float) $_SESSION['theme']['message_delay']['text']);
 			$_SESSION["messages"][$mood]['message'][] = $message;
 			$_SESSION["messages"][$mood]['delay'][] = $delay;
 		}
-		
+
+		static function count() {
+			return is_array($_SESSION["messages"]) ? sizeof($_SESSION["messages"]) : 0;
+		}
+
 		static function html($clear_messages = true, $spacer = "") {
 			$html = "${spacer}//render the messages\n";
 			$spacer .="\t";
-			if (strlen($_SESSION['message']) > 0) {
+			if (is_string($_SESSION['message']) && strlen(trim($_SESSION['message'])) > 0) {
 				self::add($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 				unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 			}
-			if(count($_SESSION['messages']) > 0 ) {
+			if (is_array($_SESSION['messages']) && count($_SESSION['messages']) > 0 ) {
 				foreach ($_SESSION['messages'] as $message_mood => $message) {
 					$message_text = str_replace(array("\r\n", "\n", "\r"),'\\n',addslashes(join('<br/>', $message['message'])));
 					$message_delay = array_sum($message['delay'])/count($message['delay']);
 					$html .= "${spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
 				}
 			}
-			if($clear_messages) {
+			if ($clear_messages) {
 				unset($_SESSION['messages']);
 			}
 			return $html;

@@ -18,25 +18,26 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-		$conference_profile_uuid = check_str($_GET["conference_profile_uuid"]);
-	}
-
 //delete the data
-	if (strlen($id) > 0) {
+	if (is_uuid($_GET["id"]) && is_uuid($_GET["conference_profile_uuid"])) {
+
+		$conference_profile_param_uuid = $_GET["id"];
+		$conference_profile_uuid = $_GET["conference_profile_uuid"];
+
 		//delete conference_profile_param
-			$sql = "delete from v_conference_profile_params ";
-			$sql .= "where conference_profile_param_uuid = '$id' ";
-			//$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['conference_profile_params'][0]['conference_profile_param_uuid'] = $conference_profile_param_uuid;
+
+			$database = new database;
+			$database->app_name = 'conference_profiles';
+			$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
-	header('Location: conference_profile_param_edit.php?id='.$conference_profile_uuid);
+	header('Location: conference_profile_edit.php?id='.$conference_profile_uuid);
 
 ?>

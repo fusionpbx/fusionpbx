@@ -106,6 +106,7 @@
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->
 		<param name="NDLB-received-in-nat-reg-contact" value="true" enabled="false"/>
 		<param name="auth-calls" value="true"/>
+		<param name="auth-subscriptions" value="true"/>
 		<!-- on authed calls, authenticate *all* the packets not just invite -->
 		<param name="auth-all-packets" value="false"/>
 		<param name="ext-rtp-ip" value="$${external_rtp_ip}" enabled="false"/>

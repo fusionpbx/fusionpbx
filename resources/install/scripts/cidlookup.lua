@@ -22,9 +22,10 @@
 --	Contributor(s):
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 --	Riccardo Granchi <riccardo.granchi@nems.it>
+--	Adrian Fretwell <adrian.fretwell@topgreen.co.uk>
 --
 --	add this in Inbound Routes before transfer to use it:
---	action set caller_id_name=${luarun cidlookup.lua ${uuid}}
+--	action set caller_id_name=${luarun cidlookup.lua ${uuid} ${domain_uuid}}
 
 --define the trim function
 	require "resources.functions.trim"
@@ -35,6 +36,7 @@
 --create the api object
 	api = freeswitch.API();
 	uuid = argv[1];
+	domain_uuid = argv[2];
 	if not uuid or uuid == "" then return end;
 	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number");
 	callee = api:executeString("uuid_getvar " .. uuid .. " destination_number");
@@ -78,16 +80,23 @@
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
 	if (database["type"] == "mysql") then
-		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
+		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family) AS name FROM v_contacts ";
 	elseif (database["type"] == "pgsql") then
-		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_label || ')' END AS name FROM v_contacts ";
+		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family END AS name FROM v_contacts ";
 	else
-		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
+		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family AS name FROM v_contacts ";
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
-	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
-	sql = sql .. "WHERE  v_contact_phones.phone_number = :caller "
-	local params = {caller = caller}
+	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid AND v_destinations.destination_number = :caller";
+	
+	local params;
+	if ((not domain_uuid) or (domain_uuid == "")) then
+		sql = sql .. "WHERE  v_contact_phones.phone_number = :caller ";
+		params = {caller = caller};
+	else
+		sql = sql .. "WHERE  v_contacts.domain_uuid = :domain_uuid and v_contact_phones.phone_number = :caller ";
+		params = {caller = caller, domain_uuid = domain_uuid};
+	end
 
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[cidlookup] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
@@ -105,7 +114,7 @@
 
 --check if there is a record, if it not then use cidlookup
 	if ((name == nil) or (string.len(name) == 0)) then
-		cidlookup_exists = api:executeString("module_exists cidlookup");
+		cidlookup_exists = api:executeString("module_exists mod_cidlookup");
 		if (cidlookup_exists == "true") then
 		    name = api:executeString("cidlookup " .. caller);
 		end
@@ -113,6 +122,8 @@
 
 --set the caller id name
 	if ((name ~= nil) and (string.len(name) > 0)) then
+		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates false");
+	
 		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
 		api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 

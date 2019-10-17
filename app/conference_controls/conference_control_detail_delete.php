@@ -18,25 +18,26 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-		$conference_control_uuid = check_str($_GET["conference_control_uuid"]);
-	}
-
 //delete the data
-	if (strlen($id) > 0) {
+	if (is_uuid($_GET["id"]) && is_uuid($_GET["conference_control_uuid"])) {
+
+		$conference_control_detail_uuid = $_GET["id"];
+		$conference_control_uuid = $_GET["conference_control_uuid"];
+
 		//delete conference_control_detail
-			$sql = "delete from v_conference_control_details ";
-			$sql .= "where conference_control_detail_uuid = '$id' ";
-			//$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['conference_control_details'][0]['conference_control_detail_uuid'] = $conference_control_detail_uuid;
+
+			$database = new database;
+			$database->app_name = 'conference_controls';
+			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
-	header('Location: conference_control_detail_edit.php?id='.$conference_control_uuid);
+	header('Location: conference_control_edit.php?id='.$conference_control_uuid);
 
 ?>

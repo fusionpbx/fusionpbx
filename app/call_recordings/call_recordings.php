@@ -78,6 +78,9 @@
 				$obj->delete($call_recordings);
 			//delete message
 				message::add($text['message-delete']);
+			//redirect
+				header('Location: call_recordings.php');
+				exit;
 		}
 	}
 
@@ -86,41 +89,30 @@
 	require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = check_str($_REQUEST["order_by"]);
-	$order = check_str($_REQUEST["order"]);
+	$order_by = $_REQUEST["order_by"] != '' ? $_REQUEST["order_by"] : 'call_recording_date';
+	$order = $_REQUEST["order"] != '' ? $_REQUEST["order"] : 'desc';
 
-//set the defaults
-	if (strlen($order_by) == 0) { 
-		$order_by = 'call_recording_date';
-		$order = 'desc';
-	}
-
-//add the search term
-	$search = strtolower(check_str($_REQUEST["search"]));
+	//add the search term
+	$search = strtolower($_REQUEST["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(call_recording_name) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_path) like '%".$search."%' ";
-		$sql_search .= "or lower(call_direction) like '%".$search."%' ";
-		$sql_search .= "or lower(call_recording_description) like '%".$search."%' ";
+		$sql_search .= "lower(call_recording_name) like :search ";
+		$sql_search .= "or lower(call_recording_path) like :search ";
+		$sql_search .= "or cast(call_recording_date as text) like :search ";
+		$sql_search .= "or lower(call_direction) like :search ";
+		$sql_search .= "or lower(call_recording_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
-	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql = "select count(call_recording_uuid) from v_call_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -132,14 +124,13 @@
 
 //get the list
 	$sql = "select * from v_call_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	$sql .= "order by $order_by $order ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
@@ -250,9 +241,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
 			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			//echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_length'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($row['call_recording_length'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_date'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_direction'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_recording_description'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -260,17 +251,17 @@
 				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			if (permission_exists('call_recording_edit')) {
-				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
+				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='fas fa-pencil-alt'></span></input>\n";
 			}
 			if (permission_exists('call_recording_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>\n";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete' onclick=\"$('#checkbox_".$x."').prop('checked', true);\"><span class='fas fa-minus'></span></button>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";
@@ -278,7 +269,7 @@
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_recording_add')) {
 		echo 		"<a href='call_recording_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -293,6 +284,12 @@
 	echo "</tr>\n";
 	echo "</table>";
 	echo "</form>\n";
+
+	if (strlen($paging_controls) > 0) {
+		echo "<br />";
+		echo $paging_controls."\n";
+	}
+
 	echo "<br /><br />";
 
 //include the footer

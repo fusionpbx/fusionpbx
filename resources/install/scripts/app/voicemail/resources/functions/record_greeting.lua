@@ -36,8 +36,10 @@
 		--get the voicemail settings
 			local settings = Settings.new(db, domain_name, domain_uuid)
 
-		--set the maximum greeeting length
-			local max_len_seconds = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
+		--set the maximum greeting length
+			local greeting_max_length = settings:get('voicemail', 'greeting_max_length', 'numeric') or 90;
+			local greeting_silence_threshold = settings:get('voicemail', 'greeting_silence_threshold', 'numeric') or 200;
+			local greeting_silence_seconds = settings:get('voicemail', 'greeting_silence_seconds', 'numeric') or 3;
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
@@ -80,8 +82,8 @@
 							if (session:ready()) then
 								silence_seconds = 5;
 								mkdir(voicemail_dir.."/"..voicemail_id);
-								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-								result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", max_len_seconds, record_silence_threshold, silence_seconds);
+								-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_seconds)
+								result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".tmp.wav", greeting_max_length, greeting_silence_threshold, greeting_silence_seconds);
 								--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 							end
 					end

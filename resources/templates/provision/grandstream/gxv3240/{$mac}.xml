@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
 <config version="1">
@@ -57,10 +57,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P48></P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!-- Secondary Outbound Proxy -->
-<P2333></P2333>
+<P2333>{$account.2.outbound_proxy_secondary}</P2333>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -90,7 +90,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- Re-register before Expiration (s). Default Value is 0 -->
 <!-- Number : 0 -->
@@ -286,7 +286,39 @@
 <!-- Enable SCA (Shared Call Appearance) -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1363>0</P1363>
+<!-- # <P1363>0</P1363> -->
+
+    <!-- Set $fixed_keys variable below and the rest should work -->
+
+{$fixed_keys=5}
+{if $template == "grandstream/gxp3240"}{$fixed_keys=5}{/if}
+<!-- Detected {$template} with {$fixed_keys} fixed keys -->
+{$start_id=1363}
+{assign var=key_types value=["none"=>-1,"line"=>0,"shared line"=>1,"speed dial"=>10, "blf"=>11, "presence watcher"=>12, "eventlist blf"=>13,"speed dial active"=>14,"dial dtmf"=>15,"voicemail"=>16,"call return"=>17,"transfer"=>18,"call park"=>19,"intercom"=>20,"ldap search"=>21,"multicast paging"=>23,"record"=>24,"call log"=>25,"monitored call park"=>26,"menu"=>27]}
+
+{for $line=1 to 6}
+{$pid=$line*2-2}
+{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
+{if $line <= $fixed_keys}
+<P{$start_id+$pid}>{$key_types[$keys.line.$line.device_key_type]}</P{$start_id+$pid}>
+{else}
+<P{$start_id+$pid}>{$key_types[$keys.line.$line.device_key_type]-10}</P{$start_id+$pid}>
+{/if}
+<P{$start_id+$pid+1}>{$keys.line.$line.device_key_line}</P{$start_id+$pid+1}>
+<P{$start_id+$pid+102}>{$keys.line.$line.device_key_label}</P{$start_id+$pid+102}>
+<P{$start_id+$pid+103}>{$keys.line.$line.device_key_value}</P{$start_id+$pid+103}>
+{else}
+{if $line <= $fixed_keys}
+<P{$start_id+$pid}>0</P{$start_id+$pid}>
+<P{$start_id+$pid+1}>{$line-1}</P{$start_id+$pid+1}>
+<P{$start_id+$pid+102}></P{$start_id+$pid+102}>
+<P{$start_id+$pid+103}></P{$start_id+$pid+103}>
+{else}
+<P{$start_id+$pid}>-1</P{$start_id+$pid}>
+{/if}
+{/if}
+
+{/for}
 
 <!-- Enable BargeIn -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
@@ -750,10 +782,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P403></P403>
+<P403>{$account.2.outbound_proxy_primary}</P403>
 
 <!-- Secondary Outbound Proxy -->
-<P2433></P2433>
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -780,7 +812,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P412>60</P412>
+<P412>{$account.2.register_expires}</P412>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -1388,10 +1420,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P503></P503>
+<P503>{$account.3.outbound_proxy_primary}</P503>
 
 <!-- Secondary Outbound Proxy -->
-<P2533></P2533>
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
 
 <!-- DNS Mode  0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- Number: 0, 1, 2. -->
@@ -1418,7 +1450,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P512>60</P512>
+<P512>{$account.3.register_expires}</P512>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -2026,10 +2058,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P603></P603>
+<P603>{$account.4.outbound_proxy_primary}</P603>
 
 <!-- Secondary Outbound Proxy -->
-<P2633></P2633>
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -2056,7 +2088,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P612>60</P612>
+<P612>{$account.4.register_expires}</P612>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -2668,10 +2700,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P1703></P1703>
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
 
 <!-- Secondary Outbound Proxy -->
-<P2733></P2733>
+<P2733>{$account.5.outbound_proxy_secondary}</P2733>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2. -->
@@ -2698,7 +2730,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1712>60</P1712>
+<P1712>{$account.5.register_expires}</P1712>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -3308,10 +3340,10 @@
 <!-- ###################################################################### -->
 
 <!-- Outbound Proxy -->
-<P1803></P1803>
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
 
 <!-- Secondary Outbound Proxy -->
-<P2833></P2833>
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -3338,7 +3370,7 @@
 
 <!-- Register Expiration (m). In minutes. Default value is 60 -->
 <!-- Number: 0 - 64800 -->
-<P1812>60</P1812>
+<P1812>{$account.6.register_expires}</P1812>
 
 <!-- Register before Expiration (s). Default value is 0 -->
 <!-- Number -->
@@ -4755,13 +4787,13 @@
 
 <!-- Firmware Upgrade Via. 0 - TFTP, 1 - HTTP, 2 - HTTPS, 3 - Manual Upload. Default value is 1. -->
 <!-- Number: 0, 1, 2, 3 -->
-<P6767>1</P6767>
+<P6767>2</P6767>
 
 <!-- Firmware Server Path -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxv3240/{$firmware_version}</P192>
+<P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxv3240</P192>
+<P192>{$grandstream_firmware_path}/</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}

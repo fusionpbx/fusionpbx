@@ -17,20 +17,17 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
 	the Initial Developer. All Rights Reserved.
 */
 
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('bridge_add') || permission_exists('bridge_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('bridge_add') && !permission_exists('bridge_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -40,10 +37,10 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$bridge_uuid = check_str($_REQUEST["id"]);
-		$id = check_str($_REQUEST["id"]);
+		$bridge_uuid = $_REQUEST["id"];
+		$id = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -51,18 +48,42 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$bridge_uuid = check_str($_POST["bridge_uuid"]);
-		$bridge_name = check_str($_POST["bridge_name"]);
-		$bridge_destination = check_str($_POST["bridge_destination"]);
-		$bridge_enabled = check_str($_POST["bridge_enabled"]);
+		$bridge_uuid = $_POST["bridge_uuid"];
+		$bridge_name = $_POST["bridge_name"];
+		$bridge_destination = $_POST["bridge_destination"];
+		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_description = $_POST["bridge_description"];
 	}
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//delete the bridge
+			if (permission_exists('bridge_delete')) {
+				if ($_POST['action'] == 'delete' && is_uuid($bridge_uuid)) {
+					//prepare
+						$bridges[0]['checked'] = 'true';
+						$bridges[0]['bridge_uuid'] = $bridge_uuid;
+					//delete
+						$obj = new bridges;
+						$obj->delete($bridges);
+					//redirect
+						header('Location: bridges.php');
+						exit;
+				}
+			}
+
 		//get the uuid from the POST
 			if ($action == "update") {
-				$bridge_uuid = check_str($_POST["bridge_uuid"]);
+				$bridge_uuid = $_POST["bridge_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: bridges.php');
+				exit;
 			}
 
 		//check for all required data
@@ -83,33 +104,25 @@
 				return;
 			}
 
-		//set the domain_uuid
-				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
 		//add the bridge_uuid
-			if (strlen($_POST["bridge_uuid"]) == 0) {
+			if (strlen($bridge_uuid) == 0) {
 				$bridge_uuid = uuid();
-				$_POST["bridge_uuid"] = $bridge_uuid;
 			}
 
 		//prepare the array
-			$array['bridges'][0] = $_POST;
+			$array['bridges'][0]['bridge_uuid'] = $bridge_uuid;
+			$array['bridges'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+			$array['bridges'][0]['bridge_name'] = $bridge_name;
+			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
+			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
+			$array['bridges'][0]['bridge_description'] = $bridge_description;
 
 		//save to the data
 			$database = new database;
 			$database->app_name = 'bridges';
-			$database->app_uuid = null;
-			if (strlen($bridge_uuid) > 0) {
-				$database->uuid($bridge_uuid);
-			}
+			$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 			$database->save($array);
 			$message = $database->message;
-
-		//debug info
-			//echo "<pre>";
-			//print_r($message);
-			//echo "</pre>";
-			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -119,27 +132,31 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: bridge_edit.php?id='.$bridge_uuid);
+				header('Location: bridges.php');
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$bridge_uuid = check_str($_GET["id"]);
+		$bridge_uuid = $_GET["id"];
 		$sql = "select * from v_bridges ";
-		$sql .= "where bridge_uuid = '$bridge_uuid' ";
-		//$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where bridge_uuid = :bridge_uuid ";
+		$parameters['bridge_uuid'] = $bridge_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
+			$bridge_description = $row["bridge_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -151,8 +168,9 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-bridge']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='bridges.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<a href='bridges.php'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
+	echo "	<button type='submit' class='btn btn-default' style='margin-right: 15px;' name='action' value='delete' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }\">".$text['button-delete']."</button>";
+	echo "	<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -184,7 +202,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='bridge_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($bridge_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -203,10 +220,23 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-bridge_description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-bridge_description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br />\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	echo "			<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

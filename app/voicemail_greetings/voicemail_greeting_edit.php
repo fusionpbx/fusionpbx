@@ -43,15 +43,15 @@
 	$text = $language->get();
 
 //get greeting id
-	if (isset($_REQUEST["id"])) {
-		$voicemail_greeting_uuid = check_str($_REQUEST["id"]);
+	if (is_uuid($_REQUEST["id"])) {
+		$voicemail_greeting_uuid = $_REQUEST["id"];
 	}
 
 //get the form value and set to php variables
-	$voicemail_id = check_str($_REQUEST["voicemail_id"]);
+	$voicemail_id = $_REQUEST["voicemail_id"];
 	if (count($_POST) > 0) {
-		$greeting_name = check_str($_POST["greeting_name"]);
-		$greeting_description = check_str($_POST["greeting_description"]);
+		$greeting_name = $_POST["greeting_name"];
+		$greeting_description = $_POST["greeting_description"];
 
 		//clean the name
 		$greeting_name = str_replace("'", "", $greeting_name);
@@ -59,7 +59,15 @@
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get greeting uuid to edit
-		$voicemail_greeting_uuid = check_str($_POST["voicemail_greeting_uuid"]);
+		$voicemail_greeting_uuid = $_POST["voicemail_greeting_uuid"];
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../voicemails/voicemails.php');
+			exit;
+		}
 
 	//check for all required data
 		$msg = '';
@@ -78,41 +86,45 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//update the database
-	if ($_POST["persistformvar"] != "true") {
-		if (permission_exists('voicemail_greeting_edit')) {
-			//update the database with the new data
-				$sql = "update v_voicemail_greetings set ";
-				$sql .= "greeting_name = '".$greeting_name."', ";
-				$sql .= "greeting_description = '".$greeting_description."' ";
-				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-			//redirect the user
-				message::add($text['message-update']);
-				header("Location: voicemail_greetings.php?id=".$voicemail_id);
-				return;
-		} //if (permission_exists('voicemail_greeting_edit')) {
-	} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	if ($_POST["persistformvar"] != "true" && permission_exists('voicemail_greeting_edit')) {
+		//build update array
+			$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+			$array['voicemail_greetings'][0]['greeting_name'] = $greeting_name;
+			$array['voicemail_greetings'][0]['greeting_description'] = $greeting_description;
+		//execute update
+			$database = new database;
+			$database->app_name = 'voicemail_greetings';
+			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
+			$database->save($array);
+			unset($array);
+		//set message
+			message::add($text['message-update']);
+		//redirect
+			header("Location: voicemail_greetings.php?id=".$voicemail_id);
+			exit;
+	}
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$voicemail_greeting_uuid = check_str($_GET["id"]);
+		$voicemail_greeting_uuid = $_GET["id"];
 		$sql = "select * from v_voicemail_greetings ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_name = $row["greeting_name"];
 			$greeting_description = $row["greeting_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	$document['title'] = $text['label-edit'];
@@ -159,6 +171,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='voicemail_greeting_uuid' value='".$voicemail_greeting_uuid."'>\n";
 	echo "			<input type='hidden' name='voicemail_id' value='".$voicemail_id."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

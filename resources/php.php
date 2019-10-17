@@ -26,7 +26,6 @@
 
 	//session handling
 		//start the session
-			ini_set("session.cookie_httponly", True);
 			if (function_exists('session_start')) { 
 				if (!isset($_SESSION)) {
 					session_start();
@@ -51,13 +50,13 @@
 		if (get_magic_quotes_gpc()) {
 			$in = array(&$_GET, &$_POST, &$_REQUEST, &$_COOKIE);
 			while (list($k,$v) = each($in)) {
-					foreach ($v as $key => $val) {
-							if (!is_array($val)) {
-									$in[$k][$key] = stripslashes($val);
-									continue;
-							}
-							$in[] =& $in[$k][$key];
+				foreach ($v as $key => $val) {
+					if (!is_array($val)) {
+							$in[$k][$key] = stripslashes($val);
+							continue;
 					}
+					$in[] =& $in[$k][$key];
+				}
 			}
 			unset($in);
 		}

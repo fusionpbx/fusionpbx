@@ -21,7 +21,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,118 +37,78 @@ License: MPL (Mozilla Public License)
 
 //-----------------------------------------------------------------------------------
 
-EditArea
-http://www.cdolivet.com/editarea/editarea/docs/license.html
-License BSD/Apache/LGPL
-
-//-----------------------------------------------------------------------------------
-
 PHPMailer
 http://code.google.com/a/apache-extras.org/p/phpmailer/
 License: LGPL
 
 //-----------------------------------------------------------------------------------
 
-TinyMCE
-http://tinymce.moxiecode.com/license.php
-License: LGPL
-
-//-----------------------------------------------------------------------------------
-
-phpsvnclient
-http://code.google.com/p/phpsvnclient/
-License: New BSD License
-
-//-----------------------------------------------------------------------------------
-
 POP3Class
 http://www.phpclasses.org/package/2-PHP-Access-to-e-mail-mailboxes-using-the-POP3-protocol.html
-
 Copyright (c) 1999-2005, Manuel Lemos
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Manuel Lemos nor the names of its
-      contributors may be used to endorse or promote products derived from
-      this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License: BSD
 
 //-----------------------------------------------------------------------------------
 
-Copyright (c) 2007 reCAPTCHA -- http://recaptcha.net
-AUTHORS:
-  Mike Crawford
-  Ben Maurer
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+jQuery
+https://jquery.com/
+Copyright 2019 The jQuery Foundation
+License: MIT
+https://jquery.org/license/#source-code
 
 //-----------------------------------------------------------------------------------
 
-EmailAddressValidator Class
-http://code.google.com/p/php-email-address-validation/
-
-Released under New BSD license
-http://www.opensource.org/licenses/bsd-license.php
+Bootstrap
+https://getbootstrap.com/
+Copyright (c) 2011-2019 Twitter, Inc.
+Copyright (c) 2011-2019 The Bootstrap Authors
+License: MIT
+https://github.com/twbs/bootstrap/blob/v4.3.1/LICENSE
 
 //-----------------------------------------------------------------------------------
 
-Copyright (c) 2011 John Resig, http://jquery.com/
+FontAwesome
+https://fontawesome.com
+Copyright Fonticons, Inc.
+Icon License: CC BY 4.0
+Font License: SIL OFL 1.1
+Code License: MIT
+https://fontawesome.com/license/free
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+//-----------------------------------------------------------------------------------
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Tempus Dominus (jQuery plugin)
+https://tempusdominus.github.io/bootstrap-4/
+Copyright (c) 2016 Tempus Dominus
+License: MIT
+https://github.com/tempusdominus/bootstrap-4/blob/master/LICENSE
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//-----------------------------------------------------------------------------------
+
+Ace (Ajax.org Cloud9 Editor)
+https://ace.c9.io/
+Copyright (c) 2010, Ajax.org B.V.
+License: BSD
+https://github.com/ajaxorg/ace/blob/master/LICENSE
+
+//-----------------------------------------------------------------------------------
+
+Moment.js
+https://momentjs.com/
+Copyright (c) JS Foundation and other contributors
+License: MIT
+https://github.com/moment/moment/blob/develop/LICENSE
+
+//-----------------------------------------------------------------------------------
+
+jQuery Password Strength Meter
+https://github.com/ablanco/jquery.pwstrength.bootstrap
+Copyright (c) 2010 Tane Piper <github@digitalspaghetti.me.uk>
+License: MIT
+https://github.com/ablanco/jquery.pwstrength.bootstrap/blob/master/MIT-LICENSE.txt
 
 //-----------------------------------------------------------------------------------
 
 */
+
 ?>

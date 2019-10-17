@@ -43,12 +43,10 @@
 	$text = $language->get();
 
 //get the ids
-	if (is_array($_REQUEST) && sizeof($_REQUEST) > 0) {
-
+	if (is_array($_REQUEST) && @sizeof($_REQUEST) > 0) {
 		$voicemail_uuids = $_REQUEST["id"];
 		foreach($voicemail_uuids as $voicemail_uuid) {
-			$voicemail_uuid = check_str($voicemail_uuid);
-			if ($voicemail_uuid != '') {
+			if (is_uuid($voicemail_uuid)) {
 				//delete voicemail messages
 					require_once "resources/classes/voicemail.php";
 					$voicemail = new voicemail;

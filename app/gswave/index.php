@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_edit')) {
+	if (permission_exists('gswave_view')) {
 		//access granted
 	}
 	else {
@@ -49,29 +49,30 @@
 
 //get the extensions
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	$sql .= "order by extension asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the extension
 	if (is_uuid($_GET['id'])) {
 		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension_uuid = '".$extension_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$extension = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and extension_uuid = :extension_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['extension_uuid'] = $extension_uuid;
+		$database = new database;
+		$extension = $database->select($sql, $parameters, 'all');
 		$field = $extension[0];
-		unset ($prep_statement, $sql);
+		unset($sql, $parameters);
 	}
 
 //get the username
 	$username = $field['extension'];
-	if (isset($row['number_alias']) && strlen($row['number_alias']) > 0) {
+	if (isset($field['number_alias']) && strlen($field['number_alias']) > 0) {
 		$username = $field['number_alias'];
 	}
 
@@ -149,14 +150,14 @@
 	//echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
 	echo "<td width='70%' colspan='2' align='left' valign='top'>\n";
 	echo "	<br />\n";
-	echo "	<a href=\"https://play.google.com/store/apps/details?id=com.grandstream.wave\" target=\"_blank\"><img src=\"/app/gswave/resources/images/google_play.png\" style=\"height:103px;\"/></a>";
+	echo "	<a href=\"https://play.google.com/store/apps/details?id=com.grandstream.wave\" target=\"_blank\"><img src=\"/app/gswave/resources/images/google_play.png\" style=\"height:71px;\"/></a>";
 	echo "	<a href=\"https://itunes.apple.com/us/app/grandstream-wave/id1029274043?ls=1&mt=8\" target=\"_blank\"><img src=\"/app/gswave/resources/images/apple_app_store.png\" style=\"height:71px;\" /></a>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "</table>";
 	echo "</form>";
-	//echo "<br />";
+	echo "<br />";
 
 //stream the file
 	if (is_uuid($_GET['id'])) {

@@ -39,45 +39,52 @@ else {
 	$text = $language->get();
 
 //get the http get value and set it as a php variable
-	if (count($_GET)>0) {
-		$fax_uuid = check_str($_GET["id"]);
-	}
+	$fax_uuid = $_GET["id"];
 
 //delete the fax extension
-	if (strlen($fax_uuid) > 0) {
+	if (is_uuid($fax_uuid)) {
 
 		//get the dialplan uuid
-			$sql = "select * from v_fax ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and fax_uuid = '$fax_uuid' ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-				$dialplan_uuid = $row['dialplan_uuid'];
-			}
+			$sql = "select dialplan_uuid from v_fax ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and fax_uuid = :fax_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['fax_uuid'] = $fax_uuid;
+			$database = new database;
+			$dialplan_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 		//delete the fax entry
-			$sql = "delete from v_fax ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and fax_uuid = '$fax_uuid' ";
-			$db->query($sql);
-			unset($sql);
+			$array['fax'][0]['fax_uuid'] = $fax_uuid;
+			$array['fax'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-		//delete the dialplan entry
-			$sql = "delete from v_dialplans ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			//echo $sql."<br>\n";
-			$db->query($sql);
-			unset($sql);
+		if (is_uuid($dialplan_uuid)) {
+			//delete the dialplan entry
+				$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-		//delete the dialplan details
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-			//echo $sql."<br>\n";
-			$db->query($sql);
-			unset($sql);
+			//delete the dialplan details
+				$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
+
+		//grant temp permissions
+			$p = new permissions;
+			$p->add('fax_delete', 'temp');
+			$p->add('dialplan_delete', 'temp');
+			$p->add('dialplan_detail_delete', 'temp');
+
+		//execute delete
+			$database = new database;
+			$database->app_name = 'fax';
+			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
+			$database->delete($array);
+			unset($array);
+
+		//revoke temp permissions
+			$p->delete('fax_delete', 'temp');
+			$p->delete('dialplan_delete', 'temp');
+			$p->delete('dialplan_detail_delete', 'temp');
 
 		//syncrhonize configuration
 			save_dialplan_xml();
@@ -88,10 +95,12 @@ else {
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$_SESSION["context"]);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: fax.php");
 	return;
 

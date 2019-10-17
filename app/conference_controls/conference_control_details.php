@@ -19,41 +19,34 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = check_str($_GET["search"]);
+	$search = $_GET["search"];
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "control_digits like '%".$search."%'";
-		$sql_search .= "or control_action like '%".$search."%'";
-		$sql_search .= "or control_data like '%".$search."%'";
-		$sql_search .= "or control_enabled like '%".$search."%'";
+		$sql_search .= "control_digits like :search";
+		$sql_search .= "or control_action like :search";
+		$sql_search .= "or control_data like :search";
+		$sql_search .= "or control_enabled like :search";
 		$sql_search .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows ";
+	$sql = "select count(*) ";
 	$sql .= "from v_conference_control_details ";
-	$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
-	//$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "where conference_control_uuid = :conference_control_uuid ";
+	//$sql .= "and domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-		}
-		else {
-				$num_rows = '0';
-		}
-	}
+	$parameters['conference_control_uuid'] = $conference_control_uuid;
+	//$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -65,15 +58,13 @@
 
 //get the list
 	$sql = "select * from v_conference_control_details ";
-	$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
-	//$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql .= "where conference_control_uuid = :conference_control_uuid ";
+	//$sql .= "and domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
 
 //alternate the row style
 	$c = 0;
@@ -101,7 +92,7 @@
 	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('conference_control_detail_add')) {
-		echo "<a href='conference_control_detail_edit.php?conference_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='conference_control_detail_edit.php?conference_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -109,7 +100,7 @@
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if (is_array($result)) {
+	if (is_array($result) && sizeof($result) != 0) {
 		foreach($result as $row) {
 			if (permission_exists('conference_control_detail_edit')) {
 				$tr_link = "href='conference_control_detail_edit.php?conference_control_uuid=".escape($row['conference_control_uuid'])."&id=".escape($row['conference_control_detail_uuid'])."'";
@@ -130,7 +121,7 @@
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
-		unset($sql, $result, $row_count);
+		unset($result);
 	} //end if results
 
 	echo "<tr>\n";
@@ -141,7 +132,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('conference_control_detail_add')) {
-		echo 		"<a href='conference_control_detail_edit.php?conference_control_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='conference_control_detail_edit.php?conference_control_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";

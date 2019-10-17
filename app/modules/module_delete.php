@@ -39,20 +39,26 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = $_GET["id"];
-	}
+	$module_uuid = $_GET["id"];
 
-if (strlen($id)>0) {
-	$sql = "delete from v_modules ";
-	$sql .= "where module_uuid = '$id' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	unset($sql);
+if (is_uuid($module_uuid)) {
+
+	//delete module
+		$array['modules'][0]['module_uuid'] = $module_uuid;
+
+		$database = new database;
+		$database->app_name = 'modules';
+		$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+		$database->delete($array);
+		unset($array);
+
+	//set message
+		message::add($text['message-delete']);
+
 }
 
-message::add($text['message-delete']);
-header("Location: modules.php");
-return;
+//redirect
+	header("Location: modules.php");
+	exit;
 
 ?>

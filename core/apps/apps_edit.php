@@ -39,9 +39,9 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$app_uuid = check_str($_REQUEST["id"]);
+		$app_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -49,15 +49,23 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$app_enabled = check_str($_POST["app_enabled"]);
+		$app_enabled = $_POST["app_enabled"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$app_uuid = check_str($_POST["app_uuid"]);
+		$app_uuid = $_POST["app_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: apps.php');
+			exit;
+		}
 
 	//check for all required data
 		//if (strlen($app_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
@@ -77,44 +85,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add") {
-				$sql = "insert into v_apps ";
-				$sql .= "(";
-				$sql .= "app_uuid ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."' ";
-				$sql .= ")";
-				//$db->exec(check_sql($sql));
-				unset($sql);
-
+				$array['apps'][0]['app_uuid'] = uuid();
 				message::add($text['message-add']);
-				header("Location: apps.php");
-				return;
-			} //if ($action == "add")
+			}
 
 			if ($action == "update") {
-				$sql = "update v_apps set ";
-				$sql .= "app_uuid = '$app_uuid' ";
-				$sql .= "where app_uuid = '$app_uuid'";
-				//$db->exec(check_sql($sql));
-				unset($sql);
-
+				$array['apps'][0]['app_uuid'] = $app_uuid;
 				message::add($text['message-update']);
-				header("Location: apps.php");
-				return;
-			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
 
-//show the header
-	require_once "resources/header.php";
-	if ($action == "update") {
-		$document['title'] = $text['title-app-edit'];
-	}
-	if ($action == "add") {
-		$document['title'] = $text['title-app-add'];
-	}
+			if (is_array($array) && sizeof($array) != 0) {
+				$database = new database;
+				$database->app_name = 'apps';
+				$database->app_uuid = 'd8704214-75a0-e52f-1336-f0780e29fef8';
+				$database->save($array);
+				unset($array);
+			}
+
+			header("Location: apps.php");
+			exit;
+		}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
@@ -135,6 +126,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$description = $row['description']['en-us'];
 			}
 		}
+	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//show the header
+	require_once "resources/header.php";
+	if ($action == "update") {
+		$document['title'] = $text['title-app-edit'];
+	}
+	if ($action == "add") {
+		$document['title'] = $text['title-app-add'];
 	}
 
 //show the content
@@ -203,6 +207,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='app_uuid' value='$app_uuid'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

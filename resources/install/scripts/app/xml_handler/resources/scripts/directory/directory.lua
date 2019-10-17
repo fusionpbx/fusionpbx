@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2019 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -87,7 +87,7 @@
 		-- Make sance only for extensions with number_alias
 		--  false - you should register with AuthID=UserID=Extension (default)
 		--  true  - you should register with AuthID=Extension and UserID=Number Alias
-		-- 	also in this case you need 2 records in memcache for one extension
+		-- 	also in this case you need 2 records in cache for one extension
 			local DIAL_STRING_BASED_ON_USERID = xml_handler and xml_handler["reg_as_number_alias"]
 
 		-- Use number as presence_id
@@ -117,10 +117,10 @@
 		-- variable. So if we have no such variable we do not need build dial-string.
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
-				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
+				-- freeswitch.consoleLog("notice", "[xml_handler][directory] dialed_extension is null\n");
 				USE_FS_PATH = false;
 			else
-				-- freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
+				-- freeswitch.consoleLog("notice", "[xml_handler][directory] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 			-- verify from_user and number alias for this methods
@@ -150,15 +150,15 @@
 		-- get the cache. We can use cache only if we do not use `fs_path`
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
-				if cache.support() and domain_name then
+				if (cache.support() and domain_name) then
 					local key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
 					XML_STRING, err = cache.get(key);
 
 					if debug['cache'] then
 						if not XML_STRING then
-							freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
 						else
-							freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] get key: " .. key .. " pass!" .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " pass!" .. "\n")
 						end
 					end
 				end
@@ -167,7 +167,7 @@
 
 		--show the params in the console
 			--if (params:serialize() ~= nil) then
-			--	freeswitch.consoleLog("notice", "[xml_handler-directory.lua] Params:\n" .. params:serialize() .. "\n");
+			--	freeswitch.consoleLog("notice", "[xml_handler][directory] Params:\n" .. params:serialize() .. "\n");
 			--end
 
 			local loaded_from_db = false
@@ -227,7 +227,7 @@
 
 							--get the caller hostname
 								local_hostname = trim(api:execute("switchname", ""));
-								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
+								--freeswitch.consoleLog("notice", "[xml_handler][directory] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
 								require "resources.functions.file_exists";
@@ -259,7 +259,7 @@
 									database_hostname = row["hostname"];
 								end);
 								--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
-								--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
+								--freeswitch.consoleLog("notice", "[xml_handler][directory] database_hostname is " .. database_hostname .. "\n");
 
 							--hostname was not found set USE_FS_PATH to false to prevent a database_hostname concatenation error
 								if (database_hostname == nil) then
@@ -357,7 +357,7 @@
 								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
 									follow_me_uuid = row.follow_me_uuid;
 									follow_me_enabled = row.follow_me_enabled;
-									follow_me_destinations= row.follow_me_destinations;
+									--follow_me_destinations= row.follow_me_destinations;
 								end
 
 							-- check matching UserID and AuthName
@@ -389,16 +389,16 @@
 									--set the an alternative dial string if the hostnames don't match
 										if (USE_FS_PATH) then
 											if (local_hostname == database_hostname) then
-												freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
+												freeswitch.consoleLog("notice", "[xml_handler][directory] local_host and database_host are the same\n");
 											else
 												contact = trim(api:execute("sofia_contact", destination));
 												array = explode('/',contact);
 												local profile, proxy = array[2], database_hostname;
 												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
-												--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
+												--freeswitch.consoleLog("notice", "[xml_handler][directory] dial_string " .. dial_string .. "\n");
 											end
 										else
-											--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
+											--freeswitch.consoleLog("notice", "[xml_handler][directory] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
 									--show debug informationa
@@ -633,9 +633,9 @@
 							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
 								table.insert(xml, [[								<variable name="follow_me_enabled" value="]] .. follow_me_enabled .. [["/>]]);
 							end
-							if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
-								table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
-							end
+							--if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
+							--	table.insert(xml, [[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
+							--end
 							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
 								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end
@@ -659,21 +659,21 @@
 							if cache.support() then
 								local key = "directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
-									freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
 								end
 								local ok, err = cache.set(key, XML_STRING, expire["directory"])
 								if debug["cache"] and not ok then
-									freeswitch.consoleLog("warning", "[xml_handler-directory][memcache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
 								end
 
 								if sip_from_number ~= sip_from_user then
 									key = "directory:" .. sip_from_user .. "@" .. domain_name
 									if debug['cache'] then
-										freeswitch.consoleLog("notice", "[xml_handler-directory][memcache] set key: " .. key .. "\n")
+										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
 									end
 									ok, err = cache.set(key, XML_STRING, expire["directory"])
 									if debug["cache"] and not ok then
-										freeswitch.consoleLog("warning", "[xml_handler-directory][memcache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
 									end
 								end
 							end
@@ -716,7 +716,7 @@
 				--send to the console
 					if (debug["cache"]) then
 						if (XML_STRING) then
-							freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: memcache \n");
+							freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: cache \n");
 						end
 					end
 			end
@@ -731,6 +731,10 @@
 					<result status="not found" />
 				</section>
 			</document>]];
+		--set the cache
+			local key = "directory:" .. user .. "@" .. domain_name;
+			ok, err = cache.set(key, XML_STRING, expire["directory"]);
+			--freeswitch.consoleLog("notice", "[xml_handler] " .. user .. "@" .. domain_name .. "\n");
 	end
 
 --send the xml to the console

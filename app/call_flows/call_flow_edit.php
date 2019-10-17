@@ -44,9 +44,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$call_flow_uuid = check_str($_REQUEST["id"]);
+		$call_flow_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -56,21 +56,21 @@
 	if (is_array($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-			$call_flow_name = check_str($_POST["call_flow_name"]);
-			$call_flow_extension = check_str($_POST["call_flow_extension"]);
-			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
-			$call_flow_status = check_str($_POST["call_flow_status"]);
-			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
-			$call_flow_label = check_str($_POST["call_flow_label"]);
-			$call_flow_sound = check_str($_POST["call_flow_sound"]);
-			$call_flow_destination = check_str($_POST["call_flow_destination"]);
-			$call_flow_alternate_label = check_str($_POST["call_flow_alternate_label"]);
-			$call_flow_alternate_sound = check_str($_POST["call_flow_alternate_sound"]);
-			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
-			$call_flow_context = check_str($_POST["call_flow_context"]);
-			$call_flow_description = check_str($_POST["call_flow_description"]);
+			$call_flow_uuid = $_POST["call_flow_uuid"];
+			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$call_flow_name = $_POST["call_flow_name"];
+			$call_flow_extension = $_POST["call_flow_extension"];
+			$call_flow_feature_code = $_POST["call_flow_feature_code"];
+			$call_flow_status = $_POST["call_flow_status"];
+			$call_flow_pin_number = $_POST["call_flow_pin_number"];
+			$call_flow_label = $_POST["call_flow_label"];
+			$call_flow_sound = $_POST["call_flow_sound"];
+			$call_flow_destination = $_POST["call_flow_destination"];
+			$call_flow_alternate_label = $_POST["call_flow_alternate_label"];
+			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
+			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
+			$call_flow_context = $_POST["call_flow_context"];
+			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -88,7 +88,15 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$call_flow_uuid = check_str($_POST["call_flow_uuid"]);
+				$call_flow_uuid = $_POST["call_flow_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_flows.php');
+				exit;
 			}
 
 		//check for all required data
@@ -125,12 +133,12 @@
 			}
 
 		//add the call_flow_uuid
-			if (strlen($call_flow_uuid) == 0) {
+			if (!is_uuid($call_flow_uuid)) {
 				$call_flow_uuid = uuid();
 			}
 
 		//add the dialplan_uuid
-			if (strlen($dialplan_uuid) == 0) {
+			if (!is_uuid($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
@@ -259,14 +267,15 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$call_flow_uuid = check_str($_GET["id"]);
+		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
-		$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
-		$sql .= "and call_flow_uuid = '$call_flow_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and call_flow_uuid = :call_flow_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['call_flow_uuid'] = $call_flow_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		foreach ($result as $row) {
 			//set the php variables
 				$call_flow_uuid = $row["call_flow_uuid"];
 				$dialplan_uuid = $row["dialplan_uuid"];
@@ -302,7 +311,7 @@
 					$alternate_destination_label = $call_flow_alternate_data;
 				}
 		}
-		unset ($prep_statement);
+		unset ($sql, $parameters, $result, $row);
 	}
 
 //set the context for users that are not in the superadmin group
@@ -312,11 +321,12 @@
 
 //get the recordings
 	$sql = "select recording_name, recording_filename from v_recordings ";
-	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$recordings = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$recordings = $database->select($sql, $parameters, 'all');
+	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
 		require_once "resources/header.php";
@@ -391,11 +401,12 @@
 				echo "</optgroup>\n";
 			}
 		//phrases
-			$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) > 0) {
+			$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			unset($parameters, $sql);
+			if (is_array($result)) {
 				echo "<optgroup label='Phrases'>\n";
 				foreach ($result as &$row) {
 					if ($var == "phrase:".$row["phrase_uuid"]) {
@@ -406,7 +417,6 @@
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 					}
 				}
-				unset ($prep_statement);
 				echo "</optgroup>\n";
 			}
 		//sounds
@@ -455,6 +465,10 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -671,10 +685,11 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_flow_uuid' value='".escape($call_flow_uuid)."'>\n";
-		echo "				<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "			<input type='hidden' name='call_flow_uuid' value='".escape($call_flow_uuid)."'>\n";
+		echo "			<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

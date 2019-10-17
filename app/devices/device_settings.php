@@ -17,34 +17,43 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('device_setting_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('device_setting_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-require_once "resources/header.php";
-require_once "resources/paging.php";
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-	$device_uuid = check_str($_GET["id"]);
+
+//get the uuid
+	if (is_uuid($_GET['id'])) {
+		$device_uuid = $_GET['id'];
+	}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -60,21 +69,14 @@ require_once "resources/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_devices_settings ";
-		$sql .= "where device_uuid = '$device_uuid' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+		$sql = "select count(*) from v_devices_settings ";
+		$sql .= "where device_uuid = :device_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['device_uuid'] = $device_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		unset($sql);
 
 	//prepare to page the results
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -85,22 +87,20 @@ require_once "resources/paging.php";
 		$offset = $rows_per_page * $page;
 
 	//get the list
-		$sql = "select * from v_device_settings ";
-		$sql .= "where device_uuid = '$device_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		$sql = str_replace('count(*)', '*', $sql);
+		$sql .= order_by($order_by, $order);
+		$sql .= limit_offset($rows_per_page, $offset);
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 			if ($previous_category != $row['device_setting_category']) {
@@ -116,7 +116,7 @@ require_once "resources/paging.php";
 				echo th_order_by('device_setting_description', $text['label-description'], $order_by, $order);
 				echo "<td align='right' width='42'>\n";
 				if (permission_exists('device_setting_add')) {
-					echo "	<a href='device_setting_edit.php?device_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+					echo "	<a href='device_setting_edit.php?device_uuid=".urlencode($device_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 				}
 				else {
 					echo "	&nbsp;\n";
@@ -142,9 +142,9 @@ require_once "resources/paging.php";
 			echo "</tr>\n";
 			$previous_category = $row['device_setting_category'];
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='6' align='left'>\n";

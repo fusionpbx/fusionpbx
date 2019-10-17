@@ -43,22 +43,23 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
+	$database_transaction_uuid = $_GET["id"];
+
+//delete transaction
+	if (is_uuid($database_transaction_uuid)) {
+		$array['database_transactions'][0]['database_transaction_uuid'] = $database_transaction_uuid;
+		$array['database_transactions'][0]['domain_uuid'] = $domain_uuid;
+
+		$database = new database;
+		$database->app_name = 'database_transactions';
+		$database->app_uuid = 'de47783c-1caa-4b3e-9b51-ad6c9e69215c';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
 	}
 
-//delete database_transaction
-	if (strlen($id)>0) {
-		$sql = "delete from v_database_transactions ";
-		$sql .= "where database_transaction_uuid = '$id' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-	}
-
-//redirect the user
-	message::add($text['message-delete']);
+//redirect
 	header('Location: database_transactions.php');
 
 ?>

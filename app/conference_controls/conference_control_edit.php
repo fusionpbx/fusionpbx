@@ -19,9 +19,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$conference_control_uuid = check_str($_REQUEST["id"]);
+		$conference_control_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -29,9 +29,9 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$control_name = check_str($_POST["control_name"]);
-		$control_enabled = check_str($_POST["control_enabled"]);
-		$control_description = check_str($_POST["control_description"]);
+		$control_name = $_POST["control_name"];
+		$control_enabled = $_POST["control_enabled"];
+		$control_description = $_POST["control_description"];
 	}
 
 //process the user data and save it to the database
@@ -39,7 +39,15 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$conference_control_uuid = check_str($_POST["conference_control_uuid"]);
+				$conference_control_uuid = $_POST["conference_control_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conference_controls.php');
+				exit;
 			}
 
 		//check for all required data
@@ -61,18 +69,20 @@
 			}
 
 		//add the conference_control_uuid
-			if (strlen($_POST["conference_control_uuid"]) == 0) {
+			if (!is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
-				$_POST["conference_control_uuid"] = $conference_control_uuid;
 			}
 
 		//prepare the array
-			$array['conference_controls'][] = $_POST;
+			$array['conference_controls'][0]['conference_control_uuid'] = $conference_control_uuid;
+			$array['conference_controls'][0]['control_name'] = $control_name;
+			$array['conference_controls'][0]['control_enabled'] = $control_enabled;
+			$array['conference_controls'][0]['control_description'] = $control_description;
 
 		//save to the data
 			$database = new database;
 			$database->app_name = 'conference_controls';
-			$database->app_uuid = null;
+			$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 			if (strlen($conference_control_uuid) > 0) {
 				$database->uuid($conference_control_uuid);
 			}
@@ -94,20 +104,24 @@
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$conference_control_uuid = check_str($_GET["id"]);
+		$conference_control_uuid = $_GET["id"];
 		$sql = "select * from v_conference_controls ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "where conference_control_uuid = '$conference_control_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where conference_control_uuid = :conference_control_uuid ";
+		$parameters['conference_control_uuid'] = $conference_control_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && sizeof($row) != 0) {
 			$control_name = $row["control_name"];
 			$control_enabled = $row["control_enabled"];
 			$control_description = $row["control_description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -172,9 +186,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
+		echo "			<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('voicemail_option_edit')) {
+	if (permission_exists('voicemail_option_delete')) {
 		//access granted
 	}
 	else {
@@ -43,22 +43,28 @@
 	$text = $language->get();
 
 //set the http values as variables
-	if (count($_GET)>0) {
-		$voicemail_option_uuid = check_str($_GET["id"]);
-		$voicemail_uuid = check_str($_GET["voicemail_uuid"]);
-	}
+	$voicemail_option_uuid = $_GET["id"];
+	$voicemail_uuid = $_GET["voicemail_uuid"];
 
 //delete the voicemail option
-	if (strlen($voicemail_option_uuid) > 0) {
-		$sql = "delete from v_voicemail_options ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and voicemail_option_uuid = '".$voicemail_option_uuid."' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+	if (is_uuid($voicemail_option_uuid) && is_uuid($voicemail_uuid)) {
+		//build delete array
+			$array['voicemail_options'][0]['voicemail_option_uuid'] = $voicemail_option_uuid;
+			$array['voicemail_options'][0]['domain_uuid'] = $domain_uuid;
+		//execute delete
+			$database = new database;
+			$database->app_name = 'voicemails';
+			$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
+			$database->delete($array);
+			unset($array);
+		//set message
+			message::add($text['message-delete']);
+		//redirect
+			header('Location: voicemail_edit.php?id='.$voicemail_uuid);
+			exit;
 	}
 
-//redirect the user
-	message::add($text['message-delete']);
-	header('Location: voicemail_edit.php?id='.$voicemail_uuid);
+//default redirect
+	header('Location: voicemails.php');
 
 ?>

@@ -502,7 +502,7 @@
 <P57>0</P57>
 
 <!-- SIP regexpiration -->
-<P32>3</P32>
+<P32>{$account.1.register_expires}</P32>
 
 <!-- SIP local port-->
 <P40></P40>
@@ -576,7 +576,13 @@
 {/if}
 
 <!-- Config Server Path  -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
 
 <!-- XML Config File Password -->
 <!-- String; between ascii values 33 and 126 -->

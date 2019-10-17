@@ -43,23 +43,31 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-		$device_vendor_uuid = check_str($_GET["device_vendor_uuid"]);
-	}
+	$device_vendor_function_uuid = $_GET["id"];
+	$device_vendor_uuid = $_GET["device_vendor_uuid"];
 
 //delete the data
-	if (strlen($id)>0) {
-		//delete device_vendor_function
-			$sql = "delete from v_device_vendor_functions ";
-			$sql .= "where device_vendor_function_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+	if (is_uuid($device_vendor_function_uuid) && is_uuid($device_vendor_uuid)) {
+		//create array
+			$array['device_vendor_functions'][0]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
+
+		//execute delete
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
+
+		//redirect the user
+			header('Location: device_vendor_edit.php?id='.$device_vendor_uuid);
+			exit;
 	}
 
-//redirect the user
-	message::add($text['message-delete']);
-	header('Location: device_vendor_function_edit.php?id='.$device_vendor_uuid);
+//default redirect
+	header('Location: device_vendors.php');
+	exit;
 
 ?>

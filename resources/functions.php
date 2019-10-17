@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,7 +27,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '4.5.3';
+			return '4.5.9';
 		}
 	}
 
@@ -42,6 +42,12 @@
 			$v = explode('.', software_version());
 			$n = ($v[0] * 10000 + $v[1] * 100 + $v[2]);
 			return $n;
+		}
+	}
+
+	if (!function_exists('mb_strtoupper')) {
+		function mb_strtoupper($string) {
+			return strtoupper($string);
 		}
 	}
 
@@ -143,48 +149,53 @@
 
 	if (!function_exists('is_uuid')) {
 		function is_uuid($uuid) {
-			$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
-			return preg_match($regex, $uuid);
+			if (gettype($uuid) == 'string') {
+				$regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
+				return preg_match($regex, $uuid);
+			}
+			return false;
 		}
 	}
 
 	if (!function_exists('recursive_copy')) {
 		if (file_exists('/bin/cp')) {
-			function recursive_copy($src, $dst, $options = '') {
+			function recursive_copy($source, $destination, $options = '') {
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
 					//copy -R recursive, preserve attributes for SUN
-					$cmd = 'cp -Rp '.$src.'/* '.$dst;
-				} else {
-					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-					$cmd = 'cp -RLp '.$options.' '.$src.'/* '.$dst;
+					$cmd = 'cp -Rp '.$source.'/* '.$destination;
 				}
-				//$this->write_debug($cmd);
+				else {
+					//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
+					$cmd = 'cp -RLp '.$options.' '.$source.'/* '.$destination;
+				}
 				exec ($cmd);
 			}
-		} elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			function recursive_copy($src, $dst, $options = '') {
-				$src = normalize_path_to_os($src);
-				$dst = normalize_path_to_os($dst);
-				exec("xcopy /E /Y \"$src\" \"$dst\"");
+		}
+		elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			function recursive_copy($source, $destination, $options = '') {
+				$source = normalize_path_to_os($source);
+				$destination = normalize_path_to_os($destination);
+				exec("xcopy /E /Y \"$source\" \"$destination\"");
 			}
-		} else {
-			function recursive_copy($src, $dst, $options = '') {
-				$dir = opendir($src);
+		}
+		else {
+			function recursive_copy($source, $destination, $options = '') {
+				$dir = opendir($source);
 				if (!$dir) {
-					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
+					throw new Exception("recursive_copy() source directory '".$source."' does not exist.");
 				}
-				if (!is_dir($dst)) {
-					if (!mkdir($dst,02770,true)) {
-						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+				if (!is_dir($destination)) {
+					if (!mkdir($destination,02770,true)) {
+						throw new Exception("recursive_copy() failed to create destination directory '".$destination."'");
 					}
 				}
 				while(false !== ( $file = readdir($dir)) ) {
 					if (( $file != '.' ) && ( $file != '..' )) {
-						if ( is_dir($src . '/' . $file) ) {
-							recursive_copy($src . '/' . $file,$dst . '/' . $file);
+						if ( is_dir($source . '/' . $file) ) {
+							recursive_copy($source . '/' . $file,$destination . '/' . $file);
 						}
 						else {
-							copy($src . '/' . $file,$dst . '/' . $file);
+							copy($source . '/' . $file,$destination . '/' . $file);
 						}
 					}
 				}
@@ -194,27 +205,32 @@
 	}
 
 	if (!function_exists('recursive_delete')) {
-		if (file_exists('/bin/rm')) {
-			function recursive_delete($dir) {
-				//$this->write_debug('rm -Rf '.$dir.'/*');
-				exec ('rm -Rf '.$dir.'/*');
-				clearstatcache();
+		if (file_exists('/usr/bin/find')) {
+			function recursive_delete($directory) {
+				if (isset($directory) && strlen($directory) > 8) {
+					exec('/usr/bin/find '.$directory.'/* -name "*" -delete');
+					//exec('rm -Rf '.$directory.'/*');
+					clearstatcache();
+				}
 			}
-		}elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-			function recursive_delete($dir) {
-				$dst = normalize_path_to_os($dst);
+		}
+		elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			function recursive_delete($directory) {
+				$directory = normalize_path_to_os($directory);
 				//$this->write_debug("del /S /F /Q \"$dir\"");
-				exec("del /S /F /Q \"$dir\"");
+				exec("del /S /F /Q \"$directory\"");
 				clearstatcache();
 			}
-		}else{
-			function recursive_delete($dir) {
-				foreach (glob($dir) as $file) {
+		}
+		else {
+			function recursive_delete($directory) {
+				foreach (glob($directory) as $file) {
 					if (is_dir($file)) {
 						//$this->write_debug("rm dir: ".$file);
 						recursive_delete("$file/*");
 						rmdir($file);
-					} else {
+					}
+					else {
 						//$this->write_debug("delete file: ".$file);
 						unlink($file);
 					}
@@ -255,26 +271,6 @@
 		}
 	}
 
-	if (!function_exists('group_members')) {
-		function group_members($db, $user_uuid) {
-			global $domain_uuid;
-			$sql = "select * from v_group_users ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and user_uuid = '".$user_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			$group_members = "||";
-			foreach($result as $field) {
-				//get the list of groups
-				$group_members .= $field['group_name']."||";
-			}
-			unset($sql, $result, $row_count);
-			return $group_members;
-		}
-	}
-
 	if (!function_exists('if_group_member')) {
 		function if_group_member($group_members, $group) {
 			if (stripos($group_members, "||".$group."||") === false) {
@@ -287,24 +283,23 @@
 	}
 
 	if (!function_exists('superadmin_list')) {
-		function superadmin_list($db) {
+		function superadmin_list() {
 			global $domain_uuid;
-			$sql = "select * from v_group_users ";
+			$sql = "select * from v_user_groups ";
 			$sql .= "where group_name = 'superadmin' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
 			$superadmin_list = "||";
-			foreach($result as $field) {
-				//get the list of superadmins
-				$superadmin_list .= $field['user_uuid']."||";
+			if (is_array($result) && @sizeof($result) != 0) {
+				foreach ($result as $field) {
+					//get the list of superadmins
+					$superadmin_list .= $field['user_uuid']."||";
+				}
 			}
-			unset($sql, $result, $row_count);
+			unset($sql, $result, $field);
 			return $superadmin_list;
 		}
 	}
-	//superadmin_list($db);
 
 	if (!function_exists('if_superadmin')) {
 		function if_superadmin($superadmin_list, $user_uuid) {
@@ -318,36 +313,29 @@
 	}
 
 	if (!function_exists('html_select_other')) {
-		function html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value) {
-			//html select other : build a select box from distinct items in db with option for other
+		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value) {
+			//html select other: build a select box from distinct items in db with option for other
 			global $domain_uuid;
 
-			$html  = "<table border='0' cellpadding='1' cellspacing='0'>\n";
+			$html = "<table border='0' cellpadding='1' cellspacing='0'>\n";
 			$html .= "<tr>\n";
 			$html .= "<td id=\"cell".$field_name."1\">\n";
 			$html .= "\n";
 			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
 			$html .= "<option value=''></option>\n";
 
-			$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) { //if user account exists then show login
-				//print_r($result);
+			$sql = "select distinct(".$field_name.") as ".$field_name." ";
+			$sql .= "from ".$table_name." ".$sql_where_optional." ";
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-							$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-						}
-						else {
-							$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-						}
+						$html .= "<option value=\"".$field[$field_name]."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".$field[$field_name]."</option>\n";
 					}
 				}
 			}
-			unset($sql, $result, $result_count);
+			unset($sql, $result, $field);
 
 			$html .= "<option value='Other'>Other</option>\n";
 			$html .= "</select>\n";
@@ -358,103 +346,41 @@
 			$html .= "</tr>\n";
 			$html .= "</table>";
 
-		return $html;
+			return $html;
 		}
 	}
 
 	if (!function_exists('html_select')) {
-		function html_select($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '') {
-			//html select other : build a select box from distinct items in db with option for other
+		function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $onchange = '') {
+			//html select: build a select box from distinct items in db
 			global $domain_uuid;
 
 			if (strlen($field_value) > 0) {
-			$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."'>\n";
-			$html .= "<option value=\"\"></option>\n";
-				$sql = "SELECT distinct($field_name) as $field_name, $field_value FROM $table_name $sql_where_optional order by $field_name asc ";
+				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "	<option value=\"\"></option>\n";
+				$sql = "select distinct(".$field_name.") as ".$field_name.", ".$field_value." from ".$table_name." ".$sql_where_optional." order by ".$field_name." asc ";
 			}
 			else {
-				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."'>\n";
-				$html .= "<option value=\"\"></option>\n";
-				$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional ";
+				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "	<option value=\"\"></option>\n";
+				$sql = "select distinct(".$field_name.") as ".$field_name." from ".$table_name." ".$sql_where_optional." ";
 			}
 
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) { //if user account exists then show login
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\" selected>".$field[$field_name]."</option>\n";
-							}
-							else {
-								$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-							}
-						}
-						else {
-							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\">".$field[$field_name]."</option>\n";
-							}
-							else {
-								$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-							}
-						}
+						$selected = $field_current_value == $field[$field_name] ? "selected='selected'" : null;
+						$array_key = strlen($field_value) > 0 ? $field_value : $field_name;
+						$html .= "<option value=\"".$field[$array_key]."\" ".$selected.">".$field[$field_name]."</option>\n";
 					}
 				}
 			}
-			unset($sql, $result, $result_count);
+			unset($sql, $result, $field);
 			$html .= "</select>\n";
 
-		return $html;
-		}
-	}
-	//$table_name = 'v_templates'; $field_name = 'templatename'; $sql_where_optional = "where domain_uuid = '$domain_uuid' "; $field_current_value = '';
-	//echo html_select($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-
-	if (!function_exists('html_select_on_change')) {
-		function html_select_on_change($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $onchange, $field_value = '') {
-			//html select other : build a select box from distinct items in db with option for other
-			global $domain_uuid;
-
-			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"".$onchange."\">\n";
-			$html .= "<option value=''></option>\n";
-
-			$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional order by $field_name asc ";
-			//echo $sql;
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			//echo $result_count;
-			if ($result_count > 0) { //if user account exists then show login
-				//print_r($result);
-				foreach($result as $field) {
-					if (strlen($field[$field_name]) > 0) {
-						if ($field_current_value == $field[$field_name]) {
-								if (strlen($field_value) > 0) {
-									$html .= "<option value=\"".$field[$field_value]."\" selected>".$field[$field_name]."</option>\n";
-								}
-								else {
-									$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
-								}
-						}
-						else {
-								if (strlen($field_value) > 0) {
-									$html .= "<option value=\"".$field[$field_value]."\">".$field[$field_name]."</option>\n";
-								}
-								else {
-									$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
-								}
-						}
-					}
-				}
-			}
-			unset($sql, $result, $result_count);
-			$html .= "</select>\n";
-
-		return $html;
+			return $html;
 		}
 	}
 
@@ -479,43 +405,6 @@
 			return $html;
 		}
 	}
-	////example usage
-		//$table_name = 'tblcontacts'; $field_name = 'contactcategory'; $sql_where_optional = "", $field_current_value ='';
-		//echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	////  On the page that recieves the POST
-		//if (check_str($_POST["contactcategory"]) == "Other") { //echo "found: ".$contactcategory;
-		//  $contactcategory = check_str($_POST["contactcategoryother"]);
-		//}
-
-	if (!function_exists('log_add')) {
-		function log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $log_add_user_ip) {
-			return; //this disables the function
-			global $domain_uuid;
-
-			$sql = "insert into logs ";
-			$sql .= "(";
-			$sql .= "log_type, ";
-			$sql .= "log_status, ";
-			$sql .= "log_desc, ";
-			$sql .= "log_add_user, ";
-			$sql .= "log_add_user_ip, ";
-			$sql .= "log_add_date ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$log_type', ";
-			$sql .= "'$log_status', ";
-			$sql .= "'$log_desc', ";
-			$sql .= "'$log_add_user', ";
-			$sql .= "'$log_add_user_ip', ";
-			$sql .= "now() ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
-	}
-	//$log_type = ''; $log_status=''; $log_add_user=''; $log_desc='';
-	//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
 
 	if (!function_exists('get_ext')) {
 		function get_ext($filename) {
@@ -540,108 +429,94 @@
 	}
 
 	if (!function_exists('file_upload')) {
-			function file_upload($field = '', $file_type = '', $dest_dir = '') {
+		function file_upload($field = '', $file_type = '', $dest_dir = '') {
 
-					$uploadtempdir = $_ENV["TEMP"]."\\";
-					ini_set('upload_tmp_dir', $uploadtempdir);
+			$uploadtempdir = $_ENV["TEMP"]."\\";
+			ini_set('upload_tmp_dir', $uploadtempdir);
 
-					$tmp_name = $_FILES[$field]["tmp_name"];
-					$file_name = $_FILES[$field]["name"];
-					$file_type = $_FILES[$field]["type"];
-					$file_size = $_FILES[$field]["size"];
-					$file_ext = get_ext($file_name);
-					$file_name_orig = $file_name;
-					$file_name_base = substr($file_name, 0, (strlen($file_name) - (strlen($file_ext)+1)));
-					//$dest_dir = '/tmp';
+			$tmp_name = $_FILES[$field]["tmp_name"];
+			$file_name = $_FILES[$field]["name"];
+			$file_type = $_FILES[$field]["type"];
+			$file_size = $_FILES[$field]["size"];
+			$file_ext = get_ext($file_name);
+			$file_name_orig = $file_name;
+			$file_name_base = substr($file_name, 0, (strlen($file_name) - (strlen($file_ext)+1)));
+			//$dest_dir = '/tmp';
 
-					if ($file_size ==  0){
-						return;
+			if ($file_size == 0) {
+				return;
+			}
+
+			if (!is_dir($dest_dir)) {
+				echo "dest_dir not found<br />\n";
+				return;
+			}
+
+			//check if allowed file type
+			if ($file_type == "img") {
+				switch (strtolower($file_ext)) {
+					case "jpg":
+					case "png":
+					case "gif":
+					case "bmp":
+					case "psd":
+					case "tif": break;
+					default: return false;
+				}
+			}
+			if ($file_type == "file") {
+				switch (strtolower($file_ext)) {
+					case "doc":
+					case "pdf":
+					case "ppt":
+					case "xls":
+					case "zip":
+					case "exe": break;
+					default: return false;
+				}
+			}
+
+			//find unique filename: check if file exists if it does then increment the filename
+				$i = 1;
+				while( file_exists($dest_dir.'/'.$file_name)) {
+					if (strlen($file_ext)> 0) {
+						$file_name = $file_name_base . $i .'.'. $file_ext;
 					}
-
-					if (!is_dir($dest_dir)) {
-						echo "dest_dir not found<br />\n";
-						return;
+					else {
+						$file_name = $file_name_orig . $i;
 					}
+					$i++;
+				}
 
-					//check if allowed file type
-					if ($file_type == "img") {
-							switch (strtolower($file_ext)) {
-								case "jpg":
-									break;
-								case "png":
-									break;
-								case "gif":
-									break;
-								case "bmp":
-									break;
-								case "psd":
-									break;
-								case "tif":
-									break;
-								default:
-									return false;
-							}
-					}
-					if ($file_type == "file") {
-						switch (strtolower($file_ext)) {
-							case "doc":
-								break;
-							case "pdf":
-								break;
-							case "ppt":
-								break;
-							case "xls":
-								break;
-							case "zip":
-								break;
-							case "exe":
-								break;
-							default:
-								return false;
-							}
-					}
+			//echo "file_type: ".$file_type."<br />\n";
+			//echo "tmp_name: ".$tmp_name."<br />\n";
+			//echo "file_name: ".$file_name."<br />\n";
+			//echo "file_ext: ".$file_ext."<br />\n";
+			//echo "file_name_orig: ".$file_name_orig."<br />\n";
+			//echo "file_name_base: ".$file_name_base."<br />\n";
+			//echo "dest_dir: ".$dest_dir."<br />\n";
 
-					//find unique filename: check if file exists if it does then increment the filename
-						$i = 1;
-						while( file_exists($dest_dir.'/'.$file_name)) {
-							if (strlen($file_ext)> 0) {
-								$file_name = $file_name_base . $i .'.'. $file_ext;
-							}
-							else {
-								$file_name = $file_name_orig . $i;
-							}
-							$i++;
-						}
+			//move the file to upload directory
+			//bool move_uploaded_file  ( string $filename, string $destination  )
 
-					//echo "file_type: ".$file_type."<br />\n";
-					//echo "tmp_name: ".$tmp_name."<br />\n";
-					//echo "file_name: ".$file_name."<br />\n";
-					//echo "file_ext: ".$file_ext."<br />\n";
-					//echo "file_name_orig: ".$file_name_orig."<br />\n";
-					//echo "file_name_base: ".$file_name_base."<br />\n";
-					//echo "dest_dir: ".$dest_dir."<br />\n";
+				if (move_uploaded_file($tmp_name, $dest_dir.'/'.$file_name)) {
+						return $file_name;
+				}
+				else {
+					echo "File upload failed!  Here's some debugging info:\n";
+					return false;
+				}
+				exit;
 
-					//move the file to upload directory
-					//bool move_uploaded_file  ( string $filename, string $destination  )
-
-						if (move_uploaded_file($tmp_name, $dest_dir.'/'.$file_name)){
-							 return $file_name;
-						}
-						else {
-							echo "File upload failed!  Here's some debugging info:\n";
-							return false;
-						}
-						exit;
-
-			} //end function
+		}
 	}
 
-	if ( !function_exists('sys_get_temp_dir')) {
+	if (!function_exists('sys_get_temp_dir')) {
 		function sys_get_temp_dir() {
-			if( $temp=getenv('TMP') )        return $temp;
-			if( $temp=getenv('TEMP') )        return $temp;
-			if( $temp=getenv('TMPDIR') )    return $temp;
-			$temp=tempnam(__FILE__,'');
+			if ($temp = getenv('TMP')) { return $temp; }
+			if ($temp = getenv('TEMP')) { return $temp; }
+			if ($temp = getenv('TMPDIR')) { return $temp; }
+			$temp = tempnam(__FILE__,'');
 			if (file_exists($temp)) {
 				unlink($temp);
 				return dirname($temp);
@@ -651,14 +526,14 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
-	if ( !function_exists('normalize_path')) {
+	if (!function_exists('normalize_path')) {
 		//don't use DIRECTORY_SEPARATOR as it will change on a per platform basis and we need consistency
 		function normalize_path($path) {
 			return str_replace(array('/','\\'), '/', $path);
 		}
 	}
 
-	if ( !function_exists('normalize_path_to_os')) {
+	if (!function_exists('normalize_path_to_os')) {
 		function normalize_path_to_os($path) {
 			return str_replace(array('/','\\'), DIRECTORY_SEPARATOR, $path);
 		}
@@ -666,125 +541,109 @@
 
 	if (!function_exists('username_exists')) {
 		function username_exists($username) {
-			global $db, $domain_uuid;
-			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and username = '".$username."' ";
-			//$sql .= "and user_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			if ($result_count > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			global $domain_uuid;
+			$sql = "select count(*) from v_users ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and username = :username ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['username'] = $username;
+			$database = new database;
+			$num_rows = $database->select($sql, $parameters, 'column');
+			return $num_rows > 0 ? true : false;
 		}
 	}
 
 	if (!function_exists('add_extension_user')) {
 		function add_extension_user($extension_uuid, $username) {
-			global $db, $domain_uuid;
+			global $domain_uuid;
 			//get the user_uuid by using the username
-				$sql = "select * from v_users ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and username = '$username' ";
-				//$sql .= "and user_enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset($prep_statement);
-				foreach ($result as &$row) {
+				$sql = "select user_uuid from v_users ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and username = :username ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['username'] = $username;
+				$database = new database;
+				$user_uuid = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+
+				if (is_uuid($user_uuid)) {
 					//check if the user_uuid exists in v_extension_users
-						$sql = "select * from v_extension_users ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and user_uuid = '".$row["user_uuid"]."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$extension_users_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						unset($prep_statement);
+						$sql = "select count(*) from v_extension_users ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and user_uuid = :user_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['user_uuid'] = $user_uuid;
+						$database = new database;
+						$num_rows = $database->select($sql, $parameters, 'column');
+						unset($sql, $parameters);
+
 					//assign the extension to the user
-						if (count($extension_users_result) == 0) {
-							$sql = "insert into v_extension_users ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "extension_uuid, ";
-							$sql .= "user_uuid ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$domain_uuid', ";
-							$sql .= "'$extension_uuid', ";
-							$sql .= "'".$row["user_uuid"]."' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+						if ($num_rows == 0) {
+							//build insert array
+								$extension_user_uuid = uuid();
+								$array['extension_users'][$x]['extension_user_uuid'] = $extension_user_uuid;
+								$array['extension_users'][$x]['domain_uuid'] = $domain_uuid;
+								$array['extension_users'][$x]['extension_uuid'] = $extension_uuid;
+								$array['extension_users'][$x]['user_uuid'] = $row["user_uuid"];
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('extension_user_add', 'temp');
+							//execute insert
+								$database = new database;
+								$database->app_name = 'function-add_extension_user';
+								$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+								$database->save($array);
+								unset($array);
+							//revoke temporary permissions
+								$p->delete('extension_user_add', 'temp');
 						}
 				}
-				unset ($result);
 		}
 	}
 
 	if (!function_exists('user_add')) {
-		function user_add($username, $password, $user_email='') {
-			global $db, $domain_uuid, $v_salt;
-			$user_uuid = uuid();
+		function user_add($username, $password, $user_email = '') {
+			global $domain_uuid;
 			if (strlen($username) == 0) { return false; }
 			if (strlen($password) == 0) { return false; }
 			if (!username_exists($username)) {
-				//salt used with the password to create a one way hash
+				//build user insert array
+					$user_uuid = uuid();
 					$salt = generate_password('20', '4');
-				//add the user account
-					$user_type = 'Individual';
-					$user_category = 'user';
-					$sql = "insert into v_users ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "user_uuid, ";
-					$sql .= "username, ";
-					$sql .= "password, ";
-					$sql .= "salt, ";
-					if (strlen($user_email) > 0) { $sql .= "user_email, "; }
-					$sql .= "add_date, ";
-					$sql .= "add_user ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$user_uuid', ";
-					$sql .= "'$username', ";
-					$sql .= "'".md5($salt.$password)."', ";
-					$sql .= "'$salt', ";
-					if (strlen($user_email) > 0) { $sql .= "'$user_email', "; }
-					$sql .= "now(), ";
-					$sql .= "'".$_SESSION["username"]."' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					$array['users'][0]['user_uuid'] = $user_uuid;
+					$array['users'][0]['domain_uuid'] = $domain_uuid;
+					$array['users'][0]['username'] = $username;
+					$array['users'][0]['password'] = md5($salt.$password);
+					$array['users'][0]['salt'] = $salt;
+					if (valid_email($user_email)) {
+						$array['users'][0]['user_email'] = $user_email;
+					}
+					$array['users'][0]['add_date'] = 'now()';
+					$array['users'][0]['add_user'] = $_SESSION["username"];
 
-				//add the user to the member group
-					$group_name = 'user';
-					$sql = "insert into v_group_users ";
-					$sql .= "(";
-					$sql .= "group_user_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "group_name, ";
-					$sql .= "user_uuid ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$group_name', ";
-					$sql .= "'$user_uuid' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-			} //end if !username_exists
-		} //end function definition
-	} //end function_exists
+				//build user group insert array
+					$user_group_uuid = uuid();
+					$array['user_groups'][0]['user_group_uuid'] = $user_group_uuid;
+					$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
+					$array['user_groups'][0]['group_name'] = 'user';
+					$array['user_groups'][0]['user_uuid'] = $user_uuid;
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('user_add', 'temp');
+					$p->add('user_group_add', 'temp');
+				//execute insert
+					$database = new database;
+					$database->app_name = 'function-user_add';
+					$database->app_uuid = '15a8d74b-ac7e-4468-add4-3e6ebdcb8e22';
+					$database->save($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('user_add', 'temp');
+					$p->delete('user_group_add', 'temp');
+			}
+		}
+	}
 
 function switch_module_is_running($fp, $mod) {
 	if (!$fp) {
@@ -862,67 +721,74 @@ function format_string ($format, $data) {
 
 //browser detection without browscap.ini dependency
 	function http_user_agent($info = '') {
-		$u_agent = $_SERVER['HTTP_USER_AGENT'];
-		$bname = 'Unknown';
-		$platform = 'Unknown';
-		$version= "";
 
-		//get the platform?
-			if (preg_match('/linux/i', $u_agent)) {
-				$platform = 'linux';
+		//set default values
+			$user_agent = $_SERVER['HTTP_USER_AGENT'];
+			$browser_name = 'Unknown';
+			$platform = 'Unknown';
+			$version = '';
+			$mobile = false;
+
+		//get the platform
+			if (preg_match('/linux/i', $user_agent)) {
+				$platform = 'Linux';
 			}
-			elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-				$platform = 'mac';
+			elseif (preg_match('/macintosh|mac os x/i', $user_agent)) {
+				$platform = 'Apple';
 			}
-			elseif (preg_match('/windows|win32/i', $u_agent)) {
-				$platform = 'windows';
+			elseif (preg_match('/windows|win32/i', $user_agent)) {
+				$platform = 'Windows';
 			}
 
-		//get the name of the useragent yes seperately and for good reason
-			if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-			{
-				$bname = 'Internet Explorer';
-				$ub = "MSIE";
+		//set mobile to true or false
+			if (preg_match('/mobile/i', $user_agent)) {
+				$platform = 'Mobile';
+				$mobile = true;
 			}
-			elseif(preg_match('/Firefox/i',$u_agent))
-			{
-				$bname = 'Mozilla Firefox';
-				$ub = "Firefox";
+			elseif (preg_match('/android/i', $user_agent)) {
+				$platform = 'Android';
+				$mobile = true;
 			}
-			elseif(preg_match('/Chrome/i',$u_agent))
-			{
-				$bname = 'Google Chrome';
-				$ub = "Chrome";
+
+		//get the name of the useragent
+			if (preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent)) {
+				$browser_name = 'Internet Explorer';
+				$browser_shortname = 'MSIE';
 			}
-			elseif(preg_match('/Safari/i',$u_agent))
-			{
-				$bname = 'Apple Safari';
-				$ub = "Safari";
+			elseif (preg_match('/Firefox/i',$user_agent)) {
+				$browser_name = 'Mozilla Firefox';
+				$browser_shortname = 'Firefox';
 			}
-			elseif(preg_match('/Opera/i',$u_agent))
-			{
-				$bname = 'Opera';
-				$ub = "Opera";
+			elseif (preg_match('/Chrome/i',$user_agent)) {
+				$browser_name = 'Google Chrome';
+				$browser_shortname = 'Chrome';
 			}
-			elseif(preg_match('/Netscape/i',$u_agent))
-			{
-				$bname = 'Netscape';
-				$ub = "Netscape";
+			elseif (preg_match('/Safari/i',$user_agent)) {
+				$browser_name = 'Apple Safari';
+				$browser_shortname = 'Safari';
+			}
+			elseif (preg_match('/Opera/i',$user_agent)) {
+				$browser_name = 'Opera';
+				$browser_shortname = 'Opera';
+			}
+			elseif (preg_match('/Netscape/i',$user_agent)) {
+				$browser_name = 'Netscape';
+				$browser_shortname = 'Netscape';
 			}
 
 		//finally get the correct version number
-			$known = array('Version', $ub, 'other');
+			$known = array('Version', $browser_shortname, 'other');
 			$pattern = '#(?<browser>' . join('|', $known) . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-			if (!preg_match_all($pattern, $u_agent, $matches)) {
-				// we have no matching number just continue
+			if (!preg_match_all($pattern, $user_agent, $matches)) {
+				//we have no matching number just continue
 			}
 
-		// see how many we have
+		//see how many we have
 			$i = count($matches['browser']);
 			if ($i != 1) {
 				//we will have two since we are not using 'other' argument yet
 				//see if version is before or after the name
-				if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
+				if (strripos($user_agent,"Version") < strripos($user_agent,$browser_shortname)) {
 					$version= $matches['version'][0];
 				}
 				else {
@@ -933,58 +799,63 @@ function format_string ($format, $data) {
 				$version= $matches['version'][0];
 			}
 
-		// check if we have a number
-			if ($version==null || $version=="") {$version="?";}
+		//check if we have a number
+			if ($version == null || $version == "") { $version = "?"; }
 
-		switch ($info) {
-			case "agent": return $u_agent; break;
-			case "name": return $bname; break;
-			case "version": return $version; break;
-			case "platform": return $platform; break;
-			case "pattern": return $pattern; break;
-			default :
-				return array(
-					'userAgent' => $u_agent,
-					'name' => $bname,
-					'version' => $version,
-					'platform' => $platform,
-					'pattern' => $pattern
-				);
-		}
+		//return the data
+			switch ($info) {
+				case "agent": return $user_agent; break;
+				case "name": return $browser_name; break;
+				case "version": return $version; break;
+				case "platform": return $platform; break;
+				case "mobile": return $mobile; break;
+				case "pattern": return $pattern; break;
+				default :
+					return array(
+						'user_agent' => $user_agent,
+						'name' => $browser_name,
+						'version' => $version,
+						'platform' => $platform,
+						'mobile' => $mobile,
+						'pattern' => $pattern
+					);
+			}
 	}
 
 //tail php function for non posix systems
 	function tail($file, $num_to_get=10) {
-			$fp = fopen($file, 'r');
-			$position = filesize($file);
-			$chunklen = 4096;
-			if($position-$chunklen<=0) {
+		$fp = fopen($file, 'r');
+		$position = filesize($file);
+		$chunklen = 4096;
+		if($position-$chunklen<=0) {
+			fseek($fp,0);
+		}
+		else {
+			fseek($fp, $position-$chunklen);
+		}
+		$data="";$ret="";$lc=0;
+		while($chunklen > 0) {
+			$data = fread($fp, $chunklen);
+			$dl=strlen($data);
+			for($i=$dl-1;$i>=0;$i--){
+				if($data[$i]=="\n"){
+					if($lc==0 && $ret!="")$lc++;
+					$lc++;
+					if($lc>$num_to_get)return $ret;
+				}
+				$ret=$data[$i].$ret;
+			}
+			if($position-$chunklen<=0){
 				fseek($fp,0);
+				$chunklen=$chunklen-abs($position-$chunklen);
 			}
 			else {
 				fseek($fp, $position-$chunklen);
 			}
-			$data="";$ret="";$lc=0;
-			while($chunklen > 0)
-			{
-					$data = fread($fp, $chunklen);
-					$dl=strlen($data);
-					for($i=$dl-1;$i>=0;$i--){
-							if($data[$i]=="\n"){
-									if($lc==0 && $ret!="")$lc++;
-									$lc++;
-									if($lc>$num_to_get)return $ret;
-							}
-							$ret=$data[$i].$ret;
-					}
-					if($position-$chunklen<=0){
-							fseek($fp,0);
-							$chunklen=$chunklen-abs($position-$chunklen);
-					}else   fseek($fp, $position-$chunklen);
-					$position = $position - $chunklen;
-			}
-			fclose($fp);
-			return $ret;
+			$position = $position - $chunklen;
+		}
+		fclose($fp);
+		return $ret;
 	}
 
 //generate a random password with upper, lowercase and symbols
@@ -1379,7 +1250,7 @@ function number_pad($number,$n) {
 
 //function to send email
 	if (!function_exists('send_email')) {
-		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3) {
+		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0, $eml_attachments = '', $eml_read_confirmation = false) {
 			/*
 			RECIPIENTS NOTE:
 
@@ -1420,6 +1291,22 @@ function number_pad($number,$n) {
 							)
 					)
 
+			ATTACHMENTS NOTE:
+
+				Pass in as many files as necessary in an array in the following format...
+
+					Array (
+						[0] => Array (
+							[type] => file (or 'path')
+							[name] => filename.ext
+							[value] => /folder/filename.ext
+							)
+						[1] => Array (
+							[type] => string
+							[name] => filename.ext
+							[value] => (string of file contents - if base64, will be decoded automatically)
+							)
+					)
 
 			ERROR RESPONSE:
 
@@ -1434,22 +1321,36 @@ function number_pad($number,$n) {
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
+			if ($_SESSION['email']['smtp_hostname']['text'] != '') {
+				$mail -> Hostname = $_SESSION['email']['smtp_hostname']['text'];
+			}
 			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
-			if ($_SESSION['email']['smtp_port']['text'] != '') {
-				$mail -> Port = $_SESSION['email']['smtp_port']['text'];
+			if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
+				$mail -> Port = $_SESSION['email']['smtp_port']['numeric'];
 			}
 			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
 				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
-			}
-			if ($_SESSION['email']['smtp_username']['text']) {
 				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
 				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
+			}
+			else {
+				$mail -> SMTPAuth = 'false';
 			}
 			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
 				$_SESSION['email']['smtp_secure']['text'] = '';
 			}
 			if ($_SESSION['email']['smtp_secure']['text'] != '') {
 				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
+			}
+			if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+				// bypass TLS certificate check e.g. for self-signed certificates
+				$mail -> SMTPOptions = array(
+					'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+					)
+				);
 			}
 			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
 			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
@@ -1458,6 +1359,14 @@ function number_pad($number,$n) {
 			$mail -> Subject = $eml_subject;
 			$mail -> MsgHTML($eml_body);
 			$mail -> Priority = $eml_priority;
+			if ($eml_read_confirmation) {
+				$mail -> AddCustomHeader('X-Confirm-Reading-To: '.$eml_from_address);
+				$mail -> AddCustomHeader('Return-Receipt-To: '.$eml_from_address);
+				$mail -> AddCustomHeader('Disposition-Notification-To: '.$eml_from_address);
+			}
+			if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
+				$mail -> SMTPDebug = $eml_debug_level;
+			}
 
 			$address_found = false;
 
@@ -1502,6 +1411,23 @@ function number_pad($number,$n) {
 				}
 			}
 
+			if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
+				foreach ($eml_attachments as $attachment) {
+					$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+					if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
+						$mail -> AddAttachment($attachment['value'], $attachment['name']);
+					}
+					else if ($attachment['type'] == 'string') {
+						if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
+							$mail -> AddStringAttachment(base64_decode($attachment['value']), $attachment['name']);
+						}
+						else {
+							$mail -> AddStringAttachment($attachment['value'], $attachment['name']);
+						}
+					}
+				}
+			}
+
 			if (!$mail -> Send()) {
 				$eml_error = $mail -> ErrorInfo;
 				return false;
@@ -1519,15 +1445,20 @@ function number_pad($number,$n) {
 
 //encrypt a string
 	if (!function_exists('encrypt')) {
-		function encrypt($key, $str_to_enc) {
-			return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $str_to_enc, MCRYPT_MODE_CBC, md5(md5($key))));
+		function encrypt($key, $data) {
+			$encryption_key = base64_decode($key);
+			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+			$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+			return base64_encode($encrypted.'::'.$iv);
 		}
 	}
 
 //decrypt a string
 	if (!function_exists('decrypt')) {
-		function decrypt($key, $str_to_dec) {
-			return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($str_to_dec), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+		function decrypt($key, $data) {
+			$encryption_key = base64_decode($key);
+			list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+			return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 		}
 	}
 
@@ -1542,6 +1473,19 @@ function number_pad($number,$n) {
 	if (!function_exists('is_mac')) {
 		function is_mac($str) {
 			return (preg_match('/([a-fA-F0-9]{2}[:|\-]?){6}/', $str) == 1) ? true : false;
+		}
+	}
+
+//detect if php is running as command line interface
+	if (!function_exists('is_cli')) {
+		function is_cli() {
+			if (defined('STDIN')) {
+				return true;
+			}
+			if (php_sapi_name() == 'cli' && !isset($_SERVER['HTTP_USER_AGENT']) && is_numeric($_SERVER['argc'])) {
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -1630,9 +1574,17 @@ function number_pad($number,$n) {
 					default:
 						return;
 				}
+			//filter direction
+				switch ($direction) {
+					case 'down': $direction = 'keydown'; break;
+					case 'press': $direction = 'keypress'; break;
+					case 'up': $direction = 'keyup'; break;
+				}
 			//check for element exceptions
-				if (sizeof($exceptions) > 0) {
-					$exceptions = "!$(e.target).is('".implode(',', $exceptions)."') && ";
+				if (is_array($exceptions)) {
+					if (sizeof($exceptions) > 0) {
+						$exceptions = "!$(e.target).is('".implode(',', $exceptions)."') && ";
+					}
 				}
 			//quote if selector is id or class
 				$subject = ($subject != 'window' && $subject != 'document') ? "'".$subject."'" : $subject;
@@ -1641,7 +1593,7 @@ function number_pad($number,$n) {
 				if ($script_wrapper) {
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 				}
-				echo "	$(".$subject.").key".$direction."(function(e) {\n";
+				echo "	$(".$subject.").on('".$direction."', function(e) {\n";
 				echo "		if (".$exceptions.$key_code.") {\n";
 				if ($prompt != '') {
 					$action = ($action != '') ? $action : "alert('".$key."');";
@@ -1717,10 +1669,14 @@ function number_pad($number,$n) {
 
 //converts a string to a regular expression
 	if (!function_exists('string_to_regex')) {
-		function string_to_regex($string) {
+		function string_to_regex($string, $prefix='') {
 			//escape the plus
 				if (substr($string, 0, 1) == "+") {
 					$string = "^\\+(".substr($string, 1).")$";
+				}
+			//add prefix
+				if (strlen($prefix) > 0) {
+					$prefix = $prefix.'?';
 				}
 			//convert N,X,Z syntax to regex
 				$string = str_ireplace("N", "[2-9]", $string);
@@ -1734,10 +1690,10 @@ function number_pad($number,$n) {
 				if (substr($string, -1) != "$") {
 					$string = $string."$";
 				}
-			//add the round brackgets ( and )
+			//add the round brackets ( and )
 				if (!strstr($string, '(')) {
 					if (strstr($string, '^')) {
-						$string = str_replace("^", "^(", $string);
+						$string = str_replace("^", "^".$prefix."(", $string);
 					}
 					else {
 						$string = '^('.$string;
@@ -1901,14 +1857,13 @@ function number_pad($number,$n) {
 
 //retrieve array of countries
 	if (!function_exists('get_countries')) {
-		function get_countries($db) {
+		function get_countries() {
 			$sql = "select * from v_countries order by country asc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			$result_count = count($result);
-			return ($result_count > 0) ? $result : false;
-			unset ($prep_statement, $sql);
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			unset($sql);
+
+			return is_array($result) && @sizeof($result) != 0 ? $result : false;
 		}
 	}
 
@@ -1936,8 +1891,160 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-		//return htmlentities($string, ENT_QUOTES, 'UTF-8');
+		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+	}
+
+//output pre-formatted array keys and values
+	if (!function_exists('view_array')) {
+		function view_array($array, $exit = true) {
+			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			$exit and exit();
+		}
+	}
+
+//format db date and/or time to local date and/or time
+	if (!function_exists('format_when_local')) {
+		function format_when_local($when, $format = 'dt', $include_seconds = false) {
+			if ($when != '') {
+				// determine when format
+				if (substr_count($when, ' ') > 0) { // date and time
+					$tmp = explode(' ', $when);
+					$date = $tmp[0];
+					$time = $tmp[1];
+				}
+				else if (substr_count($when, '-') > 0) { // date only
+					$date = $when;
+				}
+				else if (substr_count($when, ':') > 0) { // time only
+					$time = $when;
+				}
+				unset($when, $tmp);
+
+				// format date
+				if ($date != '') {
+					$tmp = explode('-', $date);
+					$date = $tmp[1].'-'.$tmp[2].'-'.$tmp[0];
+				}
+
+				// format time
+				if ($time != '') {
+					$tmp = explode(':', $time);
+					if ($tmp[0] >= 0 && $tmp[0] <= 11) {
+						$meridiem = 'AM';
+						$hour = ($tmp[0] == 0) ? 12 : $tmp[0];
+					}
+					else {
+						$meridiem = 'PM';
+						$hour = ($tmp[0] > 12) ? ($tmp[0] - 12) : $tmp[0];
+					}
+					$minute = $tmp[1];
+					$second = $tmp[2];
+				}
+
+				// structure requested time format
+				$time = $hour.':'.$minute;
+				if ($include_seconds) { $time .= ':'.$second; }
+				$time .= ' '.$meridiem;
+
+				$return['d'] = $date;
+				$return['t'] = $time;
+				$return['dt'] = $date.' '.$time;
+
+				return $return[$format];
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+//define email button (src: https://buttons.cm)
+	if (!function_exists('email_button')) {
+		function email_button($text = 'Click Here!', $link = URL, $bg_color = '#dddddd', $fg_color = '#000000', $radius = '') {
+
+			// default button radius
+			$radius = $radius != '' ? $radius : '3px';
+
+			// retrieve single/first numeric radius value for ms arc
+			$tmp = $radius;
+			if (substr_count($radius, ' ') > 0) {
+				$tmp = explode(' ', $radius);
+				$tmp = $tmp[0];
+			}
+			$tmp = preg_replace("/[^0-9,.]/", '', $tmp); // remove non-numeric characters
+			$arc = floor($tmp / 35 * 100); // calculate percentage
+
+			// create button code
+			$btn = "
+				<div>
+					<!--[if mso]>
+					  <v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='".$link."' style='height: 35px; v-text-anchor: middle; width: 140px;' arcsize='".$arc."%' stroke='f' fillcolor='".$bg_color."'>
+							<w:anchorlock/>
+							<center>
+					<![endif]-->
+					<a href='".$link."' style='background-color: ".$bg_color."; border-radius: ".$radius."; color: ".$fg_color."; display: inline-block; font-family: sans-serif; font-size: 13px; font-weight: bold; line-height: 35px; text-align: center; text-decoration: none; width: 140px; -webkit-text-size-adjust: none;'>".$text."</a>
+					<!--[if mso]>
+							</center>
+						</v:roundrect>
+					<![endif]-->
+				</div>
+				";
+
+			return $btn;
+		}
+	}
+
+//validate and format order by clause of select statement
+	if (!function_exists('order_by')) {
+		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
+			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
+			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
+			if ($col != '') { return ' order by '.$col.' '.$dir.' '; }
+			else if ($col_default != '') { return ' order by '.$col_default.' '.$dir.' '; }
+		}
+	}
+
+//validate and format limit and offset clause of select statement
+	if (!function_exists('limit_offset')) {
+		function limit_offset($limit, $offset = 0) {
+			$regex = '#[^0-9]#';
+			$limit = preg_replace($regex, '', $limit);
+			$offset = preg_replace($regex, '', $offset);
+			if (is_numeric($limit) && $limit > 0) {
+				$clause .= ' limit '.$limit;
+				$offset = is_numeric($offset) ? $offset : 0;
+				$clause .= ' offset '.$offset;
+			}
+			return $clause.' ';
+		}
+	}
+
+//add a random_bytes function when it doesn't exist for old versions of PHP
+	if (!function_exists('random_bytes')) {
+		function random_bytes($length) {
+			$charset .= "0123456789";
+			$charset .= "abcdefghijkmnopqrstuvwxyz";
+			$charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+			srand((double)microtime() * rand(1000000, 9999999));
+			while ($length > 0) {
+				$string .= $charset[rand(0, strlen($charset)-1)];
+				$length--;
+			}
+			return $string.' ';
+		}
+	}
+
+//add a hash_equals function when it doesn't exist for old versions of PHP
+	if (!function_exists('hash_equals')) {
+		function hash_equals($var1, $var2) {
+			if ($var1 == $var2) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 
 ?>

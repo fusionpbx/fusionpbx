@@ -77,7 +77,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max about 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P32>3</P32>
+    <P32>{$account.1.register_expires}</P32>
     <!-- Reregister Before Expiration (in seconds). Default is 0 second -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -516,7 +516,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days-->
     <!-- Number: 1 - 64800-->
     <!-- Mandatory-->
-    <P412>3</P412>
+    <P412>{$account.2.register_expires}</P412>
     <!-- Reregister before Expiration (in seconds). Default is 0-->
     <!-- Number: 0 - 64800-->
     <!-- Mandatory-->
@@ -948,7 +948,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P512>3</P512>
+    <P512>{$account.3.register_expires}</P512>
     <!-- Reregister before Expiration (in seconds). Default is 0 second -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -1379,7 +1379,7 @@
     <!-- Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!-- Number: 1 - 64800 -->
     <!-- Mandatory -->
-    <P612>3</P612>
+    <P612>{$account.4.register_expires}</P612>
     <!-- Reregister before Expiration (in seconds). Default is 0 -->
     <!-- Number: 0 - 64800 -->
     <!-- Mandatory -->
@@ -1921,7 +1921,14 @@
 
     <!-- Config Server Path -->
     <!-- String -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {else}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    
     <!-- Firmware File Prefix -->
     <!-- String -->
     <P232></P232>
@@ -2153,7 +2160,7 @@
     <!-- Use Random Port. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P78>0</P78>
+    <P78>1</P78>
     <!-- Keep-alive interval (in seconds). Default is 20 -->
     <!-- Number: 10 - 160 -->
     <!-- Mandatory -->
@@ -2314,7 +2321,7 @@
     <!-- Disable Missed Call Backlight. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P351>0</P351>
+    <P351>1</P351>
     <!--  Settings/Date and Time -->
     <!-- NTP Server -->
     <!-- String -->
