@@ -878,7 +878,11 @@
 <!--  FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
+{if isset($grandstream_fax_mode)}
+<P228>1</P228>
+{else}
 <P228>0</P228>
+{/if}
 
 <!--  Fax Tone Detection Mode. 1 - Caller, 0 - Callee, 2 - Caller or Callee -->
 <!--  Number: 0, 1, 2 -->
