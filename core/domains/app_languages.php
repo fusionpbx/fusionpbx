@@ -622,6 +622,26 @@ $text['label-12-hour']['ru-ru'] = "12-часовой";
 $text['label-12-hour']['sv-se'] = "12-timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
 
+$text['label-default_settings']['en-us'] = "Default Settings";
+$text['label-default_settings']['ar-eg'] = "";
+$text['label-default_settings']['de-at'] = "Standardeinstellungen"; //copied from de-de
+$text['label-default_settings']['de-ch'] = "Standardeinstellungen"; //copied from de-de
+$text['label-default_settings']['de-de'] = "Standardeinstellungen";
+$text['label-default_settings']['es-cl'] = "Condiciones Predeterminadas";
+$text['label-default_settings']['es-mx'] = "Condiciones Predeterminadas"; //copied from es-cl
+$text['label-default_settings']['fr-ca'] = "Configurations par Défaut"; //copied from fr-fr
+$text['label-default_settings']['fr-fr'] = "Configurations par Défaut";
+$text['label-default_settings']['he-il'] = "";
+$text['label-default_settings']['it-it'] = "Parametri di Default";
+$text['label-default_settings']['nl-nl'] = "";
+$text['label-default_settings']['pl-pl'] = "Ustawienia domyślne";
+$text['label-default_settings']['pt-br'] = "Configurações";
+$text['label-default_settings']['pt-pt'] = "Predefinições";
+$text['label-default_settings']['ro-ro'] = "";
+$text['label-default_settings']['ru-ru'] = "Настройки по умолчанию";
+$text['label-default_settings']['sv-se'] = "Standard Inställningar";
+$text['label-default_settings']['uk-ua'] = "Налаштування за замовчуванням";
+
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['ar-eg'] = "";
 $text['header-settings']['de-at'] = "Einstellungen"; //copied from de-de
