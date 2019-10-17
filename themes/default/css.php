@@ -531,7 +531,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: none;
 		}
 
-	div#menu_side_container > a.menu_side_item_main {
+	div#menu_side_container > a.menu_side_item_main,
+	div#menu_side_container > div > a.menu_side_item_main,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main {
 		display: block;
 		width: 100%;
 		padding: 10px 20px;
@@ -544,7 +546,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	div#menu_side_container > a.menu_side_item_main:hover,
 	div#menu_side_container a.menu_side_item_main:focus,
-	div#menu_side_container a.menu_side_item_main:active {
+	div#menu_side_container a.menu_side_item_main:active,
+	div#menu_side_container > div > a.menu_side_item_main:hover,
+	div#menu_side_container > div > a.menu_side_item_main:focus,
+	div#menu_side_container > div > a.menu_side_item_main:active,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:hover,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:focus,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;
