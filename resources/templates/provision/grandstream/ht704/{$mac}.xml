@@ -818,7 +818,11 @@
 <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset($grandstream_fax_mode)}
+<P228>1</P228>
+{else}
 <P228>0</P228>
+{/if}
 
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->
