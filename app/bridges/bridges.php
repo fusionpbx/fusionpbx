@@ -166,7 +166,7 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<div class='action_bar'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<b style='float: left;'>".$text['title-bridges']." (".$num_rows.")</b>\n";
 	if (permission_exists('bridge_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'bridge_edit.php']);
