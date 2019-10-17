@@ -437,7 +437,6 @@
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['default_setting_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons' nowrap='nowrap'>";
-//this one works
 			if (permission_exists('default_setting_edit')) {
 				echo "<a href=\"javascript:document.location.href='default_setting_edit.php?id=".escape($row['default_setting_uuid'])."&search='+$('#default_setting_search').val();\" alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
