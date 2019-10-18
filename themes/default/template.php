@@ -424,13 +424,13 @@ echo "	<div id='message_container'></div>\n";
 		echo "		<div id='domains_list'>\n";
 
 		//alternating background colors of inactive domains
-		if ($_SESSION['theme']['domain_inactive_background_color'][0]['text'] != '') {
+		if ($_SESSION['theme']['domain_inactive_background_color'][0] != '') {
 			$bgcolor1 = $_SESSION['theme']['domain_inactive_background_color'][0];
 		}
 		else {
 			$bgcolor1 = "#eaedf2";
 		}	
-		if ($_SESSION['theme']['domain_inactive_background_color'][1]['text'] != '') {
+		if ($_SESSION['theme']['domain_inactive_background_color'][1] != '') {
 			$bgcolor2 = $_SESSION['theme']['domain_inactive_background_color'][1];
 		}	
 		else {
