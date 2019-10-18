@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="extension_queue" continue="false" app_uuid="854df474-bf40-419e-9ba7-3bd27a52d98a" enabled="false">
+	<extension name="extension_queue" continue="false" app_uuid="854df474-bf40-419e-9ba7-3bd27a52d98a" enabled="false" order="560">
 		<condition field="${user_exists}" expression="^true$">
 			<action application="answer" data=""/>
 			<action application="set" data="fifo_simo=1"/>
