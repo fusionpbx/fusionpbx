@@ -163,7 +163,6 @@
 
 ?>
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
 	<div align='center'>
@@ -228,7 +227,7 @@
 								   '<label for="id' + key + '">'
 									+ val.label + '</label>');
 		});
-		choiceContainer.find("input").click(plotAccordingToChoices);
+		choiceContainer.find("input").on('click', plotAccordingToChoices);
 
 		function plotAccordingToChoices() {
 			var data = [];
@@ -248,13 +247,15 @@
 					},
 					yaxis: { min: 0 },
 					<?php
-						if ($hours <= 48) {
-							echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
-						} else if ($hours > 48 && $hours < 168) {
-							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
-						} else {
-							echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
-						}
+					if ($hours <= 48) {
+						echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+					}
+					else if ($hours > 48 && $hours < 168) {
+						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+					}
+					else {
+						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+					}
 					?>
 				});
 		}
@@ -284,7 +285,7 @@
 		if ($i <= $hours) {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".($i+1)."</td>\n";
 		}
-		elseif ($i == $hours+1) {
+		else if ($i == $hours+1) {
 			echo "	<br /><br />\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
@@ -323,7 +324,7 @@
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
 		echo "</tr >\n";
-		if ($c==0) { $c=1; } else { $c=0; }
+		$c = $c ? 0 : 1;
 		$i++;
 	}
 	echo "</table>\n";

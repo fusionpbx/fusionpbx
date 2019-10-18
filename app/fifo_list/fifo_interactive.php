@@ -23,23 +23,27 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('active_queue_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('active_queue_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the fifo_name from http and set it to a php variable
-	$fifo_name = trim($_REQUEST["c"]);
+	$fifo_name = preg_replace('#[^a-zA-Z0-9\_\@\-./]#', '', $_REQUEST["c"]);
 
 //if not the user is not a member of the superadmin then restrict to viewing their own domain
 	if (!if_group("superadmin")) {
@@ -139,4 +143,5 @@ echo "<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</di
 echo "<br><br>";
 
 require_once "resources/footer.php";
+
 ?>

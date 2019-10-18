@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,23 +82,23 @@
 	}
 
 //parse the email message
-	$mime=new mime_parser_class;
+	$mime = new mime_parser_class;
 	$mime->decode_bodies = 1;
-	$parameters=array(
+	$parameters = array(
 		//'File'=>$message_file,
 
 		// Read a message from a string instead of a file
-		'Data'=>$msg,
+		'Data' => $msg,
 
 		// Save the message body parts to a directory
-		// 'SaveBody'=>'/tmp',
+		// 'SaveBody' => '/tmp',
 
 		// Do not retrieve or save message body parts
-		//   'SkipBody'=>1,
+		//   'SkipBody' => 1,
 	);
-	$success=$mime->Decode($parameters, $decoded);
+	$success = $mime->Decode($parameters, $decoded);
 
-	if(!$success) {
+	if (!$success) {
 		echo "MIME message decoding error: ".HtmlSpecialChars($mime->error)."\n";
 	}
 	else {
@@ -118,7 +118,7 @@
 			$body = '';
 			$content_type = $decoded[0]['Headers']['content-type:'];
 			if (substr($content_type, 0, 15) == "multipart/mixed" || substr($content_type, 0, 21) == "multipart/alternative") {
-				foreach($decoded[0]["Parts"] as $row) {
+				foreach ($decoded[0]["Parts"] as $row) {
 					$body_content_type = $row["Headers"]["content-type:"];
 					if (substr($body_content_type, 0, 9) == "text/html") { $body = $row["Body"]; }
 					if (substr($body_content_type, 0, 10) == "text/plain") { $body_plain = $row["Body"];  $body = $body_plain; }
@@ -141,7 +141,8 @@
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
 		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
-	} else {
+	}
+	else {
 		$smtp['port'] = 0;
 	}
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['text'];
@@ -162,21 +163,21 @@
 	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
-		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
 		$sql .= "and domain_setting_name = 'text' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$parameters['domain_uuid'] = $headers["X-FusionPBX-Domain-UUID"];
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
 			foreach ($result as $row) {
 				if ($row['domain_setting_value'] != '') {
 					$smtp[str_replace('smtp_','',$row["domain_setting_subcategory"])] = $row['domain_setting_value'];
 				}
 			}
 		}
-		unset($sql, $prep_statement);
+		unset($sql, $parameters, $result, $row);
 	}
 	// value adjustments
 	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
@@ -195,7 +196,10 @@
 			case 'mail': $mail->IsMail(); break;
 			default: $mail->IsSMTP(); break;
 		}
-	} else $mail->IsSMTP();
+	}
+	else {
+		$mail->IsSMTP();
+	}
 
 // optional bypass TLS certificate check e.g. for self-signed certificates
 	if (isset($_SESSION['email']['smtp_validate_certificate'])) {
@@ -257,7 +261,7 @@
 		$mail->AddAddress($to);
 	}
 	else {
-		foreach($to_array as $to_row) {
+		foreach ($to_array as $to_row) {
 			if (strlen($to_row) > 0) {
 				echo "Add Address: $to_row\n";
 				$mail->AddAddress(trim($to_row));
@@ -266,7 +270,7 @@
 	}
 
 //get the attachments and add to the email
-	if($success) {
+	if ($success) {
 		foreach ($decoded[0][Parts] as &$parts_array) {
 			$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];
 				//image/tiff;name="testfax.tif"
@@ -325,7 +329,7 @@
 //add the body to the email
 	$body_plain = remove_tags($body);
 	//echo "body_plain = $body_plain\n";
-	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
+	if ((substr($body, 0, 5) == "<html") || (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body."<br><br>".nl2br($transcription);
 		$mail->AltBody = $body_plain."\n\n$transcription";
@@ -340,40 +344,39 @@
 	$mail->CharSet = "utf-8";
 
 //send the email
-	if(!$mail->Send()) {
+	if (!$mail->Send()) {
 		$mailer_error = $mail->ErrorInfo;
 		echo "Mailer Error: ".$mailer_error."\n\n";
 
 		$call_uuid = $headers["X-FusionPBX-Call-UUID"];
 		if ($resend == true) {
 			echo "Retained in v_email_logs \n";
-		} else {
+		}
+		else {
 			// log/store message in database for review
 			if (!isset($email_log_uuid)) {
-				$email_log_uuid = uuid();
-				$sql = "insert into v_email_logs ( ";
-				$sql .= "email_log_uuid, ";
-				if ($call_uuid) {
-					$sql .= "call_uuid, ";
-				}
-				$sql .= "domain_uuid, ";
-				$sql .= "sent_date, ";
-				$sql .= "type, ";
-				$sql .= "status, ";
-				$sql .= "email ";
-				$sql .= ") values ( ";
-				$sql .= "'".$email_log_uuid."', ";
-				if ($call_uuid) {
-					$sql .= "'".$call_uuid."', ";
-				}
-				$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
-				$sql .= "now(),";
-				$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
-				$sql .= "'failed', ";
-				$sql .= "'".str_replace("'", "''", $msg)."' ";
-				$sql .= ") ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				//build insert array
+					$email_log_uuid = uuid();
+					$array['email_logs'][0]['email_log_uuid'] = $email_log_uuid;
+					if (is_uuid($call_uuid)) {
+						$array['email_logs'][0]['call_uuid'] = $call_uuid;
+					}
+					$array['email_logs'][0]['domain_uuid'] = $headers["X-FusionPBX-Domain-UUID"];
+					$array['email_logs'][0]['sent_date'] = 'now()';
+					$array['email_logs'][0]['type'] = $headers["X-FusionPBX-Email-Type"];
+					$array['email_logs'][0]['status'] = 'failed';
+					$array['email_logs'][0]['email'] = str_replace("'", "''", $msg);
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('email_log_add', 'temp');
+				//execute insert
+					$database = new database;
+					$database->app_name = 'v_mailto';
+					$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
+					$database->save($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('email_log_add', 'temp');
 			}
 
 			echo "Retained in v_email_logs as email_log_uuid = ".$email_log_uuid."\n";
@@ -394,31 +397,25 @@
 	fclose($fp);
 
 /*
-// save in /tmp as eml file
+//save in /tmp as eml file
+	$fp = fopen(sys_get_temp_dir()."/email.eml", "w");
+	ob_end_clean();
+	ob_start();
 
-$fp = fopen(sys_get_temp_dir()."/email.eml", "w");
-ob_end_clean();
-ob_start();
+	$sql = "select email from v_email_logs where email_log_uuid = :email_log_uuid ";
+	$parameters['email_log_uuid'] = $email_log_uuid;
+	$database = new database;
+	$email = $database->select($sql, $parameters, 'column');
+	echo $email;
+	unset($sql, $parameters, $email);
 
-$sql = "select email from v_email_logs where email_log_uuid = '".$email_log_uuid."'";
-$prep_statement = $db->prepare($sql);
-if ($prep_statement) {
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		echo $row["email"];
-		break;
-	}
-}
-unset($sql, $prep_statement, $result);
+	$content = ob_get_contents(); //get the output from the buffer
+	$content = str_replace("<br />", "", $content);
 
-$content = ob_get_contents(); //get the output from the buffer
-$content = str_replace("<br />", "", $content);
+	ob_end_clean(); //clean the buffer
 
-ob_end_clean(); //clean the buffer
-
-fwrite($fp, $content);
-fclose($fp);
-
+	fwrite($fp, $content);
+	fclose($fp);
 */
+
 ?>

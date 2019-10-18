@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -92,6 +92,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$domain_setting_uuid = $_POST["domain_setting_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../domains/domain_edit.php?id='.$domain_uuid);
+			exit;
+		}
 
 	//check for all required/authorized data
 		if (strlen($domain_setting_category) == 0 || (is_array($allowed_categories) && sizeof($allowed_categories) > 0 && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -308,7 +316,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: domain_edit.php?id=".$domain_uuid);
+				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".$domain_uuid);
 				exit;
 		}
 }
@@ -332,8 +340,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$domain_setting_enabled = $row["domain_setting_enabled"];
 			$domain_setting_description = $row["domain_setting_description"];
 		}
-		unset($sql, $parameters, $row);
+		unset($sql, $parameters);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -357,7 +369,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domain_edit.php?id=".escape($domain_uuid)."'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($domain_uuid)."'\" value='".$text['button-back']."'>";
 	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -379,10 +391,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('domain_setting_category_edit')) {
+		if ($action == 'add') {
+			$domain_setting_category = $_GET['domain_setting_category'];
+		}
 		echo "	<input type='text' class='formfld' name='domain_setting_category' id='domain_setting_category' maxlength='255' value=\"".escape($domain_setting_category)."\">\n";
 	}
 	else {
-		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').focus();\">\n";
+		echo "	<select class='formfld' name='domain_setting_category' id='domain_setting_category' onchange=\"$('#domain_setting_subcategory').trigger('focus');\">\n";
 		echo "		<option value=''></option>\n";
 		if (is_array($allowed_categories) && sizeof($allowed_categories) > 0) {
 			foreach ($allowed_categories as $category) {
@@ -534,7 +549,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
 		$row['domain_setting_value'] = str_replace('"', "'", $row['domain_setting_value']);
 		if ($fonts = get_available_fonts('alpha')) {
-			echo "	<select class='formfld' id='sel_domain_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_domain_setting_value option').length - 1) { $('#txt_domain_setting_value').val('').fadeIn('fast'); $('#txt_domain_setting_value').focus(); } else { $('#txt_domain_setting_value').fadeOut('fast', function(){ $('#txt_domain_setting_value').val($('#sel_domain_setting_value').val()) }); } \">\n";
+			echo "	<select class='formfld' id='sel_domain_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_domain_setting_value option').length - 1) { $('#txt_domain_setting_value').val('').fadeIn('fast'); $('#txt_domain_setting_value').trigger('focus'); } else { $('#txt_domain_setting_value').fadeOut('fast', function(){ $('#txt_domain_setting_value').val($('#sel_domain_setting_value').val()) }); } \">\n";
 			echo "		<option value=''></option>\n";
 			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
 			$option_found = false;
@@ -623,6 +638,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='fixed' ".(($row['domain_setting_value'] == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
 		echo "    	<option value='static' ".(($row['domain_setting_value'] == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
 		echo "    	<option value='inline' ".(($row['domain_setting_value'] == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+		echo "    	<option value='side' ".(($row['domain_setting_value'] == "side") ? "selected='selected'" : null).">".$text['label-side']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
@@ -636,6 +652,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='left' ".(($row['domain_setting_value'] == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
 		echo "    	<option value='center' ".(($row['domain_setting_value'] == "center") ? "selected='selected'" : null).">".$text['label-center']."</option>\n";
 		echo "    	<option value='right' ".(($row['domain_setting_value'] == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
+		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='domain_setting_value' name='domain_setting_value' wrap='off'>".$row['domain_setting_value']."</textarea>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "button_icons" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='auto'>".$text['option-button_icons_auto']."</option>\n";
+		echo "    	<option value='only' ".($row['domain_setting_value'] == "only" ? "selected='selected'" : null).">".$text['option-button_icons_only']."</option>\n";
+		echo "    	<option value='always' ".($row['domain_setting_value'] == "always" ? "selected='selected'" : null).">".$text['option-button_icons_always']."</option>\n";
+		echo "    	<option value='never' ".($row['domain_setting_value'] == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
 		echo "    </select>\n";
 	}
 	else {
@@ -722,6 +749,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='domain_setting_uuid' value='".escape($domain_setting_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br />";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
@@ -732,7 +760,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<script>\n";
 	//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
+	echo "	$(window).on('keypress',function(event){\n";
 	echo "		if (event.which == 13) { submit_form(); }\n";
 	echo "	});\n";
 	//hide/convert password fields then submit form
@@ -742,9 +770,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	//define lowercase class
-	echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+	echo "	$('.lowercase').on('blur',function(){ this.value = this.value.toLowerCase(); });";
 	//show order if array
-	echo "	$('#domain_setting_name').keyup(function(){ \n";
+	echo "	$('#domain_setting_name').on('keyup',function(){ \n";
 	echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
 	echo "	});\n";
 	echo "</script>\n";

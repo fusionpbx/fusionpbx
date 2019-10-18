@@ -38,55 +38,43 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//set the variables
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-	}
-
 //delete the data
-	if (strlen($id) == 36) {
-		//start the database transaction
-			$db->beginTransaction();
+	$menu_uuid = $_GET['id'];
 
-		//delete the menu
-			$sql = "delete from v_menus ";
-			$sql .= "where menu_uuid = '$id'; ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+	if (is_uuid($menu_uuid)) {
 
-		//delete the items in the menu
-			$sql = "delete from v_menu_items ";
-			$sql .= "where menu_uuid = '$id'; ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		//build delete array for the menu, menu items, menu permissions, and menu languages
+			$array['menus'][0]['menu_uuid'] = $menu_uuid;
+			$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
+			$array['menu_item_groups'][0]['menu_uuid'] = $menu_uuid;
+			$array['menu_languages'][0]['menu_uuid'] = $menu_uuid;
 
-		//delete the menu permissions
-			$sql = "delete from v_menu_item_groups ";
-			$sql .= "where menu_uuid = '$id'; ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add('menu_delete', 'temp');
+			$p->add('menu_item_delete', 'temp');
+			$p->add('menu_item_group_delete', 'temp');
+			$p->add('menu_language_delete', 'temp');
 
-		//delete the menu languages
-			$sql = "delete from v_menu_languages ";
-			$sql .= "where menu_uuid = '$id'; ";
-			//echo $sql."\n";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		//execute delete
+			$database = new database;
+			$database->app_name = 'menu';
+			$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+			$database->delete($array);
+			unset($array);
 
-		//save the changes to the database
-			$db->commit();
+		//revoke temporary permissions
+			$p->delete('menu_delete', 'temp');
+			$p->delete('menu_item_delete', 'temp');
+			$p->delete('menu_item_group_delete', 'temp');
+			$p->delete('menu_language_delete', 'temp');
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: menu.php");
-	return;
+	exit;
 
 ?>

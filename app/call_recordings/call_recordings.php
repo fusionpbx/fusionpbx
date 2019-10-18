@@ -78,6 +78,9 @@
 				$obj->delete($call_recordings);
 			//delete message
 				message::add($text['message-delete']);
+			//redirect
+				header('Location: call_recordings.php');
+				exit;
 		}
 	}
 
@@ -95,6 +98,7 @@
 		$sql_search = "and (";
 		$sql_search .= "lower(call_recording_name) like :search ";
 		$sql_search .= "or lower(call_recording_path) like :search ";
+		$sql_search .= "or cast(call_recording_date as text) like :search ";
 		$sql_search .= "or lower(call_direction) like :search ";
 		$sql_search .= "or lower(call_recording_description) like :search ";
 		$sql_search .= ") ";
@@ -237,9 +241,9 @@
 			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
 			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
 			//echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_length'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape($row['call_recording_length'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_date'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_direction'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_recording_description'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -247,10 +251,10 @@
 				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?id=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
 			if (permission_exists('call_recording_edit')) {
-				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
+				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='fas fa-pencil-alt'></span></input>\n";
 			}
 			if (permission_exists('call_recording_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>\n";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete' onclick=\"$('#checkbox_".$x."').prop('checked', true);\"><span class='fas fa-minus'></span></button>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

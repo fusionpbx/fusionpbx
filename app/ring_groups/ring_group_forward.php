@@ -50,64 +50,83 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//find the path
+	switch ($_SERVER['REQUEST_URI']) {
+		case PROJECT_PATH."/core/user_settings/user_dashboard.php":
+			$validated_path = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+			break;
+		case PROJECT_PATH."/app/ring_groups/ring_group_forward.php":
+			$validated_path = PROJECT_PATH."/app/ring_groups/ring_group_forward.php";
+			break;
+		default:
+			$validated_path = PROJECT_PATH."/app/ring_groups/ring_group_forward.php";
+	}
+
 //update ring group forwarding
 	if (sizeof($_POST) > 0) {
-		$ring_groups = $_POST['ring_group_forward_enabled'];
-		$destinations = $_POST['ring_group_forward_destination'];
-
-		if (is_array($ring_groups) && sizeof($ring_groups) > 0) {
-			foreach ($ring_groups as $ring_group_uuid => $ring_group_forward_enabled) {
-			//remove non-numeric characters
-				$ring_group_foreward_destination = preg_replace("~[^0-9]~", "", $destinations[$ring_group_uuid]);
-			//update the ring group
-				$sql = "update v_ring_groups set ";
-				$sql .= "ring_group_forward_enabled = '".check_str($ring_group_forward_enabled)."', ";
-				$sql .= "ring_group_forward_destination = '".check_str($ring_group_foreward_destination)."' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and ring_group_uuid = '".$ring_group_uuid."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+		if (is_array($_POST['ring_groups']) && @sizeof($_POST['ring_groups']) != 0 && permission_exists('ring_group_forward')) {
+			$x = 0;
+			foreach ($_POST['ring_groups'] as $row) {
+				//remove non-numeric characters
+					$ring_group_uuid = $row['ring_group_uuid'];
+					$ring_group_forward_destination = preg_replace("~[^0-9]~", "", $row['ring_group_forward_destination']);
+					$ring_group_forward_enabled = ($row['ring_group_forward_enabled'] == 'true') ? $ring_group_forward_enabled = 'true' : $ring_group_forward_enabled = 'false';
+				//build array
+					if (is_uuid($ring_group_uuid)) {
+						$array['ring_groups'][$x]['ring_group_uuid'] = $ring_group_uuid;
+						$array['ring_groups'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['ring_groups'][$x]['ring_group_forward_enabled'] =$ring_group_forward_enabled;
+						$array['ring_groups'][$x]['ring_group_forward_destination'] = $ring_group_forward_destination;
+					}
+				//increment counter
+					$x++;
 			}
-			//redirect the user
-				message::add($text['message-update']);
-				header("Location: ".$_REQUEST['return_url']);
-				exit;
+
+			if (is_array($array) && sizeof($array) != 0) {
+				//update ring group
+					$p = new permissions;
+					$p->add('ring_group_edit', 'temp');
+
+					$database = new database;
+					$database->app_name = 'ring_groups';
+					$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+					$database->save($array);
+					unset($array);
+
+					$p->delete('ring_group_edit', 'temp');
+
+				//set message
+					message::add($text['message-update']);
+
+				//redirect the user
+					header("Location: ".$validated_path);
+					exit;
+			}
 		}
 	}
 
 //prepare to page the results
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
 		//show all ring groups
-		$sql = "select count(*) as num_rows from v_ring_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		//show only assigned fax extensions
-		$sql = "select count(*) as num_rows from v_ring_groups as r, v_ring_group_users as u ";
+		//show only assigned ring groups
+		$sql = "select count(*) from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
-		$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
-	if ($is_included) {
-		$rows_per_page = 10;
-	}
-	else {
-		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	}
+	$rows_per_page = $is_included ? 10 : (is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50);
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -118,33 +137,25 @@
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
 		//show all ring groups
 		$sql = "select * from v_ring_groups ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
 		//show only assigned ring groups
-		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, ";
-		$sql .= "r.ring_group_forward_enabled, r.ring_group_description ";
-		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
+		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
-		$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
-	if (strlen($order_by) == 0) {
-		$sql .= "order by ring_group_extension asc ";
-	}
-	else {
-		$sql .= "order by ".$order_by." ".$order." ";
-	}
-	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll();
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= order_by($order_by, $order, 'ring_group_extension', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
-	echo "<form method='post' name='frm' action='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php'>\n";
-	echo "<input type='hidden' name='return_url' value='".$_SERVER['REQUEST_URI']."'>\n";
-
+	echo "<form method='post' name='frm' action='".$validated_path."'>\n";
 	echo "	<div style='float: left;'>";
 	echo "		<b>".$text['header-ring-group-forward']."</b><br />";
 	if (!$is_included) {
@@ -170,28 +181,30 @@
 	}
 	echo "</tr>\n";
 
-	$c = 0;
-	if ($result_count > 0) {
+	$c = 0; $x = 0;
+	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
-			$onclick = "onclick=\"document.getElementById('".$row['ring_group_uuid']."').selectedIndex = (document.getElementById('".$row['ring_group_uuid']."').selectedIndex) ? 0 : 1; if (document.getElementById('".$row['ring_group_uuid']."').selectedIndex) { document.getElementById('destination').focus(); }\"";
+			$onclick = "onclick=\"document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex = (document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex) ? 0 : 1; if (document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex) { document.getElementById('destination').focus(); }\"";
 			echo "<tr>\n";
-			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".$row['ring_group_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".$row['ring_group_extension']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".escape($row['ring_group_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".escape($row['ring_group_extension'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_style".$c." row_style_slim' width='5'>";
-			echo "		<select class='formfld' name='ring_group_forward_enabled[".$row['ring_group_uuid']."]' id='".$row['ring_group_uuid']."' onchange=\"(this.selectedIndex == 1) ? document.getElementById('destination').focus() : null;\">";
+			echo "		<input type='hidden' name='ring_groups[".$x."][ring_group_uuid]' id='destination'  value=\"".escape($row["ring_group_uuid"])."\">";
+			echo "		<select class='formfld' name='ring_groups[".$x."][ring_group_forward_enabled]\" id='".escape($row['ring_group_uuid'])."' onchange=\"(this.selectedIndex == 1) ? document.getElementById('destination').focus() : null;\">";
 			echo "			<option value='false'>".$text['option-disabled']."</option>";
 			echo "			<option value='true' ".(($row["ring_group_forward_enabled"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
 			echo "		</select>";
-			echo "		<input class='formfld' style='width: 100px;' type='text' name='ring_group_forward_destination[".$row['ring_group_uuid']."]' id='destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".$row["ring_group_forward_destination"]."\">";
+			echo "		<input class='formfld' style='width: 100px;' type='text' name='ring_groups[".$x."][ring_group_forward_destination]' id='destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($row["ring_group_forward_destination"])."\">";
 			echo "	</td>\n";
 			if (!$is_included) {
-				echo "	<td valign='top' class='row_stylebg tr_link_void' ".$onclick.">".$row['ring_group_description']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg tr_link_void' ".$onclick.">".escape($row['ring_group_description'])."&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
+			$x++;
 		}
-		unset($sql, $result, $row_count);
 	}
+	unset($result, $row);
 
 	echo "</table>";
 	echo "</form>";
@@ -205,4 +218,5 @@
 	if (!$is_included) {
 		require_once "resources/footer.php";
 	}
+
 ?>

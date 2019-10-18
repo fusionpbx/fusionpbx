@@ -57,9 +57,9 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$message_from = check_str($_POST["message_from"]);
-		$message_to = check_str($_POST["message_to"]);
-		$message_text = check_str($_POST["message_text"]);
+		$message_from = $_POST["message_from"];
+		$message_to = $_POST["message_to"];
+		$message_text = $_POST["message_text"];
 		$message_media = $_FILES["message_media"];
 	}
 
@@ -77,10 +77,8 @@
 					exit;
 			}
 
-
-
 		// handle media (if any)
-			if (is_array($message_media) && sizeof($message_media) != 0) {
+			if (is_array($message_media) && @sizeof($message_media) != 0) {
 				// reorganize media array, ignore errored files
 				$f = 0;
 				foreach ($message_media['error'] as $index => $error) {
@@ -96,22 +94,19 @@
 				$message_media = $tmp_media;
 				unset($tmp_media, $f);
 			}
-			$message_type = is_array($message_media) && sizeof($message_media) != 0 ? 'mms' : 'sms';
-
+			$message_type = is_array($message_media) && @sizeof($message_media) != 0 ? 'mms' : 'sms';
 
 		//get the contact uuid
-			//$sql = "SELECT trim(c.contact_name_given || ' ' || c.contact_name_family || ' (' || c.contact_organization || ')') AS name, p.phone_number AS number ";
-			$sql = "SELECT c.contact_uuid ";
-			$sql .= "FROM v_contacts as c, v_contact_phones as p ";
-			$sql .= "WHERE p.contact_uuid = c.contact_uuid ";
-			//$sql .= "and p.phone_number = :phone_number ";
-			$sql .= "and p.phone_number like '%".$phone_number."%' ";
-			$sql .= "and c.domain_uuid = '".$domain_uuid."' ";
-			$prep_statement = $db->prepare($sql);
-			//$prep_statement->bindParam(':phone_number', $phone_number);
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_NAMED);
-			$contact_uuid = $row['contact_uuid'];
+			$sql = "select c.contact_uuid ";
+			$sql .= "from v_contacts as c, v_contact_phones as p ";
+			$sql .= "where p.contact_uuid = c.contact_uuid ";
+			$sql .= "and p.phone_number like :phone_number ";
+			$sql .= "and c.domain_uuid = :domain_uuid ";
+			$parameters['phone_number'] = '%'.$phone_number.'%';
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$contact_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 		//build the message array
 			$message_uuid = uuid();
@@ -127,7 +122,8 @@
 			$array['messages'][0]['message_text'] = $message_text;
 
 		//build message media array (if necessary)
-			if (is_array($message_media)) {
+			$p = new permissions;
+			if (is_array($message_media) && @sizeof($message_media) != 0) {
 				foreach($message_media as $index => $media) {
 					$array['message_media'][$index]['message_media_uuid'] = $media['uuid'];
 					$array['message_media'][$index]['message_uuid'] = $message_uuid;
@@ -137,19 +133,19 @@
 					$array['message_media'][$index]['message_media_url'] = $media['name'];
 					$array['message_media'][$index]['message_media_content'] = base64_encode(file_get_contents($media['tmp_name']));
 				}
+
+				$p->add('message_media_add', 'temp');
 			}
 
 		//save to the data
 			$database = new database;
 			$database->app_name = 'messages';
-			$database->app_uuid = null;
-			$database->uuid($message_uuid);
+			$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
 			$database->save($array);
-			$message = $database->message;
-			unset($array, $message);
+			unset($array);
 
-		//debug info
-			//echo "<pre>".print_r($message, true)."</pre>"; exit;
+		//remove any temporary permissions
+			$p->delete('message_media_add', 'temp');
 
 		//santize the from
 			$message_from = preg_replace('{[\D]}', '', $message_from);
@@ -157,12 +153,11 @@
 		//prepare message to send
 			$message['to'] = $message_to;
 			$message['text'] = $message_text;
-			if (is_array($message_media) && sizeof($message_media) != 0) {
+			if (is_array($message_media) && @sizeof($message_media) != 0) {
 				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
 				foreach ($message_media as $index => $media) {
 					$path = $protocol.$_SERVER['HTTP_HOST'].'/app/messages/message_media.php?id='.$media['uuid'].'&action=download&.'.strtolower(pathinfo($media['name'], PATHINFO_EXTENSION));
 					$message['media'][] = $path;
-					//echo $path."<br><br>";
 				}
 			}
 			$http_content = json_encode($message);
@@ -185,11 +180,9 @@
 				$headers[] = "Authorization: Basic ".base64_encode($http_auth_user.':'.$http_auth_password);
 			}
 			$response = http_request($http_destination, $http_method, $headers, $http_content);
-			//echo $http_content."<br><br>".$response;
 
 		//redirect the user
-			//$_SESSION["message"] = $text['message-sent'];
 			return true;
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 ?>

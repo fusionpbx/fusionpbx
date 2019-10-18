@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2018 All Rights Reserved.
+	Copyright (C) 2008-2019 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -43,9 +43,10 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
+		$page = $_REQUEST['page'];
 	}
 	else {
 		$action = "add";
@@ -54,18 +55,18 @@
 //get total extension count from the database, check limit, if defined
 	if ($action == 'add') {
 		if ($_SESSION['limit']['extensions']['numeric'] != '') {
-			$sql = "select count(*) as num_rows from v_extensions where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$total_extensions = $row['num_rows'];
-			}
-			unset($prep_statement, $row);
+			$sql = "select count(*) ";
+			$sql .= "from v_extensions ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$total_extensions = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+
 			if ($total_extensions >= $_SESSION['limit']['extensions']['numeric']) {
 				message::add($text['message-maximum_extensions'].' '.$_SESSION['limit']['extensions']['numeric'], 'negative');
-				header('Location: extensions.php');
-				return;
+				header('Location: extensions.php'.(is_numeric($page) ? '?page='.$page : null));
+				exit;
 			}
 		}
 	}
@@ -129,7 +130,7 @@
 				$voicemail_id = $number_alias;
 			}
 			if (!is_numeric($voicemail_id)) {
-				$voicemail_id = NULL;
+				$voicemail_id = null;
 			}
 			
 			//change toll allow delimiter
@@ -137,27 +138,44 @@
 	}
 
 //delete the user from the v_extension_users
-	if ($_REQUEST["delete_type"] == "user" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
+	if ($_REQUEST["delete_type"] == "user" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 		//set the variables
 			$extension_uuid = $_REQUEST["id"];
 			$user_uuid = $_REQUEST["delete_uuid"];
 		//delete the group from the users
-			$sql = "delete from v_extension_users ";
-			$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
-			$sql .= "and user_uuid = '".check_str($user_uuid)."' ";
-			$db->exec(check_sql($sql));
+			$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
+			$array['extension_users'][0]['user_uuid'] = $user_uuid;
+
+			$p = new permissions;
+			$p->add('extension_user_delete', 'temp');
+
+			$database = new database;
+			$database->app_name = 'extensions';
+			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+			$database->delete($array);
+			unset($array);
+
+			$p->delete('extension_user_delete', 'temp');
 	}
 
 //delete the line from the v_device_lines
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
-		if ($_REQUEST["delete_type"] == "device_line" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
+		if ($_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 			//set the variables
 				$device_line_uuid = $_REQUEST["delete_uuid"];
 			//delete device_line
-				$sql = "delete from v_device_lines ";
-				$sql .= "where device_line_uuid = '".check_str($device_line_uuid)."' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
+
+				$p = new permissions;
+				$p->add('device_line_delete', 'temp');
+
+				$database = new database;
+				$database->app_name = 'extensions';
+				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+				$database->delete($array);
+				unset($array);
+
+				$p->delete('device_line_delete', 'temp');
 		}
 	}
 
@@ -165,11 +183,14 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//set the domain_uuid
-			if (permission_exists('extension_domain')) {
-				$domain_uuid = $_POST["domain_uuid"];
-			}
-			else {
-				$domain_uuid = $_SESSION['domain_uuid'];
+			$domain_uuid = permission_exists('extension_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extensions.php');
+				exit;
 			}
 
 		//check for all required data
@@ -250,7 +271,7 @@
 
 				//add the user to the database
 					$user_email = '';
-					if ($_SESSION["user"]["unique"]["text"] != "global") {
+					if ($_SESSION["users"]["unique"]["text"] != "global") {
 						if ($autogen_users == "true") {
 							$auto_user = $extension;
 							for ($i=1; $i<=$range; $i++) {
@@ -402,17 +423,19 @@
 									if ($voicemail_id !== NULL) {
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
-											$sql .= "where voicemail_id = '".check_str($voicemail_id)."' ";
-											$sql .= "and domain_uuid = '".check_str($domain_uuid)."' ";
-											$prep_statement = $db->prepare(check_sql($sql));
-											$prep_statement->execute();
-											$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-											foreach ($result as &$row) {
+											$sql .= "where voicemail_id = :voicemail_id ";
+											$sql .= "and domain_uuid = :domain_uuid ";
+											$parameters['voicemail_id'] = $voicemail_id;
+											$parameters['domain_uuid'] = $domain_uuid;
+											$database = new database;
+											$row = $database->select($sql, $parameters, 'row');
+											if (is_array($row) && @sizeof($row) != 0) {
 												$voicemail_uuid = $row["voicemail_uuid"];
 											}
+											unset($sql, $parameters, $row);
 
 										//if voicemail_uuid does not exist then get a new uuid
-											if (!isset($voicemail_uuid)) {
+											if (!is_uuid($voicemail_uuid)) {
 												$voicemail_uuid = uuid();
 												$voicemail_tutorial = 'true';
 											}
@@ -459,24 +482,33 @@
 				//update devices having extension assigned to line(s) with new password
 					if ($action == "update" && $range == 1 && permission_exists('extension_password')) {
 						$sql = "update v_device_lines set ";
-						$sql .= "password = '".check_str($password)."' ";
-						$sql .= "where domain_uuid = '".check_str($_SESSION['domain_uuid'])."' ";
-						$sql .= "and server_address = '".check_str($_SESSION['domain_name'])."' ";
-						$sql .= "and user_id = '".check_str($extension)."' ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$sql .= "password = :password ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and server_address = :server_address ";
+						$sql .= "and user_id = :user_id ";
+						$parameters['password'] = $password;
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['server_address'] = $_SESSION['domain_name'];
+						$parameters['user_id'] = $extension;
+						$database = new database;
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 					}
 				//update device key label
 					if (strlen($effective_caller_id_name) > 0) {
 						$sql = "update v_device_keys set ";
-						$sql .= "device_key_label = '".$effective_caller_id_name."' ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and device_key_value = '".$extension."' ";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$sql .= "device_key_label = :device_key_label ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and device_key_value = :device_key_value ";
+						$parameters['device_key_label'] = $effective_caller_id_name;
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['device_key_value'] = $extension;
+						$database = new database;
+						$database->execute($sql, $parameters);
+						unset($sql, $parameters);
 					}
 				//assign the user to the extension 
-					if ($action == "update" && strlen($_POST["extension_users"][0]["user_uuid"]) > 0) {
+					if ($action == "update" && is_uuid($_POST["extension_users"][0]["user_uuid"])) {
 						$array["extension_users"][0]["extension_user_uuid"] = uuid();
 						$array["extension_users"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 						$array["extension_users"][0]["user_uuid"] = $_POST["extension_users"][0]["user_uuid"];
@@ -498,16 +530,17 @@
 							$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
 						//get the device_uuid
-							$sql = "SELECT device_uuid FROM v_devices ";
-							$sql .= "WHERE device_mac_address = '".check_str($device_mac_address)."' ";
-							$sql .= "AND domain_uuid = '".check_str($domain_uuid)."' ";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							foreach($result as $field) {
-								$device_uuid = $field['device_uuid'];
+							$sql = "select device_uuid from v_devices ";
+							$sql .= "where device_mac_address = :device_mac_address ";
+							$sql .= "and domain_uuid = :domain_uuid ";
+							$parameters['device_mac_address'] = $device_mac_address;
+							$parameters['domain_uuid'] = $domain_uuid;
+							$database = new database;
+							$row = $database->select($sql, $parameters, 'row');
+							if (is_uuid($row['device_uuid'])) {
+								$device_uuid = $row['device_uuid'];
 							}
-							unset($sql, $prep_statement);
+							unset($sql, $parameters);
 
 						//set a default line number
 							if (strlen($line_number) == 0) { $line_number = '1'; }
@@ -526,12 +559,7 @@
 							$array["devices"][0]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
 							$array["devices"][0]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
 							$array["devices"][0]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
-							if (strlen($effective_caller_id_name) > 0) {
-								$array["devices"][0]["device_lines"][0]["display_name"] = $effective_caller_id_name;
-							}
-							else {
-								$array["devices"][0]["device_lines"][0]["display_name"] = $extension;
-							}
+							$array["devices"][0]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
 							$array["devices"][0]["device_lines"][0]["user_id"] = $extension;
 							$array["devices"][0]["device_lines"][0]["auth_id"] = $extension;
 							$array["devices"][0]["device_lines"][0]["password"] = $password;
@@ -545,12 +573,10 @@
 				//save to the data
 					$database = new database;
 					$database->app_name = 'extensions';
-					$database->app_uuid = null;
+					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array);
 					$message = $database->message;
-					// echo "<pre>".print_r($array, true)."<pre>\n";
-					// echo "<pre>".print_r($message, true)."<pre>\n";
-					// die();
+					unset($array);
 
 				//check the permissions
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {
@@ -606,36 +632,36 @@
 									echo "			<th>Username</th>\n";
 									echo "			<th>Password</th>\n";
 									echo "		</tr>\n";
-									foreach($generated_users as $tmp_user){
+									foreach ($generated_users as $tmp_user) {
 										echo "		<tr>\n";
 										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['username']."</td>\n";
 										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['password']."</td>\n";
 										echo "		</tr>\n";
 									}
-									if ($c==0) { $c=1; } else { $c=0; }
+									$c = $c ? 0 : 1;
 									echo "	</table>";
 									echo "</div>\n";
 									require_once "resources/footer.php";
 							}
-							return;
+							exit;
 					}
 					if ($action == "update") {
 						message::add($text['message-update']);
-						header("Location: extension_edit.php?id=".$extension_uuid);
+						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
 						return;
 					}
-		} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
-		$sql .= "where extension_uuid = '".check_str($extension_uuid)."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where extension_uuid = :extension_uuid ";
+		$parameters['extension_uuid'] = $extension_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
 			$extension = $row["extension"];
 			$number_alias = $row["number_alias"];
@@ -675,30 +701,27 @@
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 
 	//get the voicemail data
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 			//get the voicemails
 				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
-				$sql .= "and voicemail_id = '".((is_numeric($number_alias)) ? check_str($number_alias) : check_str($extension))."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$voicemail_password = $row["voicemail_password"];
-					$voicemail_mail_to = $row["voicemail_mail_to"];
-					$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and voicemail_id = :voicemail_id ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
+					$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
 					$voicemail_file = $row["voicemail_file"];
 					$voicemail_local_after_email = $row["voicemail_local_after_email"];
 					$voicemail_enabled = $row["voicemail_enabled"];
 					$voicemail_tutorial = $row["voicemail_tutorial"];
 				}
-				unset ($prep_statement);
-			//clean the variables
-				$voicemail_password = str_replace("#", "", $voicemail_password);
-				$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+				unset($sql, $parameters, $row);
 		}
 
 	}
@@ -708,75 +731,83 @@
 	}
 
 //get the device lines
-	$sql = "SELECT d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
-	$sql .= "FROM v_device_lines as l, v_devices as d ";
-	$sql .= "WHERE (l.user_id = '".check_str($extension)."' or l.user_id = '".check_str($number_alias)."')";
-	$sql .= "AND l.domain_uuid = '".check_str($domain_uuid)."' ";
-	$sql .= "AND l.device_uuid = d.device_uuid ";
-	$sql .= "ORDER BY l.line_number, d.device_mac_address asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($sql, $prep_statement);
+	$sql = "select d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+	$sql .= "from v_device_lines as l, v_devices as d ";
+	$sql .= "where (l.user_id = :user_id_1 or l.user_id = :user_id_2)";
+	$sql .= "and l.domain_uuid = :domain_uuid ";
+	$sql .= "and l.device_uuid = d.device_uuid ";
+	$sql .= "order by l.line_number, d.device_mac_address asc ";
+	$parameters['user_id_1'] = $extension;
+	$parameters['user_id_2'] = $number_alias;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$device_lines = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the devices
-	$sql = "SELECT * FROM v_devices ";
-	$sql .= "WHERE domain_uuid = '".check_str($domain_uuid)."' ";
-	$sql .= "ORDER BY device_mac_address asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($sql, $prep_statement);
+	$sql = "select * from v_devices ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by device_mac_address asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$devices = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get the device vendors
-	$sql = "SELECT name ";
-	$sql .= "FROM v_device_vendors ";
-	$sql .= "WHERE enabled = 'true' ";
-	$sql .= "ORDER BY name ASC ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_vendors = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select name ";
+	$sql .= "from v_device_vendors ";
+	$sql .= "where enabled = 'true' ";
+	$sql .= "order by name asc ";
+	$database = new database;
+	$device_vendors = $database->select($sql, null, 'all');
+	unset($sql);
 
 //get assigned users
 	if (is_uuid($extension_uuid)) {
-		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
+		$sql = "select u.username, e.user_uuid ";
+		$sql .= "from v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
 		$sql .= "and u.user_enabled = 'true' ";
-		$sql .= "and e.domain_uuid = '".check_str($domain_uuid)."' ";
-		$sql .= "and e.extension_uuid = '".check_str($extension_uuid)."' ";
+		$sql .= "and e.domain_uuid = :domain_uuid ";
+		$sql .= "and e.extension_uuid = :extension_uuid ";
 		$sql .= "order by u.username asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$assigned_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($assigned_users as $field) {
-			$assigned_user_uuids[] = $field['user_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['extension_uuid'] = $extension_uuid;
+		$database = new database;
+		$assigned_users = $database->select($sql, $parameters, 'all');
+		if (is_array($assigned_users) && @sizeof($assigned_users) != 0) {
+			foreach($assigned_users as $row) {
+				$assigned_user_uuids[] = $row['user_uuid'];
+			}
 		}
-		unset($sql, $prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //get the users
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
-	if (isset($assigned_user_uuids)) foreach($assigned_user_uuids as $assigned_user_uuid) {
-		$sql .= "and user_uuid <> '".check_str($assigned_user_uuid)."' ";
+	$sql = "select * from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	if (is_array($assigned_user_uuids) && @sizeof($assigned_user_uuids) != 0) {
+		foreach ($assigned_user_uuids as $index => $assigned_user_uuid) {
+			$sql .= "and user_uuid <> :user_uuid_".$index." ";
+			$parameters['user_uuid_'.$index] = $assigned_user_uuid;
+		}
 	}
-	unset($assigned_user_uuids);
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset($sql, $prep_statement);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $assigned_user_uuids, $assigned_user_uuid);
 
 //get the destinations
 	$sql = "select * from v_destinations ";
-	$sql .= "where domain_uuid = '".check_str($domain_uuid)."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and destination_type = 'inbound' ";
 	$sql .= "order by destination_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$destinations = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	unset ($sql, $prep_statement);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$destinations = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //change toll allow delimiter
 	$toll_allow = str_replace(':',',', $toll_allow);
@@ -787,6 +818,10 @@
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //begin the page content
 	require_once "resources/header.php";
@@ -815,13 +850,13 @@
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
 	echo "		if (!isNaN(new_ext)) {\n";
-	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext;\n";
+	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			var new_number_alias = prompt('".$text['message-number_alias']."');\n";
 	echo "			if (new_number_alias != null) {\n";
 	echo "				if (!isNaN(new_number_alias)) {\n";
-	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext + '&alias=' + new_number_alias;\n";
+	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid)."&ext=' + new_ext + '&alias=' + new_number_alias".(is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
 	echo "				}\n";
 	echo "			}\n";
 	echo "		}\n";
@@ -830,6 +865,9 @@
 	echo "</script>";
 
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	if (is_numeric($page)) {
+		echo "<input type='hidden' name='page' value='".$page."'>\n";
+	}
 	echo "<table width='100%' border='0' cellpdding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
@@ -839,9 +877,13 @@
 		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php".(is_numeric($page) ? '?page='.$page : null)."'\" value='".$text['button-back']."'>\n";
+	if ($action == 'update' && permission_exists('xml_cdr_view')) {
+		echo "	<input type='button' class='btn' alt='".$text['button-cdr']."' onclick=\"window.location='../xml_cdr/xml_cdr.php?extension_uuid=".urlencode($extension_uuid)."';\" value='".$text['button-cdr']."'>\n";
+	}
+	
 	if ($action == 'update' && (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
-		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".escape($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".urlencode($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
 	}
 	if ($action == "update" && permission_exists('extension_copy')) {
 		echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
@@ -1014,9 +1056,6 @@
 			echo "				</td>\n";
 
 			echo "				<td>\n";
-			//if (permission_exists('device_edit')) {
-			//	echo "					<a href='device_line_edit.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			//}
 			//if (permission_exists('device_delete')) {
 			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			//}
@@ -1241,7 +1280,6 @@
 			else {
 				echo "	<input type=\"submit\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 			}
-			unset ($prep_statement);
 		}
 		else {
 			echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($outbound_caller_id_number)."\">\n";
@@ -1715,9 +1753,9 @@
 	echo "    <select class='formfld' name='sip_force_contact'>\n";
 	echo "    <option value=''></option>\n";
 	switch ($sip_force_contact) {
-		case "NDLB-connectile-dysfunction" : 		$selected[1] = "selected='selected'"; 	break;
-		case "NDLB-connectile-dysfunction-2.0" : 	$selected[2] = "selected='selected'"; 	break;
-		case "NDLB-tls-connectile-dysfunction" : 	$selected[3] = "selected='selected'"; 	break;
+		case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
+		case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
+		case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
 	}
 	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
 	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
@@ -1905,7 +1943,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea class='formfld' name='description' rows='4'>".escape($description)."</textarea>\n";
+	echo "    <textarea class='formfld' name='description' rows='4'>".$description."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -1921,6 +1959,7 @@
 		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
 	echo "		</td>\n";

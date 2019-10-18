@@ -43,46 +43,45 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //get fax extension
-	if (isset($_GET['id']) && is_uuid($_GET["id"])) {
+	if (is_uuid($_GET["id"])) {
 		$fax_uuid = $_GET["id"];
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select fax_name, fax_extension from v_fax ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and fax_uuid = '$fax_uuid' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and fax_uuid = :fax_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['fax_uuid'] = $fax_uuid;
 		}
 		else {
 			//show only assigned fax extensions
 			$sql = "select fax_name, fax_extension from v_fax as f, v_fax_users as u ";
 			$sql .= "where f.fax_uuid = u.fax_uuid ";
-			$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and f.fax_uuid = '$fax_uuid' ";
-			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+			$sql .= "and f.domain_uuid = :domain_uuid ";
+			$sql .= "and f.fax_uuid = :fax_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['fax_uuid'] = $fax_uuid;
+			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		if (count($result) == 0) {
-			if (if_group("superadmin") || if_group("admin")) {
-				//allow access
-			}
-			else {
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
+			//set database fields as variables
+				$fax_name = $row["fax_name"];
+				$fax_extension = $row["fax_extension"];
+		}
+		else {
+			if (!if_group("superadmin") && !if_group("admin")) {
 				echo "access denied";
 				exit;
 			}
 		}
-		foreach ($result as &$row) {
-			//set database fields as variables
-				$fax_name = $row["fax_name"];
-				$fax_extension = $row["fax_extension"];
-			//limit to one row
-				break;
-		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
 
 //set the fax directory
@@ -93,47 +92,47 @@
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
-			if (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = $fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
+			if (file_exists($fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'])) {
+				$tmp_faxdownload_file = $fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'];
 			}
 		}
 		else if ($_GET['type'] == "fax_sent") {
-			if  (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = $fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
+			if  (file_exists($fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'])) {
+				$tmp_faxdownload_file = $fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'];
 			}
 		}
-		//let's see if we found it.
+		//let's see if we found it
 		if (strlen($tmp_faxdownload_file) > 0) {
 			$fd = fopen($tmp_faxdownload_file, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Description: File Transfer");
-				header('Content-Disposition: attachment; filename="'.check_str($_GET['filename']).'"');
+				header('Content-Disposition: attachment; filename="'.$_GET['filename'].'"');
 			}
 			else {
-				$file_ext = substr(check_str($_GET['filename']), -3);
+				$file_ext = substr($_GET['filename'], -3);
 				if ($file_ext == "tif") {
-				  header("Content-Type: image/tiff");
+					header("Content-Type: image/tiff");
 				}
 				else if ($file_ext == "png") {
-				  header("Content-Type: image/png");
+					header("Content-Type: image/png");
 				}
 				else if ($file_ext == "jpg") {
-				  header('Content-Type: image/jpeg');
+					header('Content-Type: image/jpeg');
 				}
 				else if ($file_ext == "pdf") {
-				  header("Content-Type: application/pdf");
+					header("Content-Type: application/pdf");
 				}
 			}
 			header('Accept-Ranges: bytes');
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-			header("Content-Length: " . filesize($tmp_faxdownload_file));
+			header("Content-Length: ".filesize($tmp_faxdownload_file));
 			fpassthru($fd);
 		}
 		else {
-			echo "".$text['label-file']."";
+			echo $text['label-file'];
 		}
 		exit;
 	}
@@ -168,26 +167,19 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) as num_rows from v_fax_files ";
-	$sql .= "where fax_uuid = '$fax_uuid' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql = "select count(*) from v_fax_files ";
+	$sql .= "where fax_uuid = :fax_uuid ";
+	$sql .= "and domain_uuid = :domain_uuid ";
 	if ($_REQUEST['box'] == 'inbox') {
 		$sql .= "and fax_mode = 'rx' ";
 	}
 	if ($_REQUEST['box'] == 'sent') {
 		$sql .= "and fax_mode = 'tx' ";
 	}
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-	$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$parameters['fax_uuid'] = $fax_uuid;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -198,21 +190,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_fax_files ";
-	$sql .= "where fax_uuid = '$fax_uuid' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
-	if ($_REQUEST['box'] == 'inbox') {
-		$sql .= "and fax_mode = 'rx' ";
-	}
-	if ($_REQUEST['box'] == 'sent') {
-		$sql .= "and fax_mode = 'tx' ";
-	}
-	$sql .= "order by ".((strlen($order_by) > 0) ? $order_by.' '.$order : "fax_date desc")." ";
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$fax_files = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$fax_files = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $num_rows);
 
 //show the header
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -250,7 +233,7 @@
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
-	if (is_array($fax_files)) {
+	if (is_array($fax_files) && @sizeof($fax_files) != 0) {
 		foreach($fax_files as $row) {
 			$file = basename($row['fax_file_path']);
 			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
@@ -378,9 +361,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $fax_files);
-	} //end if results
+		}
+	}
+	unset($fax_files, $row);
 
 //show the paging controls
 	echo "</table>";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,13 +40,14 @@
 
 //get the contact list
 	$sql = "select * from v_contact_phones ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and contact_uuid = '$contact_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by phone_primary desc, phone_label asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$contact_phones = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_phones = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style
 	$c = 0;
@@ -89,7 +90,8 @@
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (is_array($contact_phones)) {
+
+	if (is_array($contact_phones) && @sizeof($contact_phones) != 0) {
 		foreach($contact_phones as $row) {
 			if (permission_exists('contact_phone_edit')) {
 				$tr_link = "href='contact_phone_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_phone_uuid'])."'";
@@ -111,7 +113,7 @@
 			unset($phone_types);
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
-			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".escape($row['phone_number'])."\">CDR</a>\n";
+			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".escape($row['phone_number'])."\">".$text['button-cdr']."</a>\n";
 			if ($row['phone_type_voice']) {
 				echo "		&nbsp;\n";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".escape(urlencode($row['phone_number']))."&src_cid_number=".escape(urlencode($row['phone_number']))."&dest_cid_name=".urlencode(escape($_SESSION['user']['extension'][0]['outbound_caller_id_name']))."&dest_cid_number=".urlencode(escape($_SESSION['user']['extension'][0]['outbound_caller_id_number']))."&src=".urlencode(escape($_SESSION['user']['extension'][0]['user']))."&dest=".escape(urlencode($row['phone_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">".$text['label-phone_call']."</a>\n";
@@ -129,7 +131,7 @@
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
 		} //end foreach
-		unset($sql, $contact_phones);
+		unset($contact_phones, $row);
 	} //end if results
 
 	echo "</table>";

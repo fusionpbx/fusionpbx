@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,22 +31,27 @@
 			$sql = "update v_domain_settings ";
 			$sql .= "set domain_setting_name = 'text' ";
 			$sql .= "where domain_setting_name = 'var' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-		//set domains with enabled status of empty or null to true
-			$sql = "update v_domains set domain_enabled = 'true' where domain_enabled = '' or domain_enabled is null";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql, $parameters);
 
 		//update any domains set to legacy languages
 			$language = new text;
 			foreach ($language->legacy_map as $language_code => $legacy_code) {
-				if(strlen($legacy_code) == 5)
+				if(strlen($legacy_code) == 5) {
 					continue;
-				$sql = "update v_domain_settings set domain_setting_value = '$language_code' where domain_setting_value = '$legacy_code' and domain_setting_name = 'code' and domain_setting_subcategory = 'language' and domain_setting_category = 'domain'";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				}
+
+				$sql = "update v_domain_settings set domain_setting_value = :language_code ";
+				$sql .= "where domain_setting_value = :legacy_code ";
+				$sql .= "and domain_setting_name = 'code' ";
+				$sql .= "and domain_setting_subcategory = 'language' ";
+				$sql .= "and domain_setting_category = 'domain'";
+				$parameters['language_code'] = $language_code;
+				$parameters['legacy_code'] = $legacy_code;
+				$database = new database;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 			}
 
 		//migrate old domain_settings
@@ -54,18 +59,18 @@
 			$sql .= "set domain_setting_value = '#fafafa' ";
 			$sql .= "where domain_setting_subcategory = 'message_default_color' ";
 			$sql .= "and domain_setting_value = '#ccffcc' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql, $parameters);
+
 			$sql = "update v_domain_settings ";
 			$sql .= "set domain_setting_value = '#666' ";
 			$sql .= "where domain_setting_subcategory = 'message_default_background_color' ";
 			$sql .= "and domain_setting_value = '#004200' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-			}
-			unset($prep_statement, $sql);
+			$database = new database;
+			$database->execute($sql, null);
+			unset($sql, $parameters);
+
 	}
+
 ?>

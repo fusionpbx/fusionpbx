@@ -92,7 +92,7 @@
 	}
 	if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
 		if (permission_exists('conference_session_play')) {
-			echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+			echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 			//echo "			".$text['label-play']."\n";
 			echo "			<input type='button' class='btn' name='' alt='".$text['label-play']."' onclick=\"\" value='".$text['label-play']."'></a>\n";
 			//echo "		\n";
@@ -102,7 +102,7 @@
 		//echo "			".$text['label-download']."\n";
 		echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' onclick=\"\" value='".$text['label-download']."'></a>\n";
 		//echo "		\n";
-		//echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' onclick=\"window.location='".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."'\" value='".$text['label-download']."'>\n";
+		//echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' onclick=\"window.location='".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."'\" value='".$text['label-download']."'>\n";
 		echo "		&nbsp;\n";
 	}
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_sessions.php'\" value='".$text['button-back']."'>\n";

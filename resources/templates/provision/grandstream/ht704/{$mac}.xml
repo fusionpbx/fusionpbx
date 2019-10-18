@@ -77,7 +77,13 @@
 {/if}
 
 <!-- Config Server Path -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
 
 <!-- XML Config File Password -->
 <!-- String-->
@@ -812,7 +818,11 @@
 <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset($grandstream_fax_mode)}
+<P228>1</P228>
+{else}
 <P228>0</P228>
+{/if}
 
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->

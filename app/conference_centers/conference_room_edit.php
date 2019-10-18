@@ -189,6 +189,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$conference_room_uuid = $_POST["conference_room_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: conference_rooms.php');
+			exit;
+		}
+
 	//check for a unique pin number and length
 		if (strlen($moderator_pin) > 0 || strlen($participant_pin) > 0) {
 			//make sure the moderator pin number is unique
@@ -541,6 +549,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($sounds) == 0) { $sounds = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -552,7 +564,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference_rooms']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
-	if (strlen($meeting_uuid) > 0) {
+	if (is_uuid($meeting_uuid)) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".escape($meeting_uuid)."'\" value='".$text['button-sessions']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".escape($meeting_uuid)."'\" value='".$text['button-view']."'>\n";
 	}
@@ -574,7 +586,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='".escape($row["conference_center_uuid"])."'>".escape($row["conference_center_name"])."</option>\n";
 		}
 	}
-	unset ($prep_statement);
 	echo "	</select>\n";
 	echo "	<br />\n";
 	echo "\n";
@@ -703,8 +714,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>".$text['label-schedule']."</td>\n";
 	echo "<td class='vtable' width='70%' align='left' style='position: relative; min-width: 275px;'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".escape($start_datetime)."'>\n";
-	echo "		<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".escape($stop_datetime)."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_datetime' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' placeholder='".$text['label-from']."' value='".escape($start_datetime)."'>\n";
+	echo "		<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#stop_datetime' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' placeholder='".$text['label-to']."' value='".escape($stop_datetime)."'>\n";
 	echo "	<br>".$text['description-schedule'];
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -793,7 +804,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_profile')) {
+	if (permission_exists('conference_room_enabled')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-enabled']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -860,6 +871,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input type='hidden' name='meeting_uuid' value='".escape($meeting_uuid)."'>\n";
 		echo "	<input type='hidden' name='conference_room_uuid' value='".escape($conference_room_uuid)."'>\n";
 	}
+	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";

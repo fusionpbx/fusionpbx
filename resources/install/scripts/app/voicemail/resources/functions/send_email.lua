@@ -180,6 +180,7 @@
 					body = body:gsub("${caller_id_number}", caller_id_number);
 					body = body:gsub("${message_date}", message_date);
 					if (transcription ~= nil) then
+						transcription = transcription:gsub("%%", "*");
 						body = body:gsub("${message_text}", transcription);
 					end
 					body = body:gsub("${message_duration}", message_length_formatted);

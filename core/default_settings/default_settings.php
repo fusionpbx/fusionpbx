@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2018
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -50,7 +50,7 @@
 		$category = $_REQUEST['category'];
 		$search = $_REQUEST['search'];
 
-		if (sizeof($default_setting_uuids) == 1 && $enabled != '' && is_uuid($default_setting_uuids[0])) {
+		if (is_array($default_setting_uuids) && sizeof($default_setting_uuids) == 1 && $enabled != '' && is_uuid($default_setting_uuids[0])) {
 			$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuids[0];
 			$array['default_settings'][0]['default_setting_enabled'] = $enabled;
 			$database = new database;
@@ -68,7 +68,7 @@
 		if ($action == 'copy' && permission_exists('domain_setting_add')) {
 			$target_domain_uuid = $_POST["target_domain_uuid"];
 
-			if (is_uuid($target_domain_uuid) && sizeof($default_setting_uuids) > 0) {
+			if (is_uuid($target_domain_uuid) && is_array($default_setting_uuids) && sizeof($default_setting_uuids) > 0) {
 				$settings_copied = 0;
 				foreach ($default_setting_uuids as $default_setting_uuid) {
 
@@ -107,11 +107,13 @@
 					$parameters['domain_setting_name'] = $default_setting_name;
 					$database = new database;
 					$target_domain_setting_uuid = $database->select($sql, $parameters, 'column');
+					$message = $database->message;
+
 					$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
 					unset($sql, $parameters);
 
 					// fix null
-					$default_setting_order = $default_setting_order != '' ? $default_setting_order : 'null';
+					$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
 
 					//begin array
 					$array['domain_settings'][0]['domain_uuid'] = $target_domain_uuid;
@@ -147,7 +149,7 @@
 				} // foreach
 
 				// set message
-				$_SESSION["message"] = $text['message-copy'].": ".escape($settings_copied);
+				message::add($text['message-copy'].": ".escape($settings_copied));
 			}
 			else {
 				// set message
@@ -217,7 +219,7 @@
 		echo "	}\n";
 		echo "\n";
 		echo "	$( document ).ready(function() {\n";
-		echo "		$('#default_setting_search').focus();\n";
+		echo "		$('#default_setting_search').trigger('focus').trigger('select');\n";
 		if ($search == '') {
 			echo "		// scroll to previous category\n";
 			echo "		var category_span_id;\n";
@@ -238,7 +240,7 @@
 //prevent enter key submit on search field
 	echo "<script language='javascript' type='text/javascript'>\n";
 	echo "	$(document).ready(function() {\n";
-	echo "		$('#default_setting_search').keydown(function(event){\n";
+	echo "		$('#default_setting_search').on('keydown',function(event){\n";
 	echo "			if (event.keyCode == 13) {\n";
 	echo "				event.preventDefault();\n";
 	echo "				return false;\n";
@@ -328,8 +330,8 @@
 					case "api" : echo "API"; break;
 					case "cdr" : echo "CDR"; break;
 					case "ldap" : echo "LDAP"; break;
-					case "ivr menu" : echo "IVR Menu"; break;
-					default: echo ucwords(str_replace("_", " ", escape($row['default_setting_category'])));
+					case "ivr_menu" : echo "IVR Menu"; break;
+					default: echo escape(ucwords(str_replace("_", " ", $row['default_setting_category'])));
 				}
 				echo "</b>\n";
 
@@ -354,15 +356,17 @@
 				echo "</tr>\n";
 			}
 
-			$tr_link = (permission_exists('default_setting_edit')) ? "href=\"javascript:document.location.href='default_setting_edit.php?id=".escape($row['default_setting_uuid'])."&search='+$('#default_setting_search').val();\"" : null;
+			$tr_link = (permission_exists('default_setting_edit')) ? "href=\"default_setting_edit.php?id=".urlencode($row['default_setting_uuid'])."\"" : null;
 			echo "<tr id='setting_".$row['default_setting_uuid']."' ".$tr_link.">\n";
 			if ( (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) || permission_exists("default_setting_delete") ) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".escape($row['default_setting_uuid'])."' value='".escape($row['default_setting_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".escape($row['default_setting_category'])."').checked = false; }\"></td>\n";
-				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'>\n";
+				echo "		<input type='checkbox' name='id[]' id='checkbox_".escape($row['default_setting_uuid'])."' value='".escape($row['default_setting_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".escape($row['default_setting_category'])."').checked = false; }\">\n";
+				echo "	</td>\n";
+				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.escape($row['default_setting_uuid']);
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {
-				echo "<a href=\"javascript:document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."&search='+$('#default_setting_search').val(); return false;\">".escape($row['default_setting_subcategory'])."</a>";
+				echo "<a href=\"default_setting_edit.php?id=".urlencode($row['default_setting_uuid'])."\">".escape($row['default_setting_subcategory'])."</a>";
 			}
 			else {
 				echo $row['default_setting_subcategory'];
@@ -409,6 +413,9 @@
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text" || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen($row['default_setting_value']));
+			}
+			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
+				echo "		".$text['option-button_icons_'.$row['default_setting_value']]."\n";
 			}
 			else {
 				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
@@ -474,7 +481,7 @@
 			foreach ($subcat_ids as $default_setting_category => $checkbox_ids) {
 				echo "if (category == '".escape($default_setting_category)."') {\n";
 				foreach ($checkbox_ids as $index => $checkbox_id) {
-					echo "document.getElementById('".escape($checkbox_id)."').checked = (what == 'all') ? true : false;\n";
+					echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
 				}
 				echo "}\n";
 			}
@@ -528,7 +535,6 @@
 	//auto run, if search term passed back
 		if ($search != '') {
 			echo "	setting_search();";
-			echo "	$('#default_setting_search').select();\n";
 		}
 		echo "</script>\n";
 

@@ -40,16 +40,19 @@
 //get media
 	if (is_uuid($message_media_uuid)) {
 
-		$sql = "select message_media_type, message_media_url, message_media_content from v_message_media ";
-		$sql .= "where message_media_uuid = '".$message_media_uuid."' ";
+		$sql = "select message_media_type, message_media_url, message_media_content ";
+		$sql .= "from v_message_media ";
+		$sql .= "where message_media_uuid = :message_media_uuid ";
 		if (is_uuid($_SESSION['user_uuid'])) {
-			$sql .= "and user_uuid = '".$_SESSION['user_uuid']."' ";
+			$sql .= "and user_uuid = :user_uuid ";
+			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$media = $prep_statement->fetch(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['message_media_uuid'] = $message_media_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$media = $database->select($sql, $parameters, 'row');
+		unset($sql, $parameters);
 
 		switch (strtolower($media['message_media_type'])) {
 			case 'jpg':

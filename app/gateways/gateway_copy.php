@@ -44,141 +44,110 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"])) {
-		$gateway_uuid = check_str($_REQUEST["id"]);
-	}
+	if (is_uuid($_REQUEST["id"])) {
+		$gateway_uuid = $_REQUEST["id"];
 
-//get the data
-	$sql = "select * from v_gateways ";
-	$sql .= "where gateway_uuid = '$gateway_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($gateways as &$row) {
-		$domain_uuid = $row["domain_uuid"];
-		$gateway = $row["gateway"];
-		$username = $row["username"];
-		$password = $row["password"];
-		$auth_username = $row["auth_username"];
-		$realm = $row["realm"];
-		$from_user = $row["from_user"];
-		$from_domain = $row["from_domain"];
-		$proxy = $row["proxy"];
-		$register_proxy = $row["register_proxy"];
-		$outbound_proxy = $row["outbound_proxy"];
-		$expire_seconds = $row["expire_seconds"];
-		$register = $row["register"];
-		$register_transport = $row["register_transport"];
-		$retry_seconds = $row["retry_seconds"];
-		$extension = $row["extension"];
-		$codec_prefs = $row["codec_prefs"];
-		$ping = $row["ping"];
-		$channels = $row["channels"];
-		$caller_id_in_from = $row["caller_id_in_from"];
-		$supress_cng = $row["supress_cng"];
-		$extension_in_contact = $row["extension_in_contact"];
-		$effective_caller_id_name = $row["effective_caller_id_name"];
-		$effective_caller_id_number = $row["effective_caller_id_number"];
-		$outbound_caller_id_name = $row["outbound_caller_id_name"];
-		$outbound_caller_id_number = $row["outbound_caller_id_number"];
-		$context = $row["context"];
-		$enabled = $row["enabled"];
-		$description = 'copy: '.$row["description"];
-	}
-	unset ($prep_statement);
+		//get the data
+			$sql = "select * from v_gateways ";
+			$sql .= "where gateway_uuid = :gateway_uuid ";
+			$parameters['gateway_uuid'] = $gateway_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$domain_uuid = $row["domain_uuid"];
+				$gateway = $row["gateway"];
+				$username = $row["username"];
+				$password = $row["password"];
+				$auth_username = $row["auth_username"];
+				$realm = $row["realm"];
+				$from_user = $row["from_user"];
+				$from_domain = $row["from_domain"];
+				$proxy = $row["proxy"];
+				$register_proxy = $row["register_proxy"];
+				$outbound_proxy = $row["outbound_proxy"];
+				$expire_seconds = $row["expire_seconds"];
+				$register = $row["register"];
+				$register_transport = $row["register_transport"];
+				$retry_seconds = $row["retry_seconds"];
+				$extension = $row["extension"];
+				$codec_prefs = $row["codec_prefs"];
+				$ping = $row["ping"];
+				$channels = $row["channels"];
+				$caller_id_in_from = $row["caller_id_in_from"];
+				$supress_cng = $row["supress_cng"];
+				$extension_in_contact = $row["extension_in_contact"];
+				$effective_caller_id_name = $row["effective_caller_id_name"];
+				$effective_caller_id_number = $row["effective_caller_id_number"];
+				$outbound_caller_id_name = $row["outbound_caller_id_name"];
+				$outbound_caller_id_number = $row["outbound_caller_id_number"];
+				$context = $row["context"];
+				$enabled = $row["enabled"];
+				$description = $row["description"]." (".$text['label-copy'].")";
+			}
+			unset($sql, $parameters, $row);
 
-//set defaults
-	if (strlen($expire_seconds) == 0) {
-		$expire_seconds = '800';
-	}
-	if (strlen($retry_seconds) == 0) {
-		$retry_seconds = '30';
-	}
+		//set defaults
+			if (strlen($expire_seconds) == 0) {
+				$expire_seconds = '800';
+			}
+			if (strlen($retry_seconds) == 0) {
+				$retry_seconds = '30';
+			}
 
-//copy the gateways
-	$gateway_uuid = uuid();
-	$sql = "insert into v_gateways ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "gateway_uuid, ";
-	$sql .= "gateway, ";
-	$sql .= "username, ";
-	$sql .= "password, ";
-	$sql .= "auth_username, ";
-	$sql .= "realm, ";
-	$sql .= "from_user, ";
-	$sql .= "from_domain, ";
-	$sql .= "proxy, ";
-	$sql .= "register_proxy, ";
-	$sql .= "outbound_proxy, ";
-	$sql .= "expire_seconds, ";
-	$sql .= "register, ";
-	$sql .= "register_transport, ";
-	$sql .= "retry_seconds, ";
-	$sql .= "extension, ";
-	$sql .= "codec_prefs, ";
-	$sql .= "ping, ";
-	//$sql .= "channels, ";
-	$sql .= "caller_id_in_from, ";
-	$sql .= "supress_cng, ";
-	$sql .= "extension_in_contact, ";
-	$sql .= "context, ";
-	$sql .= "enabled, ";
-	$sql .= "description ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	if (strlen($domain_uuid) > 0) {
-		$sql .= "'$domain_uuid', ";
-	}
-	else {
-		$sql .= "null, ";
-	}
-	$sql .= "'$gateway_uuid', ";
-	$sql .= "'$gateway', ";
-	$sql .= "'$username', ";
-	$sql .= "'$password', ";
-	$sql .= "'$auth_username', ";
-	$sql .= "'$realm', ";
-	$sql .= "'$from_user', ";
-	$sql .= "'$from_domain', ";
-	$sql .= "'$proxy', ";
-	$sql .= "'$register_proxy', ";
-	$sql .= "'$outbound_proxy', ";
-	$sql .= "'$expire_seconds', ";
-	$sql .= "'$register', ";
-	$sql .= "'$register_transport', ";
-	$sql .= "'$retry_seconds', ";
-	$sql .= "'$extension', ";
-	$sql .= "'$codec_prefs', ";
-	$sql .= "'$ping', ";
-	//$sql .= "'$channels', ";
-	$sql .= "'$caller_id_in_from', ";
-	$sql .= "'$supress_cng', ";
-	$sql .= "'$extension_in_contact', ";
-	$sql .= "'$context', ";
-	$sql .= "'$enabled', ";
-	$sql .= "'$description' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+		//copy the gateways
+			$gateway_uuid = uuid();
+			$array['gateways'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+			$array['gateways'][0]['gateway_uuid'] = $gateway_uuid;
+			$array['gateways'][0]['gateway'] = $gateway;
+			$array['gateways'][0]['username'] = $username;
+			$array['gateways'][0]['password'] = $password;
+			$array['gateways'][0]['auth_username'] = $auth_username;
+			$array['gateways'][0]['realm'] = $realm;
+			$array['gateways'][0]['from_user'] = $from_user;
+			$array['gateways'][0]['from_domain'] = $from_domain;
+			$array['gateways'][0]['proxy'] = $proxy;
+			$array['gateways'][0]['register_proxy'] = $register_proxy;
+			$array['gateways'][0]['outbound_proxy'] = $outbound_proxy;
+			$array['gateways'][0]['expire_seconds'] = $expire_seconds;
+			$array['gateways'][0]['register'] = $register;
+			$array['gateways'][0]['register_transport'] = $register_transport;
+			$array['gateways'][0]['retry_seconds'] = $retry_seconds;
+			$array['gateways'][0]['extension'] = $extension;
+			$array['gateways'][0]['codec_prefs'] = $codec_prefs;
+			$array['gateways'][0]['ping'] = $ping;
+			//$array['gateways'][0]['channels'] = $channels;
+			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
+			$array['gateways'][0]['supress_cng'] = $supress_cng;
+			$array['gateways'][0]['extension_in_contact'] = $extension_in_contact;
+			$array['gateways'][0]['context'] = $context;
+			$array['gateways'][0]['enabled'] = $enabled;
+			$array['gateways'][0]['description'] = $description;
 
-//add new gateway to session variable
-	if ($enabled == 'true') {
-		$_SESSION['gateways'][$gateway_uuid] = $gateway;
+			$database = new database;
+			$database->app_name = 'gateways';
+			$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
+			$database->save($array);
+			unset($array);
+
+		//add new gateway to session variable
+			if ($enabled == 'true') {
+				$_SESSION['gateways'][$gateway_uuid] = $gateway;
+			}
+
+		//synchronize the xml config
+			save_gateway_xml();
+
+		//clear the cache
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			$hostname = trim(event_socket_request($fp, 'api switchname'));
+			$cache = new cache;
+			$cache->delete("configuration:sofia.conf:".$hostname);
+
+		//set message
+			message::add($text['message-copy']);
 	}
-
-//synchronize the xml config
-	save_gateway_xml();
-
-//clear the cache
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	$hostname = trim(event_socket_request($fp, 'api switchname'));
-	$cache = new cache;
-	$cache->delete("configuration:sofia.conf:".$hostname);
 
 //redirect the user
-	message::add($text['message-copy']);
 	header("Location: gateways.php");
 	return;
 

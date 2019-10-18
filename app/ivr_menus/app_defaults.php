@@ -31,24 +31,32 @@ if ($domains_processed == 1) {
 	$sql = "select * from v_ivr_menus where ivr_menu_context is null ";
 	$database = new database;
 	$ivr_menus = $database->select($sql, null, 'all');
+	unset($sql);
+
 	if (is_array($ivr_menus)) {
 
 		//get the domain list
 		$sql = "select * from v_domains ";
 		$domains = $database->select($sql, null, 'all');
+		unset($sql);
 
 		//update the ivr menu context
+		$x = 0;
 		foreach ($ivr_menus as $row) {
 			foreach ($domains as $domain) {
 				if ($row['domain_uuid'] == $domain['domain_uuid']) {
-					$sql = "update v_ivr_menus set ivr_menu_context = :domain_name \n";
-					$sql .= "where ivr_menu_uuid = :ivr_menu_uuid \n";
-					$parameters['domain_name'] = $domain['domain_name'];
-					$parameters['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
-					$database->execute($sql, $parameters);
-					unset($parameters);
+					$array['ivr_menus'][$x]['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+					$array['ivr_menus'][$x]['ivr_menu_context'] = $domain['domain_name'];
+					$x++;
 				}
-			 }
+			}
+		}
+		if (is_array($array) && @sizeof($array) != 0) {
+			$database = new database;
+			$database->app_name = 'ivr_menus';
+			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+			$database->save($array);
+			unset($array);
 		}
 	}
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,11 +50,20 @@
 			$group_name_previous = $_POST['group_name_previous'];
 			$domain_uuid = $_POST["domain_uuid"];
 			$domain_uuid_previous = $_POST["domain_uuid_previous"];
+			$group_level = $_POST["group_level"];
 			$group_description = $_POST["group_description"];
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: groups.php');
+				exit;
+			}
+
 		//check for global/domain duplicates
-			$sql = "select count(*) from v_groups where ";
-			$sql .= "group_name = :group_name ";
+			$sql = "select count(*) from v_groups ";
+			$sql .= "where group_name = :group_name ";
 			$sql .= "and group_uuid <> :group_uuid ";
 			if (is_uuid($domain_uuid)) {
 				$sql .= "and domain_uuid = :domain_uuid ";
@@ -75,6 +84,7 @@
 				$array['groups'][0]['group_uuid'] = $group_uuid;
 				$array['groups'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
 				$array['groups'][0]['group_name'] = $group_name;
+				$array['groups'][0]['group_level'] = $group_level;
 				$array['groups'][0]['group_description'] = $group_description;
 				$database = new database;
 				$database->app_name = 'groups';
@@ -129,7 +139,6 @@
 								unset($sql, $parameters);
 						}
 				}
-
 				//group changed from one domain to another
 				else if (is_uuid($domain_uuid_previous) && is_uuid($domain_uuid) && $domain_uuid_previous != $domain_uuid) {
 					//remove any users assigned to the group from the old domain
@@ -274,10 +283,15 @@
 		if (is_array($row) && sizeof($row) != 0) {
 			$group_name = $row['group_name'];
 			$domain_uuid = $row['domain_uuid'];
+			$group_level = $row['group_level'];
 			$group_description = $row['group_description'];
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	include "resources/header.php";
@@ -292,7 +306,7 @@
 	echo "		if (new_group_name != null) {\n";
 	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
 	echo "			if (new_group_desc != null) {\n";
-	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "				window.location = 'permissions_copy.php?id=".escape($group_uuid)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
 	echo "			}\n";
 	echo "		}\n";
 	echo "	}\n";
@@ -300,7 +314,6 @@
 
 //show the content
 	echo "<form name='login' method='post' action=''>\n";
-	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -353,15 +366,42 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top'>\n";
+	echo "		".$text['label-level']."\n";
+	echo "</td>\n";
+	echo "<td align='left' class='vtable' valign='top'>\n";
+	echo "		<select name='group_level' class='formfld'>\n";
+	$i = 10;
+	while ($i <= 90) {
+		$selected = ($i == $group_level) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "			<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "			<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i = $i + 10;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top'>\n";
 	echo 	$text['label-group_description']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable' valign='top'>\n";
-	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".escape($group_description)."</textarea>\n";
+	echo "	<textarea name='group_description' class='formfld' style='width: 250px; height: 50px;'>".$group_description."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td colspan='2' align='right'>\n";
+	echo "	<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<br />";
 	echo "	<input type='submit' class='btn' value=\"".$text['button-save']."\">\n";
 	echo "</td>\n";

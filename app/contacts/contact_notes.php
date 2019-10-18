@@ -38,6 +38,11 @@
 		exit;
 	}
 
+//set the uuid
+	if (is_uuid($_GET['id'])) {
+		$contact_uuid = $_GET['id'];
+	}
+
 //show the content
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
@@ -48,15 +53,14 @@
 
 //get the contact list
 	$sql = "select * from v_contact_notes ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and contact_uuid = '$contact_uuid' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
 	$sql .= "order by last_mod_date desc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$contact_notes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		unset ($prep_statement, $sql);
-	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_notes = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row style array
 	$c = 0;
@@ -71,7 +75,7 @@
 	echo "<th style='text-align: right;'>".$text['label-note_user']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('contact_note_add')) {
-		echo "<a href='contact_note_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='contact_note_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -79,7 +83,7 @@
 
 	echo "<div id='contact_notes' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
 	echo "<table class='tr_hover' style='width: 100%; direction: ltr; padding-left: 1px' border='0' cellpadding='0' cellspacing='0'>\n";
-	if (is_array($contact_notes)) {
+	if (is_array($contact_notes) && @sizeof($contact_notes) != 0) {
 		foreach($contact_notes as $row) {
 			$contact_note = $row['contact_note'];
 			$contact_note = escape($contact_note);
@@ -102,9 +106,9 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($sql, $contact_notes);
-	} //end if results
+		}
+	}
+	unset($contact_notes, $row);
 	echo "</table>";
 	echo "</div>\n";
 

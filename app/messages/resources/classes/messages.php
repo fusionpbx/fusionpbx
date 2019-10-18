@@ -8,19 +8,11 @@
 if (!class_exists('messages')) {
 	class messages {
 
-		public $db;
-
 		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -50,13 +42,28 @@ if (!class_exists('messages')) {
 							}
 						//delete the checked rows
 							if ($action == 'delete') {
+								$x = 0;
 								foreach($messages as $row) {
 									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
-										$sql = "delete from v_messages ";
-										$sql .= "where message_uuid = '".$row['message_uuid']."'; ";
-										$this->db->query($sql);
-										unset($sql);
+										//build delete array
+											$array['messages'][$x]['message_uuid'] = $row['message_uuid'];
+											$x++;
 									}
+								}
+								if (is_array($array) && @sizeof($array) != 0) {
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('message_delete', 'temp');
+
+									//execute delete
+										$database = new database;
+										$database->app_name = 'messages';
+										$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
+										$database->delete($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('message_delete', 'temp');
 								}
 								unset($messages);
 							}

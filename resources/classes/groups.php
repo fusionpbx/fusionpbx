@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,108 +82,107 @@ if (!class_exists('groups')) {
 		public function defaults() {
 
 			//if the are no groups add the default groups
-				$sql = "SELECT * FROM v_groups ";
-				$sql .= "WHERE domain_uuid is null ";
-				$result = $this->db->query($sql)->fetch();
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						$x = 0;
-						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'superadmin';
-						$groups[$x]['group_description'] = 'Super Administrator Group';
-						$groups[$x]['group_protected'] = 'false';
-						$x++;
-						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'admin';
-						$groups[$x]['group_description'] = 'Administrator Group';
-						$groups[$x]['group_protected'] = 'false';
-						$x++;
-						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'user';
-						$groups[$x]['group_description'] = 'User Group';
-						$groups[$x]['group_protected'] = 'false';
-						$x++;
-						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'public';
-						$groups[$x]['group_description'] = 'Public Group';
-						$groups[$x]['group_protected'] = 'false';
-						$x++;
-						//$groups[$x]['group_uuid'] = '';
-						$groups[$x]['group_name'] = 'agent';
-						$groups[$x]['group_description'] = 'Call Center Agent Group';
-						$groups[$x]['group_protected'] = 'false';
-						$this->db->beginTransaction();
-						foreach($groups as $row) {
-							if (strlen($row['group_name']) > 0) {
-								$sql = "insert into v_groups ";
-								$sql .= "(";
-								$sql .= "domain_uuid, ";
-								$sql .= "group_uuid, ";
-								$sql .= "group_name, ";
-								$sql .= "group_description, ";
-								$sql .= "group_protected ";
-								$sql .= ")";
-								$sql .= "values ";
-								$sql .= "(";
-								$sql .= "null, ";
-								$sql .= "'".uuid()."', ";
-								$sql .= "'".$row['group_name']."', ";
-								$sql .= "'".$row['group_description']."', ";
-								$sql .= "'".$row['group_protected']."' ";
-								$sql .= ")";
-								$this->db->exec($sql);
-								unset($sql);
-							}
-						}
-						$this->db->commit();
-					}
-					unset($prep_statement, $result);
+				$sql = "select * from v_groups ";
+				$sql .= "where domain_uuid is null ";
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				if (count($result) == 0) {
+					$x = 0;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'superadmin';
+					$array['groups'][$x]['group_level'] = '80';
+					$array['groups'][$x]['group_description'] = 'Super Administrator Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'admin';
+					$array['groups'][$x]['group_level'] = '50';
+					$array['groups'][$x]['group_description'] = 'Administrator Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'user';
+					$array['groups'][$x]['group_level'] = '30';
+					$array['groups'][$x]['group_description'] = 'User Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'agent';
+					$array['groups'][$x]['group_level'] = '20';
+					$array['groups'][$x]['group_description'] = 'Call Center Agent Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+					$x++;
+					$array['groups'][$x]['group_uuid'] = uuid();
+					$array['groups'][$x]['domain_uuid'] = null;
+					$array['groups'][$x]['group_name'] = 'public';
+					$array['groups'][$x]['group_level'] = '10';
+					$array['groups'][$x]['group_description'] = 'Public Group';
+					$array['groups'][$x]['group_protected'] = 'false';
+
+					//add the temporary permissions
+					$p = new permissions;
+					$p->add("group_add", "temp");
+					$p->add("group_edit", "temp");
+
+					//save the data to the database
+					$database = new database;
+					$database->app_name = 'groups';
+					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+					$database->save($array);
+					unset($array);
+
+					//remove the temporary permission
+					$p->delete("group_add", "temp");
+					$p->delete("group_edit", "temp");
 				}
+				unset($result);
 
 			//if there are no permissions listed in v_group_permissions then set the default permissions
-				$sql = "select count(*) as count from v_group_permissions ";
+				$sql = "select count(*) from v_group_permissions ";
 				$sql .= "where domain_uuid is null ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset ($prep_statement);
-				if ($result['count'] == 0) {
+				$database = new database;
+				$num_rows = $database->select($sql, null, 'column');
+				if ($num_rows == 0) {
 					//build the apps array
-						$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-						$x = 0;
-						foreach ($config_list as &$config_path) {
-							include($config_path);
-							$x++;
-						}
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+					$x = 0;
+					foreach ($config_list as &$config_path) {
+						include($config_path);
+						$x++;
+					}
+
 					//no permissions found add the defaults
-						$this->db->beginTransaction();
-						foreach($apps as $app) {
-							if (is_array($app['permissions'])) foreach ($app['permissions'] as $row) {
-								if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
-									//add the record
-									$sql = "insert into v_group_permissions ";
-									$sql .= "(";
-									$sql .= "group_permission_uuid, ";
-									$sql .= "domain_uuid, ";
-									$sql .= "permission_name, ";
-									$sql .= "group_name ";
-									$sql .= ")";
-									$sql .= "values ";
-									$sql .= "(";
-									$sql .= "'".uuid()."', ";
-									$sql .= "null, ";
-									$sql .= "'".$row['name']."', ";
-									$sql .= "'".$group."' ";
-									$sql .= ")";
-									$this->db->exec($sql);
-									unset($sql);
-								}
+					foreach($apps as $app) {
+						if (is_array($app['permissions'])) foreach ($app['permissions'] as $row) {
+							if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
+								$x++;
+								$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+								$array['group_permissions'][$x]['domain_uuid'] = null;
+								$array['group_permissions'][$x]['permission_name'] = $row['name'];
+								$array['group_permissions'][$x]['group_name'] = $group;
 							}
 						}
-						$this->db->commit();
+					}
+
+					//add the temporary permissions
+					$p = new permissions;
+					$p->add("group_permission_add", "temp");
+					$p->add("group_permission_edit", "temp");
+
+					//save the data to the database
+					$database = new database;
+					$database->app_name = 'groups';
+					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+					$database->save($array);
+					unset($array);
+
+					//remove the temporary permission
+					$p->delete("group_permission_add", "temp");
+					$p->delete("group_permission_edit", "temp");
 				}
 		}
 	} //end scripts class

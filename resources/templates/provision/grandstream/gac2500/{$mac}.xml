@@ -114,8 +114,9 @@
     {if isset($subscribe_mwi)}
 	<P99>1</P99>
 	{else}
-	P99>0</P99>
-	/if}
+	<P99>0</P99>
+	{/if}
+	
     <!-- # Enable SIP OPTIONS Keep Alive. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
     <P2397>0</P2397>
@@ -369,9 +370,9 @@
     <!-- # SRTP Mode. 0 - Disable, 1 - Enable but not forced, 2 - Enable and forced. -->
     <!-- # Number:0, 1, 2 -->
 	{if isset($grandstream_srtp)}
-	P183>{$grandstream_srtp}</P183>
-	else}
-	P183>0</P183>
+	<P183>{$grandstream_srtp}</P183>
+	{else}
+	<P183>0</P183>
 	{/if}
     <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default value is 0 -->
     <!-- #Number:0, 1, 2 -->
@@ -407,9 +408,9 @@
 
     <!-- # DialPlan. Default value is { x+ | \+x+ | *x+ | *xx*x+ | x+*x+*x+*x+ | x+*x+*x+*x+#x+ } -->
 	{if isset($grandstream_dial_plan) }
-	P290>{$grandstream_dial_plan}</P290>
+	<P290>{$grandstream_dial_plan}</P290>
 	{else}
-	P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+	<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
 	{/if}
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
@@ -4622,7 +4623,7 @@
 	{/if}
 
 	{/for}
-	{/if}
+	
 	
     <!-- ####################################################################### -->
     <!-- ##  Hidden P Values                                    				 ## -->

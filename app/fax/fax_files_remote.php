@@ -45,34 +45,34 @@
 	$language = new text;
 	$text = $language->get();
 
+//get submitted id
+	$fax_uuid = $_GET["id"];
+
 //get fax server uuid, set connection parameters
-	if (strlen($_GET['id']) > 0) {
-		$fax_uuid = check_str($_GET["id"]);
+	if (is_uuid($fax_uuid)) {
 
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select * from v_fax ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and fax_uuid = '$fax_uuid' ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and fax_uuid = :fax_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['fax_uuid'] = $fax_uuid;
 		}
 		else {
 			//show only assigned fax extensions
 			$sql = "select * from v_fax as f, v_fax_users as u ";
 			$sql .= "where f.fax_uuid = u.fax_uuid ";
-			$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and f.fax_uuid = '$fax_uuid' ";
-			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+			$sql .= "and f.domain_uuid = :domain_uuid ";
+			$sql .= "and f.fax_uuid = :fax_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['fax_uuid'] = $fax_uuid;
+			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		if (count($result) == 0) {
-			if (!if_group("superadmin") && !if_group("admin")) {
-				echo "access denied";
-				exit;
-			}
-		}
-		foreach ($result as &$row) {
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_name = $row["fax_name"];
 			$fax_extension = $row["fax_extension"];
 			$fax_email_connection_type = $row["fax_email_connection_type"];
@@ -84,9 +84,14 @@
 			$fax_email_connection_password = $row["fax_email_connection_password"];
 			$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
-			break;
 		}
-		unset ($prep_statement);
+		else {
+			if (!if_group("superadmin") && !if_group("admin")) {
+				echo "access denied";
+				exit;
+			}
+		}
+		unset($sql, $parameters, $row);
 
 		// make connection
 		$fax_email_connection = "{".$fax_email_connection_host.":".$fax_email_connection_port."/".$fax_email_connection_type;
@@ -107,7 +112,7 @@
 
 //message action
 	if ($_GET['email_id'] != '') {
-		$email_id = check_str($_GET['email_id']);
+		$email_id = $_GET['email_id'];
 
 		//download attachment
 		if (isset($_GET['download'])) {
@@ -210,7 +215,7 @@
 	}
 	echo "	</tr>";
 
-	if ($emails) {
+	if (is_array($emails) && @sizeof($emails) != 0) {
 		rsort($emails); // most recent on top
 		foreach ($emails as $email_id) {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
@@ -230,9 +235,7 @@
 			}
 			echo "	</tr>\n";
 			$c = ($c) ? 0 : 1;
-
 		}
-
 	}
 	else {
 		echo "<tr valign='top'>\n";

@@ -106,7 +106,7 @@
 			]];
 			--freeswitch.consoleLog("NOTICE", "[ring_group] SQL "..sql.."\n");
 
-			assert(dbh:query(sql, function(row)
+			dbh:query(sql, function(row)
 				if (row.in_group == "0") then
 					sql = [[
 						INSERT INTO
@@ -135,7 +135,7 @@
 					freeswitch.consoleLog("NOTICE", "[ring_group][destination] ALREADY LOGGED IN\n");
 					session:streamFile("ivr/ivr-you_are_now_logged_in.wav");
 				end
-			end));
+			end);
 		end
 		if (menu_selection == "2") then
 			sql = [[

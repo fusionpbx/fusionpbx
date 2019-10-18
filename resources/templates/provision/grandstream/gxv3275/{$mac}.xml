@@ -3212,12 +3212,6 @@ Account 5 Codec Settings
 <!-- Number: 0, 1, 2, 3 -->
 <P212>2</P212>
 
-<!-- Firmware Server Path -->
-<P192>{$domain_name}/firmware/gs</P192>
-
-<!-- Config Server Path -->
-<P237>{$domain_name}{$project_path}/app/provision</P237>
-
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
 <P192>{$grandstream_firmware_path}/gxv3275/{$firmware_version}</P192>
 {elseif isset($grandstream_firmware_path)}
@@ -3227,7 +3221,13 @@ Account 5 Codec Settings
 {/if}
 
 <!-- Config Server Path -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
 
 <!-- Firmware File Prefix -->
 <P232></P232>

@@ -38,23 +38,27 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]); //relation
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//get submitted
+	$contact_relation_uuid = $_GET["id"];
+	$contact_uuid = $_GET["contact_uuid"];
 
-if (strlen($id)>0) {
-	$sql = "delete from v_contact_relations ";
-	$sql .= "where contact_relation_uuid = '".$id."' ";
-	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and contact_uuid = '".$contact_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	unset($sql);
-}
+//delete
+	if (is_uuid($contact_relation_uuid) && is_uuid($contact_uuid)) {
+		$array['contact_relations'][0]['contact_relation_uuid'] = $contact_relation_uuid;
+		$array['contact_relations'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+		$array['contact_relations'][0]['contact_uuid'] = $contact_uuid;
 
-message::add($text['message-delete']);
-header("Location: contact_edit.php?id=".$contact_uuid);
-return;
+		$database = new database;
+		$database->app_name = 'contacts';
+		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
+		$database->delete($array);
+		unset($array);
+
+		message::add($text['message-delete']);
+	}
+
+//redirect
+	header("Location: contact_edit.php?id=".$contact_uuid);
+	exit;
 
 ?>

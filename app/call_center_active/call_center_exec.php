@@ -108,27 +108,25 @@
 		//validate the user status
 			$user_status = $_GET['data'];
 			switch ($user_status) {
-				case "Available" :
+				case "Available":
+				case "Available (On Demand)":
+				case "On Break":
+				case "Do Not Disturb":
+				case "Logged Out":
 					break;
-				case "Available (On Demand)" :
-					break;
-				case "On Break" :
-					break;
-				case "Do Not Disturb" :
-					break;
-				case "Logged Out" :
-					break;
-				default :
+				default:
 					$user_status = null;
 			}
 
 			$user_status = $data;
-			$sql  = "update v_users set ";
-			$sql .= "user_status = '".trim($user_status, "'")."' ";
+			$sql = "update v_users set ";
+			$sql .= "user_status = :user_status ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			$sql .= "and username = '".$username."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$parameters['user_status'] = trim($user_status, "'");
+			$database = new database;
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
 		}
 
 		//fs cmd

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,30 +29,28 @@ if ($domains_processed == 1) {
 
 	//update the notifications table
 	if (is_array($_SESSION['switch']['scripts'])) {
-		$sql = "select count(*) as num_rows from v_notifications ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "insert into v_notifications ";
-				$sql .= "(";
-				$sql .= "notification_uuid, ";
-				$sql .= "project_notifications ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'false' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-			unset($prep_statement, $row);
+		$sql = "select count(*) from v_notifications ";
+		$database = new database;
+		$num_rows = $database->select($sql, null, 'column');
+		if ($num_rows == 0) {
+			//build insert array
+				$array['notifications'][0]['notification_uuid'] = uuid();
+				$array['notifications'][0]['project_notifications'] = 'false';
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('notification_add', 'temp');
+			//execute insert
+				$database = new database;
+				$database->app_name = 'notifications';
+				$database->app_uuid = 'e746fbcb-f67f-4e0e-ab64-c414c01fac11';
+				$database->save($array);
+				unset($array);
+			//revoke temporary permissions
+				$p->delete('notification_add', 'temp');
 		}
+		unset($sql, $num_rows);
 	}
 
 }
-
 
 ?>

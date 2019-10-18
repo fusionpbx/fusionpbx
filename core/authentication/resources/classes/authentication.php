@@ -65,18 +65,18 @@ class authentication {
 				$plugin = $base."/".$name.".php";
 				if (file_exists($plugin)) {
 					include_once $plugin;
-					$obj = new $class_name();
-					$obj->debug = $this->debug;
-					$obj->domain_name = $this->domain_name;
-					$obj->domain_uuid = $this->domain_uuid;
+					$object = new $class_name();
+					$object->debug = $this->debug;
+					$object->domain_name = $this->domain_name;
+					$object->domain_uuid = $this->domain_uuid;
 					if (strlen($this->key) > 0) {
-						$obj->key = $this->key;
+						$object->key = $this->key;
 					}
 					if (strlen($this->username) > 0) {
-						$obj->username = $this->username;
-						$obj->password = $this->password;
+						$object->username = $this->username;
+						$object->password = $this->password;
 					}
-					$array = $obj->$name();
+					$array = $object->$name();
 					$result['plugin'] = $array["plugin"];
 					$result['domain_name'] = $array["domain_name"];
 					$result['username'] = $array["username"];
@@ -90,8 +90,12 @@ class authentication {
 					if (count($_SESSION['authentication']['methods']) > 1) {
 						$result['results'][] = $array;
 					}
+
 					if ($result["authorized"] == "true") {
+						//add the username to the session
 						$_SESSION['username'] = $result["username"];
+
+						//end the loop
 						break;
 					}
 				}
@@ -110,8 +114,8 @@ class authentication {
 			$this->domain_name = $_SERVER["HTTP_HOST"];
 
 		//get the domain name from the username
-			if ($_SESSION["user"]["unique"]["text"] != "global") {
-				$username_array = explode("@", check_str($_REQUEST["username"]));
+			if ($_SESSION["users"]["unique"]["text"] != "global") {
+				$username_array = explode("@", $_REQUEST["username"]);
 				if (count($username_array) > 1) {
 					//get the domain name
 						$domain_name =  $username_array[count($username_array) -1];
@@ -127,7 +131,7 @@ class authentication {
 					//if the domain exists then set domain_name and update the username
 						if ($domain_exists) {
 							$this->domain_name = $domain_name;
-							$this->username = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+							$this->username = substr($_REQUEST["username"], 0, -(strlen($domain_name)+1));
 							$_SESSION['domain_uuid'] = $this->domain_uuid;
 						}
 					//unset the domain name variable
@@ -136,8 +140,8 @@ class authentication {
 			}
 
 		//get the domain name from the http value
-			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-				$this->domain_name = check_str($_REQUEST["domain_name"]);
+			if (strlen($_REQUEST["domain_name"]) > 0) {
+				$this->domain_name = $_REQUEST["domain_name"];
 			}
 
 		//remote port number from the domain name

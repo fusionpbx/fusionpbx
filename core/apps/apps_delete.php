@@ -39,7 +39,7 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (is_uuid($_GET["id"]) {
+	if (is_uuid($_GET["id"])) {
 
 		$app_uuid = $_GET["id"];
 
@@ -59,7 +59,7 @@ else {
 							foreach ($row['menu'] as $index => &$menu) {
 								//delete menu groups and permissions from the database
 									$array['menu_item_groups'][$index]['menu_item_uuid'] = $menu['uuid'];
-									$array['menu_items'][$index['menu_item_uuid'] = $menu['uuid'];
+									$array['menu_items'][$index]['menu_item_uuid'] = $menu['uuid'];
 								//delete the app from the file system
 									if (strlen($menu['path']) > 0) {
 										system('rm -rf '.dirname($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.$menu['path']));

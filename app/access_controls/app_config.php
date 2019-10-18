@@ -55,6 +55,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 
+	//cache details
+		$apps[$x]['cache']['key'] = "configuration.acl.conf";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_access_controls";

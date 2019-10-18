@@ -58,23 +58,27 @@
 				$obj->delete($streams);
 			//delete message
 				message::add($text['message-delete']);
+			//redirect
+				header('Location: streams.php');
+				exit;
 		}
 	}
 
 //get variables used to control the order
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = " (";
-		$sql_search .= "lower(stream_name) like '%".$search."%' ";
-		$sql_search .= "or lower(stream_location) like '%".$search."%' ";
-		$sql_search .= "or lower(stream_enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(domain_uuid) like '%".$search."%' ";
-		$sql_search .= "or lower(stream_description) like '%".$search."%' ";
+		$sql_search = "and (";
+		$sql_search .= "lower(stream_name) like :search ";
+		$sql_search .= "or lower(stream_location) like :search ";
+		$sql_search .= "or lower(stream_enabled) like :search ";
+		$sql_search .= "or lower(domain_uuid) like :search ";
+		$sql_search .= "or lower(stream_description) like :search ";
 		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 
 //additional includes
@@ -82,29 +86,15 @@
 	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(stream_uuid) as num_rows from v_streams ";
-	if ($_GET['show'] == "all" && permission_exists('stream_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+	$sql = "select count(*) from v_streams ";
+	$sql .= "where true ";
+	$sql .= $sql_search;
+	if (!($_GET['show'] == "all" && permission_exists('stream_all'))) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+	$database = new database;
+	$num_rows = $database->select($sql, (is_array($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -118,28 +108,26 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_streams ";
-	if ($_GET['show'] == "all" && permission_exists('stream_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-	} else {
-		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-	}
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
-	$sql .= "limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement, $sql);
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$streams = $database->select($sql, (is_array($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
+	unset($sql, $parameters);
 
 //alternate the row style
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//audio control styles
+	echo "<style>\n";
+	echo "	audio {\n";
+	echo "		margin-bottom: -5px;\n";
+	echo "		width: 100%;\n";
+	echo "		height: 35px;\n";
+	echo "	}\n";
+	echo "</style>\n";
 
 //define the checkbox_toggle function
 	echo "<script type=\"text/javascript\">\n";
@@ -228,37 +216,37 @@
 				else {
 					$domain = $text['label-global'];
 				}
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$domain."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='width: 15%; white-space: nowrap;'>".$domain."</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 15%; white-space: nowrap;'>".escape($row['stream_name'])."&nbsp;</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap; padding: 0;'>\n";
 			if (strlen($row['stream_location']) > 0) {
 				$location_parts = explode('://',$row['stream_location']);
 				if ($location_parts[0] == "shout") {
-					echo "<audio src=\"http://".$location_parts[1]."\" controls=\"controls\"/>\n";
+					echo "<audio src=\"http://".$location_parts[1]."\" controls=\"controls\" />\n";
 				}
 			}
 			echo "	</td>\n";
 
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_location'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['stream_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".($row['stream_enabled'] == 'true' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_uuid'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['stream_description'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' style='width: 20%; white-space: nowrap;'>".escape($row['stream_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('stream_edit')) {
 				echo "<a href='stream_edit.php?id=".$row['stream_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('stream_delete')) {
-				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"streams[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"streams[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='fas fa-minus'></span></button>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $streams, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($streams, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='7' align='left'>\n";

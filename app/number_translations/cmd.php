@@ -39,8 +39,8 @@
 	}
 
 //set the variables
-	$cmd = check_str($_GET['cmd']);
-	$rdr = check_str($_GET['rdr']);
+	$cmd = $_GET['cmd'];
+	$rdr = $_GET['rdr'];
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

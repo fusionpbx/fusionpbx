@@ -91,6 +91,14 @@
 			//$call_block_uuid = check_str($_POST["call_block_uuid"]);
 		}
 	
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_block.php');
+				exit;
+			}
+
 		//check for all required data
 			if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
 			if ($action == "add") {
@@ -226,6 +234,10 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 
@@ -345,6 +357,7 @@
 	if ($action == "update") {
 		echo "		<input type='hidden' name='call_block_uuid' value='".escape($call_block_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -453,4 +466,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
