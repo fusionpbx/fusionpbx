@@ -150,7 +150,7 @@
 	echo "		var inputs = document.getElementsByTagName('input');\n";
 	echo "		var box_checked = document.getElementById('checkbox_all').checked;\n";
 	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "		    if (inputs[i].type === 'checkbox') {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
 	echo "				inputs[i].checked = box_checked;\n";
 	echo "			}\n";
 	echo "		}\n";
