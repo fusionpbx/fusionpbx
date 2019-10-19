@@ -205,8 +205,8 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		?>
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-			$('.tr_hover tr').each(function(i,e) {
-				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').on('click', function() {
+			$('.tr_hover tr,.list tr').each(function(i,e) {
+				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
 					var href = $(this).closest("tr").attr("href");
 					var target = $(this).closest('tr').attr('target');
 					if (href) {
@@ -378,13 +378,55 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
-		//handle action bar style on scroll
+	//handle action bar style on scroll
 		window.addEventListener('scroll', action_bar_scroll , false);
 		function action_bar_scroll() {
 			if (document.getElementById('action_bar')) {
 				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
 				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
 			}
+		}
+
+	//list functions
+		function list_all_toggle() {
+			var inputs = document.getElementsByTagName('input');
+			var checkbox_checked = document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = checkbox_checked;
+				}
+			}
+			if (checkbox_checked) {
+				document.getElementById('btn_check_all').style.display = 'none';
+				document.getElementById('btn_check_none').style.display = '';
+			}
+			else {
+				document.getElementById('btn_check_all').style.display = '';
+				document.getElementById('btn_check_none').style.display = 'none';
+			}
+		}
+
+		function list_self_check(checkbox_id) {
+			var inputs = document.getElementsByTagName('input');
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = false;
+				}
+			}
+			document.getElementById(checkbox_id).checked = true;
+		}
+
+		function list_action_set(action) {
+			document.getElementById('action').value = action;
+		}
+
+		function list_form_submit(form_id) {
+			document.getElementById(form_id).submit();
+		}
+
+		function list_search_reset() {
+			document.getElementById('btn_reset').style.display = 'none';
+			document.getElementById('btn_search').style.display = '';
 		}
 
 </script>

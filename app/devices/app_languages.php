@@ -1881,26 +1881,6 @@ $text['label-multicast_paging']['ru-ru'] = "Multicast Paging";
 $text['label-multicast_paging']['sv-se'] = "Multicast Paging";
 $text['label-multicast_paging']['uk-ua'] = "";
 
-$text['label-page']['en-us'] = "Page";
-$text['label-page']['ar-eg'] = "";
-$text['label-page']['de-at'] = "Page"; //copied from de-de
-$text['label-page']['de-ch'] = "Page"; //copied from de-de
-$text['label-page']['de-de'] = "Page";
-$text['label-page']['es-cl'] = "";
-$text['label-page']['es-mx'] = "";
-$text['label-page']['fr-ca'] = "Page";
-$text['label-page']['fr-fr'] = "Page";
-$text['label-page']['he-il'] = "";
-$text['label-page']['it-it'] = "Page";
-$text['label-page']['nl-nl'] = "";
-$text['label-page']['pl-pl'] = "";
-$text['label-page']['pt-br'] = "";
-$text['label-page']['pt-pt'] = "";
-$text['label-page']['ro-ro'] = "";
-$text['label-page']['ru-ru'] = "Page";
-$text['label-page']['sv-se'] = "Page";
-$text['label-page']['uk-ua'] = "";
-
 $text['label-park']['en-us'] = "Park";
 $text['label-park']['ar-eg'] = "";
 $text['label-park']['de-at'] = "Park"; //copied from de-de
