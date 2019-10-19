@@ -45,13 +45,14 @@ if (!class_exists('bridges')) {
 
 				//delete multiple bridges
 					if (is_array($bridges) && @sizeof($bridges) != 0) {
-						//delete the checked rows
+						//build the delete array
 							foreach($bridges as $x => $row) {
 								if ($row['checked'] == 'true' && is_uuid($row['bridge_uuid'])) {
 									$array['bridges'][$x]['bridge_uuid'] = $row['bridge_uuid'];
 									$array['bridges'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
 							}
+						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
 									$database = new database;
@@ -116,17 +117,18 @@ if (!class_exists('bridges')) {
 								$x++;
 							}
 
-						if (is_array($array) && @sizeof($array) != 0) {
-							//execute update
-								$database = new database;
-								$database->app_name = 'bridges';
-								$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-								$database->save($array);
-								unset($array);
-							//set message
-								message::add($text['message-toggle']);
-						}
-						unset($bridges, $bridge_states);
+						//save the changes
+							if (is_array($array) && @sizeof($array) != 0) {
+								//save the array
+									$database = new database;
+									$database->app_name = 'bridges';
+									$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+									$database->save($array);
+									unset($array);
+								//set message
+									message::add($text['message-toggle']);
+							}
+							unset($bridges, $bridge_states);
 					}
 
 			}
@@ -179,14 +181,16 @@ if (!class_exists('bridges')) {
 								}
 								unset($sql, $parameters, $rows, $row);
 							}
-						//execute insert
+						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
+								//save the array
 								$database = new database;
 								$database->app_name = 'bridges';
 								$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 								$database->save($array);
 								unset($array);
-							//set message
+
+								//set message
 								message::add($text['message-copy']);
 							}
 							unset($bridges);
