@@ -175,12 +175,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-access_control_default']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='access_control_default'>\n";
-	echo "	<option value=''></option>\n";
 	if ($access_control_default == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}
