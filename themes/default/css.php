@@ -2127,9 +2127,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow']['text'] != '') ? $_SESSION['theme']['action_bar_shadow']['text'] : 'none'; ?>;
 		padding: 10px;
 		margin: -10px -10px 10px -10px;
-		-webkit-transition: all .3s ease;
-		-moz-transition: all .3s ease;
-		transition: all .3s ease;
+		-webkit-transition: all .2s ease;
+		-moz-transition: all .2s ease;
+		transition: all .2s ease;
 		}
 
 	div.action_bar.scroll {
