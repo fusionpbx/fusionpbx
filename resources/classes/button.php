@@ -46,9 +46,7 @@ if (!class_exists('button')) {
 				$button .= ">";
 			//icon
 				if ($array['icon'] && (
-					$button_icons == 'only' ||
-					$button_icons == 'always' ||
-					$button_icons == 'auto' ||
+					$button_icons != 'never' ||
 					!$array['label']
 					)) {
 					$icon_class = is_array($array['icon']) ? $array['icon']['text'] : 'fas fa-'.$array['icon'];
