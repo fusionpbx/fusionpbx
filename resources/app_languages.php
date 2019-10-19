@@ -3351,6 +3351,26 @@ $text['label-tickets']['ru-ru'] = "";
 $text['label-tickets']['sv-se'] = "";
 $text['label-tickets']['uk-ua'] = "";
 
+$text['label-page']['en-us'] = "Page";
+$text['label-page']['ar-eg'] = "";
+$text['label-page']['de-at'] = "Page"; //copied from de-de
+$text['label-page']['de-ch'] = "Page"; //copied from de-de
+$text['label-page']['de-de'] = "Page";
+$text['label-page']['es-cl'] = "";
+$text['label-page']['es-mx'] = "";
+$text['label-page']['fr-ca'] = "Page";
+$text['label-page']['fr-fr'] = "Page";
+$text['label-page']['he-il'] = "";
+$text['label-page']['it-it'] = "Page";
+$text['label-page']['nl-nl'] = "";
+$text['label-page']['pl-pl'] = "";
+$text['label-page']['pt-br'] = "";
+$text['label-page']['pt-pt'] = "";
+$text['label-page']['ro-ro'] = "";
+$text['label-page']['ru-ru'] = "Page";
+$text['label-page']['sv-se'] = "Page";
+$text['label-page']['uk-ua'] = "";
+
 $text['button-tickets']['en-us'] = "Tickets";
 $text['button-tickets']['ar-eg'] = "";
 $text['button-tickets']['de-at'] = ""; //copied from de-de
