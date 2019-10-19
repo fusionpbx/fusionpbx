@@ -2196,6 +2196,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.list-row > .checkbox {
 		width: 1px;
 		text-align: center;
+		cursor: default !important;
 		}
 
 	.list-row > .checkbox {
