@@ -58,7 +58,7 @@ if (!class_exists('button')) {
 					!$array['icon'] ||
 					$array['class'] == 'link'
 					)) {
-					$hide_class = $array['icon'] && $button_icons != 'always' && $button_icons != 'never' ? 'hide-sm' : null;
+					$hide_class = $array['icon'] && $button_icons != 'always' && $button_icons != 'never' ? 'hide-md-dn' : null;
 					$pad_class = $array['icon'] ? 'pad' : null;
 					$button .= "<span class='button-label ".$hide_class." ".$pad_class."'>".$array['label']."</span>";
 				}

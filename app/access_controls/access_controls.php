@@ -154,7 +154,7 @@
 	echo "	</th>\n";
 	echo th_order_by('access_control_name', $text['label-access_control_name'], $order_by, $order);
 	echo th_order_by('access_control_default', $text['label-access_control_default'], $order_by, $order);
-	echo th_order_by('access_control_description', $text['label-access_control_description'], $order_by, $order);
+	echo th_order_by('access_control_description', $text['label-access_control_description'], $order_by, $order, null, "class='hide-xs'");
 	if (permission_exists('access_control_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -173,7 +173,7 @@
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."'>".escape($row['access_control_name'])."</a></td>\n";
 			echo "	<td>".escape($row['access_control_default'])."</td>\n";
-			echo "	<td class='description overflow'>".escape($row['access_control_description'])."</td>\n";
+			echo "	<td class='description overflow hide-xs'>".escape($row['access_control_description'])."</td>\n";
 			if (permission_exists('access_control_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);

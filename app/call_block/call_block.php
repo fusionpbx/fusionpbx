@@ -186,7 +186,7 @@
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order);
-	echo "	<th>".$text['label-description']."</th>\n";
+	echo "	<th class='hide-md-dn'>".$text['label-description']."</th>\n";
 	if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -218,7 +218,7 @@
 			echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['call_block_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			echo "	</td>\n";
 			echo "	<td>".date("j M Y H:i:s".(defined('TIME_24HR') && TIME_24HR == 1 ? 'a' : null), $row['date_added'])."</td>\n";
-			echo "	<td class='description overflow'>".escape($row['call_block_description'])."</td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
 			if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
