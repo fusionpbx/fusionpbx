@@ -161,14 +161,15 @@
 	echo "</tr>\n";
 
 	if (is_array($access_controls)) {
+		$x = 0;
 		foreach($access_controls as $row) {
 			if (permission_exists('access_control_edit')) {
 				$list_row_url = "access_control_edit.php?id=".escape($row['access_control_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='access_controls[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='access_controls[$x][access_control_uuid]' value='".escape($row['access_control_uuid'])."' />\n";
+			echo "		<input type='checkbox' name='access_controls[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+			echo "		<input type='hidden' name='access_controls[".$x."][access_control_uuid]' value='".escape($row['access_control_uuid'])."' />\n";
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."'>".escape($row['access_control_name'])."</a></td>\n";
 			echo "	<td>".escape($row['access_control_default'])."</td>\n";
