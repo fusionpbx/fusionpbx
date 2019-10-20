@@ -165,7 +165,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list of dialplans
-	$sql = "select count(*) from v_dialplans ";
+	$sql = "select * from v_dialplans ";
 	$sql .= $sql_where;
 	$sql .= ($order_by != '' ? order_by($order_by, $order) : 'order by dialplan_order asc, dialplan_name asc ');
 	$sql .= limit_offset($rows_per_page, $offset);
