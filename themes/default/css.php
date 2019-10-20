@@ -712,17 +712,56 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			}
 	<?php } ?>
 
-	/* small screen, hide button labels if icons present */
-	@media (max-width: 990px) {
-		button:not(.btn-link) > span.button-label.hide-sm {
+/* BREAKPOINTS ****************************************************************/
+
+	/* hide button labels on medium and smaller screens (only if icons present) */
+	@media (max-width: 991.98px) {
+		button:not(.btn-link) > span.button-label.hide-md-dn {
 			display: none;
 			}
 	}
 
-	/* large screen show button labels if icons present */
-	@media (min-width: 991px) {
-		button:not(.btn-link) > span.button-label.hide-sm {
-			display: inline;
+	/* screens = extra small */
+	@media (max-width: 575.98px) {
+		.hide-xs,
+		.hide-sm-dn,
+		.hide-md-dn,
+		.hide-lg-dn {
+			display: none;
+			}
+	}
+
+	/* screens = small */
+	@media (min-width: 576px) and (max-width: 767.98px) {
+		.hide-sm,
+		.hide-sm-dn,
+		.hide-md-dn,
+		.hide-lg-dn {
+			display: none;
+			}
+	}
+
+	/* screens = medium */
+	@media (min-width: 768px) and (max-width: 991.98px) {
+		.hide-md,
+		.hide-md-dn,
+		.hide-lg-dn {
+			display: none;
+			}
+	}
+
+	/* screens = large */
+	@media (min-width: 992px) and (max-width: 1199.98px) {
+		.hide-lg,
+		.hide-lg-dn {
+			display: none;
+			}
+	}
+
+	/* screens >= extra large */
+	@media (min-width: 1200px) {
+		.hide-xl {
+			display: none;
 			}
 	}
 

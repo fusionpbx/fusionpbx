@@ -193,7 +193,7 @@
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'");
-	echo "	<th>".$text['label-description']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
 	if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -225,7 +225,7 @@
 			echo "	<td class='no-link center'>";
 			echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['bridge_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			echo "	</td>\n";
-			echo "	<td class='description overflow'>".escape($row['bridge_description'])."</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['bridge_description'])."</td>\n";
 			if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
