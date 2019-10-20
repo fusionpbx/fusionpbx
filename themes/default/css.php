@@ -2182,6 +2182,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>;
 		text-align: left;
+		vertical-align: top;
 		}
 
 	.list-row > :not(.checkbox) {
@@ -2223,4 +2224,14 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		white-space: nowrap;
 		background: none;
 		padding: 0;
+		}
+
+	.list-header > .center,
+	.list-row > .center {
+		text-align: center !important;
+		}
+
+	.list-header > .right,
+	.list-row > .right {
+		text-align: right !important;
 		}
