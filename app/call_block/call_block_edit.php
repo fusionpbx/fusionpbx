@@ -81,6 +81,7 @@
 		$call_block_number = $_POST["call_block_number"];
 		$call_block_action = $_POST["call_block_action"];
 		$call_block_enabled = $_POST["call_block_enabled"];
+		$call_block_description = $_POST["call_block_description"];
 	}
 
 //handle the http post
@@ -157,6 +158,7 @@
 					$array['call_block'][0]['call_block_action'] = $call_block_action;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
+					$array['call_block'][0]['call_block_description'] = $call_block_description;
 
 					$database = new database;
 					$database->app_name = 'call_block';
@@ -197,6 +199,7 @@
 					$array['call_block'][0]['call_block_action'] = $call_block_action;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
+					$array['call_block'][0]['call_block_description'] = $call_block_description;
 
 					$database = new database;
 					$database->app_name = 'call_block';
@@ -228,8 +231,8 @@
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
 			$call_block_action = $row["call_block_action"];
-			$blocked_call_destination = $row["blocked_call_destination"];
 			$call_block_enabled = $row["call_block_enabled"];
+			$call_block_description = $row["call_block_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -349,6 +352,17 @@
 	echo "<br />\n";
 	echo $text['description-enable']."\n";
 	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_description' maxlength='255' value=\"".escape($call_block_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
