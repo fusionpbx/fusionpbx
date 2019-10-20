@@ -17,71 +17,25 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//only run the following code if the directory exists
-	/*
-	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
-		//write the dialplan/default.xml if it does not exist
-			//set the path
-				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
-					$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
-				}
-				else {
-					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf';
-				}
-
-			//get the contents of the dialplan/default.xml
-				$file_default_path = $path.'/dialplan/default.xml';
-				$file_default_contents = file_get_contents($file_default_path);
-
-			//prepare the file contents and the path
-				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-					$file_default_contents = str_replace("{v_domain}", $context, $file_default_contents);
-				//set the file path
-					$file_path = $_SESSION['switch']['conf']['dir'].'/dialplan/'.$context.'.xml';
-
-			//write the default dialplan
-				if (!file_exists($file_path)) {
-					$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissions are set correctly.');
-					fwrite($fh, $file_default_contents);
-					fclose($fh);
-				}
-	}
-	*/
-
 //get the $apps array from the installed apps from the core and mod directories
 	if ($domains_processed == 1) {
-		//get the array of xml files
-			$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+
+		//get the list of domains
+			$sql = "select * from v_domains ";
+			$database = new database;
+			$domains = $database->select($sql, null, 'all');
+			unset($sql);
 
 		//dialplan class
 			$dialplan = new dialplan;
-
-		//process the xml files
-			foreach ($xml_list as &$xml_file) {
-				//get and parse the xml
-					$xml_string = file_get_contents($xml_file);
-				//get the order number prefix from the file name
-					$name_array = explode('_', basename($xml_file));
-					if (is_numeric($name_array[0])) {
-						$dialplan_order = $name_array[0];
-					}
-					else {
-						$dialplan_order = 0;
-					}
-					$dialplan->dialplan_order = $dialplan_order;
-					if ($display_type == "text") {
-						$dialplan->display_type = 'text';
-					}
-					$dialplan->xml = $xml_string;
-					$dialplan->import();
-			}
+			$dialplan->import($domains);
 
 		//update the dialplan order
 			$database = new database;
@@ -92,7 +46,6 @@
 			$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
 			$database->execute($sql);
 			unset($sql);
-
 
 		//set empty strings to null
 			$database = new database;
@@ -129,7 +82,6 @@
 				$dialplans->context = $row["domain_name"];
 				$dialplans->is_empty = "dialplan_xml";
 				$array = $dialplans->xml();
-				//print_r($array);
 			}
 		}
 		unset($sql, $results);
