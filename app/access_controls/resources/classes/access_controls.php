@@ -27,7 +27,7 @@ if (!class_exists('access_controls')) {
 			//assign private variables
 				$this->app_name = 'access_controls';
 				$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-				$this->permission_prefix = 'access_control';
+				$this->permission_prefix = 'access_control_';
 				$this->list_page = 'access_controls.php';
 				$this->table = 'access_controls';
 				$this->uuid_prefix = 'access_control_';
@@ -49,7 +49,7 @@ if (!class_exists('access_controls')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'_delete')) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -96,7 +96,7 @@ if (!class_exists('access_controls')) {
 		 * copy records
 		 */
 		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'_add')) {
+			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support
 					$language = new text;
