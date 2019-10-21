@@ -111,11 +111,11 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -149,7 +149,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	/*
-	if (permission_exists('bridge_all')) {
+	if (permission_exists('call_block_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "	<input type='hidden' name='show' value='all'>";
 		}
@@ -196,7 +196,7 @@
 		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('call_block_edit')) {
-				$list_row_url = "call_block_edit.php?id=".escape($row['call_block_uuid']);
+				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
