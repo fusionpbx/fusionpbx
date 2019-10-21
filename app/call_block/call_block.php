@@ -91,11 +91,10 @@
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "	lower(call_block_name) like :search ";
-		$sql_search .= "	or lower(call_block_number) like :search ";
-		$sql_search .= "	or lower(call_block_description) like :search ";
+		$sql_search .= "lower(call_block_name) like :search ";
+		$sql_search .= "or lower(call_block_number) like :search ";
+		$sql_search .= "or lower(call_block_description) like :search ";
 		$sql_search .= ") ";
-
 		$parameters['search'] = '%'.$search.'%';
 	}
 
@@ -148,16 +147,6 @@
 	if (permission_exists('call_block_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	/*
-	if (permission_exists('call_block_all')) {
-		if ($_GET['show'] == 'all') {
-			echo "	<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
-		}
-	}
-	*/
 	echo "<form id='form_search' class='inline' method='get'>\n";
 	echo "<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
@@ -201,7 +190,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
 			echo "		<input type='checkbox' name='call_blocks[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='call_blocks[".$x."][call_block_uuid]' value='".escape($row['call_block_uuid'])."' />\n";
+			echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 			echo "	</td>\n";
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {

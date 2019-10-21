@@ -90,11 +90,10 @@
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "	lower(bridge_name) like :search ";
-		$sql_search .= "	or lower(bridge_destination) like :search ";
-		$sql_search .= "	or lower(bridge_enabled) like :search ";
+		$sql_search .= "lower(bridge_name) like :search ";
+		$sql_search .= "or lower(bridge_destination) like :search ";
+		$sql_search .= "or lower(bridge_enabled) like :search ";
 		$sql_search .= ") ";
-
 		$parameters['search'] = '%'.$search.'%';
 	}
 
@@ -208,7 +207,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
 			echo "		<input type='checkbox' name='bridges[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='bridges[$x][bridge_uuid]' value='".escape($row['bridge_uuid'])."' />\n";
+			echo "		<input type='hidden' name='bridges[$x][uuid]' value='".escape($row['bridge_uuid'])."' />\n";
 			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";

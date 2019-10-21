@@ -9,14 +9,34 @@ if (!class_exists('bridges')) {
 	class bridges {
 
 		/**
-		 * Called when the object is created
+		 * declare private variables
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $enabled_prefix;
+
+		/**
+		 * called when the object is created
 		 */
 		public function __construct() {
+
+			//assign private variables
+				$this->app_name = 'bridges';
+				$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+				$this->permission_prefix = 'bridge';
+				$this->list_page = 'bridges.php';
+				$this->table = 'bridges';
+				$this->uuid_prefix = 'bridge_';
+				$this->enabled_prefix = 'bridge_';
 
 		}
 
 		/**
-		 * Called when there are no references to a particular object
+		 * called when there are no references to a particular object
 		 * unset the variables used in the class
 		 */
 		public function __destruct() {
@@ -26,10 +46,10 @@ if (!class_exists('bridges')) {
 		}
 
 		/**
-		 * delete bridges
+		 * delete records
 		 */
-		public function delete($bridges) {
-			if (permission_exists('bridge_delete')) {
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'_delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -39,40 +59,44 @@ if (!class_exists('bridges')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: bridges.php');
+						header('Location: '.$this->list_page);
 						exit;
 					}
 
-				//delete multiple bridges
-					if (is_array($bridges) && @sizeof($bridges) != 0) {
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
 						//build the delete array
-							foreach($bridges as $x => $row) {
-								if ($row['checked'] == 'true' && is_uuid($row['bridge_uuid'])) {
-									$array['bridges'][$x]['bridge_uuid'] = $row['bridge_uuid'];
-									$array['bridges'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
 							}
+
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+
 								//execute delete
 									$database = new database;
-									$database->app_name = 'bridges';
-									$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
 								//set message
 									message::add($text['message-delete']);
 							}
-							unset($bridges);
+							unset($records);
 					}
 			}
 		}
 
 		/**
-		 * toggle bridges
+		 * toggle records
 		 */
-		public function toggle($bridges) {
-			if (permission_exists('bridge_edit')) {
+		public function toggle($records) {
+			if (permission_exists($this->permission_prefix.'_edit')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -82,28 +106,29 @@ if (!class_exists('bridges')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: bridges.php');
+						header('Location: '.$this->list_page);
 						exit;
 					}
 
-				//toggle the checked bridges
-					if (is_array($bridges) && @sizeof($bridges) != 0) {
-						//get current enabled state of checked bridges
-							foreach($bridges as $x => $row) {
-								if ($row['checked'] == 'true' && is_uuid($row['bridge_uuid'])) {
-									$bridge_uuids[] = "bridge_uuid = '".$row['bridge_uuid']."'";
+				//toggle the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//get current enabled state
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
 								}
 							}
-							if (is_array($bridge_uuids) && @sizeof($bridge_uuids) != 0) {
-								$sql = "select bridge_uuid, bridge_enabled from v_bridges ";
+							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->enabled_prefix."enabled as enabled from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $bridge_uuids)." ) ";
+								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$bridge_states[$row['bridge_uuid']] = $row['bridge_enabled'];
+										$states[$row['uuid']] = $row['enabled'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -111,34 +136,36 @@ if (!class_exists('bridges')) {
 
 						//build update array
 							$x = 0;
-							foreach($bridge_states as $bridge_uuid => $bridge_state) {
-								$array['bridges'][$x]['bridge_uuid'] = $bridge_uuid;
-								$array['bridges'][$x]['bridge_enabled'] = $bridge_state == 'true' ? 'false' : 'true';
+							foreach($states as $uuid => $state) {
+								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+								$array[$this->table][$x][$this->enabled_prefix.'enabled'] = $state == 'true' ? 'false' : 'true';
 								$x++;
 							}
 
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
+
 								//save the array
 									$database = new database;
-									$database->app_name = 'bridges';
-									$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
 								//set message
 									message::add($text['message-toggle']);
 							}
-							unset($bridges, $bridge_states);
+							unset($records, $states);
 					}
 
 			}
 		}
 
 		/**
-		 * copy bridges
+		 * copy records
 		 */
-		public function copy($bridges) {
-			if (permission_exists('bridge_add')) {
+		public function copy($records) {
+			if (permission_exists($this->permission_prefix.'_add')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -148,52 +175,57 @@ if (!class_exists('bridges')) {
 					$token = new token;
 					if (!$token->validate($_SERVER['PHP_SELF'])) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: bridges.php');
+						header('Location: '.$this->list_page);
 						exit;
 					}
 
-				//copy the checked bridges
-					if (is_array($bridges) && @sizeof($bridges) != 0) {
+				//copy the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
 
-						//get checked bridges
-							foreach($bridges as $x => $row) {
-								if ($row['checked'] == 'true' && is_uuid($row['bridge_uuid'])) {
-									$bridge_uuids[] = "bridge_uuid = '".$row['bridge_uuid']."'";
+						//get checked records
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
 								}
 							}
+
 						//create insert array from existing data
-							if (is_array($bridge_uuids) && @sizeof($bridge_uuids) != 0) {
-								$sql = "select * from v_bridges ";
+							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $bridge_uuids)." ) ";
+								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
-										$array['bridges'][$x]['bridge_uuid'] = uuid();
-										$array['bridges'][$x]['domain_uuid'] = $row['domain_uuid'];
-										$array['bridges'][$x]['bridge_name'] = $row['bridge_name'];
-										$array['bridges'][$x]['bridge_destination'] = $row['bridge_destination'];
-										$array['bridges'][$x]['bridge_enabled'] = $row['bridge_enabled'];
-										$array['bridges'][$x]['bridge_description'] = trim($row['bridge_description'].' ('.$text['label-copy'].')');
+										$new_uuid = uuid();
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_uuid;
+										$array[$this->table][$x]['domain_uuid'] = $row['domain_uuid'];
+										$array[$this->table][$x]['bridge_name'] = $row['bridge_name'];
+										$array[$this->table][$x]['bridge_destination'] = $row['bridge_destination'];
+										$array[$this->table][$x]['bridge_enabled'] = $row['bridge_enabled'];
+										$array[$this->table][$x]['bridge_description'] = trim($row['bridge_description'].' ('.$text['label-copy'].')');
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
 							}
+
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
+
 								//save the array
 									$database = new database;
-									$database->app_name = 'bridges';
-									$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
 
 								//set message
 									message::add($text['message-copy']);
+
 							}
-							unset($bridges);
+							unset($records);
 					}
 
 			}
@@ -201,10 +233,5 @@ if (!class_exists('bridges')) {
 
 	}
 }
-
-/*
-$obj = new bridges;
-$obj->delete();
-*/
 
 ?>
