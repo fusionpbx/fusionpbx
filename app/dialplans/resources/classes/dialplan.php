@@ -232,7 +232,7 @@ include "root.php";
 				//set the row id
 					$x = 0;
 
-				//check if the dialplan app uuid exists
+				//loop through each domain
 					foreach ($domains as $domain) {
 
 						//get the array of xml files
@@ -247,9 +247,9 @@ include "root.php";
 									if (strlen($xml_string) > 0) {
 										//replace the variables
 											$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
-											//$this->xml = str_replace("{v_context}", $this->default_context, $xml_string);
-											$this->xml = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
-											$this->xml = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $xml_string);
+											$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
+											$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
+											$xml_string = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $xml_string);
 										//convert the xml string to an xml object
 											$xml = simplexml_load_string($xml_string);
 										//convert to json
@@ -284,15 +284,9 @@ include "root.php";
 								//check if the dialplan exists
 									if (!$app_uuid_exists) {
 
-										//set the dialplan_context
-											$dialplan_context = $dialplan['@attributes']['name'];
-											if ($dialplan_context == "{v_context}") {
-												$dialplan_context = $domain['domain_name'];
-											}
-
 										//dialplan global
 											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
-													$dialplan_global = true;
+												$dialplan_global = true;
 											}
 											else {
 												$dialplan_global = false;
@@ -314,7 +308,7 @@ include "root.php";
 											$array['dialplans'][$x]['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
 											$array['dialplans'][$x]['dialplan_name'] = $dialplan['extension']['@attributes']['name'];
 											$array['dialplans'][$x]['dialplan_number'] = $dialplan['extension']['@attributes']['number'];
-											$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
+											$array['dialplans'][$x]['dialplan_context'] = $dialplan['@attributes']['name'];
 											if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
 												$array['dialplans'][$x]['dialplan_destination'] = $dialplan['extension']['@attributes']['destination'];
 											}
@@ -413,14 +407,13 @@ include "root.php";
 
 													//increase the order number
 													$order = $order + 5;
-
 												}
 											}
 
 										//update the session array
 											$_SESSION['upgrade']['app_defaults']['dialplans'][$domain['domain_name']][]['dialplan_name'] = $dialplan_name;
 
-										//increase the row number 
+										//increase the row number
 											$x++;
 									} //app_uuid exists
 							} //end foreach $xml_list
