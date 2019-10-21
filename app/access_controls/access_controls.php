@@ -96,11 +96,11 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = '';
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -164,7 +164,7 @@
 		$x = 0;
 		foreach($access_controls as $row) {
 			if (permission_exists('access_control_edit')) {
-				$list_row_url = "access_control_edit.php?id=".escape($row['access_control_uuid']);
+				$list_row_url = "access_control_edit.php?id=".urlencode($row['access_control_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
