@@ -26,7 +26,7 @@ if (!class_exists('call_broadcast')) {
 			//assign private variables
 				$this->app_name = 'call_broadcast';
 				$this->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
-				$this->permission_prefix = 'call_broadcast';
+				$this->permission_prefix = 'call_broadcast_';
 				$this->list_page = 'call_broadcast.php';
 				$this->table = 'call_broadcasts';
 				$this->uuid_prefix = 'call_broadcast_';
@@ -47,7 +47,7 @@ if (!class_exists('call_broadcast')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'_delete')) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -94,7 +94,7 @@ if (!class_exists('call_broadcast')) {
 		 * copy records
 		 */
 		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'_add')) {
+			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support
 					$language = new text;

@@ -27,7 +27,7 @@ if (!class_exists('call_block')) {
 			//assign private variables
 				$this->app_name = 'call_block';
 				$this->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-				$this->permission_prefix = 'call_block';
+				$this->permission_prefix = 'call_block_';
 				$this->list_page = 'call_block.php';
 				$this->table = 'call_block';
 				$this->uuid_prefix = 'call_block_';
@@ -49,7 +49,7 @@ if (!class_exists('call_block')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'_delete')) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -96,7 +96,7 @@ if (!class_exists('call_block')) {
 		 * toggle records
 		 */
 		public function toggle($records) {
-			if (permission_exists($this->permission_prefix.'_edit')) {
+			if (permission_exists($this->permission_prefix.'edit')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -165,7 +165,7 @@ if (!class_exists('call_block')) {
 		 * copy records
 		 */
 		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'_add')) {
+			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support
 					$language = new text;

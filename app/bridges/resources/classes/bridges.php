@@ -27,7 +27,7 @@ if (!class_exists('bridges')) {
 			//assign private variables
 				$this->app_name = 'bridges';
 				$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-				$this->permission_prefix = 'bridge';
+				$this->permission_prefix = 'bridge_';
 				$this->list_page = 'bridges.php';
 				$this->table = 'bridges';
 				$this->uuid_prefix = 'bridge_';
@@ -49,7 +49,7 @@ if (!class_exists('bridges')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'_delete')) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -96,7 +96,7 @@ if (!class_exists('bridges')) {
 		 * toggle records
 		 */
 		public function toggle($records) {
-			if (permission_exists($this->permission_prefix.'_edit')) {
+			if (permission_exists($this->permission_prefix.'edit')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -165,7 +165,7 @@ if (!class_exists('bridges')) {
 		 * copy records
 		 */
 		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'_add')) {
+			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support
 					$language = new text;
