@@ -73,9 +73,6 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 		}
 	}
 
-	//get the offset
-	$offset = ($page_number - 1) * $rows_per_page;
-
 	//how many pages we have when using paging
 	if ($num_rows > 0) {
 		$max_page = ceil($num_rows/$rows_per_page);
@@ -158,6 +155,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 							"if (page_num < 1) { page_num = 1; }\n".
 							"if (page_num > ".$max_page.") { page_num = ".$max_page."; }\n".
 							"document.location.href = '".$self."?page='+(--page_num)+'".$sanitized_parameters."';\n".
+							"return false;\n".
 						"}\n".
 					"}\n".
 				"</script>\n";
@@ -185,7 +183,6 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 		$array[] = "";
 	}
 	$array[] = $rows_per_page;
-	$array[] = $offset;
 
 	return $array;
 
