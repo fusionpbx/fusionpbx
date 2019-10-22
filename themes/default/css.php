@@ -714,13 +714,6 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 /* BREAKPOINTS ****************************************************************/
 
-	/* hide button labels on medium and smaller screens (only if icons present) */
-	@media (max-width: 991.98px) {
-		button:not(.btn-link) > span.button-label.hide-md-dn {
-			display: none;
-			}
-	}
-
 	/* screens = extra small */
 	@media (max-width: 575.98px) {
 		.hide-xs,
@@ -761,6 +754,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	/* screens >= extra large */
 	@media (min-width: 1200px) {
 		.hide-xl {
+			display: none;
+			}
+	}
+
+	/* hide button labels on medium and smaller screens (only if icons present) */
+	@media (max-width: 991.98px) {
+		button:not(.btn-link) > span.button-label.hide-md-dn {
 			display: none;
 			}
 	}
@@ -1328,7 +1328,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
 		}
 
-	td.playback_progress_bar_background {
+	tr.playback_progress_bar_background {
 		padding: 0;
 		border-bottom: none;
 		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
@@ -2132,7 +2132,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		position: relative;
 		}
 
-	div.form_set > .field.nowrap {
+	div.form_set > .field.no-wrap {
 		white-space: nowrap;
 		}
 
@@ -2141,6 +2141,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	div.action_bar {
 		position: -webkit-sticky;
 		position: sticky;
+		z-index: 5;
 		<?php
 		switch ($_SESSION['theme']['menu_style']['text']) {
 			case 'side':
@@ -2245,8 +2246,8 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	.list-row > .button {
 		margin: 0;
-		padding-top: 0;
-		padding-bottom: 0;
+		padding-top: 1px;
+		padding-bottom: 1px;
 		white-space: nowrap;
 		}
 
@@ -2273,4 +2274,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.list-header > .right,
 	.list-row > .right {
 		text-align: right !important;
+		}
+
+	.list-header > .no-wrap,
+	.list-row > .no-wrap {
+		white-space: nowrap;
 		}

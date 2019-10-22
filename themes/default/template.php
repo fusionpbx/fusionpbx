@@ -329,10 +329,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (recording_audio.paused) {
 				recording_audio.volume = 1;
 				recording_audio.play();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_pause']['text']; ?>'></span>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
 
-				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
+				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
 
 				$('audio').each(function(){$('#menu_side_container').width()
@@ -344,7 +344,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 			else {
 				recording_audio.pause();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>";
 				clearInterval(audio_clock);
 			}
 		}
@@ -361,7 +361,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
 				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
 			}
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>";
 			clearInterval(audio_clock);
 		}
 
