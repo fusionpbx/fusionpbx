@@ -812,11 +812,11 @@
 						$content .= "	<td class='no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
 					}
 				//action icon
-					if (permission_exists('xml_cdr_details')) {
-						$content .= "	<td class='action-button'>";
-						$content .= button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
-						$content .= "	</td>\n";
-					}
+					//if (permission_exists('xml_cdr_details')) {
+					//	$content .= "	<td class='action-button'>";
+					//	$content .= button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
+					//	$content .= "	</td>\n";
+					//}
 					$content .= "</tr>\n";
 
 				//show the leg b only to those with the permission
