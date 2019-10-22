@@ -161,10 +161,10 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 				"</script>\n";
 		//determine size
 			if ($mini) {
-				$code = $prev.$next."\n".$script;
+				$code = "<span style='white-space: nowrap;'>".$prev.$next."</span>\n".$script;
 			}
 			else {
-				$code .= "<center nowrap=\"nowrap\">";
+				$code .= "<center style='white-space: nowrap;'>";
 				$code .= "	".$prev;
 				$code .= "	&nbsp;&nbsp;&nbsp;";
 				$code .= "	<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>";
