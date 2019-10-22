@@ -145,7 +145,7 @@
 		echo "	<input type='hidden' name='order_by' value='".escape($order_by)."'>\n";
 		echo "	<input type='hidden' name='order' value='".escape($order)."'>\n";
 	}
-	if (permission_exists('bridge_delete')) {
+	if (permission_exists('xml_cdr_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('xml_cdr_all')) {
