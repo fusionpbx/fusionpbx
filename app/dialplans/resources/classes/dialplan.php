@@ -340,7 +340,6 @@ include "root.php";
 													if (strlen($row['@attributes']['break']) > 0) {
 														$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row['@attributes']['break'];
 													}
-													//$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = 
 													$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
 													$y++;
 
@@ -405,8 +404,9 @@ include "root.php";
 														}
 													}
 
-													//increase the order number
+													//increment the values
 													$order = $order + 5;
+													$group = $group + 5;
 												}
 											}
 
