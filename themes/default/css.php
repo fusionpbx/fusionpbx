@@ -1328,15 +1328,15 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
 		}
 
-	tr.playback_progress_bar_background {
+	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
 		border-bottom: none;
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -o-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.15)), color-stop(1, transparent));
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -o-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.10)), color-stop(1, transparent));
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
 		}
 
