@@ -68,20 +68,29 @@
 			public function dialplan() {
 
 				//delete previous dialplan
-					if (strlen($this->dialplan_uuid) > 0) {
-						//delete the previous dialplan
-						$sql = "delete from v_dialplans ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
+					if (is_uuid($this->dialplan_uuid)) {
+						//build delete array
+							$array['dialplans'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+							$array['dialplans'][0]['domain_uuid'] = $this->domain_uuid;
+							$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+							$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
-						$sql = "delete from v_dialplan_details ";
-						$sql .= "where dialplan_uuid = '".$this->dialplan_uuid."' ";
-						$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-						$this->db->exec($sql);
-						unset($sql);
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('dialplan_delete', 'temp');
+							$p->add('dialplan_detail_delete', 'temp');
+
+						//execute delete
+							$database = new database;
+							$database->app_name = 'call_centers';
+							$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+							$database->delete($array);
+							unset($array);
+
+						//revoke temporary permissions
+							$p->delete('dialplan_delete', 'temp');
+							$p->delete('dialplan_detail_delete', 'temp');
 					}
-					unset($prep_statement);
 
 				//build the dialplan array
 					$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
@@ -112,7 +121,6 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
-
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
@@ -135,6 +143,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
+
 					if (strlen($this->queue_cid_prefix) > 0) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -145,7 +154,6 @@
 						$y++;
 					}
 
-
 					if (strlen($this->queue_greeting) > 0) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -155,7 +163,7 @@
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 						$y++;
 					}
-				
+
 					if (strlen($this->queue_greeting) > 0) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -183,6 +191,7 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 					$y++;
+
 					if (strlen($this->queue_timeout_action) > 0) {
 						$action_array = explode(":",$this->queue_timeout_action);
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
@@ -193,6 +202,7 @@
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 						$y++;
 					}
+
 					$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "hangup";
@@ -200,37 +210,48 @@
 					$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 
-				//add the dialplan permission
+				//prepare the array
+					$array["dialplans"][0] = $dialplan;
+
+				//add temporary permissions
 					$p = new permissions;
 					$p->add("dialplan_add", 'temp');
 					$p->add("dialplan_detail_add", 'temp');
 					$p->add("dialplan_edit", 'temp');
 					$p->add("dialplan_detail_edit", 'temp');
-				
-				//prepare the array
-					$array["dialplans"][0] = $dialplan;
 
 				//save the dialplan
 					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->app_name = 'call_centers';
+					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 					$database->save($array);
 					$dialplan_response = $database->message;
 					$this->dialplan_uuid = $dialplan_response['uuid'];
+					unset($array);
 
-				//if new dialplan uuid then update the call center queue
-					$sql = "update v_call_center_queues ";
-					$sql .= "set dialplan_uuid = '".$this->dialplan_uuid."' ";
-					$sql .= "where call_center_queue_uuid = '".$this->call_center_queue_uuid."' ";
-					$sql .= "and domain_uuid = '".$this->domain_uuid."' ";
-					$this->db->exec($sql);
-					unset($sql);
-
-				//remove the temporary permission
+				//remove temporary permissions
 					$p->delete("dialplan_add", 'temp');
 					$p->delete("dialplan_detail_add", 'temp');
 					$p->delete("dialplan_edit", 'temp');
 					$p->delete("dialplan_detail_edit", 'temp');
+
+				//build call center queue update array
+					$array['call_center_queues'][0]['call_center_queue_uuid'] = $this->call_center_queue_uuid;
+					$array['call_center_queues'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('call_center_queue_edit', 'temp');
+
+				//execute update
+					$database = new database;
+					$database->app_name = 'call_centers';
+					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+					$database->save($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('call_center_queue_edit', 'temp');
 
 				//synchronize the xml config
 					save_dialplan_xml();

@@ -27,31 +27,43 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (!permission_exists('message_delete')) {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
+//get the id
+	$message_uuids = $_REQUEST['messages'];
+
 //delete the message
-	message::add($text['message-delete']);
-
-//delete the data
-	if (isset($_GET["id"]) && is_uuid($_GET["id"]) && permission_exists('message_delete')) {
-
-		//get the id
-			$id = check_str($_GET["id"]);
+	if (is_array($message_uuids) && @sizeof($message_uuids) != 0) {
 
 		//delete message
-			$sql = "delete from v_messages ";
-			$sql .= "where message_uuid = '$id' ";
-			$sql .= "and domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			foreach ($message_uuids as $index => $message_uuid) {
+				$array['messages'][$index]['message_uuid'] = $message_uuid;
+				$array['messages'][$index]['domain_uuid'] = $domain_uuid;
+			}
 
-		//redirect the user
-			header('Location: messages_log.php');
+			$database = new database;
+			$database->app_name = 'messages';
+			$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
+			$database->delete($array);
+			unset($array);
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
 
+//redirect the user
+	header('Location: messages_log.php');
+	exit;
 
 ?>

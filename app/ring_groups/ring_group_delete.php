@@ -43,28 +43,24 @@
 	$text = $language->get();
 
 //get the http value and set it as a php variable
-	if (is_array($_GET)) {
-		$id = $_GET["id"];
-	}
+	$ring_group_uuid = $_GET["id"];
 
 //delete the user data
-	if (is_uuid($id)) {
+	if (is_uuid($ring_group_uuid)) {
 		
 		//get the dialplan_uuid
 			$sql = "select * from v_ring_groups ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and ring_group_uuid = :ring_group_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$parameters['ring_group_uuid'] = $id;
+			$parameters['ring_group_uuid'] = $ring_group_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters);
-			if (is_array($result)) {
-				foreach ($result as &$row) {
-					$dialplan_uuid = $row["dialplan_uuid"];
-					$ring_group_context = $row["ring_group_context"];
-				}
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($array) && @sizeof($array) != 0) {
+				$dialplan_uuid = $row["dialplan_uuid"];
+				$ring_group_context = $row["ring_group_context"];
 			}
-			unset($database, $sql, $parameters);
+			unset($sql, $parameters, $row);
 
 		//add the dialplan permission
 			$p = new permissions;
@@ -73,9 +69,9 @@
 		//delete the data
 			$array['dialplan_details'][]['dialplan_uuid'] = $dialplan_uuid;
 			$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
-			$array['ring_group_destinations'][]['ring_group_uuid'] = $id;
-			$array['ring_group_users'][]['ring_group_uuid'] = $id;
-			$array['ring_groups'][]['ring_group_uuid'] = $id;
+			$array['ring_group_destinations'][]['ring_group_uuid'] = $ring_group_uuid;
+			$array['ring_group_users'][]['ring_group_uuid'] = $ring_group_uuid;
+			$array['ring_groups'][]['ring_group_uuid'] = $ring_group_uuid;
 			$database = new database;
 			$database->app_name = 'ring_groups';
 			$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
@@ -94,11 +90,13 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$ring_group_context);
+
+		//set message
+			message::add($text['message-delete']);
 	}
 
 //redirect the user
-	message::add($text['message-delete']);
 	header("Location: ring_groups.php");
-	return;
+	exit;
 
 ?>

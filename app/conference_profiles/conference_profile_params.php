@@ -73,7 +73,7 @@
 	echo th_order_by('profile_param_description', $text['label-profile_param_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('conference_profile_param_add')) {
-		echo "<a href='conference_profile_param_edit.php?conference_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='conference_profile_param_edit.php?conference_profile_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -113,7 +113,7 @@
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('conference_profile_param_add')) {
-		echo 		"<a href='conference_profile_param_edit.php?conference_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='conference_profile_param_edit.php?conference_profile_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";

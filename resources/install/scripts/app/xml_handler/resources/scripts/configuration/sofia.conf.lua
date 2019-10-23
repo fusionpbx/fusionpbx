@@ -126,15 +126,10 @@
 						--table.insert(xml, [[						<X-PRE-PROCESS cmd="include" data="]]..sip_profile_name..[[/*.xml"/>]]);
 
 						--get the gateways
-							if (domain_count > 1) then
-								sql = "select * from v_gateways as g, v_domains as d ";
-								sql = sql .. "where g.profile = :profile ";
-								sql = sql .. "and g.enabled = 'true' ";
-								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
-							else
-								sql = "select * from v_gateways as g ";
-								sql = sql .. "where g.enabled = 'true' and g.profile = :profile ";
-							end
+							sql = "select * from v_gateways as g, v_domains as d ";
+							sql = sql .. "where g.profile = :profile ";
+							sql = sql .. "and g.enabled = 'true' ";
+							sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							sql = sql .. "and (g.hostname = :hostname or g.hostname is null or g.hostname = '') ";
 							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then

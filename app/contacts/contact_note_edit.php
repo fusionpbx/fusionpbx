@@ -23,16 +23,19 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -65,6 +68,14 @@ else {
 		//get the primary id for the contact note
 			if ($action == "update") {
 				$contact_note_uuid = $_POST["contact_note_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
 			}
 
 		//check for all required data
@@ -157,6 +168,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -189,7 +204,7 @@ else {
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".escape($contact_note)."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".$contact_note."</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -201,6 +216,7 @@ else {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_note_uuid' value='".escape($contact_note_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -210,4 +226,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

@@ -16,15 +16,15 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2018
+--	Copyright (C) 2010-2019
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
 --predefined variables
-	predefined_destination = "";
-	fallback_destination = "";
+	predefined_destination = '';
+	fallback_destination = '';
 
 --define the trim function
 	require "resources.functions.trim";
@@ -47,8 +47,8 @@
 		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		caller_id_name = session:getVariable("caller_id_name");
-		caller_id_number = session:getVariable("caller_id_number");
+		--caller_id_name = session:getVariable("caller_id_name");
+		--caller_id_number = session:getVariable("caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
 		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");
@@ -81,27 +81,27 @@
 	end
 
 	if (not digit_timeout) then
-	    digit_timeout = "5000";
+		digit_timeout = "5000";
 	end
 
 	if (not sound_pin) then
-	    sound_pin = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav";
+		sound_pin = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav";
 	end
 
 	if (not sound_extension) then
-	    sound_extension = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav";
+		sound_extension = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav";
 	end
 
 	if (not max_tries) then
-	    max_tries = "3";
+		max_tries = "3";
 	end
 
 	if (not pin_tries) then
-	    pin_tries = max_tries;
+		pin_tries = max_tries;
 	end
 
 	if (not extension_tries) then
-	    extension_tries = max_tries;
+		extension_tries = max_tries;
 	end
 
 --if the sound_greeting is provided then play it
@@ -131,10 +131,11 @@
 		if (predefined_destination) then
 			destination_number = predefined_destination;
 		else
+			session:sleep(1000);
 			dtmf = ""; --clear dtmf digits to prepare for next dtmf request
 			destination_number = session:playAndGetDigits(digit_min_length, digit_max_length, extension_tries, digit_timeout, "#", sound_extension, "", "\\d+");
 			if (string.len(destination_number) == 0 and fallback_destination) then
-			    destination_number = fallback_destination;
+				destination_number = fallback_destination;
 			end
 			--if (string.len(destination_number) == 10) then destination_number = "1"..destination_number; end
 		end
@@ -157,7 +158,7 @@
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
-				caller_id_number = session:getVariable("effective_caller_id_name");
+			        caller_id_number = session:getVariable("effective_caller_id_number");
 			end
 			if (caller_id_number) then
 				--caller id number provided do nothing
@@ -168,7 +169,7 @@
 			if (caller_id_name) then
 				--caller id name provided do nothing
 			else
-				caller_id_number = session:getVariable("outbound_caller_id_name");
+				caller_id_number = session:getVariable("outbound_caller_id_number");
 			end
 			if (caller_id_number) then
 				--caller id number provided do nothing
@@ -178,6 +179,18 @@
 		end
 	end
 
+--get the caller id number
+	--if (session:ready()) then
+	--	min_digits = 7;
+	--	max_digits = 20;
+	--	session:sleep(1000);
+	--	caller_id_name = '';
+	--	caller_id_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_source_telephone_number.wav", "", "\\d+");
+	--	if (string.len(caller_id_number) == 0) then
+	--		sesssion:hangup();
+	--	end
+	--end
+
 --send the destination
 	if (session:ready()) then
 		if (user_exists == true) then
@@ -185,8 +198,13 @@
 			session:execute("transfer", destination_number .. " XML " .. context);
 		else
 			--exteernal call
-			session:execute("set", "effective_caller_id_name="..caller_id_name);
-			session:execute("set", "effective_caller_id_number="..caller_id_number);
+			if (caller_id_name) then
+				session:execute("set", "effective_caller_id_name="..caller_id_name);
+			end
+			if (caller_id_number) then
+				session:execute("set", "outbound_caller_id_number="..caller_id_number);
+				session:execute("set", "effective_caller_id_number="..caller_id_number);
+			end
 			session:execute("transfer", destination_number .. " XML " .. context);
 		end
 	end

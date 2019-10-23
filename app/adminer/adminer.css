@@ -76,7 +76,7 @@ tr:nth-child(2n) td, tr:nth-child(2n) th, .odd td, .odd th, tr.odd {background-c
 tr:hover td, tr:hover th {background-color: #BCD;}
 fieldset {display: inline; vertical-align: top; padding: 2px 12px; margin: 25px 12px 12px 0; border: none; background-color: #F1F1F1; border: 1px solid #E3E3E3; position: relative; padding-top: 14px;}
 fieldset, x:-moz-any-link {padding-top: 4px;}
-fieldset {%padding-top: 14px;}
+fieldset {padding-top: 14px;}
 legend {font-weight: 900; color: #000; position: absolute; top: -1.666em; left: -1em; padding: 0 4px;}
 input[name='limit'], input[name*='length'] {width: 3em; xtext-align: right;}
 input[name='text_length'] {width: 5em;}

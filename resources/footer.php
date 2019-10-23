@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,7 +40,7 @@
 	ob_end_clean(); //clean the buffer
 
 //clear the template
-	if ($_SESSION['theme']['cache']['boolean'] == "false") {
+	if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
 		$_SESSION["template_content"] = '';
 	}
 

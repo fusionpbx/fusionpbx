@@ -48,7 +48,6 @@ else {
 		$database->app_name = 'call_broadcasts';
 		$database->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
 		$database->delete($array);
-		$response = $database->message;
 		unset($array);
 
 		message::add($text['message-delete']);

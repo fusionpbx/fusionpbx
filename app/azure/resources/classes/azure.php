@@ -128,7 +128,7 @@ class azure{
     }
 
     private static function getSubscriptionKey(){
-        return $_SESSION['azure]['key']['text'];
+        return $_SESSION['azure']['key']['text'];
     }
 
     private static function _getToken(){

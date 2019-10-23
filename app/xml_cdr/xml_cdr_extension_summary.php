@@ -47,11 +47,11 @@
 	require_once "resources/header.php";
 
 //retrieve submitted data
-	$quick_select = check_str($_REQUEST['quick_select']);
-	$start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
-	$start_stamp_end = check_str($_REQUEST['start_stamp_end']);
-	$include_internal = check_str($_REQUEST['include_internal']);
-	$quick_select = (sizeof($_REQUEST) == 0) ? 3 : $quick_select; //set default
+	$quick_select = $_REQUEST['quick_select'];
+	$start_stamp_begin = $_REQUEST['start_stamp_begin'];
+	$start_stamp_end = $_REQUEST['start_stamp_end'];
+	$include_internal = $_REQUEST['include_internal'];
+	$quick_select = sizeof($_REQUEST) == 0 ? 3 : $quick_select; //set default
 
 //get the summary
 	$cdr = new xml_cdr;
@@ -112,7 +112,8 @@
 	echo "onclick=\"window.location='xml_cdr_extension_summary.php?";
 	if (strlen($_SERVER["QUERY_STRING"]) > 0) { 
 		echo $_SERVER["QUERY_STRING"]."&type=csv';\">\n";
-	} else { 
+	}
+	else {
 		echo "type=csv';\">\n";
 	}
 
@@ -159,7 +160,7 @@
 		echo "						".$text['label-start_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='position: relative; min-width: 135px;'>\n";
-		echo "						<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='$start_stamp_begin'>\n";
+		echo "						<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";
@@ -172,7 +173,7 @@
 		echo "						".$text['label-end_date_time']."\n";
 		echo "					</td>\n";
 		echo "					<td class='vtable' width='70%' align='left' style='position: relative; min-width: 135px;'>\n";
-		echo "						<input type='text' class='formfld datetimepicker' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='$start_stamp_end'>\n";
+		echo "						<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>\n";
 		echo "					</td>\n";
 		echo "				</tr>\n";
 		echo "			</table>\n";

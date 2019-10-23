@@ -76,29 +76,43 @@
 		header("Content-Transfer-Encoding: binary");
 	}
 
+
+//define possible columns in the array
+	$allowed_columns[] = 'device_uuid';
+	$allowed_columns[] = 'domain_uuid';
+	$allowed_columns[] = 'device_mac_address';
+	$allowed_columns[] = 'device_label';
+	$allowed_columns[] = 'device_template';
+	$allowed_columns[] = 'device_description';
+
 //get the devices and send them as output
-	if (isset($_REQUEST["column_group"])) {
-		$columns = implode(",",$_REQUEST["column_group"]);
-		$sql = "select " . $columns . " from v_devices ";
-		$sql .= " where domain_uuid = '".$domain_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$devices = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		unset ($sql, $prep_statement);
-		//print_r($extensions);
+	$column_group = $_REQUEST["column_group"];
+	if (is_array($column_group) && @sizeof($column_group) != 0) {
+		//validate columns
+			foreach ($column_group as $index => $column_name) {
+				if (!in_array($column_name, $allowed_columns)) {
+					unset($column_group[$index]);
+				}
+			}
+		//iterate columns
+			if (is_array($column_group) && @sizeof($column_group) != 0) {
+				$column_names = implode(", ", $column_group);
+				$sql = "select ".$column_names." from v_devices ";
+				$sql .= " where domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$database = new database;
+				$devices = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters, $column_names);
+				//print_r($extensions);
 
-		download_send_headers("data_export_" . date("Y-m-d") . ".csv");
-		echo array2csv($devices);
-		die();
+				if (is_array($devices) && @sizeof($devices) != 0) {
+					download_send_headers("data_export_".date("Y-m-d").".csv");
+					echo array2csv($devices);
+					exit();
+				}
+			}
+			unset($column_group);
 	}
-
-//define the columns in the array
-	$columns[] = 'device_uuid';
-	$columns[] = 'domain_uuid';
-	$columns[] = 'device_mac_address';
-	$columns[] = 'device_label';
-	$columns[] = 'device_template';
-	$columns[] = 'device_description';
 
 //set the row style
 	$c = 0;
@@ -121,12 +135,12 @@
 	echo "	<th>Description</th>\n";
 	echo "</tr>\n";
 
-	foreach ($columns as $value) {
+	foreach ($allowed_columns as $column_name) {
 		echo "<tr>\n";
 		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
-		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
+		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"".$column_name."\"/>";
 		echo "	</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>$value</td>";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$column_name."</td>";
 		echo "	<td valign='top' class='".$row_style[$c]."'></td>";
 		echo "</tr>";
 		if ($c==0) { $c=1; } else { $c=0; }

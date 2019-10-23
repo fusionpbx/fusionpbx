@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //redirect admin to app instead
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/") && !permission_exists('domain_parent') && permission_exists('domain_descendants')) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
 		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
 	}
 

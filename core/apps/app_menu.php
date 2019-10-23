@@ -22,7 +22,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "glyphicon-send";
+	$apps[$x]['menu'][$y]['icon'] = "fa-paper-plane";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "20";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";

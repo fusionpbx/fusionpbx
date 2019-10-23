@@ -421,5 +421,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight Brightness. Default is 100.. Value 10-100.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "513f981f-3954-4bbd-a311-8ea134fe0818";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_fax_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through.";
+		$y++;
 
 ?>

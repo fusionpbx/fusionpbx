@@ -114,30 +114,30 @@ echo "					</td>";
 if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				<td valign='top' nowrap='nowrap'>";
 	if (sizeof($_SESSION['user']['extensions']) > 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : $_REQUEST['eavesdrop_dest'])."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		if (is_array($_SESSION['user']['extensions'])) foreach ($_SESSION['user']['extensions'] as $user_extension) {
-			echo "				<option value='".$user_extension."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".$user_extension."</option>\n";
+			echo "				<option value='".escape($user_extension)."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".escape($user_extension)."</option>\n";
 		}
 		echo "				</select>\n";
 	}
 	else if (sizeof($_SESSION['user']['extensions']) == 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extension'][0]['destination']."\">";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".escape($_SESSION['user']['extension'][0]['destination'])."\">";
 	}
 	echo "				</td>";
 }
 
 if (sizeof($groups) > 0) {
 	echo "				<td valign='top' nowrap='nowrap'>";
-	echo "					<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
+	echo "					<input type='hidden' id='group' value=\"".escape($_REQUEST['group'])."\">";
 	if (sizeof($groups) > 5) {
 		//show select box
 		echo "				<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		echo "					<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
 		echo "					<option value=''>".$text['button-all']."</option>";
 		if (is_array($groups)) foreach ($groups as $group) {
-			echo "				<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
+			echo "				<option value='".escape($group)."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".escape($group)."</option>\n";
 		}
 		echo "				</select>\n";
 	}
@@ -145,7 +145,7 @@ if (sizeof($groups) > 0) {
 		//show buttons
 		echo "				<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\" ".$onhover_pause_refresh.">";
 		if (is_array($groups)) foreach ($groups as $group) {
-			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\" ".$onhover_pause_refresh.">";
+			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".escape($group)."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\" ".$onhover_pause_refresh.">";
 		}
 	}
 	echo "				</td>";
@@ -309,12 +309,12 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			$status_hover = $text['label-status_logged_out_or_unknown'];
 	}
 
-	$block .= "<div id='".$extension."' class='op_ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+	$block .= "<div id='".escape($extension)."' class='op_ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 	$block .= "<table class='op_ext ".$style."'>";
 	$block .= "	<tr>";
 	$block .= "		<td class='op_ext_icon'>";
-	$block .= "			<span name='".$extension."'>"; // DRAG FROM
-	$block .= 				"<img id='".$call_identifier."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
+	$block .= "			<span name='".escape($extension)."'>"; // DRAG FROM
+	$block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
 	$block .= 			"</span>";
 	$block .= "		</td>";
 	$block .= "		<td class='op_ext_info ".$style."'>";
@@ -322,22 +322,22 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\">";
 	}
 	$block .= "			<span class='op_user_info'>";
-	if ($ext['effective_caller_id_name'] != '' && $ext['effective_caller_id_name'] != $extension) {
-		$block .= "			<strong class='strong'>".$ext['effective_caller_id_name']."</strong> (".$extension.")";
+	if ($ext['effective_caller_id_name'] != '' && escape($ext['effective_caller_id_name']) != $extension) {
+		$block .= "			<strong class='strong'>".escape($ext['effective_caller_id_name'])."</strong> (".escape($extension).")";
 	}
 	else {
-		$block .= "			<strong class='strong'>".$extension."</strong>";
+		$block .= "			<strong class='strong'>".escape($extension)."</strong>";
 	}
 	$block .= "			</span><br>";
 	if ($ext_state != '') {
 		$block .= "		<span class='op_caller_info'>";
 		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
-		$block .= "				<span class='op_call_info'>".$ext['call_length']."</span><br>";
+		$block .= "				<span class='op_call_info'>".escape($ext['call_length'])."</span><br>";
 		$block .= "				<span class='call_control'>";
 		//record
 		if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 			$call_identifier_record = $ext['call_uuid'];
-			$rec_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$call_identifier_record.".wav";
+			$rec_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
 			if (file_exists($rec_file)) {
 				$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">";
 			}
@@ -347,7 +347,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		}
 		//eavesdrop
 		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$ext['destination']."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".escape($ext['destination'])."','".escape($call_identifier)."');\" ".$onhover_pause_refresh.">";
 		}
 		//hangup
 		if (permission_exists('operator_panel_hangup') || in_array($extension, $_SESSION['user']['extensions'])) {
@@ -360,32 +360,32 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			else {
 				$call_identifier_hangup_uuid = $call_identifier;
 			}
-			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-hangup']."' onclick=\"hangup_call('".$call_identifier_hangup_uuid."');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-hangup']."' onclick=\"hangup_call('".escape($call_identifier_hangup_uuid)."');\" ".$onhover_pause_refresh.">";
 		}
 		$block .=				"</span>";
 		//transfer
 		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
-			$block .= 			"<img id='destination_control_".$extension."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".$extension."', 'transfer');\" ".$onhover_pause_refresh.">";
+			$block .= 			"<img id='destination_control_".escape($extension)."_transfer' class='destination_control' src='resources/images/keypad_transfer.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' onclick=\"toggle_destination('".escape($extension)."', 'transfer');\" ".$onhover_pause_refresh.">";
 		}
 		$block .= "			</td></tr></table>";
 		if (permission_exists('operator_panel_call_details')) {
-			$block .= "			<span id='op_caller_details_".$extension."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
+			$block .= "			<span id='op_caller_details_".escape($extension)."'><strong>".escape($call_name)."</strong><br>".escape($call_number)."</span>";
 		}
 		$block .= "		</span>";
 		//transfer
 		if (in_array($extension, $_SESSION['user']['extensions']) && $ext_state == 'active') {
 			$call_identifier_transfer = $ext['variable_bridge_uuid'];
-			$block .= "		<form id='frm_destination_".$extension."_transfer' onsubmit=\"go_destination('".$extension."', document.getElementById('destination_".$extension."_transfer').value, 'transfer', '".$call_identifier_transfer."'); return false;\">";
-			$block .= "			<input type='text' class='formfld' id='destination_".$extension."_transfer' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 3px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."', 'transfer');\">";
+			$block .= "		<form id='frm_destination_".escape($extension)."_transfer' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_transfer').value, 'transfer', '".escape($call_identifier_transfer)."'); return false;\">";
+			$block .= "			<input type='text' class='formfld' id='destination_".escape($extension)."_transfer' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 3px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'transfer');\">";
 			$block .= "		</form>\n";
 		}
 	}
 	else {
 		//call
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= "		<img id='destination_control_".$extension."_call' class='destination_control' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."', 'call');\" ".$onhover_pause_refresh.">";
-			$block .= "		<form id='frm_destination_".$extension."_call' onsubmit=\"go_destination('".$extension."', document.getElementById('destination_".$extension."_call').value, 'call'); return false;\">";
-			$block .= "			<input type='text' class='formfld' id='destination_".$extension."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".$extension."', 'call');\">";
+			$block .= "		<img id='destination_control_".escape($extension)."_call' class='destination_control' src='resources/images/keypad_call.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; margin-right: 1px; cursor: pointer;' align='right' onclick=\"toggle_destination('".escape($extension)."', 'call');\" ".$onhover_pause_refresh.">";
+			$block .= "		<form id='frm_destination_".escape($extension)."_call' onsubmit=\"go_destination('".escape($extension)."', document.getElementById('destination_".escape($extension)."_call').value, 'call'); return false;\">";
+			$block .= "			<input type='text' class='formfld' id='destination_".escape($extension)."_call' style='width: 100px; min-width: 100px; max-width: 100px; margin-top: 10px; text-align: center; display: none;' onblur=\"toggle_destination('".escape($extension)."', 'call');\">";
 			$block .= "		</form>\n";
 		}
 	}
@@ -395,18 +395,18 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	if (if_group("superadmin") && isset($_GET['debug'])) {
 		$block .= "<span style='font-size: 10px;'>";
-		$block .= "From ID<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: maroon'>".$extension."</strong><br>";
-		$block .= "uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['uuid'] ? 'blue' : 'black').";'>".$ext['uuid']."</strong><br>";
-		$block .= "call_uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['call_uuid'] ? 'blue' : 'black').";'>".$ext['call_uuid']."</strong><br>";
-		$block .= "variable_bridge_uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['variable_bridge_uuid'] ? 'blue' : 'black').";'>".$ext['variable_bridge_uuid']."</strong><br>";
-		$block .= "direction<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['direction']."</strong><br>";
-		$block .= "variable_call_direction<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['variable_call_direction']."</strong><br>";
-		$block .= "state<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['state']."</strong><br>";
-		$block .= "cid_num<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['cid_num']."</strong><br>";
-		$block .= "dest<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['dest']."</strong><br>";
-		$block .= "context<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['context']."</strong><br>";
-		$block .= "presence_id<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['presence_id']."</strong><br>";
-		$block .= "callstate<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".$ext['callstate']."</strong><br>";
+		$block .= "From ID<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: maroon'>".escape($extension)."</strong><br>";
+		$block .= "uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['uuid'] ? 'blue' : 'black').";'>".escape($ext['uuid'])."</strong><br>";
+		$block .= "call_uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['call_uuid'] ? 'blue' : 'black').";'>".escape($ext['call_uuid'])."</strong><br>";
+		$block .= "variable_bridge_uuid<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: ".($call_identifier == $ext['variable_bridge_uuid'] ? 'blue' : 'black').";'>".escape($ext['variable_bridge_uuid'])."</strong><br>";
+		$block .= "direction<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['direction'])."</strong><br>";
+		$block .= "variable_call_direction<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['variable_call_direction'])."</strong><br>";
+		$block .= "state<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['state'])."</strong><br>";
+		$block .= "cid_num<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['cid_num'])."</strong><br>";
+		$block .= "dest<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['dest'])."</strong><br>";
+		$block .= "context<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['context'])."</strong><br>";
+		$block .= "presence_id<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['presence_id'])."</strong><br>";
+		$block .= "callstate<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong style='color: black;'>".escape($ext['callstate'])."</strong><br>";
 		$block .= "</span>";
 	}
 	$block .= "</div>";
@@ -430,7 +430,7 @@ if (sizeof($user_extensions) > 0) {
 
 if ($_REQUEST['group'] != '') {
 	if (sizeof($user_extensions) > 0) { echo "<br>"; }
-	echo "<strong style='color: black;'>".ucwords($_REQUEST['group'])."</strong>";
+	echo "<strong style='color: black;'>".ucwords(escape($_REQUEST['group']))."</strong>";
 	echo "<br><br>";
 }
 else if (sizeof($user_extensions) > 0) {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,108 +43,124 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
-		$device_uuid = check_str($_REQUEST["id"]);
-		$mac_address_new = check_str($_REQUEST["mac"]);
-		$mac_address_new = preg_replace('#[^a-fA-F0-9./]#', '', $mac_address_new);
+	if (is_uuid($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
+		$device_uuid = $_REQUEST["id"];
+		$device_mac_address = $_REQUEST["mac"];
+		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 	}
 
 //set the default
 	$save = true;
 
 //check to see if the mac address exists
-	if ($mac_address_new == "" || $mac_address_new == "000000000000") {
+	if ($device_mac_address == "" || $device_mac_address == "000000000000") {
 		//allow duplicates to be used as templaes
 	}
 	else {
-		$sql = "SELECT count(*) AS num_rows FROM v_devices ";
-		$sql .= "WHERE device_mac_address = '".$mac_address_new."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == "0") {
-				$save = true;
-			}
-			else {
-				$save = false;
-				message::add($text['message-duplicate']);
-			}
+		$sql = "select count(*) from v_devices ";
+		$sql .= "where device_mac_address = :device_mac_address ";
+		$parameters['device_mac_address'] = $device_mac_address;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		if ($num_rows == 0) {
+			$save = true;
 		}
-		unset($prep_statement);
+		else {
+			$save = false;
+			message::add($text['message-duplicate'],'negative');
+		}
+		unset($sql, $parameters, $num_rows);
 	}
 
 //get the device
-	$sql = "SELECT * FROM v_devices ";
-	$sql .= "where device_uuid = '".$device_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select * from v_devices ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$devices = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device lines
-	$sql = "SELECT * FROM v_device_lines ";
-	$sql .= "where device_uuid = '".$device_uuid."' ";
+	$sql = "select * from v_device_lines ";
+	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by line_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_lines = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device keys
-	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	$sql .= "ORDER by ";
-	$sql .= "CASE device_key_category ";
-	$sql .= "WHEN 'line' THEN 1 ";
-	$sql .= "WHEN 'memort' THEN 2 ";
-	$sql .= "WHEN 'programmable' THEN 3 ";
-	$sql .= "WHEN 'expansion' THEN 4 ";
-	$sql .= "ELSE 100 END, ";
+	$sql = "select * from v_device_keys ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$sql .= "order by ";
+	$sql .= "case device_key_category ";
+	$sql .= "when 'line' then 1 ";
+	$sql .= "when 'memort' then 2 ";
+	$sql .= "when 'programmable' then 3 ";
+	$sql .= "when 'expansion' then 4 ";
+	$sql .= "else 100 END, ";
 	$sql .= "cast(device_key_id as numeric) asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_keys = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //get device settings
-	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	$sql .= "ORDER by device_setting_subcategory asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$sql = "select * from v_device_settings ";
+	$sql .= "where device_uuid = :device_uuid ";
+	$sql .= "order by device_setting_subcategory asc ";
+	$parameters['device_uuid'] = $device_uuid;
+	$database = new database;
+	$device_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
-//prepare the devices array
-	unset($devices[0]["device_uuid"]);
+//set the device primary key
+	$device_uuid = uuid();
 
-//add copy to the device description
+//prepare the device array
+	$devices[0]["device_uuid"] = $device_uuid;
 	$devices[0]["device_description"] = $text['button-copy']." ".$devices[0]["device_description"];
 
 //prepare the device_lines array
+
 	$x = 0;
-	foreach ($device_lines as $row) {
-		unset($device_lines[$x]["device_uuid"]);
-		unset($device_lines[$x]["device_line_uuid"]);
-		$x++;
+	if (is_array($device_lines)) {
+		foreach ($device_lines as $row) {
+			$device_lines[$x]["device_uuid"] = $device_uuid;
+			$device_lines[$x]["device_line_uuid"] = uuid();
+			$x++;
+		}
 	}
 
 //prepare the device_keys array
 	$x = 0;
-	foreach ($device_keys as $row) {
-		unset($device_keys[$x]["device_uuid"]);
-		unset($device_keys[$x]["device_key_uuid"]);
-		$x++;
+	if (is_array($device_keys)) {
+		foreach ($device_keys as $row) {
+			$device_keys[$x]["device_uuid"] = $device_uuid;
+			$device_keys[$x]["device_key_uuid"] = uuid();
+			$x++;
+		}
 	}
 
 //prepare the device_settings array
 	$x = 0;
-	foreach ($device_settings as $row) {
-		unset($device_settings[$x]["device_uuid"]);
-		unset($device_settings[$x]["device_setting_uuid"]);
-		$x++;
+	if (is_array($device_settings)) {
+		foreach ($device_settings as $row) {
+			$device_settings[$x]["device_uuid"] = $device_uuid;
+			$device_settings[$x]["device_setting_uuid"] = uuid();
+			$x++;
+		}
+	}
+
+//normalize the mac address
+	if (isset($device_mac_address) && strlen($device_mac_address) > 0) {
+		$device_mac_address = strtolower($device_mac_address);
+		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 	}
 
 //create the device array
 	$device = $devices[0];
-	$device["device_mac_address"] = $mac_address_new;
+	$device["device_mac_address"] = $device_mac_address;
 	$device["device_lines"] = $device_lines;
 	$device["device_keys"] = $device_keys;
 	$device["device_settings"] = $device_settings;
@@ -163,7 +179,8 @@
 	}
 
 //redirect
-	header("Location: devices.php");
-	return;
+	if (is_uuid($device_uuid)) {
+		header("Location: device_edit.php?id=".urlencode($device_uuid));
+	}
 
 ?>

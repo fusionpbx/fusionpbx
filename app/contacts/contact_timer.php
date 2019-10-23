@@ -132,9 +132,18 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	if ($contact_organization != '') {
 		$contact .= ($contact != '') ? ', '.$contact_organization : $contact_organization;
 	}
-?>
 
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
+//get the browser version
+	$user_agent = http_user_agent();
+	$browser_version =  $user_agent['version'];
+	$browser_name =  $user_agent['name'];
+	$browser_version_array = explode('.', $browser_version);
+
+//set the doctype
+	echo ($browser_name != "Internet Explorer") ? "<!DOCTYPE html>\n" : "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+
+?>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
 	<title><?php echo $text['label-time_timer']; ?>: <?php echo $contact; ?></title>
 	<style>
@@ -287,7 +296,8 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 	</style>
 
-	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
+	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.4.1.min.js'></script>
+	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			//ajax for refresh
@@ -331,10 +341,9 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<input type='hidden' name='time_action' value="<?php echo escape($timer_action); ?>">
 	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 		<tr>
-			<td class='vncell' style='text-align: center; padding: 10px;'>
-				<?php echo $text['label-description']; ?>
-				<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo escape($time_description); ?></textarea>
-				<? if ($timer_state == 'stopped') { ?><script>document.getElementById('timer_description').focus();</script><? } ?>
+			<td class='vncell' style='text-align: center; border: none; padding: 0 !important; padding-top: 10px !important;'>
+				<?php echo $text['label-description']; ?><br>
+				<textarea name='time_description' id='timer_description' class='formfld' style='width: calc(100% - 30px); height: 50px; margin: 5px 10px 10px;'><?php echo escape($time_description); ?></textarea>
 			</td>
 		</tr>
 	</table>
@@ -347,5 +356,6 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<?php } ?>
 	</center>
 	</form>
+	<?php if ($timer_state == 'stopped') { ?><script>$('#timer_description').trigger('focus');</script><?php } ?>
 </body>
 </html>

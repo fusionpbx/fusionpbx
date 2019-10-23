@@ -75,6 +75,14 @@ else {
 				$contact_relation_uuid = $_POST["contact_relation_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -172,6 +180,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['title-contact_relation'];
 	require_once "resources/header.php";
@@ -183,7 +195,7 @@ else {
 	echo "		document.getElementById(field).selectedIndex = 0;";
 	echo "		document.getElementById(field+'_custom').value = '';";
 	echo "		$('#'+field+'_custom').toggle();";
-	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').focus(); } else { $('#'+field).focus(); }";
+	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').trigger('focus'); } else { $('#'+field).trigger('focus'); }";
 	echo "	}";
 	echo "</script>";
 
@@ -321,6 +333,7 @@ else {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

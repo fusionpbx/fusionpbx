@@ -120,8 +120,8 @@
 <input type='hidden' class='formfld' id='sort1' value=''>
 
 <!-- autocomplete for contact lookup -->
-<link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.css">
-<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui-1.9.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.min.css">
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
 //ajax refresh
@@ -346,7 +346,7 @@
 			}
 			else {
 				$('#destination_'+ext+'_call').show(0, function() {
-					$('#destination_'+ext+'_call').focus();
+					$('#destination_'+ext+'_call').trigger('focus');
 					$('#destination_'+ext+'_call').autocomplete({
 						source: "autocomplete.php",
 						minLength: 3,
@@ -374,7 +374,7 @@
 			else {
 				$('#op_caller_details_'+ext).hide(0, function() {
 					$('#destination_'+ext+'_transfer').show(0, function() {
-						$('#destination_'+ext+'_transfer').focus();
+						$('#destination_'+ext+'_transfer').trigger('focus');
 						$('#destination_'+ext+'_transfer').autocomplete({
 							source: "autocomplete.php",
 							minLength: 3,

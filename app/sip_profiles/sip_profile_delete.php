@@ -43,46 +43,39 @@
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
-	}
+	$sip_profile_uuid = $_GET["id"];
 
 //delete the records
-	if (strlen($id) > 0) {
+	if (is_uuid($sip_profile_uuid)) {
 
 		//get the details of the sip profile
 			$sql = "select * from v_sip_profiles ";
-			$sql .= "where sip_profile_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			foreach ($result as &$row) {
+			$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+			$parameters['sip_profile_uuid'] = $sip_profile_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($array) && @sizeof($array) != 0) {
 				$sip_profile_name = $row["sip_profile_name"];
 				$sip_profile_hostname = $row["sip_profile_hostname"];
 				$sip_profile_description = $row["sip_profile_description"];
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $row);
 
 		//delete the sip profile domains
-			$sql = "delete from v_sip_profile_domains ";
-			$sql .= "where sip_profile_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['sip_profile_domains'][0]['sip_profile_uuid'] = $sip_profile_uuid;
 
 		//delete the sip profile settings
-			$sql = "delete from v_sip_profile_settings ";
-			$sql .= "where sip_profile_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['sip_profile_settings'][0]['sip_profile_uuid'] = $sip_profile_uuid;
 
 		//delete the sip profile
-			$sql = "delete from v_sip_profiles ";
-			$sql .= "where sip_profile_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+			$array['sip_profiles'][0]['sip_profile_uuid'] = $sip_profile_uuid;
+
+		//execute delete
+			$database = new database;
+			$database->app_name = 'sip_profiles';
+			$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
+			$database->delete($array);
+			unset($array);
 
 		//delete the xml sip profile and directory
 			unlink($_SESSION['switch']['conf']['dir']."/sip_profiles/".$sip_profile_name.".xml");
@@ -106,11 +99,14 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("configuration:sofia.conf:".$sip_profile_name);
+
+		//set message
+			message::add($text['message-delete']);
+
 	}
 
 //redirect the browser
-	message::add($text['message-delete']);
 	header("Location: sip_profiles.php");
-	return;
+	exit;
 
 ?>

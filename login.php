@@ -28,7 +28,6 @@
 	require_once "resources/require.php";
 
 //start session
-	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
 //if config.php file does not exist then redirect to the install page

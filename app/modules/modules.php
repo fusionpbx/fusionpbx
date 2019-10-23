@@ -70,6 +70,8 @@
 				$msg = "<strong>".$text['label-load_module'].":</strong> <pre>".$response."</pre>";
 			}
 		}
+		header('Location: modules.php');
+		exit;
 	}
 
 //check connection status
@@ -223,10 +225,10 @@
 			echo "</tr>\n";
 
 			$prev_module_category = $row["module_category"];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
+			$c = $c ? 0 : 1;
+		}
 		unset($sql, $modules, $row_count);
-	} //end if results
+	}
 
 	echo "<tr>\n";
 	echo "<td colspan='6'>\n";

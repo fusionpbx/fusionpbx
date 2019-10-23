@@ -42,6 +42,14 @@
 				$conference_control_uuid = $_POST["conference_control_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conference_controls.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($control_name) == 0) { $msg .= $text['message-required']." ".$text['label-control_name']."<br>\n"; }
@@ -63,11 +71,13 @@
 		//add the conference_control_uuid
 			if (!is_uuid($_POST["conference_control_uuid"])) {
 				$conference_control_uuid = uuid();
-				$_POST["conference_control_uuid"] = $conference_control_uuid;
 			}
 
 		//prepare the array
-			$array['conference_controls'][] = $_POST;
+			$array['conference_controls'][0]['conference_control_uuid'] = $conference_control_uuid;
+			$array['conference_controls'][0]['control_name'] = $control_name;
+			$array['conference_controls'][0]['control_enabled'] = $control_enabled;
+			$array['conference_controls'][0]['control_description'] = $control_description;
 
 		//save to the data
 			$database = new database;
@@ -108,6 +118,10 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -172,9 +186,10 @@
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
+		echo "			<input type='hidden' name='conference_control_uuid' value='".escape($conference_control_uuid)."'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

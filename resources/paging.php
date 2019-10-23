@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,15 +32,46 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	if (!is_numeric($result_count)) { $result_count = 0; }
 
 	// if $_get['page'] defined, use it as page number
-	if(isset($_GET['page']) && is_numeric($_GET['page'])) {
+	if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 		$page_number = $_GET['page'];
 	}
 	else {
 		$page_number = 0;
 	}
 
-	//get the offset
-	$offset = ($page_number - 1) * $rows_per_page;
+	//sanitize the parameters
+	$sanitized_parameters = '';
+	if (isset($param) && strlen($param) > 0) {
+		$param_array = explode("&", $param);
+		if (is_array($param_array)) {
+			foreach($param_array as $row) {
+				$param_sub_array = explode("=", $row);
+				$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $param_sub_array['0']);
+				$value = urldecode($param_sub_array['1']);
+				if ($key == 'order_by' && strlen($value) > 0) {
+					//validate order by
+					$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+				}
+				else if ($key == 'order' && strlen($value) > 0) {
+					//validate order
+					switch ($value) {
+						case 'asc':
+							$sanitized_parameters .= "&order=asc";
+							break;
+						case 'desc':
+							$sanitized_parameters .= "&order=desc";
+							break;
+					}
+				}
+				else if (strlen($value) > 0 && is_numeric($value)) {
+					$sanitized_parameters .= "&".$key."=".$value;
+				}
+				else {
+					$sanitized_parameters .= "&".$key."=".urlencode($value);
+				}
+			}
+		}
+	}
 
 	//how many pages we have when using paging
 	if ($num_rows > 0) {
@@ -51,40 +82,40 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	$language = new text;
 	$text = $language->get();
 
-	// print the link to access each page
-	$self = $_SERVER['PHP_SELF'];
+	//print the link to access each page
+	$self =  htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
 	$nav = '';
-	for($page = 1; $page <= $max_page; $page++){
+	for ($page = 1; $page <= $max_page; $page++){
 		if ($page == $page_number) {
 			$nav .= " $page ";   // no need to create a link to current page
 		}
 		else {
-			$nav .= " <a href=\"$self?page=$page\">$page</a> \n";
+			$nav .= " <a href='".$self."?page=".$page."'>".$page."</a> \n";
 		}
 	}
 
 	if ($page_number > 0) {
-        $page = $page_number - 1;
-		$prev = "<input class='btn' type='button' value='".$text['button-back']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9664;
-		$first = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=1".$param."';\">\n"; //&#9650;
+		$page = $page_number - 1;
+		$prev = button::create(['type'=>'button','label'=>(!$mini ? $text['button-back'] : null),'icon'=>($mini ? 'chevron-left' : null),'link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$first = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-left' : null),'link'=>$self."?page=1".$sanitized_parameters]);
 	}
 	else {
-		$prev = "<input class='btn' type='button' disabled value='".$text['button-back']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9664;
+		$prev = button::create(['type'=>'button','label'=>(!$mini ? $text['button-back'] : null),'icon'=>($mini ? 'chevron-left' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	if (($page_number + 1) < $max_page) {
-        $page = $page_number + 1;
-		$next = "<input class='btn' type='button' value='".$text['button-next']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n"; //&#9654;
-		$last = "<input class='btn' type='button' value='".$text['button-back']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
+		$page = $page_number + 1;
+		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$last = button::create(['type'=>'button','label'=>(!$mini ? $text['button-back'] : null),'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$max_page.$sanitized_parameters]);
 	}
 	else {
-		$last = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=$max_page".$param."';\">\n"; //&#9660;
-		$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+		$last = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$max_page.$sanitized_parameters]);
+		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-right' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	//if the result count is less than the rows per page then this is the last page of results
 	if ($result_count > 0 and $result_count < $rows_per_page) {
-			$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-right' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	$array = array();
@@ -123,16 +154,17 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 							"// action to peform when enter is hit\n".
 							"if (page_num < 1) { page_num = 1; }\n".
 							"if (page_num > ".$max_page.") { page_num = ".$max_page."; }\n".
-							"document.location.href = '".$self."?page='+(--page_num)+'".$param."';\n".
+							"document.location.href = '".$self."?page='+(--page_num)+'".$sanitized_parameters."';\n".
+							"return false;\n".
 						"}\n".
 					"}\n".
 				"</script>\n";
 		//determine size
 			if ($mini) {
-				$code = $prev.$next."\n".$script;
+				$code = "<span style='white-space: nowrap;'>".$prev.$next."</span>\n".$script;
 			}
 			else {
-				$code .= "<center nowrap=\"nowrap\">";
+				$code .= "<center style='white-space: nowrap;'>";
 				$code .= "	".$prev;
 				$code .= "	&nbsp;&nbsp;&nbsp;";
 				$code .= "	<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>";
@@ -151,7 +183,6 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 		$array[] = "";
 	}
 	$array[] = $rows_per_page;
-	$array[] = $offset;
 
 	return $array;
 

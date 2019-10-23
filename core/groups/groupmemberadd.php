@@ -50,6 +50,14 @@
 	$group_name = $_POST["group_name"];
 	$user_uuid = $_POST["user_uuid"];
 
+//validate the token
+	$token = new token;
+	if (!$token->validate('/core/groups/groupmembers.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: groups.php');
+		exit;
+	}
+
 //add the user to the group
 	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {
 		$array['user_groups'][0]['user_group_uuid'] = uuid();

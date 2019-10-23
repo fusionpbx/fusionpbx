@@ -44,15 +44,16 @@
 	$text = $language->get();
 
 //add the search term
-	$search = strtolower(check_str($_GET["search"]));
+	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(ring_group_name) like '%".$search."%' ";
-		$sql_search .= "or lower(ring_group_extension) like '%".$search."%' ";
-		$sql_search .= "or lower(ring_group_description) like '%".$search."%' ";
-		$sql_search .= "or lower(ring_group_enabled) like '%".$search."%' ";
-		$sql_search .= "or lower(ring_group_strategy) like '%".$search."%' ";
+		$sql_search .= "lower(ring_group_name) like :search ";
+		$sql_search .= "or lower(ring_group_extension) like :search ";
+		$sql_search .= "or lower(ring_group_description) like :search ";
+		$sql_search .= "or lower(ring_group_enabled) like :search ";
+		$sql_search .= "or lower(ring_group_strategy) like :search ";
 		$sql_search .= ")";
+		$parameters['search'] = '%'.$search.'%';
 	}	
 
 //additional includes
@@ -67,7 +68,6 @@
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
-	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
@@ -82,28 +82,17 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-//get total ring group count from the database
-	$sql = "select count(*) as num_rows from v_ring_groups where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		$total_ring_groups = $row['num_rows'];
-	}
-	unset($prep_statement, $row);
+//get total ring group count
+	$sql = "select count(*) from v_ring_groups ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$total_ring_groups = $database->select($sql, $parameters, 'column');
 
-//prepare to page the results (reuse $sql from above)
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if (strlen($row['num_rows']) > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
+//get filtered ring group count
+	$sql .= $search;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -113,21 +102,17 @@
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
-//get the  list
-	$sql = "select * from v_ring_groups ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= $sql_search;
+//get the list
+	$sql = str_replace('count(*)', '*', $sql);
 	if (strlen($order_by) == 0) {
-		$sql .= "order by ring_group_name, ring_group_extension asc ";
+		$sql .= "order by ring_group_name asc, ring_group_extension asc ";
 	}
 	else {
-		$sql .= "order by $order_by $order ";
+		$sql .= order_by($order_by, $order);
 	}
-	$sql .= " limit $rows_per_page offset $offset ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$ring_groups = $prep_statement->fetchAll();
-	unset ($prep_statement, $sql);
+	$sql .= limit_offset($rows_per_page, $offset);
+	$ring_groups = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //set the row styles
 	$c = 0;
@@ -152,7 +137,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($ring_groups)) {
+	if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
 		foreach($ring_groups as $row) {
 			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -178,14 +163,14 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $ring_groups);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($ring_groups, $row);
 
 	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "</table>";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
@@ -197,11 +182,7 @@
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
+ 	echo "</table>\n";
 	echo "<br><br>";
 
 //include the footer

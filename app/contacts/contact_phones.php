@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -113,7 +113,7 @@
 			unset($phone_types);
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
-			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".escape($row['phone_number'])."\">CDR</a>\n";
+			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".escape($row['phone_number'])."\">".$text['button-cdr']."</a>\n";
 			if ($row['phone_type_voice']) {
 				echo "		&nbsp;\n";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".escape(urlencode($row['phone_number']))."&src_cid_number=".escape(urlencode($row['phone_number']))."&dest_cid_name=".urlencode(escape($_SESSION['user']['extension'][0]['outbound_caller_id_name']))."&dest_cid_number=".urlencode(escape($_SESSION['user']['extension'][0]['outbound_caller_id_number']))."&src=".urlencode(escape($_SESSION['user']['extension'][0]['user']))."&dest=".escape(urlencode($row['phone_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">".$text['label-phone_call']."</a>\n";

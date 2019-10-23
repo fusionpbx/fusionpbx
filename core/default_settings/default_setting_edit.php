@@ -74,6 +74,14 @@
 				$default_setting_uuid = uuid();
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: default_settings.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -185,6 +193,10 @@
 		}
 		unset($sql, $parameters);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -437,7 +449,7 @@
 	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
 		$default_setting_value = str_replace('"', "'", $default_setting_value);
 		if ($fonts = get_available_fonts('alpha')) {
-			echo "	<select class='formfld' id='sel_default_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_default_setting_value option').length - 1) { $('#txt_default_setting_value').val('').fadeIn('fast'); $('#txt_default_setting_value').focus(); } else { $('#txt_default_setting_value').fadeOut('fast', function(){ $('#txt_default_setting_value').val($('#sel_default_setting_value').val()) }); } \">\n";
+			echo "	<select class='formfld' id='sel_default_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_default_setting_value option').length - 1) { $('#txt_default_setting_value').val('').fadeIn('fast'); $('#txt_default_setting_value').trigger('focus'); } else { $('#txt_default_setting_value').fadeOut('fast', function(){ $('#txt_default_setting_value').val($('#sel_default_setting_value').val()) }); } \">\n";
 			echo "		<option value=''></option>\n";
 			echo "		<optgroup label='".$text['label-web_fonts']."'>\n";
 			$option_found = false;
@@ -558,6 +570,14 @@
 	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
 		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "button_icons" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='auto'>".$text['option-button_icons_auto']."</option>\n";
+		echo "    	<option value='only' ".($default_setting_value == "only" ? "selected='selected'" : null).">".$text['option-button_icons_only']."</option>\n";
+		echo "    	<option value='always' ".($default_setting_value == "always" ? "selected='selected'" : null).">".$text['option-button_icons_always']."</option>\n";
+		echo "    	<option value='never' ".($default_setting_value == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
+		echo "    </select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='listen' ".(($default_setting_value == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
@@ -656,6 +676,7 @@
 		echo "		<input type='hidden' name='default_setting_uuid' value='".$default_setting_uuid."'>\n";
 		echo "		<input type='hidden' name='search' value='".$search."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
@@ -671,7 +692,7 @@
 	echo "<script>\n";
 	//capture enter key to submit form
 		if (!($category == "theme" && $subcategory == "custom_css_code" && $name == "text" )) {
-			echo "	$(window).keypress(function(event){\n";
+			echo "	$(window).on('keypress',function(event){\n";
 			echo "		if (event.which == 13) { submit_form(); }\n";
 			echo "	});\n";
 		}
@@ -682,9 +703,9 @@
 		echo "		$('form#frm').submit();\n";
 		echo "	}\n";
 	//define lowercase class
-		echo "	$('.lowercase').blur(function(){ this.value = this.value.toLowerCase(); });";
+		echo "	$('.lowercase').on('blur',function(){ this.value = this.value.toLowerCase(); });";
 	//show order if array
-		echo "	$('#default_setting_name').keyup(function(){ \n";
+		echo "	$('#default_setting_name').on('keyup',function(){ \n";
 		echo "		(this.value.toLowerCase() == 'array') ? $('#tr_order').slideDown('fast') : $('#tr_order').slideUp('fast');\n";
 		echo "	});\n";
 	echo "</script>\n";

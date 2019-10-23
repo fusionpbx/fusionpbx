@@ -34,17 +34,14 @@
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		if ((! isset($_SESSION['event_socket_ip_address'])) or strlen($_SESSION['event_socket_ip_address']) == 0) {
 			$sql = "select * from v_settings ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				foreach ($result as &$row) {
-					$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
-					$_SESSION['event_socket_port'] = $row["event_socket_port"];
-					$_SESSION['event_socket_password'] = $row["event_socket_password"];
-					break; //limit to 1 row
-				}
+			$database = new database;
+			$row = $database->select($sql, null, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
+				$_SESSION['event_socket_port'] = $row["event_socket_port"];
+				$_SESSION['event_socket_password'] = $row["event_socket_password"];
 			}
+			unset($sql, $row);
 		}
 	}
 
@@ -72,16 +69,14 @@ function event_socket_request_cmd($cmd) {
 
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
 		$sql = "select * from v_settings ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($result as &$row) {
+		$database = new database;
+		$row = $database->select($sql, null, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
 			$event_socket_password = $row["event_socket_password"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $row);
 	}
 
 	$esl = new event_socket;
@@ -137,85 +132,74 @@ function ListFiles($dir) {
 function save_setting_xml() {
 	global $domain_uuid, $host, $config;
 
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
 	$sql = "select * from v_settings ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($result as &$row) {
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
-			$xml = "<include>\n";
-			$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
-			$xml .= "    <variables>\n";
-			$xml .= "      <!--all variables here will be set on all inbound calls that originate from this user -->\n";
-			$xml .= "      <!-- set these to take advantage of a dialplan localized to this user -->\n";
-			$xml .= "      <variable name=\"numbering_plan\" value=\"" . $row['numbering_plan'] . "\"/>\n";
-			$xml .= "      <variable name=\"default_gateway\" value=\"" . $row['default_gateway'] . "\"/>\n";
-			$xml .= "      <variable name=\"default_area_code\" value=\"" . $row['default_area_code'] . "\"/>\n";
-			$xml .= "    </variables>\n";
-			$xml .= "  </user>\n";
-			$xml .= "</include>\n";
-			fwrite($fout, $xml);
-			unset($xml);
-			fclose($fout);
+	$database = new database;
+	$row = $database->select($sql, null, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
+		$xml = "<include>\n";
+		$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
+		$xml .= "    <variables>\n";
+		$xml .= "      <!--all variables here will be set on all inbound calls that originate from this user -->\n";
+		$xml .= "      <!-- set these to take advantage of a dialplan localized to this user -->\n";
+		$xml .= "      <variable name=\"numbering_plan\" value=\"" . $row['numbering_plan'] . "\"/>\n";
+		$xml .= "      <variable name=\"default_gateway\" value=\"" . $row['default_gateway'] . "\"/>\n";
+		$xml .= "      <variable name=\"default_area_code\" value=\"" . $row['default_area_code'] . "\"/>\n";
+		$xml .= "    </variables>\n";
+		$xml .= "  </user>\n";
+		$xml .= "</include>\n";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
 
-			$event_socket_ip_address = $row['event_socket_ip_address'];
-			if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+		$event_socket_ip_address = $row['event_socket_ip_address'];
+		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
 
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
-			$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/event_socket.conf.xml","w");
+		$xml = "<configuration name=\"event_socket.conf\" description=\"Socket Client\">\n";
+		$xml .= "  <settings>\n";
+		$xml .= "    <param name=\"listen-ip\" value=\"" . $event_socket_ip_address . "\"/>\n";
+		$xml .= "    <param name=\"listen-port\" value=\"" . $row['event_socket_port'] . "\"/>\n";
+		$xml .= "    <param name=\"password\" value=\"" . $row['event_socket_password'] . "\"/>\n";
+		if (strlen($row['event_socket_acl']) > 0) {
+			$xml .= "    <param name=\"apply-inbound-acl\" value=\"" . $row['event_socket_acl'] . "\"/>\n";
+		}
+		$xml .= "  </settings>\n";
+		$xml .= "</configuration>";
+		fwrite($fout, $xml);
+		unset($xml, $event_socket_password);
+		fclose($fout);
+
+		$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
+		$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
+		$xml .= "  <settings>\n";
+		$xml .= "    <!-- The port where you want to run the http service (default 8080) -->\n";
+		$xml .= "    <param name=\"http-port\" value=\"" . $row['xml_rpc_http_port'] . "\"/>\n";
+		$xml .= "    <!-- if all 3 of the following params exist all http traffic will require auth -->\n";
+		$xml .= "    <param name=\"auth-realm\" value=\"" . $row['xml_rpc_auth_realm'] . "\"/>\n";
+		$xml .= "    <param name=\"auth-user\" value=\"" . $row['xml_rpc_auth_user'] . "\"/>\n";
+		$xml .= "    <param name=\"auth-pass\" value=\"" . $row['xml_rpc_auth_pass'] . "\"/>\n";
+		$xml .= "  </settings>\n";
+		$xml .= "</configuration>\n";
+		fwrite($fout, $xml);
+		unset($xml);
+		fclose($fout);
+
+		//shout.conf.xml
+			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
+			$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
 			$xml .= "  <settings>\n";
-			$xml .= "    <param name=\"listen-ip\" value=\"" . $event_socket_ip_address . "\"/>\n";
-			$xml .= "    <param name=\"listen-port\" value=\"" . $row['event_socket_port'] . "\"/>\n";
-			$xml .= "    <param name=\"password\" value=\"" . $row['event_socket_password'] . "\"/>\n";
-			if (strlen($row['event_socket_acl']) > 0) {
-				$xml .= "    <param name=\"apply-inbound-acl\" value=\"" . $row['event_socket_acl'] . "\"/>\n";
-			}
+			$xml .= "    <!-- Don't change these unless you are insane -->\n";
+			$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
+			$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
+			$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
 			$xml .= "  </settings>\n";
 			$xml .= "</configuration>";
 			fwrite($fout, $xml);
-			unset($xml, $event_socket_password);
-			fclose($fout);
-
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_rpc.conf.xml","w");
-			$xml = "<configuration name=\"xml_rpc.conf\" description=\"XML RPC\">\n";
-			$xml .= "  <settings>\n";
-			$xml .= "    <!-- The port where you want to run the http service (default 8080) -->\n";
-			$xml .= "    <param name=\"http-port\" value=\"" . $row['xml_rpc_http_port'] . "\"/>\n";
-			$xml .= "    <!-- if all 3 of the following params exist all http traffic will require auth -->\n";
-			$xml .= "    <param name=\"auth-realm\" value=\"" . $row['xml_rpc_auth_realm'] . "\"/>\n";
-			$xml .= "    <param name=\"auth-user\" value=\"" . $row['xml_rpc_auth_user'] . "\"/>\n";
-			$xml .= "    <param name=\"auth-pass\" value=\"" . $row['xml_rpc_auth_pass'] . "\"/>\n";
-			$xml .= "  </settings>\n";
-			$xml .= "</configuration>\n";
-			fwrite($fout, $xml);
 			unset($xml);
 			fclose($fout);
-
-			//shout.conf.xml
-				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/shout.conf.xml","w");
-				$xml = "<configuration name=\"shout.conf\" description=\"mod shout config\">\n";
-				$xml .= "  <settings>\n";
-				$xml .= "    <!-- Don't change these unless you are insane -->\n";
-				$xml .= "    <param name=\"decoder\" value=\"" . $row['mod_shout_decoder'] . "\"/>\n";
-				$xml .= "    <param name=\"volume\" value=\"" . $row['mod_shout_volume'] . "\"/>\n";
-				$xml .= "    <!--<param name=\"outscale\" value=\"8192\"/>-->\n";
-				$xml .= "  </settings>\n";
-				$xml .= "</configuration>";
-				fwrite($fout, $xml);
-				unset($xml);
-				fclose($fout);
-
-			break; //limit to 1 row
-		}
-		unset ($prep_statement);
 	}
+	unset($sql, $row);
 
 	//apply settings
 		$_SESSION["reload_xml"] = true;
@@ -226,13 +210,13 @@ function save_setting_xml() {
 }
 
 function filename_safe($filename) {
-	// lower case
+	//lower case
 		$filename = strtolower($filename);
 
-	// replace spaces with a '_'
+	//replace spaces with a '_'
 		$filename = str_replace(" ", "_", $filename);
 
-	// loop through string
+	//loop through string
 		$result = '';
 		for ($i=0; $i<strlen($filename); $i++) {
 			if (preg_match('([0-9]|[a-z]|_)', $filename[$i])) {
@@ -240,7 +224,7 @@ function filename_safe($filename) {
 			}
 		}
 
-	// return filename
+	//return filename
 		return $result;
 }
 
@@ -253,12 +237,6 @@ function save_gateway_xml() {
 
 	//declare the global variables
 		global $domain_uuid, $config;
-
-	//get the database connection
-		require_once "resources/classes/database.php";
-		$database = new database;
-		$database->connect();
-		$db = $database->db;
 
 	//delete all old gateways to prepare for new ones
 		if (count($_SESSION["domains"]) > 1) {
@@ -274,112 +252,114 @@ function save_gateway_xml() {
 
 	//get the list of gateways and write the xml
 		$sql = "select * from v_gateways ";
-		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($result as &$row) {
-			if ($row['enabled'] != "false") {
-					//set the default profile as external
-						$profile = $row['profile'];
-						if (strlen($profile) == 0) {
-							$profile = "external";
-						}
-					//open the xml file
-						$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
-					//build the xml
-						$xml .= "<include>\n";
-						$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
-						if (strlen($row['username']) > 0) {
-							$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
-						}
-						if (strlen($row['distinct_to']) > 0) {
-							$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
-						}
-						if (strlen($row['auth_username']) > 0) {
-							$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
-						}
-						if (strlen($row['password']) > 0) {
-							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
-						}
-						if (strlen($row['realm']) > 0) {
-							$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
-						}
-						if (strlen($row['from_user']) > 0) {
-							$xml .= "      <param name=\"from-user\" value=\"" . $row['from_user'] . "\"/>\n";
-						}
-						if (strlen($row['from_domain']) > 0) {
-							$xml .= "      <param name=\"from-domain\" value=\"" . $row['from_domain'] . "\"/>\n";
-						}
-						if (strlen($row['proxy']) > 0) {
-							$xml .= "      <param name=\"proxy\" value=\"" . $row['proxy'] . "\"/>\n";
-						}
-						if (strlen($row['register_proxy']) > 0) {
-							$xml .= "      <param name=\"register-proxy\" value=\"" . $row['register_proxy'] . "\"/>\n";
-						}
-						if (strlen($row['outbound_proxy']) > 0) {
-							$xml .= "      <param name=\"outbound-proxy\" value=\"" . $row['outbound_proxy'] . "\"/>\n";
-						}
-						if (strlen($row['expire_seconds']) > 0) {
-							$xml .= "      <param name=\"expire-seconds\" value=\"" . $row['expire_seconds'] . "\"/>\n";
-						}
-						if (strlen($row['register']) > 0) {
-							$xml .= "      <param name=\"register\" value=\"" . $row['register'] . "\"/>\n";
-						}
-
-						if (strlen($row['register_transport']) > 0) {
-							switch ($row['register_transport']) {
-							case "udp":
-								$xml .= "      <param name=\"register-transport\" value=\"udp\"/>\n";
-								break;
-							case "tcp":
-								$xml .= "      <param name=\"register-transport\" value=\"tcp\"/>\n";
-								break;
-							case "tls":
-								$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
-								$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
-								break;
-							default:
-								$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		if (is_array($result) && @sizeof($result) != 0) {
+			foreach ($result as &$row) {
+				if ($row['enabled'] != "false") {
+						//set the default profile as external
+							$profile = $row['profile'];
+							if (strlen($profile) == 0) {
+								$profile = "external";
 							}
-						}
+						//open the xml file
+							$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
+						//build the xml
+							$xml .= "<include>\n";
+							$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
+							if (strlen($row['username']) > 0) {
+								$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+							}
+							if (strlen($row['distinct_to']) > 0) {
+								$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
+							}
+							if (strlen($row['auth_username']) > 0) {
+								$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
+							}
+							if (strlen($row['password']) > 0) {
+								$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+							}
+							if (strlen($row['realm']) > 0) {
+								$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
+							}
+							if (strlen($row['from_user']) > 0) {
+								$xml .= "      <param name=\"from-user\" value=\"" . $row['from_user'] . "\"/>\n";
+							}
+							if (strlen($row['from_domain']) > 0) {
+								$xml .= "      <param name=\"from-domain\" value=\"" . $row['from_domain'] . "\"/>\n";
+							}
+							if (strlen($row['proxy']) > 0) {
+								$xml .= "      <param name=\"proxy\" value=\"" . $row['proxy'] . "\"/>\n";
+							}
+							if (strlen($row['register_proxy']) > 0) {
+								$xml .= "      <param name=\"register-proxy\" value=\"" . $row['register_proxy'] . "\"/>\n";
+							}
+							if (strlen($row['outbound_proxy']) > 0) {
+								$xml .= "      <param name=\"outbound-proxy\" value=\"" . $row['outbound_proxy'] . "\"/>\n";
+							}
+							if (strlen($row['expire_seconds']) > 0) {
+								$xml .= "      <param name=\"expire-seconds\" value=\"" . $row['expire_seconds'] . "\"/>\n";
+							}
+							if (strlen($row['register']) > 0) {
+								$xml .= "      <param name=\"register\" value=\"" . $row['register'] . "\"/>\n";
+							}
 
-						if (strlen($row['retry_seconds']) > 0) {
-							$xml .= "      <param name=\"retry-seconds\" value=\"" . $row['retry_seconds'] . "\"/>\n";
-						}
-						if (strlen($row['extension']) > 0) {
-							$xml .= "      <param name=\"extension\" value=\"" . $row['extension'] . "\"/>\n";
-						}
-						if (strlen($row['ping']) > 0) {
-							$xml .= "      <param name=\"ping\" value=\"" . $row['ping'] . "\"/>\n";
-						}
-						if (strlen($row['context']) > 0) {
-							$xml .= "      <param name=\"context\" value=\"" . $row['context'] . "\"/>\n";
-						}
-						if (strlen($row['caller_id_in_from']) > 0) {
-							$xml .= "      <param name=\"caller-id-in-from\" value=\"" . $row['caller_id_in_from'] . "\"/>\n";
-						}
-						if (strlen($row['supress_cng']) > 0) {
-							$xml .= "      <param name=\"supress-cng\" value=\"" . $row['supress_cng'] . "\"/>\n";
-						}
-						if (strlen($row['sip_cid_type']) > 0) {
-							$xml .= "      <param name=\"sip_cid_type\" value=\"" . $row['sip_cid_type'] . "\"/>\n";
-						}
-						if (strlen($row['extension_in_contact']) > 0) {
-							$xml .= "      <param name=\"extension-in-contact\" value=\"" . $row['extension_in_contact'] . "\"/>\n";
-						}
+							if (strlen($row['register_transport']) > 0) {
+								switch ($row['register_transport']) {
+								case "udp":
+									$xml .= "      <param name=\"register-transport\" value=\"udp\"/>\n";
+									break;
+								case "tcp":
+									$xml .= "      <param name=\"register-transport\" value=\"tcp\"/>\n";
+									break;
+								case "tls":
+									$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
+									$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
+									break;
+								default:
+									$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
+								}
+							}
 
-						$xml .= "    </gateway>\n";
-						$xml .= "</include>";
+							if (strlen($row['retry_seconds']) > 0) {
+								$xml .= "      <param name=\"retry-seconds\" value=\"" . $row['retry_seconds'] . "\"/>\n";
+							}
+							if (strlen($row['extension']) > 0) {
+								$xml .= "      <param name=\"extension\" value=\"" . $row['extension'] . "\"/>\n";
+							}
+							if (strlen($row['ping']) > 0) {
+								$xml .= "      <param name=\"ping\" value=\"" . $row['ping'] . "\"/>\n";
+							}
+							if (strlen($row['context']) > 0) {
+								$xml .= "      <param name=\"context\" value=\"" . $row['context'] . "\"/>\n";
+							}
+							if (strlen($row['caller_id_in_from']) > 0) {
+								$xml .= "      <param name=\"caller-id-in-from\" value=\"" . $row['caller_id_in_from'] . "\"/>\n";
+							}
+							if (strlen($row['supress_cng']) > 0) {
+								$xml .= "      <param name=\"supress-cng\" value=\"" . $row['supress_cng'] . "\"/>\n";
+							}
+							if (strlen($row['sip_cid_type']) > 0) {
+								$xml .= "      <param name=\"sip_cid_type\" value=\"" . $row['sip_cid_type'] . "\"/>\n";
+							}
+							if (strlen($row['extension_in_contact']) > 0) {
+								$xml .= "      <param name=\"extension-in-contact\" value=\"" . $row['extension_in_contact'] . "\"/>\n";
+							}
 
-					//write the xml
-						fwrite($fout, $xml);
-						unset($xml);
-						fclose($fout);
+							$xml .= "    </gateway>\n";
+							$xml .= "</include>";
+
+						//write the xml
+							fwrite($fout, $xml);
+							unset($xml);
+							fclose($fout);
+				}
+
 			}
-
-		} //end foreach
-		unset($prep_statement);
+		}
+		unset($sql, $parameters, $result, $row);
 
 	//apply settings
 		$_SESSION["reload_xml"] = true;
@@ -389,12 +369,6 @@ function save_gateway_xml() {
 function save_var_xml() {
 	if (is_array($_SESSION['switch']['conf'])) {
 		global $config, $domain_uuid;
-
-		//get the database connection
-		require_once "resources/classes/database.php";
-		$database = new database;
-		$database->connect();
-		$db = $database->db;
 
 		//open the vars.xml file
 		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
@@ -412,32 +386,33 @@ function save_var_xml() {
 		$sql = "select * from v_vars ";
 		$sql .= "where var_enabled = 'true' ";
 		$sql .= "order by var_category, var_order asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$variables = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$database = new database;
+		$variables = $database->select($sql, $parameters, 'all');
 		$prev_var_category = '';
 		$xml = '';
-		foreach ($variables as &$row) {
-			if ($row['var_category'] != 'Provision') {
-				if ($prev_var_category != $row['var_category']) {
-					$xml .= "\n<!-- ".$row['var_category']." -->\n";
-					if (strlen($row["var_description"]) > 0) {
-						$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+		if (is_array($variables) && @sizeof($variables) != 0) {
+			foreach ($variables as &$row) {
+				if ($row['var_category'] != 'Provision') {
+					if ($prev_var_category != $row['var_category']) {
+						$xml .= "\n<!-- ".$row['var_category']." -->\n";
+						if (strlen($row["var_description"]) > 0) {
+							$xml .= "<!-- ".base64_decode($row['var_description'])." -->\n";
+						}
+					}
+					if (strlen($row['var_command']) == 0) { $row['var_command'] = 'set'; }
+					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
+					if (strlen($row['var_hostname']) == 0) {
+						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+					} elseif ($row['var_hostname'] == $hostname) {
+						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 					}
 				}
-				if (strlen($row['var_command']) == 0) { $row['var_command'] = 'set'; }
-				if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
-				if (strlen($row['var_hostname']) == 0) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-				} elseif ($row['var_hostname'] == $hostname) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-				}
+				$prev_var_category = $row['var_category'];
 			}
-			$prev_var_category = $row['var_category'];
 		}
 		$xml .= "\n";
 		fwrite($fout, $xml);
-		unset($prep_statement, $variables, $xml);
+		unset($sql, $variables, $xml);
 		fclose($fout);
 
 		//apply settings
@@ -449,12 +424,7 @@ function save_var_xml() {
 	}
 }
 
-function outbound_route_to_bridge ($domain_uuid, $destination_number) {
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
+function outbound_route_to_bridge($domain_uuid, $destination_number) {
 
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -471,70 +441,81 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	$hostname = trim(event_socket_request_cmd('api switchname'));
 
 	$sql = "select * from v_dialplans ";
-	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-	$sql .= "and (hostname = '".$hostname."' or hostname is null) ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$x = 0;
-	foreach ($result as &$row) {
-		//set as variables
-			$dialplan_uuid = $row['dialplan_uuid'];
-			$dialplan_detail_tag = $row["dialplan_detail_tag"];
-			$dialplan_detail_type = $row['dialplan_detail_type'];
-			$dialplan_continue = $row['dialplan_continue'];
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['hostname'] = $hostname;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+	if (is_array($result) && @sizeof($result) != 0) {
+		$x = 0;
+		foreach ($result as &$row) {
+			//set as variables
+				$dialplan_uuid = $row['dialplan_uuid'];
+				$dialplan_detail_tag = $row["dialplan_detail_tag"];
+				$dialplan_detail_type = $row['dialplan_detail_type'];
+				$dialplan_continue = $row['dialplan_continue'];
 
-		//get the extension number using the dialplan_uuid
-			$sql = "select * ";
-			$sql .= "from v_dialplan_details ";
-			$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
-			$sql .= "order by dialplan_detail_order asc ";
-			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			$regex_match = false;
-			foreach ($sub_result as &$sub_row) {
-				if ($sub_row['dialplan_detail_tag'] == "condition") {
-					if ($sub_row['dialplan_detail_type'] == "destination_number") {
-							$dialplan_detail_data = $sub_row['dialplan_detail_data'];
-							$pattern = '/'.$dialplan_detail_data.'/';
-							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
-							if (count($matches) == 0) {
-								$regex_match = false;
+			//get the extension number using the dialplan_uuid
+				$sql = "select * ";
+				$sql .= "from v_dialplan_details ";
+				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				$sql .= "order by dialplan_detail_order asc ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$database = new database;
+				$sub_result = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				$regex_match = false;
+				if (is_array($sub_result) && @sizeof($sub_result) != 0) {
+					foreach ($sub_result as &$sub_row) {
+						if ($sub_row['dialplan_detail_tag'] == "condition") {
+							if ($sub_row['dialplan_detail_type'] == "destination_number") {
+									$pattern = '/'.$sub_row['dialplan_detail_data'].'/';
+									preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+									if (count($matches) == 0) {
+										$regex_match = false;
+									}
+									else {
+										$regex_match = true;
+										$regex_match_1 = $matches[1][0];
+										$regex_match_2 = $matches[2][0];
+										$regex_match_3 = $matches[3][0];
+										$regex_match_4 = $matches[4][0];
+										$regex_match_5 = $matches[5][0];
+									}
 							}
-							else {
-								$regex_match = true;
-								$regex_match_1 = $matches[1][0];
-								$regex_match_2 = $matches[2][0];
-								$regex_match_3 = $matches[3][0];
-								$regex_match_4 = $matches[4][0];
-								$regex_match_5 = $matches[5][0];
-							}
-					}
-				}
-			}
-			if ($regex_match) {
-				foreach ($sub_result as &$sub_row) {
-					$dialplan_detail_data = $sub_row['dialplan_detail_data'];
-					if ($sub_row['dialplan_detail_tag'] == "action" && $sub_row['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
-					$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
-						//echo "dialplan_detail_data: $dialplan_detail_data";
-						$bridge_array[$x] = $dialplan_detail_data;
-						$x++;
-						if ($dialplan_continue == "false") {
-							break 2;
 						}
 					}
 				}
-			}
+
+				if ($regex_match) {
+					$x = 0;
+					foreach ($sub_result as &$sub_row) {
+						$dialplan_detail_data = $sub_row['dialplan_detail_data'];
+						if ($sub_row['dialplan_detail_tag'] == "action" && $sub_row['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+							$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+							$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
+							$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
+							$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
+							$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
+							$bridge_array[$x] = $dialplan_detail_data;
+							$x++;
+							if ($dialplan_continue == "false") {
+								break 2;
+							}
+						}
+					}
+				}
+		}
 	}
+	unset($result, $row);
+
 	return $bridge_array;
-	unset ($prep_statement);
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
@@ -545,53 +526,47 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 function extension_exists($extension) {
 	global $domain_uuid;
 
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
-	$sql = "select 1 from v_extensions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and (extension = '$extension' ";
-	$sql .= "or number_alias = '$extension') ";
+	$sql = "select count(*) from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and ( ";
+	$sql .= "extension = :extension ";
+	$sql .= "or number_alias = :extension ";
+	$sql .= ") ";
 	$sql .= "and enabled = 'true' ";
-	$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-	if (count($result) > 0) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['extension'] = $extension;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+	return $num_rows > 0 ? true : false;
+	unset($sql, $parameters, $num_rows);
 }
 
 function extension_presence_id($extension, $number_alias = false) {
 	global $domain_uuid;
 
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
 	if ($number_alias === false) {
 		$sql = "select extension, number_alias from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and (extension = '$extension' ";
-		$sql .= "or number_alias = '$extension') ";
-		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-		if (count($result) == 0) {
-			return false;
-		}
-		foreach ($result as &$row) {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ( ";
+		$sql .= "extension = :extension ";
+		$sql .= "or number_alias = :extension ";
+		$sql .= ") ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['extension'] = $extension;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$extension = $row['extension'];
 			$number_alias = $row['number_alias'];
-			break;
 		}
+		else {
+			return false;
+		}
+		unset($sql, $parameters, $row);
 	}
 
-	if(strlen($number_alias) > 0) {
-		if($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
+	if (strlen($number_alias) > 0) {
+		if ($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
 			return $number_alias;
 		}
 	}
@@ -599,114 +574,73 @@ function extension_presence_id($extension, $number_alias = false) {
 }
 
 function get_recording_filename($id) {
-	global $domain_uuid, $db;
+	global $domain_uuid;
+
 	$sql = "select * from v_recordings ";
-	$sql .= "where recording_uuid = '$id' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	foreach ($result as &$row) {
+	$sql .= "where recording_uuid = :recording_uuid ";
+	$sql .= "and domain_uuid = :domain_uuid ";
+	$parameters['recording_uuid'] = $id;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && @sizeof($row) != 0) {
 		//$filename = $row["filename"];
 		//$recording_name = $row["recording_name"];
 		//$recording_uuid = $row["recording_uuid"];
 		return $row["filename"];
-		break; //limit to 1 row
 	}
-	unset ($prep_statement);
+	unset($sql, $parameters, $row);
 }
 
 function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid) {
-	global $db_type;
-
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
-	$sql = "insert into v_dialplans ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "dialplan_uuid, ";
-	if (strlen($app_uuid) > 0) {
-		$sql .= "app_uuid, ";
-	}
-	$sql .= "dialplan_name, ";
-	$sql .= "dialplan_order, ";
-	$sql .= "dialplan_context, ";
-	$sql .= "dialplan_enabled, ";
-	$sql .= "dialplan_description ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$dialplan_uuid', ";
-	if (strlen($app_uuid) > 0) {
-		$sql .= "'$app_uuid', ";
-	}
-	$sql .= "'$dialplan_name', ";
-	$sql .= "'$dialplan_order', ";
-	$sql .= "'$dialplan_context', ";
-	$sql .= "'$dialplan_enabled', ";
-	$sql .= "'$dialplan_description' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	//build insert array
+		$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+		$array['dialplans'][0]['domain_uuid'] = $domain_uuid;
+		if (is_uuid($app_uuid)) {
+			$array['dialplans'][0]['app_uuid'] = $app_uuid;
+		}
+		$array['dialplans'][0]['dialplan_name'] = $dialplan_name;
+		$array['dialplans'][0]['dialplan_order'] = $dialplan_order;
+		$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
+		$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
+		$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
+	//grant temporary permissions
+		$p = new permissions;
+		$p->add('dialplan_add', 'temp');
+	//execute insert
+		$database = new database;
+		$database->app_name = 'switch-function-dialplan_add';
+		$database->app_uuid = '2fa2243c-47a1-41a0-b144-eb2b609219e0';
+		$database->save($array);
+		unset($array);
+	//revoke temporary permissions
+		$p->delete('dialplan_add', 'temp');
 }
 
 function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break = null, $dialplan_detail_inline = null) {
-
-	//get the database connection
-	require_once "resources/classes/database.php";
-	$database = new database;
-	$database->connect();
-	$db = $database->db;
-
-	$dialplan_detail_uuid = uuid();
-	$sql = "insert into v_dialplan_details ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "dialplan_uuid, ";
-	$sql .= "dialplan_detail_uuid, ";
-	$sql .= "dialplan_detail_tag, ";
-	$sql .= "dialplan_detail_group, ";
-	$sql .= "dialplan_detail_order, ";
-	$sql .= "dialplan_detail_type, ";
-	$sql .= "dialplan_detail_data, ";
-	$sql .= "dialplan_detail_break, ";
-	$sql .= "dialplan_detail_inline ";
-	$sql .= ") ";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'".check_str($dialplan_uuid)."', ";
-	$sql .= "'".check_str($dialplan_detail_uuid)."', ";
-	$sql .= "'".check_str($dialplan_detail_tag)."', ";
-	if (strlen($dialplan_detail_group) == 0) {
-		$sql .= "null, ";
-	}
-	else {
-		$sql .= "'".check_str($dialplan_detail_group)."', ";
-	}
-	$sql .= "'".check_str($dialplan_detail_order)."', ";
-	$sql .= "'".check_str($dialplan_detail_type)."', ";
-	$sql .= "'".check_str($dialplan_detail_data)."', ";
-	if (strlen($dialplan_detail_break) == 0) {
-		$sql .= "null, ";
-	}
-	else {
-		$sql .= "'".check_str($dialplan_detail_break)."', ";
-	}
-	if (strlen($dialplan_detail_inline) == 0) {
-		$sql .= "null ";
-	}
-	else {
-		$sql .= "'".check_str($dialplan_detail_inline)."' ";
-	}
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	//build insert array
+		$dialplan_detail_uuid = uuid();
+		$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+		$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
+		$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+		$array['dialplan_details'][0]['dialplan_detail_tag'] = $dialplan_detail_tag;
+		$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($dialplan_detail_group) != 0 ? $dialplan_detail_group : null;
+		$array['dialplan_details'][0]['dialplan_detail_order'] = $dialplan_detail_order;
+		$array['dialplan_details'][0]['dialplan_detail_type'] = $dialplan_detail_type;
+		$array['dialplan_details'][0]['dialplan_detail_data'] = $dialplan_detail_data;
+		$array['dialplan_details'][0]['dialplan_detail_break'] = strlen($dialplan_detail_break) != 0 ? $dialplan_detail_break : null;
+		$array['dialplan_details'][0]['dialplan_detail_inline'] = strlen($dialplan_detail_inline) != 0 ? $dialplan_detail_inline : null;
+	//grant temporary permissions
+		$p = new permissions;
+		$p->add('dialplan_detail_add', 'temp');
+	//execute insert
+		$database = new database;
+		$database->app_name = 'switch-function-dialplan_detail_add';
+		$database->app_uuid = '53ea51fc-a7ef-4726-9482-383984dc7747';
+		$database->save($array);
+		unset($array);
+	//revoke temporary permissions
+		$p->delete('dialplan_detail_add', 'temp');
 }
 
 function save_dialplan_xml() {
@@ -739,13 +673,11 @@ function save_dialplan_xml() {
 		if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
 			$sql = "select * from v_dialplans ";
 			$sql .= "where dialplan_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach ($result as &$row) {
-					$tmp = "";
-					$tmp .= "\n";
+					$tmp = "\n";
 					$first_action = true;
 
 					$dialplan_continue = '';
@@ -755,94 +687,94 @@ function save_dialplan_xml() {
 
 					$tmp = "<extension name=\"".$row['dialplan_name']."\" $dialplan_continue>\n";
 
-					$sql = " select * from v_dialplan_details ";
-					$sql .= " where dialplan_uuid = '".$row['dialplan_uuid']."' ";
-					$sql .= " order by dialplan_detail_group asc, dialplan_detail_order asc ";
-					$prep_statement_2 = $db->prepare($sql);
-					if ($prep_statement_2) {
-						$prep_statement_2->execute();
-						$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-						$result_count2 = count($result2);
-						unset ($prep_statement_2, $sql);
+					$sql = "select * from v_dialplan_details ";
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc ";
+					$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
+					$database = new database;
+					$result_2 = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
 
+					if (sizeof($result_2) && @sizeof($result_2) != 0) {
 						//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
 							$details = array();
 							$previous_tag = '';
 							$details[$group]['condition_count'] = '';
-							//conditions
-								$x = 0;
-								$y = 0;
-								foreach($result2 as $row2) {
-									if ($row2['dialplan_detail_tag'] == "condition") {
-										//get the group
-											$group = $row2['dialplan_detail_group'];
-										//get the generic type
-											switch ($row2['dialplan_detail_type']) {
-												case "hour":
-												case "minute":
-												case "minute-of-day":
-												case "time-of-day":
-												case "mday":
-												case "mweek":
-												case "mon":
-												case "yday":
-												case "year":
-												case "wday":
-												case "week":
-													$type = 'time';
-													break;
-												default:
-													$type = 'default';
-											}
-
-										//add the conditions to the details array
-											$details[$group]['condition-'.$x]['dialplan_detail_tag'] = $row2['dialplan_detail_tag'];
-											$details[$group]['condition-'.$x]['dialplan_detail_type'] = $row2['dialplan_detail_type'];
-											$details[$group]['condition-'.$x]['dialplan_uuid'] = $row2['dialplan_uuid'];
-											$details[$group]['condition-'.$x]['dialplan_detail_order'] = $row2['dialplan_detail_order'];
-											$details[$group]['condition-'.$x]['field'][$y]['type'] = $row2['dialplan_detail_type'];
-											$details[$group]['condition-'.$x]['field'][$y]['data'] = $row2['dialplan_detail_data'];
-											$details[$group]['condition-'.$x]['dialplan_detail_break'] = $row2['dialplan_detail_break'];
-											$details[$group]['condition-'.$x]['dialplan_detail_group'] = $row2['dialplan_detail_group'];
-											$details[$group]['condition-'.$x]['dialplan_detail_inline'] = $row2['dialplan_detail_inline'];
-											if ($type == "time") {
-												$y++;
-											}
-									}
-									if ($type == "default") {
-										$x++;
-										$y = 0;
-									}
-								}
-
-							//actions
-								$x = 0;
-								foreach($result2 as $row2) {
-									if ($row2['dialplan_detail_tag'] == "action") {
-										$group = $row2['dialplan_detail_group'];
-										foreach ($row2 as $key => $val) {
-											$details[$group]['action-'.$x][$key] = $val;
+						//conditions
+							$x = 0;
+							$y = 0;
+							foreach ($result_2 as $row_2) {
+								if ($row_2['dialplan_detail_tag'] == "condition") {
+									//get the group
+										$group = $row_2['dialplan_detail_group'];
+									//get the generic type
+										switch ($row_2['dialplan_detail_type']) {
+											case "hour":
+											case "minute":
+											case "minute-of-day":
+											case "time-of-day":
+											case "mday":
+											case "mweek":
+											case "mon":
+											case "yday":
+											case "year":
+											case "wday":
+											case "week":
+												$type = 'time';
+												break;
+											default:
+												$type = 'default';
 										}
-									}
-									$x++;
-								}
-							//anti-actions
-								$x = 0;
-								foreach($result2 as $row2) {
-									if ($row2['dialplan_detail_tag'] == "anti-action") {
-										$group = $row2['dialplan_detail_group'];
-										foreach ($row2 as $key => $val) {
-											$details[$group]['anti-action-'.$x][$key] = $val;
+
+									//add the conditions to the details array
+										$details[$group]['condition-'.$x]['dialplan_detail_tag'] = $row_2['dialplan_detail_tag'];
+										$details[$group]['condition-'.$x]['dialplan_detail_type'] = $row_2['dialplan_detail_type'];
+										$details[$group]['condition-'.$x]['dialplan_uuid'] = $row_2['dialplan_uuid'];
+										$details[$group]['condition-'.$x]['dialplan_detail_order'] = $row_2['dialplan_detail_order'];
+										$details[$group]['condition-'.$x]['field'][$y]['type'] = $row_2['dialplan_detail_type'];
+										$details[$group]['condition-'.$x]['field'][$y]['data'] = $row_2['dialplan_detail_data'];
+										$details[$group]['condition-'.$x]['dialplan_detail_break'] = $row_2['dialplan_detail_break'];
+										$details[$group]['condition-'.$x]['dialplan_detail_group'] = $row_2['dialplan_detail_group'];
+										$details[$group]['condition-'.$x]['dialplan_detail_inline'] = $row_2['dialplan_detail_inline'];
+										if ($type == "time") {
+											$y++;
 										}
-									}
-									$x++;
 								}
-							unset($result2);
+								if ($type == "default") {
+									$x++;
+									$y = 0;
+								}
+							}
+
+						//actions
+							$x = 0;
+							foreach($result_2 as $row_2) {
+								if ($row_2['dialplan_detail_tag'] == "action") {
+									$group = $row_2['dialplan_detail_group'];
+									foreach ($row_2 as $key => $val) {
+										$details[$group]['action-'.$x][$key] = $val;
+									}
+								}
+								$x++;
+							}
+
+						//anti-actions
+							$x = 0;
+							foreach($result_2 as $row_2) {
+								if ($row_2['dialplan_detail_tag'] == "anti-action") {
+									$group = $row_2['dialplan_detail_group'];
+									foreach ($row_2 as $key => $val) {
+										$details[$group]['anti-action-'.$x][$key] = $val;
+									}
+								}
+								$x++;
+							}
+
+						unset($result_2, $row_2);
 					}
 
-					$i=1;
-					if ($result_count2 > 0) {
-						foreach($details as $group) {
+					if (is_array($details) && @sizeof($details) != 0) {
+						foreach ($details as $group) {
 							$current_count = 0;
 							$x = 0;
 							foreach($group as $ent) {
@@ -901,13 +833,14 @@ function save_dialplan_xml() {
 
 									//get the count
 										$count = 0;
-										foreach($details as $group2) {
-											foreach($group2 as $ent2) {
-												if ($ent2['dialplan_detail_group'] == $ent['dialplan_detail_group'] && $ent2['dialplan_detail_tag'] == "condition") {
+										foreach($details as $group_2) {
+											foreach($group_2 as $ent_2) {
+												if ($ent_2['dialplan_detail_group'] == $ent['dialplan_detail_group'] && $ent_2['dialplan_detail_tag'] == "condition") {
 													$count++;
 												}
 											}
 										}
+										unset($group_2, $ent_2);
 
 									//use the correct type of dialplan_detail_tag open or self closed
 										if ($count == 1) { //single condition
@@ -966,18 +899,15 @@ function save_dialplan_xml() {
 									}
 								//set the previous dialplan_detail_tag
 									$previous_tag = $ent['dialplan_detail_tag'];
-								$i++;
-							} //end foreach
+
+							}
 							if ($close_condition_tag == true) {
 								$tmp .= "   </condition>\n";
 							}
 							$x++;
 						}
-						if ($condition_count > 0) {
-							$condition_count = $result_count2;
-						}
-						unset($sql, $result_count2, $result2, $row_count2);
-					} //end if results
+						unset($sql, $result_2, $row_count2);
+					}
 					$tmp .= "</extension>\n";
 
 					$dialplan_order = $row['dialplan_order'];
@@ -1017,12 +947,12 @@ function save_dialplan_xml() {
 					}
 					unset($dialplan_filename);
 					unset($tmp);
-				} //end while
+				}
 
 				//apply settings
 					$_SESSION["reload_xml"] = true;
 			}
-		} //end if (is_dir($_SESSION['switch']['dialplan']['dir']))
+		}
 }
 
 if (!function_exists('phone_letter_to_number')) {
@@ -1043,22 +973,15 @@ if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
 		global $domain_uuid;
 
-		//get the database connection
-		require_once "resources/classes/database.php";
-		$database = new database;
-		$database->connect();
-		$db = $database->db;
-
 		if (strlen($_SESSION['switch']['call_center']['dir']) > 0) {
 
 			//get the call center queue array
 			$sql = "select * from v_call_center_queues ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$call_center_queues = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($call_center_queues);
-			unset ($prep_statement, $sql);
-			if ($result_count > 0) {
+			$database = new database;
+			$call_center_queues = $database->select($sql, null, 'all');
+			unset($sql);
+
+			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
 
 				//prepare Queue XML string
 					$x=0;
@@ -1088,7 +1011,7 @@ if (!function_exists('save_call_center_xml')) {
 							$v_queues .= "\n";
 							$v_queues .= "		";
 						}
-						$v_queues .= "<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
+						$v_queues .= "		<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
 						$v_queues .= "			<param name=\"strategy\" value=\"$queue_strategy\"/>\n";
 						if (strlen($queue_moh_sound) == 0) {
 							$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
@@ -1122,114 +1045,120 @@ if (!function_exists('save_call_center_xml')) {
 						$v_queues .= "		</queue>";
 						$x++;
 					}
-					unset ($prep_statement);
 
 				//prepare Agent XML string
 					$v_agents = '';
 					$sql = "select * from v_call_center_agents ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					$x=0;
-					foreach ($result as &$row) {
-						//get the values from the db and set as php variables
-							$agent_name = $row["agent_name"];
-							$agent_type = $row["agent_type"];
-							$agent_call_timeout = $row["agent_call_timeout"];
-							$agent_contact = $row["agent_contact"];
-							$agent_status = $row["agent_status"];
-							$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
-							$agent_max_no_answer = $row["agent_max_no_answer"];
-							$agent_wrap_up_time = $row["agent_wrap_up_time"];
-							$agent_reject_delay_time = $row["agent_reject_delay_time"];
-							$agent_busy_delay_time = $row["agent_busy_delay_time"];
-							if ($x > 0) {
-								$v_agents .= "\n";
-								$v_agents .= "		";
-							}
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					unset($sql);
 
-						//get and then set the complete agent_contact with the call_timeout and when necessary confirm
-							//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
-							//if you change this variable also change app/call_center/call_center_agent_edit.php
-							$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
-							if(strstr($agent_contact, '}') === FALSE) {
-								//not found
-								if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
-									//add the call_timeout
-									$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
+					$x=0;
+					if (is_array($result) && @sizeof($result) != 0) {
+						foreach ($result as &$row) {
+							//get the values from the db and set as php variables
+								$agent_name = $row["agent_name"];
+								$agent_type = $row["agent_type"];
+								$agent_call_timeout = $row["agent_call_timeout"];
+								$agent_contact = $row["agent_contact"];
+								$agent_status = $row["agent_status"];
+								$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
+								$agent_max_no_answer = $row["agent_max_no_answer"];
+								$agent_wrap_up_time = $row["agent_wrap_up_time"];
+								$agent_reject_delay_time = $row["agent_reject_delay_time"];
+								$agent_busy_delay_time = $row["agent_busy_delay_time"];
+								if ($x > 0) {
+									$v_agents .= "\n";
+									$v_agents .= "		";
 								}
-								else {
-									//add the call_timeout and confirm
-									$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
-									$tmp_agent_contact = "{".$tmp_confirm.",call_timeout=".$agent_call_timeout."}".$agent_contact;
-								}
-							}
-							else {
-								//found
-								if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+
+							//get and then set the complete agent_contact with the call_timeout and when necessary confirm
+								//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
+								//if you change this variable also change app/call_center/call_center_agent_edit.php
+								$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
+								if(strstr($agent_contact, '}') === FALSE) {
 									//not found
-									if(stristr($agent_contact, 'call_timeout') === FALSE) {
+									if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
 										//add the call_timeout
-										$tmp_pos = strrpos($agent_contact, "}");
-										$tmp_first = substr($agent_contact, 0, $tmp_pos);
-										$tmp_last = substr($agent_contact, $tmp_pos);
-										$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+										$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
 									}
 									else {
-										//the string has the call timeout
-										$tmp_agent_contact = $agent_contact;
+										//add the call_timeout and confirm
+										$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+										$tmp_agent_contact = "{".$tmp_confirm.",call_timeout=".$agent_call_timeout."}".$agent_contact;
 									}
 								}
 								else {
 									//found
-									$tmp_pos = strrpos($agent_contact, "}");
-									$tmp_first = substr($agent_contact, 0, $tmp_pos);
-									$tmp_last = substr($agent_contact, $tmp_pos);
-									if(stristr($agent_contact, 'call_timeout') === FALSE) {
-										//add the call_timeout and confirm
-										$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
+									if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+										//not found
+										if(stristr($agent_contact, 'call_timeout') === FALSE) {
+											//add the call_timeout
+											$tmp_pos = strrpos($agent_contact, "}");
+											$tmp_first = substr($agent_contact, 0, $tmp_pos);
+											$tmp_last = substr($agent_contact, $tmp_pos);
+											$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+										}
+										else {
+											//the string has the call timeout
+											$tmp_agent_contact = $agent_contact;
+										}
 									}
 									else {
-										//add confirm
-										$tmp_agent_contact = $tmp_first.','.$tmp_confirm.$tmp_last;
+										//found
+										$tmp_pos = strrpos($agent_contact, "}");
+										$tmp_first = substr($agent_contact, 0, $tmp_pos);
+										$tmp_last = substr($agent_contact, $tmp_pos);
+										if(stristr($agent_contact, 'call_timeout') === FALSE) {
+											//add the call_timeout and confirm
+											$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
+										}
+										else {
+											//add confirm
+											$tmp_agent_contact = $tmp_first.','.$tmp_confirm.$tmp_last;
+										}
 									}
 								}
-							}
 
-						$v_agents .= "<agent ";
-						$v_agents .= "name=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" ";
-						$v_agents .= "type=\"$agent_type\" ";
-						$v_agents .= "contact=\"$tmp_agent_contact\" ";
-						$v_agents .= "status=\"$agent_status\" ";
-						$v_agents .= "no-answer-delay-time=\"$agent_no_answer_delay_time\" ";
-						$v_agents .= "max-no-answer=\"$agent_max_no_answer\" ";
-						$v_agents .= "wrap-up-time=\"$agent_wrap_up_time\" ";
-						$v_agents .= "reject-delay-time=\"$agent_reject_delay_time\" ";
-						$v_agents .= "busy-delay-time=\"$agent_busy_delay_time\" ";
-						$v_agents .= "/>";
-						$x++;
+							$v_agents .= "<agent ";
+							$v_agents .= "name=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" ";
+							$v_agents .= "type=\"$agent_type\" ";
+							$v_agents .= "contact=\"$tmp_agent_contact\" ";
+							$v_agents .= "status=\"$agent_status\" ";
+							$v_agents .= "no-answer-delay-time=\"$agent_no_answer_delay_time\" ";
+							$v_agents .= "max-no-answer=\"$agent_max_no_answer\" ";
+							$v_agents .= "wrap-up-time=\"$agent_wrap_up_time\" ";
+							$v_agents .= "reject-delay-time=\"$agent_reject_delay_time\" ";
+							$v_agents .= "busy-delay-time=\"$agent_busy_delay_time\" ";
+							$v_agents .= "/>";
+							$x++;
+						}
 					}
-					unset ($prep_statement);
+					unset($result, $row);
 
 				//prepare Tier XML string
 					$v_tiers = '';
 					$sql = "select * from v_call_center_tiers ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					unset($sql);
+
 					$x=0;
-					foreach ($result as &$row) {
-						$agent_name = $row["agent_name"];
-						$queue_name = $row["queue_name"];
-						$tier_level = $row["tier_level"];
-						$tier_position = $row["tier_position"];
-						if ($x > 0) {
-							$v_tiers .= "\n";
-							$v_tiers .= "		";
+					if (is_array($result) && @sizeof($result) != 0) {
+						foreach ($result as &$row) {
+							$agent_name = $row["agent_name"];
+							$queue_name = $row["queue_name"];
+							$tier_level = $row["tier_level"];
+							$tier_position = $row["tier_position"];
+							if ($x > 0) {
+								$v_tiers .= "\n";
+								$v_tiers .= "		";
+							}
+							$v_tiers .= "<tier agent=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" queue=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" level=\"$tier_level\" position=\"$tier_position\"/>";
+							$x++;
 						}
-						$v_tiers .= "<tier agent=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" queue=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" level=\"$tier_level\" position=\"$tier_position\"/>";
-						$x++;
 					}
+					unset($result, $row);
 
 				//set the path
 					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
@@ -1244,13 +1173,13 @@ if (!function_exists('save_call_center_xml')) {
 
 				//add the Call Center Queues, Agents and Tiers to the XML config
 					$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
-					unset ($v_queues);
+					unset($v_queues);
 
 					$file_contents = str_replace("{v_agents}", $v_agents, $file_contents);
-					unset ($v_agents);
+					unset($v_agents);
 
 					$file_contents = str_replace("{v_tiers}", $v_tiers, $file_contents);
-					unset ($v_tiers);
+					unset($v_tiers);
 
 				//write the XML config file
 					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/callcenter.conf.xml","w");
@@ -1262,22 +1191,15 @@ if (!function_exists('save_call_center_xml')) {
 
 				//apply settings
 					$_SESSION["reload_xml"] = true;
+
 			}
+			unset($call_center_queues);
 		}
 	}
 }
 
 if (!function_exists('switch_conf_xml')) {
 	function switch_conf_xml() {
-		//get the global variables
-			global $domain_uuid;
-
-		//get the database connection
-			require_once "resources/classes/database.php";
-			$database = new database;
-			$database->connect();
-			$db = $database->db;
-
 		//get the contents of the template
 			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
@@ -1335,16 +1257,6 @@ if (!function_exists('switch_conf_xml')) {
 
 if (!function_exists('xml_cdr_conf_xml')) {
 	function xml_cdr_conf_xml() {
-
-		//get the global variables
-			global $domain_uuid;
-
-		//get the database connection
-			require_once "resources/classes/database.php";
-			$database = new database;
-			$database->connect();
-			$db = $database->db;
-
 		//get the contents of the template
 		 	if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
@@ -1379,7 +1291,6 @@ if (!function_exists('xml_cdr_conf_xml')) {
 
 if (!function_exists('save_sip_profile_xml')) {
 	function save_sip_profile_xml() {
-
 		//skip saving the sip profile xml if the directory is not set
 			if (strlen($_SESSION['switch']['sip_profiles']['dir']) == 0) {
 				return;
@@ -1389,26 +1300,16 @@ if (!function_exists('save_sip_profile_xml')) {
 			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
 			if (!is_readable($profile_dir)) { event_socket_mkdir($profile_dir); }
 
-		//get the global variables
-			global $domain_uuid;
-
-		//get the database connection
-			require_once "resources/classes/database.php";
-			$database = new database;
-			$database->connect();
-			$db = $database->db;
-
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			$result_count = count($result);
-			unset ($prep_statement, $sql);
-			if ($result_count > 0) {
+			$database = new database;
+			$result = $database->select($sql, null, 'all');
+			unset($sql);
+
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $row) {
-					$sip_profile_uuid    = $row['sip_profile_uuid'];
-					$sip_profile_name    = $row['sip_profile_name'];
+					$sip_profile_uuid = $row['sip_profile_uuid'];
+					$sip_profile_name = $row['sip_profile_name'];
 					$sip_profile_enabled = $row['sip_profile_enabled'];
 
 					if ($sip_profile_enabled == 'false') {
@@ -1429,16 +1330,18 @@ if (!function_exists('save_sip_profile_xml')) {
 
 					//get the sip profile settings
 						$sql = "select * from v_sip_profile_settings ";
-						$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
+						$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 						$sql .= "and sip_profile_setting_enabled = 'true' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll();
-						$sip_profile_settings = '';
-						foreach ($result as &$row) {
-							$sip_profile_settings .= "		<param name=\"".$row["sip_profile_setting_name"]."\" value=\"".$row["sip_profile_setting_value"]."\"/>\n";
+						$parameters['sip_profile_uuid'] = $sip_profile_uuid;
+						$database = new database;
+						$result_2 = $database->select($sql, $parameters, 'all');
+						if (is_array($result_2) && @sizeof($result_2) != 0) {
+							$sip_profile_settings = '';
+							foreach ($result_2 as &$row_2) {
+								$sip_profile_settings .= "		<param name=\"".$row_2["sip_profile_setting_name"]."\" value=\"".$row_2["sip_profile_setting_value"]."\"/>\n";
+							}
 						}
-						unset ($prep_statement);
+						unset($sql, $parameters, $result_2, $row_2);
 
 					//replace the values in the template
 						$file_contents = str_replace("{v_sip_profile_name}", $sip_profile_name, $file_contents);
@@ -1454,9 +1357,9 @@ if (!function_exists('save_sip_profile_xml')) {
 					//if the directory does not exist then create it
 						if (!is_readable($profile_dir.'/'.$sip_profile_name)) { event_socket_mkdir($profile_dir.'/'.$sip_profile_name); }
 
-				} //end foreach
-				unset($sql, $result, $row_count);
-			} //end if results
+				}
+				unset($result, $row);
+			}
 
 		//apply settings
 			$_SESSION["reload_xml"] = true;

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -210,7 +210,8 @@ include "root.php";
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 						}
-				} elseif (PHP_OS == "FreeBSD") {
+				}
+				elseif (PHP_OS == "FreeBSD") {
 					//if the FreeBSD port is installed use the following paths by default.
 						if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 							if (strlen($this->template_dir) == 0) {
@@ -228,17 +229,20 @@ include "root.php";
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 						}
-				} elseif (PHP_OS == "NetBSD") {
+				}
+				elseif (PHP_OS == "NetBSD") {
 					//set the default template_dir
 						if (strlen($this->template_dir) == 0) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
-				} elseif (PHP_OS == "OpenBSD") {
+				}
+				elseif (PHP_OS == "OpenBSD") {
 					//set the default template_dir
 						if (strlen($this->template_dir) == 0) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 						}
-				} else {
+				}
+				else {
 					//set the default template_dir
 						if (strlen($this->template_dir) == 0) {
 							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
@@ -253,6 +257,55 @@ include "root.php";
 			//return the template directory
 				return $this->template_dir;
 		}
+
+
+		/**
+		 * delete drives
+		 */
+		public function delete($devices) {
+			if (permission_exists('device_delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: devices.php');
+						exit;
+					}
+
+				//delete multiple devices
+					if (is_array($devices)) {
+						//get the action
+							foreach($devices as $row) {
+								if ($row['action'] == 'delete') {
+									$action = 'delete';
+									break;
+								}
+							}
+						//delete the checked rows
+							if ($action == 'delete') {
+								$database = new database;
+								foreach($devices as $x => $row) {
+									if ($row['action'] == 'delete' or $row['checked'] == 'true') {
+										$array['devices'][$x]['device_uuid'] = $row['device_uuid'];
+										$array['devices'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									}
+								}
+								if (is_array($array) && @sizeof($array) != 0) {
+									$database->app_name = 'devices';
+									$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+									$database->delete($array);
+									unset($array);
+								}
+								unset($devices);
+							}
+					}
+			}
+		} //end the delete function
 	}
 
 ?>

@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -63,7 +63,6 @@
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_provider: " .. transcribe_provider .. "\n");
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_language: " .. transcribe_language .. "\n");
-
 			end
 
 			if (transcribe_provider == "microsoft") then
@@ -210,6 +209,78 @@
 			        end
 			end
 
+		--Watson
+                        if (transcribe_provider == "watson") then
+                                local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
+                                local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
+                                if (api_key ~= '') then
+					if (vm_message_ext == "mp3") then
+                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/mp3" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+                                        else
+                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+                                        end
+                                        local handle = io.popen(transcribe_cmd);
+                                        local transcribe_result = handle:read("*a");
+                                        handle:close();
+                                        if (debug["info"]) then
+                                                freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+                                                freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+                                        end
+
+									--Trancribe request can fail
+										if (transcribe_result == '') then
+											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+											return ''
+										else
+                                        	status, transcribe_json = pcall(JSON.decode, transcribe_result);
+
+   											if not status then
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] error decoding watson json\n");
+												end
+												return '';
+											end 
+										end
+
+
+									if (transcribe_json["results"] ~= nil) then
+										--Transcription	
+											if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
+												transcription = '';
+												for key, row in pairs(transcribe_json["results"]) do 
+													transcription = transcription .. row["alternatives"][1]["transcript"];
+												end
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
+												end
+											else
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+												end
+												return '';
+											end
+										--Confidence
+											if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
+												end											
+												confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
+											else
+												if (debug["info"]) then
+													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+												end
+											end
+
+	                                        return transcription;
+									else
+										if (debug["info"]) then
+											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
+										end
+										return '';	
+									end
+                                end
+                        end
+
 			if (transcribe_provider == "custom") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
 				local api_key = settings:get('voicemail', 'api_key', 'text') or '';
@@ -255,16 +326,21 @@
 
 --save the recording
 	function record_message()
-		local db = dbh or Database.new('system')
-		local settings = Settings.new(db, domain_name, domain_uuid)
-
-		local max_len_seconds = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
-		transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
-
-		if (debug["info"]) then
-			freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
-			freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
-		end
+		
+		--set the variables
+			local db = dbh or Database.new('system')
+			local settings = Settings.new(db, domain_name, domain_uuid)
+			local message_max_length = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
+			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
+			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
+			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
+			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
+	
+		--debug information
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
+				freeswitch.consoleLog("notice", "[voicemail] voicemail_transcription_enabled: " .. voicemail_transcription_enabled .. "\n");
+			end
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_instructions == "true") then
@@ -389,20 +465,23 @@
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-			silence_seconds = 5;
 			if (storage_path == "http_cache") then
-				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, message_max_length, message_silence_threshold, message_silence_seconds);
 			else
 				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
-					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "false") then
+					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled ~= "true") then
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
-						--record in mp3 directly
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", max_len_seconds, record_silence_threshold, silence_seconds);
+						--record in mp3 directly, no transcription
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
+					elseif (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "true" and transcribe_provider == "watson") then
+						--record in mp3 directly with mp3 transcription if watson selected
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
+							transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3",settings,start_epoch);
 					else
 						--create initial wav recording
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, record_silence_threshold, silence_seconds);
+							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", message_max_length, message_silence_threshold, message_silence_seconds);
 							if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
 								transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav",settings,start_epoch);
 							end
@@ -424,7 +503,7 @@
 							end
 					end
 				else
-					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, record_silence_threshold, silence_seconds);
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, message_max_length, message_silence_threshold, message_silence_seconds);
 					if (transcribe_enabled == "true" and voicemail_transcription_enabled == "true") then
 						transcription = transcribe(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext,settings,start_epoch);
 					end

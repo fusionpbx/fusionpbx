@@ -81,17 +81,37 @@
 		$call_block_number = $_POST["call_block_number"];
 		$call_block_action = $_POST["call_block_action"];
 		$call_block_enabled = $_POST["call_block_enabled"];
+		$call_block_description = $_POST["call_block_description"];
 	}
 
 //handle the http post
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	
-		$msg = '';
-		if ($action == "update") {
-			//$call_block_uuid = check_str($_POST["call_block_uuid"]);
-		}
-	
+		//delete the call block
+			if (permission_exists('call_block_delete')) {
+				if ($_POST['action'] == 'delete' && is_uuid($call_block_uuid)) {
+					//prepare
+						$array[0]['checked'] = 'true';
+						$array[0]['uuid'] = $call_block_uuid;
+					//delete
+						$obj = new call_block;
+						$obj->delete($array);
+					//redirect
+						header('Location: call_block.php');
+						exit;
+				}
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_block.php');
+				exit;
+			}
+
 		//check for all required data
+			$msg = '';
 			if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
 			if ($action == "add") {
 				if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
@@ -149,6 +169,7 @@
 					$array['call_block'][0]['call_block_action'] = $call_block_action;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
+					$array['call_block'][0]['call_block_description'] = $call_block_description;
 
 					$database = new database;
 					$database->app_name = 'call_block';
@@ -189,6 +210,7 @@
 					$array['call_block'][0]['call_block_action'] = $call_block_action;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
+					$array['call_block'][0]['call_block_description'] = $call_block_description;
 
 					$database = new database;
 					$database->app_name = 'call_block';
@@ -220,11 +242,15 @@
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
 			$call_block_action = $row["call_block_action"];
-			$blocked_call_destination = $row["blocked_call_destination"];
 			$call_block_enabled = $row["call_block_enabled"];
+			$call_block_description = $row["call_block_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -240,8 +266,6 @@
 	echo "	}\n";
 	echo "</script>";
 
-	// Show last 5-10 calls first, with add button
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -252,17 +276,20 @@
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-edit-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_block.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' style='margin-right: 15px;' name='' alt='".$text['button-back']."' onclick=\"window.location='call_block.php'\" value='".$text['button-back']."'>";
+	if ($action == 'update' && permission_exists('call_block_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
+	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
 	if ($action == "add") {
-	echo $text['label-add-note']."<br /><br />\n";
+		echo $text['label-add-note']."<br /><br />\n";
 	}
 	if ($action == "update") {
-	echo $text['label-edit-note']."<br /><br />\n";
+		echo $text['label-edit-note']."<br /><br />\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -340,11 +367,23 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_description' maxlength='255' value=\"".escape($call_block_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='call_block_uuid' value='".escape($call_block_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -453,4 +492,5 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

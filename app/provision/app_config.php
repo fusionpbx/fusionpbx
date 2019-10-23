@@ -65,7 +65,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed380d7d-b3b8-40b4-8528-f10d521ddef0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_auth_password";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -452,7 +452,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa secure call No or Yes";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA secure call No or Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2672dbbc-2834-4e95-9ea9-e9ff6dc07838";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -461,6 +461,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "User level password for phone embeded web server.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8efadd1-8753-42b3-92d8-d2b40f111c63";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_resync_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA resync at 0300 every night at 3:00 am. Default disabled.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "753ed706-a5b0-47c1-a466-5ed35c4d27da";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_upgrade_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA upgrade firmware enable Yes or No Default No.";
 		$y++;
 
 ?>

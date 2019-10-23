@@ -39,21 +39,26 @@ else {
 	$text = $language->get();
 
 //get the html values and set them as variables
-	if (count($_GET)>0) {
-		$uuid = trim($_GET["id"]);
+	$uuid = trim($_GET["id"]);
+
+	if (is_uuid($uuid)) {
+		//show the result
+			if (count($_GET) > 0) {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$cmd = "sched_del ".$uuid;
+					$result = event_socket_request($fp, 'api '.$cmd);
+					message::add(htmlentities($result));
+				}
+			}
+
+		//redirect
+			header('Location: call_broadcast_edit.php?id='.$uuid);
+			exit;
 	}
 
-//show the header
-	header('Location: call_broadcast_edit.php?id='.$uuid);
-
-//show the result
-	if (count($_GET) > 0) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$cmd = "sched_del ".$uuid;
-			$result = event_socket_request($fp, 'api '.$cmd);
-			message::add(htmlentities($result));
-		}
-	}
+//default redirect
+	header('Location: call_broadcasts.php');
+	exit;
 
 ?>

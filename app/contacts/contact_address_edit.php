@@ -82,6 +82,14 @@ else {
 				$contact_address_uuid = $_POST["contact_address_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -200,6 +208,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -216,7 +228,7 @@ else {
 	echo "		document.getElementById(field).selectedIndex = 0;";
 	echo "		document.getElementById(field+'_custom').value = '';";
 	echo "		$('#'+field+'_custom').toggle();";
-	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').focus(); } else { $('#'+field).focus(); }";
+	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').trigger('focus'); } else { $('#'+field).trigger('focus'); }";
 	echo "	}";
 	echo "</script>";
 
@@ -315,7 +327,7 @@ else {
 	echo "	".$text['label-address_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".escape($address_street)."</textarea><br>\n";
+	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".$address_street."</textarea><br>\n";
 	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"".escape($address_extended)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_address']."\n";
@@ -431,6 +443,7 @@ else {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_address_uuid' value='".escape($contact_address_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -440,4 +453,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

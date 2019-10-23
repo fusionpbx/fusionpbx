@@ -8,7 +8,6 @@
 if (!class_exists('switch_settings')) {
 	class switch_settings {
 
-		public $db;
 		public $event_socket_ip_address;
 		public $event_socket_port;
 		public $event_socket_password;
@@ -17,13 +16,7 @@ if (!class_exists('switch_settings')) {
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -215,10 +208,9 @@ if (!class_exists('switch_settings')) {
 			//get an array of the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_category = 'switch' ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset ($prep_statement, $sql);
+				$database = new database;
+				$default_settings = $database->select($sql, null, 'all');
+				unset($sql);
 
 			//find the missing default settings
 				$x = 0;
@@ -237,32 +229,31 @@ if (!class_exists('switch_settings')) {
 
 			//add the missing default settings
 				if (count($missing) > 0) {
-					$sql = "insert into v_default_settings (";
-					$sql .= "default_setting_uuid, ";
-					$sql .= "default_setting_category, ";
-					$sql .= "default_setting_subcategory, ";
-					$sql .= "default_setting_name, ";
-					$sql .= "default_setting_value, ";
-					$sql .= "default_setting_enabled, ";
-					$sql .= "default_setting_description ";
-					$sql .= ") values \n";
 					$i = 1;
 					foreach ($missing as $row) {
-						$sql .= "(";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'".check_str($row['default_setting_category'])."', ";
-						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-						$sql .= "'".check_str($row['default_setting_name'])."', ";
-						$sql .= "'".check_str($row['default_setting_value'])."', ";
-						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-						$sql .= "'".check_str($row['default_setting_description'])."' ";
-						$sql .= ")";
-						if (sizeof($missing) != $i) { 
-							$sql .= ",\n";
-						}
+						//build insert array
+							$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+							$array['default_settings'][$i]['default_setting_category'] = $row['default_setting_category'];
+							$array['default_settings'][$i]['default_setting_subcategory'] = $row['default_setting_subcategory'];
+							$array['default_settings'][$i]['default_setting_name'] = $row['default_setting_name'];
+							$array['default_settings'][$i]['default_setting_value'] = $row['default_setting_value'];
+							$array['default_settings'][$i]['default_setting_enabled'] = $row['default_setting_enabled'];
+							$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
 						$i++;
 					}
-					$this->db->exec(check_sql($sql));
+					if (is_array($array) && @sizeof($array) != 0) {
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('default_setting_add', 'temp');
+						//execute insert
+							$database = new database;
+							$database->app_name = 'switch_settings';
+							$database->app_uuid = '84e91084-a227-43cd-ae99-a0f8ed61eb8b';
+							$database->save($array);
+							unset($array);
+						//revoke temporary permissions
+							$p->delete('default_setting_add', 'temp');
+					}
 					unset($missing);
 				}
 

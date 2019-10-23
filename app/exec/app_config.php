@@ -46,7 +46,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "exec_sql";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "exec_sql_backup";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['name'] = "exec_sql_backup";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

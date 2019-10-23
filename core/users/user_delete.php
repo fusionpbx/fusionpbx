@@ -61,7 +61,7 @@
 			}
 
 		//required to be a superadmin to delete a member of the superadmin group
-			$superadmin_list = superadmin_list($db);
+			$superadmin_list = superadmin_list();
 			if (if_superadmin($superadmin_list, $user_uuid)) {
 				if (!if_group("superadmin")) {
 					//access denied - do not delete the user

@@ -46,17 +46,15 @@ include "root.php";
 		public $outbound_caller_id_number;
 
 		public function set() {
-			//set the global variable
-				global $db;
-
 			//determine whether to update the dial string
 				$sql = "select * from v_extensions ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (is_array($result)) foreach ($result as &$row) {
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and extension_uuid = :extension_uuid ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['extension_uuid'] = $this->extension_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
 					$this->extension = $row["extension"];
 					$this->number_alias = $row["number_alias"];
 					$this->accountcode = $row["accountcode"];
@@ -64,31 +62,34 @@ include "root.php";
 					$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
 					$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 				}
-				unset ($prep_statement);
+				unset($sql, $parameters, $row);
 
-			//update the extension
-				$sql = "update v_extensions set ";
-				if (strlen($this->forward_all_destination) == 0) {
-					$sql .= "forward_all_destination = null, ";
-				}
-				else {
-					$sql .= "forward_all_destination = '$this->forward_all_destination', ";
-				}
+			//build extension update array
+				$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
+				$array['extensions'][0]['forward_all_destination'] = strlen($this->forward_all_destination) != 0 ? $this->forward_all_destination : null;
 				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
-					$sql .= "dial_string = null, ";
-					$sql .= "forward_all_enabled = 'false' ";
+					$array['extensions'][0]['dial_string'] = null;
+					$array['extensions'][0]['forward_all_enabled'] = 'false';
 				}
 				else {
-					$sql .= "dial_string = '".check_str($this->dial_string)."', ";
-					$sql .= "forward_all_enabled = 'true' ";
+					$array['extensions'][0]['dial_string'] = $this->dial_string;
+					$array['extensions'][0]['forward_all_enabled'] = 'true';
 				}
-				$sql .= "where domain_uuid = '$this->domain_uuid' ";
-				$sql .= "and extension_uuid = '$this->extension_uuid' ";
-				if ($this->debug) {
-					echo $sql;
-				}
-				$db->exec(check_sql($sql));
-				unset($sql);
+
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('extension_add', 'temp');
+
+			//execute update
+				$database = new database;
+				$database->app_name = 'calls';
+				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+				$database->save($array);
+				unset($array);
+
+			//grant temporary permissions
+				$p = new permissions;
+				$p->delete('extension_add', 'temp');
 
 			//delete extension from the cache
 				$cache = new cache;
@@ -97,7 +98,7 @@ include "root.php";
 					$cache->delete("directory:".$this->number_alias."@".$this->domain_name);
 				}
 
-		} //function
-	} //class
+		}
+	}
 
 ?>

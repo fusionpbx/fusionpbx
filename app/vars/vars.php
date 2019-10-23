@@ -42,22 +42,37 @@
 	$text = $language->get();
 
 //toggle enabled state
-	if ($_REQUEST['id'] != '' && $_REQUEST['enabled'] != '') {
-		$sql = "update v_vars set ";
-		$sql .= "var_enabled = '".check_str($_REQUEST['enabled'])."' ";
-		$sql .= "where var_uuid = '".check_str($_REQUEST['id'])."' ";
-		$db->exec(check_sql($sql));
-		unset($sql);
+	if (is_uuid($_REQUEST['id']) && (strtolower($_REQUEST['enabled']) == 'true' || strtolower($_REQUEST['enabled']) == 'false')) {
+		//build array
+			$array['vars'][0]['var_uuid'] = $_REQUEST['id'];
+			$array['vars'][0]['var_enabled'] = strtolower($_REQUEST['enabled']);
+
+		//grant temporary permissions
+			$p = new permissions;
+			$p->add('var_edit', 'temp');
+
+		//execute update
+			$database = new database;
+			$database->app_name = 'vars';
+			$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+			$database->save($array);
+			unset($array);
+
+		//revoke temporary permissions
+			$p->delete('var_edit', 'temp');
 
 		//unset the user defined variables
-		$_SESSION["user_defined_variables"] = "";
+			$_SESSION["user_defined_variables"] = "";
 
 		//synchronize the configuration
-		save_var_xml();
+			save_var_xml();
 
-		message::add($text['message-update']);
-		header("Location: vars.php?id=".$_REQUEST['id']);
-		exit;
+		//set message
+			message::add($text['message-update']);
+
+		//redirect
+			header("Location: vars.php?id=".$_REQUEST['id']);
+			exit;
 	}
 
 //include the header
@@ -78,17 +93,10 @@
 	echo "</table>\n";
 
 	$sql = "select * from v_vars ";
-	if (strlen($order_by)> 0) {
-		$sql .= "order by $order_by $order ";
-	}
-	else {
-		$sql .= "order by var_category, var_order asc ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
+	$sql .= $order_by != '' ? order_by($order_by, $order) : "order by var_category, var_order asc ";
+	$database = new database;
+	$result = $database->select($sql, null, 'all');
+	unset($sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -96,8 +104,7 @@
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	$tmp_var_header = '';
-	$tmp_var_header .= "<tr>\n";
+	$tmp_var_header = "<tr>\n";
 	$tmp_var_header .= th_order_by('var_name', $text['label-name'], $order_by, $order);
 	$tmp_var_header .= th_order_by('var_value', $text['label-value'], $order_by, $order);
 	$tmp_var_header .= th_order_by('var_hostname', $text['label-hostname'], $order_by, $order);
@@ -110,7 +117,7 @@
 	$tmp_var_header .= "</td>\n";
 	$tmp_var_header .= "<tr>\n";
 
-	if ($result_count > 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
 		$prev_var_category = '';
 		foreach($result as $row) {
 			$var_value = $row['var_value'];
@@ -170,10 +177,10 @@
 			echo "</tr>\n";
 
 			$prev_var_category = $row['var_category'];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($result, $row);
 
 	echo "<tr>\n";
 	echo "<td colspan='6' align='left'>\n";

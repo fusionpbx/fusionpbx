@@ -97,36 +97,37 @@
 			unset($sql, $parameters);
 
 			if (is_array($result) && sizeof($result) != 0) {
-				foreach ($result as $index => &$row) {
-					$domain_uuid = $row["domain_uuid"];
-					$permission_name = $row["permission_name"];
-					$group_name = $row["group_name"];
-
-					//copy the group permissions
-					$array['group_permissions'][$index]['group_permission_uuid'] = uuid();
-					if (is_uuid($domain_uuid)) {
-						$array['group_permissions'][$index]['domain_uuid'] = $domain_uuid;
-					}
-					$array['group_permissions'][$index]['permission_name'] = $permission_name;
-					$array['group_permissions'][$index]['group_name'] = $new_group_name;
-					$array['group_permissions'][$index]['group_uuid'] = $new_group_uuid;
+				foreach ($result as $x => &$row) {
+					//define group permissions values
+						$domain_uuid = $row["domain_uuid"];
+						$permission_name = $row["permission_name"];
+						$group_name = $row["group_name"];
+					//build insert array
+						$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+						if (is_uuid($domain_uuid)) {
+							$array['group_permissions'][$x]['domain_uuid'] = $domain_uuid;
+						}
+						$array['group_permissions'][$x]['permission_name'] = $permission_name;
+						$array['group_permissions'][$x]['group_name'] = $new_group_name;
+						$array['group_permissions'][$x]['group_uuid'] = $new_group_uuid;
 				}
 				if (is_array($array) && sizeof($array) != 0) {
-					$p = new permissions;
-					$p->add('group_permission_add', 'temp');
-
-					$database = new database;
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-					$database->save($array);
-					unset($array);
-
-					$p->delete('group_permission_add', 'temp');
-
-					message::add($text['message-copy']);
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('group_permission_add', 'temp');
+					//execute insert
+						$database = new database;
+						$database->app_name = 'groups';
+						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+						$database->save($array);
+						unset($array);
+					//revoke temporary permissions
+						$p->delete('group_permission_add', 'temp');
+					//set message
+						message::add($text['message-copy']);
 				}
 			}
-			unset ($prep_statement);
+			unset($result, $row);
 	}
 
 //redirect

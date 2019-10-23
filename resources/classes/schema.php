@@ -643,7 +643,7 @@ if (!class_exists('schema')) {
 													}
 
 												//add or rename fields
-													if ($this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
+													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
 														if ($db_type == "pgsql") {
 															$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
 														}

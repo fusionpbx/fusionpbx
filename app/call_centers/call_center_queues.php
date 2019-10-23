@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -127,36 +127,36 @@
 
 	if (is_array($result)) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('call_center_queue_edit')) ? "href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'" : null;
+			$tr_link = (permission_exists('call_center_queue_edit')) ? "href='call_center_queue_edit.php?id=".escape($row['call_center_queue_uuid'])."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_center_queue_edit')) {
-				echo "<a href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."'>".escape($row[queue_name])."</a>";
+				echo "<a href='call_center_queue_edit.php?id=".escape($row['call_center_queue_uuid'])."'>".escape($row['queue_name'])."</a>";
 			}
 			else {
 				echo escape($row[queue_name]);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_extension])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_strategy])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_extension'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['queue_strategy'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_moh_sound])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_record_template])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_time_base_score])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_max_wait_time_with_no_agent])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row[queue_tier_rules_apply]))."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['queue_tier_rules_apply']))."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_second])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_no_agent_no_wait])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_discard_abandoned_after])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_abandoned_resume_allowed])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row[queue_tier_rule_wait_multiply_level])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row[queue_description])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['queue_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_center_queue_edit')) {
-				echo "<a href='call_center_queue_edit.php?id=".escape($row[call_center_queue_uuid])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='call_center_queue_edit.php?id=".escape($row['call_center_queue_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_center_queue_delete')) {
-				echo "<a href='call_center_queue_delete.php?id=".escape($row[call_center_queue_uuid])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='call_center_queue_delete.php?id=".escape($row['call_center_queue_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

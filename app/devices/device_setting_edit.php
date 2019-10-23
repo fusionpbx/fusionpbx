@@ -39,7 +39,7 @@ else {
 	$text = $language->get();
 
 //action add or update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$device_setting_uuid = check_str($_REQUEST["id"]);
 	}
@@ -47,26 +47,36 @@ else {
 		$action = "add";
 	}
 
-if (strlen($_GET["device_uuid"]) > 0) {
-	$device_uuid = check_str($_GET["device_uuid"]);
+if (is_uuid($_GET["device_uuid"])) {
+	$device_uuid = $_GET["device_uuid"];
 }
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$device_setting_category = check_str($_POST["device_setting_category"]);
-		$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
-		$device_setting_name = check_str($_POST["device_setting_name"]);
-		$device_setting_value = check_str($_POST["device_setting_value"]);
-		$device_setting_enabled = check_str($_POST["device_setting_enabled"]);
-		$device_setting_description = check_str($_POST["device_setting_description"]);
+		$device_setting_category = $_POST["device_setting_category"];
+		$device_setting_subcategory = $_POST["device_setting_subcategory"];
+		$device_setting_name = $_POST["device_setting_name"];
+		$device_setting_value = $_POST["device_setting_value"];
+		$device_setting_enabled = $_POST["device_setting_enabled"];
+		$device_setting_description = $_POST["device_setting_description"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update" && permission_exists('device_setting_edit')) {
-		$device_setting_uuid = check_str($_POST["device_setting_uuid"]);
+		$device_setting_uuid = $_POST["device_setting_uuid"];
 	}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: devices.php');
+			exit;
+		}
+
+	//check for all required data
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -84,78 +94,62 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//add the device
 				if ($action == "add" && permission_exists('device_setting_add')) {
-					$sql = "insert into v_device_settings ";
-					$sql .= "(";
-					$sql .= "device_uuid, ";
-					$sql .= "device_setting_uuid, ";
-					$sql .= "device_setting_category, ";
-					$sql .= "device_setting_subcategory, ";
-					$sql .= "device_setting_name, ";
-					$sql .= "device_setting_value, ";
-					$sql .= "device_setting_enabled, ";
-					$sql .= "device_setting_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$device_uuid', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'$device_setting_category', ";
-					$sql .= "'$device_setting_subcategory', ";
-					$sql .= "'$device_setting_name', ";
-					$sql .= "'$device_setting_value', ";
-					$sql .= "'$device_setting_enabled', ";
-					$sql .= "'$device_setting_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "add")
+					$array['device_settings'][0]['device_setting_uuid'] = uuid();
+					message::add($text['message-add']);
+				}
 
 			//update the device
 				if ($action == "update" && permission_exists('device_setting_edit')) {
-					$sql = "update v_device_settings set ";
-					$sql .= "device_setting_category = '$device_setting_category', ";
-					$sql .= "device_setting_subcategory = '$device_setting_subcategory', ";
-					$sql .= "device_setting_name = '$device_setting_name', ";
-					$sql .= "device_setting_value = '$device_setting_value', ";
-					$sql .= "device_setting_enabled = '$device_setting_enabled', ";
-					$sql .= "device_setting_description = '$device_setting_description' ";
-					$sql .= "where device_uuid = '$device_uuid' ";
-					$sql .= "and device_setting_uuid = '$device_setting_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				} //if ($action == "update")
+					$array['device_settings'][0]['device_setting_uuid'] = $device_setting_uuid;
+					message::add($text['message-update']);
+				}
 
-			if ($action == "add") {
-				message::add($text['message-add']);
+			//execute
+			if (is_array($array) && @sizeof($array) != 0) {
+				$array['device_settings'][0]['device_uuid'] = $device_uuid;
+				$array['device_settings'][0]['device_setting_category'] = $device_setting_category;
+				$array['device_settings'][0]['device_setting_subcategory'] = $device_setting_subcategory;
+				$array['device_settings'][0]['device_setting_name'] = $device_setting_name;
+				$array['device_settings'][0]['device_setting_value'] = $device_setting_value;
+				$array['device_settings'][0]['device_setting_enabled'] = $device_setting_enabled;
+				$array['device_settings'][0]['device_setting_description'] = $device_setting_description;
+
+				$database = new database;
+				$database->app_name = 'devices';
+				$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+				$database->save($array);
+				unset($array);
 			}
-			if ($action == "update") {
-				message::add($text['message-update']);
-			}
+
 			header("Location: device_edit.php?id=".$device_uuid);
-			return;
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+			exit;
+		}
+}
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$device_setting_uuid = check_str($_GET["id"]);
+		$device_setting_uuid = $_GET["id"];
 		$sql = "select * from v_device_settings ";
-		$sql .= "where device_uuid = '$device_uuid' ";
-		$sql .= "and device_setting_uuid = '$device_setting_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
+		$sql .= "where device_uuid = :device_uuid ";
+		$sql .= "and device_setting_uuid = :device_setting_uuid ";
+		$parameters['device_uuid'] = $device_uuid;
+		$parameters['device_setting_uuid'] = $device_setting_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
 			$device_setting_category = $row["device_setting_category"];
 			$device_setting_subcategory = $row["device_setting_subcategory"];
 			$device_setting_name = $row["device_setting_name"];
 			$device_setting_value = $row["device_setting_value"];
 			$device_setting_enabled = $row["device_setting_enabled"];
 			$device_setting_description = $row["device_setting_description"];
-			break; //limit to 1 row
 		}
-		unset ($prep_statement);
+		unset($sql, $parameters, $row);
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	require_once "resources/header.php";
@@ -278,6 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_setting_uuid' value='$device_setting_uuid'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

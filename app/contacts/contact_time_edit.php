@@ -67,6 +67,14 @@ else {
 				$contact_time_uuid = $_POST["contact_time_uuid"];
 			}
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -158,6 +166,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
@@ -194,7 +206,7 @@ else {
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimesecondspicker' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($time_start)."'>\n";
+	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."' onblur=\"$(this).datetimepicker('hide');\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -203,7 +215,7 @@ else {
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimesecondspicker' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($time_stop)."'>\n";
+	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."' onblur=\"$(this).datetimepicker('hide');\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -212,7 +224,7 @@ else {
 	echo "	".$text['label-time_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".escape($time_description)."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".$time_description."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -223,6 +235,7 @@ else {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='contact_time_uuid' value='".escape($contact_time_uuid)."'>\n";
 	}
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -230,17 +243,7 @@ else {
 	echo "<br><br>";
 	echo "</form>";
 
-	//apply bootstrap-datetimepicker WITH seconds
-		echo "<script language='JavaScript' type='text/javascript'>";
-		echo "	$(document).ready(function() {\n";
-		echo "		$(function() {\n";
-		echo "			$('.datetimepicker').datetimepicker({\n";
-		echo "				format: 'YYYY-MM-DD HH:mm:ss',\n";
-		echo "			});\n";
-		echo "		});\n";
-		echo "	});\n";
-		echo "</script>\n";
-
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

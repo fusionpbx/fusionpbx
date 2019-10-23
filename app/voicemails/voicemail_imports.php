@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,12 +58,10 @@
 	ini_set(max_execution_time,7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$from_row = check_str($_POST["from_row"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
+	$action = $_POST["action"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -75,7 +73,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('voicemail_import')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -123,13 +121,9 @@
 							$schema[$i]['fields'][] = $field_name;
 						}
 					}
-					$i++;	
+					$i++;
 				}
 			}
-			//echo "<pre>\n";
-			//print_r($schema);
-			//echo "</pre>\n";
-			//exit;
 	}
 
 //match the column names to the field names
@@ -312,13 +306,7 @@
 					} //end while
 					fclose($handle);
 
-				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
-
-				//save to the data
+					//save to the data
 					if (is_array($array)) {
 						$database = new database;
 						$database->app_name = 'voicemails';
@@ -344,7 +332,7 @@
 	echo "		".$text['description-import']."\n";
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemails.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemails.php'\" value='".$text['button-back']."'>\n";
 	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";

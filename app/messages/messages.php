@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,31 +41,33 @@
 
 //get (from) destinations
 	$sql = "select destination_number from v_destinations ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and destination_type_text = 1 ";
 	$sql .= "and destination_enabled = 'true' ";
 	$sql .= "order by destination_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	//view_array($rows);
-	if (is_array($rows) && sizeof($rows)) {
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows)) {
 		foreach ($rows as $row) {
 			$destinations[] = $row['destination_number'];
 		}
 	}
-	unset ($prep_statement, $sql, $row, $record);
+	unset($sql, $parameters, $rows, $row);
 
 //get self (primary contact attachment) image
 	if (!is_array($_SESSION['tmp']['messages']['contact_me'])) {
-		$sql = "select attachment_filename as filename, attachment_content as image from v_contact_attachments ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '".$_SESSION['user']['contact_uuid']."' ";
+		$sql = "select attachment_filename as filename, attachment_content as image ";
+		$sql .= "from v_contact_attachments ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_uuid = :contact_uuid ";
 		$sql .= "and attachment_primary = 1 ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$_SESSION['tmp']['messages']['contact_me'] = $prep_statement->fetch(PDO::FETCH_NAMED);
-		unset ($sql, $bind, $prep_statement);
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $_SESSION['user']['contact_uuid'];
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'row');
+		$_SESSION['tmp']['messages']['contact_me'] = $row;
+		unset($sql, $parameters, $row);
 	}
 
 //additional includes
@@ -86,10 +88,10 @@
 	echo "	#message_new_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -113,10 +115,10 @@
 	echo "	#message_media_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -159,7 +161,7 @@
 		echo "							<td class='vncell'>".$text['label-message_from']."</td>\n";
 		echo "							<td class='vtable'>\n";
 		if (is_array($destinations) && sizeof($destinations) != 0) {
-			echo "							<select class='formfld' name='message_from' id='message_new_from' onchange=\" $('#message_new_to').focus();\">\n";
+			echo "							<select class='formfld' name='message_from' id='message_new_from' onchange=\"$('#message_new_to').trigger('focus');\">\n";
 			foreach ($destinations as $destination) {
 				echo "							<option value='".$destination."'>".format_phone($destination)."</option>\n";
 			}
@@ -253,13 +255,13 @@
 	echo "	function load_thread(number, contact_uuid) {\n";
 	echo "		clearTimeout(timer_thread);\n";
 	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!
 	if (!http_user_agent('mobile')) {
 		echo "			if ($('#message_new_layer').is(':hidden')) {\n";
-		echo "				$('#message_text').focus();\n";
+		echo "				$('#message_text').trigger('focus');\n";
 		echo "			}\n";
 	}
 	echo "				refresh_contacts();\n";
@@ -278,13 +280,13 @@
 
 	echo "	function refresh_thread(number, contact_uuid, onsent) {\n";
 	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!
 	if (!http_user_agent('mobile')) {
 		echo "				if ($('#message_new_layer').is(':hidden')) {\n";
-		echo "			$('#message_text').focus();\n";
+		echo "			$('#message_text').trigger('focus');\n";
 		echo "			}\n";
 	}
 	echo "				if (onsent != 'true') {\n";

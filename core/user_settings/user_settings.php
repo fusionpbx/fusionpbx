@@ -248,10 +248,10 @@
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$previous_category = $row['user_setting_category'];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $user_settings);
-	} //end if results
+			$c = $c ? 0 : 1;
+		}
+	}
+	unset($sql);
 
 	echo "<tr>\n";
 	echo "<td colspan='20' align='left'>\n";
@@ -277,8 +277,10 @@
 
 	echo "<br /><br />";
 
+	unset($user_settings);
+
 	// check or uncheck all category checkboxes
-	if (sizeof($subcat_ids) > 0) {
+	if (is_array($subcat_ids) && sizeof($subcat_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what, category) {\n";
 		foreach ($subcat_ids as $user_setting_category => $checkbox_ids) {

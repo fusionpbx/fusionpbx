@@ -55,9 +55,9 @@
 	unset($preset_region);
 
 //set the action as an add or an update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$dialplan_uuid = check_str($_REQUEST["id"]);
+		$dialplan_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -65,20 +65,20 @@
 
 //get the post variables
 	if (count($_POST) > 0) {
-		$domain_uuid = check_str($_POST["domain_uuid"]);
-		$dialplan_name = check_str($_POST["dialplan_name"]);
-		$dialplan_number = check_str($_POST["dialplan_number"]);
-		$dialplan_order = check_str($_POST["dialplan_order"]);
+		$domain_uuid = $_POST["domain_uuid"];
+		$dialplan_name = $_POST["dialplan_name"];
+		$dialplan_number = $_POST["dialplan_number"];
+		$dialplan_order = $_POST["dialplan_order"];
 
-		$dialplan_anti_action = check_str($_POST["dialplan_anti_action"]);
+		$dialplan_anti_action = $_POST["dialplan_anti_action"];
 		$dialplan_anti_action_array = explode(":", $dialplan_anti_action);
 		$dialplan_anti_action_app = array_shift($dialplan_anti_action_array);
 		$dialplan_anti_action_data = join(':', $dialplan_anti_action_array);
 		if (permission_exists('time_condition_context')) {
-			$dialplan_context = check_str($_POST["dialplan_context"]);
+			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
-		$dialplan_description = check_str($_POST["dialplan_description"]);
+		$dialplan_enabled = $_POST["dialplan_enabled"];
+		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -86,6 +86,15 @@
 	}
 
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: time_conditions.php');
+				exit;
+			}
+
 		//check for all required data
 			//if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
 	 		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
@@ -105,12 +114,11 @@
 			}
 
 		//remove the invalid characters from the dialplan name
-			$dialplan_name = str_replace(' ', '_', $dialplan_name);
 			$dialplan_name = str_replace('/', '', $dialplan_name);
 
 		//set the context for users that do not have the permission
 			if (permission_exists('time_condition_context')) {
-				$dialplan_context = check_str($_POST["dialplan_context"]);
+				$dialplan_context = $_POST["dialplan_context"];
 			}
 			else {
 				if ($action == 'add') {
@@ -118,77 +126,68 @@
 				}
 			}
 
-		//start the atomic transaction
-			$count = $db->exec("BEGIN;"); //returns affected rows
-
 		//process main dialplan entry
 			if ($action == "add") {
-
-				//add main dialplan entry
+				//build insert array
 					$dialplan_uuid = uuid();
-					$sql = "insert into v_dialplans ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "app_uuid, ";
-					$sql .= "dialplan_name, ";
-					$sql .= "dialplan_number, ";
-					$sql .= "dialplan_order, ";
-					$sql .= "dialplan_continue, ";
-					$sql .= "dialplan_context, ";
-					$sql .= "dialplan_enabled, ";
-					$sql .= "dialplan_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					if (strlen($domain_uuid) == 0) {
-						$sql .= "null, ";
-					}
-					else {
-						$sql .= "'".$domain_uuid."', ";
-					}
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'4b821450-926b-175a-af93-a03c441818b1', ";
-					$sql .= "'".$dialplan_name."', ";
-					$sql .= "'".$dialplan_number."', ";
-					$sql .= "'".$dialplan_order."', ";
-					$sql .= "'false', ";
-					$sql .= "'".$dialplan_context."', ";
-					$sql .= "'".$dialplan_enabled."', ";
-					$sql .= "'".$dialplan_description."' ";
-					$sql .= ")";
+					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][0]['app_uuid'] = '4b821450-926b-175a-af93-a03c441818b1';
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
+					$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 
-					//execute query
-					$db->exec(check_sql($sql));
-					unset($sql);
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('dialplan_add', 'temp');
 			}
 			else if ($action == "update") {
-				//update main dialplan entry
-					$sql = "update v_dialplans set ";
-					if (strlen($domain_uuid) == 0) {
-						$sql .= "domain_uuid = null, ";
-					}
-					else {
-						$sql .= "domain_uuid = '".$domain_uuid."', ";
-					}
-					$sql .= "dialplan_name = '".$dialplan_name."', ";
-					$sql .= "dialplan_number = '".$dialplan_number."', ";
-					$sql .= "dialplan_order = '".$dialplan_order."', ";
-					$sql .= "dialplan_continue = 'true', ";
-					if (strlen($dialplan_context) > 0) {
-						$sql .= "dialplan_context = '".$dialplan_context."', ";
-					}
-					$sql .= "dialplan_enabled = '".$dialplan_enabled."', ";
-					$sql .= "dialplan_description = '".$dialplan_description."' ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
+				//build delete array
+					$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
 
-				//delete existing dialplan details
-					$sql = "delete from v_dialplan_details ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-					$db->query($sql);
-					unset($sql);
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('dialplan_detail_delete', 'temp');
+
+				//execute delete
+					$database = new database;
+					$database->app_name = 'time_conditions';
+					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+					$database->delete($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('dialplan_detail_delete', 'temp');
+
+				//build update array
+					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+					$array['dialplans'][0]['dialplan_continue'] = 'true';
+					if (strlen($dialplan_context) > 0) {
+						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
+					}
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('dialplan_edit', 'temp');
+			}
+
+			if (is_array($array) && @sizeof($array) != 0) {
+				//add common fields to insert/update array
+					$array['dialplans'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+					$array['dialplans'][0]['dialplan_name'] = $dialplan_name;
+					$array['dialplans'][0]['dialplan_number'] = $dialplan_number;
+					$array['dialplans'][0]['dialplan_order'] = $dialplan_order;
+					$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
+					$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
+
+				//execute insert/update
+					$database = new database;
+					$database->app_name = 'time_conditions';
+					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+					$database->save($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('dialplan_add', 'temp');
+					$p->delete('dialplan_edit', 'temp');
 			}
 
 		//initialize dialplan detail group and order numbers
@@ -271,192 +270,155 @@
 				}
 			}
 
-		//process conditions
-			$conditions_exist = false;
+		//add conditions to insert array for custom and preset conditions
+			if (is_array($_REQUEST['variable'])) {
+				$x = 0;
+				foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 
-		//begin insert query for custom and preset conditions
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_break, ";
-			$sql .= "dialplan_detail_inline, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
+					$group_conditions_exist[$group_id] = false;
 
-		//add conditions
-			if (is_array($_REQUEST['variable'])) foreach ($_REQUEST['variable'] as $group_id => $conditions) {
+					//determine if preset
+					$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
-				$group_conditions_exist[$group_id] = false;
-
-				//determine if preset
-				$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
-
-				//set group and order number
-				$dialplan_detail_group_user = check_str($_POST["group_$group_id"]);
-				if($dialplan_detail_group_user!='') {
-					$dialplan_detail_group = $dialplan_detail_group_user;
-				} else {
-					$dialplan_detail_group = $group_id;
-				}
-
-				$dialplan_detail_order = 0;
-
-				if (is_array($conditions)) foreach ($conditions as $cond_num => $cond_var) {
-					if ($cond_var != '') {
-						$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
-						$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
-
-						//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
-						if ($cond_var == 'time-of-day') {
-							$cond_var = 'minute-of-day';
-							$array_cond_start = explode(':', $cond_start);
-							$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
-							if ($cond_stop != '') {
-								$array_cond_stop = explode(':', $cond_stop);
-								$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
-							}
-						}
-
-						$cond_value = $cond_start;
-						if ($cond_stop != '') {
-							$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
-							$cond_value .= $range_indicator.$cond_stop;
-						}
-
-						if (!$group_conditions_exist[$group_id]) {
-							//add destination number condition
-							$dialplan_detail_order += 10;
-							$sql .= ($conditions_exist) ? ", ( " : "( ";
-							if (strlen($domain_uuid) == 0) {
-								$sql .= "null, ";
-							}
-							else {
-								$sql .= "'".$domain_uuid."', ";
-							}
-							$sql .= "'".$dialplan_uuid."', ";
-							$sql .= "'".uuid()."', ";
-							$sql .= "'condition', ";
-							$sql .= "'destination_number', ";
-							$sql .= "'^".$dialplan_number."$', ";
-							$sql .= "null, ";
-							$sql .= "null, ";
-							$sql .= "'".$dialplan_detail_group."', ";
-							$sql .= "'".$dialplan_detail_order."' ";
-							$sql .= ") ";
-						}
-
-						//add condition to query string
-						$dialplan_detail_order += 10;
-						$sql .= ", ( ";
-						if (strlen($domain_uuid) == 0) {
-							$sql .= "null, ";
-						}
-						else {
-							$sql .= "'".$domain_uuid."', ";
-						}
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'condition', ";
-						$sql .= "'".$cond_var."', ";
-						$sql .= "'".$cond_value."', ";
-						$sql .= "'never', ";
-						$sql .= "null, ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ") ";
-
-						$conditions_exist = true;
-						$group_conditions_exist[$group_id] = true;
-					} //if
-				} //for each
-
-				//continue adding to query only if conditions exist in current group
-				if ($group_conditions_exist[$group_id]) {
-
-					//determine group action app and data
-					$dialplan_action = check_str($_REQUEST["dialplan_action"][$group_id]);
-					if ($dialplan_action == '') {
-						if ($is_preset) {
-							if (check_str($_REQUEST['default_preset_action']) != '') {
-								$dialplan_action = check_str($_REQUEST['default_preset_action']);
-							}
-							else if (check_str($_REQUEST['dialplan_anti_action']) != '') {
-								$dialplan_action = check_str($_REQUEST['dialplan_anti_action']);
-							}
-						}
+					//set group and order number
+					$dialplan_detail_group_user = $_POST["group_$group_id"];
+					if ($dialplan_detail_group_user != '') {
+						$dialplan_detail_group = $dialplan_detail_group_user;
+					}
+					else {
+						$dialplan_detail_group = $group_id;
 					}
 
-					if ($dialplan_action != '') {
-						//if preset, set log variable
-						if ($is_preset && is_array($_REQUEST['preset'])) {
-							foreach ($_REQUEST['preset'] as $preset_number => $preset_group_id) {
-								if ($group_id == $preset_group_id) {
-									if (is_array($available_presets[$preset_number])) {
-										foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
-											$dialplan_detail_order += 10;
-											$sql .= ", ( ";
-											if (strlen($domain_uuid) == 0) {
-												$sql .= "null, ";
-											}
-											else {
-												$sql .= "'".$domain_uuid."', ";
-											}
-											$sql .= "'".$dialplan_uuid."', ";
-											$sql .= "'".uuid()."', ";
-											$sql .= "'action', ";
-											$sql .= "'set', ";
-											$sql .= "'preset=".$available_preset_name."', ";
-											$sql .= "null, ";
-											$sql .= "'true', ";
-											$sql .= "'".$dialplan_detail_group."', ";
-											$sql .= "'".$dialplan_detail_order."' ";
-											$sql .= ") ";
-										}
+					$dialplan_detail_order = 0;
+
+					if (is_array($conditions)) {
+						foreach ($conditions as $cond_num => $cond_var) {
+							if ($cond_var != '') {
+								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
+								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
+
+								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
+								if ($cond_var == 'time-of-day') {
+									$cond_var = 'minute-of-day';
+									$array_cond_start = explode(':', $cond_start);
+									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1];
+									if ($cond_stop != '') {
+										$array_cond_stop = explode(':', $cond_stop);
+										$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
 									}
+								}
+
+								$cond_value = $cond_start;
+								if ($cond_stop != '') {
+									$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
+									$cond_value .= $range_indicator.$cond_stop;
+								}
+
+								if (!$group_conditions_exist[$group_id]) {
+									//add destination number condition
+									$dialplan_detail_order += 10;
+									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+									$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+									$array['dialplan_details'][$x]['dialplan_detail_type'] = 'destination_number';
+									$array['dialplan_details'][$x]['dialplan_detail_data'] = '^'.$dialplan_number.'$';
+									$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$x++;
+								}
+
+								//add condition to query string
+								$dialplan_detail_order += 10;
+								$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+								$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+								$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+								$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+								$array['dialplan_details'][$x]['dialplan_detail_type'] = $cond_var;
+								$array['dialplan_details'][$x]['dialplan_detail_data'] = $cond_value;
+								$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+								$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+								$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+								$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+								$x++;
+
+								$group_conditions_exist[$group_id] = true;
+							} //if
+						} //foreach
+					} //if
+
+					//continue adding to query only if conditions exist in current group
+					if ($group_conditions_exist[$group_id]) {
+
+						//determine group action app and data
+						$dialplan_action = $_REQUEST["dialplan_action"][$group_id];
+						if ($dialplan_action == '') {
+							if ($is_preset) {
+								if ($_REQUEST['default_preset_action'] != '') {
+									$dialplan_action = $_REQUEST['default_preset_action'];
+								}
+								else if ($_REQUEST['dialplan_anti_action'] != '') {
+									$dialplan_action = $_REQUEST['dialplan_anti_action'];
 								}
 							}
 						}
 
-						//parse group app and data
-						if (substr_count($dialplan_action, ":") > 0) {
-							$dialplan_action_array = explode(":", $dialplan_action);
-							$dialplan_action_app = array_shift($dialplan_action_array);
-							$dialplan_action_data = join(':', $dialplan_action_array);
-						}
-						else {
-							$dialplan_action_app = $dialplan_action;
-							$dialplan_action_data = '';
-						}
+						if ($dialplan_action != '') {
+							//if preset, set log variable
+							if ($is_preset && is_array($_REQUEST['preset'])) {
+								foreach ($_REQUEST['preset'] as $preset_number => $preset_group_id) {
+									if ($group_id == $preset_group_id) {
+										if (is_array($available_presets[$preset_number])) {
+											foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
+												$dialplan_detail_order += 10;
+												$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+												$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+												$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+												$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
+												$array['dialplan_details'][$x]['dialplan_detail_type'] = 'set';
+												$array['dialplan_details'][$x]['dialplan_detail_data'] = 'preset='.$available_preset_name;
+												$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+												$array['dialplan_details'][$x]['dialplan_detail_inline'] = 'true';
+												$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+												$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+												$x++;
+											}
+										}
+									}
+								}
+							}
 
-						//add group action to query
-						$dialplan_detail_order += 10;
-						$sql .= ", ( ";
-						if (strlen($domain_uuid) == 0) {
-							$sql .= "null, ";
+							//parse group app and data
+							if (substr_count($dialplan_action, ":") > 0) {
+								$dialplan_action_array = explode(":", $dialplan_action);
+								$dialplan_action_app = array_shift($dialplan_action_array);
+								$dialplan_action_data = join(':', $dialplan_action_array);
+							}
+							else {
+								$dialplan_action_app = $dialplan_action;
+								$dialplan_action_data = '';
+							}
+
+							//add group action to query
+							$dialplan_detail_order += 10;
+							$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+							$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+							$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+							$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
+							$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_action_app;
+							$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_action_data;
+							$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+							$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+							$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+							$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+							$x++;
 						}
-						else {
-							$sql .= "'".$domain_uuid."', ";
-						}
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'action', ";
-						$sql .= "'".$dialplan_action_app."', ";
-						$sql .= "'".$dialplan_action_data."', ";
-						$sql .= "null, ";
-						$sql .= "null, ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ") ";
 					}
-				}
-			} //for each
+
+				} //foreach
+			} //if
 
 		//add to query for default anti-action (if defined)
 			if (strlen($dialplan_anti_action_app) > 0) {
@@ -467,53 +429,49 @@
 
 				//add destination number condition
 				$dialplan_detail_order += 10;
-				$sql .= ", ( ";
-				if (strlen($domain_uuid) == 0) {
-					$sql .= "null, ";
-				}
-				else {
-					$sql .= "'".$domain_uuid."', ";
-				}
-				$sql .= "'".$dialplan_uuid."', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'condition', ";
-				$sql .= "'destination_number', ";
-				$sql .= "'^".$dialplan_number."$', ";
-				$sql .= "null, ";
-				$sql .= "null, ";
-				$sql .= "'".$dialplan_detail_group."', ";
-				$sql .= "'".$dialplan_detail_order."' ";
-				$sql .= ") ";
+				$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+				$array['dialplan_details'][$x]['dialplan_detail_type'] = 'destination_number';
+				$array['dialplan_details'][$x]['dialplan_detail_data'] = '^'.$dialplan_number.'$';
+				$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$x++;
 
 				//add anti-action
 				$dialplan_detail_order += 10;
-				$sql .= ", ( ";
-				if (strlen($domain_uuid) == 0) {
-					$sql .= "null, ";
-				}
-				else {
-					$sql .= "'".$domain_uuid."', ";
-				}
-				$sql .= "'".$dialplan_uuid."', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'action', ";
-				$sql .= "'".$dialplan_anti_action_app."', ";
-				$sql .= "'".$dialplan_anti_action_data."', ";
-				$sql .= "null, ";
-				$sql .= "null, ";
-				$sql .= "'".$dialplan_detail_group."', ";
-				$sql .= "'".$dialplan_detail_order."' ";
-				$sql .= ") ";
+				$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
+				$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_anti_action_app;
+				$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_anti_action_data;
+				$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$x++;
 			}
 
 		//execute query
-			if ($conditions_exist) {
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
+			if (is_array($array) && @sizeof($array) != 0) {
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('dialplan_detail_add', 'temp');
 
-		//commit the atomic transaction
-			$count = $db->exec("COMMIT;");
+				//execute insert
+					$database = new database;
+					$database->app_name = 'time_conditions';
+					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
+					$database->save($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('dialplan_detail_add', 'temp');
+			}
 
 		//update the dialplan xml
 			$dialplans = new dialplan;
@@ -536,51 +494,40 @@
 			else if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: time_condition_edit.php?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
-			return;
+			header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
+			exit;
 
-	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //get existing data to pre-populate form
-	if ($dialplan_uuid != '' && $_POST["persistformvar"] != "true") {
-
-		//add the dialplan permission
-			$p = new permissions;
-			$p->add("dialplan_add", 'temp');
-			$p->add("dialplan_detail_add", 'temp');
-			$p->add("dialplan_edit", 'temp');
-			$p->add("dialplan_detail_edit", 'temp');
+	if (is_uuid($dialplan_uuid) && $_POST["persistformvar"] != "true") {
 
 		//get main dialplan entry
 			$sql = "select * from v_dialplans ";
-			$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$dialplans = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (is_array($dialplans)) {
-				foreach ($dialplans as &$row) {
-					$domain_uuid = $row["domain_uuid"];
-					//$app_uuid = $row["app_uuid"];
-					$dialplan_name = $row["dialplan_name"];
-					$dialplan_number = $row["dialplan_number"];
-					$dialplan_order = $row["dialplan_order"];
-					$dialplan_continue = $row["dialplan_continue"];
-					$dialplan_context = $row["dialplan_context"];
-					$dialplan_enabled = $row["dialplan_enabled"];
-					$dialplan_description = $row["dialplan_description"];
-				}
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$domain_uuid = $row["domain_uuid"];
+				//$app_uuid = $row["app_uuid"];
+				$dialplan_name = $row["dialplan_name"];
+				$dialplan_number = $row["dialplan_number"];
+				$dialplan_order = $row["dialplan_order"];
+				$dialplan_continue = $row["dialplan_continue"];
+				$dialplan_context = $row["dialplan_context"];
+				$dialplan_enabled = $row["dialplan_enabled"];
+				$dialplan_description = $row["dialplan_description"];
 			}
-			unset ($prep_statement);
+			unset($sql, $parameters, $row);
 
-		//remove the temporary permission
-			$p->delete("dialplan_add", 'temp');
-			$p->delete("dialplan_detail_add", 'temp');
-			$p->delete("dialplan_edit", 'temp');
-			$p->delete("dialplan_detail_edit", 'temp');
+		//remove the underscore in the time condition name
+			$dialplan_name = str_replace('_', ' ', $dialplan_name);
 
 		//get dialplan detail conditions
-			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data from v_dialplan_details ";
-			$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data ";
+			$sql .= "from v_dialplan_details ";
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
 			$sql .= "and ";
 			$sql .= "( ";
 			$sql .= "	( ";
@@ -593,10 +540,10 @@
 			$sql .= "	) ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset ($prep_statement, $sql);
+			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$database = new database;
+			$dialplan_details = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
 
 		//load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
@@ -619,20 +566,22 @@
 		//loop through available presets (if any)
 			if (is_array($available_presets)) {
 				foreach ($available_presets as $preset_number => $preset) {
-					if (is_array($preset)) foreach ($preset as $preset_name => $preset_variables) {
-						//loop through each condition group
-						if (is_array($current_conditions)) {
-							foreach ($current_conditions as $group_id => $condition_variables) {
-								$matches = 0;
-								if (is_array($condition_variables)) {
-									foreach ($condition_variables as $condition_variable_name => $condition_variable_value) {
-										//count matching variable values
-										if ($preset_variables[$condition_variable_name] == $condition_variable_value) { $matches++; }
+					if (is_array($preset)) {
+						foreach ($preset as $preset_name => $preset_variables) {
+							//loop through each condition group
+							if (is_array($current_conditions)) {
+								foreach ($current_conditions as $group_id => $condition_variables) {
+									$matches = 0;
+									if (is_array($condition_variables)) {
+										foreach ($condition_variables as $condition_variable_name => $condition_variable_value) {
+											//count matching variable values
+											if ($preset_variables[$condition_variable_name] == $condition_variable_value) { $matches++; }
+										}
 									}
-								}
-								//if all preset variables found, then condition is a preset
-								if ($matches == sizeof($preset_variables)) {
-									$current_presets[$preset_number] = $group_id;
+									//if all preset variables found, then condition is a preset
+									if ($matches == sizeof($preset_variables)) {
+										$current_presets[$preset_number] = $group_id;
+									}
 								}
 							}
 						}
@@ -644,6 +593,10 @@
 
 //set the defaults
 	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	require_once "resources/header.php";
@@ -834,10 +787,13 @@
 		tb_id = obj.id;
 		tb.className = 'formfld datetimepicker';
 		tb.setAttribute('style', 'position: relative; width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
+		tb.setAttribute('data-toggle', 'datetimepicker');
+		tb.setAttribute('data-target', '#' + tb.id);
+		tb.setAttribute('onblur', "$(this).datetimepicker('hide');");
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 		$('#'+tb_id).wrap("<div style='position: relative; display: inline;'></div>"); //add parent div
-		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', showTodayButton: true, showClear: true, showClose: true, });
+		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
 	}
 
 	function change_to_select(obj) {
@@ -854,13 +810,18 @@
 
 	function alternate_destination_required() {
 		require_default_or_alt_destination = false;
-		<?php if (is_array($available_presets)) foreach ($available_presets as $preset_number => $meh) { ?>
-			if (document.getElementById('preset_<?php echo $preset_number; ?>').checked) {
-				preset_group_id = document.getElementById('preset_<?php echo $preset_number; ?>').value;
-				preset_destination = $('#dialplan_action_' + preset_group_id).val();
-				if (preset_destination == '') { require_default_or_alt_destination = true; }
+		<?php
+		if (is_array($available_presets)) {
+			foreach ($available_presets as $preset_number => $meh) { ?>
+				if (document.getElementById('preset_<?php echo $preset_number; ?>').checked) {
+					preset_group_id = document.getElementById('preset_<?php echo $preset_number; ?>').value;
+					preset_destination = $('#dialplan_action_' + preset_group_id).val();
+					if (preset_destination == '') { require_default_or_alt_destination = true; }
+				}
+				<?php
 			}
-		<?php } ?>
+		}
+		?>
 
 		if (require_default_or_alt_destination && $('#default_preset_action').val() == '') {
 			$('#td_alt_dest').attr('class', 'vncellreq');
@@ -1259,6 +1220,7 @@ if ($action == 'update') {
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>";
 

@@ -336,8 +336,8 @@
 			#app defaults
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
-			//install completed
-			//restart the server
+			//install completed - prompt the user to login
+			header("Location: /logout.php");
 		}
 	}
 
@@ -404,8 +404,5 @@
 	}
 	$view->assign("content", $content);
 	echo $view->render('template.htm');
-
-//include the footer
-	require_once "resources/footer.php";
 
 ?>
