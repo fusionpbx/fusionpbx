@@ -121,7 +121,7 @@
 						$database->app_name = 'domains';
 						$database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 						$database->save($array);
-	
+
 						//add dialplans to the domain
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
 							$dialplan = new dialplan;
@@ -153,7 +153,7 @@
 					// add dialplans to the domain
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
 						$dialplan = new dialplan;
-						$dialplan->import($array);
+						$dialplan->import($array['domains']);
 						unset($array);
 					}
 
