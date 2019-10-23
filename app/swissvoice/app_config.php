@@ -1,6 +1,6 @@
 <?php
 
-        //application details
+		//application details
                 $apps[$x]['name'] = "Swissvoice";
                 $apps[$x]['uuid'] = "33fb949e-d00f-45d7-b671-0c2c19c65822";
                 $apps[$x]['category'] = "Vendor";
@@ -27,4 +27,14 @@
                 $apps[$x]['description']['ru-ru'] = "";
                 $apps[$x]['description']['sv-se'] = "";
                 $apps[$x]['description']['uk-ua'] = "";
+		//default settings
+				$y=0;
+				$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "307e4444-1a75-4f32-b494-cff6a3f9308e";
+				$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+				$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "swissvoice_codec_order";
+				$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+				$apps[$x]['default_settings'][$y]['default_setting_value'] = "PCMU,PCMA,G726-32,G729,G723,iLBC,AMR,G722,AMR-WB";
+				$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+				$apps[$x]['default_settings'][$y]['default_setting_description'] = "Separatea by comma. Default = PCMU,PCMA,G726-32,G729,G723,iLBC,AMR,G722,AMR-WB";
+				$y++;
 ?>
