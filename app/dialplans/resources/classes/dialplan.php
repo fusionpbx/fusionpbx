@@ -403,18 +403,26 @@ include "root.php";
 															}
 														}
 													}
+													else {
+														$condition_self_closing_tag = true;
+													}
+
+													//if not a self closing tag then increment the group
+													if (!$condition_self_closing_tag) {
+														$group++;
+													}
 
 													//increment the values
 													$order = $order + 5;
-													$group = $group + 5;
+
+													//increase the row number
+													$x++;
 												}
 											}
 
 										//update the session array
 											$_SESSION['upgrade']['app_defaults']['dialplans'][$domain['domain_name']][]['dialplan_name'] = $dialplan_name;
 
-										//increase the row number
-											$x++;
 									} //app_uuid exists
 							} //end foreach $xml_list
 
