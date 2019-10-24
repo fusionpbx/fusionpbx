@@ -101,43 +101,44 @@
 
 //page title and description
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<b style='float: left;'>".$text['title-call_detail_records']."</b>\n";
-	echo "	<form id='frm_export' class='inline' method='post' action='xml_cdr_export.php'>\n";
-	echo "	<input type='hidden' name='cdr_id' value='".escape($cdr_id)."'>\n";
-	echo "	<input type='hidden' name='direction' value='".escape($direction)."'>\n";
-	echo "	<input type='hidden' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
-	echo "	<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin)."'>\n";
-	echo "	<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
-	echo "	<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
-	echo "	<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
-	echo "	<input type='hidden' name='caller_extension_uuid' value='".escape($caller_extension_uuid)."'>\n";
-	echo "	<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
-	echo "	<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
-	echo "	<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
-	echo "	<input type='hidden' name='context' value='".escape($context)."'>\n";
-	echo "	<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
-	echo "	<input type='hidden' name='answer_stamp_end' value='".escape($answer_stamp_end)."'>\n";
-	echo "	<input type='hidden' name='end_stamp_begin' value='".escape($end_stamp_begin)."'>\n";
-	echo "	<input type='hidden' name='end_stamp_end' value='".escape($end_stamp_end)."'>\n";
-	echo "	<input type='hidden' name='start_epoch' value='".escape($start_epoch)."'>\n";
-	echo "	<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
-	echo "	<input type='hidden' name='duration' value='".escape($duration)."'>\n";
-	echo "	<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
-	echo "	<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'>\n";
-	echo "	<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
-	echo "	<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
-	echo "	<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
-	echo "	<input type='hidden' name='write_codec' value='".escape($write_codec)."'>\n";
-	echo "	<input type='hidden' name='remote_media_ip' value='".escape($remote_media_ip)."'>\n";
-	echo "	<input type='hidden' name='network_addr' value='".escape($network_addr)."'>\n";
-	echo "	<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
-	echo "	<input type='hidden' name='leg' value='".escape($leg)."'>\n";
+	echo "	<div class='heading'><b>".$text['title-call_detail_records']."</b></div>\n";
+	echo "	<div class='buttons'>\n";
+	echo "		<form id='frm_export' class='inline' method='post' action='xml_cdr_export.php'>\n";
+	echo "		<input type='hidden' name='cdr_id' value='".escape($cdr_id)."'>\n";
+	echo "		<input type='hidden' name='direction' value='".escape($direction)."'>\n";
+	echo "		<input type='hidden' name='caller_id_name' value='".escape($caller_id_name)."'>\n";
+	echo "		<input type='hidden' name='start_stamp_begin' value='".escape($start_stamp_begin)."'>\n";
+	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
+	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
+	echo "		<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
+	echo "		<input type='hidden' name='caller_extension_uuid' value='".escape($caller_extension_uuid)."'>\n";
+	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
+	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
+	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
+	echo "		<input type='hidden' name='context' value='".escape($context)."'>\n";
+	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
+	echo "		<input type='hidden' name='answer_stamp_end' value='".escape($answer_stamp_end)."'>\n";
+	echo "		<input type='hidden' name='end_stamp_begin' value='".escape($end_stamp_begin)."'>\n";
+	echo "		<input type='hidden' name='end_stamp_end' value='".escape($end_stamp_end)."'>\n";
+	echo "		<input type='hidden' name='start_epoch' value='".escape($start_epoch)."'>\n";
+	echo "		<input type='hidden' name='stop_epoch' value='".escape($stop_epoch)."'>\n";
+	echo "		<input type='hidden' name='duration' value='".escape($duration)."'>\n";
+	echo "		<input type='hidden' name='billsec' value='".escape($billsec)."'>\n";
+	echo "		<input type='hidden' name='xml_cdr_uuid' value='".escape($xml_cdr_uuid)."'>\n";
+	echo "		<input type='hidden' name='bleg_uuid' value='".escape($bleg_uuid)."'>\n";
+	echo "		<input type='hidden' name='accountcode' value='".escape($accountcode)."'>\n";
+	echo "		<input type='hidden' name='read_codec' value='".escape($read_codec)."'>\n";
+	echo "		<input type='hidden' name='write_codec' value='".escape($write_codec)."'>\n";
+	echo "		<input type='hidden' name='remote_media_ip' value='".escape($remote_media_ip)."'>\n";
+	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr)."'>\n";
+	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	echo "		<input type='hidden' name='leg' value='".escape($leg)."'>\n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = $array[count($array) - 1];
 			if (isset($_REQUEST[$field_name])) {
-				echo "	<input type='hidden' name='".escape($field_name)."' value='".escape($$field_name)."'>\n";
+				echo "<input type='hidden' name='".escape($field_name)."' value='".escape($$field_name)."'>\n";
 			}
 		}
 	}
@@ -149,10 +150,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('xml_cdr_all')) {
-		if ($_REQUEST['show'] == 'all') {
-			echo "	<input type='hidden' name='show' value='all'>\n";
-		}
-		else {
+		if (!$_REQUEST['show'] == 'all') {
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
@@ -164,16 +162,18 @@
 		echo button::create(['type'=>'button','label'=>$text['button-archive'],'icon'=>'archive','link'=>'xml_cdr_archive.php'.($_REQUEST['show'] == 'all' ? '?show=all' : null)]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>'file-export','onclick'=>"toggle_select('export_format'); this.blur();"]);
-	echo "<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
-	echo 	"<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
-	echo 	"<option value='csv'>CSV</option>";
-	echo 	"<option value='pdf'>PDF</option>";
-	echo "</select>";
+	echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
+	echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
+	echo "			<option value='csv'>CSV</option>";
+	echo "			<option value='pdf'>PDF</option>";
+	echo "		</select>";
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','link'=>'xml_cdr.php']);
 	if ($paging_controls_mini != '') {
-		echo "<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
-	echo "	</form>\n";
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
 	echo $text['description']." \n";
@@ -185,6 +185,9 @@
 //basic search of call detail records
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form method='get' action=''>\n";
+		if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+			echo "<input type='hidden' name='show' value='all'>\n";
+		}
 
 		echo "<div class='form_grid'>\n";
 
