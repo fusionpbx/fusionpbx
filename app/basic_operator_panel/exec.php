@@ -58,7 +58,7 @@
 		$username = $_SESSION['username'];
 	}
 
-if (count($_GET) >0) {
+if (count($_GET) > 0) {
 
 	//setup the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -70,31 +70,31 @@ if (count($_GET) >0) {
 			case "Available":
 				$user_status = "Available";
 				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION["user"]["domain_name"]." Waiting";
 				$response = event_socket_request($fp, $cmd);
 				break;
 			case "Available_On_Demand":
 				$user_status = "Available (On Demand)";
 				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION["user"]["domain_name"]." Waiting";
 				$response = event_socket_request($fp, $cmd);
 				break;
 			case "Logged_Out":
 				$user_status = "Logged Out";
 				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION["user"]["domain_name"]." Waiting";
 				$response = event_socket_request($fp, $cmd);
 				break;
 			case "On_Break":
 				$user_status = "On Break";
 				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION["user"]["domain_name"]." Waiting";
 				$response = event_socket_request($fp, $cmd);
 				break;
 			case "Do_Not_Disturb":
 				$user_status = "Do Not Disturb";
 				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION["user"]["domain_name"]." Waiting";
 				$response = event_socket_request($fp, $cmd);
 				break;
 			default:
@@ -112,7 +112,7 @@ if (count($_GET) >0) {
 			if ($switch_cmd == 'originate') {
 				$source = preg_replace($num_pattern,'',$_GET['source']);
 				$destination = preg_replace($num_pattern,'',$_GET['destination']);
-				$api_cmd = 'bgapi originate {sip_auto_answer=true,origination_caller_id_number=' . $source . ',sip_h_Call-Info=_undef_}user/' . $source . '@' . $_SESSION['domain_name'] . ' ' . $destination . ' XML ' . trim($_SESSION['user_context']);
+				$api_cmd = 'bgapi originate {sip_auto_answer=true,origination_caller_id_number=' . $source . ',sip_h_Call-Info=_undef_}user/' . $source . '@' . $_SESSION["user"]["domain_name"] . ' ' . $destination . ' XML ' . trim($_SESSION['user_context']);
 			} elseif ($switch_cmd == 'uuid_record') {
 				$uuid = preg_replace($uuid_pattern,'',$_GET['uuid']);
 				$api_cmd = 'uuid_record ' . $uuid . ' start ' . $_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/archive/' . date('Y/M/d') . '/' . $uuid . '.wav';
@@ -128,7 +128,7 @@ if (count($_GET) >0) {
 				$language = new text;
 				$text = $language->get();
 
-				$api_cmd = 'bgapi originate {origination_caller_id_name=' . $text['label-eavesdrop'] . ',origination_caller_id_number=' . $ext . '}user/' . $destination . '@' . $_SESSION['domain_name'] . ' &eavesdrop(' . $chan_uuid . ')';
+				$api_cmd = 'bgapi originate {origination_caller_id_name=' . $text['label-eavesdrop'] . ',origination_caller_id_number=' . $ext . '}user/' . $destination . '@' . $_SESSION["user"]["domain_name"] . ' &eavesdrop(' . $chan_uuid . ')';
 			} elseif ($switch_cmd == 'uuid_kill') {
 				$call_id = preg_replace($uuid_pattern,'',$_GET['call_id']);
 				$api_cmd = 'uuid_kill ' . $call_id;
