@@ -197,8 +197,9 @@
 			--local call
 			session:execute("transfer", destination_number .. " XML " .. context);
 		else
-			--exteernal call
+			--external call
 			if (caller_id_name) then
+				session:execute("set", "outbound_caller_id_name="..caller_id_name);
 				session:execute("set", "effective_caller_id_name="..caller_id_name);
 			end
 			if (caller_id_number) then
