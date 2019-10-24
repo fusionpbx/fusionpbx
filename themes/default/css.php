@@ -712,6 +712,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 			}
 	<?php } ?>
 
+	a.disabled,
+	button.btn.disabled {
+		outline: none; /* hides the dotted outline of the anchor tag on focus/active */
+		cursor: default;
+		}
+
 /* BREAKPOINTS ****************************************************************/
 
 	/* screens = extra small */

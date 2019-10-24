@@ -387,6 +387,30 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
+	//enable button class button
+		function button_enable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = false;
+			button.classList.remove('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.remove('disabled');
+				anchor.setAttribute('onclick','');
+			}
+		}
+
+	//disable button class button
+		function button_disable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = true;
+			button.classList.add('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.add('disabled');
+				anchor.setAttribute('onclick','return false;');
+			}
+		}
+
 	//list functions
 		function list_all_toggle() {
 			var inputs = document.getElementsByTagName('input');

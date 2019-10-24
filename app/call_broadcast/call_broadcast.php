@@ -153,9 +153,11 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' value='' onclick='list_all_toggle();'>\n";
-	echo "	</th>\n";
+	if (permission_exists('call_broadcast_add') || permission_exists('call_broadcast_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('broadcast_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('broadcast_concurrent_limit', $text['label-concurrent-limit'], $order_by, $order);
 	echo th_order_by('broadcast_description', $text['label-description'], $order_by, $order);
@@ -171,10 +173,12 @@
 				$list_row_url = "call_broadcast_edit.php?id=".urlencode($row['call_broadcast_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='call_broadcasts[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='call_broadcasts[$x][uuid]' value='".escape($row['call_broadcast_uuid'])."' />\n";
-			echo "	</td>\n";
+			if (permission_exists('call_broadcast_add') || permission_exists('call_broadcast_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='call_broadcasts[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='call_broadcasts[$x][uuid]' value='".escape($row['call_broadcast_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
 			echo "	<td>";
 			if (permission_exists('call_broadcast_edit')) {
 				echo "<a href='".$list_row_url."'>".escape($row['broadcast_name'])."</a>";

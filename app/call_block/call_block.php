@@ -138,13 +138,13 @@
 	if (permission_exists('call_block_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'call_block_edit.php']);
 	}
-	if (permission_exists('call_block_add')) {
+	if (permission_exists('call_block_add') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	if (permission_exists('call_block_edit')) {
+	if (permission_exists('call_block_edit') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	if (permission_exists('call_block_delete')) {
+	if (permission_exists('call_block_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "<form id='form_search' class='inline' method='get'>\n";
@@ -166,9 +166,11 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' value='' onclick='list_all_toggle();'>\n";
-	echo "	</th>\n";
+	if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center'");
@@ -188,10 +190,12 @@
 				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='call_blocks[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
-			echo "	</td>\n";
+			if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='call_blocks[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='".$list_row_url."'>".escape($row['call_block_number'])."</a>";
@@ -203,8 +207,14 @@
 			echo "	<td>".escape($row['call_block_name'])."</td>\n";
 			echo "	<td class='center'>".escape($row['call_block_count'])."</td>\n";
 			echo "	<td>".escape($row['call_block_action'])."</td>\n";
-			echo "	<td class='no-link center'>";
-			echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['call_block_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			if (permission_exists('call_block_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['call_block_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['call_block_enabled']];
+			}
 			echo "	</td>\n";
 			echo "	<td>".date("j M Y H:i:s".(defined('TIME_24HR') && TIME_24HR == 1 ? 'a' : null), $row['date_added'])."</td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";

@@ -123,10 +123,10 @@
 	if (permission_exists('access_control_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'access_control_edit.php']);
 	}
-	if (permission_exists('access_control_add')) {
+	if (permission_exists('access_control_add') && $access_controls) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	if (permission_exists('access_control_delete')) {
+	if (permission_exists('access_control_delete') && $access_controls) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "<form id='form_search' class='inline' method='get'>\n";
@@ -148,9 +148,11 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' value='' onclick='list_all_toggle();'>\n";
-	echo "	</th>\n";
+	if (permission_exists('access_control_add') || permission_exists('access_control_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($access_controls ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('access_control_name', $text['label-access_control_name'], $order_by, $order);
 	echo th_order_by('access_control_default', $text['label-access_control_default'], $order_by, $order);
 	echo th_order_by('access_control_description', $text['label-access_control_description'], $order_by, $order, null, "class='hide-xs'");
@@ -166,10 +168,12 @@
 				$list_row_url = "access_control_edit.php?id=".urlencode($row['access_control_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='access_controls[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "		<input type='hidden' name='access_controls[".$x."][uuid]' value='".escape($row['access_control_uuid'])."' />\n";
-			echo "	</td>\n";
+			if (permission_exists('access_control_add') || permission_exists('access_control_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='access_controls[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='access_controls[".$x."][uuid]' value='".escape($row['access_control_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
 			echo "	<td><a href='".$list_row_url."'>".escape($row['access_control_name'])."</a></td>\n";
 			echo "	<td>".escape($row['access_control_default'])."</td>\n";
 			echo "	<td class='description overflow hide-xs'>".escape($row['access_control_description'])."</td>\n";
