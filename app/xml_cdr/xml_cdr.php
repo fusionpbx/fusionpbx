@@ -102,7 +102,7 @@
 //page title and description
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_detail_records']."</b></div>\n";
-	echo "	<div class='buttons'>\n";
+	echo "	<div class='actions'>\n";
 	echo "		<form id='frm_export' class='inline' method='post' action='xml_cdr_export.php'>\n";
 	echo "		<input type='hidden' name='cdr_id' value='".escape($cdr_id)."'>\n";
 	echo "		<input type='hidden' name='direction' value='".escape($direction)."'>\n";

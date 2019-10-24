@@ -120,7 +120,7 @@
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-access_controls']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='buttons'>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('access_control_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'access_control_edit.php']);
 	}
