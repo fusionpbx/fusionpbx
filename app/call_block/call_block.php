@@ -135,6 +135,7 @@
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call-block']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('call_block_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'call_block_edit.php']);
 	}

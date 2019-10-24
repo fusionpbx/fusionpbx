@@ -2192,7 +2192,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		float: left;
 		}
 
-	div.action_bar > div.buttons {
+	div.action_bar > div.actions {
 		float: right;
 		white-space: nowrap;
 		}
