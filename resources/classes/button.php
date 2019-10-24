@@ -43,8 +43,9 @@ if (!class_exists('button')) {
 					$button .= "title=\"".($array['title'] ? $array['title'] : $array['label'])."\" ";
 				}
 				$button .= $array['onclick'] ? "onclick=\"".$array['onclick']."\" " : null;
-				$button .= "class='btn btn-".($array['class'] ? $array['class'] : 'default')."' ";
+				$button .= "class='btn btn-".($array['class'] ? $array['class'] : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
 				$button .= "style='margin-left: 2px; margin-right: 2px; ".($array['style'] ? $array['style'] : null)."' ";
+				$button .= $array['disabled'] ? "disabled='disabled' " : null;
 				$button .= ">";
 			//icon
 				if ($array['icon'] && (
@@ -77,7 +78,12 @@ if (!class_exists('button')) {
 				$button .= "</button>";
 			//link
 				if ($array['link']) {
-					$button = "<a href='".$array['link']."' target=\"".($array['target'] ? $array['target'] : '_self')."\">".$button."</a>";
+					$anchor = "<a ";
+					$anchor .= "href='".$array['link']."' ";
+					$anchor .= "target=\"".($array['target'] ? $array['target'] : '_self')."\" ";
+					$anchor .= ($array['disabled'] ? "class='disabled' onclick='return false;'" : null)." ";
+					$anchor .= ">";
+					$button = $anchor.$button."</a>";
 				}
 			return $button;
 			unset($button);
@@ -87,9 +93,10 @@ if (!class_exists('button')) {
 }
 
 /*
+
 //usage
 
-	echo button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>'icon','name'=>'btn','id'=>'btn','value'=>'value','link'=>'url','target'=>'_blank','onclick'=>'javascript','class'=>'name','style'=>'css','title'=>$text['button-label'],'collapse'=>'class']);
+	echo button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>'icon','name'=>'btn','id'=>'btn','value'=>'value','link'=>'url','target'=>'_blank','onclick'=>'javascript','class'=>'name','style'=>'css','title'=>$text['button-label'],'collapse'=>'class','disabled'=>false]);
 
 	echo button::create([
 		'type'=>'button',
@@ -104,8 +111,10 @@ if (!class_exists('button')) {
 		'class'=>'name',
 		'style'=>'css',
 		'title'=>$text['button-label'],
-		'collapse'=>'class'
+		'collapse'=>'class',
+		'disabled'=>false
 		]);
+
 
 //options
 
@@ -119,6 +128,8 @@ if (!class_exists('button')) {
 	style		css style[s]
 	title		tooltip text (if not set, defaults to value of label)
 	collapse	overide the default hide class ('hide-md-dn')
+	disabled	boolean true/false, or a value that evaluates to a boolean
+
 
 //notes
 
@@ -128,6 +139,52 @@ if (!class_exists('button')) {
 		button::$collapse = '...';
 
 	3) setting either collapse (instance or default) to false (boolean) will cause the button label to always be visible
+
+
+//example: enable/disable buttons with javascript
+
+	//javascript
+		onclick='button_enable('disabled_button');
+	//button
+		echo button::create(['type'=>'button', ... ,'id'=>'disabled_button','disabled'=>true]);
+
+	//javascript
+		onclick='button_disable('enabled_button');
+
+	//button
+		echo button::create(['type'=>'button', ... ,'id'=>'enabled_button']);
+
+
+	//enable button class button
+		echo "<script>\n";
+		echo "	function button_enable(button_id) {\n";
+		echo "		button = document.getElementById(button_id);\n";
+		echo "		button.disabled = false;\n";
+		echo "		button.classList.remove('disabled');\n";
+		echo "		if (button.parentElement.nodeName == 'A') {\n";
+		echo "			anchor = button.parentElement;\n";
+		echo "			anchor.classList.remove('disabled');\n";
+		echo "			anchor.setAttribute('onclick','');\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+
+	//disable button class button
+		echo "<script>\n";
+		echo "	function button_disable(button_id) {\n";
+		echo "		button = document.getElementById(button_id);\n";
+		echo "		button.disabled = true;\n";
+		echo "		button.classList.add('disabled');\n";
+		echo "		if (button.parentElement.nodeName == 'A') {\n";
+		echo "			anchor = button.parentElement;\n";
+		echo "			anchor.classList.add('disabled');\n";
+		echo "			anchor.setAttribute('onclick','return false;');\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+
+	//note: the javascript functions above are already contained in the template.php file.
+
 
 */
 
