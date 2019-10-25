@@ -529,19 +529,19 @@
 				$field_label = ucwords(str_replace("_", " ", $field_name));
 				$field_label = str_replace("Sip", "SIP", $field_label);
 				if ($field_name != "destination_number") {
-					echo "<th class='right'>".$field_label."</th>\n";
+					echo "<th class='center'>".$field_label."</th>\n";
 					$col_count++;
 				}
 			}
 		}
 	}
 	if (permission_exists('xml_cdr_start')) {
-		echo "<th class='right shrink'>".$text['label-date']."</th>\n";
-		echo "<th class='right shrink hide-md-dn'>".$text['label-time']."</th>\n";
+		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
+		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
 	}
 	if (permission_exists('xml_cdr_tta')) {
-		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
+		echo "<th class='center hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_duration')) {
@@ -549,7 +549,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_pdd')) {
-		echo "<th class='right hide-md-dn' title=\"".$text['description-pdd']."\">".$text['label-pdd']."</th>\n";
+		echo "<th class='center hide-md-dn' title=\"".$text['description-pdd']."\">".$text['label-pdd']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_mos')) {
