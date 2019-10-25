@@ -2296,6 +2296,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-align: right !important;
 		}
 
+	.list-header > .middle,
+	.list-row > .middle {
+		vertical-align: middle !important;
+		}
+
 	.list-header > .no-wrap,
 	.list-row > .no-wrap {
 		white-space: nowrap;
