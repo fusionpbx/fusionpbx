@@ -638,7 +638,7 @@
 					}
 					$content .= "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('xml_cdr_delete')) {
-						$content .= "	<td class='checkbox'>\n";
+						$content .= "	<td class='checkbox middle'>\n";
 						$content .= "		<input type='checkbox' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 						$content .= "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 						$content .= "	</td>\n";
@@ -646,7 +646,7 @@
 
 				//determine call result and appropriate icon
 					if (permission_exists('xml_cdr_direction')) {
-						$content .= "<td>\n";
+						$content .= "<td class='middle'>\n";
 						if ($theme_cdr_images_exist) {
 							if ($row['direction'] == 'inbound' || $row['direction'] == 'local') {
 								if ($row['answer_stamp'] != '' && $row['bridge_uuid'] != '') { $call_result = 'answered'; }
@@ -673,23 +673,19 @@
 					}
 				//extension
 					if (permission_exists('xml_cdr_extension')) {
-						$content .= "	<td>";
-						$content .= 	$row['extension'].'&nbsp;';
-						$content .= "	</td>\n";
+						$content .= "	<td class='middle'>".$row['extension']."</td>\n";
 					}
 				//domain name
 					if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
-						$content .= "	<td>";
-						$content .= 	$row['domain_name'].'&nbsp;';
-						$content .= "	</td>\n";
+						$content .= "	<td class='middle'>".$row['domain_name']."</td>\n";
 					}
 				//caller id name
 					if (permission_exists('xml_cdr_caller_id_name')) {
-						$content .= "	<td class='overflow hide-md-dn' title=\"".escape($row['caller_id_name'])."\">".escape($row['caller_id_name'])."</td>\n";
+						$content .= "	<td class='middle overflow hide-md-dn' title=\"".escape($row['caller_id_name'])."\">".escape($row['caller_id_name'])."</td>\n";
 					}
 				//source
 					if (permission_exists('xml_cdr_caller_id_number')) {
-						$content .= "	<td class='no-link no-wrap'>";
+						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_id_number'])) {
 							$content .= "		".format_phone(substr($row['caller_id_number'], 0, 20)).' ';
@@ -702,7 +698,7 @@
 					}
 				//caller destination
 					if (permission_exists('xml_cdr_caller_destination')) {
-						$content .= "	<td class='no-link no-wrap hide-md-dn'>";
+						$content .= "	<td class='middle no-link no-wrap hide-md-dn'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
 							$content .= "		".format_phone(escape(substr($row['caller_destination'], 0, 20))).' ';
@@ -731,7 +727,7 @@
 								}
 							}
 						}
-						$content .= "	<td class='no-link no-wrap'>";
+						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['destination_number'])) {
 							if ($prefix) {
@@ -764,7 +760,7 @@
 				//recording
 					if (permission_exists('xml_cdr_recording') && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 						if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
-							$content .= "	<td class='button center no-link no-wrap'>";
+							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if (permission_exists('recording_play')) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')",'title'=>$text['label-play'].' / '.$text['label-pause']]);
@@ -785,27 +781,27 @@
 								$array = explode(",", $field);
 								$field_name = $array[count($array) - 1];
 								if ($field_name != "destination_number") {
-									$content .= "	<td class='center no-wrap'>".escape($row[$field_name])."</td>\n";
+									$content .= "	<td class='middle center no-wrap'>".escape($row[$field_name])."</td>\n";
 								}
 							}
 						}
 					}
 				//start
 					if (permission_exists('xml_cdr_start')) {
-						$content .= "	<td class='right no-wrap'>".$tmp_start_epoch_date."</td>\n";
-						$content .= "	<td class='right no-wrap hide-md-dn'>".$tmp_start_epoch_time."</td>\n";
+						$content .= "	<td class='middle right no-wrap'>".$tmp_start_epoch_date."</td>\n";
+						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$tmp_start_epoch_time."</td>\n";
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
-						$content .= "	<td class='right hide-md-dn'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
-						$content .= "	<td class='center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
+						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $seconds)."</td>\n";
 					}
 				//pdd (post dial delay)
 					if (permission_exists("xml_cdr_pdd")) {
-						$content .= "	<td class='right hide-md-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
+						$content .= "	<td class='middle right hide-md-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
 					}
 				//mos (mean opinion score)
 					if (permission_exists("xml_cdr_mos")) {
@@ -813,14 +809,14 @@
 							$title = " title='".$text['label-mos_score-'.round($row['rtp_audio_in_mos'])]."'";
 							$value = $row['rtp_audio_in_mos'];
 						}
-						$content .= "	<td class='center hide-md-dn' ".$title.">".$value."</td>\n";
+						$content .= "	<td class='middle center hide-md-dn' ".$title.">".$value."</td>\n";
 					}
 				//hangup cause/call result
 					if (permission_exists('xml_cdr_hangup_cause')) {
-						$content .= "	<td class='no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
+						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
 					else {
-						$content .= "	<td class='no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
+						$content .= "	<td class='middle no-wrap hide-sm-dn'>".ucwords(escape($call_result))."</td>\n";
 					}
 				//action icon
 					//if (permission_exists('xml_cdr_details')) {
