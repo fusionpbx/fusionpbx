@@ -1987,6 +1987,26 @@ $text['label-end_date_time']['sv-se'] = "Slut Datum/Tid";
 $text['label-end_date_time']['uk-ua'] = "";
 $text['label-end_date_time']['tr-tr'] = "Bitiş Tarihi/Zamanı";
 
+$text['label-date']['en-us'] = "Date";
+$text['label-date']['ar-eg'] = "وقت";
+$text['label-date']['de-at'] = "Datum"; //copied from de-de
+$text['label-date']['de-ch'] = "Datum"; //copied from de-de
+$text['label-date']['de-de'] = "Datum";
+$text['label-date']['es-cl'] = "Fecha";
+$text['label-date']['es-mx'] = "Fecha"; //copied from es-cl
+$text['label-date']['fr-ca'] = "Date"; //copied from fr-fr
+$text['label-date']['fr-fr'] = "Date";
+$text['label-date']['he-il'] = "תאריך שעה";
+$text['label-date']['it-it'] = "Data";
+$text['label-date']['nl-nl'] = "";
+$text['label-date']['pl-pl'] = "Data";
+$text['label-date']['pt-br'] = "Data";
+$text['label-date']['pt-pt'] = "Data";
+$text['label-date']['ro-ro'] = "Data";
+$text['label-date']['ru-ru'] = "Дата";
+$text['label-date']['sv-se'] = "Datum";
+$text['label-date']['uk-ua'] = "Дата";
+
 $text['label-time']['en-us'] = "Time";
 $text['label-time']['ar-eg'] = "";
 $text['label-time']['de-at'] = "Zeit"; //copied from de-de
