@@ -536,8 +536,8 @@
 		}
 	}
 	if (permission_exists('xml_cdr_start')) {
-		echo "<th class='right'>".$text['label-date']."</th>\n";
-		echo "<th class='right hide-md-dn'>".$text['label-time']."</th>\n";
+		echo "<th class='right shrink'>".$text['label-date']."</th>\n";
+		echo "<th class='right shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
 	}
 	if (permission_exists('xml_cdr_tta')) {
