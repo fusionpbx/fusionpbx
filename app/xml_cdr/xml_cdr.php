@@ -490,11 +490,11 @@
 
 //column headings
  	if (permission_exists('xml_cdr_direction')) {
-		echo "<th>&nbsp;</th>\n";
+		echo "<th class='shrink'>&nbsp;</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_extension')) {
-		echo "<th>".$text['label-extension']."</th>\n";
+		echo "<th class='shrink'>".$text['label-ext']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == "all") {
@@ -502,7 +502,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_caller_id_name')) {
-		echo "<th class='hide-md-dn'>".$text['label-caller_id_name']."</th>\n";
+		echo "<th class='hide-md-dn' style='min-width: 90px;'>".$text['label-caller_id_name']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_caller_id_number')) {
@@ -510,7 +510,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_caller_destination')) {
-		echo "<th class='hide-md-dn'>".$text['label-caller_destination']."</th>\n";
+		echo "<th class='no-wrap hide-md-dn'>".$text['label-caller_destination']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_destination')) {
@@ -518,7 +518,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_recording') && (permission_exists('recording_play') || permission_exists('recording_download'))) {
-		echo "<th class='center'>".$text['label-recording']."</th>\n";
+		echo "<th class='center shrink'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_custom_fields')) {
@@ -536,8 +536,9 @@
 		}
 	}
 	if (permission_exists('xml_cdr_start')) {
-		echo "<th class='center'>".$text['label-start']."</th>\n";
-		$col_count++;
+		echo "<th class='right'>".$text['label-date']."</th>\n";
+		echo "<th class='right hide-md-dn'>".$text['label-time']."</th>\n";
+		$col_count += 2;
 	}
 	if (permission_exists('xml_cdr_tta')) {
 		echo "<th class='right hide-md-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
@@ -556,7 +557,7 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_hangup_cause')) {
-		echo "<th class='hide-sm-dn'>".$text['label-hangup_cause']."</th>\n";
+		echo "<th class='hide-sm-dn shrink'>".$text['label-hangup_cause']."</th>\n";
 		$col_count++;
 	}
 	else {
@@ -594,7 +595,13 @@
 					$tmp_year = date("Y", strtotime($row['start_stamp']));
 					$tmp_month = date("M", strtotime($row['start_stamp']));
 					$tmp_day = date("d", strtotime($row['start_stamp']));
-					$tmp_start_epoch = ($_SESSION['domain']['time_format']['text'] == '12h') ? escape(date("j M Y", $row['start_epoch']))." <span class='hide-md-dn'>".escape(date("g:i:sa", $row['start_epoch']))."</span>" : escape(date("j M Y", $row['start_epoch']))." <span class='hide-md-dn'>".escape(date("H:i:s", $row['start_epoch']))."</span>";
+					$tmp_start_epoch_date = escape(date("j M Y", $row['start_epoch']));
+					if ($_SESSION['domain']['time_format']['text'] == '12h') {
+						$tmp_start_epoch_time = escape(date("g:i:sa", $row['start_epoch']));
+					}
+					else {
+						$tmp_start_epoch_time = escape(date("H:i:s", $row['start_epoch']));
+					}
 
 				//get the hangup cause
 					$hangup_cause = $row['hangup_cause'];
@@ -678,7 +685,7 @@
 					}
 				//caller id name
 					if (permission_exists('xml_cdr_caller_id_name')) {
-						$content .= "	<td class='overflow hide-md-dn'>".escape($row['caller_id_name'])."&nbsp;</td>\n";
+						$content .= "	<td class='overflow hide-md-dn' title=\"".escape($row['caller_id_name'])."\">".escape($row['caller_id_name'])."</td>\n";
 					}
 				//source
 					if (permission_exists('xml_cdr_caller_id_number')) {
@@ -785,7 +792,8 @@
 					}
 				//start
 					if (permission_exists('xml_cdr_start')) {
-						$content .= "	<td class='center no-wrap'>".$tmp_start_epoch."</td>\n";
+						$content .= "	<td class='right no-wrap'>".$tmp_start_epoch_date."</td>\n";
+						$content .= "	<td class='right no-wrap hide-md-dn'>".$tmp_start_epoch_time."</td>\n";
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {

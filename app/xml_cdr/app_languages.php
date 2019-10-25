@@ -1500,6 +1500,26 @@ $text['label-extension']['ru-ru'] = "Внутренний номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
+$text['label-ext']['en-us'] = "Ext.";
+$text['label-ext']['ar-eg'] = "";
+$text['label-ext']['de-at'] = "Dur"; //copied from de-de
+$text['label-ext']['de-ch'] = "Dur"; //copied from de-de
+$text['label-ext']['de-de'] = "Dur";
+$text['label-ext']['es-cl'] = "Ext";
+$text['label-ext']['es-mx'] = "Ext"; //copied from es-cl
+$text['label-ext']['fr-ca'] = "Ext"; //copied from fr-fr
+$text['label-ext']['fr-fr'] = "Ext";
+$text['label-ext']['he-il'] = "";
+$text['label-ext']['it-it'] = "Int";
+$text['label-ext']['nl-nl'] = "";
+$text['label-ext']['pl-pl'] = "Num";
+$text['label-ext']['pt-br'] = "Ram";
+$text['label-ext']['pt-pt'] = "Ext";
+$text['label-ext']['ro-ro'] = "";
+$text['label-ext']['ru-ru'] = "Вну";
+$text['label-ext']['sv-se'] = "Ank";
+$text['label-ext']['uk-ua'] = "Роз";
+
 $text['label-end_stamp']['en-us'] = "End";
 $text['label-end_stamp']['ar-eg'] = "";
 $text['label-end_stamp']['de-at'] = "Ende"; //copied from de-de

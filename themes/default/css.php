@@ -2215,13 +2215,17 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	.list-header > th {
-		padding: 4px 7px;
+		padding: <?php echo ($_SESSION['theme']['table_heading_padding']['text'] != '') ? $_SESSION['theme']['table_heading_padding']['text'] : '4px 7px'; ?>;
 		text-align: left;
 		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['table_heading_text_size']['text'] != '') ? $_SESSION['theme']['table_heading_text_size']['text'] : '12px'; ?>;
 		font-family: <?php echo ($_SESSION['theme']['table_heading_text_font']['text'] != '') ? $_SESSION['theme']['table_heading_text_font']['text'] : 'arial'; ?>;
 		background: <?php echo ($_SESSION['theme']['table_heading_background_color']['text'] != '') ? $_SESSION['theme']['table_heading_background_color']['text'] : 'none'; ?>;
 		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_heading_border_color']['text'] != '') ? $_SESSION['theme']['table_heading_border_color']['text'] : '#a4aebf'; ?>;
+		}
+
+	.list-header > th.shrink {
+		width: 1px;
 		}
 
 	.list-row:nth-child(odd) > :not(.action-button) {
@@ -2242,7 +2246,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	.list-row > :not(.checkbox) {
-		padding: <?php echo ($_SESSION['theme']['table_row_padding']['text'] != '') ? $_SESSION['theme']['table_row_padding']['text'] : '4px 7px 4px 7px'; ?>;
+		padding: <?php echo ($_SESSION['theme']['table_row_padding']['text'] != '') ? $_SESSION['theme']['table_row_padding']['text'] : '4px 7px'; ?>;
 		}
 
 	.list-row > td.description {
