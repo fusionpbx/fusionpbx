@@ -536,8 +536,8 @@
 		}
 	}
 	if (permission_exists('xml_cdr_start')) {
-		echo "<th class='right shrink'>".$text['label-date']."</th>\n";
-		echo "<th class='right shrink hide-md-dn'>".$text['label-time']."</th>\n";
+		echo "<th class='center shrink'>".$text['label-date']."</th>\n";
+		echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 		$col_count += 2;
 	}
 	if (permission_exists('xml_cdr_tta')) {
@@ -597,7 +597,7 @@
 					$tmp_day = date("d", strtotime($row['start_stamp']));
 					$tmp_start_epoch_date = escape(date("j M Y", $row['start_epoch']));
 					if ($_SESSION['domain']['time_format']['text'] == '12h') {
-						$tmp_start_epoch_time = escape(date("g:i:sa", $row['start_epoch']));
+						$tmp_start_epoch_time = escape(date("g:i:s a", $row['start_epoch']));
 					}
 					else {
 						$tmp_start_epoch_time = escape(date("H:i:s", $row['start_epoch']));
