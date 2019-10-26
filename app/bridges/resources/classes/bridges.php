@@ -199,13 +199,14 @@ if (!class_exists('bridges')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
-										$new_uuid = uuid();
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $row['domain_uuid'];
-										$array[$this->table][$x]['bridge_name'] = $row['bridge_name'];
-										$array[$this->table][$x]['bridge_destination'] = $row['bridge_destination'];
-										$array[$this->table][$x]['bridge_enabled'] = $row['bridge_enabled'];
-										$array[$this->table][$x]['bridge_description'] = trim($row['bridge_description'].' ('.$text['label-copy'].')');
+
+										//copy data
+											$array[$this->table][$x] = $row;
+
+										//overwrite
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
+											$array[$this->table][$x]['bridge_description'] = trim($row['bridge_description'].' ('.$text['label-copy'].')');
+
 									}
 								}
 								unset($sql, $parameters, $rows, $row);

@@ -128,21 +128,14 @@ if (!class_exists('call_broadcast')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
-										$new_uuid = uuid();
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $row['domain_uuid'];
-										$array[$this->table][$x]['broadcast_name'] = $row['broadcast_name'];
-										$array[$this->table][$x]['broadcast_description'] = trim($row['broadcast_description'].' ('.$text['label-copy'].')');
-										$array[$this->table][$x]['broadcast_timeout'] = $row['broadcast_timeout'];
-										$array[$this->table][$x]['broadcast_concurrent_limit'] = $row['broadcast_concurrent_limit'];
-										$array[$this->table][$x]['recording_uuid'] = $row['recording_uuid'];
-										$array[$this->table][$x]['broadcast_caller_id_name'] = $row['broadcast_caller_id_name'];
-										$array[$this->table][$x]['broadcast_caller_id_number'] = $row['broadcast_caller_id_number'];
-										$array[$this->table][$x]['broadcast_destination_type'] = $row['broadcast_destination_type'];
-										$array[$this->table][$x]['broadcast_phone_numbers'] = $row['broadcast_phone_numbers'];
-										$array[$this->table][$x]['broadcast_avmd'] = $row['broadcast_avmd'];
-										$array[$this->table][$x]['broadcast_destination_data'] = $row['broadcast_destination_data'];
-										$array[$this->table][$x]['broadcast_accountcode'] = $row['broadcast_accountcode'];
+
+										//copy data
+											$array[$this->table][$x] = $row;
+
+										//overwrite
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
+											$array[$this->table][$x]['broadcast_description'] = trim($row['broadcast_description'].' ('.$text['label-copy'].')');
+
 									}
 								}
 								unset($sql, $parameters, $rows, $row);

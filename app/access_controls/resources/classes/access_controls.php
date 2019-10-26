@@ -77,12 +77,19 @@ if (!class_exists('access_controls')) {
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('access_control_node_delete', 'temp');
+
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('access_control_node_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
@@ -122,43 +129,55 @@ if (!class_exists('access_controls')) {
 
 						//create insert array from existing data
 							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".implode(' or ', $record_uuids)." ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$y = 0;
-									foreach ($rows as $x => $row) {
-										//primary table
+
+								//primary table
+									$sql = "select * from v_".$this->table." ";
+									$sql .= "where ".implode(' or ', $record_uuids)." ";
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										$y = 0;
+										foreach ($rows as $x => $row) {
 											$primary_uuid = uuid();
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
-											$array[$this->table][$x]['access_control_name'] = $row['access_control_name'];
-											$array[$this->table][$x]['access_control_default'] = $row['access_control_default'];
-											$array[$this->table][$x]['access_control_description'] = trim($row['access_control_description'].' ('.$text['label-copy'].')');
-										//sub table
-											$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
-											$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
-											$database = new database;
-											$rows_2 = $database->select($sql_2, $parameters_2, 'all');
-											if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-												foreach ($rows_2 as $row_2) {
-													$array['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
-													$array['access_control_nodes'][$y]['access_control_uuid'] = $primary_uuid;
-													$array['access_control_nodes'][$y]['node_type'] = $row_2['node_type'];
-													$array['access_control_nodes'][$y]['node_cidr'] = $row_2['node_cidr'];
-													$array['access_control_nodes'][$y]['node_domain'] = $row_2['node_domain'];
-													$array['access_control_nodes'][$y]['node_description'] = $row_2['node_description'];
-													$y++;
+
+											//copy data
+												$array[$this->table][$x] = $row;
+
+											//overwrite
+												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
+												$array[$this->table][$x]['access_control_description'] = trim($row['access_control_description'].' ('.$text['label-copy'].')');
+
+											//sub table
+												$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
+												$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
+												$database = new database;
+												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+													foreach ($rows_2 as $row_2) {
+
+														//copy data
+															$array['access_control_nodes'][$y] = $row_2;
+
+														//overwrite
+															$array['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
+
+														//increment
+															$y++;
+
+													}
 												}
-											}
-											unset($sql_2, $parameters_2, $rows_2, $row_2);
+												unset($sql_2, $parameters_2, $rows_2, $row_2);
+										}
 									}
-								}
-								unset($sql, $parameters, $rows, $row);
+									unset($sql, $parameters, $rows, $row);
 							}
 
 						//save the changes and set the message
 							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('access_control_node_add', 'temp');
 
 								//save the array
 									$database = new database;
@@ -166,6 +185,9 @@ if (!class_exists('access_controls')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('access_control_node_add', 'temp');
 
 								//set message
 									message::add($text['message-copy']);
