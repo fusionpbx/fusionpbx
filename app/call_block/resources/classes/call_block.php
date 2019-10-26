@@ -199,16 +199,14 @@ if (!class_exists('call_block')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
-										$new_uuid = uuid();
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_uuid;
-										$array[$this->table][$x]['domain_uuid'] = $row['domain_uuid'];
-										$array[$this->table][$x]['call_block_name'] = $row['call_block_name'];
-										$array[$this->table][$x]['call_block_number'] = $row['call_block_number'];
-										$array[$this->table][$x]['call_block_count'] = 0;
-										$array[$this->table][$x]['call_block_action'] = $row['call_block_action'];
-										$array[$this->table][$x]['date_added'] = $row['date_added'];
-										$array[$this->table][$x]['call_block_enabled'] = $row['call_block_enabled'];
-										$array[$this->table][$x]['call_block_description'] = trim($row['call_block_description'].' ('.$text['label-copy'].')');
+
+										//copy data
+											$array[$this->table][$x] = $row;
+
+										//overwrite
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
+											$array[$this->table][$x]['call_block_description'] = trim($row['call_block_description'].' ('.$text['label-copy'].')');
+
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
