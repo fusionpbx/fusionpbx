@@ -1893,5 +1893,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-eye";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7f2b1214-3b29-499e-aa3c-f410238d6bc8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_back";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-step-backward";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 ?>
