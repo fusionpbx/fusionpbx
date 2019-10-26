@@ -514,11 +514,11 @@
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_destination')) {
-		echo "<th>".$text['label-destination']."</th>\n";
+		echo "<th class='shrink'>".$text['label-destination']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_recording') && (permission_exists('recording_play') || permission_exists('recording_download'))) {
-		echo "<th class='center shrink'>".$text['label-recording']."</th>\n";
+		echo "<th class='center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
 	if (permission_exists('xml_cdr_custom_fields')) {
