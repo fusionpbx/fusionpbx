@@ -650,7 +650,7 @@
 
 	if ($action == "update" && permission_exists('domain_setting_view')) {
 		echo "<br />\n";
-		require PROJECT_PATH."core/domain_settings/domain_settings.php";
+		require "core/domain_settings/domain_settings.php";
 	}
 
 //include the footer
