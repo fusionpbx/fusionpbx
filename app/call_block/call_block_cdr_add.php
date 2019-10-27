@@ -41,10 +41,10 @@
 	$text = $language->get();
 
 //action add from cdr
-	if (is_uuid($_REQUEST["cdr_id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 
 		//get the uuid
-			$xml_cdr_uuid = $_REQUEST["cdr_id"];
+			$xml_cdr_uuid = $_REQUEST["id"];
 
 		// get the caller id info from cdr the user chose
 			$sql = "select caller_id_name, caller_id_number ";
