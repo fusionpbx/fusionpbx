@@ -413,7 +413,7 @@
 
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach($result as $row) {
-				$tr_href = " href='call_block_cdr_add.php?cdr_id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' ";
+				$tr_href = " href='call_block_cdr_add.php?id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' ";
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
@@ -465,17 +465,19 @@
 					//if (if_group("superadmin")) {
 					//	echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['xml_cdr_uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
 					//}
-					//echo "	<a href='call_block_cdr_add.php?cdr_id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					//echo "	<a href='call_block_cdr_add.php?id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					//echo "	</td>";
 					echo "</tr>\n";
 					$c = $c == 1 ? 0 : 1;
 				}
 			}
 			unset($result);
+
 		}
 
 		echo "</table>";
 		echo "<br>";
+
 	}
 
 //include the footer
