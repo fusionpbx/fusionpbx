@@ -256,16 +256,6 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
-	echo "	function call_block_recent(cdr_uuid, cur_name) {\n";
-	echo "		var new_name = prompt('".$text['prompt-block_recent_name']."', cur_name);\n";
-	echo "		if (new_name != null) {\n";
-	echo "			block_name = (new_name != '') ? new_name : cur_name;\n";
-	echo "			document.location.href='call_block_cdr_add.php?cdr_id=' + cdr_uuid + '&name=' + escape(block_name)\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "</script>";
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -415,7 +405,7 @@
 		echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
 		echo th_order_by('start_stamp', $text['label-called-on'], $order_by, $order);
 		echo th_order_by('duration', $text['label-duration'], $order_by, $order);
-		echo "<td>&nbsp;</td>\n";
+		//echo "<td>&nbsp;</td>\n";
 		echo "</tr>";
 		$c = 0;
 		$row_style["0"] = "row_style0";
@@ -423,14 +413,14 @@
 
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach($result as $row) {
-				$tr_onclick = " onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
+				$tr_href = " href='call_block_cdr_add.php?cdr_id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' ";
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
 					} else {
 						$tmp_start_epoch = date("j M Y h:i:sa", $row['start_epoch']);
 					}
-					echo "<tr>\n";
+					echo "<tr ".$tr_href.">\n";
 					if (
 						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
 						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png") &&
@@ -457,37 +447,35 @@
 					else {
 						echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
 					}
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
+					echo "	<td valign='top' class='".$row_style[$c]."'>";
 					echo 	$row['caller_id_name'].' ';
 					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
+					echo "	<td valign='top' class='".$row_style[$c]."'>";
 					if (is_numeric($row['caller_id_number'])) {
-						echo 	format_phone($row['caller_id_number']).' ';
+						echo format_phone($row['caller_id_number']).' ';
 					}
 					else {
-						echo 	$row['caller_id_number'].' ';
+						echo $row['caller_id_number'].' ';
 					}
 					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".$tmp_start_epoch."</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
 					$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //If they cancelled, show the ring time, not the bill time.
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".gmdate("G:i:s", $seconds)."</td>\n";
-					echo "	<td class='list_control_icons' ".((!(if_group("admin") || if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
-					if (if_group("admin") || if_group("superadmin")) {
-						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".escape($row['xml_cdr_uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
-					}
-					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-					echo "  </td>";
+					echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
+					//echo "	<td class='list_control_icons' ".((!(if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
+					//if (if_group("superadmin")) {
+					//	echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['xml_cdr_uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
+					//}
+					//echo "	<a href='call_block_cdr_add.php?cdr_id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					//echo "	</td>";
 					echo "</tr>\n";
 					$c = $c == 1 ? 0 : 1;
 				}
 			}
 			unset($result);
-
 		}
 
 		echo "</table>";
 		echo "<br>";
-
 	}
 
 //include the footer
