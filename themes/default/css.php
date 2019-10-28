@@ -855,6 +855,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		color: #999;
 		}
 
+	div.domains_list_item_active a {
+		color: <?php echo ($_SESSION['theme']['domain_active_text_color']['text'] != '') ? $_SESSION['theme']['domain_active_text_color']['text'] : '#004083'; ?>;
+	}
+	div.domains_list_item_inactive a {
+		color: <?php echo ($_SESSION['theme']['domain_inactive_text_color']['text'] != '') ? $_SESSION['theme']['domain_inactive_text_color']['text'] : '#004083'; ?>;
+	}
+
 	div.domains_list_item_active span.domain_active_list_item_description {
 		color: <?php echo ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '') ? $_SESSION['theme']['domain_active_desc_text_color']['text'] : '#999'; ?>;
 		}
@@ -867,7 +874,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	div.domains_list_item:hover span {
 		color: #5082ca;
 		}
-	
+
 	div.domains_list_item_active:hover a,
 	div.domains_list_item_active:hover span {
 		color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
