@@ -54,14 +54,12 @@
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters);
-			if (is_array($result)) {
-				foreach ($result as &$row) {
-					$dialplan_uuid = $row["dialplan_uuid"];
-					$ivr_menu_context = $row["ivr_menu_context"];
-				}
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$dialplan_uuid = $row["dialplan_uuid"];
+				$ivr_menu_context = $row["ivr_menu_context"];
 			}
-			unset($sql, $parameters, $result, $row);
+			unset($sql, $parameters, $row);
 
 		//add the dialplan permission
 			$p = new permissions;
