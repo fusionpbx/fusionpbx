@@ -40,32 +40,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//define the call_block_get_extensions function
-	function call_block_get_extensions($select_extension) {
-		global $text;
-
-		//list voicemail
-		$sql = "select extension, user_context, description from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and enabled = 'true' ";
-		$sql .= "order by extension asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters);
-
-		if (is_array($result) && sizeof($result) != 0) {
-			echo "<optgroup label='".$text['label-voicemail']."'>\n";
-			foreach ($result as &$row) {
-				$extension = $row["extension"];
-				$context = $row["user_context"];
-				$description = $row["description"];
-				$selected = $extension == $select_extension ? "selected='selected'" : null;
-				echo "<option value='Voicemail ".$context." ".$extension."' ".$selected.">".$extension." ".$description."</option>\n";
-			}
-			echo "</optgroup>\n";
-		}
-	}
-
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -77,6 +51,7 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
 		$call_block_number = $_POST["call_block_number"];
 		$call_block_action = $_POST["call_block_action"];
@@ -85,8 +60,8 @@
 	}
 
 //handle the http post
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
-	
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
 		//delete the call block
 			if (permission_exists('call_block_delete')) {
 				if ($_POST['action'] == 'delete' && is_uuid($call_block_uuid)) {
@@ -129,10 +104,10 @@
 				require_once "resources/footer.php";
 				return;
 			}
-	
+
 		//add or update the database
 			if (is_array($_POST) && sizeof($_POST) != 0 && $_POST["persistformvar"] != "true") {
-	
+
 				//ensure call block is enabled in the dialplan
 					if ($action == "add" || $action == "update") {
 						$sql = "select dialplan_uuid from v_dialplans where true ";
@@ -159,10 +134,13 @@
 							$p->delete('dialplan_edit', 'temp');
 						}
 					}
-	
+
 				if ($action == "add") {
 					$array['call_block'][0]['call_block_uuid'] = uuid();
 					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					if (is_uuid($extension_uuid)) {
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+					}
 					$array['call_block'][0]['call_block_name'] = $call_block_name;
 					$array['call_block'][0]['call_block_number'] = $call_block_number;
 					$array['call_block'][0]['call_block_count'] = 0;
@@ -177,12 +155,12 @@
 					$database->save($array);
 					$response = $database->message;
 					unset($array);
-	
+
 					message::add($text['label-add-complete']);
 					header("Location: call_block.php");
 					return;
 				}
-	
+
 				if ($action == "update") {
 					$sql = "select c.call_block_number, d.domain_name ";
 					$sql .= "from v_call_block as c ";
@@ -196,15 +174,18 @@
 					if (is_array($result) && sizeof($result) != 0) {
 						//set the domain_name
 						$domain_name = $result[0]["domain_name"];
-	
+
 						//clear the cache
 						$cache = new cache;
 						$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
 					}
 					unset($sql, $parameters);
-	
+
 					$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
 					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					if (is_uuid($extension_uuid)) {
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+					}
 					$array['call_block'][0]['call_block_name'] = $call_block_name;
 					$array['call_block'][0]['call_block_number'] = $call_block_number;
 					$array['call_block'][0]['call_block_action'] = $call_block_action;
@@ -218,14 +199,12 @@
 					$database->save($array);
 					$response = $database->message;
 					unset($array);
-	
+
 					message::add($text['label-update-complete']);
 					header("Location: call_block.php");
 					return;
 				}
-
 			}
-
 	}
 
 //pre-populate the form
@@ -239,6 +218,7 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
+			$extension_uuid = $row["extension_uuid"];
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
 			$call_block_action = $row["call_block_action"];
@@ -247,6 +227,15 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//get the extensions
+	$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and enabled = 'true' ";
+	$sql .= "order by extension asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters);
 
 //create token
 	$object = new token;
@@ -334,10 +323,37 @@
 	else {
 		echo "	<option value='Hold'>".$text['label-hold']."</option>\n";
 	}
-	call_block_get_extensions($extension);
+	if (is_array($extensions) && sizeof($extensions) != 0) {
+		echo "	<optgroup label='".$text['label-voicemail']."'>\n";
+		foreach ($extensions as &$row) {
+			$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+			echo "		<option value='Voicemail ".escape($row["user_context"])." ".escape($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+		}
+		echo "	</optgroup>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-action']."\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-extension']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='extension_uuid'>\n";
+	echo "	<option value=''></option>\n";
+	if (is_array($extensions) && sizeof($extensions) != 0) {
+		foreach ($extensions as $row) {
+			$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+			echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+		}
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-enable']."\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -381,7 +397,6 @@
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";
-
 
 //get recent calls from the db (if not editing an existing call block record)
 	if (!is_uuid($_REQUEST["id"])) {
