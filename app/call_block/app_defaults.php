@@ -26,8 +26,8 @@
 
 if ($domains_processed == 1) {
 
-	  //create the user view combines username, organization, contact first and last name
-  	$database = new database;
+	  //create a view for call block
+		$database = new database;
 		$database->execute("DROP VIEW view_call_block;", null);
 		$sql = "CREATE VIEW view_call_block AS ( \n";
 		$sql .= "	select c.domain_uuid, call_block_uuid, c.extension_uuid, call_block_name, \n";
