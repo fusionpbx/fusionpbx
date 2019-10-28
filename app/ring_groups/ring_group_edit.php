@@ -56,7 +56,7 @@
 		}
 
 		//get the domain_uuid
-		if (permission_exists('ring_group_all')) {
+		if (is_uuid($ring_group_uuid) && permission_exists('ring_group_all')) {
 			$sql = "select domain_uuid from v_ring_groups ";
 			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
@@ -70,7 +70,6 @@
 	}
 	else {
 		$action = "add";
-		$ring_group_uuid = uuid();
 		$domain_uuid = $_SESSION['domain_uuid'];
 	}
 
@@ -103,8 +102,6 @@
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
 	}
-
-
 
 //get total ring group count from the database, check limit, if defined
 	if ($action == 'add') {
@@ -272,6 +269,11 @@
 					$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
 					$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 					$ring_group_timeout_data = join(':', $ring_group_timeout_array);
+
+				//add a uuid to ring_group_uuid if it is empty
+					if ($action == 'add') {
+						$ring_group_uuid = uuid();
+					}
 
 				//add the dialplan_uuid
 					if (!is_uuid($_POST["dialplan_uuid"])) {
@@ -720,7 +722,7 @@
 		echo "				<td>&nbsp;</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>";
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			echo "				<a href='ring_group_destination_delete.php?id=".escape($row['ring_group_destination_uuid'])."&ring_group_uuid=".escape($row['ring_group_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo "				<a href='ring_group_destination_delete.php?id=".urlencode($row['ring_group_destination_uuid'])."&ring_group_uuid=".urlencode($row['ring_group_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -837,7 +839,7 @@
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 			echo "				<td>\n";
-			echo "					<a href='ring_group_edit.php?id=".escape($ring_group_uuid)."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+			echo "					<a href='ring_group_edit.php?id=".urlencode($ring_group_uuid)."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
