@@ -50,13 +50,11 @@
 		
 		//get the dialplan_uuid
 			$sql = "select * from v_ring_groups ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and ring_group_uuid = :ring_group_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$sql .= "where ring_group_uuid = :ring_group_uuid ";
 			$parameters['ring_group_uuid'] = $ring_group_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($array) && @sizeof($array) != 0) {
+			if (is_array($row) && @sizeof($row) != 0) {
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ring_group_context = $row["ring_group_context"];
 			}
