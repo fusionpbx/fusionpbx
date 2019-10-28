@@ -344,7 +344,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='extension_uuid'>\n";
-	echo "	<option value=''></option>\n";
+	echo "	<option value=''>".$text['label-all']."</option>\n";
 	if (is_array($extensions) && sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
 			$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
