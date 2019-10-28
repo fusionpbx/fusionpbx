@@ -312,7 +312,7 @@
 					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
-					$array['dialplans'][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+					$array['dialplans'][0]["domain_uuid"] = $domain_uuid;
 					$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array['dialplans'][0]["dialplan_name"] = $ivr_menu_name;
 					$array['dialplans'][0]["dialplan_number"] = $ivr_menu_extension;
