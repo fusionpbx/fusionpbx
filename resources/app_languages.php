@@ -2593,6 +2593,27 @@ $text['label-copy']['sv-se'] = "Kopiera";
 $text['label-copy']['uk-ua'] = "Копіювати";
 $text['label-copy']['tr-tr'] = "Kopyala";
 
+$text['label-all']['en-us'] = "All";
+$text['label-all']['ar-eg'] = "الكل";
+$text['label-all']['de-at'] = "Alle"; //copied from de-de
+$text['label-all']['de-ch'] = "Alle"; //copied from de-de
+$text['label-all']['de-de'] = "Alle";
+$text['label-all']['es-cl'] = "Todos";
+$text['label-all']['es-mx'] = "Todos"; //copied from es-cl
+$text['label-all']['fr-ca'] = "Tout"; //copied from fr-fr
+$text['label-all']['fr-fr'] = "Tout";
+$text['label-all']['he-il'] = "הצג הכל";
+$text['label-all']['it-it'] = "Tutto";
+$text['label-all']['nl-nl'] = "";
+$text['label-all']['pl-pl'] = "wszystkie";
+$text['label-all']['pt-br'] = "todos";
+$text['label-all']['pt-pt'] = "Todos";
+$text['label-all']['ro-ro'] = "";
+$text['label-all']['ru-ru'] = "все";
+$text['label-all']['sv-se'] = "Allt";
+$text['label-all']['uk-ua'] = "всі";
+$text['label-all']['tr-tr'] = "Görüntüle";
+
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
 $text['label-music_on_hold']['ar-eg'] = "موسيقى المؤجلة";
 $text['label-music_on_hold']['de-at'] = "Wartemusik"; //copied from de-de
