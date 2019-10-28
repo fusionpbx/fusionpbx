@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
-	Origianal version of Call Block was written by Gerrit Visser <gerrit308@gmail.com>
+	Original version of Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 */
 
 //includes
