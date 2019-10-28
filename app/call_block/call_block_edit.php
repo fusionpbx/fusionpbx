@@ -24,8 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
-	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
+	Origianal version of Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
