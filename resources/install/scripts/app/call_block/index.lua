@@ -94,10 +94,15 @@
 			--get the dialplan xml
 				sql = "select * from v_call_block ";
 				sql = sql .. "where call_block_number = :caller_id_number ";
-				--sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
+				if (user_exists == 'true' and extension_uuid ~= nil) then
+					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
+				end
 				sql = sql .. "and domain_uuid = :domain_uuid ";
-				local params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number};
-				--local params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number, extension_uuid = extension_uuid};
+				if (user_exists == 'true' and extension_uuid ~= nil) then
+					params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number, extension_uuid = extension_uuid};
+				else
+					params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number};
+				end
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 				end
