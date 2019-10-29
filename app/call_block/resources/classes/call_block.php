@@ -17,7 +17,8 @@ if (!class_exists('call_block')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
-		private $enabled_prefix;
+		private $toggle_field;
+		private $toggle_values;
 
 		/**
 		 * called when the object is created
@@ -31,7 +32,8 @@ if (!class_exists('call_block')) {
 				$this->list_page = 'call_block.php';
 				$this->table = 'call_block';
 				$this->uuid_prefix = 'call_block_';
-				$this->enabled_prefix = 'call_block_';
+				$this->toggle_field = 'call_block_enabled';
+				$this->toggle_values = ['true','false'];
 
 		}
 
@@ -113,14 +115,14 @@ if (!class_exists('call_block')) {
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//get current enabled state
+						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
 								}
 							}
 							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->enabled_prefix."enabled as enabled from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -128,7 +130,7 @@ if (!class_exists('call_block')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['enabled'];
+										$states[$row['uuid']] = $row['toggle'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -138,7 +140,7 @@ if (!class_exists('call_block')) {
 							$x = 0;
 							foreach($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->enabled_prefix.'enabled'] = $state == 'true' ? 'false' : 'true';
+								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 

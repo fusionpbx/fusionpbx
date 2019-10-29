@@ -17,7 +17,6 @@ if (!class_exists('access_controls')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
-		private $enabled_prefix;
 
 		/**
 		 * called when the object is created
@@ -31,7 +30,6 @@ if (!class_exists('access_controls')) {
 				$this->list_page = 'access_controls.php';
 				$this->table = 'access_controls';
 				$this->uuid_prefix = 'access_control_';
-				$this->enabled_prefix = 'access_control_';
 
 		}
 
