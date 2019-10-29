@@ -121,6 +121,17 @@
 		}
 		exit;
 	}
+	
+//determine category name
+	if (permission_exists('recording_category_add')) {
+	    	if (strlen($_POST["recording_category_name_other"]) > 0) {
+				$category_name = trim($_POST["recording_category_name_other"]);
+				
+			}
+			else {
+				$category_name = trim($_POST["recording_category_name"]);
+	    }
+	}
 
 //upload the recording
 	if (
@@ -147,7 +158,7 @@
 
 		//set the file name to be inserted as the recording description
 			$recording_description = $_FILES['ulfile']['name'];
-			header("Location: recordings.php?rd=".urlencode($recording_description));
+			header("Location: recordings.php?rd=".urlencode($recording_description)."+&category=".urlencode($category_name));
 			exit;
 	}
 
@@ -206,11 +217,13 @@
 					if (!in_array($recording_filename, $array_recordings)) {
 						//file not found in db, add it
 							$recording_uuid = uuid();
+							$recording_category_name = $_GET['category'];
 							$recording_name = ucwords(str_replace('_', ' ', pathinfo($recording_filename, PATHINFO_FILENAME)));
 							$recording_description = $_GET['rd'];
 						//build array
 							$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 							$array['recordings'][0]['recording_uuid'] = $recording_uuid;
+							$array['recordings'][0]['recording_category_name'] = $recording_category_name;
 							$array['recordings'][0]['recording_filename'] = $recording_filename;
 							$array['recordings'][0]['recording_name'] = $recording_name;
 							$array['recordings'][0]['recording_description'] = $recording_description;
@@ -291,8 +304,9 @@
 			case 'mysql': $sql_file_size = "length(from_base64(recording_base64)) as recording_size, "; break;
 		}
 	}
-	$sql = str_replace('count(*)', 'recording_uuid, domain_uuid, recording_filename, '.$sql_file_size.' recording_name, recording_description', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql = str_replace('count(*)', 'recording_uuid, domain_uuid, recording_filename, recording_category_name, '.$sql_file_size.' recording_name, recording_description', $sql);
+	$sql .= "order by recording_category_name asc nulls first ";
+	$sql .= str_replace("order by",',',order_by($order_by, $order));
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
@@ -311,8 +325,20 @@
 	if (permission_exists('recording_upload')) {
 		echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>\n";
 		echo "	<tr>\n";
+		echo "		<form action='' method='post' enctype='multipart/form-data' name='frmUpload'>\n";
+		if (permission_exists("recording_category_add")) {
+			echo "		<td nowrap='nowrap'>\n";
+			echo 			$text['label-category_name'];
+			echo "		</td>\n";
+			echo "		<td style='padding-right: 20px;'>\n";
+			$table_name = 'v_recordings';
+			$field_name = 'recording_category_name';
+			$sql_where_optional = "";
+			$field_current_value = $row['recording_category_name'];
+			echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+			echo "		</td>\n";
+		}
 		echo "		<td nowrap='nowrap'>\n";
-		echo "			<form action='' method='post' enctype='multipart/form-data' name='frmUpload'>\n";
 		echo "			<input name='type' type='hidden' value='rec'>\n";
 		echo "			<input name='ulfile' type='file' class='formfld fileinput' style='width: 260px;' id='ulfile'>\n";
 		echo "			<input name='submit' type='submit'  class='btn' id='upload' value=\"".$text['button-upload']."\">\n";
@@ -327,28 +353,42 @@
 	echo "<br /><br />\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
-	if (permission_exists('recording_play') || permission_exists('recording_download')) {
-		echo "<th class='listhdr' nowrap style='text-align: center; padding: 0 30px 0 20px;'>".$text['label-tools']."</th>\n";
-	}
-	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
-	}
-	echo "<th class='listhdr' style='text-align: center;' nowrap>".($_SESSION['recordings']['storage_type']['text'] == 'base64' ? $text['label-size'] : $text['label-file_size'])."</th>\n";
-	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
-		echo "<th class='listhdr' style='text-align: center;'>".$text['label-uploaded']."</th>\n";
-	}
-	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>&nbsp;</td>\n";
-	echo "</tr>\n";
-
-	//calculate colspan for progress bar
-	$colspan = 4; //min
-	if ($_SESSION['recordings']['storage_type']['text'] != 'base64') { $colspan += 2; }
 
 	if (is_array($recordings) && @sizeof($recordings) != 0) {
+		$prev_recording_category = '';
 		foreach($recordings as $row) {
+			$row['recording_category_name'] = (strlen($row['recording_category_name']) == 0) ? $text['label-default_category_name'] : $row['recording_category_name'];
+			if ($prev_recording_category != $row['recording_category_name']) {
+				echo "<tr><td>";
+				echo "	<br />\n";
+				echo "	<br />\n";
+				if (strlen($row['recording_category_name']) > 0) {
+					echo "	<b>".$row['recording_category_name']."</b>&nbsp;";
+				} else {
+					echo "	<b>General</b>&nbsp;";
+				}
+				echo "</td></tr>\n";
+				echo "<tr>\n";
+				
+				echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
+				if (permission_exists('recording_play') || permission_exists('recording_download')) {
+					echo "<th class='listhdr' nowrap style='text-align: center; padding: 0 30px 0 20px;'>".$text['label-tools']."</th>\n";
+				}
+				if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+					echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
+				}
+				echo "<th class='listhdr' style='text-align: center;' nowrap>".($_SESSION['recordings']['storage_type']['text'] == 'base64' ? $text['label-size'] : $text['label-file_size'])."</th>\n";
+				if ($_SESSION['recordings']['storage_type']['text'] != 'base64') {
+					echo "<th class='listhdr' style='text-align: center;'>".$text['label-uploaded']."</th>\n";
+				}
+				echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
+				echo "<td class='list_control_icons'>&nbsp;</td>\n";
+				echo "</tr>\n";
+			
+				//calculate colspan for progress bar
+				$colspan = 4; //min
+				if ($_SESSION['recordings']['storage_type']['text'] != 'base64') { $colspan += 2; }
+			}
 			//playback progress bar
 			if (permission_exists('recording_play')) {
 				echo "<tr id='recording_progress_bar_".escape($row['recording_uuid'])."' style='display: none;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$colspan."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td></tr>\n";
@@ -405,14 +445,15 @@
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-
+			
+			$prev_recording_category = $row['recording_category_name'];
 			$c = ($c) ? 0 : 1;
 		}
 	}
 	unset($recordings, $row);
 	echo "</table>\n";
 	echo "<br />\n";
-
+	
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<br><br>\n";
 
