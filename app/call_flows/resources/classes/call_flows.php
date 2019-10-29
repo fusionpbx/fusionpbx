@@ -18,6 +18,7 @@ if (!class_exists('call_flows')) {
 		private $table;
 		private $uuid_prefix;
 		private $toggle_field;
+		private $toggle_values;
 
 		/**
 		 * called when the object is created
@@ -32,6 +33,7 @@ if (!class_exists('call_flows')) {
 				$this->table = 'call_flows';
 				$this->uuid_prefix = 'call_flow_';
 				$this->toggle_field = 'call_flow_status';
+				$this->toggle_values = ['true','false'];
 
 		}
 
@@ -138,7 +140,7 @@ if (!class_exists('call_flows')) {
 							$x = 0;
 							foreach($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == 'true' ? 'false' : 'true';
+								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
