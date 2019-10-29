@@ -49,6 +49,7 @@ else {
 		$recording_filename = $_POST["recording_filename"];
 		$recording_filename_original = $_POST["recording_filename_original"];
 		$recording_name = $_POST["recording_name"];
+		$recording_category_name = (strlen($_POST["recording_category_name_other"]) > 0) ? $_POST["recording_category_name_other"] : $_POST["recording_category_name"];
 		$recording_description = $_POST["recording_description"];
 
 		//clean the recording filename and name
@@ -183,6 +184,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['message-file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	
+	if (permission_exists("recording_category_edit")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-category_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		$table_name = 'v_recordings';
+		$field_name = 'recording_category_name';
+		$sql_where_optional = "";
+		$field_current_value = $recording_category_name;
+		echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+		echo $text['description-category']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}	
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
