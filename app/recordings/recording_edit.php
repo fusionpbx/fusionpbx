@@ -99,6 +99,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 				$array['recordings'][0]['recording_filename'] = $recording_filename;
 				$array['recordings'][0]['recording_name'] = $recording_name;
+				$array['recordings'][0]['recording_category_name'] = $recording_category_name;
 				$array['recordings'][0]['recording_description'] = $recording_description;
 				$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 				$array['recordings'][0]['recording_uuid'] = $recording_uuid;
