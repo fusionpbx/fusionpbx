@@ -133,6 +133,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (is_array($row) && @sizeof($row) != 0) {
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
+			$recording_category_name = $row['recording_category_name'];
 			$recording_description = $row["recording_description"];
 		}
 		unset($sql, $parameters, $row);
