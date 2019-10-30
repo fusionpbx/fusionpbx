@@ -31,8 +31,12 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!permission_exists('bridge_view')) {
-		echo "access denied"; exit;
+	if (permission_exists('bridge_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support

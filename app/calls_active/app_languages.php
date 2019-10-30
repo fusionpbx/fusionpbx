@@ -561,6 +561,26 @@ $text['confirm-hangup']['ru-ru'] = "Вы действительно хотите
 $text['confirm-hangup']['sv-se'] = "Vill du verkligen avsluta detta samtal";
 $text['confirm-hangup']['uk-ua'] = "Ви дійсно бажаєте розірвати дзвінок?";
 
+$text['confirm-hangups']['en-us'] = "Do you really want to hangup these calls?";
+$text['confirm-hangups']['ar-eg'] = "";
+$text['confirm-hangups']['de-at'] = "Wollen Sie dieses Gespräch wirklich beenden?"; //copied from de-de
+$text['confirm-hangups']['de-ch'] = "Wollen Sie dieses Gespräch wirklich beenden?"; //copied from de-de
+$text['confirm-hangups']['de-de'] = "Wollen Sie dieses Gespräch wirklich beenden?";
+$text['confirm-hangups']['es-cl'] = "¿Realmente desea terminar esta llamada?";
+$text['confirm-hangups']['es-mx'] = "¿Realmente desea terminar esta llamada?"; //copied from es-cl
+$text['confirm-hangups']['fr-ca'] = "Voulez-vous vraiment raccrocher cette communication?"; //copied from fr-fr
+$text['confirm-hangups']['fr-fr'] = "Voulez-vous vraiment raccrocher cette communication?";
+$text['confirm-hangups']['he-il'] = "";
+$text['confirm-hangups']['it-it'] = "Vuoi veramente chiudere questa chiamata?";
+$text['confirm-hangups']['nl-nl'] = "";
+$text['confirm-hangups']['pl-pl'] = "Czy na pewno chcesz się rozłączyć tę rozmowę?";
+$text['confirm-hangups']['pt-br'] = "Deseja realmente finalizar essa chamada?";
+$text['confirm-hangups']['pt-pt'] = "Deseja realmente terminar esta chamada?";
+$text['confirm-hangups']['ro-ro'] = "";
+$text['confirm-hangups']['ru-ru'] = "Вы действительно хотите завершить вызов?";
+$text['confirm-hangups']['sv-se'] = "Vill du verkligen avsluta detta samtal";
+$text['confirm-hangups']['uk-ua'] = "Ви дійсно бажаєте розірвати дзвінок?";
+
 $text['check-onbreak-status']['en-us'] = "On Break";
 $text['check-onbreak-status']['ar-eg'] = "";
 $text['check-onbreak-status']['de-at'] = "Auf Pause"; //copied from de-de
@@ -680,5 +700,25 @@ $text['button-show_all']['ro-ro'] = "";
 $text['button-show_all']['ru-ru'] = "Показать все";
 $text['button-show_all']['sv-se'] = "Visa Allt";
 $text['button-show_all']['uk-ua'] = "Показати всі";
+
+$text['message-calls_ended']['en-us'] = "Calls Ended";
+$text['message-calls_ended']['ar-eg'] = "";
+$text['message-calls_ended']['de-at'] = "";
+$text['message-calls_ended']['de-ch'] = "";
+$text['message-calls_ended']['de-de'] = "";
+$text['message-calls_ended']['es-cl'] = "";
+$text['message-calls_ended']['es-mx'] = "";
+$text['message-calls_ended']['fr-ca'] = "";
+$text['message-calls_ended']['fr-fr'] = "";
+$text['message-calls_ended']['he-il'] = "";
+$text['message-calls_ended']['it-it'] = "";
+$text['message-calls_ended']['nl-nl'] = "";
+$text['message-calls_ended']['pl-pl'] = "";
+$text['message-calls_ended']['pt-br'] = "";
+$text['message-calls_ended']['pt-pt'] = "";
+$text['message-calls_ended']['ro-ro'] = "";
+$text['message-calls_ended']['ru-ru'] = "";
+$text['message-calls_ended']['sv-se'] = "";
+$text['message-calls_ended']['uk-ua'] = "";
 
 ?>

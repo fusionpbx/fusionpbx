@@ -43,6 +43,8 @@ if (!class_exists('button')) {
 					$button .= "title=\"".($array['title'] ? $array['title'] : $array['label'])."\" ";
 				}
 				$button .= $array['onclick'] ? "onclick=\"".$array['onclick']."\" " : null;
+				$button .= $array['onmouseover'] ? "onmouseenter=\"".$array['onmouseover']."\" " : null;
+ 				$button .= $array['onmouseout'] ? "onmouseleave=\"".$array['onmouseout']."\" " : null;
 				$button .= "class='btn btn-".($array['class'] ? $array['class'] : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
 				$button .= "style='margin-left: 2px; margin-right: 2px; ".($array['style'] ? $array['style'] : null)."' ";
 				$button .= $array['disabled'] ? "disabled='disabled' " : null;
@@ -96,7 +98,7 @@ if (!class_exists('button')) {
 
 //usage
 
-	echo button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>'icon','name'=>'btn','id'=>'btn','value'=>'value','link'=>'url','target'=>'_blank','onclick'=>'javascript','class'=>'name','style'=>'css','title'=>$text['button-label'],'collapse'=>'class','disabled'=>false]);
+	echo button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>'icon','name'=>'btn','id'=>'btn','value'=>'value','link'=>'url','target'=>'_blank','onclick'=>'javascript','onmouseover'=>'javascript','onmouseout'=>'javascript','class'=>'name','style'=>'css','title'=>$text['button-label'],'collapse'=>'class','disabled'=>false]);
 
 	echo button::create([
 		'type'=>'button',
@@ -108,6 +110,8 @@ if (!class_exists('button')) {
 		'link'=>'url',
 		'target'=>'_blank',
 		'onclick'=>'javascript',
+		'onmouseover'=>'javascript',
+		'onmouseout'=>'javascript',
 		'class'=>'name',
 		'style'=>'css',
 		'title'=>$text['button-label'],
@@ -124,6 +128,8 @@ if (!class_exists('button')) {
 	value		submitted value (if type is also set to 'submit')
 	target		'_blank' | '_self' (default) | etc
 	onclick		javascript
+	onmouseover	javascript (actually uses onmouseenter so doesn't bubble to child elements)
+	onmouseout	javascript (actually uses onmouseleave so doesn't bubble to child elements)
 	class		css class[es]
 	style		css style[s]
 	title		tooltip text (if not set, defaults to value of label)

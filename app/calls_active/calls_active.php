@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
@@ -86,31 +87,12 @@
 	//refresh controls
 		function refresh_stop() {
 			clearTimeout(timer_id);
-			document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
+			document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; margin-right: 20px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
 		}
 
 		function refresh_start() {
-			if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
+			if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 2px; margin-right: 20px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
 			ajax_get();
-		}
-
-	//call controls
-		function hangup(uuid) {
-			if (confirm("<?php echo $text['confirm-hangup']?>")) {
-				send_cmd('calls_exec.php?command=hangup&uuid='+uuid);
-			}
-		}
-
-		function send_cmd(url) {
-			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			}
-			else {// code for IE6, IE5
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.open("GET",url,false);
-			xmlhttp.send(null);
-			document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
 		}
 
 	</script>
