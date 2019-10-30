@@ -69,7 +69,7 @@ if (!class_exists('bridges')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//build the delete array
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
