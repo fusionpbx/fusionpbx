@@ -101,6 +101,17 @@
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('call_block_all') && count($_SESSION['user']['extension']) > 0) {
+		$sql .= "and extension_uuid in (";
+		$x = 0;
+		foreach ($_SESSION['user']['extension'] as $field) {
+			if (is_uuid($field['extension_uuid'])) {
+				$sql .= ($x == 0) ? "'".$field['extension_uuid']."'" : ",'".$field['extension_uuid']."'";
+			}
+			$x++;
+		}
+		$sql .= ") ";
+	}
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
@@ -120,6 +131,17 @@
 //get the list
 	$sql = "select * from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('call_block_all') && count($_SESSION['user']['extension']) > 0) {
+		$sql .= "and extension_uuid in (";
+		$x = 0;
+		foreach ($_SESSION['user']['extension'] as $field) {
+			if (is_uuid($field['extension_uuid'])) {
+				$sql .= ($x == 0) ? "'".$field['extension_uuid']."'" : ",'".$field['extension_uuid']."'";
+			}
+			$x++;
+		}
+		$sql .= ") ";
+	}
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
