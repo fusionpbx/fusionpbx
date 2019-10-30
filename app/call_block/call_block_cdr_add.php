@@ -56,15 +56,33 @@
 			unset ($sql, $parameters);
 
 		//create data array
-			$array['call_block'][0]['call_block_uuid'] = uuid();
-			$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['call_block'][0]['call_block_name'] = trim($result["caller_id_name"]);
-			$array['call_block'][0]['call_block_number'] = trim($result["caller_id_number"]);
-			$array['call_block'][0]['call_block_count'] = 0;
-			$array['call_block'][0]['call_block_action'] = 'Reject';
-			$array['call_block'][0]['call_block_enabled'] = 'true';
-			$array['call_block'][0]['date_added'] = time();
-
+			$x = 0;
+			if (permission_exists('call_block_all')) {
+				$array['call_block'][$x]['call_block_uuid'] = uuid();
+				$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['call_block'][$x]['call_block_name'] = trim($result["caller_id_name"]);
+				$array['call_block'][$x]['call_block_number'] = trim($result["caller_id_number"]);
+				$array['call_block'][$x]['call_block_count'] = 0;
+				$array['call_block'][$x]['call_block_action'] = 'Reject';
+				$array['call_block'][$x]['call_block_enabled'] = 'true';
+				$array['call_block'][$x]['date_added'] = time();
+			}
+			if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'])) {
+				foreach ($_SESSION['user']['extension'] as $field) {
+					if (is_uuid($field['extension_uuid'])) {
+						$array['call_block'][$x]['call_block_uuid'] = uuid();
+						$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
+						$array['call_block'][$x]['call_block_name'] = trim($result["caller_id_name"]);
+						$array['call_block'][$x]['call_block_number'] = trim($result["caller_id_number"]);
+						$array['call_block'][$x]['call_block_count'] = 0;
+						$array['call_block'][$x]['call_block_action'] = 'Reject';
+						$array['call_block'][$x]['call_block_enabled'] = 'true';
+						$array['call_block'][$x]['date_added'] = time();
+					}
+					$x++;
+				}
+			}
 		//ensure call block is enabled in the dialplan
 			$sql = "select dialplan_uuid from v_dialplans where true ";
 			$sql .= "and domain_uuid = :domain_uuid ";
