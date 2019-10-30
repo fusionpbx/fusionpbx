@@ -156,7 +156,7 @@
 	// Transcription
 	$transcription_status = $_SESSION['voicemail']['transcribe_enabled']['boolean'];
 	if ($transcription_status=='true') {
-		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcription_enabled'], $order_by, $order);
+		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
 	}
 	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
