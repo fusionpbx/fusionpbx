@@ -596,7 +596,9 @@ if (!$default_login) {
 				default:
 					$menu_position = ($menu_position != '') ? $menu_position : 'top';
 					$menu_type = 'fixed-'.$menu_position;
-					$menu_width = !http_user_agent('mobile') ? 'calc(90% - 20px)' : null;
+					if (!http_user_agent('mobile')) {
+						$menu_width = $_SESSION['theme']['menu_width_fixed']['text'] != '' ? $_SESSION['theme']['menu_width_fixed']['text'] : 'calc(90% - 20px)';
+					}
 					$menu_brand = true;
 					$menu_corners = null;
 			}
