@@ -1026,6 +1026,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: underline;
 		}
 
+	button.btn {
+		margin-left: 2px;
+		margin-right: 2px;
+		}
+
 	button.btn.btn-link {
 		margin: 0;
 		margin-top: -2px;
@@ -1033,6 +1038,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border: none;
 		font-size: inherit;
 		font-family: inherit;
+		}
+
+	button.btn > span.fas.fa-spin {
+		display: inline-block;
 		}
 
 	form {
