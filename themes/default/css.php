@@ -981,7 +981,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	/* default body padding */
 	.container-fluid {
-		width: 90%;
+		width: <?php echo ($_SESSION['theme']['body_width']['text'] != '') ? $_SESSION['theme']['body_width']['text'] : '90%'; ?>;
 		}
 
 	/* maximize viewport usage on xs displays */
