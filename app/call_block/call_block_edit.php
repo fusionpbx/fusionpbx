@@ -274,6 +274,28 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('call_block_all')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-extension']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='extension_uuid'>\n";
+		echo "	<option value=''>".$text['label-all']."</option>\n";
+		if (is_array($extensions) && sizeof($extensions) != 0) {
+			foreach ($extensions as $row) {
+				$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+				echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+			}
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-enable']."\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-number']."\n";
@@ -341,26 +363,6 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-extension']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='extension_uuid'>\n";
-	echo "	<option value=''>".$text['label-all']."</option>\n";
-	if (is_array($extensions) && sizeof($extensions) != 0) {
-		foreach ($extensions as $row) {
-			$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
-			echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
-		}
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-enable']."\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -401,17 +403,52 @@
 
 //get recent calls from the db (if not editing an existing call block record)
 	if (!is_uuid($_REQUEST["id"])) {
-		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
-		$sql .= "from v_xml_cdr where true ";
-		$sql .= "and domain_uuid = :domain_uuid ";
-		$sql .= "and direction != 'outbound' ";
-		$sql .= "order by start_stamp desc ";
-		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$database = new database;
-		$result = $database->select($sql, $parameters);
-		unset($sql, $parameters);
+
+		if (permission_exists('call_block_all')) {
+			$sql = "select caller_id_number, caller_id_name, caller_id_number, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
+			$sql .= "from v_xml_cdr where true ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$sql .= "and direction != 'outbound' ";
+			$sql .= "order by start_stamp desc ";
+			$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters);
+			unset($sql, $parameters);
+		}
+
+		if (!permission_exists('call_block_all')) {
+			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+			}
+
+			$sql = "select caller_id_number, caller_id_name, caller_id_number, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
+			$sql .= "from v_xml_cdr ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+				if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+					$x = 0;
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+						//$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
+						//$sql_where_array[] = "destination_number = :destination_number_1_".$x;
+						//$sql_where_array[] = "destination_number = :destination_number_2_".$x;
+						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+						//$parameters['caller_id_number_'.$x] = $assigned_extension;
+						//$parameters['destination_number_1_'.$x] = $assigned_extension;
+						//$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
+						$x++;
+					}
+					if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+						$sql .= "and (".implode(' or ', $sql_where_array).") ";
+					}
+					unset($sql_where_array);
+				}
+			$sql .= "order by start_stamp desc";
+			$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+		}
 
 		echo "<b>".$text['label-edit-add-recent']."</b>";
 		echo "<br><br>";
@@ -429,7 +466,16 @@
 
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach($result as $row) {
-				$tr_href = " href='call_block_cdr_add.php?id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name'])."' ";
+				$extension_uuids = '';
+				if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'])) {
+					foreach ($_SESSION['user']['extension'] as $field) {
+						if (is_uuid($field['extension_uuid'])) {
+							$extension_uuids .= "&extension_uuid=".$field['extension_uuid'];
+						}
+					}
+				}
+				$tr_href = " href='call_block_cdr_add.php?id=".urlencode($row['xml_cdr_uuid'])."&name=".urlencode($row['caller_id_name']).$extension_uuids."' ";
+
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
