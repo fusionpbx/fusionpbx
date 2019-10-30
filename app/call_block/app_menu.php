@@ -26,5 +26,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/call_block/call_block.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "user";
 
 ?>
