@@ -201,8 +201,8 @@
 		echo "	</th>\n";
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
@@ -234,6 +234,16 @@
 				echo "<a href='".$list_row_url."'>".escape($row['extension'])."</a>";
 			}
 			echo "	</td>\n";
+
+			echo "	<td>";
+			if (permission_exists('call_block_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['call_block_name'])."</a>";
+			}
+			else {
+				echo escape($row['call_block_name']);
+			}
+			echo "	</td>\n";
+
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='".$list_row_url."'>".escape($row['call_block_number'])."</a>";
@@ -242,7 +252,7 @@
 				echo escape($row['call_block_number']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['call_block_name'])."</td>\n";
+
 			echo "	<td class='center'>".escape($row['call_block_count'])."</td>\n";
 			echo "	<td>".$text['label-'.$row['call_block_app']]." ".escape($row['call_block_data'])."</td>\n";
 			if (permission_exists('call_block_edit')) {
