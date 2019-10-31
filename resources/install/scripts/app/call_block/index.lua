@@ -101,6 +101,7 @@
 					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
 				end
 				sql = sql .. "and domain_uuid = :domain_uuid ";
+				sql = sql .. "and call_block_enabled = 'true' ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
 					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
 				else
