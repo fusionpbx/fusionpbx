@@ -153,6 +153,9 @@
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order);
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order);
+	if (isset($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
+	}
 	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
 	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order);
@@ -191,6 +194,9 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['voicemail_file'] == 'attach') ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
+			if (isset($_SESSION['voicemail']['transcribe_enabled']['boolean']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
+			}
 			echo "	<td valign='middle' class='".$row_style[$c]."' style='white-space: nowrap;'>\n";
 			if (permission_exists('voicemail_message_view')) {
 				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
