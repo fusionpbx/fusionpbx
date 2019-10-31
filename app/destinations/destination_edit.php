@@ -154,8 +154,14 @@
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number) {
 				$sql = "select count(*) from v_destinations ";
 				$sql .= "where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number) ";
+				if ($action == "update") {
+					$sql .= "and destination_uuid != :destination_uuid ";
+				}
 				$sql .= "and destination_type = 'inbound' ";
 				$parameters['destination_number'] = $destination_number;
+				if ($action == "update") {
+					$parameters['destination_uuid'] = $destination_uuid;
+				}
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
