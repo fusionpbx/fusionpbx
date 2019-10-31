@@ -304,7 +304,7 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo $text['description-enable']."\n";
+		echo $text['description-extension']."\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -317,7 +317,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
 	echo "<br />\n";
-	echo $text['description-name']."\n";
+	echo $text['description-call_block_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -328,7 +328,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\">\n";
 	echo "<br />\n";
-	echo $text['description-number']."\n";
+	echo $text['description-call_block_number']."\n";
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
