@@ -244,7 +244,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['call_block_name'])."</td>\n";
 			echo "	<td class='center'>".escape($row['call_block_count'])."</td>\n";
-			echo "	<td>".escape($row['call_block_action'])."</td>\n";
+			echo "	<td>".$text['label-'.$row['call_block_app']]." ".escape($row['call_block_data'])."</td>\n";
 			if (permission_exists('call_block_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['call_block_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
