@@ -44,6 +44,7 @@
 	if (session:ready()) then
 		--session:setAutoHangup(false);
 		domain_uuid = session:getVariable("domain_uuid");
+		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
 		context = session:getVariable("context");
 		call_block = session:getVariable("call_block");
@@ -101,9 +102,9 @@
 				end
 				sql = sql .. "and domain_uuid = :domain_uuid ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
-					params = {domain_uuid = domain_uuid, caller_id_name = caller_id_name, caller_id_number = caller_id_number, extension_uuid = extension_uuid};
+					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
 				else
-					params = {domain_uuid = domain_uuid, caller_id_name = caller_id_name, caller_id_number = caller_id_number};
+					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number};
 				end
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
