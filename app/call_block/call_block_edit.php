@@ -91,10 +91,8 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
-			if ($action == "add") {
-				if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
-			}
+			//if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
+			//if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
 			if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
