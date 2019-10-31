@@ -94,14 +94,16 @@
 
 			--check to see if the call should be blocked
 				sql = "select * from v_call_block ";
-				sql = sql .. "where (call_block_name = :call_block_name and call_block_number = :call_block_number) ";
-				sql = sql .. "or (call_block_name is null and call_block_number = :call_block_number) ";
-				sql = sql .. "or (call_block_name = :call_block_name and call_block_number is null) ";
+				sql = sql .. "where domain_uuid = :domain_uuid ";
+				sql = sql .. "and call_block_enabled = 'true' ";
+				sql = sql .. "and ( ";
+				sql = sql .. "	(call_block_name = :call_block_name and call_block_number = :call_block_number) ";
+				sql = sql .. "	or (call_block_name is null and call_block_number = :call_block_number) ";
+				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) ";
+				sql = sql .. ") ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
 					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
 				end
-				sql = sql .. "and domain_uuid = :domain_uuid ";
-				sql = sql .. "and call_block_enabled = 'true' ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
 					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
 				else
