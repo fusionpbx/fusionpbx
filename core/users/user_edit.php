@@ -118,9 +118,9 @@
 				$username_old = $_POST["username_old"];
 			}
 			$domain_uuid = $_POST["domain_uuid"];
-			$username = $_POST["username"];
-			$password = $_POST["password"];
-			$password_confirm = $_POST["password_confirm"];
+			$username = trim($_POST["username"]);
+			$password = trim($_POST["password"]);
+			$password_confirm = trim($_POST["password_confirm"]);
 			$user_email = $_POST["user_email"];
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
