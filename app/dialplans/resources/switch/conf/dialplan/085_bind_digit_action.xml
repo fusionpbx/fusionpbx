@@ -1,6 +1,6 @@
 
 <context name="{v_context}">
-	<extension name="bind_digit_action" number="" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false" order="860">
+	<extension name="bind_digit_action" number="" continue="true" app_uuid="7e007a4d-886b-4cdf-81f4-da9eb4689f1c" enabled="false" order="85">
 		<condition field="${sip_authorized}" expression="true" break="never">
 			<action application="set" data="bind_target=both" inline="true"/>
 			<!-- set to peer to prevent manipulate of call by caller -->
