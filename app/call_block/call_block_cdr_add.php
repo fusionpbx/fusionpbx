@@ -52,7 +52,7 @@
 			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
 			$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
 			$database = new database;
-			$result = $database->select($sql, $parameters, 'row');
+			$row = $database->select($sql, $parameters, 'row');
 			unset ($sql, $parameters);
 
 		//create data array
@@ -60,10 +60,10 @@
 			if (permission_exists('call_block_all')) {
 				$array['call_block'][$x]['call_block_uuid'] = uuid();
 				$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['call_block'][$x]['call_block_name'] = trim($result["caller_id_name"]);
-				$array['call_block'][$x]['call_block_number'] = trim($result["caller_id_number"]);
+				$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+				$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
 				$array['call_block'][$x]['call_block_count'] = 0;
-				$array['call_block'][$x]['call_block_action'] = 'Reject';
+				$array['call_block'][$x]['call_block_action'] = 'reject';
 				$array['call_block'][$x]['call_block_enabled'] = 'true';
 				$array['call_block'][$x]['date_added'] = time();
 			}
@@ -73,10 +73,10 @@
 						$array['call_block'][$x]['call_block_uuid'] = uuid();
 						$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
-						$array['call_block'][$x]['call_block_name'] = trim($result["caller_id_name"]);
-						$array['call_block'][$x]['call_block_number'] = trim($result["caller_id_number"]);
+						$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+						$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
 						$array['call_block'][$x]['call_block_count'] = 0;
-						$array['call_block'][$x]['call_block_action'] = 'Reject';
+						$array['call_block'][$x]['call_block_action'] = 'reject';
 						$array['call_block'][$x]['call_block_enabled'] = 'true';
 						$array['call_block'][$x]['date_added'] = time();
 					}
