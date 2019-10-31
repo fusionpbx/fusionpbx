@@ -159,7 +159,6 @@
 					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 					$database->save($array);
 					$response = $database->message;
-//view_array($response);
 					unset($array);
 
 					message::add($text['label-add-complete']);
@@ -205,7 +204,6 @@
 					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 					$database->save($array);
 					$response = $database->message;
-//view_array($response);
 					unset($array);
 
 					message::add($text['label-update-complete']);
