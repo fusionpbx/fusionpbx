@@ -114,6 +114,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Action for call.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_block_app";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Application";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_block_data";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Data";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "date_added";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Date/Time number was added.";
