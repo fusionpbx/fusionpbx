@@ -91,17 +91,19 @@
 			--exits the script if we didn't connect properly
 				assert(dbh:connected());
 
-			--get the dialplan xml
+			--check to see if the call should be blocked
 				sql = "select * from v_call_block ";
-				sql = sql .. "where call_block_number = :caller_id_number ";
+				sql = sql .. "where (call_block_name = :call_block_name and call_block_number = :call_block_number) ";
+				sql = sql .. "or (call_block_name is null and call_block_number = :call_block_number) ";
+				sql = sql .. "or (call_block_name = :call_block_name and call_block_number is null) ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
 					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
 				end
 				sql = sql .. "and domain_uuid = :domain_uuid ";
 				if (user_exists == 'true' and extension_uuid ~= nil) then
-					params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number, extension_uuid = extension_uuid};
+					params = {domain_uuid = domain_uuid, caller_id_name = caller_id_name, caller_id_number = caller_id_number, extension_uuid = extension_uuid};
 				else
-					params = {domain_uuid = domain_uuid, caller_id_number = caller_id_number};
+					params = {domain_uuid = domain_uuid, caller_id_name = caller_id_name, caller_id_number = caller_id_number};
 				end
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -109,7 +111,8 @@
 				local found = false;
 				dbh:query(sql, params, function(row)
 					call_block_uuid = row.call_block_uuid;
-					call_block_action = row.call_block_action;
+					call_block_app = row.call_block_app;
+					call_block_data = row.call_block_data;
 					call_block_count = row.call_block_count;
 					extension_uuid = row.extension_uuid;
 
@@ -127,39 +130,38 @@
 				end
 
 			--call block action
-				if (call_block_action ~= nil and call_block_action == 'Busy') then
+				if (call_block_app ~= nil and call_block_app == 'busy') then
 					if (session:ready()) then
 						session:execute("respond", '486');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
-						session:execute('set', 'call_block_action=busy');
+						session:execute('set', 'call_block_app=busy');
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Busy\n");
 					end
 				end
-				if (call_block_action ~= nil and call_block_action == 'Hold') then
+				if (call_block_app ~= nil and call_block_app == 'hold') then
 					if (session:ready()) then
-						session:execute("respond", '503');
+						session:execute("respond", '607');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
-						session:execute('set', 'call_block_action=hold');
+						session:execute('set', 'call_block_app=hold');
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Hold\n");
 					end
 				end
-				if (call_block_action ~= nil and call_block_action == 'Reject') then
+				if (call_block_app ~= nil and call_block_app == 'reject') then
 					if (session:ready()) then
-						session:execute("respond", '503');
+						session:execute("respond", '607');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
-						session:execute('set', 'call_block_action=reject');
+						session:execute('set', 'call_block_app=reject');
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Reject\n");
 					end
 				end
-				if (call_block_action ~= nil) then
-					action = explode(' ', call_block_action);
-					if (action[1] == 'Voicemail') then
-						destination = '*99' .. action[3] .. ' XML ' .. action[2];
+				if (call_block_app ~= nil and call_block_data ~= nil) then
+					if (call_block_app == 'voicemail') then
 						if (session:ready()) then
 							session:execute('set', 'call_block_uuid='..call_block_uuid);
-							session:execute('set', 'call_block_action='..destination);
-							session:execute("transfer", '*99'..action[3]..' XML '.. action[2]);
-							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: ".. destination.."\n");
+							session:execute('set', 'call_block_app='..call_block_app);
+							session:execute('set', 'call_block_data='..call_block_data);
+							session:execute("transfer", '*99'..call_block_data..' XML '.. context);
+							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: *99".. call_block_data.."\n");
 						end
 					end
 				end
