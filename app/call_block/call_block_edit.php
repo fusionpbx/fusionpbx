@@ -55,9 +55,12 @@
 		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
 		$call_block_number = $_POST["call_block_number"];
-		$call_block_action = $_POST["call_block_action"];
 		$call_block_enabled = $_POST["call_block_enabled"];
 		$call_block_description = $_POST["call_block_description"];
+		
+		$action_array = explode(':', $_POST["call_block_action"]);
+		$call_block_app = $action_array[0];
+		$call_block_data = $action_array[1];
 	}
 
 //handle the http post
@@ -145,7 +148,8 @@
 					$array['call_block'][0]['call_block_name'] = $call_block_name;
 					$array['call_block'][0]['call_block_number'] = $call_block_number;
 					$array['call_block'][0]['call_block_count'] = 0;
-					$array['call_block'][0]['call_block_action'] = $call_block_action;
+					$array['call_block'][0]['call_block_app'] = $call_block_app;
+					$array['call_block'][0]['call_block_data'] = $call_block_data;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
 					$array['call_block'][0]['call_block_description'] = $call_block_description;
@@ -155,6 +159,7 @@
 					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 					$database->save($array);
 					$response = $database->message;
+//view_array($response);
 					unset($array);
 
 					message::add($text['label-add-complete']);
@@ -189,7 +194,8 @@
 					}
 					$array['call_block'][0]['call_block_name'] = $call_block_name;
 					$array['call_block'][0]['call_block_number'] = $call_block_number;
-					$array['call_block'][0]['call_block_action'] = $call_block_action;
+					$array['call_block'][0]['call_block_app'] = $call_block_app;
+					$array['call_block'][0]['call_block_data'] = $call_block_data;
 					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
 					$array['call_block'][0]['date_added'] = time();
 					$array['call_block'][0]['call_block_description'] = $call_block_description;
@@ -199,6 +205,7 @@
 					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 					$database->save($array);
 					$response = $database->message;
+//view_array($response);
 					unset($array);
 
 					message::add($text['label-update-complete']);
@@ -222,7 +229,8 @@
 			$extension_uuid = $row["extension_uuid"];
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
-			$call_block_action = $row["call_block_action"];
+			$call_block_app = $row["call_block_app"];
+			$call_block_data = $row["call_block_data"];
 			$call_block_enabled = $row["call_block_enabled"];
 			$call_block_description = $row["call_block_description"];
 		}
@@ -237,6 +245,16 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$extensions = $database->select($sql, $parameters);
+
+//get the extensions
+	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
+	$sql .= "from v_voicemails ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and voicemail_enabled = 'true' ";
+	$sql .= "order by voicemail_id asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$voicemails = $database->select($sql, $parameters);
 
 //create token
 	$object = new token;
@@ -297,25 +315,25 @@
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-number']."\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
 	echo "<br />\n";
-	echo $text['description-number']."\n";
-	echo "<br />\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name']."\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\">\n";
 	echo "<br />\n";
-	echo $text['description-name']."\n";
+	echo $text['description-number']."\n";
+	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -325,32 +343,39 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_action'>\n";
-	$pieces = explode(" ", $call_block_action);
-	$action = $pieces[0];
-	$extension = $pieces[2];
-	if ($action == "Reject") {
-		echo "	<option value='Reject' selected='selected'>".$text['label-reject']."</option>\n";
+	if ($call_block_app == "reject") {
+		echo "	<option value='reject' selected='selected'>".$text['label-reject']."</option>\n";
 	}
 	else {
-		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
+		echo "   <option value='reject' >".$text['label-reject']."</option>\n";
 	}
-	if ($action == "Busy") {
-		echo "	<option value='Busy' selected='selected'>".$text['label-busy']."</option>\n";
-	}
-	else {
-		echo "	<option value='Busy'>".$text['label-busy']."</option>\n";
-	}
-	if ($action == "Hold") {
-		echo "	<option value='Hold' selected='selected'>".$text['label-hold']."</option>\n";
+	if ($call_block_app == "busy") {
+		echo "	<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
 	}
 	else {
-		echo "	<option value='Hold'>".$text['label-hold']."</option>\n";
+		echo "	<option value='busy'>".$text['label-busy']."</option>\n";
 	}
+	if ($call_block_app == "hold") {
+		echo "	<option value='hold' selected='selected'>".$text['label-hold']."</option>\n";
+	}
+	else {
+		echo "	<option value='hold'>".$text['label-hold']."</option>\n";
+	}
+	/*
 	if (is_array($extensions) && sizeof($extensions) != 0) {
-		echo "	<optgroup label='".$text['label-voicemail']."'>\n";
+		echo "	<optgroup label='".$text['label-extension']."'>\n";
 		foreach ($extensions as &$row) {
-			$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
-			echo "		<option value='Voicemail ".escape($row["user_context"])." ".escape($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+			$selected = ($call_block_app == 'extension' && $call_block_data == $row['extension']) ? "selected='selected'" : null;
+			echo "		<option value='voicemail:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+		}
+		echo "	</optgroup>\n";
+	}
+	*/
+	if (is_array($voicemails) && sizeof($voicemails) != 0) {
+		echo "	<optgroup label='".$text['label-voicemail']."'>\n";
+		foreach ($voicemails as &$row) {
+			$selected = ($call_block_app == 'voicemail' && $call_block_data == $row['voicemail_id']) ? "selected='selected'" : null;
+			echo "		<option value='voicemail:".urlencode($row["voicemail_id"])."' ".$selected.">".escape($row['voicemail_id'])." ".escape($row['voicemail_description'])."</option>\n";
 		}
 		echo "	</optgroup>\n";
 	}
