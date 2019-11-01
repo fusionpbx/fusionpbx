@@ -101,10 +101,12 @@
 				sql = sql .. "	or (call_block_name is null and call_block_number = :call_block_number) ";
 				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) ";
 				sql = sql .. ") ";
-				if (user_exists == 'true' and extension_uuid ~= nil) then
+				if (extension_uuid == nil) then
+					sql = sql .. "and extension_uuid is null ";
+				else
 					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
 				end
-				if (user_exists == 'true' and extension_uuid ~= nil) then
+				if (extension_uuid ~= nil) then
 					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
 				else
 					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number};
