@@ -126,7 +126,7 @@
 
 			--set call block default to false
 				call_block = false;
-				if (call_block_action ~= nil) then
+				if (call_block_app ~= nil) then
 					call_block = true;
 					if (session:ready()) then
 						session:execute('set', 'call_block=true');
