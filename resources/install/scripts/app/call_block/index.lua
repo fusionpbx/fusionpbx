@@ -48,10 +48,7 @@
 		caller_id_number = session:getVariable("caller_id_number");
 		context = session:getVariable("context");
 		call_block = session:getVariable("call_block");
-		user_exists = session:getVariable("user_exists");
-		if (user_exists == 'true') then
-			extension_uuid = session:getVariable("extension_uuid");
-		end
+		extension_uuid = session:getVariable("extension_uuid");
 	end
 
 --set default variables
