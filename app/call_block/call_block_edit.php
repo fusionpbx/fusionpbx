@@ -362,18 +362,20 @@
 		echo "	<optgroup label='".$text['label-extension']."'>\n";
 		foreach ($extensions as &$row) {
 			$selected = ($call_block_app == 'extension' && $call_block_data == $row['extension']) ? "selected='selected'" : null;
-			echo "		<option value='voicemail:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+			echo "		<option value='extension:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
 		}
 		echo "	</optgroup>\n";
 	}
 	*/
-	if (is_array($voicemails) && sizeof($voicemails) != 0) {
-		echo "	<optgroup label='".$text['label-voicemail']."'>\n";
-		foreach ($voicemails as &$row) {
-			$selected = ($call_block_app == 'voicemail' && $call_block_data == $row['voicemail_id']) ? "selected='selected'" : null;
-			echo "		<option value='voicemail:".urlencode($row["voicemail_id"])."' ".$selected.">".escape($row['voicemail_id'])." ".escape($row['voicemail_description'])."</option>\n";
+	if (permission_exists('call_block_voicemail')) {
+		if (is_array($voicemails) && sizeof($voicemails) != 0) {
+			echo "	<optgroup label='".$text['label-voicemail']."'>\n";
+			foreach ($voicemails as &$row) {
+				$selected = ($call_block_app == 'voicemail' && $call_block_data == $row['voicemail_id']) ? "selected='selected'" : null;
+				echo "		<option value='voicemail:".urlencode($row["voicemail_id"])."' ".$selected.">".escape($row['voicemail_id'])." ".escape($row['voicemail_description'])."</option>\n";
+			}
+			echo "	</optgroup>\n";
 		}
-		echo "	</optgroup>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
