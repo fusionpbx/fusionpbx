@@ -395,7 +395,7 @@ include "root.php";
 									message::add($text['message-toggle']);
 
 							}
-							unset($records, $states);
+							unset($records, $extensions, $extension);
 					}
 
 			}

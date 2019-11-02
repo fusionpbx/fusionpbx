@@ -2321,3 +2321,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.list-row > .no-wrap {
 		white-space: nowrap;
 		}
+
+/* MODAL ************************************************************************/
+
+	div.modal-footer {
+		justify-content: space-between;
+		}

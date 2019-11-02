@@ -52,7 +52,6 @@
 			private $list_page;
 			private $table;
 			private $uuid_prefix;
-			private $enabled_prefix;
 
 			/**
 			 * Called when the object is created
