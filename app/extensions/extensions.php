@@ -191,7 +191,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($extensions)) {
+	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach($extensions as $row) {
 			if (permission_exists('extension_edit')) {
 				$tr_link = "href='extension_edit.php?id=".urlencode($row['extension_uuid']).(is_numeric($page) ? '&page='.$page : null)."'";
@@ -264,7 +264,7 @@
 		}
 	}
 
-	if (is_array($extensions)) {
+	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
 		if (permission_exists('extension_add')) {
@@ -292,7 +292,7 @@
 	echo "<br /><br />".((is_array($extensions)) ? "<br /><br />" : null);
 
 	// check or uncheck all checkboxes
-	if (sizeof($ext_ids) > 0) {
+	if (is_array($ext_ids) && @sizeof($ext_ids) != 0) {
 		echo "<script>\n";
 		echo "	function check(what) {\n";
 		echo "		document.getElementById('chk_all').checked = (what == 'all') ? true : false;\n";
