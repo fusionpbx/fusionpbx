@@ -68,15 +68,13 @@
 
 			//see if email exists
 			$sql = "select ";
-			$sql .= "u.username, ";
-			$sql .= "u.password ";
+			$sql .= "username, ";
+			$sql .= "password, ";
+			$sql .= "domain_uuid ";
 			$sql .= "from ";
-			$sql .= "v_users as u, ";
-			$sql .= "v_contact_emails as e ";
-			$sql .= "where e.domain_uuid = u.domain_uuid ";
-			$sql .= "and e.contact_uuid = u.contact_uuid ";
-			$sql .= "and u.email_address = :email ";
-			$sql .= "and e.domain_uuid = :domain_uuid ";
+			$sql .= "v_users ";
+			$sql .= "where user_email = :email ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['email'] = $email;
 			$database = new database;
