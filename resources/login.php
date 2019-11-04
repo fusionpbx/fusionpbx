@@ -74,7 +74,7 @@
 			$sql .= "from ";
 			$sql .= "v_users ";
 			$sql .= "where user_email = :email ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['email'] = $email;
 			$database = new database;
