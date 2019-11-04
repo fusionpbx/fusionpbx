@@ -160,7 +160,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-device_mac_address']."<br>\n"; }
 			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
 			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
