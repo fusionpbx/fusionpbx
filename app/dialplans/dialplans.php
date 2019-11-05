@@ -107,51 +107,51 @@
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
 
-//common sql where
+//prepare the sql
+	$sql = "select count(*) from v_dialplans ";
 	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
-		$sql_where = "where true ";
+		$sql .= "where true ";
 	}
 	else {
-		$sql_where .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
 		//hide inbound routes
-			$sql_where .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
-			$sql_where .= "and dialplan_context <> 'public' ";
+			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
+			$sql .= "and dialplan_context <> 'public' ";
 		//hide outbound routes
-			$sql_where .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+			$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	}
 	else {
 		if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-			$sql_where .= "and (app_uuid = :app_uuid or dialplan_context = 'public') ";
+			$sql .= "and (app_uuid = :app_uuid or dialplan_context = 'public') ";
 		}
 		else {
-			$sql_where .= "and app_uuid = :app_uuid ";
+			$sql .= "and app_uuid = :app_uuid ";
 		}
 		$parameters['app_uuid'] = $app_uuid;
 	}
 	if (strlen($search) > 0) {
-		$sql_where .= "and (";
-		$sql_where .= " 	dialplan_context like :search ";
-		$sql_where .= " 	or dialplan_name like :search ";
-		$sql_where .= " 	or dialplan_number like :search ";
-		$sql_where .= " 	or dialplan_continue like :search ";
+		$sql .= "and (";
+		$sql .= " 	dialplan_context like :search ";
+		$sql .= " 	or dialplan_name like :search ";
+		$sql .= " 	or dialplan_number like :search ";
+		$sql .= " 	or dialplan_continue like :search ";
 		if (is_numeric($search)) {
-			$sql_where .= " 	or dialplan_order = :search ";
+			$sql .= " 	or dialplan_order = :search ";
 		}
-		$sql_where .= " 	or dialplan_enabled like :search ";
-		$sql_where .= " 	or dialplan_description like :search ";
-		$sql_where .= ") ";
+		$sql .= " 	or dialplan_enabled like :search ";
+		$sql .= " 	or dialplan_description like :search ";
+		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
 //get the number of rows in the dialplan
-	$sql = "select count(*) from v_dialplans ";
-	$sql .= $sql_where;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
+//prepare the paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".escape($search);
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
@@ -165,10 +165,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list of dialplans
-	$sql = "select * from v_dialplans ";
-	$sql .= $sql_where;
-	$sql .= ($order_by != '' ? order_by($order_by, $order) : 'order by dialplan_order asc, dialplan_name asc ');
-	$sql .= limit_offset($rows_per_page, $offset);
+	$sql = str_replace('count(*)', '*', $sql);
 	$database = new database;
 	$dialplans = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
