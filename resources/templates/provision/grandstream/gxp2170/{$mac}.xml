@@ -6637,11 +6637,11 @@
 
     <!-- # HTTP/HTTPS User Name -->
     <!-- # String -->
-    <P6713></P6713>
+    <P6713>{$http_auth_username}</P6713>
 
     <!-- # HTTP/HTTPS Password -->
     <!-- # String -->
-    <P6714></P6714>
+    <P6714>{$http_auth_password}</P6714>
 
     <!-- # Phonebook XML Server Path -->
     <!-- # This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
