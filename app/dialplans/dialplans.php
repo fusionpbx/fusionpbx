@@ -139,12 +139,15 @@
 		$sql .= " 	or dialplan_number like :search ";
 		$sql .= " 	or dialplan_continue like :search ";
 		if (is_numeric($search)) {
-			$sql .= " 	or dialplan_order = :search ";
+			$sql .= " 	or dialplan_order = :search_numeric ";
 		}
 		$sql .= " 	or dialplan_enabled like :search ";
 		$sql .= " 	or dialplan_description like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+		if (is_numeric($search)) {
+			$parameters['search_numeric'] = $search;
+		}
 	}
 
 //get the number of rows in the dialplan
