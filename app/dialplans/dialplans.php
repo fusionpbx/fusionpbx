@@ -166,6 +166,8 @@
 
 //get the list of dialplans
 	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= ($order_by != '' ? order_by($order_by, $order) : 'order by dialplan_order asc, dialplan_name asc ');
+	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$dialplans = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
