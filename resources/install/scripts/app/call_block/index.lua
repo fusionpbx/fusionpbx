@@ -113,14 +113,16 @@
 				end
 				local found = false;
 				dbh:query(sql, params, function(row)
+					found = true;
+
+					--get the values from the database
 					call_block_uuid = row.call_block_uuid;
 					call_block_app = row.call_block_app;
 					call_block_data = row.call_block_data;
 					call_block_count = row.call_block_count;
 					extension_uuid = row.extension_uuid;
 
-					cached_value = domain_uuid..','..caller_id_number;
-					found = true;
+					--cached_value = domain_uuid..','..caller_id_number;
 				end);
 
 			--set call block default to false
@@ -194,7 +196,9 @@
 				dbh:release();
 
 			--set the cache
-				local ok, err = cache.set(call_block_cache_key, cached_value, '3600');
+				if (cached_value ~= nil) then
+					local ok, err = cache.set(call_block_cache_key, cached_value, '3600');
+				end
 				if debug["cache"] then
 					if ok then
 						freeswitch.consoleLog("notice", "[call_block] " .. call_block_cache_key .. " stored in the cache\n");
