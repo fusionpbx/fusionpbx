@@ -48,18 +48,25 @@
 	}
 
 //get the extension(s)
-	$sql = "select e.* ";
-	$sql .= "from v_extensions as e, ";
-	$sql .= "v_extension_users as eu ";
-	$sql .= "where e.extension_uuid = eu.extension_uuid ";
-	if (!permission_exists('extension_edit')) {
+	if (permission_exists('extension_edit')) {
+		//admin user
+		$sql = "select * from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and enabled = 'true' ";
+		$sql .= "order by extension asc ";
+	}
+	else {
+		//normal user
+		$sql = "select e.* ";
+		$sql .= "from v_extensions as e, ";
+		$sql .= "v_extension_users as eu ";
+		$sql .= "where e.extension_uuid = eu.extension_uuid ";
 		$sql .= "and eu.user_uuid = :user_uuid ";
+		$sql .= "and e.domain_uuid = :domain_uuid ";
+		$sql .= "and e.enabled = 'true' ";
+		$sql .= "order by e.extension asc ";
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
-	$sql .= "and e.domain_uuid = :domain_uuid ";
-	$sql .= "and e.enabled = 'true' ";
-	$sql .= "group by e.extension_uuid ";
-	$sql .= "order by e.extension asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
