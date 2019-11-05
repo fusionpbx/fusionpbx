@@ -517,7 +517,7 @@
 		echo "<th class='shrink'>".$text['label-destination']."</th>\n";
 		$col_count++;
 	}
-	if (permission_exists('xml_cdr_recording') && (permission_exists('recording_play') || permission_exists('recording_download'))) {
+	if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 		echo "<th class='center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
@@ -613,7 +613,7 @@
 					$seconds = $row['hangup_cause'] == "ORIGINATOR_CANCEL" ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 
 				//determine recording properties
-					if (permission_exists('recording_play') || permission_exists('recording_download')) {
+					if (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download')) {
 						$record_path = $row['record_path'];
 						$record_name = $row['record_name'];
 						//$record_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
@@ -629,7 +629,7 @@
 					$content = '';
 
 				//recording playback
-					if (permission_exists('recording_play') && $record_path != '') {
+					if (permission_exists('xml_cdr_recording_play') && $record_path != '') {
 						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border-bottom: none; overflow: hidden;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy table row to maintain alternating background color
 					}
@@ -758,14 +758,14 @@
 						$content .= "	</td>\n";
 					}
 				//recording
-					if (permission_exists('xml_cdr_recording') && (permission_exists('recording_play') || permission_exists('recording_download'))) {
+					if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 						if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
-							if (permission_exists('recording_play')) {
+							if (permission_exists('xml_cdr_recording_play')) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')",'title'=>$text['label-play'].' / '.$text['label-pause']]);
 							}
-							if (permission_exists('recording_download')) {
+							if (permission_exists('xml_cdr_recording_download')) {
 								$content .= button::create(['type'=>'button','title'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
 							}
 							$content .= 	"</td>\n";
