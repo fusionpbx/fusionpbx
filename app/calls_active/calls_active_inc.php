@@ -120,7 +120,6 @@
 			echo "<div class='action_bar' id='action_bar'>\n";
 			echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
 			echo "	<div class='actions'>\n";
-// 			echo "		<span id='refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 2px; margin-right: 20px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span>";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 			if (permission_exists('call_active_hangup') && $rows) {
 				echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','onclick'=>"if (confirm('".$text['confirm-hangups']."')) { list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
