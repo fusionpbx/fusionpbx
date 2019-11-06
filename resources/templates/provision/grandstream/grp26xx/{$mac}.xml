@@ -6781,21 +6781,40 @@
 		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
 		<!-- # AutoBLF (30), Default or Line(31), SharedLine (32)  -->
-		<!--<item name="pks.vpk.1.keyMode"></item>-->
+		
+		{foreach $keys["line"] as $row}
+		{if $row.device_key_id <= 24}
+		
+		{assign var=key_types value=["none"=>-1,"line"=>31,"sharedline"=>32,"speeddial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17,"dnd"=>22]}
+		
+		
+		{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
+
+		<item name="pks.vpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		{else}
+		<item name="pks.vpk.{$row.device_key_id}.keyMode">{$key_types[$keys.line.$line.device_key_type]-10}</item>
+		{/if}
 
 		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-		<!--<item name="pks.vpk.1.account"></item>-->
+		<item name="pks.vpk.{$row.device_key_id}.account">{$row.device_key_line}</item>
 
 		<!-- # Description. Max length allowed is 32 characters. -->
 		<!-- # String -->
-		<!--<item name="pks.vpk.1.description"></item>-->
+		<item name="pks.vpk.{$row.device_key_id}.description">{$row.device_key_label}</item>
 
 		<!-- # Value. Max length allowed is 64 characters. -->
 		<!-- # String -->
-		<!--<item name="pks.vpk.1.value"></item>-->
+		<item name="pks.vpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 
 		<!-- # Locked: uncheck, check.  -->
-		<!--<item name="pks.vpk.1.lockMode"></item>-->
+		<item name="pks.vpk.{$row.device_key_id}.lockMode">{if $row.device_key_value == '0'}uncheck{else}check{/if}</item>
+		
+		
+		
+		{/if}
+		{/foreach}
+		
+		
 
 		<!-- ###################################################################################### -->
 		<!-- # VPK 2 fixed VPK  -->
@@ -6807,21 +6826,22 @@
 		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
 		<!-- # AutoBLF (30), Default or Line(31), SharedLine (32)  -->
-		<!--<item name="pks.vpk.2.keyMode"></item>-->
+		<!-- <item name="pks.vpk.2.keyMode"></item>-->
 
 		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-		<!--<item name="pks.vpk.2.account"></item>-->
+		<!-- <item name="pks.vpk.2.account"></item>-->
 
 		<!-- # Description. Max length allowed is 32 characters. -->
 		<!-- # String -->
-		<!--<item name="pks.vpk.2.description"></item>-->
+		<!-- <item name="pks.vpk.2.description"></item>-->
 
 		<!-- # Value. Max length allowed is 64 characters. -->
 		<!-- # String -->
-		<!--<item name="pks.vpk.2.value"></item>-->
+		<!-- <item name="pks.vpk.2.value"></item>-->
 
 		<!-- # Locked: uncheck, check.  -->
-		<!--<item name="pks.vpk.2.lockMode"></item>-->
+		<!-- <item name="pks.vpk.2.lockMode"></item>-->
+
 
 		<!-- ###################################################################################### -->
 		<!-- # VPK 3 fixed VPK  -->
