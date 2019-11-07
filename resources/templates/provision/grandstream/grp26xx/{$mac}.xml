@@ -5179,7 +5179,6 @@
 		<!-- TFTP, HTTP, HTTPS -->
 		<item name="provisioning.firmware.protocol">HTTPS</item>
 		<!-- Firmware Server Path -->
-		<item name="provisioning.firmware.serverPath">fm.grandstream.com/gs</item>
 		
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
 		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
