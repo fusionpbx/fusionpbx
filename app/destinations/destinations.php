@@ -198,7 +198,7 @@
 	echo button::create(['type'=>'button','label'=>$text['button-outbound'],'icon'=>'location-arrow','link'=>'?type=outbound'.($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
 	echo button::create(['type'=>'button','label'=>$text['button-local'],'icon'=>'vector-square','link'=>'?type=local'.($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
 	if (permission_exists('destination_import')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>'file-import','link'=>'destination_imports.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'destination_imports.php']);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";

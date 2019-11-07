@@ -263,7 +263,7 @@
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>'file-import','link'=>'contact_import.php','style'=>'margin-left: 15px;']);
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'contact_import.php','style'=>'margin-left: 15px;']);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
