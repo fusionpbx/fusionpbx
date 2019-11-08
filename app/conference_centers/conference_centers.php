@@ -140,6 +140,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_centers']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-rooms'],'icon'=>'door-open','style'=>'margin-right: 15px;','link'=>'conference_rooms.php']);
 	if (permission_exists('conference_center_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'conference_center_edit.php']);
 	}
@@ -165,7 +166,6 @@
 	if (permission_exists('conference_active_advanced_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>'bolt','link'=>PROJECT_PATH.'/app/conferences_active/conferences_active.php']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-rooms'],'icon'=>'door-open','link'=>'conference_rooms.php']);
 	echo 		"</span>\n";
 	echo "		</form>\n";
 	echo "	</div>\n";
