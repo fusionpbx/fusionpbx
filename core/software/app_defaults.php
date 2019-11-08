@@ -39,11 +39,11 @@ if ($domains_processed == 1) {
 			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
 			$array['software'][0]['software_name'] = 'FusionPBX';
 			$array['software'][0]['software_url'] = 'https://www.fusionpbx.com';
-			$array['software'][0]['software_version'] = software_version();
+			$array['software'][0]['software_version'] = software::version();
 		}
 		else {
 			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
-			$array['software'][0]['software_version'] = software_version();
+			$array['software'][0]['software_version'] = software::version();
 		}
 		$database = new database;
 		$database->app_name = 'software';
