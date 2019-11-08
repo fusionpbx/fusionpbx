@@ -964,7 +964,12 @@
 
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
-				$tmp = shell_exec("df /home 2>&1");
+				if ($_SESSION['dashboard']['disk_usage_partition']['text']) {
+					$disk_usage_partition = $_SESSION['dashboard']['disk_usage_partition']['text'];
+				} else {
+					$disk_usage_partition = "/home";
+				}
+				$tmp = shell_exec("df ".$disk_usage_partition." 2>&1");
 				$tmp = explode("\n", $tmp);
 				$tmp = preg_replace('!\s+!', ' ', $tmp[1]); // multiple > single space
 				$tmp = explode(' ', $tmp);
