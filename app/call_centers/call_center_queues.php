@@ -127,14 +127,24 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-call_center_queues']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('call_center_agent_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-agents'],'icon'=>'users','link'=>'call_center_agents.php']);
+	}
+	if (permission_exists('call_center_wallboard')) {
+		echo button::create(['type'=>'button','label'=>$text['button-wallboard'],'icon'=>'th','link'=>PROJECT_PATH.'/app/call_center_wallboard/call_center_wallboard.php']);
+	}
+	$margin_left = permission_exists('call_center_agent_view') || permission_exists('call_center_wallboard') ? 'margin-left: 15px;' : null;
 	if (permission_exists('call_center_queue_add') && (!is_numeric($_SESSION['limit']['call_center_queues']['numeric']) || $num_rows <= $_SESSION['limit']['call_center_queues']['numeric'])) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'call_center_queue_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'style'=>$margin_left,'link'=>'call_center_queue_edit.php']);
+		unset($margin_left);
 	}
 	if (permission_exists('call_center_queue_add') && $result && (!is_numeric($_SESSION['limit']['call_center_queues']['numeric']) || $num_rows <= $_SESSION['limit']['call_center_queues']['numeric'])) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>$margin_left,'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		unset($margin_left);
 	}
 	if (permission_exists('call_center_queue_delete') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>$margin_left,'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		unset($margin_left);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
@@ -142,12 +152,6 @@
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_center_queues.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
-	if (permission_exists('call_center_agent_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-agents'],'icon'=>'users','style'=>'margin-left: 15px;','link'=>'call_center_agents.php']);
-	}
-	if (permission_exists('call_center_wallboard')) {
-		echo button::create(['type'=>'button','label'=>$text['button-wallboard'],'icon'=>'th','link'=>PROJECT_PATH.'/app/call_center_wallboard/call_center_wallboard.php']);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
