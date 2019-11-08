@@ -8850,11 +8850,15 @@
     </P>
     <P>
       <N>ProxyServerPort</N>
-      <V>5061</V>
+      {if isset($row.sip_port)}<V>{$row.sip_port}</V>{else}<V>5060</V>{/if}
     </P>
     <P>
       <N>ProxyServerTransport</N>
-      <V>TLS</V>
+      {if $row.sip_transport == ''}<V>TCP</V>{/if}
+      {if $row.sip_transport == 'tcp'}<V>TCP</V>{/if}
+      {if $row.sip_transport == 'udp'}<V>UDP</V>{/if}
+      {if $row.sip_transport == 'tls'}<V>TLS</V>{/if}
+      {if $row.sip_transport == 'dns srv'}<V>SRV</V>{/if}
     </P>
     <P>
       <N>RegistrarServer</N>
