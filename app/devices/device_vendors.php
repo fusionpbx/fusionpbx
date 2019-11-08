@@ -124,6 +124,9 @@
 	echo "	<div class='heading'><b>".$text['title-device_vendors']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'devices.php']);
+	if (permission_exists('device_vendor_restore')) {
+		echo button::create(['type'=>'button','label'=>$text['button-restore'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'margin-right: 15px;','link'=>'device_vendor_restore.php']);
+	}
 	if (permission_exists('device_vendor_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'device_vendor_edit.php']);
 	}
@@ -139,9 +142,6 @@
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'device_vendors.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
-	if (permission_exists('device_vendor_restore')) {
-		echo button::create(['type'=>'button','label'=>$text['button-restore'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'margin-left: 15px;','link'=>'device_vendor_restore.php']);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
