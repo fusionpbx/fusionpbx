@@ -215,6 +215,24 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-devices']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	$margin_left = permission_exists('device_import') || permission_exists('device_export') || permission_exists('device_vendor_view') || permission_exists('device_profile_view') ? "margin-left: 15px;" : null;
+	if (permission_exists('device_import')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>$margin_left,'link'=>'device_imports.php']);
+		unset($margin_left);
+	}
+	if (permission_exists('device_export')) {
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>$margin_left,'link'=>'device_download.php']);
+		unset($margin_left);
+	}
+	if (permission_exists('device_vendor_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-vendors'],'icon'=>'fax','style'=>$margin_left,'link'=>'device_vendors.php']);
+		unset($margin_left);
+	}
+	if (permission_exists('device_profile_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','style'=>$margin_left." margin-right: 15px;" ,'link'=>'device_profiles.php']);
+		unset($margin_left);
+	}
+
 	if (permission_exists('device_add') && (!is_numeric($_SESSION['limit']['devices']['numeric']) || ($total_devices < $_SESSION['limit']['devices']['numeric']))) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'device_edit.php']);
 	}
@@ -233,28 +251,12 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
+
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
-	$margin_left = permission_exists('device_import') || permission_exists('device_export') || permission_exists('device_vendor_view') || permission_exists('device_profile_view') ? "margin-left: 15px;" : null;
-	if (permission_exists('device_import')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>$margin_left,'link'=>'device_imports.php']);
-		unset($margin_left);
-	}
-	if (permission_exists('device_export')) {
-		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>$margin_left,'link'=>'device_download.php']);
-		unset($margin_left);
-	}
-	if (permission_exists('device_vendor_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-vendors'],'icon'=>'fax','style'=>$margin_left,'link'=>'device_vendors.php']);
-		unset($margin_left);
-	}
-	if (permission_exists('device_profile_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','style'=>$margin_left,'link'=>'device_profiles.php']);
-		unset($margin_left);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
