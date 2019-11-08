@@ -250,6 +250,9 @@
 	echo "	<div class='heading'><b>".$text['header-contacts']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('contact_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'contact_import.php']);
+	}
+	if (permission_exists('contact_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'contact_edit.php']);
 	}
 	if (permission_exists('contact_delete') && $contacts) {
@@ -261,9 +264,6 @@
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'contacts.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
-	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'contact_import.php','style'=>'margin-left: 15px;']);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
