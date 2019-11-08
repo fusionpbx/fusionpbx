@@ -207,9 +207,9 @@
 	}
 	echo "</tr>\n";
 
-	if (is_array($bridges)) {
+	if (is_array($bridges) && @sizeof($bridges) != 0) {
 		$x = 0;
-		foreach($bridges as $row) {
+		foreach ($bridges as $row) {
 			if (permission_exists('bridge_edit')) {
 				$list_row_url = "bridge_edit.php?id=".urlencode($row['bridge_uuid']);
 			}
