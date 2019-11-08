@@ -26,31 +26,6 @@
 
 if ($domains_processed == 1) {
 
-	//remove old rows 
-		$sql = "delete from v_software where software_uuid <> '7de057e7-333b-4ebf-9466-315ae7d44efd' ";
-		$database = new database;
-		$database->execute($sql, null);
-
-	//update the software table
-		$sql = "select count(*) from v_software ";
-		$database = new database;
-		$num_rows = $database->select($sql, null, 'column');
-		if ($num_rows == 0) {
-			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
-			$array['software'][0]['software_name'] = 'FusionPBX';
-			$array['software'][0]['software_url'] = 'https://www.fusionpbx.com';
-			$array['software'][0]['software_version'] = software_version();
-		}
-		else {
-			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
-			$array['software'][0]['software_version'] = software_version();
-		}
-		$database = new database;
-		$database->app_name = 'software';
-		$database->app_uuid = 'b88c795f-7dea-4fc8-9ab7-edd555242cff';
-		$database->save($array);
-		unset($array);
-
 	//ensure the login message is set, if new message exists
 		$sql = "select count(*) as num_rows from v_default_settings ";
 		$sql .= "where default_setting_category = 'login' ";
