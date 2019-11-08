@@ -68,10 +68,32 @@ include "root.php";
 			public $is_empty;
 			public $array;
 
+			/**
+			* declare public/private properties
+			*/
+			private $app_name;
+			public $app_uuid;
+			private $permission_prefix;
+			public $list_page;
+			private $table;
+			private $uuid_prefix;
+			private $toggle_field;
+			private $toggle_values;
+
 			//class constructor
 			public function __construct() {
 				//set the default value
 				$this->dialplan_global = false;
+
+				//assign property defaults
+					$this->app_name = 'dialplans';
+					$this->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db'; //dialplans
+					$this->permission_prefix = 'dialplan_';
+					$this->list_page = 'dialplans.php';
+					$this->table = 'dialplans';
+					$this->uuid_prefix = 'dialplan_';
+					$this->toggle_field = 'dialplan_enabled';
+					$this->toggle_values = ['true','false'];
 			}
 
 			public function dialplan_add() {
@@ -998,7 +1020,360 @@ include "root.php";
 
 			}
 
-		}
+			/**
+			* delete records
+			*/
+			public function delete($records) {
+
+				//determine app and permission prefix
+					if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+						$this->app_name = 'dialplan_inbound';
+						$this->permission_prefix = 'inbound_route_';
+					}
+					else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
+						$this->app_name = 'dialplan_outbound';
+						$this->permission_prefix = 'outbound_route_';
+					}
+					else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
+						$this->app_name = 'fifo';
+						$this->permission_prefix = 'fifo_';
+					}
+					else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
+						$this->app_name = 'time_conditions';
+						$this->permission_prefix = 'time_condition_';
+					}
+					else {
+						//use default in constructor
+					}
+
+				if (permission_exists($this->permission_prefix.'delete')) {
+
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
+
+					//validate the token
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: '.$this->list_page);
+							exit;
+						}
+
+					//delete multiple records
+						if (is_array($records) && @sizeof($records) != 0) {
+
+							//build the delete array
+								foreach ($records as $x => $record) {
+									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+
+										//build delete array
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+											$array['dialplan_details'][$x]['dialplan_uuid'] = $record['uuid'];
+
+										//get the dialplan context
+											$sql = "select dialplan_context from v_dialplans ";
+											$sql .= "where dialplan_uuid = :dialplan_uuid ";
+											$parameters['dialplan_uuid'] = $record['uuid'];
+											$database = new database;
+											$dialplan_contexts[] = $database->select($sql, $parameters, 'column');
+											unset($sql, $parameters);
+
+									}
+								}
+
+							//delete the checked rows
+								if (is_array($array) && @sizeof($array) != 0) {
+
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('dialplan_delete', 'temp');
+										$p->add('dialplan_detail_delete', 'temp');
+
+									//execute delete
+										$database = new database;
+										$database->app_name = $this->app_name;
+										$database->app_uuid = $this->app_uuid;
+										$database->delete($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('dialplan_delete', 'temp');
+										$p->delete('dialplan_detail_delete', 'temp');
+
+									//synchronize the xml config
+										save_dialplan_xml();
+
+									//clear the cache
+										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
+											$cache = new cache;
+											foreach ($dialplan_contexts as $dialplan_context) {
+												$cache->delete("dialplan:".$dialplan_context);
+											}
+										}
+
+									//set message
+										message::add($text['message-delete'].': '.@sizeof($array[$this->table]));
+
+								}
+								unset($records);
+
+						}
+				}
+			}
+
+			/**
+			* toggle records
+			*/
+			public function toggle($records) {
+
+				//determine app and permission prefix
+					if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+						$this->app_name = 'dialplan_inbound';
+						$this->permission_prefix = 'inbound_route_';
+					}
+					else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
+						$this->app_name = 'dialplan_outbound';
+						$this->permission_prefix = 'outbound_route_';
+					}
+					else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
+						$this->app_name = 'fifo';
+						$this->permission_prefix = 'fifo_';
+					}
+					else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
+						$this->app_name = 'time_conditions';
+						$this->permission_prefix = 'time_condition_';
+					}
+					else {
+						//use default in constructor
+					}
+
+				if (permission_exists($this->permission_prefix.'edit')) {
+
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
+
+					//validate the token
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: '.$this->list_page);
+							exit;
+						}
+
+					//toggle the checked records
+						if (is_array($records) && @sizeof($records) != 0) {
+
+							//get current toggle state
+								foreach($records as $x => $record) {
+									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									}
+								}
+								if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+									$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_context from v_".$this->table." ";
+									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+									$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										foreach ($rows as $row) {
+											$states[$row['uuid']] = $row['toggle'];
+											$dialplan_contexts[] = $row['dialplan_context'];
+										}
+									}
+									unset($sql, $parameters, $rows, $row);
+								}
+
+							//build update array
+								$x = 0;
+								foreach($states as $uuid => $state) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+									$x++;
+								}
+
+							//save the changes
+								if (is_array($array) && @sizeof($array) != 0) {
+
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('dialplan_edit', 'temp');
+
+									//save the array
+										$database = new database;
+										$database->app_name = $this->app_name;
+										$database->app_uuid = $this->app_uuid;
+										$database->save($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('dialplan_edit', 'temp');
+
+									//synchronize the xml config
+										save_dialplan_xml();
+
+									//clear the cache
+										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
+											$cache = new cache;
+											foreach ($dialplan_contexts as $dialplan_context) {
+												$cache->delete("dialplan:".$dialplan_context);
+											}
+										}
+
+									//set message
+										message::add($text['message-toggle']);
+								}
+								unset($records, $states);
+						}
+
+				}
+			}
+
+			/**
+			* copy records
+			*/
+			public function copy($records) {
+
+				//determine app and permission prefix
+					if ($this->app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+						$this->app_name = 'dialplan_inbound';
+						$this->permission_prefix = 'inbound_route_';
+					}
+					else if ($this->app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3') {
+						$this->app_name = 'dialplan_outbound';
+						$this->permission_prefix = 'outbound_route_';
+					}
+					else if ($this->app_uuid == '16589224-c876-aeb3-f59f-523a1c0801f7') {
+						$this->app_name = 'fifo';
+						$this->permission_prefix = 'fifo_';
+					}
+					else if ($this->app_uuid == '4b821450-926b-175a-af93-a03c441818b1') {
+						$this->app_name = 'time_conditions';
+						$this->permission_prefix = 'time_condition_';
+					}
+					else {
+						//use default in constructor
+					}
+
+				if (permission_exists($this->permission_prefix.'add')) {
+
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
+
+					//validate the token
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: '.$this->list_page);
+							exit;
+						}
+
+					//copy the checked records
+						if (is_array($records) && @sizeof($records) != 0) {
+
+							//get checked records
+								foreach($records as $x => $record) {
+									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									}
+								}
+
+							//create insert array from existing data
+								if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+
+									//primary table
+										$sql = "select * from v_".$this->table." ";
+										$sql .= "where ".implode(' or ', $record_uuids)." ";
+										$database = new database;
+										$rows = $database->select($sql, $parameters, 'all');
+										if (is_array($rows) && @sizeof($rows) != 0) {
+											$y = 0;
+											foreach ($rows as $x => $row) {
+												$primary_uuid = uuid();
+
+												//copy data
+													$array[$this->table][$x] = $row;
+
+												//overwrite
+													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
+													$array[$this->table][$x]['dialplan_description'] = trim($row['dialplan_description'].' ('.$text['label-copy'].')');
+
+												//details sub table
+													$sql_2 = "select * from v_dialplan_details where dialplan_uuid = :dialplan_uuid";
+													$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
+													$database = new database;
+													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+														foreach ($rows_2 as $row_2) {
+
+															//copy data
+																$array['dialplan_details'][$y] = $row_2;
+
+															//overwrite
+																$array['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+																$array['dialplan_details'][$y]['dialplan_uuid'] = $primary_uuid;
+
+															//increment
+																$y++;
+
+														}
+													}
+													unset($sql_2, $parameters_2, $rows_2, $row_2);
+
+												//get dialplan contexts
+													$dialplan_contexts[] = $row['dialplan_context'];
+											}
+										}
+										unset($sql, $parameters, $rows, $row);
+								}
+
+							//save the changes and set the message
+								if (is_array($array) && @sizeof($array) != 0) {
+
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('dialplan_detail_add', 'temp');
+
+									//save the array
+										$database = new database;
+										$database->app_name = $this->app_name;
+										$database->app_uuid = $this->app_uuid;
+										$database->save($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('dialplan_detail_add', 'temp');
+
+									//synchronize the xml config
+										save_dialplan_xml();
+
+									//clear the cache
+										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
+											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
+											$cache = new cache;
+											foreach ($dialplan_contexts as $dialplan_context) {
+												$cache->delete("dialplan:".$dialplan_context);
+											}
+										}
+
+									//set message
+										message::add($text['message-copy']);
+
+								}
+								unset($records);
+						}
+
+				}
+			} //method
+
+
+		} //class
 	}
 
 ?>
