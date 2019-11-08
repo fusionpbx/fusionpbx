@@ -429,6 +429,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Dashboard Call Center Agent Status block for users in the agent group.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5da8cd79-7d3d-4842-97a9-40e91f96f34b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "disk_usage_partition";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/home";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the partition to show  for disk usage.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "85d79c4e-4689-4d8e-b87d-5edd5b1574b1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "method";
