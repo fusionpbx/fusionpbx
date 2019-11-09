@@ -124,9 +124,18 @@
 
 						//add dialplans to the domain
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+							//import the dialplans
 							$dialplan = new dialplan;
 							$dialplan->import($array['domains']);
 							unset($array);
+
+							//add xml for each dialplan where the dialplan xml is empty
+							$dialplans = new dialplan;
+							$dialplans->source = "details";
+							$dialplans->destination = "database";
+							$dialplans->context = $domain_name;
+							$dialplans->is_empty = "dialplan_xml";
+							$array = $dialplans->xml();
 						}
 					}
 				}
@@ -152,9 +161,18 @@
 
 					// add dialplans to the domain
 					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_config.php")) {
+						//import the dialplans
 						$dialplan = new dialplan;
 						$dialplan->import($array['domains']);
 						unset($array);
+
+						//add xml for each dialplan where the dialplan xml is empty
+						$dialplans = new dialplan;
+						$dialplans->source = "details";
+						$dialplans->destination = "database";
+						$dialplans->context = $domain_name;
+						$dialplans->is_empty = "dialplan_xml";
+						$array = $dialplans->xml();
 					}
 
 					if ($original_domain_name != $domain_name) {
