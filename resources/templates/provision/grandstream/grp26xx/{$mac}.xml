@@ -6798,6 +6798,7 @@
 		<item name="pks.vpk.{$line}.account">{$keys.line.$line.device_key_line}</item>
 		<item name="pks.vpk.{$line}.description">{$keys.line.$line.device_key_label}</item>
 		<item name="pks.vpk.{$line}.value">{$keys.line.$line.device_key_value}</item>
+		<item name="pks.vpk.{$line}.lockMode">{if $line == '-1'}uncheck{else}check{/if}</item>
 		{else}
 		{if $line <= $fixed_keys}
 
