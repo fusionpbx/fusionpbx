@@ -86,6 +86,7 @@
 			$destination_type = trim($_POST["destination_type"]);
 			$destination_number = trim($_POST["destination_number"]);
 			$destination_prefix = trim($_POST["destination_prefix"]);
+			$destination_number_from_to = trim($_POST["destination_number_from_to"]);
 			$db_destination_number = trim($_POST["db_destination_number"]);
 			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
 			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
@@ -265,12 +266,17 @@
 					$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 					$dialplan_detail_order = 10;
 
-				//set the dialplan detail type
-					if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
-						$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+				//set the dialplan detail 
+					if (!$destination_number_from_to || $destination_number_from_to == 'false') {
+						if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+							$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+						}
+						else {
+							$dialplan_detail_type = "destination_number";
+						}
 					}
 					else {
-						$dialplan_detail_type = "destination_number";
+						$dialplan_detail_type = "sip_to_user";
 					}
 
 				//build the xml dialplan
@@ -313,7 +319,6 @@
 						$dialplan["dialplan_xml"] .= "	</condition>\n";
 						$dialplan["dialplan_xml"] .= "</extension>\n";
 					}
-
 				//dialplan details
 					if ($_SESSION['destinations']['dialplan_details']['boolean'] == "true") {
 
@@ -339,11 +344,17 @@
 						//check the destination number
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
-								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+							//set the dialplan detail 
+							if (!$destination_number_from_to || $destination_number_from_to == 'false') {
+								if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+								}
+								else {
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+								}
 							}
 							else {
-								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "\${sip_to_user}";
 							}
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
@@ -603,6 +614,7 @@
 						$destination["destination_number"] = $destination_number;
 						$destination["destination_number_regex"] = $destination_number_regex;
 						$destination["destination_prefix"] = $destination_prefix;
+						$destination["destination_number_from_to"] = $destination_number_from_to;
 					}
 					$destination["destination_caller_id_name"] = $destination_caller_id_name;
 					$destination["destination_caller_id_number"] = $destination_caller_id_number;
@@ -716,6 +728,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
 				$destination_number = $row["destination_number"];
+				$destination_number_from_to = $row["destination_number_from_to"];
 				$destination_prefix = $row["destination_prefix"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
@@ -921,6 +934,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+	
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -934,6 +948,35 @@
 	}
 	else {
 		echo escape($destination_number)."\n";
+	}
+	echo "</td>\n";
+	echo "</tr>\n";
+	
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['description-destination_number_from_to']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if (permission_exists('destination_number')) {
+		echo "	<select class='formfld' type='select' name='destination_number_from_to'>";
+		echo "		<option></option>";
+		if ($destination_number_from_to == 'true') {
+			echo "		<option value='true' selected='selected'>true</option>";
+		} 
+		else {
+			echo "		<option value='true'>true</option>";
+		}
+		
+		if ($destination_number_from_to == 'false') {
+			echo "		<option value='false' selected='selected'>false</option>";
+		} else {
+			echo "		<option value='false'>true</option>";
+		}
+		echo "<br />\n";
+		echo $text['description-destination_number']."\n";
+	}
+	else {
+		echo escape($destination_number_from_to)."\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
