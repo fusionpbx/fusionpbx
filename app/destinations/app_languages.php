@@ -961,6 +961,26 @@ $text['description-destination_prefix']['ru-ru'] = "";
 $text['description-destination_prefix']['sv-se'] = "";
 $text['description-destination_prefix']['uk-ua'] = "";
 
+$text['description-destination_number_from_to']['en-us'] = "Number from To header";
+$text['description-destination_number_from_to']['ar-eg'] = "";
+$text['description-destination_number_from_to']['de-at'] = "";
+$text['description-destination_number_from_to']['de-ch'] = "";
+$text['description-destination_number_from_to']['de-de'] = "";
+$text['description-destination_number_from_to']['es-cl'] = "";
+$text['description-destination_number_from_to']['es-mx'] = "";
+$text['description-destination_number_from_to']['fr-ca'] = "";
+$text['description-destination_number_from_to']['fr-fr'] = "";
+$text['description-destination_number_from_to']['he-il'] = "";
+$text['description-destination_number_from_to']['it-it'] = "";
+$text['description-destination_number_from_to']['nl-nl'] = "";
+$text['description-destination_number_from_to']['pl-pl'] = "";
+$text['description-destination_number_from_to']['pt-br'] = "";
+$text['description-destination_number_from_to']['pt-pt'] = "";
+$text['description-destination_number_from_to']['ro-ro'] = "";
+$text['description-destination_number_from_to']['ru-ru'] = "";
+$text['description-destination_number_from_to']['sv-se'] = "";
+$text['description-destination_number_from_to']['uk-ua'] = "";
+
 $text['description-destination_enabled']['en-us'] = "Set the current status of this destination.";
 $text['description-destination_enabled']['ar-eg'] = "";
 $text['description-destination_enabled']['de-at'] = "Setzen Sie den derzeitigen Status des Ziels."; //copied from de-de
