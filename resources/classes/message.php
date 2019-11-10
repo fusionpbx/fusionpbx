@@ -28,11 +28,21 @@
 if (!class_exists('message')) {
 	class message {
 
-		static function add($message, $mood = NULL, $delay = NULL) {
-			$mood = $mood ?: 'positive';
-			$delay = $delay ?: (1000 * (float) $_SESSION['theme']['message_delay']['text']);
-			$_SESSION["messages"][$mood]['message'][] = $message;
-			$_SESSION["messages"][$mood]['delay'][] = $delay;
+		static function add($message, $mood = null, $delay = null) {
+			//set mood and delay
+				$mood = $mood ?: 'positive';
+				$delay = $delay ?: (1000 * (float) $_SESSION['theme']['message_delay']['text']);
+			//ignore duplicate messages
+				if (is_array($_SESSION["messages"][$mood]['message']) && @sizeof($_SESSION["messages"][$mood]['message']) != 0) {
+					if (!in_array($message, $_SESSION["messages"][$mood]['message'])) {
+						$_SESSION["messages"][$mood]['message'][] = $message;
+						$_SESSION["messages"][$mood]['delay'][] = $delay;
+					}
+				}
+				else {
+					$_SESSION["messages"][$mood]['message'][] = $message;
+					$_SESSION["messages"][$mood]['delay'][] = $delay;
+				}
 		}
 
 		static function count() {
