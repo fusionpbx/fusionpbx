@@ -5179,8 +5179,7 @@
 		<!-- TFTP, HTTP, HTTPS -->
 		<item name="provisioning.firmware.protocol">HTTPS</item>
 		<!-- Firmware Server Path -->
-		<item name="provisioning.firmware.serverPath">fm.grandstream.com/gs</item>
-		
+
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
 		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
 		{elseif isset($grandstream_firmware_path)}
@@ -6781,21 +6780,33 @@
 		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
 		<!-- # AutoBLF (30), Default or Line(31), SharedLine (32)  -->
-		<!--<item name="pks.vpk.1.keyMode"></item>-->
 
-		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-		<!--<item name="pks.vpk.1.account"></item>-->
+		{$fixed_keys=4}
+		{if $template == "grandstream/grp26xx"}{$fixed_keys=12}{/if}
+		<!-- Detected {$template} with {$fixed_keys} fixed keys -->
 
-		<!-- # Description. Max length allowed is 32 characters. -->
-		<!-- # String -->
-		<!--<item name="pks.vpk.1.description"></item>-->
+		{assign var=key_types value=["none"=>-1,"line"=>31,"sharedline"=>32,"speeddial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17,"dnd"=>22]}
 
-		<!-- # Value. Max length allowed is 64 characters. -->
-		<!-- # String -->
-		<!--<item name="pks.vpk.1.value"></item>-->
+		{for $line=1 to 24}
 
-		<!-- # Locked: uncheck, check.  -->
-		<!--<item name="pks.vpk.1.lockMode"></item>-->
+		{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
+		{if $line <= $fixed_keys}
+		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		{else}
+		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]-10}</item>
+		{/if}
+		<item name="pks.vpk.{$line}.account">{$keys.line.$line.device_key_line}</item>
+		<item name="pks.vpk.{$line}.description">{$keys.line.$line.device_key_label}</item>
+		<item name="pks.vpk.{$line}.value">{$keys.line.$line.device_key_value}</item>
+		<item name="pks.vpk.{$line}.lockMode">{if $line == '-1'}uncheck{else}check{/if}</item>
+		{else}
+		{if $line <= $fixed_keys}
+
+		{/if}
+		{/if}
+
+		{/for}
+		
 
 		<!-- ###################################################################################### -->
 		<!-- # VPK 2 fixed VPK  -->
