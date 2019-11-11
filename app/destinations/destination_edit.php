@@ -662,6 +662,9 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$destination_context);
 					$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					if (isset($destination_prefix)) {
+						$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+					}
 			}
 
 		//save the outbound destination
