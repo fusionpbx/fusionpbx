@@ -198,7 +198,6 @@ echo "<body style='margin: 0; padding: 5px;' onfocus='blur();'>\n";
 
 echo "<div style='text-align: left; margin-left: -16px;'>\n";
 
-ini_set("session.cookie_httponly", True);
 if (!isset($_SESSION)) { session_start(); }
 //get the directory
 	if (!isset($_SESSION)) { session_start(); }
