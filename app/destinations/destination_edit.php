@@ -661,8 +661,10 @@
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$destination_context);
-					$cache->delete("dialplan:".$destination_context.":".$destination_number);
-					if (isset($destination_prefix)) {
+					if (isset($destination_number) && is_numeric($destination_number)) {
+						$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					}
+					if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
 						$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
 					}
 			}
