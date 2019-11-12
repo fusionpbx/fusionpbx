@@ -221,7 +221,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom headset memory mode 0=Disabled - 1=Enabled ";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom headset memory mode 0=Disabled - 1=Enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2e8fdb67-a4e5-42ed-9ec9-440836b0c44e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_analog_headset_option";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom EHS. 0=No EHS compatible headset, 1=Jabra,2=Plantronics,3=Sennheiser";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "947aa9ea-5769-4ef6-8c55-4144962359c5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
