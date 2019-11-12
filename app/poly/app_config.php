@@ -44,7 +44,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "See provision profile for codes.";
 		$y++;
-    $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "799038b2-77ca-4312-82fc-a0ccd2ed4402";
+    		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "799038b2-77ca-4312-82fc-a0ccd2ed4402";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "poly_obi_logo_450";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
