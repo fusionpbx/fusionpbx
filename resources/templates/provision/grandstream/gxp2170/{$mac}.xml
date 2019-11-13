@@ -5927,15 +5927,18 @@
     <!-- # Enable Manual VLAN Configuration. 0 - Disable, 1 - Enable. Default is 0. -->
     <!-- # Number: 0,1 -->
     <!-- # Mandatory -->
-    <P22174>0</P22174>
+{if isset($grandstream_lan_port_vlan) }
+    <P22174>1</P22174>
 
     <!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
     <!-- # Number: 0 - 4094 -->
     <!-- # Mandatory -->
-{if isset($grandstream_lan_port_vlan) }
+
     <P51>{$grandstream_lan_port_vlan}</P51>
+    
 {else}
     <P51>0</P51>
+    <P22174>0</P22174>
 {/if}
 
     <!-- # Layer 2 QoS. 802.1p priority value (0 - 7). Default is 0 -->
