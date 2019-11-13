@@ -60,12 +60,15 @@
 //set a default filter
 	if (!isset($_POST['filter'])) { $_POST['filter'] = ""; }	
 
+//set default default log file
+	if (!isset($_POST['log_file'])) { $_POST['log_file'] = "freeswitch.log"; }	
+
 //download the log
 	if (permission_exists('log_download')) {
 		if (isset($_GET['a']) && $_GET['a'] == "download") {
 			if (isset($_GET['t']) && $_GET['t'] == "logs") {
 				$tmp = $_SESSION['switch']['log']['dir'].'/';
-				$filename = 'freeswitch.log';
+				$filename = $_POST['filename'];
 			}
 			session_cache_limiter('public');
 			$fd = fopen($tmp.$filename, "rb");
@@ -88,6 +91,17 @@
 	echo "		</td>\n";
 	echo "		<td align='right' valign='middle' nowrap>\n";
 	echo "			<form action='log_viewer.php' method='POST'>\n";
+	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
+	
+	$files = scandir($_SESSION['switch']['log']['dir']);
+	foreach($files as $file) {
+		if (substr($file,0,14) == "freeswitch.log") {
+			$selected = ($file == $_POST['log_file']) ? "selected='selected'" : "";
+			echo "	<option value='".$file."'".$selected.">".$file."</option>";
+		}
+	}
+	
+	echo "			</select>\n";
 	echo "			".$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
 	echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".(($_POST['line_number'] == 1) ? 'checked' : null)."> ".$text['label-line_number']."</label>";
 	echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".(($_POST['sort'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
@@ -112,7 +126,7 @@
 		$default_type = 'normal';
 		$default_font = 'monospace';
 		$default_file_size = '512000';
-		$log_file = $_SESSION['switch']['log']['dir']."/freeswitch.log";
+		$log_file = $_SESSION['switch']['log']['dir']."/".$_POST['log_file'];
 
 		//put the color matches here...
 		$array_filter[0]['pattern'] = '[NOTICE]';
