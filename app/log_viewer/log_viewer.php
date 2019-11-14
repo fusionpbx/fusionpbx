@@ -66,9 +66,9 @@
 //download the log
 	if (permission_exists('log_download')) {
 		if (isset($_GET['a']) && $_GET['a'] == "download") {
-			if (isset($_GET['t']) && $_GET['t'] == "logs") {
+			if (isset($_GET['n']) && substr($_GET['n'],0,14) == "freeswitch.log") {
 				$tmp = $_SESSION['switch']['log']['dir'].'/';
-				$filename = $_POST['log_file'];
+				$filename = $_GET['n'];
 			}
 			session_cache_limiter('public');
 			$fd = fopen($tmp.$filename, "rb");
@@ -108,7 +108,7 @@
 	echo "			Display <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size']."";
 	echo "			<input type='submit' class='btn' style='margin-left: 20px;' name='submit' value=\"".$text['button-reload']."\">";
 	if (permission_exists('log_download')) {
-		echo "		<input type='button' class='btn' value='".$text['button-download']."' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
+		echo "		<input type='button' class='btn' value='".$text['button-download']."' onclick=\"document.location.href='log_viewer.php?a=download&n=".$_POST['log_file']."';\" />\n";
 	}
 	echo "			</form>\n";
 	echo "		</td>\n";
