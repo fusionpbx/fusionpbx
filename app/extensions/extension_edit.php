@@ -549,6 +549,7 @@
 							$array["devices"][0]["device_uuid"] = $device_uuid;
 							$array["devices"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$array["devices"][0]["device_mac_address"] = $device_mac_address;
+							$array["devices"][0]["device_label"] = $extension;
 							if (strlen($device_template) > 0) {
 								$array["devices"][0]["device_template"] = $device_template;
 							}
