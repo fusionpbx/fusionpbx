@@ -784,10 +784,10 @@
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' width='5%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_mac_address']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' width='70%' align='left'>\n";
+	echo "<td class='vtable' width='95%' align='left'>\n";
 	if (permission_exists('device_mac_address')) {
 		echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"".escape($device_mac_address)."\"/>\n";
 		echo "<br />\n";
