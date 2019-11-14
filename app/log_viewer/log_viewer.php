@@ -61,7 +61,7 @@
 	if (!isset($_POST['filter'])) { $_POST['filter'] = ""; }	
 
 //set default default log file
-	if (!isset($_POST['log_file'])) { $_POST['log_file'] = "freeswitch.log"; }	
+	if (!isset($_POST['log_file']) || substr($_POST['log_file'],0,14) != "freeswitch.log") { $_POST['log_file'] = "freeswitch.log"; }	
 
 //download the log
 	if (permission_exists('log_download')) {
