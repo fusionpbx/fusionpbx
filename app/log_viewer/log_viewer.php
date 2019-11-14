@@ -68,7 +68,7 @@
 		if (isset($_GET['a']) && $_GET['a'] == "download") {
 			if (isset($_GET['t']) && $_GET['t'] == "logs") {
 				$tmp = $_SESSION['switch']['log']['dir'].'/';
-				$filename = $_POST['filename'];
+				$filename = $_POST['log_file'];
 			}
 			session_cache_limiter('public');
 			$fd = fopen($tmp.$filename, "rb");
