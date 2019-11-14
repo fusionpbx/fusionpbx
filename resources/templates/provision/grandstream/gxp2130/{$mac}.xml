@@ -6685,7 +6685,7 @@
     <!-- # Phonebook Key Function. 0 - Default, 1 - LDAP Search, 2 - Local Phonebook, 3 - Local Group, 4 - Broadsoft Phonebook -->
     <!-- # Number: 0, 1, 2, 3, 4. -->
     <!-- # Mandatory -->
-{if isset($contact_grandstream)}
+{if isset($grandstream_phonebook_download)}
     <P1526>2</P1526>
 {else}
     <P1526>0</P1526>
