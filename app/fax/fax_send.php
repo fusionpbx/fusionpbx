@@ -738,14 +738,8 @@ if (!function_exists('fax_split_dtmf')) {
 		unset($sql, $parameters, $row);
 
 		if (!$included) {
-			$sql = "select contact_uuid from v_users where user_uuid = :user_uuid ";
+			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
-			$database = new database;
-			$contact_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-
-			$sql = "select email_address from v_contact_emails where contact_uuid = :contact_uuid order by email_primary desc;";
-			$parameters['contact_uuid'] = $contact_uuid;
 			$database = new database;
 			$mailto_address_user = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -810,7 +804,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$cmd = "api originate " . $dial_string;
-
 					//send the command to event socket
 					$response = event_socket_request($fp, $cmd);
 					$response = str_replace("\n", "", $response);
