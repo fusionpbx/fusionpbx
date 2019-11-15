@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Contrôles d'accès";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "בקרת גישה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Controlli Accesso";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toegangs Controle";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kontrola dostępu";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Controles de Acesso";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Controles de Acesso";
