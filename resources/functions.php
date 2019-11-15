@@ -1656,7 +1656,12 @@ function number_pad($number,$n) {
 				}
 			//add prefix
 				if (strlen($prefix) > 0) {
-					$prefix = $prefix.'?';
+					if (strlen($prefix) == 1) {
+						$prefix = $prefix.'?';
+					}
+					else {
+						$prefix = '(?:'.$prefix.')?';
+					}
 				}
 			//convert N,X,Z syntax to regex
 				$string = str_ireplace("N", "[2-9]", $string);
