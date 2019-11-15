@@ -1675,7 +1675,7 @@ function number_pad($number,$n) {
 				if (substr($string, -1) != "$") {
 					$string = $string."$";
 				}
-			//add the round brackets ( and )
+			//add the round brackets
 				if (!strstr($string, '(')) {
 					if (strstr($string, '^')) {
 						$string = str_replace("^", "^".$prefix."(", $string);
@@ -1683,8 +1683,6 @@ function number_pad($number,$n) {
 					else {
 						$string = '^('.$string;
 					}
-				}
-				if (!strstr($string, ')')) {
 					if (strstr($string, '$')) {
 						$string = str_replace("$", ")$", $string);
 					}
