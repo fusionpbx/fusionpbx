@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer des numéros d'appelant.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Greedschap om inkomende oproepen te blokkeren.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
