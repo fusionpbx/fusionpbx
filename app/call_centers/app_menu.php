@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Call-Centers";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Call Center ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Centro de Chamadas";
@@ -38,7 +38,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "État de l'agent";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Agent status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status agenta";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do agente";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Estado do Agente";
