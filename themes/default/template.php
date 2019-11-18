@@ -429,6 +429,16 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
+		function list_all_check() {
+			var inputs = document.getElementsByTagName('input');
+			document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = true;
+				}
+			}
+		}
+
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
