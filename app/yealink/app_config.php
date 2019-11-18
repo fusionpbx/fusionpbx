@@ -886,14 +886,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b6685b3-0ca7-49f5-8863-f1b358b1c0e4";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g723_53_enable";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2f7e7465-31f4-4fb1-87ba-54d283f9b96b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_g729_enable";
