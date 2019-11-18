@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Messagerie Vocale";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "תא קולי";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Caselle Vocali";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Antwoordapparaat";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Poczta głosowa";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Correio de voz";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
