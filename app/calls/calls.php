@@ -105,7 +105,7 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
-		if (count($_SESSION['user']['extension']) > 0) {
+		if (is_array($_SESSION['user']['extension'] && count($_SESSION['user']['extension']) > 0)) {
 			$sql .= "and (";
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
