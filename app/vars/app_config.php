@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Définr les variables utilisées par le switch, le provisioning et plus.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Definieer variabelen die door de Pbx, voorzieningen, en andere onderdelen gebruikt worden";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Definir variáveis que são utilizadas pelo softswitch, aprovisionamento, e outros.";
