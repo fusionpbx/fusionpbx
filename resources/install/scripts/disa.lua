@@ -154,7 +154,7 @@
 	if (session:ready()) then
 		cmd = "user_exists id ".. destination_number .." "..context;
 		user_exists = trim(api:executeString(cmd));
-		freeswitch.consoleLog("err", caller_id_number);
+		
 		if (user_exists == "true") then
 			if (disa_caller_id_name) then
 				--caller id name provided do nothing
