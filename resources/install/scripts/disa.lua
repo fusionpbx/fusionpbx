@@ -47,8 +47,8 @@
 		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		caller_id_name = session:getVariable("caller_id_name");
-		caller_id_number = session:getVariable("caller_id_number");
+		caller_id_name = session:getVariable("disa_caller_id_name");
+		caller_id_number = session:getVariable("disa_caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
 		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");
@@ -154,22 +154,23 @@
 	if (session:ready()) then
 		cmd = "user_exists id ".. destination_number .." "..context;
 		user_exists = trim(api:executeString(cmd));
+		freeswitch.consoleLog("err", caller_id_number);
 		if (user_exists == "true") then
-			if (caller_id_name) then
+			if (disa_caller_id_name) then
 				--caller id name provided do nothing
 			else
-			        caller_id_number = session:getVariable("effective_caller_id_number");
+			        caller_id_name = session:getVariable("effective_caller_id_name");
 			end
-			if (caller_id_number) then
+			if (disa_caller_id_number) then
 				--caller id number provided do nothing
 			else
 				caller_id_number = session:getVariable("effective_caller_id_number");
 			end
 		else
-			if (caller_id_name) then
+			if (disa_caller_id_name) then
 				--caller id name provided do nothing
 			else
-				caller_id_number = session:getVariable("outbound_caller_id_number");
+				caller_id_name = session:getVariable("outbound_caller_id_name");
 			end
 			if (caller_id_number) then
 				--caller id number provided do nothing
@@ -200,11 +201,11 @@
 			--external call
 			if (caller_id_name) then
 				session:execute("set", "outbound_caller_id_name="..caller_id_name);
-				session:execute("set", "effective_caller_id_name="..caller_id_name);
+				--session:execute("set", "effective_caller_id_name="..caller_id_name);
 			end
 			if (caller_id_number) then
 				session:execute("set", "outbound_caller_id_number="..caller_id_number);
-				session:execute("set", "effective_caller_id_number="..caller_id_number);
+				--session:execute("set", "effective_caller_id_number="..caller_id_number);
 			end
 			session:execute("transfer", destination_number .. " XML " .. context);
 		end
