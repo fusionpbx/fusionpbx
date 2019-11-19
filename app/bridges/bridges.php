@@ -86,7 +86,7 @@
 		}
 	}
 
-//get order and order by and sanatize the values
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
@@ -124,8 +124,7 @@
 	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -225,10 +224,10 @@
 			}
 			echo "	<td>";
 			if (permission_exists('bridge_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['bridge_name'])."</a>\n";
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['bridge_name'])."</a>";
 			}
 			else {
-				echo "	".escape($row['bridge_name'])."\n";
+				echo escape($row['bridge_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['bridge_destination'])."</td>\n";
