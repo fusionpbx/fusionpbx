@@ -145,7 +145,7 @@ if (!class_exists('access_controls')) {
 												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
 												$array[$this->table][$x]['access_control_description'] = trim($row['access_control_description'].' ('.$text['label-copy'].')');
 
-											//sub table
+											//nodes sub table
 												$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
 												$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
 												$database = new database;
@@ -158,6 +158,7 @@ if (!class_exists('access_controls')) {
 
 														//overwrite
 															$array['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
+															$array['access_control_nodes'][$y]['access_control_uuid'] = $primary_uuid;
 
 														//increment
 															$y++;

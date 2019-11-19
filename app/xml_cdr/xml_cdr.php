@@ -161,7 +161,7 @@
 	if (permission_exists('xml_cdr_archive')) {
 		echo button::create(['type'=>'button','label'=>$text['button-archive'],'icon'=>'archive','link'=>'xml_cdr_archive.php'.($_REQUEST['show'] == 'all' ? '?show=all' : null)]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>'file-export','onclick'=>"toggle_select('export_format'); this.blur();"]);
+	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
 	echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
 	echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
 	echo "			<option value='csv'>CSV</option>";

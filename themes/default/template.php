@@ -53,7 +53,6 @@ echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resourc
 echo "<title><!--{title}--></title>\n";
 
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery-3.4.1.min.js'></script>\n";
-//echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery.autosize.input.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/momentjs/moment-with-locales.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js'></script>\n";
@@ -430,6 +429,16 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
+		function list_all_check() {
+			var inputs = document.getElementsByTagName('input');
+			document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = true;
+				}
+			}
+		}
+
 		function list_self_check(checkbox_id) {
 			var inputs = document.getElementsByTagName('input');
 			for (var i = 0, max = inputs.length; i < max; i++) {
@@ -717,8 +726,7 @@ if (!$default_login) {
 
 			echo "			</ul>\n";
 
-			echo "			<ul class='navbar-nav ml-auto'>
-\n";
+			echo "			<ul class='navbar-nav ml-auto'>\n";
 			//domain name/selector
 				if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 					echo "		<li class='nav-item'>\n";

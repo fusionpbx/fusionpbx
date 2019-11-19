@@ -89,7 +89,7 @@
 		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
-		echo "		".software_version()."\n";
+		echo "		".software::version()."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 

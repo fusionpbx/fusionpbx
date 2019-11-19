@@ -549,6 +549,7 @@
 							$array["devices"][0]["device_uuid"] = $device_uuid;
 							$array["devices"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$array["devices"][0]["device_mac_address"] = $device_mac_address;
+							$array["devices"][0]["device_label"] = $extension;
 							if (strlen($device_template) > 0) {
 								$array["devices"][0]["device_template"] = $device_template;
 							}
@@ -1152,10 +1153,10 @@
 			if (is_dir($template_dir) && is_array($device_vendors)) {
 				foreach($device_vendors as $row) {
 					echo "		<optgroup label='".escape($row["name"])."'>\n";
-					$templates = scandir($template_dir.'/'.$row["name"]);
-					foreach($templates as $dir) {
-						if ($file != "." && $dir != ".." && $dir[0] != '.') {
-							if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+					if (is_dir($template_dir.'/'.$row["name"])) {
+						$templates = scandir($template_dir.'/'.$row["name"]);
+						foreach($templates as $dir) {
+							if ($file != "." && $dir != ".." && $dir[0] != '.' && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
 								if ($device_template == $row["name"]."/".$dir) {
 									echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
 								}

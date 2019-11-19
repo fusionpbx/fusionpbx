@@ -47,8 +47,8 @@
 		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		--caller_id_name = session:getVariable("caller_id_name");
-		--caller_id_number = session:getVariable("caller_id_number");
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
 		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");

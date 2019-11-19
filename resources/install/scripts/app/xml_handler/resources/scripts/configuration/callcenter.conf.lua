@@ -212,7 +212,7 @@
 								pos = string.find(agent_contact, "}");
 								first = string.sub(agent_contact, 0, pos);
 								last = string.sub(agent_contact, pos);
-								if (stristr(agent_contact, 'call_timeout') == FALSE) then
+								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
 									agent_contact = first..','..confirm..',call_timeout='..agent_call_timeout..last;
 								else
