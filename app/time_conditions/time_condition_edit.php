@@ -124,6 +124,19 @@
 				if ($action == 'add') {
 					$dialplan_context = $_SESSION['domain_name'];
 				}
+				if ($action == 'update') {
+					$sql = "select * from v_dialplans ";
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$parameters['dialplan_uuid'] = $dialplan_uuid;
+					$database = new database;
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$domain_uuid = $row["domain_uuid"];
+						$dialplan_context = $row["dialplan_context"];
+					}
+					unset($sql, $parameters, $row);
+					
+				}
 			}
 
 		//process main dialplan entry
@@ -461,6 +474,7 @@
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_detail_add', 'temp');
+					$p->add('dialplan_detail_edit', 'temp');
 
 				//execute insert
 					$database = new database;
@@ -471,6 +485,7 @@
 
 				//revoke temporary permissions
 					$p->delete('dialplan_detail_add', 'temp');
+					$p->delete('dialplan_detail_edit', 'temp');
 			}
 
 		//update the dialplan xml
@@ -494,8 +509,12 @@
 			else if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
-			exit;
+
+		//redirect the browser
+			if (is_uuid($dialplan_uuid)) {
+				header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
+				exit;
+			}
 
 	}
 

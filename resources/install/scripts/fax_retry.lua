@@ -149,6 +149,15 @@
 				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
 			end
 		end
+		ignore_early_media = "false";
+		if (settings['fax']['variable'] ~= nil) then
+			for i, var in ipairs(settings.fax.variable) do
+		  		--freeswitch.consoleLog("notice", "variable #" .. i .. ": " .. var .. "\n");
+		  		if (var == "ignore_early_media=true") then
+		  			ignore_early_media = "true";
+		  		end
+			end
+		end
 	end
 
 --be sure accountcode is not empty
@@ -462,8 +471,12 @@
 				if (hangup_cause_q850 ~= 17) then
 					fax_retry_attempts = fax_retry_attempts + 1;
 				end
-				cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
-
+				if (ignore_early_media == "true") then
+					cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,ignore_early_media=true,fax_disable_v17=false,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+				else
+					cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+				end
+			
 			elseif (fax_retry_attempts == 2) then
 				--send t38 off, ECM on
 				freeswitch.consoleLog("INFO","[FAX] TRYING ["..fax_retry_attempts.."] of [4] to: "..number_dialed.." with: t38 OFF ECM ON, Fast\n");
@@ -478,8 +491,11 @@
 				if (hangup_cause_q850 ~= 17) then
 					fax_retry_attempts = fax_retry_attempts + 1;
 				end
-
-				cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+				if (ignore_early_media == "true") then
+					cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,ignore_early_media=true,fax_disable_v17=true,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+				else
+					cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+				end
 
 			elseif (fax_retry_attempts == 4) then
 				--send t38 off v17 [slow] on ECM off
@@ -545,13 +561,25 @@
 	else
 		--Success
 		if (fax_retry_attempts == 0) then
-			fax_trial = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+			if (ignore_early_media == "true") then
+				fax_trial = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,ignore_early_media=true,fax_disable_v17=default";
+			else
+				fax_trial = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+			end
 		elseif (fax_retry_attempts == 1) then
-			fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+			if (ignore_early_media == "true") then
+				fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,ignore_early_media=true,fax_disable_v17=false";
+			else
+				fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+			end
 		elseif (fax_retry_attempts == 2) then
 			fax_trial = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 		elseif (fax_retry_attempts == 3) then
-			fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			if (ignore_early_media == "true") then
+				fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,ignore_early_media=true,fax_disable_v17=true";
+			else
+				fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			end
 		elseif (fax_retry_attempts == 4) then
 			fax_trial = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 		else

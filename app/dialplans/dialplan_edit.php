@@ -170,7 +170,7 @@
 						if (strlen($row["dialplan_detail_uuid"]) > 0) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 						}
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $array['domain_uuid'];
+						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];

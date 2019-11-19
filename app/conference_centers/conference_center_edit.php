@@ -255,8 +255,11 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_center']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' style='margin-right: 15px;' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>";
+	if (permission_exists('conference_center_delete') && $action == 'update') {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'link'=>'conference_center_delete.php?id='.urlencode($conference_center_uuid),'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
+	}
+	echo 	"<input type='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 

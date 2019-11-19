@@ -151,6 +151,7 @@
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
+		$sql .= "order by number_translation_detail_order";
 		$database = new database;
 		$number_translation_details = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);

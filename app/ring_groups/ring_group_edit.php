@@ -45,6 +45,34 @@
 	$language = new text;
 	$text = $language->get();
 
+//action add or update
+	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ring_group_uuid"])) {
+		$action = "update";
+
+		//get the ring_group_uuid
+		$ring_group_uuid = $_REQUEST["id"];
+		if (is_uuid($_REQUEST["ring_group_uuid"])) {
+			$ring_group_uuid = $_REQUEST["ring_group_uuid"];
+		}
+
+		//get the domain_uuid
+		if (is_uuid($ring_group_uuid) && permission_exists('ring_group_all')) {
+			$sql = "select domain_uuid from v_ring_groups ";
+			$sql .= "where ring_group_uuid = :ring_group_uuid ";
+			$parameters['ring_group_uuid'] = $ring_group_uuid;
+			$database = new database;
+			$domain_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+		}
+		else {
+			$domain_uuid = $_SESSION['domain_uuid'];
+		}
+	}
+	else {
+		$action = "add";
+		$domain_uuid = $_SESSION['domain_uuid'];
+	}
+
 //delete the user from the ring group
 	if (
 		$_GET["a"] == "delete"
@@ -53,7 +81,6 @@
 		) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
-			$ring_group_uuid = $_REQUEST["id"];
 		//build array
 			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
 			$array['ring_group_users'][0]['ring_group_uuid'] = $ring_group_uuid;
@@ -76,25 +103,12 @@
 			exit;
 	}
 
-//action add or update
-	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ring_group_uuid"])) {
-		$action = "update";
-		$ring_group_uuid = $_REQUEST["id"];
-		if (is_uuid($_REQUEST["ring_group_uuid"])) {
-			$ring_group_uuid = $_REQUEST["ring_group_uuid"];
-		}
-	}
-	else {
-		$action = "add";
-		$ring_group_uuid = uuid();
-	}
-
 //get total ring group count from the database, check limit, if defined
 	if ($action == 'add') {
 		if ($_SESSION['limit']['ring_groups']['numeric'] != '') {
 			$sql = "select count(*) from v_ring_groups ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$total_ring_groups = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -153,7 +167,6 @@
 	if (is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
-			$extension_uuid = $_REQUEST["id"];
 		//build array
 			$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
 			$array['ring_group_users'][0]['domain_uuid'] = $domain_uuid;
@@ -173,7 +186,7 @@
 		//set message
 			message::add($text['message-add']);
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".$ring_group_uuid);
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
 			exit;
 	}
 
@@ -257,9 +270,9 @@
 					$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 					$ring_group_timeout_data = join(':', $ring_group_timeout_array);
 
-				//add the domain_uuid
-					if (!is_uuid($_POST["domain_uuid"])) {
-						$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
+				//add a uuid to ring_group_uuid if it is empty
+					if ($action == 'add') {
+						$ring_group_uuid = uuid();
 					}
 
 				//add the dialplan_uuid
@@ -317,7 +330,7 @@
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 							$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
-							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 						}
 						$y++;
 					}
@@ -332,7 +345,7 @@
 					$dialplan_xml .= "</extension>\n";
 
 				//build the dialplan array
-					$array["dialplans"][0]["domain_uuid"] = $_SESSION["domain_uuid"];
+					$array["dialplans"][0]["domain_uuid"] = $domain_uuid;
 					$array["dialplans"][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array["dialplans"][0]["dialplan_name"] = $ring_group_name;
 					$array["dialplans"][0]["dialplan_number"] = $ring_group_extension;
@@ -394,13 +407,12 @@
 //pre-populate the form
 	if (is_uuid($ring_group_uuid)) {
 		$sql = "select * from v_ring_groups ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ring_group_uuid = :ring_group_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$sql .= "where ring_group_uuid = :ring_group_uuid ";
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
+			$domain_uuid = $row["domain_uuid"];
 			$ring_group_name = $row["ring_group_name"];
 			$ring_group_extension = $row["ring_group_extension"];
 			$ring_group_greeting = $row["ring_group_greeting"];
@@ -446,7 +458,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and ring_group_uuid = :ring_group_uuid ";
 		$sql .= "order by destination_delay, destination_number asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
 		$database = new database;
 		$ring_group_destinations = $database->select($sql, $parameters, 'all');
@@ -479,7 +491,7 @@
 		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$sql .= "and r.ring_group_uuid = :ring_group_uuid ";
 		$sql .= "order by u.username asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['ring_group_uuid'] = $ring_group_uuid;
 		$database = new database;
 		$ring_group_users = $database->select($sql, $parameters, 'all');
@@ -491,7 +503,7 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -710,7 +722,7 @@
 		echo "				<td>&nbsp;</td>\n";
 		echo "				<td class='list_control_icons' style='width: 25px;'>";
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			echo "				<a href='ring_group_destination_delete.php?id=".escape($row['ring_group_destination_uuid'])."&ring_group_uuid=".escape($row['ring_group_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo "				<a href='ring_group_destination_delete.php?id=".urlencode($row['ring_group_destination_uuid'])."&ring_group_uuid=".urlencode($row['ring_group_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
@@ -827,7 +839,7 @@
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 			echo "				<td>\n";
-			echo "					<a href='ring_group_edit.php?id=".escape($ring_group_uuid)."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+			echo "					<a href='ring_group_edit.php?id=".urlencode($ring_group_uuid)."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}

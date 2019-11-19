@@ -47,8 +47,8 @@
 		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		--caller_id_name = session:getVariable("caller_id_name");
-		--caller_id_number = session:getVariable("caller_id_number");
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
 		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");
@@ -184,8 +184,8 @@
 	--	min_digits = 7;
 	--	max_digits = 20;
 	--	session:sleep(1000);
-	--	caller_id_name = '';
 	--	caller_id_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_source_telephone_number.wav", "", "\\d+");
+	--	caller_id_name = '';
 	--	if (string.len(caller_id_number) == 0) then
 	--		sesssion:hangup();
 	--	end
@@ -197,8 +197,9 @@
 			--local call
 			session:execute("transfer", destination_number .. " XML " .. context);
 		else
-			--exteernal call
+			--external call
 			if (caller_id_name) then
+				session:execute("set", "outbound_caller_id_name="..caller_id_name);
 				session:execute("set", "effective_caller_id_name="..caller_id_name);
 			end
 			if (caller_id_number) then

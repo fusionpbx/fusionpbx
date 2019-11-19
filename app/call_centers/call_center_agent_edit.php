@@ -117,7 +117,7 @@
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
 			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
 			//if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
-			if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
+			//if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
 			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
 			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
 			if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required']." ".$text['label-agent_max_no_answer']."<br>\n"; }
@@ -486,6 +486,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
+	echo "	<option value=''></option>\n";
 	if ($agent_status == "Logged Out") {
 		echo "	<option value='Logged Out' SELECTED >".$text['option-logged_out']."</option>\n";
 	}

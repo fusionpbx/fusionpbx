@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,19 +43,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(ring_group_name) like :search ";
-		$sql_search .= "or lower(ring_group_extension) like :search ";
-		$sql_search .= "or lower(ring_group_description) like :search ";
-		$sql_search .= "or lower(ring_group_enabled) like :search ";
-		$sql_search .= "or lower(ring_group_strategy) like :search ";
-		$sql_search .= ")";
-		$parameters['search'] = '%'.$search.'%';
-	}	
-
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
@@ -64,12 +51,23 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//add the search term
+	$search = strtolower($_GET["search"]);
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
 	echo "		<form method='get' action=''>\n";
 	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	if (permission_exists('ring_group_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='ring_groups.php?show=all&search=".escape($search)."';\">\n";
+		}
+	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
 	echo "			</td>\n";
@@ -85,25 +83,66 @@
 //get total ring group count
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //get filtered ring group count
-	$sql .= $search;
+	$sql = "select count(*) from v_ring_groups ";
+	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+		//$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "lower(ring_group_name) like :search ";
+		$sql .= "or lower(ring_group_extension) like :search ";
+		$sql .= "or lower(ring_group_description) like :search ";
+		$sql .= "or lower(ring_group_enabled) like :search ";
+		$sql .= "or lower(ring_group_strategy) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
 	$page = $_GET['page'];
+	$param = "&search=".escape($search);
+	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+		$param .= "&show=all";
+	}
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * from v_ring_groups as r, v_domains as d ";
+	$sql .= "where r.domain_uuid = d.domain_uuid ";
+	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+		$sql .= "and true ";
+	}
+	else {
+		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "lower(ring_group_name) like :search ";
+		$sql .= "or lower(ring_group_extension) like :search ";
+		$sql .= "or lower(ring_group_description) like :search ";
+		$sql .= "or lower(ring_group_enabled) like :search ";
+		$sql .= "or lower(ring_group_strategy) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+
 	if (strlen($order_by) == 0) {
 		$sql .= "order by ring_group_name asc, ring_group_extension asc ";
 	}
@@ -122,6 +161,9 @@
 //show the content
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	}
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('ring_group_strategy', $text['label-strategy'], $order_by, $order);
@@ -141,6 +183,9 @@
 		foreach($ring_groups as $row) {
 			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
+			if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."&nbsp;</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('ring_group_edit')) {
 				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."'>".escape($row['ring_group_name'])."</a>";
@@ -149,6 +194,7 @@
 				echo $row['ring_group_name'];
 			}
 			echo "	</td>\n";
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";

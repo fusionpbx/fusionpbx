@@ -511,7 +511,6 @@
 	//end where
 	if (strlen($order_by) > 0) {
 		$sql .= order_by($order_by, $order);
-		//$sql .= " order by $order_by $order ";
 	}
 	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
 		if ($rows_per_page == 0) {
@@ -542,12 +541,7 @@
 	unset($database, $sql, $parameters);
 
 //return the paging
-	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
-
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
 
 ?>

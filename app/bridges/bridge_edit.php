@@ -62,11 +62,11 @@
 			if (permission_exists('bridge_delete')) {
 				if ($_POST['action'] == 'delete' && is_uuid($bridge_uuid)) {
 					//prepare
-						$bridges[0]['checked'] = 'true';
-						$bridges[0]['bridge_uuid'] = $bridge_uuid;
+						$array[0]['checked'] = 'true';
+						$array[0]['uuid'] = $bridge_uuid;
 					//delete
 						$obj = new bridges;
-						$obj->delete($bridges);
+						$obj->delete($array);
 					//redirect
 						header('Location: bridges.php');
 						exit;
@@ -168,9 +168,11 @@
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-bridge']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<a href='bridges.php'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
-	echo "	<button type='submit' class='btn btn-default' style='margin-right: 15px;' name='action' value='delete' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }\">".$text['button-delete']."</button>";
-	echo "	<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>";
+	echo 	"<a href='bridges.php'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
+	if ($action == 'update' && permission_exists('bridge_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
+	}
+	echo 	"<button type='submit' class='btn btn-default' name='action' value='save'>".$text['button-save']."</button>";
 	echo "</td>\n";
 	echo "</tr>\n";
 

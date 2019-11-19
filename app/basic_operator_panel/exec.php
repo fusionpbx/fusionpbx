@@ -2,7 +2,7 @@
 /* $Id$ */
 /*
 	v_exec.php
-	Copyright (C) 2008 Mark J Crane
+	Copyright (C) 2008-2019 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -49,59 +49,16 @@
 // 		}
 // 	}
 
-//http get variables set to php variables
-	if (count($_GET) > 0) {
+//process the requests
+if (count($_GET) > 0) {
+	//set the variables
 		$switch_cmd = trim($_GET["cmd"]);
 		$action = trim($_GET["action"]);
 		$data = trim($_GET["data"]);
 		$direction = trim($_GET["direction"]);
-		$username = $_SESSION['username'];
-	}
-
-if (count($_GET) >0) {
 
 	//setup the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-/*
-	//get the status
-		if (stristr($action, 'user_status') == true) {
-			$user_status = $data;
-			switch ($user_status) {
-			case "Available":
-				$user_status = "Available";
-				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-				break;
-			case "Available_On_Demand":
-				$user_status = "Available (On Demand)";
-				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-				break;
-			case "Logged_Out":
-				$user_status = "Logged Out";
-				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-				break;
-			case "On_Break":
-				$user_status = "On Break";
-				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-				break;
-			case "Do_Not_Disturb":
-				$user_status = "Do Not Disturb";
-				//update the user state
-				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-				$response = event_socket_request($fp, $cmd);
-				break;
-			default:
-				$user_status = "";
-			}
-		}
-*/
 
 	//allow specific commands
 		if (strlen($switch_cmd) > 0) {
@@ -136,43 +93,6 @@ if (count($_GET) >0) {
 				echo 'access denied';
 				return;
 			}
-
-			/*
-			//set the status so they are compatible with mod_callcenter
-			$switch_cmd = str_replace("Available_On_Demand", "'Available (On Demand)'", $switch_cmd);
-			$switch_cmd = str_replace("Logged_Out", "'Logged Out'", $switch_cmd);
-			$switch_cmd = str_replace("On_Break", "'On Break'", $switch_cmd);
-			$switch_cmd = str_replace("Do_Not_Disturb", "'Logged Out'", $switch_cmd);
-
-			//if ($action == "energy") {
-				//conference 3001-example.org energy 103
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$result_array = explode("=",$switch_result);
-				$tmp_value = $result_array[1];
-				//if ($direction == "up") { $tmp_value = $tmp_value + 100; }
-				//if ($direction == "down") { $tmp_value = $tmp_value - 100; }
-				//echo "energy $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-			//}
-			if ($action == "volume_in") {
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$result_array = explode("=",$switch_result);
-				$tmp_value = $result_array[1];
-				if ($direction == "up") { $tmp_value = $tmp_value + 1; }
-				if ($direction == "down") { $tmp_value = $tmp_value - 1; }
-				//echo "volume $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-			}
-			if ($action == "volume_out") {
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				$result_array = explode("=",$switch_result);
-				$tmp_value = $result_array[1];
-				if ($direction == "up") { $tmp_value = $tmp_value + 1; }
-				if ($direction == "down") { $tmp_value = $tmp_value - 1; }
-				//echo "volume $tmp_value<br />\n";
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-			}
-			*/
 
 			//run the command
 			$switch_result = event_socket_request($fp, 'api '.$api_cmd);

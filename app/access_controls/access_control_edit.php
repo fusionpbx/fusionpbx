@@ -51,6 +51,21 @@
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
+	//delete the access control
+		if (permission_exists('access_control_delete')) {
+			if ($_POST['action'] == 'delete' && is_uuid($access_control_uuid)) {
+				//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $access_control_uuid;
+				//delete
+					$obj = new access_controls;
+					$obj->delete($array);
+				//redirect
+					header('Location: access_controls.php');
+					exit;
+			}
+		}
+
 	//get the primary key
 		if ($action == "update") {
 			$access_control_uuid = $_POST["access_control_uuid"];
@@ -90,15 +105,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$execute = true;
 				$access_control_uuid = uuid();
 
-				//add the message
+				//set the message
 				message::add($text['message-add']);
+
+				//set redirect url
+				$redirect_url = 'access_control_edit.php?id='.$access_control_uuid;
 			}
 
 			if ($action == "update" && permission_exists('access_control_edit')) {
 				$execute = true;
-				//$access_control_uuid //already set
 
-				//add the message
+				//set the message
 				message::add($text['message-update']);
 			}
 
@@ -123,11 +140,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 			//redirect the user
-			header("Location: access_controls.php");
-			return;
+			header('Location: '.($redirect_url ? $redirect_url : 'access_controls.php'));
+			exit;
+		}
 
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
@@ -158,7 +175,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='access_controls.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' style='margin-right: 15px;' name='' alt='".$text['button-back']."' onclick=\"window.location='access_controls.php'\" value='".$text['button-back']."'>";
+	if ($action == 'update' && permission_exists('access_control_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
+	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -175,12 +195,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-access_control_default']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='access_control_default'>\n";
-	echo "	<option value=''></option>\n";
 	if ($access_control_default == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}

@@ -1,244 +1,220 @@
 --
---      call_block
---      Version: MPL 1.1
+--	FusionPBX
+--	Version: MPL 1.1
 --
---      The contents of this file are subject to the Mozilla Public License Version
---      1.1 (the "License"); you may not use this file except in compliance with
---      the License. You may obtain a copy of the License at
---      http://www.mozilla.org/MPL/
+--	The contents of this file are subject to the Mozilla Public License Version
+--	1.1 (the "License"); you may not use this file except in compliance with
+--	the License. You may obtain a copy of the License at
+--	http://www.mozilla.org/MPL/
 --
---      Software distributed under the License is distributed on an "AS IS" basis,
---      WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
---      for the specific language governing rights and limitations under the
---      License.
+--	Software distributed under the License is distributed on an "AS IS" basis,
+--	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+--	for the specific language governing rights and limitations under the
+--	License.
 --
---      The Original Code is call_block-FS
+--	The Original Code is FusionPBX
 --
---      The Initial Developer of the Original Code is
---      Gerrit Visser <gerrit308@gmail.com>
---      Copyright (C) 2011
---      the Initial Developer. All Rights Reserved.
+--	The Initial Developer of the Original Code is
+--	Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2019
+--	the Initial Developer. All Rights Reserved.
 --
---      Contributor(s):
---      Gerrit Visser <gerrit308@gmail.com>
---      Mark J Crane <markjcrane@fusionpbx.com>
---[[
-This module provides for Blacklisting of phone numbers. Essentially these are numbers that you do not want to hear from again!
+--	Contributor(s):
+--	Mark J Crane <markjcrane@fusionpbx.com>
 
-To call this script and pass it arguments:
-1. On the command line, e.g. in a FS incoming dialplan: <action application="lua" data="call_block.lua C"/>
-This method causes the script to get its manadatory arguments directly from the Session
-]]
---[[ Change Log:
-	15 Jun, 2011: initial release > FusionPBX
-	15 Jun, 2011: Added loglevel parameter and logger function to simplify control of debug output
-	4 May, 2012: tested with FusionPBX V3
-	4 May, 2012: added per_tenant capability (domain based)
-	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
-	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
-	27 Sep, 2013: Changed the name of the fields to conform with the table name
-	12 Feb, 2018: Added support for regular expressions and SQL "like" matching  on the phone number
-]]
-
---set defaults
-	expire = {}
-	expire["call_block"] = "900";
-	source = "";
+--set the debug level
+	debug["sql"] = false;
 
 --includes
-	local cache = require"resources.functions.cache"
+	local cache = require"resources.functions.cache";
 	local log = require"resources.functions.log"["call_block"];
-	--json = require "resources.functions.lunajson";
 
--- Command line parameters
-	local params = {
-		cid_num = string.match(tostring(session:getVariable("caller_id_number")), "%d+"),
-		cid_name = session:getVariable("caller_id_name"),
-		domain_name = session:getVariable("domain_name"),
-		userid = "", -- session:getVariable("id")
-		loglevel = "W" -- Warning, Debug, Info
-		}
-
---check if cid_num is numeric
-	if (tonumber(params["cid_num"]) == nil) then
-		return
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson";
 	end
 
--- local storage
-	local sql = nil
-
---define the functions
-	local Settings = require "resources.functions.lazy_settings"
-	local Database = require "resources.functions.database"
+--include functions
 	require "resources.functions.trim";
+	require "resources.functions.explode";
+	require "resources.functions.file_exists";
 
---define the logger function
-	local function logger(level, log, data)
-		-- output data to console 'log' if debug level is on
-		if string.find(params["loglevel"], level) then
-			freeswitch.consoleLog(log, "[call_block] " .. data .. "\n")
-		end
+--get the variables
+	if (session:ready()) then
+		--session:setAutoHangup(false);
+		domain_uuid = session:getVariable("domain_uuid");
+		caller_id_name = session:getVariable("caller_id_name");
+		caller_id_number = session:getVariable("caller_id_number");
+		context = session:getVariable("context");
+		call_block = session:getVariable("call_block");
+		extension_uuid = session:getVariable("extension_uuid");
 	end
 
---set the api object
+--set default variables
 	api = freeswitch.API();
 
--- ensure that we have a fresh status on exit
-	session:setVariable("call_block", "");
-
--- get the configuration variables from the DB
-	local db = dbh or Database.new('system')
-	local settings = Settings.new(db, domain_name, domain_uuid)
-	local call_block_matching = settings:get('call_block', 'call_block_matching', 'text');
-
---send to the log
-	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"],
-			params["cid_name"], params["userid"], params["domain_name"]));
-
 --set the dialplan cache key
-	local cache_key = "app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"];
+	local call_block_cache_key = "call_block:" .. caller_id_number;
 
 --get the cache
-	cache_data, err = cache.get(cache_key);
+	cached_value, err = cache.get(call_block_cache_key);
 	if (debug['cache']) then
-		if cache_data then
-			log.notice(cache_key.." source: cache");
-		elseif (not cache_data) then
-			log.notice("error get element from cache: " .. err);
+		if cached_value then
+			log.notice(call_block_cache_key.." source: cache");
+		elseif err ~= 'NOT FOUND' then
+			log.notice("error cache: " .. err);
 		end
 	end
 
---connect to the database
-	Database = require "resources.functions.database";
-	dbh = Database.new('system');
+--disable the cache
+	cached_value = nil;
 
---log if not connect
-	if dbh:connected() == false then
-		logger("W", "NOTICE", "db was not connected")
-	end
+--run call block one time
+	if (call_block == nil and call_block ~= 'true') then
 
---check if the the call block is blocked
-	sql = "SELECT * FROM v_call_block as c "
-	sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-	if ((database["type"] == "pgsql") and (call_block_matching == "regex")) then
-		logger("W", "NOTICE", "call_block using regex match on cid_num")
-		sql = sql .. "WHERE :cid_num ~ c.call_block_number AND d.domain_name = :domain_name "
-	elseif (((database["type"] == "mysql") or (database["type"] == "sqlite")) and (call_block_matching == "regex")) then
-		logger("W", "NOTICE", "call_block using regex match on cid_num")
-		sql = sql .. "WHERE :cid_num REGEXP c.call_block_number AND d.domain_name = :domain_name "
-	elseif call_block_matching == "like" then
-		logger("W", "NOTICE", "call_block using like match on cid_num")
-		sql = sql .. "WHERE :cid_num LIKE c.call_block_number AND d.domain_name = :domain_name "
-	else
-		logger("W", "NOTICE", "call_block using exact match on cid_num")
-		sql = sql .. "WHERE :cid_num = c.call_block_number AND d.domain_name = :domain_name "
-	end
-	--freeswitch.consoleLog("notice", "[call_block] " .. sql .. "\n");
-	dbh:query(sql, params, function(rows)
-		found_cid_num = rows["call_block_number"];
-		found_uuid = rows["call_block_uuid"];
-		found_enabled = rows["call_block_enabled"];
-		found_action = rows["call_block_action"];
-		found_count = rows["call_block_count"];
-	end)
-	-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
-
---check if number is in call_block list then increment the counter and block the call
-	--if not cached then get the information from the database
-	if (not cache_data) then
 		--set the cache
-			if (found_cid_num) then	-- caller id exists
-				if (found_enabled == "true") then
-					--set the cache
-					cache_data = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action;
-					local ok, err = cache.set(cache_key, cache_data, expire["call_block"]);
-					if debug["cache"] then
-						if ok then
-							freeswitch.consoleLog("notice", "[call_block] " .. cache_key .. " stored in the cache\n");
-						else
-							freeswitch.consoleLog("warning", "[call_block] " .. cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+		if (not cached_value) then
+
+			--connect to the database
+				local Database = require "resources.functions.database";
+				dbh = Database.new('system');
+
+			--include json library
+				local json
+				if (debug["sql"]) then
+					json = require "resources.functions.lunajson";
+				end
+
+			--exits the script if we didn't connect properly
+				assert(dbh:connected());
+
+			--check to see if the call should be blocked
+				sql = "select * from v_call_block ";
+				sql = sql .. "where domain_uuid = :domain_uuid ";
+				sql = sql .. "and call_block_enabled = 'true' ";
+				sql = sql .. "and ( ";
+				sql = sql .. "	(call_block_name = :call_block_name and call_block_number = :call_block_number) ";
+				sql = sql .. "	or (call_block_name is null and call_block_number = :call_block_number) ";
+				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) ";
+				sql = sql .. ") ";
+				if (extension_uuid == nil) then
+					sql = sql .. "and extension_uuid is null ";
+				else
+					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
+				end
+				if (extension_uuid ~= nil) then
+					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
+				else
+					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number};
+				end
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
+				local found = false;
+				dbh:query(sql, params, function(row)
+					found = true;
+
+					--get the values from the database
+					call_block_uuid = row.call_block_uuid;
+					call_block_app = row.call_block_app;
+					call_block_data = row.call_block_data;
+					call_block_count = row.call_block_count;
+					extension_uuid = row.extension_uuid;
+
+					--cached_value = domain_uuid..','..caller_id_number;
+				end);
+
+			--set call block default to false
+				call_block = false;
+				if (call_block_app ~= nil) then
+					call_block = true;
+					if (session:ready()) then
+						session:execute('set', 'call_block=true');
+					end
+				end
+
+			--call block action
+				if (call_block_app ~= nil and call_block_app == 'busy') then
+					if (session:ready()) then
+						session:execute("respond", '486');
+						session:execute('set', 'call_block_uuid='..call_block_uuid);
+						session:execute('set', 'call_block_app=busy');
+						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Busy\n");
+					end
+				end
+				if (call_block_app ~= nil and call_block_app == 'hold') then
+					if (session:ready()) then
+						session:execute("respond", '607');
+						session:execute('set', 'call_block_uuid='..call_block_uuid);
+						session:execute('set', 'call_block_app=hold');
+						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Hold\n");
+					end
+				end
+				if (call_block_app ~= nil and call_block_app == 'reject') then
+					if (session:ready()) then
+						session:execute("respond", '607');
+						session:execute('set', 'call_block_uuid='..call_block_uuid);
+						session:execute('set', 'call_block_app=reject');
+						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Reject\n");
+					end
+				end
+				if (call_block_app ~= nil and call_block_data ~= nil) then
+					if (call_block_app == 'extension') then
+						if (session:ready()) then
+							session:execute('set', 'call_block_uuid='..call_block_uuid);
+							session:execute('set', 'call_block_app='..call_block_app);
+							session:execute('set', 'call_block_data='..call_block_data);
+							session:execute("transfer", call_block_data..' XML '.. context);
+							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: extension ".. call_block_data.."\n");
 						end
 					end
-
-					--set the source
-					source = "database";
-				end
-			end
-
-	else
-		--get from the cache
-			--add the function
-				require "resources.functions.explode";
-
-			--parse the cache
-				array = explode("&", cache_data);
-
-			--define the array/table and variables
-				local var = {}
-				local key = "";
-				local value = "";
-
-			--parse the cache
-				key_pairs = explode("&", cache_data);
-				for k,v in pairs(key_pairs) do
-					f = explode("=", v);
-					key = f[1];
-					value = f[2];
-					var[key] = value;
+					if (call_block_app == 'voicemail') then
+						if (session:ready()) then
+							session:execute('set', 'call_block_uuid='..call_block_uuid);
+							session:execute('set', 'call_block_app='..call_block_app);
+							session:execute('set', 'call_block_data='..call_block_data);
+							session:execute("transfer", '*99'..call_block_data..' XML '.. context);
+							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: voicemail *99".. call_block_data.."\n");
+						end
+					end
 				end
 
-			--set the variables
-				found_cid_num = var["found_cid_num"];
-				found_uuid = var["found_uuid"];
-				found_enabled = var["found_enabled"];
-				found_action = var["found_action"];
-
-			--set the source
-				source = "cache";
-	end
-
---debug information
-	--freeswitch.consoleLog("error", "[call_block] " .. cache_data .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
-	--freeswitch.consoleLog("error", "[call_block] found_count = " .. found_count  .. "\n");
-
---block the call
-	if found_cid_num then	-- caller id exists
-		if (found_enabled == "true") then
-			details = {}
-			k = 0
-			for v in string.gmatch(found_action, "[%w%.]+") do
-				details[k] = v
-				--logger("W", "INFO", "Details: " .. details[k])
-				k = k + 1
-			end
-			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
-
-			-- Command line parameters
-			local params = {
-				call_block_count = found_count + 1,
-				call_block_uuid = found_uuid
-			}
 			--update the call block count
-			local sql = "UPDATE v_call_block SET call_block_count = :call_block_count WHERE call_block_uuid = :call_block_uuid";
-			dbh:query(sql, params);
-			freeswitch.consoleLog("error", "[call_block] udpate\n");
-			--freeswitch.consoleLog("error", "[call_block] sql = " .. sql  .. "\n");
-			--freeswitch.consoleLog("error", "[call_block] " .. json.encode(params) .. "\n");
+				if (call_block) then
+					sql = "update v_call_block ";
+					sql = sql .. "set call_block_count = :call_block_count ";
+					sql = sql .. "where call_block_uuid = :call_block_uuid ";
+					local params = {call_block_uuid = call_block_uuid, call_block_count = call_block_count + 1};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params);
+				end
 
-			session:execute("set", "call_blocked=true");
-			if (found_action == "Reject") then
-				session:hangup("CALL_REJECTED")
-			elseif (found_action == "Busy") then
-				session:hangup("USER_BUSY")
-			elseif (found_action =="Hold") then
-				session:setAutoHangup(false)
-				session:execute("transfer", "*9664")
-			elseif (details[0] =="Voicemail") then
-				session:setAutoHangup(false)
-				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
-			end
+			--close the database connection
+				dbh:release();
+
+			--set the cache
+				if (cached_value ~= nil) then
+					local ok, err = cache.set(call_block_cache_key, cached_value, '3600');
+				end
+				if debug["cache"] then
+					if ok then
+						freeswitch.consoleLog("notice", "[call_block] " .. call_block_cache_key .. " stored in the cache\n");
+					else
+						freeswitch.consoleLog("warning", "[call_block] " .. call_block_cache_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+					end
+				end
+
+			--send to the console
+				if (debug["cache"]) then
+					freeswitch.consoleLog("notice", "[call_block] " .. call_block_cache_key .. " source: database\n");
+				end
+		else
+			--send to the console
+				if (debug["cache"]) then
+					freeswitch.consoleLog("notice", "[call_block] " .. call_block_cache_key .. " source: cache\n");
+				end
 		end
 	end

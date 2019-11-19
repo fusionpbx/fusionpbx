@@ -187,9 +187,9 @@
 
 				//build the xml
 					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default+flags{'".$conference_flags."}\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default+flags{'".$conference_flags."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -202,10 +202,11 @@
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
 					$array['dialplans'][0]['dialplan_order'] = '333';
 					$array['dialplans'][0]['dialplan_context'] = $_SESSION['context'];
-					$array['dialplans'][0]['dialplan_enabled'] = 'true';
+					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
 					$p = new permissions;
+					$p->add('dialplan_add', 'temp');
 					$p->add('dialplan_edit', 'temp');
 
 					$database = new database;
@@ -215,6 +216,7 @@
 					$response = $database->message;
 					unset($array);
 
+					$p->delete('dialplan_add', 'temp');
 					$p->delete('dialplan_edit', 'temp');
 
 				//delete the dialplan details
@@ -302,9 +304,6 @@
 //set the default
 	if ($conference_profile == "") { $conference_profile = "default"; }
 
-//set defaults
-	if (strlen($conference_enabled) == 0) { $conference_enabled = "true"; }
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -378,20 +377,23 @@
 			echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 			echo "		<td class='vtable'>";
 
-			echo "			<table width='52%'>\n";
-			foreach($conference_users as $field) {
-				echo "			<tr>\n";
-				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
-				echo "				<td>\n";
-				echo "					<a href='conference_edit.php?id=".escape($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
-				echo "				</td>\n";
-				echo "			</tr>\n";
+			if (is_array($conference_users) && @sizeof($conference_users) != 0) {
+				echo "		<table width='52%'>\n";
+				foreach ($conference_users as $field) {
+					echo "		<tr>\n";
+					echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
+					echo "			<td>\n";
+					echo "				<a href='conference_edit.php?id=".escape($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+					echo "			</td>\n";
+					echo "		</tr>\n";
+				}
+				echo "		</table>\n";
+				echo "		<br />\n";
 			}
-			echo "			</table>\n";
-			echo "			<br />\n";
+
 			echo "			<select name=\"user_uuid\" class='formfld'>\n";
 			echo "			<option value=\"\"></option>\n";
-			foreach($users as $field) {
+			foreach ($users as $field) {
 				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
@@ -464,18 +466,9 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_enabled'>\n";
-	if ($conference_enabled == "true") {
-		echo "	<option value='true' selected='selected'>true</option>\n";
-	}
-	else {
-		echo "	<option value='true'>true</option>\n";
-	}
-	if ($conference_enabled == "false") {
-		echo "	<option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "	<option value='false'>false</option>\n";
-	}
+	$selected = $conference_enabled == 'false' ? "selected='selected'" : null;
+	echo "		<option value='true'>".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".$selected.">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";

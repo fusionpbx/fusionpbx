@@ -663,24 +663,13 @@
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='device_profile_enabled'>\n";
-	echo "		<option value=''></option>\n";
-	if ($device_profile_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($device_profile_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
+	echo "		<option value='true'>".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".($device_profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-device_profile_enabled']."\n";

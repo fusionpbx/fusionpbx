@@ -5927,15 +5927,18 @@
     <!-- # Enable Manual VLAN Configuration. 0 - Disable, 1 - Enable. Default is 0. -->
     <!-- # Number: 0,1 -->
     <!-- # Mandatory -->
-    <P22174>0</P22174>
+{if isset($grandstream_lan_port_vlan) }
+    <P22174>1</P22174>
 
     <!-- # Layer 2 QoS. 802.1Q/VLAN Tag (VLAN classification for RTP). Default is 0 -->
     <!-- # Number: 0 - 4094 -->
     <!-- # Mandatory -->
-{if isset($grandstream_lan_port_vlan) }
+
     <P51>{$grandstream_lan_port_vlan}</P51>
+    
 {else}
     <P51>0</P51>
+    <P22174>0</P22174>
 {/if}
 
     <!-- # Layer 2 QoS. 802.1p priority value (0 - 7). Default is 0 -->
@@ -6637,17 +6640,17 @@
 
     <!-- # HTTP/HTTPS User Name -->
     <!-- # String -->
-    <P6713></P6713>
+    <P6713>{$http_auth_username}</P6713>
 
     <!-- # HTTP/HTTPS Password -->
     <!-- # String -->
-    <P6714></P6714>
+    <P6714>{$http_auth_password}</P6714>
 
     <!-- # Phonebook XML Server Path -->
     <!-- # This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!-- # For example: directory.grandstream.com/engineering -->
     <!-- # String -->
-{if isset($grandstream_phonebook_download)}
+{if isset($grandstream_phonebook_xml_server_path)}
     <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
     <P331>{$grandstream_phonebook_xml_server_path}</P331>
@@ -6682,7 +6685,7 @@
     <!-- # Phonebook Key Function. 0 - Default, 1 - LDAP Search, 2 - Local Phonebook, 3 - Local Group, 4 - Broadsoft Phonebook -->
     <!-- # Number: 0, 1, 2, 3, 4. -->
     <!-- # Mandatory -->
-{if isset($contact_grandstream)}
+{if isset($contact_groups) ||  isset($contact_users) ||  isset($contact_extensions)}
     <P1526>2</P1526>
 {else}
     <P1526>0</P1526>

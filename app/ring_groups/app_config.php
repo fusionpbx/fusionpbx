@@ -122,6 +122,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;

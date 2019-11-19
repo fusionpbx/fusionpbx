@@ -441,6 +441,26 @@ $text['label-voicemail_local_after_email']['ru-ru'] = "Оставлять лок
 $text['label-voicemail_local_after_email']['sv-se'] = "Behåll Lokalt";
 $text['label-voicemail_local_after_email']['uk-ua'] = "Залишати локально";
 
+$text['label-voicemail_transcribe_enabled']['en-us'] = "Transcribe";
+$text['label-voicemail_transcribe_enabled']['ar-eg'] = "";
+$text['label-voicemail_transcribe_enabled']['de-at'] = "transkribieren";
+$text['label-voicemail_transcribe_enabled']['de-ch'] = "transkribieren";
+$text['label-voicemail_transcribe_enabled']['de-de'] = "transkribieren";
+$text['label-voicemail_transcribe_enabled']['es-cl'] = "transcribir";
+$text['label-voicemail_transcribe_enabled']['es-mx'] = "transcribir";
+$text['label-voicemail_transcribe_enabled']['fr-ca'] = "transcrire";
+$text['label-voicemail_transcribe_enabled']['fr-fr'] = "transcrire";
+$text['label-voicemail_transcribe_enabled']['he-il'] = "";
+$text['label-voicemail_transcribe_enabled']['it-it'] = "trascrivere";
+$text['label-voicemail_transcribe_enabled']['nl-nl'] = "overschrijven";
+$text['label-voicemail_transcribe_enabled']['pl-pl'] = "rozpisać";
+$text['label-voicemail_transcribe_enabled']['pt-br'] = "transcrever";
+$text['label-voicemail_transcribe_enabled']['pt-pt'] = "transcrever";
+$text['label-voicemail_transcribe_enabled']['ro-ro'] = "";
+$text['label-voicemail_transcribe_enabled']['ru-ru'] = "транскрибировать";
+$text['label-voicemail_transcribe_enabled']['sv-se'] = "transkribera";
+$text['label-voicemail_transcribe_enabled']['uk-ua'] = "переписати";
+
 $text['label-voicemail_id']['en-us'] = "Voicemail ID";
 $text['label-voicemail_id']['ar-eg'] = "";
 $text['label-voicemail_id']['de-at'] = "Mailbox ID"; //copied from de-de

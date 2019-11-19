@@ -98,6 +98,21 @@
 	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_destination=";
 	--forward_busy_destination = trim(api:executeString(cmd));
 
+--get the domain_uuid
+	if (domain_uuid == nil) then
+		if (domain_name ~= nil) then
+			local sql = "SELECT domain_uuid FROM v_domains "
+				.. "WHERE domain_name = :domain_name ";
+			local params = {domain_name = domain_name};
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+			end
+			dbh:query(sql, params, function(rows)
+				domain_uuid = rows["domain_uuid"];
+			end);
+		end
+	end
+
 --select data from the database
 	local sql = "select follow_me_uuid, toll_allow ";
 	sql = sql .. "from v_extensions ";

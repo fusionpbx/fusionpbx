@@ -248,7 +248,7 @@
 	echo "<br><br>";
 	echo "</form>";
 
-	if (sizeof($dialplan_ids) > 0) {
+	if (is_array($dialplan_ids) && sizeof($dialplan_ids) > 0) {
 		echo "<script>\n";
 		echo "	function check(what) {\n";
 		foreach ($dialplan_ids as $checkbox_id) {

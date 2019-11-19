@@ -35,22 +35,24 @@
 	}
 
 //includes
-	if (!defined('STDIN')) { include "root.php"; }
+	if (!defined('STDIN')) { include_once "root.php"; }
 	require_once "resources/require.php";
 
 //define a function to remove html tags
-	function remove_tags($string) {
-		//remove HTML tags
-		$string = preg_replace ('/<[^>]*>/', ' ', $string);
+	if (!function_exists('remove_tags')) {
+		function remove_tags($string) {
+			//remove HTML tags
+			$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		//remove control characters
-		$string = str_replace("\r", '', $string);    // --- replace with empty space
-		$string = str_replace("\n", ' ', $string);   // --- replace with space
-		$string = str_replace("\t", ' ', $string);   // --- replace with space
+			//remove control characters
+			$string = str_replace("\r", '', $string);    // --- replace with empty space
+			$string = str_replace("\n", ' ', $string);   // --- replace with space
+			$string = str_replace("\t", ' ', $string);   // --- replace with space
 
-		//remove multiple spaces
-		$string = trim(preg_replace('/ {2,}/', ' ', $string));
-		return $string;
+			//remove multiple spaces
+			$string = trim(preg_replace('/ {2,}/', ' ', $string));
+			return $string;
+		}
 	}
 
 //set init settings
@@ -75,8 +77,8 @@
 	//echo "Message: \n".$msg."\n";
 
 //includes
-	require('resources/pop3/mime_parser.php');
-	require('resources/pop3/rfc822_addresses.php');
+	require_once('resources/pop3/mime_parser.php');
+	require_once('resources/pop3/rfc822_addresses.php');
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
 		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
 	}
@@ -186,8 +188,8 @@
 	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
 
 //send the email
-	include "resources/phpmailer/class.phpmailer.php";
-	include "resources/phpmailer/class.smtp.php";
+	include_once "resources/phpmailer/class.phpmailer.php";
+	include_once "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
 	if (isset($_SESSION['email']['method'])) {
 		switch($_SESSION['email']['method']['text']) {

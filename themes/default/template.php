@@ -53,7 +53,6 @@ echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resourc
 echo "<title><!--{title}--></title>\n";
 
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery-3.4.1.min.js'></script>\n";
-//echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery.autosize.input.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/momentjs/moment-with-locales.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js'></script>\n";
@@ -205,8 +204,8 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		?>
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-			$('.tr_hover tr').each(function(i,e) {
-				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').on('click', function() {
+			$('.tr_hover tr,.list tr').each(function(i,e) {
+				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
 					var href = $(this).closest("tr").attr("href");
 					var target = $(this).closest('tr').attr('target');
 					if (href) {
@@ -329,10 +328,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (recording_audio.paused) {
 				recording_audio.volume = 1;
 				recording_audio.play();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_pause']['text']; ?>'></span>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
 
-				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
+				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
 
 				$('audio').each(function(){$('#menu_side_container').width()
@@ -344,7 +343,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 			else {
 				recording_audio.pause();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>";
 				clearInterval(audio_clock);
 			}
 		}
@@ -361,7 +360,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
 				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
 			}
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?>'></span>";
 			clearInterval(audio_clock);
 		}
 
@@ -378,13 +377,89 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
-		//handle action bar style on scroll
+	//handle action bar style on scroll
 		window.addEventListener('scroll', action_bar_scroll , false);
 		function action_bar_scroll() {
 			if (document.getElementById('action_bar')) {
 				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
 				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
 			}
+		}
+
+	//enable button class button
+		function button_enable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = false;
+			button.classList.remove('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.remove('disabled');
+				anchor.setAttribute('onclick','');
+			}
+		}
+
+	//disable button class button
+		function button_disable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = true;
+			button.classList.add('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.add('disabled');
+				anchor.setAttribute('onclick','return false;');
+			}
+		}
+
+	//list functions
+		function list_all_toggle() {
+			var inputs = document.getElementsByTagName('input');
+			var checkbox_checked = document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = checkbox_checked;
+				}
+			}
+			if (checkbox_checked) {
+				document.getElementById('btn_check_all').style.display = 'none';
+				document.getElementById('btn_check_none').style.display = '';
+			}
+			else {
+				document.getElementById('btn_check_all').style.display = '';
+				document.getElementById('btn_check_none').style.display = 'none';
+			}
+		}
+
+		function list_all_check() {
+			var inputs = document.getElementsByTagName('input');
+			document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = true;
+				}
+			}
+		}
+
+		function list_self_check(checkbox_id) {
+			var inputs = document.getElementsByTagName('input');
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = false;
+				}
+			}
+			document.getElementById(checkbox_id).checked = true;
+		}
+
+		function list_action_set(action) {
+			document.getElementById('action').value = action;
+		}
+
+		function list_form_submit(form_id) {
+			document.getElementById(form_id).submit();
+		}
+
+		function list_search_reset() {
+			document.getElementById('btn_reset').style.display = 'none';
+			document.getElementById('btn_search').style.display = '';
 		}
 
 </script>
@@ -457,17 +532,19 @@ echo "	<div id='message_container'></div>\n";
 				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
 			echo "<a href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
-			//active domain description text color
-			if ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
-				echo "<span class=\"domain_active_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
-			}
-			//inactive domains description text color
-			else if ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
-				echo "<span class=\"domain_inactive_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
-			}
-			//default domain description text color
-			else {
-				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+			if ($domain['domain_description'] != '') {
+				//active domain description text color
+				if ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
+					echo "<span class='domain_active_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
+				//inactive domains description text color
+				else if ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
+					echo "<span class='domain_inactive_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
+				//default domain description text color
+				else {
+					echo "<span class='domain_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
 			}
 			echo "</div>\n";
 			$ary_domain_names[] = $domain['domain_name'];
@@ -528,7 +605,9 @@ if (!$default_login) {
 				default:
 					$menu_position = ($menu_position != '') ? $menu_position : 'top';
 					$menu_type = 'fixed-'.$menu_position;
-					$menu_width = !http_user_agent('mobile') ? 'calc(90% - 20px)' : null;
+					if (!http_user_agent('mobile')) {
+						$menu_width = $_SESSION['theme']['menu_width_fixed']['text'] != '' ? $_SESSION['theme']['menu_width_fixed']['text'] : 'calc(90% - 20px)';
+					}
 					$menu_brand = true;
 					$menu_corners = null;
 			}
@@ -647,8 +726,7 @@ if (!$default_login) {
 
 			echo "			</ul>\n";
 
-			echo "			<ul class='navbar-nav ml-auto'>
-\n";
+			echo "			<ul class='navbar-nav ml-auto'>\n";
 			//domain name/selector
 				if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 					echo "		<li class='nav-item'>\n";

@@ -25,26 +25,6 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-	if (!function_exists('software_version')) {
-		function software_version() {
-			return '4.5.9';
-		}
-	}
-
-	if (!function_exists('version')) {
-		function version() {
-			return software_version();
-		}
-	}
-
-	if (!function_exists('numeric_version')) {
-		function numeric_version() {
-			$v = explode('.', software_version());
-			$n = ($v[0] * 10000 + $v[1] * 100 + $v[2]);
-			return $n;
-		}
-	}
-
 	if (!function_exists('mb_strtoupper')) {
 		function mb_strtoupper($string) {
 			return strtoupper($string);
@@ -1676,7 +1656,12 @@ function number_pad($number,$n) {
 				}
 			//add prefix
 				if (strlen($prefix) > 0) {
-					$prefix = $prefix.'?';
+					if (strlen($prefix) == 1) {
+						$prefix = $prefix.'?';
+					}
+					else {
+						$prefix = '(?:'.$prefix.')?';
+					}
 				}
 			//convert N,X,Z syntax to regex
 				$string = str_ireplace("N", "[2-9]", $string);
@@ -1690,7 +1675,7 @@ function number_pad($number,$n) {
 				if (substr($string, -1) != "$") {
 					$string = $string."$";
 				}
-			//add the round brackets ( and )
+			//add the round brackets
 				if (!strstr($string, '(')) {
 					if (strstr($string, '^')) {
 						$string = str_replace("^", "^".$prefix."(", $string);
@@ -1698,8 +1683,6 @@ function number_pad($number,$n) {
 					else {
 						$string = '^('.$string;
 					}
-				}
-				if (!strstr($string, ')')) {
 					if (strstr($string, '$')) {
 						$string = str_replace("$", ")$", $string);
 					}
@@ -2000,8 +1983,12 @@ function number_pad($number,$n) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
 			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
-			if ($col != '') { return ' order by '.$col.' '.$dir.' '; }
-			else if ($col_default != '') { return ' order by '.$col_default.' '.$dir.' '; }
+			if ($col != '') {
+				return ' order by '.$col.' '.$dir.' ';
+			}
+			else if ($col_default != '') {
+				return ' order by '.$col_default.' '.$dir_default.' ';
+			}
 		}
 	}
 

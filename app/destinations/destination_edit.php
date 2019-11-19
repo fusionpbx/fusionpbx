@@ -153,7 +153,7 @@
 		//check for duplicates
 			if ($destination_type == 'inbound' && $destination_number != $db_destination_number) {
 				$sql = "select count(*) from v_destinations ";
-				$sql .= "where destination_number = :destination_number ";
+				$sql .= "where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number) ";
 				$sql .= "and destination_type = 'inbound' ";
 				$parameters['destination_number'] = $destination_number;
 				$database = new database;
@@ -661,7 +661,12 @@
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$destination_context);
-					$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					if (isset($destination_number) && is_numeric($destination_number)) {
+						$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					}
+					if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
+						$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+					}
 			}
 
 		//save the outbound destination
