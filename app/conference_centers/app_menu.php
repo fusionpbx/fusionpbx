@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreksruimten";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
@@ -38,7 +38,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Centro Conferenze";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreksruimten";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Centrum Konferencyjne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Centro de Conferência";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
