@@ -50,7 +50,7 @@
 	}
 
 //get the search
-	$search = strtolower($_GET["search"]);
+	$search = strtolower($_REQUEST["search"]);
 
 //toggle the devices
 	if (permission_exists('device_edit')) {
