@@ -46,9 +46,11 @@
 //get posted data
 	if (is_array($_POST['devices'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
 		$devices = $_POST['devices'];
 	}
+
+//get the search
+	$search = strtolower($_REQUEST["search"]);
 
 //toggle the devices
 	if (permission_exists('device_edit')) {
