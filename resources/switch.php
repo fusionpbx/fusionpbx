@@ -129,6 +129,152 @@ function ListFiles($dir) {
 	}
 }
 
+function save_amqp_xml($str) {
+	global $domain_uuid, $host, $config;
+	//get the database connection
+	require_once "resources/classes/database.php";
+	$database = new database;
+	$database->connect();
+	$db = $database->db;
+
+	$sql = "select * from v_multinode_rabitMQ where node_priority='primary' and switch_name='$str'";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($result as &$row) {
+			$event_socket_ip_address = $row['event_socket_ip_address'];
+			if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/amqp.conf.xml","w");
+                        $xml = "<configuration name=\"amqp.conf\" description=\"mod_amqp\">\n";
+                        $xml .= "  <producers>\n";
+                        $xml .= "  <profile name=\"".$row['name']."\">\n";
+                        $xml .= "  <connections>\n";
+			$xml .= "  <connection name=\"".$row['node_priority']."\">\n";
+			$xml .= "    <param name=\"hostname\" value=\"" . $row['hostname'] . "\"/>\n";
+			$xml .= "    <param name=\"virtualhost\" value=\"" . $row['virtualhost'] . "\"/>\n";
+			$xml .= "    <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+			$xml .= "    <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+			$xml .= "    <param name=\"port\" value=\"" . $row['port'] . "\"/>\n";
+			$xml .= "    <param name=\"heartbeat\" value=\"0\"/>\n";
+			$xml .= "  </connection>\n";
+		}
+		unset ($prep_statement);
+	}
+
+	$sql = "select * from v_multinode_rabitMQ where node_priority='secondary' and switch_name='$str'";
+        $prep_statement = $db->prepare(check_sql($sql));
+        if ($prep_statement) {
+                $prep_statement->execute();
+                $result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+                	foreach ($result as &$row) {
+                        $event_socket_ip_address = $row['event_socket_ip_address'];
+                        if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+                        $xml .= "  <connection name=\"".$row['node_priority']."\">\n";
+                        $xml .= "    <param name=\"hostname\" value=\"" . $row['hostname'] . "\"/>\n";
+                        $xml .= "    <param name=\"virtualhost\" value=\"" . $row['virtualhost'] . "\"/>\n";
+                        $xml .= "    <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+                        $xml .= "    <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+                        $xml .= "    <param name=\"port\" value=\"" . $row['port'] . "\"/>\n";
+                        $xml .= "    <param name=\"heartbeat\" value=\"0\"/>\n";
+                        $xml .= "  </connection>\n";
+                }
+                unset ($prep_statement);
+        }
+
+			 $xml .= "  </connections>\n";
+
+	$sql = "select * from v_multinode_rabitMQ where node_priority='primary' and switch_name='$str'";
+        $prep_statement = $db->prepare(check_sql($sql));
+        if ($prep_statement) {
+                $prep_statement->execute();
+                $result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($result as &$row) {
+                        $event_socket_ip_address = $row['event_socket_ip_address'];
+                        if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
+
+			$xml .= "  <params>\n";
+                        $xml .= "    <param name=\"exchange-name\" value=\"" . $row['exchange_name'] . "\"/>\n";
+                        $xml .= "    <param name=\"exchange-type\" value=\"" . $row['exchange_type'] . "\"/>\n";
+                        $xml .= "    <param name=\"circuit_breaker_ms\" value=\"" . $row['circuit_breaker_ms'] . "\"/>\n";
+                        $xml .= "    <param name=\"reconnect_interval_ms\" value=\"" . $row['reconnect_interval_ms'] . "\"/>\n";
+                        $xml .= "    <param name=\"send_queue_size\" value=\"" . $row['send_queue_size'] . "\"/>\n";
+                        $xml .= "    <param name=\"enable_fallback_format_fields\" value=\"" . $row['enable_fallback_format_fields'] . "\"/>\n";
+                        $xml .= "    <param name=\"format_fields\" value=\"" . $row['format_fields'] . "\"/>\n";
+                        $xml .= "    <param name=\"event_filter\" value=\"" . $row['event_filter'] . "\"/>\n";
+                        $xml .= "  </params>\n";
+                        $xml .= "  </profile>\n";
+                        $xml .= "  </producers>\n";
+
+			$xml .= "  <commands>\n";
+                        $xml .= "  <profile name=\"".$row['name']."\">\n";
+                        $xml .= "  <connections>\n";
+                        $xml .= "  <connection name=\"".$row['node_priority']."\">\n";
+                        $xml .= "    <param name=\"hostname\" value=\"" . $row['hostname'] . "\"/>\n";
+                        $xml .= "    <param name=\"virtualhost\" value=\"" . $row['virtualhost'] . "\"/>\n";
+                        $xml .= "    <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+                        $xml .= "    <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+                        $xml .= "    <param name=\"port\" value=\"" . $row['port'] . "\"/>\n";
+                        $xml .= "    <param name=\"heartbeat\" value=\"0\"/>\n";
+                        $xml .= "  </connection>\n";
+                        $xml .= "  </connections>\n";
+                        $xml .= "  <params>\n";
+                        $xml .= "    <param name=\"exchange-name\" value=\"" . $row['exchange_name'] . "\"/>\n";
+                        $xml .= "    <param name=\"binding_key\" value=\"commandBindingKey\"/>\n";
+                        $xml .= "    <param name=\"reconnect_interval_ms\" value=\"" . $row['reconnect_interval_ms'] . "\"/>\n";
+                        $xml .= "  </params>\n";
+                        $xml .= "  </profile>\n";
+                        $xml .= "  </commands>\n";
+
+			$xml .= "  <logging>\n";
+                        $xml .= "  <profile name=\"".$row['name']."\">\n";
+                        $xml .= "  <connections>\n";
+                        $xml .= "  <connection name=\"".$row['node_priority']."\">\n";
+                        $xml .= "    <param name=\"hostname\" value=\"" . $row['hostname'] . "\"/>\n";
+                        $xml .= "    <param name=\"virtualhost\" value=\"" . $row['virtualhost'] . "\"/>\n";
+                        $xml .= "    <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+                        $xml .= "    <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+                        $xml .= "    <param name=\"port\" value=\"" . $row['port'] . "\"/>\n";
+                        $xml .= "    <param name=\"heartbeat\" value=\"0\"/>\n";
+                        $xml .= "  </connection>\n";
+                        $xml .= "  </connections>\n";
+                        $xml .= "  <params>\n";
+                        $xml .= "    <param name=\"exchange-name\" value=\"" . $row['exchange_name'] . "\"/>\n";
+                        $xml .= "    <param name=\"send_queue_size\" value=\"" . $row['send_queue_size'] . "\"/>\n";
+                        $xml .= "    <param name=\"reconnect_interval_ms\" value=\"" . $row['reconnect_interval_ms'] . "\"/>\n";
+                        $xml .= "    <param name=\"log-levels\" value=\"debug,info,notice,warning,err,crit,alert\"/>\n";
+                        $xml .= "  </params>\n";
+                        $xml .= "  </profile>\n";
+                        $xml .= "  </logging>\n";
+			
+			$xml .= "</configuration>";
+                        fwrite($fout, $xml);
+                        unset($xml, $event_socket_password);
+                        fclose($fout);
+
+                }
+                unset ($prep_statement);
+        }
+
+
+
+	//apply settings
+		$_SESSION["reload_xml"] = true;
+
+
+        //$cmd = "api reload mod_amqp";
+        //event_socket_request_cmd($cmd);
+        //unset($cmd);
+
+//echo "file swrite done";exit;
+	//$cmd = "api reloadxml";
+	//event_socket_request_cmd($cmd);
+	//unset($cmd);
+}
+
+
+
+
 function save_setting_xml() {
 	global $domain_uuid, $host, $config;
 
