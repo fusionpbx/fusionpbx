@@ -50,6 +50,11 @@
 		$devices = $_POST['devices'];
 	}
 
+//get the search
+	if (isset($search)) {
+		$search = strtolower($_GET["search"]);
+	}
+
 //toggle the devices
 	if (permission_exists('device_edit')) {
 		if ($action == 'toggle' && is_array($devices) && @sizeof($devices) != 0) {
