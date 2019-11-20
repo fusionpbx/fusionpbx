@@ -59,8 +59,8 @@
 	echo "</script>";
 
 //start the html form
-	if (strlen(check_str($_GET['redirect'])) > 0) {
-		echo "<form method='get' action='" . $_GET['redirect'] . ".php'>\n";
+	if ($_GET['redirect'] == 'xml_cdr_statistics') {
+		echo "<form method='get' action='xml_cdr_statistics.php'>\n";
 	} else {
 		echo "<form method='get' action='xml_cdr.php'>\n";
 	}
