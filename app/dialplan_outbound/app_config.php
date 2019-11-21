@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les routes sortantes acheminent un appel en fonction d'une ou plusieurs conditions. Quand les conditions sont remplies, l'appel est dirigés vers la passerelle correspondante.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Uitgaande kiesplannen hebben een of meer voorwaarden die met de attributen van een oproep worden vergeleken. Als een oproep aan de voorwaarden voldoet dan wordt de oproep naar de gateway gestuurd.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Dialplans de saída tem uma ou mais condições que são compatíveis com os atributos de uma chamada. Quando uma chamada coincide com as condições da chamada é então encaminhado para o gateway.";

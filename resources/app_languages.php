@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 27th of September 2017 01:41:52 PM UTC
 
 $text['language-name']['en-us'] = "English - United States";
 $text['language-name']['ar-eg'] = "العربية - مصر";
@@ -691,6 +690,27 @@ $text['button-back']['ru-ru'] = "Назад";
 $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "Назад";
 $text['button-back']['tr-tr'] = "Geri";
+
+$text['button-undo']['en-us'] = "Undo";
+$text['button-undo']['ar-eg'] = "تراجع";
+$text['button-undo']['de-at'] = "öffnen"; //copied from de-de
+$text['button-undo']['de-ch'] = "öffnen"; //copied from de-de
+$text['button-undo']['de-de'] = "öffnen";
+$text['button-undo']['es-cl'] = "Deshacer";
+$text['button-undo']['es-mx'] = "Deshacer"; //copied from es-cl
+$text['button-undo']['fr-ca'] = "Annuler"; //copied from fr-fr
+$text['button-undo']['fr-fr'] = "Annuler";
+$text['button-undo']['he-il'] = "לבטל";
+$text['button-undo']['it-it'] = "Disfare";
+$text['button-undo']['nl-nl'] = "Undo";
+$text['button-undo']['pl-pl'] = "Cofnij";
+$text['button-undo']['pt-br'] = "Desfazer"; //copied from pt-pt
+$text['button-undo']['pt-pt'] = "Desfazer";
+$text['button-undo']['ro-ro'] = "Anula";
+$text['button-undo']['ru-ru'] = "Отменить";
+$text['button-undo']['sv-se'] = "Ångra";
+$text['button-undo']['uk-ua'] = "Скасувати";
+$text['button-undo']['tr-tr'] = "Geri alma";
 
 $text['button-edit']['en-us'] = "Edit";
 $text['button-edit']['ar-eg'] = "تعديل";

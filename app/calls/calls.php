@@ -104,8 +104,8 @@
 	$sql = "select count(*) from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and enabled = 'true' ";
-	if (!(if_group("admin") || if_group("superadmin"))) {
-		if (count($_SESSION['user']['extension']) > 0) {
+	if (!permission_exists('extension_edit')) {
+		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
@@ -140,7 +140,26 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and enabled = 'true' ";
+	if (!permission_exists('extension_edit')) {
+		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+			$sql .= "and (";
+			$x = 0;
+			foreach($_SESSION['user']['extension'] as $row) {
+				if ($x > 0) { $sql .= "or "; }
+				$sql .= "extension = '".$row['user']."' ";
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			//used to hide any results when a user has not been assigned an extension
+			$sql .= "and extension = 'disabled' ";
+		}
+	}
+	$sql .= $sql_search;
 	$sql .= order_by($order_by, $order, 'extension', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;

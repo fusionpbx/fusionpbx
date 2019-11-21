@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil en AJAX pour voir et gérer toutes les conférences actives.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "AJAX gereedschap om in een gespreksruimte de aktieve gebruikers te bekijken en beheren";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.";

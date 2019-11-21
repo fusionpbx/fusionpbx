@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "routage des appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Istradamento Chiamate";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep routering";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "roteamento de chamadas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Roteamento de chamadas";

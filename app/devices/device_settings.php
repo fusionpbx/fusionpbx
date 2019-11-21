@@ -154,7 +154,7 @@
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('device_setting_add')) {
-		echo "			<a href='device_setting_edit.php?device_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "			<a href='device_setting_edit.php?device_uuid=".urlencode($device_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";

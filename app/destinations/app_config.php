@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Gebruikt om externe bestemmingen vast te leggen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para definir os números de destino externos.";

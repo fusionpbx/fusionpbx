@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "L'éditeur permet de modifier les scripts lua, javascript ou autres.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Script bewerker kan worden gebruik om lua, javascript of andere scripts aan te passen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";

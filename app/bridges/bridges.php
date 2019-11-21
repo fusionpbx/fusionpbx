@@ -97,6 +97,7 @@
 		$sql_search .= "lower(bridge_name) like :search ";
 		$sql_search .= "or lower(bridge_destination) like :search ";
 		$sql_search .= "or lower(bridge_enabled) like :search ";
+		$sql_search .= "or lower(bridge_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}

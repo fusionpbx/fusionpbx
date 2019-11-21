@@ -440,7 +440,7 @@
 			unset($sql, $parameters);
 		}
 
-		if (!permission_exists('call_block_all')) {
+		if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'])) {
 			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
 				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
 			}
