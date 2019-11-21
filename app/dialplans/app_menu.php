@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Piano Numerazioni";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Dialplan";

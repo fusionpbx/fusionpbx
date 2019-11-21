@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -283,7 +283,7 @@
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
-		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
+		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
 			// create simple user extension array
 			foreach ($_SESSION['user']['extension'] as $row) {
 				$user_extensions[] = $row['user'];

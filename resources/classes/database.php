@@ -553,7 +553,7 @@ include "root.php";
 								if (strlen($value) > 0) {
 									//$sql .= "'".$value."' ";
 									$sql .= ":".$name." \n";
-									$params[$name] = $value;
+									$params[$name] = trim($value);
 								}
 								else {
 									$sql .= "null \n";
@@ -563,7 +563,7 @@ include "root.php";
 								if (strlen($value) > 0) {
 									//$sql .= "'".$value."', ";
 									$sql .= ":".$name.", \n";
-									$params[$name] = $value;
+									$params[$name] = trim($value);
 								}
 								else {
 									$sql .= "null, \n";
@@ -615,7 +615,7 @@ include "root.php";
 								else {
 									//$sql .= $name." = '".$value."' ";
 									$sql .= $name." = :".$name." ";
-									$params[$name] = $value;
+									$params[$name] = trim($value);
 								}
 							}
 							else {
@@ -625,7 +625,7 @@ include "root.php";
 								else {
 									//$sql .= $name." = '".$value."', ";
 									$sql .= $name." = :".$name.", ";
-									$params[$name] = $value;
+									$params[$name] = trim($value);
 								}
 							}
 							$i++;
@@ -1273,7 +1273,7 @@ include "root.php";
 														else {
 															//$sql .= "'".check_str($array_value)."', ";
 															$sql .= ':'.$array_key.", ";
-															$params[$array_key] = $array_value;
+															$params[$array_key] = trim($array_value);
 														}
 													}
 												}
@@ -1354,7 +1354,7 @@ include "root.php";
 														else {
 															//$sql .= $array_key." = '".check_str($array_value)."', ";
 															$sql .= $array_key." = :".$array_key.", ";
-															$params[$array_key] = $array_value;
+															$params[$array_key] = trim($array_value);
 														}
 													}
 												}
@@ -1438,7 +1438,7 @@ include "root.php";
 														if (is_array($row)) foreach ($row as $k => $v) {
 															if ($child_key_name == $k) {
 																if (strlen($v) > 0) {
-																	$child_key_value = $v;
+																	$child_key_value = trim($v);
 																	$uuid_exists = true;
 																	break;
 																}
@@ -1505,7 +1505,7 @@ include "root.php";
 																			else {
 																				//$sql .= "$k = '".check_str($v)."', ";
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = $v;
+																				$params[$k] = trim($v);
 																			}
 																		}
 																	}
@@ -1514,7 +1514,6 @@ include "root.php";
 																$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 																$sql = str_replace(", WHERE", " WHERE", $sql);
 																$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
 
 																try {
@@ -1579,7 +1578,7 @@ include "root.php";
 																	}
 																	if ($k == $child_key_name) {
 																		$child_key_exists = true;
-																		$child_key_value = $v;
+																		$child_key_value = trim($v);
 																	}
 																}
 															}
@@ -1625,7 +1624,7 @@ include "root.php";
 																			$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
 																			//$sql .= "'".check_str($v)."', ";
 																			$sql .= ':'.$k.", ";
-																			$params[$k] = $v;
+																			$params[$k] = trim($v);
 																		}
 																	}
 																}

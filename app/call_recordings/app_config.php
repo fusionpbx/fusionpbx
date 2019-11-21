@@ -8,7 +8,8 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = '';
+		$apps[$x]['description']['en-us'] = 'Call Recordings';
+		$apps[$x]['description']['nl-nl'] = 'Gespreksopnamen';
 
 	//permission details
 		$y = 0;
