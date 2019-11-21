@@ -200,7 +200,7 @@
 
 					// reduce too long app data
 						if(strlen($application_data) > 512) {
-							$application_data = substr($application_data, 0, 512) . '';
+							$application_data = substr($application_data, 0, 512) . '...';
 						}
 
 					//send the html
