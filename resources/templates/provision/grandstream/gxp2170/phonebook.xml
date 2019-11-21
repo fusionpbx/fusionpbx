@@ -1,49 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <AddressBook>
-<version>1</version>
-{foreach $contacts as $contact}
-{if $contact.contact_type == "group"}
-<pbgroup>
-<id>{$contact.id}</id>
-<name>{$contact.group_description|truncate:10}</name>
-</pbgroup>
+	
+	<pbgroup>
+		<id>6</id>
+		<name>Users</name>
+		<ringtones>default ringtone</ringtones>
+	</pbgroup>
+	<pbgroup>
+		<id>7</id>
+		<name>Extensions</name>
+		<ringtones>system</ringtones>
+	</pbgroup>
+	
+	{foreach $contacts as $row}
+	{if $row.category == "users"}	
+	{$start_id=1}	
+	<Contact>
+		<id>{$start_id}</id>
+		{if $row.contact_name_given != ""}
+		<FirstName>{$row.contact_name_given}</FirstName>
+		
+		<LastName>{$row.contact_name_family}</LastName>
+		
+		<JobTitle></JobTitle>
+		
+		{foreach $row.numbers as $number}
+		{if $number.phone_number != ""}
+		
+		<Frequent>0</Frequent>
+		<Phone type="Work">
+			<phonenumber>{$number.phone_number}</phonenumber>
+			<accountindex>0</accountindex>
+		</Phone>
+		<Phone type="Home">
+			<phonenumber>{$number.phone_extension}</phonenumber>
+			<accountindex>0</accountindex>
+		</Phone>
+		<Phone type="Cell">
+			<phonenumber>{$number.phone_mobile}</phonenumber>
+			<accountindex>0</accountindex>
+		</Phone>
+		<Group>6</Group>
+		<Primary>0</Primary>
+		<Department></Department>
+		<Job></Job>
+		<Company></Company>
+		{/if}
+	{/foreach}
+	</Contact>
 {/if}
-{/foreach}
-{$i=0}
-{foreach $contacts as $contact}
-{if $contact.contact_name_given != "" && $contact.contact_type == "contact"}
-<Contact>
-<FirstName>{$contact.contact_name_given}</FirstName>
-<LastName>{$contact.contact_name_family}</LastName>
-{if $contact.contact_role != "" }
-<JobTitle>{$contact.contact_role}</JobTitle>
-{/if}
-{if $contact.contact_category != "" }
-<Department>{$contact.contact_category}</Department>
-{/if}
-<Phone type="Work">
-<phonenumber>{$contact.contact_work}</phonenumber>
-<accountindex>1</accountindex>
-</Phone>
-{if $contact.contact_home != "" }
-<Phone type="Home">
-<phonenumber>{$contact.contact_home}</phonenumber>
-<accountindex>1</accountindex>
-</Phone>
-{/if}
-{if $contact.contact_cell != "" }
-<Phone type="Cell">
-<phonenumber>{$contact.contact_cell}</phonenumber>
-<accountindex>1</accountindex>
-</Phone>
-{/if}
-{if $contact.contact_organization != "" }
-<Company>{$contact.contact_organization}</Company>
-{/if}
-{foreach $contact.groups as $group}
-<Group>{$group}</Group>
-{/foreach}
-</Contact>
-{/if}
-{/foreach}
+		{/if}
+		{/foreach}	
 </AddressBook>
+
+
