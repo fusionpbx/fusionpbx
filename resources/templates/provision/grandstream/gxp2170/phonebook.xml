@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <AddressBook>
-	
+
 	<pbgroup>
 		<id>6</id>
 		<name>Users</name>
@@ -12,10 +12,10 @@
 		<name>Extensions</name>
 		<ringtones>system</ringtones>
 	</pbgroup>
-	
+
 	{foreach $contacts as $row}
-		{if $row.category == "users"}	
-		{$start_id=1}	
+		{if $row.category == "users"}
+		{$start_id=1}
 		<Contact>
 			<id>{$start_id}</id>
 			{if $row.contact_name_given != ""}
@@ -46,9 +46,9 @@
 			<Department></Department>
 			<Job></Job>
 			<Company></Company>
-		{/if}
-		{if $row.category == "groups"}	
-		{$start_id=1}	
+		</Contact>
+		{elseif $row.category == "groups"}
+		{$start_id=1}
 		<Contact>
 			<id>{$start_id}</id>
 			{if $row.contact_name_given != ""}
@@ -79,9 +79,9 @@
 			<Department></Department>
 			<Job></Job>
 			<Company></Company>
-		{/if}
-		{if $row.category == "extensions"}	
-		{$start_id=1}	
+		</Contact>
+		{elseif $row.category == "extensions"}
+		{$start_id=1}
 		<Contact>
 			<id>{$start_id}</id>
 			{if $row.contact_name_given != ""}
@@ -112,12 +112,8 @@
 			<Department></Department>
 			<Job></Job>
 			<Company></Company>
+		</Contact>
 		{/if}
 	{/foreach}
-	</Contact>
-{/if}
-		{/if}
-		{/foreach}	
+
 </AddressBook>
-
-
