@@ -477,7 +477,7 @@
 	echo "	<td width='70%' valign='top' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt=\"".$text['button-back']."\" onclick=\"window.location='fax.php'\" value=\"".$text['button-back']."\">\n";
 	if (permission_exists('fax_extension_copy') && $action == "update") {
-		echo "	<input type='button' class='btn' alt=\"".$text['button-copy']."\" onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".urlencode($fax_uuid)."';}\" value=\"".$text['button-copy']."\">\n";
+		echo "	<input type='button' class='btn' alt=\"".$text['button-copy']."\" onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='fax_copy.php?id=".urlencode($fax_uuid)."';}\" value=\"".$text['button-copy']."\">\n";
 	}
 	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
