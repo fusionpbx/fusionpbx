@@ -6651,9 +6651,7 @@
     <!-- # For example: directory.grandstream.com/engineering -->
     <!-- # String -->
 {if isset($grandstream_phonebook_xml_server_path)}
-    <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($grandstream_phonebook_xml_server_path)}
-    <P331>{$grandstream_phonebook_xml_server_path}</P331>
+    <P331>{$grandstream_phonebook_xml_server_path}/{$mac}</P331>
 {else}
     <P331></P331>
 {/if}
