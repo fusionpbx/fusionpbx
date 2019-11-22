@@ -275,7 +275,6 @@
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='gateways[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='gateways[$x][uuid]' value='".escape($row['gateway_uuid'])."' />\n";
-				echo "		<input type='hidden' name='gateways[$x][profile]' value='".escape($row['profile'])."' />\n";
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == "all" && permission_exists('gateway_all')) {
