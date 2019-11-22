@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Queues Actives";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code Attive";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve wachtrijen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne kolejki";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas ativas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Filas Activas";
