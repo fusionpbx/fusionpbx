@@ -1361,24 +1361,4 @@ $text['description-auth_username']['ru-ru'] = "Введите имя польз�
 $text['description-auth_username']['sv-se'] = "Ange 'uth-username' här.";
 $text['description-auth_username']['uk-ua'] = "Enter the auth-username here.";
 
-$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
-$text['confirm-copy']['ar-eg'] = "";
-$text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?"; //copied from de-de
-$text['confirm-copy']['de-ch'] = "Wollen Sie das wirklich kopieren?"; //copied from de-de
-$text['confirm-copy']['de-de'] = "Wollen Sie das wirklich kopieren?";
-$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
-$text['confirm-copy']['es-mx'] = "¿Realmente desea copiar esto?"; //copied from es-cl
-$text['confirm-copy']['fr-ca'] = "Voulez-vous vraiment copier cela?"; //copied from fr-fr
-$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
-$text['confirm-copy']['he-il'] = "? בטוח שאתה רוצה להעתיק";
-$text['confirm-copy']['it-it'] = "Vuoi veramente copiarlo?";
-$text['confirm-copy']['nl-nl'] = "Wil dit werkelijk kopieren?";
-$text['confirm-copy']['pl-pl'] = "Czy na pewno chcesz to skopiować?";
-$text['confirm-copy']['pt-br'] = "Deseja realmente copiar isto?"; //copied from pt-pt
-$text['confirm-copy']['pt-pt'] = "Deseja realmente copiar isto?";
-$text['confirm-copy']['ro-ro'] = "Chiar doriți să copiați acest lucru?";
-$text['confirm-copy']['ru-ru'] = "Вы действительно хотите это скопировать?";
-$text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
-$text['confirm-copy']['uk-ua'] = "Ви дійсно бажаєте це копіювати?";
-
 ?>
