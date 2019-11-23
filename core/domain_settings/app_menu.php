@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Paramètres du Domaine";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Domein instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia Domen";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações do Dominio";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Definições do Domínio";
