@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gestion des enregistrements principalement utilisés dans les IVR";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Beheer de uitspraken die vooral bij een IVR gebruikt worden.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
