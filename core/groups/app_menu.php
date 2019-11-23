@@ -5,6 +5,7 @@ $apps[$x]['menu'][3]['title']['es-cl'] = "Administración de Grupos";
 $apps[$x]['menu'][3]['title']['fr-fr'] = "Gestion des groupes";
 $apps[$x]['menu'][3]['title']['pt-pt'] = "'Gestão de Grupos";
 $apps[$x]['menu'][3]['title']['pt-br'] = "Gerenciar grupos";
+$apps[$x]['menu'][3]['title']['nl-nl'] = "Groep Beheer";
 $apps[$x]['menu'][3]['title']['pl'] = "Menedżer grup";
 $apps[$x]['menu'][3]['title']['ru-ru'] = "Управление группами";
 $apps[$x]['menu'][3]['title']['uk'] = "Групи";
