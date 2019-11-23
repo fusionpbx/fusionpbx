@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Tableau de bord de l'utilisateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "ממשק משתמש";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello di Controllo";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bedieningspaneel";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Panel użytkowników";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel de controle do usuário (Dashboard)";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Painel de Controle do Usuário";

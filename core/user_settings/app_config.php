@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "L'usager peut modifier la configuration de son compte";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Gebruikers account instellingen kunnen door de gebruiker aangepast worden.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Configurações das contas podem ser alteradas pelo usuário.";
 		$apps[$x]['description']['pt-pt'] = "Configurações de conta de utilizador pode ser alterado pelo utilizador.";
