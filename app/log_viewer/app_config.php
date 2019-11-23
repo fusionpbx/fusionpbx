@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Logs du switch.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Centale log tonen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Exibir os logs de switch.";

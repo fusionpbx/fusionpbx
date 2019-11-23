@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les Modules augmentent les fonctionnalitées du système. Ici il est possible de les activer et de les désactiver.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Modules breiden de mogelijkheden van het systeem uit. Gebruikde deze pagina om modules aan/uit te zetten.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
