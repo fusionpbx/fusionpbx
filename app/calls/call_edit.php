@@ -466,6 +466,8 @@
 	}
 
 //prepare the autocomplete
+	if($_SESSION['follow_me']['follow_me_autocomplete']['boolean'] == 'true') {
+
 	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
 	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
 	echo "<script type=\"text/javascript\">\n";
@@ -488,7 +490,7 @@
 
 	echo "});\n";
 	echo "</script>\n";
-
+	}
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
