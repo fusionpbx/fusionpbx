@@ -17,22 +17,26 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('menu_add') || permission_exists('menu_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -48,98 +52,87 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$menu_uuid = $_POST["menu_uuid"];
 		$menu_name = $_POST["menu_name"];
 		$menu_language = $_POST["menu_language"];
 		$menu_description = $_POST["menu_description"];
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+//process the http post
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$menu_uuid = $_POST["menu_uuid"];
-	}
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: menu.php');
+				exit;
+			}
 
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: menu.php');
-			exit;
-		}
-
-	//check for all required data
-		//if (strlen($menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-		//if (strlen($menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
-		//if (strlen($menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "resources/header.php";
-			require_once "resources/persist_form_var.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
-		}
-
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
-			//create a new unique id
-				$menu_uuid = uuid();
-
-			//start a new menu
-				$array['menus'][0]['menu_uuid'] = $menu_uuid;
-				$array['menus'][0]['menu_name'] = $menu_name;
-				$array['menus'][0]['menu_language'] = $menu_language;
-				$array['menus'][0]['menu_description'] = $menu_description;
-				$database = new database;
-				$database->app_name = 'menu';
-				$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
-				$database->save($array);
-				unset($array);
-
-			//add the default items in the menu
-				require_once "resources/classes/menu.php";
-				$menu = new menu;
-				$menu->db = $db;
-				$menu->menu_uuid = $menu_uuid;
-				$menu->menu_language = $menu_language;
-				$menu->restore();
-
-			//redirect the user back to the main menu
-				message::add($text['message-add']);
-				header("Location: menu.php");
+		//check for all required data
+			$msg = '';
+			//if (strlen($menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			//if (strlen($menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+			//if (strlen($menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
 				return;
-		} //if ($action == "add")
+			}
 
-		if ($action == "update") {
-			//update the menu
-				$array['menus'][0]['menu_uuid'] = $menu_uuid;
-				$array['menus'][0]['menu_name'] = $menu_name;
-				$array['menus'][0]['menu_language'] = $menu_language;
-				$array['menus'][0]['menu_description'] = $menu_description;
-				$database = new database;
-				$database->app_name = 'menu';
-				$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
-				$database->save($array);
-				unset($array);
+		//add or update the database
+		if ($_POST["persistformvar"] != "true") {
+			if ($action == "add") {
+				//create a new unique id
+					$menu_uuid = uuid();
 
-			//redirect the user back to the main menu
-				message::add($text['message-update']);
-				header("Location: menu.php");
-				return;
+				//start a new menu
+					$array['menus'][0]['menu_uuid'] = $menu_uuid;
+					$array['menus'][0]['menu_name'] = $menu_name;
+					$array['menus'][0]['menu_language'] = $menu_language;
+					$array['menus'][0]['menu_description'] = $menu_description;
+					$database = new database;
+					$database->app_name = 'menu';
+					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+					$database->save($array);
+					unset($array);
+
+				//redirect the user back to the main menu
+					message::add($text['message-add']);
+					header("Location: menu.php");
+					return;
+			} //if ($action == "add")
+
+			if ($action == "update") {
+				//update the menu
+					$array['menus'][0]['menu_uuid'] = $menu_uuid;
+					$array['menus'][0]['menu_name'] = $menu_name;
+					$array['menus'][0]['menu_language'] = $menu_language;
+					$array['menus'][0]['menu_description'] = $menu_description;
+					$database = new database;
+					$database->app_name = 'menu';
+					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
+					$database->save($array);
+					unset($array);
+
+				//redirect the user back to the main menu
+					message::add($text['message-update']);
+					header("Location: menu.php");
+					return;
+			}
 		}
 	}
-}
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && is_array($_GET["id"]) && $_POST["persistformvar"] != "true") {
 		$menu_uuid = $_GET["id"];
 		$sql = "select * from v_menus ";
 		$sql .= "where menu_uuid = :menu_uuid ";
@@ -251,4 +244,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
