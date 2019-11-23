@@ -38,7 +38,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur XML";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor XML";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "XML bewerking";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor XML";
@@ -64,7 +64,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de Provisioning";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor di Provisioning";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Voorzieningen bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Provisionamento";
@@ -90,7 +90,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur PHP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor PHP";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "PHP bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de PHP";
@@ -116,7 +116,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de Grammaire";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor Grammatica";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Grammatica bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor Gramático";

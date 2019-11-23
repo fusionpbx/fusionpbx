@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Passerelles";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gateways";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Brama wyjściowa ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gateways";
