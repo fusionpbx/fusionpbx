@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2018
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,15 +43,14 @@
 	$text = $language->get();
 
 //set the variables
-	if (is_uuid($_REQUEST["id"])) {
-		$database_transaction_uuid = $_REQUEST["id"];
+	if (is_uuid($_GET["id"])) {
+		$database_transaction_uuid = $_GET["id"];
 		$search = $_GET['search'];
 		$page = $_GET['page'];
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$database_transaction_uuid = $_GET["id"];
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
 
 		$sql = "select ";
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
@@ -84,7 +83,7 @@
 	}
 
 //undo the transaction
-	if ($_GET['action'] == 'undo' && ($transaction_type = 'delete' || $transaction_type = 'update')) {
+	if ($_GET['action'] == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
 		//get the array
 			$array = json_decode($transaction_old, true);
 
@@ -118,14 +117,13 @@
 	echo "	<tr>\n";
 	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
 	echo "		<td width='80%' align='right' valign='top'>\n";
-	if ($transaction_type = 'delete' || $transaction_type = 'update') {
+	if ($transaction_type == 'delete' || $transaction_type == 'update') {
 		echo "			<a href='database_transaction_edit.php?id=".urlencode($database_transaction_uuid)."&action=undo".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-undo']."'>".$text['button-undo']."</button></a>";
 	}
 	echo "			<a href='database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-
 	echo "<table width='400'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<td valign='top'>\n";
 	echo "	<table>\n";
@@ -134,7 +132,7 @@
 	echo "				".$text['label-app_name']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				".$app_name."\n";
+	echo "				".escape($app_name)."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
@@ -288,10 +286,10 @@
 						$_SESSION['previous_name'] = $_SESSION['name'];
 						$_SESSION['previous_row'] = $_SESSION['row'];
 					//show the results
-						echo "<tr style='color: $color;'>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".$key."</td>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".$old."</td>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".$new."</td>";
+						echo "<tr class='list-row' style='color: $color;'>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".escape($key)."</td>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".escape($old)."</td>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".escape($new)."</td>";
 						echo "</tr>\n";
 					//echo "</table>\n";
 				}
@@ -342,21 +340,19 @@
 				}
 			}
 		}
-
+		echo "<br />\n";
 		echo "<table border='0'>\n";
 		foreach($array as $row) {
 			if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
 				echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
 				echo "<tr>\n";
-				echo "	<th>".$row['schema']."</th>\n";
+				echo "	<th>".escape($row['schema'])."</th>\n";
 				echo "	<th>value</th>\n";
 				echo "</tr>\n";
 			}
-			echo "<tr>\n";
-			//echo "	<td>".$row['schema']."</td>\n";
-			//echo "	<td>".$row['row']."</td>\n";
-			echo "	<td class=\"vtable\" style='color: #000000;'>".$row['name']."</td>\n";
-			echo "	<td class=\"vtable\" style='color: #ff0000;'>".$row['value']."</td>\n";
+			echo "<tr class='list-row'>\n";
+			echo "	<td class=\"vtable\" style='color: #000000;'>".escape($row['name'])."</td>\n";
+			echo "	<td class=\"vtable\" style='color: #ff0000;'>".escape($row['value'])."</td>\n";
 			echo "</tr>\n";
 
 			$previous_schema = $row['schema'];
@@ -399,6 +395,7 @@
 				$_SESSION['table_header'] = $table_header;
 			
 			//show the difference
+				echo "<br />\n";
 				echo "<table border='0'>\n";
 				show_difference($array);
 				echo "</table>\n";
@@ -407,11 +404,24 @@
 
 //show the delete
 	if ($transaction_type == "delete") {
-		//echo "<h3>Record Deleted</h3><br />\n";
-		echo "<br />\n";
-		echo "<pre>\n";
-		print_r($before);
-		echo "</pre>\n";
+		echo "<br /><br />\n";
+		echo "<table>\n";
+		foreach($before as $table_name => $rows) {
+			echo "	<tr>\n";
+			echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
+			echo "	</tr>\n";
+			foreach ($rows as $row) {
+				foreach ($row as $key => $value) {
+					echo "	<tr class='list-row'>\n";
+					echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
+					echo "	</tr>\n";
+				}
+				echo "	<tr>\n";
+				echo "		<td colspan='3'><br /><br /></td>\n";
+				echo "	</tr>\n";
+			}
+		}
+		echo "</table>\n";
 	}
 
 //add a few lines at the end
