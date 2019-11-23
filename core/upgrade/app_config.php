@@ -18,7 +18,7 @@
 		$apps[$x]['description']['fr-fr'] = "Mise à jour du Schàma de la base de donnàes";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Herstel of werk verschillende systeem instellingen in.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema da base de dados.";
