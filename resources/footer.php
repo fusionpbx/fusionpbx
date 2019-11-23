@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 
 //set variables if not set
-	if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
+	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
 	if (!isset($document)) { $document = null; }
 	if (!isset($v_menu)) { $v_menu = null; }
 	if (!isset($_SESSION["menu"])) { $_SESSION["menu"] = null; }
@@ -40,9 +40,9 @@
 	ob_end_clean(); //clean the buffer
 
 //clear the template
-	if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
-		$_SESSION["template_content"] = '';
-	}
+	//if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
+	//	$_SESSION["template_content"] = '';
+	//}
 
 //set a default template
 	if (strlen($_SESSION["template_full_path"]) == 0) { //build template if session template has no length
@@ -69,12 +69,10 @@
 	}
 
 //get the template
-	$template_full_path = $_SESSION["template_full_path"];
 	ob_start();
-	include($template_full_path);
+	include($_SESSION["template_full_path"]);
 	$template = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
-	$_SESSION["template_content"] = $template;
 
 //prepare the template to display the output
 	$custom_head = '';
