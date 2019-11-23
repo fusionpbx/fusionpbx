@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Enregistrements SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Registrazioni SIP";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Registraties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Rejestracje";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Registros";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Registos";
