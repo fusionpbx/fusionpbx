@@ -27,6 +27,7 @@
 //define the menu class
 if (!class_exists('menu')) {
 	class menu {
+
 		//define the variables
 			public $menu_uuid;
 			public $menu_language;
