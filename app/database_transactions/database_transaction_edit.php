@@ -42,7 +42,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//action add or update
+//set the variables
 	if (is_uuid($_REQUEST["id"])) {
 		$database_transaction_uuid = $_REQUEST["id"];
 		$search = $_GET['search'];
@@ -83,6 +83,23 @@
 		unset($sql, $parameters, $row);
 	}
 
+//undo the transaction
+	if ($_GET['action'] == 'undo' && ($transaction_type = 'delete' || $transaction_type = 'update')) {
+		//get the array
+			$array = json_decode($transaction_old, true);
+
+		//save to the data
+			$database = new database;
+			$database->app_name = $app_name;
+			$database->app_uuid = $app_uuid;
+			$database->save($array);
+			$message = $database->message;
+
+		//redirect the user
+			$_SESSION["message"] = $text['message-update'];
+			header("Location: database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null));
+	} 
+
 //get the type if not provided
 	if (strlen($transaction_type) == 0) {
 		if ($transaction_old == null || $transaction_old == "null") {
@@ -101,7 +118,10 @@
 	echo "	<tr>\n";
 	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
 	echo "		<td width='80%' align='right' valign='top'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php?".($search != '' ? "&search=".$search : null).($page != '' ? "&page=".urlencode($page) : null)."'\" value='".$text['button-back']."'>";
+	if ($transaction_type = 'delete' || $transaction_type = 'update') {
+		echo "			<a href='database_transaction_edit.php?id=".urlencode($database_transaction_uuid)."&action=undo".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-undo']."'>".$text['button-undo']."</button></a>";
+	}
+	echo "			<a href='database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

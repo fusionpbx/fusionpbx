@@ -4375,11 +4375,11 @@
 
     <!-- # Phonebook Key Function. 0 - Default, 1 - LDAP Search, 2 - Local Phonebook, 3 - Local Group, 4 - Broadsoft Phonebook. Default value is 0. -->
     <!-- # Number : 0, 1, 2, 3, 4 -->
-    {if isset($contact_grandstream)}
-	<P1526>2</P1526>
-	{else}
-	<P1526>0</P1526>
-	{/if}
+    {if isset($contact_groups) ||  isset($contact_users) ||  isset($contact_extensions)}
+    <P1526>2</P1526>
+    {else}
+    <P1526>0</P1526>
+    {/if}
 
     <!-- # Clear the old list / Clear old history mode. 0 - No, 1 - Clear all, 2 - Keep local contacts. Default value is 0 -->
     <!-- # Combined use. If set to 0, Clear the old list is unchecked and Clear old history mode is not available, otherwise it is checked. -->
@@ -4393,11 +4393,7 @@
 
     <!-- # Download Mode. 0 - OFF, 1 - TFTP, 2 - HTTP, 3- HTTPS. Default value is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
-    {if isset($contact_grandstream)}
-	<P330>1</P330>
-	{else}
-	<P330>0</P330>
-	{/if}
+    <P330>{$grandstream_phonebook_download}</P330>
 
     <!-- # File Encoding. GBK - GBK, UTF-8 - UTF-8, UTF-16 - UTF-16, UTF-32 - UTF-32, Big5 - Big5, Big5-HKSCS - Big5-HKSCS, Shift-JIS - Shift-JIS -->
     <!-- # ISO 2022-JP - ISO 2022-JP, KOI8-R - KOI8-R, ISO8859-1 - ISO8859-1, ISO8859-15 - ISO8859-15, Windows-1251 - Windows-1251, EUC-KR - EUC-KR -->
@@ -4408,27 +4404,25 @@
     <!-- # Download Server. It MUST be in the host/path format -->
     <!-- # For example: directory.grandstream.com/engineering -->
     <!-- # String -->
-    {if isset($contact_grandstream)}
-	<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
-	{elseif isset($grandstream_phonebook_xml_server_path)}
-	<P331>{$grandstream_phonebook_xml_server_path}</P331>
-	{else}
-	<P331></P331>
-	{/if}
+    {if isset($grandstream_phonebook_xml_server_path)}
+    <P331>{$grandstream_phonebook_xml_server_path}/{$mac}</P331>
+    {else}
+    <P331></P331>
+    {/if}
 
     <!-- #HTTP/HTTPS User Name -->
-    <P6713></P6713>
+    <P6713>{$http_auth_username}</P6713>
 
     <!-- #HTTP/HTTPS Password -->
-    <P6714></P6714>
+    <P6714>{$http_auth_password}</P6714>
 
     <!-- # Download Interval. Default is 0 for disabled -->
     <!-- # Number: 0, 120, 240, 360, 480, 720 -->
     {if isset($grandstream_phonebook_download_interval)}
-	<P332>{$grandstream_phonebook_download_interval}</P332>
-	{else}
-	<P332>0</P332>
-	{/if}
+    <P332>{$grandstream_phonebook_download_interval}</P332>
+    {else}
+    <P332>0</P332>
+    {/if}
 
     <!-- ####################################################################### -->
     <!-- ##  Contact - LDAP Phonebook                                         ## -->

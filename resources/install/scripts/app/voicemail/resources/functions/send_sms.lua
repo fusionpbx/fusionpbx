@@ -77,7 +77,9 @@
 					message_length_formatted = format_seconds(message_length);
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail-sms] message length: " .. message_length .. "\n");
-						freeswitch.consoleLog("notice", "[voicemail-sms] transcription: " .. transcription .. "\n");
+						if (transcription ~= nil) then
+							freeswitch.consoleLog("notice", "[voicemail-sms] transcription: " .. transcription .. "\n");
+						end
 						freeswitch.consoleLog("notice", "[voicemail-sms] domain_name: " .. domain_name .. "\n");
 					end
 					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch)

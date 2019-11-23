@@ -1918,6 +1918,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7e5d0132-a3a8-40b1-9540-f8b7df4cf8ca";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_start";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fas fa-play";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ccfc5c6a-4946-496d-b1aa-45dfb35588f7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "button_icon_stop";
