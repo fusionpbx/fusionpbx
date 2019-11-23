@@ -132,7 +132,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_array($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
 		$menu_uuid = $_GET["id"];
 		$sql = "select * from v_menus ";
 		$sql .= "where menu_uuid = :menu_uuid ";
