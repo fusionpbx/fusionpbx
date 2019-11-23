@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Beheer database toegangs informatie.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Armazena informações de conexão com a base de dados.";
