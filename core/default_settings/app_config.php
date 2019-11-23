@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Configurations par défaut applicable à tous les domaines";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Standaardinstallingen die voor alle domeinen gelden.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Configurações padrão que se aplicam a todos os domínios.";

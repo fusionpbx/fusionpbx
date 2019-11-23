@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Confs par Défaut";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri di Default";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Standaard instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia domyślne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Predefinições";
