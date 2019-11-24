@@ -118,10 +118,10 @@
 				$username_old = $_POST["username_old"];
 			}
 			$domain_uuid = $_POST["domain_uuid"];
-			$username = trim($_POST["username"]);
-			$password = trim($_POST["password"]);
-			$password_confirm = trim($_POST["password_confirm"]);
-			$user_email = trim($_POST["user_email"]);
+			$username = $_POST["username"];
+			$password = $_POST["password"];
+			$password_confirm = $_POST["password_confirm"];
+			$user_email = $_POST["user_email"];
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
@@ -129,15 +129,15 @@
 				$contact_uuid = $_POST["contact_uuid"];
 			}
 			else if (permission_exists('user_add') && $action == 'add') {
-				$contact_organization = trim($_POST["contact_organization"]);
-				$contact_name_given = trim($_POST["contact_name_given"]);
-				$contact_name_family = trim($_POST["contact_name_family"]);
+				$contact_organization = $_POST["contact_organization"];
+				$contact_name_given = $_POST["contact_name_given"];
+				$contact_name_family = $_POST["contact_name_family"];
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_enabled = $_POST["user_enabled"];
-			$api_key = trim($_POST["api_key"]);
+			$api_key = $_POST["api_key"];
 			if (permission_exists('message_view')) {
-				$message_key = trim($_POST["message_key"]);
+				$message_key = $_POST["message_key"];
 			}
 
 		//validate the token
