@@ -1130,7 +1130,7 @@
 		//phrases
 			if (is_array($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
-				foreach ($result as &$row) {
+				foreach ($phrases as &$row) {
 					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";
