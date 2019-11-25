@@ -36,10 +36,10 @@
 --create the api object
 	api = freeswitch.API();
 	uuid = argv[1];
-	domain_uuid = argv[2];
 	if not uuid or uuid == "" then return end;
 	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number");
 	callee = api:executeString("uuid_getvar " .. uuid .. " destination_number");
+	domain_uuid = api:executeString("uuid_getvar " .. uuid .. " domain_uuid");
 
 --clean local country prefix from caller (ex: +39 or 0039 in Italy)
 	exitCode    = api:executeString("uuid_getvar " .. uuid .. " default_exitcode");
@@ -87,7 +87,6 @@
 		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family AS name FROM v_contacts ";
 	end
 	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
-	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid AND v_destinations.destination_number = :caller ";
 	
 	local params;
 	if ((not domain_uuid) or (domain_uuid == "")) then
