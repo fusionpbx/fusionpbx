@@ -88,16 +88,14 @@
 
 //prepare for paging
 	$rows_per_page = is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "search=".escape($search);
-	if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
+	$param = "&search=".$search;
+	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		$param .= "&show=all";
 	}
-	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-	}
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
 
 //get the users from the database
 	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, ";
