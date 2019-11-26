@@ -24,15 +24,9 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the ivr_menu class
-if (!class_exists('ivr_menu')) {
-	class ivr_menu {
-
-		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-		public $ivr_menu_uuid;
+//define the phrases class
+if (!class_exists('phrases')) {
+	class phrases {
 
 		/**
 		 * declare private variables
@@ -52,13 +46,13 @@ if (!class_exists('ivr_menu')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'ivr_menus';
-				$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-				$this->permission_prefix = 'ivr_menu_';
-				$this->list_page = 'ivr_menus.php';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
-				$this->toggle_field = 'ivr_menu_enabled';
+				$this->app_name = 'phrases';
+				$this->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
+				$this->permission_prefix = 'phrase_';
+				$this->list_page = 'phrases.php';
+				$this->table = 'phrases';
+				$this->uuid_prefix = 'phrase_';
+				$this->toggle_field = 'phrase_enabled';
 				$this->toggle_values = ['true','false'];
 
 		}
@@ -71,21 +65,6 @@ if (!class_exists('ivr_menu')) {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
 			}
-		}
-
-		public function find() {
-			$sql = "select * from v_ivr_menus ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			if (isset($this->ivr_menu_uuid)) {
-				$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-				$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
-			}
-			if (isset($this->order_by)) {
-				$sql .= $this->order_by;
-			}
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			return $database->select($sql, $parameters, 'all');
 		}
 
 		/**
@@ -109,37 +88,39 @@ if (!class_exists('ivr_menu')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//filter out unchecked ivr menus, build where clause for below
-							foreach ($records as $record) {
+						//filter out unchecked phrases, build where clause for below
+							foreach($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
 								}
 							}
 
-						//get necessary ivr menu details
+						//get phrase languages
 							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ivr_menu_context from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid) ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, phrase_language as lang from v_".$this->table." ";
+								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-										$ivr_menu_contexts[] = $row['ivr_menu_context'];
+										$phrase_languages[$row['uuid']] = $row['lang'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
 							}
 
 						//build the delete array
-							$x = 0;
-							foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ivr_menu_uuid;
-								$array['ivr_menu_options'][$x]['ivr_menu_uuid'] = $ivr_menu_uuid;
-								$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
-								$x++;
+							if (is_array($phrase_languages) && @sizeof($phrase_languages) != 0) {
+								$x = 0;
+								foreach ($phrase_languages as $phrase_uuid => $phrase_language) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['phrase_details'][$x][$this->uuid_prefix.'uuid'] = $phrase_uuid;
+									$array['phrase_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$x++;
+								}
 							}
 
 						//delete the checked rows
@@ -147,8 +128,7 @@ if (!class_exists('ivr_menu')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('ivr_menu_options_delete', 'temp');
-									$p->add('dialplan_delete', 'temp');
+									$p->add('phrase_details_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -158,25 +138,19 @@ if (!class_exists('ivr_menu')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('ivr_menu_options_delete', 'temp');
-									$p->delete('dialplan_delete', 'temp');
-
-								//synchronize the xml config
-									save_dialplan_xml();
+									$p->delete('phrase_details_delete', 'temp');
 
 								//clear the cache
-									if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
-										$ivr_menu_contexts = array_unique($ivr_menu_contexts);
-										$cache = new cache;
-										foreach ($ivr_menu_contexts as $ivr_menu_context) {
-											$cache->delete("dialplan:".$dialplan_context);
-										}
+									$phrase_languages = array_unique($phrase_languages);
+									$cache = new cache;
+									foreach ($phrase_languages as $phrase_language) {
+										$cache->delete("languages:".$phrase_language);
 									}
 
 								//set message
 									message::add($text['message-delete']);
 							}
-							unset($records, $ivr_menus);
+							unset($records, $phrase_languages);
 					}
 			}
 		}
@@ -202,14 +176,14 @@ if (!class_exists('ivr_menu')) {
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//get current toggle state
+						//get current toggle state and language
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
 								}
 							}
 							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, phrase_language as lang from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -217,8 +191,8 @@ if (!class_exists('ivr_menu')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$ivr_menus[$row['uuid']]['state'] = $row['toggle'];
-										$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$states[$row['uuid']] = $row['toggle'];
+										$phrase_languages[] = $row['lang'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -226,20 +200,14 @@ if (!class_exists('ivr_menu')) {
 
 						//build update array
 							$x = 0;
-							foreach ($ivr_menus as $uuid => $ivr_menu) {
+							foreach($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
-								$array['dialplans'][$x]['dialplan_enabled'] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
 						//save the changes
 							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = new permissions;
-									$p->add('dialplan_edit', 'temp');
 
 								//save the array
 									$database = new database;
@@ -248,14 +216,11 @@ if (!class_exists('ivr_menu')) {
 									$database->save($array);
 									unset($array);
 
-								//revoke temporary permissions
-									$p->delete('dialplan_edit', 'temp');
-
 								//clear the cache
+									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
-									foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-										$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
+									foreach ($phrase_languages as $phrase_language) {
+										$cache->delete("languages:".$phrase_language);
 									}
 
 								//set message
@@ -300,39 +265,37 @@ if (!class_exists('ivr_menu')) {
 
 								//primary table
 									$sql = "select * from v_".$this->table." ";
-									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 									$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
-										$y = $z = 0;
+										$y = 0;
 										foreach ($rows as $x => $row) {
-											$new_ivr_menu_uuid = uuid();
-											$new_dialplan_uuid = uuid();
+											$primary_uuid = uuid();
 
 											//copy data
 												$array[$this->table][$x] = $row;
 
 											//overwrite
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ivr_menu_uuid;
-												$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-												$array[$this->table][$x]['ivr_menu_description'] = trim($row['ivr_menu_description'].' ('.$text['label-copy'].')');
+												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
+												$array[$this->table][$x]['phrase_description'] = trim($row['phrase_description'].' ('.$text['label-copy'].')');
 
-											//ivr menu options sub table
-												$sql_2 = "select * from v_ivr_menu_options where ivr_menu_uuid = :ivr_menu_uuid";
-												$parameters_2['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+											//details sub table
+												$sql_2 = "select * from v_phrase_details where phrase_uuid = :phrase_uuid";
+												$parameters_2['phrase_uuid'] = $row['phrase_uuid'];
 												$database = new database;
 												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
 														//copy data
-															$array['ivr_menu_options'][$y] = $row_2;
+															$array['phrase_details'][$y] = $row_2;
 
 														//overwrite
-															$array['ivr_menu_options'][$y]['ivr_menu_option_uuid'] = uuid();
-															$array['ivr_menu_options'][$y]['ivr_menu_uuid'] = $new_ivr_menu_uuid;
+															$array['phrase_details'][$y]['phrase_detail_uuid'] = uuid();
+															$array['phrase_details'][$y]['phrase_uuid'] = $primary_uuid;
 
 														//increment
 															$y++;
@@ -341,29 +304,8 @@ if (!class_exists('ivr_menu')) {
 												}
 												unset($sql_2, $parameters_2, $rows_2, $row_2);
 
-											//ivr menu dialplan record
-												$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
-												$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-												$database = new database;
-												$dialplan = $database->select($sql_3, $parameters_3, 'row');
-												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
-
-													//copy data
-														$array['dialplans'][$z] = $dialplan;
-
-													//overwrite
-														$array['dialplans'][$z]['dialplan_uuid'] = $new_dialplan_uuid;
-														$dialplan_xml = $dialplan['dialplan_xml'];
-														$dialplan_xml = str_replace($row['ivr_menu_uuid'], $new_ivr_menu_uuid, $dialplan_xml); //replace source ivr_menu_uuid with new
-														$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-														$array['dialplans'][$z]['dialplan_xml'] = $dialplan_xml;
-														$array['dialplans'][$z]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
-
-													//increment
-														$z++;
-												}
-												unset($sql_3, $parameters_3, $dialplan);
-
+											//create array of languages
+												$phrase_languages[] = $row['phrase_languages'];
 										}
 									}
 									unset($sql, $parameters, $rows, $row);
@@ -374,8 +316,7 @@ if (!class_exists('ivr_menu')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('ivr_menu_option_add', 'temp');
-									$p->add('dialplan_add', 'temp');
+									$p->add('phrase_detail_add', 'temp');
 
 								//save the array
 									$database = new database;
@@ -385,16 +326,14 @@ if (!class_exists('ivr_menu')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p = new permissions;
-									$p->delete('ivr_menu_option_add', 'temp');
-									$p->delete('dialplan_add', 'temp');
-
-								//synchronize the xml config
-									save_dialplan_xml();
+									$p->delete('phrase_detail_add', 'temp');
 
 								//clear the cache
+									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									foreach ($phrase_languages as $phrase_language) {
+										$cache->delete("languages:".$phrase_language);
+									}
 
 								//set message
 									message::add($text['message-copy']);
@@ -404,9 +343,9 @@ if (!class_exists('ivr_menu')) {
 					}
 
 			}
-		}
+		} //method
 
-	}
+	} //class
 }
 
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,8 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+	require_once "resources/functions/save_phrases_xml.php";
 
 //check the permission
 	if (!permission_exists('phrase_view')) {
@@ -39,111 +41,203 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http get values and set them as php variables
+//get posted data
+	if (is_array($_POST['phrases'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$phrases = $_POST['phrases'];
+	}
+
+//copy the phrases
+	if (permission_exists('phrase_add')) {
+		if ($action == 'copy' && is_array($phrases) && @sizeof($phrases) != 0) {
+			//copy
+				$obj = new phrases;
+				$obj->copy($phrases);
+			//save the xml
+				save_phrases_xml();
+			//redirect
+				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+				exit;
+		}
+	}
+
+//toggle the phrases
+	if (permission_exists('phrase_edit')) {
+		if ($action == 'toggle' && is_array($phrases) && @sizeof($phrases) != 0) {
+			//toggle
+				$obj = new phrases;
+				$obj->toggle($phrases);
+			//save the xml
+				save_phrases_xml();
+			//redirect
+				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+				exit;
+		}
+	}
+
+//delete the phrases
+	if (permission_exists('phrase_delete')) {
+		if ($action == 'delete' && is_array($phrases) && @sizeof($phrases) != 0) {
+			//delete
+				$obj = new phrases;
+				$obj->delete($phrases);
+			//save the xml
+				save_phrases_xml();
+			//redirect
+				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+				exit;
+		}
+	}
+
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add paging
-	require_once "resources/paging.php";
+//add the search term
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_search = "and (";
+		$sql_search .= "lower(phrase_name) like :search ";
+		$sql_search .= "or lower(phrase_enabled) like :search ";
+		$sql_search .= "or lower(phrase_description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+
+//get phrases record count
+	$sql = "select count(*) from v_phrases ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$sql .= $sql_search;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$num_rows = $database->select($sql, $parameters, 'column');
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "&search=".$search;
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$phrases = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-phrases'];
 
 //begin the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<b>".$text['header_phrases']."</b>\n";
-	echo "			<br /><br />\n";
-	echo "			".$text['description-phrases']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>";
-	echo "<br />\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header_phrases']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (permission_exists('phrase_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'phrase_edit.php']);
+	}
+	if (permission_exists('phrase_add') && $phrases) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('phrase_edit') && $phrases) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('phrase_delete') && $phrases) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'phrases.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	$sql = "select count(*) from v_phrases ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "or domain_uuid is null ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	echo $text['description-phrases']."\n";
+	echo "<br /><br />\n";
 
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('phrase_add') || permission_exists('phrase_edit') || permission_exists('phrase_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($phrases ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('phrase_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('phrase_language', $text['label-language'], $order_by, $order);
-	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('phrase_add')) {
-		echo "<a href='phrase_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 40%;'");
+	if (permission_exists('phrase_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('phrase_edit')) ? "href='phrase_edit.php?id=".$row['phrase_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['phrase_name'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['phrase_language'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['phrase_enabled'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['phrase_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+	if (is_array($phrases) && @sizeof($phrases) != 0) {
+		$x = 0;
+		foreach($phrases as $row) {
 			if (permission_exists('phrase_edit')) {
-				echo "<a href='phrase_edit.php?id=".escape($row['phrase_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+				$list_row_url = "phrase_edit.php?id=".urlencode($row['phrase_uuid']);
 			}
-			if (permission_exists('phrase_delete')) {
-				echo "<a href='phrase_delete.php?id=".escape($row['phrase_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('phrase_add') || permission_exists('phrase_edit') || permission_exists('phrase_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='phrases[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='phrases[$x][uuid]' value='".escape($row['phrase_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>";
+			if (permission_exists('phrase_edit')) {
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['phrase_name'])."</a>";
+			}
+			else {
+				echo escape($row['phrase_name']);
 			}
 			echo "	</td>\n";
+			echo "	<td>".escape($row['phrase_language'])."&nbsp;</td>\n";
+			if (permission_exists('phrase_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['phrase_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['phrase_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['phrase_description'])."&nbsp;</td>\n";
+			if (permission_exists('phrase_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-
-			$c = $c ? 0 : 1;
+			$x++;
 		}
 	}
-	unset($result, $row);
-
-	echo "<tr>\n";
-	echo "<td colspan='4'>&nbsp;</td>\n";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('phrase_add')) {
-		echo "<a href='phrase_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
+	unset($phrases);
 
 	echo "</table>\n";
-
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>".$paging_controls."</td>\n";
-	echo "		<td class='list_control_icons'>";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-
 	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
