@@ -925,8 +925,8 @@ if (!class_exists('modules')) {
 		/**
 		 * delete modules
 		 */
-		private function delete($records) {
-			if (permission_exists($this->permission_prefix.'edit')) {
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
 					$language = new text;
@@ -982,7 +982,7 @@ if (!class_exists('modules')) {
 								//stop modules
 									if ($fp) {
 										foreach ($modules as $module_uuid => $module) {
-											if ($module['enabled'] == 'true') {
+											if ($this->active($module['name'])) {
 												$cmd = 'api unload '.$module['name'];
 												$responses[$module_uuid]['module'] = $module['name'];
 												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
