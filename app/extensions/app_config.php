@@ -187,6 +187,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_copy";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_export";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;

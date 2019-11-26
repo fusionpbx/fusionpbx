@@ -320,6 +320,9 @@
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'device_export';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 
 	//default settings
 		$y = 0;
