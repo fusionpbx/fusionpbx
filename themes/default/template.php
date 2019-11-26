@@ -411,21 +411,35 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		}
 
 	//list functions
-		function list_all_toggle() {
+		function list_all_toggle(modifier) {
 			var inputs = document.getElementsByTagName('input');
-			var checkbox_checked = document.getElementById('checkbox_all').checked;
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
-					inputs[i].checked = checkbox_checked;
-				}
-			}
-			if (checkbox_checked) {
-				document.getElementById('btn_check_all').style.display = 'none';
-				document.getElementById('btn_check_none').style.display = '';
+			if (modifier !== undefined) {
+				var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
 			}
 			else {
-				document.getElementById('btn_check_all').style.display = '';
-				document.getElementById('btn_check_none').style.display = 'none';
+				var checkbox_checked = document.getElementById('checkbox_all').checked;
+			}
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (modifier !== undefined) {
+					if (inputs[i].type === 'checkbox' && inputs[i].className === 'checkbox_'+modifier) {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+				else {
+					if (inputs[i].type === 'checkbox') {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+			}
+			if (document.getElementById('btn_check_all') && document.getElementById('btn_check_none')) {
+				if (checkbox_checked) {
+					document.getElementById('btn_check_all').style.display = 'none';
+					document.getElementById('btn_check_none').style.display = '';
+				}
+				else {
+					document.getElementById('btn_check_all').style.display = '';
+					document.getElementById('btn_check_none').style.display = 'none';
+				}
 			}
 		}
 

@@ -306,7 +306,6 @@
 							echo "	<td class='no-link center'>";
 							echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-start'],'title'=>$text['button-start'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('start'); list_form_submit('form_list')"]);
 							echo "	</td>\n";
-// 							echo "	<td><a href='gateways.php?a=start&gateway=".urlencode($row["gateway_uuid"])."&profile=".urlencode($row["profile"])."' alt='".$text['label-action-start']."'>".$text['label-action-start']."</a></td>\n";
 						}
 						echo "	<td>&nbsp;</td>\n";
 					}
@@ -320,11 +319,10 @@
 								echo "	<td class='no-link center'>";
 								echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
 								echo "	</td>\n";
-// 								echo "	<td><a href='gateways.php?a=stop&gateway=".urlencode($row["gateway_uuid"])."&profile=".urlencode($row["profile"])."' alt='".$text['label-action-stop']."'>".$text['label-action-stop']."</a></td>\n";
 							}
 							echo "	<td>".escape($state)."</td>\n"; //REGED, NOREG, UNREGED
 						}
-						catch(Exception $e) {
+						catch (Exception $e) {
 								//echo $e->getMessage();
 						}
 					}
