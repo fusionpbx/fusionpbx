@@ -167,7 +167,7 @@
 	}
 	echo th_order_by('number_translation_name', $text['label-number_translation_name'], $order_by, $order);
 	echo th_order_by('number_translation_enabled', $text['label-number_translation_enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('number_translation_description', $text['label-number_translation_description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('number_translation_description', $text['label-number_translation_description'], $order_by, $order, null, "class='hide-sm-dn'  style='min-width: 50%;'");
 	if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -203,7 +203,7 @@
 				echo $text['label-'.$row['number_translation_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn' style='min-width: 50%;'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
 			if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);

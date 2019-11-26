@@ -965,8 +965,8 @@ if (!class_exists('modules')) {
 							}
 
 						//build the delete array
-							$x = 0;
 							if (is_array($modules) && @sizeof($modules) != 0) {
+								$x = 0;
 								foreach ($modules as $module_uuid => $module) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $module_uuid;
 									$x++;
