@@ -79,49 +79,6 @@
 		}
 	}
 
-
-//resend email (previous method)
-	/*
-	if ($_REQUEST['a'] == 'resend' && permission_exists('email_log_resend')) {
-		$email_log_uuid = $_REQUEST["id"];
-		$resend = true;
-
-		$msg_found = false;
-
-		if (is_uuid($email_log_uuid)) {
-			$sql = "select email from v_email_logs ";
-			$sql .= "where email_log_uuid = :email_log_uuid ";
-			if (!permission_exists('email_log_all') || $_REQUEST['showall'] != 'true') {
-				$sql .= "and domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-			}
-			$parameters['email_log_uuid'] = $email_log_uuid;
-			$database = new database;
-			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
-				$email = $row['email'];
-				$msg_found = true;
-			}
-			unset($sql, $parameters, $row);
-		}
-
-		if ($msg_found) {
-			$msg = $email;
-			require_once "secure/v_mailto.php";
-			if ($mailer_error == '') {
-				message::add($text['message-message_resent']);
-				header("Location: email_log_delete.php?id=".$email_log_uuid.(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "&showall=true" : null));
-			}
-			else {
-				message::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
-				header("Location: email_logs.php".(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "?showall=true" : null));
-			}
-		}
-
-		exit;
-	}
-	*/
-
 //get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
