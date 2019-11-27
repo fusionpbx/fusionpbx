@@ -119,6 +119,7 @@
 				$sql .= "('".uuid()."', 'German - Liechtenstein', 'de-li'), ";
 				$sql .= "('".uuid()."', 'German - Luxembourg', 'de-lu'), ";
 				$sql .= "('".uuid()."', 'German - Switzerland', 'de-ch'), ";
+				$sql .= "('".uuid()."', 'Greek - Cyprus', 'el-cy'), ";
 				$sql .= "('".uuid()."', 'Greek - Greece', 'el-gr'), ";
 				$sql .= "('".uuid()."', 'Guarani - Paraguay', 'gn'), ";
 				$sql .= "('".uuid()."', 'Gujarati', 'gu'), ";
