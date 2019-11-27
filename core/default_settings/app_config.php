@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Configurações Padrão aplicáveis à todos os domínios";
 		$apps[$x]['description']['pt-pt'] = "Configurações padrão que se aplicam a todos os domínios.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Настройки по умолчанию для всех доменов";
