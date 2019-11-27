@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Aggiorna";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktualizacja";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Atualizar banco de dados";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Atualização";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Actualizar BD";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Обновление";
