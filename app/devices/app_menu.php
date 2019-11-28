@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Dispositivi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toestellen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Urządzenia";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Telefones";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Telefones IP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Telefones";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Dispozitive";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Устройства";
