@@ -17,48 +17,50 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('dialplan_add')
-	|| permission_exists('dialplan_edit')
-	|| permission_exists('inbound_route_add')
-	|| permission_exists('inbound_route_edit')
-	|| permission_exists('outbound_route_add')
-	|| permission_exists('outbound_route_edit')
-	|| permission_exists('fifo_edit')
-	|| permission_exists('fifo_add')
-	|| permission_exists('time_condition_add')
-	|| permission_exists('time_condition_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permisions
+	if (permission_exists('dialplan_add')
+		|| permission_exists('dialplan_edit')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('inbound_route_edit')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('outbound_route_edit')
+		|| permission_exists('fifo_edit')
+		|| permission_exists('fifo_add')
+		|| permission_exists('time_condition_add')
+		|| permission_exists('time_condition_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set the action as an add or update
-	if (isset($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+		$dialplan_detail_uuid = $_REQUEST["id"];
 		$action = "update";
-		$dialplan_detail_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
 	}
-	$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
 
 //get the http values and set them as php variables
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
 	if (count($_POST)>0) {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$dialplan_detail_tag = check_str($_POST["dialplan_detail_tag"]);
@@ -69,15 +71,22 @@ else {
 		$dialplan_detail_inline = check_str($_POST["dialplan_detail_inline"]);
 		$dialplan_detail_group = check_str($_POST["dialplan_detail_group"]);
 	}
+	if (is_uuid($_REQUEST["app_uuid"])) {
+		$app_uuid = $_REQUEST["app_uuid"];
+	}
+	if (is_uuid($_REQUEST["app_uuid"])) {
+		$dialplan_uuid = $_REQUEST["dialplan_uuid"];
+	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$dialplan_detail_uuid = check_str($_POST["dialplan_detail_uuid"]);
+
+	if ($action == "update" && is_uuid($_POST["dialplan_detail_uuid"])) {
+		$dialplan_detail_uuid = $_POST["dialplan_detail_uuid"];
 	}
 
 	//check for all required data
+			$msg = '';
 		if (strlen($dialplan_detail_tag) == 0) { $msg .= $text['message-required'].$text['label-tag']."<br>\n"; }
 		if (strlen($dialplan_detail_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		//if (strlen($dialplan_detail_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
@@ -186,8 +195,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$dialplan_detail_uuid = $_GET["id"];
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+		if (is_uuid($_GET["id"])) {
+			$dialplan_detail_uuid = $_GET["id"];
+		}
 		$sql = "select * from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
