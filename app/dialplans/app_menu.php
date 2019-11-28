@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Piano Numerazioni";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dialplan";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Dialplan";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Plano de Discagem";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "План нумерации";
@@ -42,7 +42,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan beheer";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menadżer dialplanu";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Dialplan";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Plano de Discagem";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestor de Dialplan";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Управление планом нумерации";
