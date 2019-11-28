@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,13 +42,15 @@
 	$language = new text;
 	$text = $language->get();
 
-//get greeting id
-	if (isset($_REQUEST["id"])) {
-		$voicemail_greeting_uuid = check_str($_REQUEST["id"]);
+//validate the uuids
+	if (is_uuid($_REQUEST["id"])) {
+		$voicemail_greeting_uuid = $_REQUEST["id"];
+	}
+	if (is_uuid($_REQUEST["voicemail_id"])) {
+		$voicemail_id = $_REQUEST["voicemail_id"];
 	}
 
 //get the form value and set to php variables
-	$voicemail_id = check_str($_REQUEST["voicemail_id"]);
 	if (count($_POST) > 0) {
 		$greeting_name = check_str($_POST["greeting_name"]);
 		$greeting_description = check_str($_POST["greeting_description"]);
@@ -59,7 +61,9 @@
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get greeting uuid to edit
-		$voicemail_greeting_uuid = check_str($_POST["voicemail_greeting_uuid"]);
+		if (is_uuid($_POST["voicemail_greeting_uuid"])) {
+			$voicemail_greeting_uuid = $_REQUEST["voicemail_greeting_uuid"];
+		}
 
 	//check for all required data
 		$msg = '';
@@ -99,7 +103,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$voicemail_greeting_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and voicemail_greeting_uuid = '".$voicemail_greeting_uuid."' ";
