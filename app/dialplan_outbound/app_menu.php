@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Rotte di Uscita";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitgaande routering";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy wyjściowe";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Rotas de Saída";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Rotas de Saída";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация исходящих";
