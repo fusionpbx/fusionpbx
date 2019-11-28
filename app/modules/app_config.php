@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Modules breiden de mogelijkheden van het systeem uit. Gebruikde deze pagina om modules aan/uit te zetten.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
 		$apps[$x]['description']['pt-pt'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
