@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Het kiesplan wordt gebruikt om oproep bestemmingen die aan de voorwaarden en context voldoet te kiezen. het kiespaln kan worden gebruikt om oproepen naar gateways, antwoordapparaten, externe nummers, scripts of enig andere bestemming te kiezen.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "O Plano de Discagem é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para troncos, atendedores automáticos, números externos, para scripts, ou qualquer destino.";
 		$apps[$x]['description']['pt-pt'] = "O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
