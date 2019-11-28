@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Script bewerker kan worden gebruik om lua, javascript of andere scripts aan te passen.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";
 		$apps[$x]['description']['pt-pt'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
