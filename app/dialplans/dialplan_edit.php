@@ -170,10 +170,16 @@
 						if (strlen($row["dialplan_detail_uuid"]) > 0) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 						}
+						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
+							$dialplan_detail_type = $row["dialplan_detail_type"];
+						}
+						if (!preg_match("/system/i", $row["dialplan_detail_data"])) {
+							$dialplan_detail_data = $row["dialplan_detail_data"];
+						}
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row["dialplan_detail_type"];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $dialplan_detail_type;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $dialplan_detail_data;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_break'] = $row["dialplan_detail_break"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
@@ -739,7 +745,7 @@
 										foreach ($_SESSION['switch']['applications'] as $row) {
 											if (strlen($row) > 0) {
 												$application = explode(",", $row);
-												if ($application[0] != "name" && stristr($application[0], "[") != true) {
+												if ($application[0] != "name" && $application[0] != "system" && stristr($application[0], "[") != true) {
 													echo "	<option value='".escape($application[0])."'>".escape($application[0])."</option>\n";
 												}
 											}
