@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor Script";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Scipt bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Editor de Scripts";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Scripts";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор скриптов";
@@ -40,7 +40,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor XML";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "XML bewerking";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Editor XML";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor XML";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор XML";
@@ -66,7 +66,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor di Provisioning";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Voorzieningen bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Editor de Provisionamento";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Provisionamento";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор шаблонов автоконфигурации";
@@ -92,7 +92,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor PHP";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "PHP bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Editor de PHP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de PHP";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор PHP";
@@ -118,7 +118,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Editor Grammatica";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Grammatica bewerker";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Editor Gramatical";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor Gramático";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Редактор грамматики";
