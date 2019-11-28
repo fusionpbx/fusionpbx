@@ -15,7 +15,7 @@
 		$text['title-email_templates']['nl-nl'] = '';
 		$text['title-email_templates']['pl-pl'] = '';
 		$text['title-email_templates']['pt-br'] = '';
-		$text['title-email_templates']['pt-pt'] = '';
+		$text['title-email_templates']['pt-pt'] = 'Modelos de Email';
 		$text['title-email_templates']['ro-ro'] = '';
 		$text['title-email_templates']['ru-ru'] = 'Email шаблоны';
 		$text['title-email_templates']['sv-se'] = '';
@@ -34,7 +34,7 @@
 		$text['title-email_template']['it-it'] = '';
 		$text['title-email_template']['nl-nl'] = '';
 		$text['title-email_template']['pl-pl'] = '';
-		$text['title-email_template']['pt-br'] = '';
+		$text['title-email_template']['pt-br'] = 'Modelo de Email';
 		$text['title-email_template']['pt-pt'] = '';
 		$text['title-email_template']['ro-ro'] = '';
 		$text['title-email_template']['ru-ru'] = 'Email шаблон';
@@ -54,7 +54,7 @@
 		$text['title_description-email_template']['it-it'] = '';
 		$text['title_description-email_template']['nl-nl'] = '';
 		$text['title_description-email_template']['pl-pl'] = '';
-		$text['title_description-email_template']['pt-br'] = '';
+		$text['title_description-email_template']['pt-br'] = 'Define e gerencia templates dinâmicos usados pelo sistema de envio de emails.';
 		$text['title_description-email_template']['pt-pt'] = '';
 		$text['title_description-email_template']['ro-ro'] = '';
 		$text['title_description-email_template']['ru-ru'] = '';
@@ -74,7 +74,7 @@
 		$text['label-template_language']['it-it'] = '';
 		$text['label-template_language']['nl-nl'] = '';
 		$text['label-template_language']['pl-pl'] = '';
-		$text['label-template_language']['pt-br'] = '';
+		$text['label-template_language']['pt-br'] = 'Idioma';
 		$text['label-template_language']['pt-pt'] = '';
 		$text['label-template_language']['ro-ro'] = '';
 		$text['label-template_language']['ru-ru'] = 'Язык';
@@ -94,7 +94,7 @@
 		$text['description-template_language']['it-it'] = '';
 		$text['description-template_language']['nl-nl'] = '';
 		$text['description-template_language']['pl-pl'] = '';
-		$text['description-template_language']['pt-br'] = '';
+		$text['description-template_language']['pt-br'] = 'Defina o Idioma';
 		$text['description-template_language']['pt-pt'] = '';
 		$text['description-template_language']['ro-ro'] = '';
 		$text['description-template_language']['ru-ru'] = '';
@@ -114,7 +114,7 @@
 		$text['label-template_category']['it-it'] = '';
 		$text['label-template_category']['nl-nl'] = '';
 		$text['label-template_category']['pl-pl'] = '';
-		$text['label-template_category']['pt-br'] = '';
+		$text['label-template_category']['pt-br'] = 'Categoria';
 		$text['label-template_category']['pt-pt'] = '';
 		$text['label-template_category']['ro-ro'] = '';
 		$text['label-template_category']['ru-ru'] = 'Категория';
@@ -134,7 +134,7 @@
 		$text['description-template_category']['it-it'] = '';
 		$text['description-template_category']['nl-nl'] = '';
 		$text['description-template_category']['pl-pl'] = '';
-		$text['description-template_category']['pt-br'] = '';
+		$text['description-template_category']['pt-br'] = 'Selecione o País';
 		$text['description-template_category']['pt-pt'] = '';
 		$text['description-template_category']['ro-ro'] = '';
 		$text['description-template_category']['ru-ru'] = '';
@@ -154,7 +154,7 @@
 		$text['label-template_subcategory']['it-it'] = '';
 		$text['label-template_subcategory']['nl-nl'] = '';
 		$text['label-template_subcategory']['pl-pl'] = '';
-		$text['label-template_subcategory']['pt-br'] = '';
+		$text['label-template_subcategory']['pt-br'] = 'Subcategoria';
 		$text['label-template_subcategory']['pt-pt'] = '';
 		$text['label-template_subcategory']['ro-ro'] = '';
 		$text['label-template_subcategory']['ru-ru'] = 'Подкатегория';
@@ -174,7 +174,7 @@
 		$text['description-template_subcategory']['it-it'] = '';
 		$text['description-template_subcategory']['nl-nl'] = '';
 		$text['description-template_subcategory']['pl-pl'] = '';
-		$text['description-template_subcategory']['pt-br'] = '';
+		$text['description-template_subcategory']['pt-br'] = 'Insira a subcategoria.';
 		$text['description-template_subcategory']['pt-pt'] = '';
 		$text['description-template_subcategory']['ro-ro'] = '';
 		$text['description-template_subcategory']['ru-ru'] = '';
@@ -194,7 +194,7 @@
 		$text['label-template_subject']['it-it'] = '';
 		$text['label-template_subject']['nl-nl'] = '';
 		$text['label-template_subject']['pl-pl'] = '';
-		$text['label-template_subject']['pt-br'] = '';
+		$text['label-template_subject']['pt-br'] = 'Assunto';
 		$text['label-template_subject']['pt-pt'] = '';
 		$text['label-template_subject']['ro-ro'] = '';
 		$text['label-template_subject']['ru-ru'] = 'Тема';
@@ -214,7 +214,7 @@
 		$text['description-template_subject']['it-it'] = '';
 		$text['description-template_subject']['nl-nl'] = '';
 		$text['description-template_subject']['pl-pl'] = '';
-		$text['description-template_subject']['pt-br'] = '';
+		$text['description-template_subject']['pt-br'] = 'Insira o assunto do modelo.';
 		$text['description-template_subject']['pt-pt'] = '';
 		$text['description-template_subject']['ro-ro'] = '';
 		$text['description-template_subject']['ru-ru'] = '';
@@ -234,7 +234,7 @@
 		$text['label-template_body']['it-it'] = '';
 		$text['label-template_body']['nl-nl'] = '';
 		$text['label-template_body']['pl-pl'] = '';
-		$text['label-template_body']['pt-br'] = '';
+		$text['label-template_body']['pt-br'] = 'Corpo';
 		$text['label-template_body']['pt-pt'] = '';
 		$text['label-template_body']['ro-ro'] = '';
 		$text['label-template_body']['ru-ru'] = 'Cообщение';
@@ -254,7 +254,7 @@
 		$text['description-template_body']['it-it'] = '';
 		$text['description-template_body']['nl-nl'] = '';
 		$text['description-template_body']['pl-pl'] = '';
-		$text['description-template_body']['pt-br'] = '';
+		$text['description-template_body']['pt-br'] = 'Insira o corpo do modelo.';
 		$text['description-template_body']['pt-pt'] = '';
 		$text['description-template_body']['ro-ro'] = '';
 		$text['description-template_body']['ru-ru'] = '';
@@ -274,7 +274,7 @@
 		$text['label-template_type']['it-it'] = '';
 		$text['label-template_type']['nl-nl'] = '';
 		$text['label-template_type']['pl-pl'] = '';
-		$text['label-template_type']['pt-br'] = '';
+		$text['label-template_type']['pt-br'] = 'Tipo';
 		$text['label-template_type']['pt-pt'] = '';
 		$text['label-template_type']['ro-ro'] = '';
 		$text['label-template_type']['ru-ru'] = '';
@@ -294,7 +294,7 @@
 		$text['description-template_type']['it-it'] = '';
 		$text['description-template_type']['nl-nl'] = '';
 		$text['description-template_type']['pl-pl'] = '';
-		$text['description-template_type']['pt-br'] = '';
+		$text['description-template_type']['pt-br'] = 'Selecione o tipo do email como texto ou HTML.';
 		$text['description-template_type']['pt-pt'] = '';
 		$text['description-template_type']['ro-ro'] = '';
 		$text['description-template_type']['ru-ru'] = '';
@@ -314,7 +314,7 @@
 		$text['label-template_enabled']['it-it'] = '';
 		$text['label-template_enabled']['nl-nl'] = '';
 		$text['label-template_enabled']['pl-pl'] = '';
-		$text['label-template_enabled']['pt-br'] = '';
+		$text['label-template_enabled']['pt-br'] = 'Ativado';
 		$text['label-template_enabled']['pt-pt'] = '';
 		$text['label-template_enabled']['ro-ro'] = '';
 		$text['label-template_enabled']['ru-ru'] = 'Включено';
@@ -334,7 +334,7 @@
 		$text['description-template_enabled']['it-it'] = '';
 		$text['description-template_enabled']['nl-nl'] = '';
 		$text['description-template_enabled']['pl-pl'] = '';
-		$text['description-template_enabled']['pt-br'] = '';
+		$text['description-template_enabled']['pt-br'] = 'Defina o estado do modelo.';
 		$text['description-template_enabled']['pt-pt'] = '';
 		$text['description-template_enabled']['ro-ro'] = '';
 		$text['description-template_enabled']['ru-ru'] = '';
@@ -354,7 +354,7 @@
 		$text['label-template_description']['it-it'] = '';
 		$text['label-template_description']['nl-nl'] = '';
 		$text['label-template_description']['pl-pl'] = '';
-		$text['label-template_description']['pt-br'] = '';
+		$text['label-template_description']['pt-br'] = 'Descrição';
 		$text['label-template_description']['pt-pt'] = '';
 		$text['label-template_description']['ro-ro'] = '';
 		$text['label-template_description']['ru-ru'] = 'Описание';
@@ -374,7 +374,7 @@
 		$text['description-template_description']['it-it'] = '';
 		$text['description-template_description']['nl-nl'] = '';
 		$text['description-template_description']['pl-pl'] = '';
-		$text['description-template_description']['pt-br'] = '';
+		$text['description-template_description']['pt-br'] = 'Entre com a descrição.';
 		$text['description-template_description']['pt-pt'] = '';
 		$text['description-template_description']['ro-ro'] = '';
 		$text['description-template_description']['ru-ru'] = '';
