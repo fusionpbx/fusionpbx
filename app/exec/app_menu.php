@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Comando";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Commando";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Polecenie";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Comandos";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Comandos do Sistema";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Comandos";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Выполнение команд";
