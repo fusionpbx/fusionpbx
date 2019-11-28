@@ -17,31 +17,35 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('dialplan_add')
-	|| permission_exists('dialplan_edit')
-	|| permission_exists('inbound_route_add')
-	|| permission_exists('inbound_route_edit')
-	|| permission_exists('outbound_route_add')
-	|| permission_exists('outbound_route_edit')
-	|| permission_exists('fifo_edit')
-	|| permission_exists('fifo_add')
-	|| permission_exists('time_condition_add')
-	|| permission_exists('time_condition_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permisions
+	if (permission_exists('dialplan_add')
+		|| permission_exists('dialplan_edit')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('inbound_route_edit')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('outbound_route_edit')
+		|| permission_exists('fifo_edit')
+		|| permission_exists('fifo_add')
+		|| permission_exists('time_condition_add')
+		|| permission_exists('time_condition_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -55,11 +59,9 @@ else {
 	else {
 		$action = "add";
 	}
-	$dialplan_uuid = $_REQUEST["dialplan_uuid"];
 
 //get the http values and set them as php variables
-	$app_uuid = $_REQUEST["app_uuid"];
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$dialplan_uuid = $_POST["dialplan_uuid"];
 		$dialplan_detail_tag = $_POST["dialplan_detail_tag"];
 		$dialplan_detail_order = $_POST["dialplan_detail_order"];
@@ -68,6 +70,12 @@ else {
 		$dialplan_detail_break = $_POST["dialplan_detail_break"];
 		$dialplan_detail_inline = $_POST["dialplan_detail_inline"];
 		$dialplan_detail_group = $_POST["dialplan_detail_group"];
+	}
+	if (is_uuid($_REQUEST["app_uuid"])) {
+		$app_uuid = $_REQUEST["app_uuid"];
+	}
+	if (is_uuid($_REQUEST["dialplan_uuid"])) {
+		$dialplan_uuid = $_REQUEST["dialplan_uuid"];
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -491,4 +499,5 @@ function replace_param(obj){
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
