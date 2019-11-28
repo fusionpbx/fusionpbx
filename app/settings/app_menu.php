@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Definições";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Definições";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конфигурация";
