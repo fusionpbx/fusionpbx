@@ -83,7 +83,7 @@
 	if (isset($_REQUEST["order_by"])) { $order_by = check_str($_REQUEST["order_by"]); } else { $order_by = null; }
 	if (isset($_REQUEST["order"])) { $order = check_str($_REQUEST["order"]); } else { $order = null; }
 	if (isset($_REQUEST["dialplan_context"])) { $dialplan_context = check_str($_REQUEST["dialplan_context"]); } else { $dialplan_context = null; }
-	if (isset($_REQUEST["app_uuid"])) { $app_uuid = check_str($_REQUEST["app_uuid"]); } else { $app_uuid = null; }
+	if (isset($_REQUEST["app_uuid"]) && is_uuid($_REQUEST["app_uuid"])) { $app_uuid = $_REQUEST["app_uuid"]; } else { $app_uuid = null; }
 
 //make sure all dialplans with context of public have the inbound route app_uuid
 	if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
@@ -102,7 +102,7 @@
 //get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-	if (strlen($app_uuid) == 0) {
+	if (!is_uuid($app_uuid)) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
 		//hide outbound routes
@@ -313,7 +313,9 @@
 		foreach($dialplans as $row) {
 
 			//get the application id
-			$app_uuid = $row['app_uuid'];
+			if (is_uuid($row['app_uuid']) {
+				$app_uuid = $row['app_uuid'];
+			}
 
 			// blank app id if doesn't match others, so will return to dialplan manager
 			switch ($app_uuid) {
