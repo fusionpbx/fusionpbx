@@ -826,7 +826,7 @@ if (!class_exists('modules')) {
 		}
 
 		/**
-		 * start modules
+		 * stop modules
 		 */
 		public function stop($records) {
 			$this->control('stop', $records);
