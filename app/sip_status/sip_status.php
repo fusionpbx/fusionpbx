@@ -238,7 +238,7 @@
 				if ($sip_profile_name != "external") {
 					echo "  <input type='button' class='btn' value='".$text['button-flush_registrations']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+flush_inbound_reg';\" />\n";
 				}
-				echo "  <input type='button' class='btn' value='".$text['button-registrations']."' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/registrations.php?show_reg=1&profile=".escape($sip_profile_name)."';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-registrations']."' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/registrations.php?profile=".escape($sip_profile_name)."';\" />\n";
 				if ($profile_state == 'stopped') {
 					echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".escape($sip_profile_name)."+start';\" />\n";
 				}
