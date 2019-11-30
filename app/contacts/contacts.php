@@ -50,16 +50,20 @@
 		$contacts = $_POST['contacts'];
 	}
 
-//delete the contacts
-	if (permission_exists('contact_delete')) {
-		if ($action == 'delete' && is_array($contacts) && @sizeof($contacts) != 0) {
-			//delete
-				$obj = new contacts;
-				$obj->delete($contacts);
-			//redirect
-				header('Location: contacts.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process posted data by action
+	if ($action != '' && is_array($contacts) && @sizeof($contacts) != 0) {
+		$obj = new contacts;
+
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('contact_delete')) {
+					$obj->delete($contacts);
+				}
+				break;
 		}
+
+		header('Location: contacts.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //retrieve current user's assigned groups (uuids)

@@ -50,28 +50,26 @@
 		$destinations = $_POST['destinations'];
 	}
 
-//toggle the destinations
-	if (permission_exists('destination_edit')) {
-		if ($action == 'toggle' && is_array($destinations) && @sizeof($destinations) != 0) {
-			//toggle
-				$obj = new destinations;
-				$obj->toggle($destinations);
-			//redirect
-				header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($destinations) && @sizeof($destinations) != 0) {
+		$obj = new destinations;
 
-//delete the destinations
-	if (permission_exists('destination_delete')) {
-		if ($action == 'delete' && is_array($destinations) && @sizeof($destinations) != 0) {
-			//delete
-				$obj = new destinations;
-				$obj->delete($destinations);
-			//redirect
-				header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('destination_edit')) {
+					$obj->toggle($destinations);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('destination_delete')) {
+					$obj->delete($destinations);
+				}
+				break;
 		}
+
+		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get the destination select list

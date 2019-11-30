@@ -46,28 +46,26 @@
 		$call_broadcasts = $_POST['call_broadcasts'];
 	}
 
-//copy the call broadcasts
-	if (permission_exists('call_broadcast_add')) {
-		if ($action == 'copy' && is_array($call_broadcasts) && @sizeof($call_broadcasts) != 0) {
-			//copy
-				$obj = new call_broadcast;
-				$obj->copy($call_broadcasts);
-			//redirect
-				header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($call_broadcasts) && @sizeof($call_broadcasts) != 0) {
+		$obj = new call_broadcast;
 
-//delete the call broadcasts
-	if (permission_exists('call_broadcast_delete')) {
-		if ($action == 'delete' && is_array($call_broadcasts) && @sizeof($call_broadcasts) != 0) {
-			//delete
-				$obj = new call_broadcast;
-				$obj->delete($call_broadcasts);
-			//redirect
-				header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('call_broadcast_add')) {
+					$obj->copy($call_broadcasts);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('call_broadcast_delete')) {
+					$obj->delete($call_broadcasts);
+				}
+				break;
 		}
+
+		header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get the http get variables and set them to php variables

@@ -50,40 +50,32 @@
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
-//copy the ivr menus
-	if (permission_exists('ivr_menu_add')) {
-		if ($action == 'copy' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
-			//copy
-				$obj = new ivr_menu;
-				$obj->copy($ivr_menus);
-			//redirect
-				header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
+		$obj = new ivr_menu;
 
-//toggle the ivr menus
-	if (permission_exists('ivr_menu_edit')) {
-		if ($action == 'toggle' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
-			//toggle
-				$obj = new ivr_menu;
-				$obj->toggle($ivr_menus);
-			//redirect
-				header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('ivr_menu_add')) {
+					$obj->copy($ivr_menus);
+				}
+				break;
 
-//delete the ivr menus
-	if (permission_exists('ivr_menu_delete')) {
-		if ($action == 'delete' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
-			//delete
-				$obj = new ivr_menu;
-				$obj->delete($ivr_menus);
-			//redirect
-				header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('ivr_menu_edit')) {
+					$obj->toggle($ivr_menus);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('ivr_menu_delete')) {
+					$obj->delete($ivr_menus);
+				}
+				break;
 		}
+
+		header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

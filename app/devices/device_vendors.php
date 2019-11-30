@@ -50,28 +50,26 @@
 		$vendors = $_POST['vendors'];
 	}
 
-//toggle the device vendors
-	if (permission_exists('device_vendor_edit')) {
-		if ($action == 'toggle' && is_array($vendors) && @sizeof($vendors) != 0) {
-			//toggle
-				$obj = new device;
-				$obj->toggle_vendors($vendors);
-			//redirect
-				header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($vendors) && @sizeof($vendors) != 0) {
+		$obj = new device;
 
-//delete the device vendors
-	if (permission_exists('device_vendor_delete')) {
-		if ($action == 'delete' && is_array($vendors) && @sizeof($vendors) != 0) {
-			//delete
-				$obj = new device;
-				$obj->delete_vendors($vendors);
-			//redirect
-				header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('device_vendor_edit')) {
+					$obj->toggle_vendors($vendors);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('device_vendor_delete')) {
+					$obj->delete_vendors($vendors);
+				}
+				break;
 		}
+
+		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

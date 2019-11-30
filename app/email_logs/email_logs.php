@@ -41,42 +41,34 @@
 		$emails = $_POST['emails'];
 	}
 
-//download the emails
-	if (permission_exists('email_log_download')) {
-		if ($action == 'download' && is_array($emails) && @sizeof($emails) != 0) {
-			//download
-				$obj = new email_logs;
-				$obj->download($emails);
-			//set message (download failed)
-				message::add($text['message-download_failed'],'negative',7000);
-			//redirect
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($emails) && @sizeof($emails) != 0) {
+		$obj = new email_logs;
 
-//resend the emails
-	if (permission_exists('email_log_resend')) {
-		if ($action == 'resend' && is_array($emails) && @sizeof($emails) != 0) {
-			//resend
-				$obj = new email_logs;
-				$obj->resend($emails);
-			//exit
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'download':
+				if (permission_exists('email_log_download')) {
+					$obj->download($emails);
+					//download failed, set message
+					message::add($text['message-download_failed'],'negative',7000);
+				}
+				break;
 
-//delete the emails
-	if (permission_exists('email_log_delete')) {
-		if ($action == 'delete' && is_array($emails) && @sizeof($emails) != 0) {
-			//delete
-				$obj = new email_logs;
-				$obj->delete($emails);
-			//redirect
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'resend':
+				if (permission_exists('email_log_resend')) {
+					$obj->resend($emails);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('email_log_delete')) {
+					$obj->delete($emails);
+				}
+				break;
 		}
+
+		header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by and sanatize the values

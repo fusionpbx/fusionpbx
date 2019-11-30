@@ -50,16 +50,20 @@
 		$xml_cdrs = $_POST['xml_cdrs'];
 	}
 
-//delete the cdr
-	if (permission_exists('xml_cdr_delete')) {
-		if ($action == 'delete' && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
-			//delete
-				$obj = new xml_cdr;
-				$obj->delete($xml_cdrs);
-			//redirect
-				header('Location: xml_cdr.php');
-				exit;
+//process posted data by action
+	if ($action != '' && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
+		$obj = new xml_cdr;
+
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('xml_cdr_delete')) {
+					$obj->delete($xml_cdrs);
+				}
+				break;
 		}
+
+		header('Location: xml_cdr.php');
+		exit;
 	}
 
 //create token
