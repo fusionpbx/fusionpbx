@@ -51,40 +51,32 @@
 	}
 
 /*
-//copy the conference centers
-	if (permission_exists('conference_center_add')) {
-		if ($action == 'copy' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//copy
-				$obj = new conference_centers;
-				$obj->copy_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
+		$obj = new conference_centers;
 
-//toggle the conference centers
-	if (permission_exists('conference_center_edit')) {
-		if ($action == 'toggle' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//toggle
-				$obj = new conference_centers;
-				$obj->toggle_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('conference_center_add')) {
+					$obj->copy($conference_centers);
+				}
+				break;
 
-//delete the conference centers
-	if (permission_exists('conference_center_delete')) {
-		if ($action == 'delete' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//delete
-				$obj = new conference_centers;
-				$obj->delete_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('conference_center_edit')) {
+					$obj->toggle($conference_centers);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('conference_center_delete')) {
+					$obj->delete($conference_centers);
+				}
+				break;
 		}
+
+		header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 */
 

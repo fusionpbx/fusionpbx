@@ -49,40 +49,32 @@
 		$profiles = $_POST['profiles'];
 	}
 
-//copy the device profiles
-	if (permission_exists('device_profile_add')) {
-		if ($action == 'copy' && is_array($profiles) && @sizeof($profiles) != 0) {
-			//copy
-				$obj = new device;
-				$obj->copy_profiles($profiles);
-			//redirect
-				header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($profiles) && @sizeof($profiles) != 0) {
+		$obj = new device;
 
-//toggle the device profiles
-	if (permission_exists('device_profile_edit')) {
-		if ($action == 'toggle' && is_array($profiles) && @sizeof($profiles) != 0) {
-			//toggle
-				$obj = new device;
-				$obj->toggle_profiles($profiles);
-			//redirect
-				header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('device_profile_add')) {
+					$obj->copy_profiles($profiles);
+				}
+				break;
 
-//delete the device profiles
-	if (permission_exists('device_profile_delete')) {
-		if ($action == 'delete' && is_array($profiles) && @sizeof($profiles) != 0) {
-			//delete
-				$obj = new device;
-				$obj->delete_profiles($profiles);
-			//redirect
-				header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('device_profile_edit')) {
+					$obj->toggle_profiles($profiles);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('device_profile_delete')) {
+					$obj->delete_profiles($profiles);
+				}
+				break;
 		}
+
+		header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

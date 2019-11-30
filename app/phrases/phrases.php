@@ -48,46 +48,35 @@
 		$phrases = $_POST['phrases'];
 	}
 
-//copy the phrases
-	if (permission_exists('phrase_add')) {
-		if ($action == 'copy' && is_array($phrases) && @sizeof($phrases) != 0) {
-			//copy
-				$obj = new phrases;
-				$obj->copy($phrases);
-			//save the xml
-				save_phrases_xml();
-			//redirect
-				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($phrases) && @sizeof($phrases) != 0) {
+		$obj = new phrases;
 
-//toggle the phrases
-	if (permission_exists('phrase_edit')) {
-		if ($action == 'toggle' && is_array($phrases) && @sizeof($phrases) != 0) {
-			//toggle
-				$obj = new phrases;
-				$obj->toggle($phrases);
-			//save the xml
-				save_phrases_xml();
-			//redirect
-				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('phrase_add')) {
+					$obj->copy($phrases);
+					save_phrases_xml();
+				}
+				break;
 
-//delete the phrases
-	if (permission_exists('phrase_delete')) {
-		if ($action == 'delete' && is_array($phrases) && @sizeof($phrases) != 0) {
-			//delete
-				$obj = new phrases;
-				$obj->delete($phrases);
-			//save the xml
-				save_phrases_xml();
-			//redirect
-				header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('phrase_edit')) {
+					$obj->toggle($phrases);
+					save_phrases_xml();
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('phrase_delete')) {
+					$obj->delete($phrases);
+					save_phrases_xml();
+				}
+				break;
 		}
+
+		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

@@ -50,40 +50,32 @@
 		$pin_numbers = $_POST['pin_numbers'];
 	}
 
-//copy the pin numbers
-	if (permission_exists('pin_number_add')) {
-		if ($action == 'copy' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-			//copy
-				$obj = new pin_numbers;
-				$obj->copy($pin_numbers);
-			//redirect
-				header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
+		$obj = new pin_numbers;
 
-//toggle the pin numbers
-	if (permission_exists('pin_number_edit')) {
-		if ($action == 'toggle' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-			//toggle
-				$obj = new pin_numbers;
-				$obj->toggle($pin_numbers);
-			//redirect
-				header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('pin_number_add')) {
+					$obj->copy($pin_numbers);
+				}
+				break;
 
-//delete the pin numbers
-	if (permission_exists('pin_number_delete')) {
-		if ($action == 'delete' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-			//delete
-				$obj = new pin_numbers;
-				$obj->delete($pin_numbers);
-			//redirect
-				header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('pin_number_edit')) {
+					$obj->toggle($pin_numbers);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('pin_number_delete')) {
+					$obj->delete($pin_numbers);
+				}
+				break;
 		}
+
+		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

@@ -47,40 +47,32 @@
 		$email_templates = $_POST['email_templates'];
 	}
 
-//copy the email_templates
-	if (permission_exists('email_template_add')) {
-		if ($action == 'copy' && is_array($email_templates) && @sizeof($email_templates) != 0) {
-			//copy
-				$obj = new email_templates;
-				$obj->copy($email_templates);
-			//redirect
-				header('Location: email_templates.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($email_templates) && @sizeof($email_templates) != 0) {
+		$obj = new email_templates;
 
-//toggle the email_templates
-	if (permission_exists('email_template_edit')) {
-		if ($action == 'toggle' && is_array($email_templates) && @sizeof($email_templates) != 0) {
-			//toggle
-				$obj = new email_templates;
-				$obj->toggle($email_templates);
-			//redirect
-				header('Location: email_templates.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('email_template_add')) {
+					$obj->copy($email_templates);
+				}
+				break;
 
-//delete the email_templates
-	if (permission_exists('email_template_delete')) {
-		if ($action == 'delete' && is_array($email_templates) && @sizeof($email_templates) != 0) {
-			//delete
-				$obj = new email_templates;
-				$obj->delete($email_templates);
-			//redirect
-				header('Location: email_templates.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('email_template_edit')) {
+					$obj->toggle($email_templates);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('email_template_delete')) {
+					$obj->delete($email_templates);
+				}
+				break;
 		}
+
+		header('Location: email_templates.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

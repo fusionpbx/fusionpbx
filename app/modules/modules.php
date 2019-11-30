@@ -50,28 +50,26 @@
 		$modules = $_POST['modules'];
 	}
 
-//toggle the modules
-	if (permission_exists('module_edit')) {
-		if ($action == 'toggle' && is_array($modules) && @sizeof($modules) != 0) {
-			//toggle
-				$obj = new modules;
-				$obj->toggle($modules);
-			//redirect
-				header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
+		$obj = new modules;
 
-//delete the modules
-	if (permission_exists('module_delete')) {
-		if ($action == 'delete' && is_array($modules) && @sizeof($modules) != 0) {
-			//delete
-				$obj = new modules;
-				$obj->delete($modules);
-			//redirect
-				header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('module_edit')) {
+					$obj->toggle($modules);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('module_delete')) {
+					$obj->delete($modules);
+				}
+				break;
 		}
+
+		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //connect to event socket

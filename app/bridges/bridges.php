@@ -50,40 +50,32 @@
 		$bridges = $_POST['bridges'];
 	}
 
-//copy the bridges
-	if (permission_exists('bridge_add')) {
-		if ($action == 'copy' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//copy
-				$obj = new bridges;
-				$obj->copy($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($bridges) && @sizeof($bridges) != 0) {
+		$obj = new bridges;
 
-//toggle the bridges
-	if (permission_exists('bridge_edit')) {
-		if ($action == 'toggle' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//toggle
-				$obj = new bridges;
-				$obj->toggle($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('bridge_add')) {
+					$obj->copy($bridges);
+				}
+				break;
 
-//delete the bridges
-	if (permission_exists('bridge_delete')) {
-		if ($action == 'delete' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//delete
-				$obj = new bridges;
-				$obj->delete($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+			case 'toggle':
+				if (permission_exists('bridge_edit')) {
+					$obj->toggle($bridges);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('bridge_delete')) {
+					$obj->delete($bridges);
+				}
+				break;
 		}
+
+		header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by
@@ -121,10 +113,8 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
-		$param .= "&show=all";
-	}
+	$param = $search ? "&search=".$search : null;
+	$param = ($_GET['show'] == "all" && permission_exists('bridge_all')) ? "&show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);

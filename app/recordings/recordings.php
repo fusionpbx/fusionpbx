@@ -264,16 +264,20 @@
 		$recordings = $_POST['recordings'];
 	}
 
-//delete the recordings
-	if (permission_exists('recording_delete')) {
-		if ($action == 'delete' && is_array($recordings) && @sizeof($recordings) != 0) {
-			//delete
-				$obj = new switch_recordings;
-				$obj->delete($recordings);
-			//redirect
-				header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process posted data by action
+	if ($action != '' && is_array($recordings) && @sizeof($recordings) != 0) {
+		$obj = new switch_recordings;
+
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('recording_delete')) {
+					$obj->delete($recordings);
+				}
+				break;
 		}
+
+		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

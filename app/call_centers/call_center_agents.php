@@ -50,28 +50,26 @@
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
-//copy the call center agents
-	if (permission_exists('call_center_agent_add')) {
-		if ($action == 'copy' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
-			//copy
-				$obj = new call_center;
-				$obj->copy_agents($call_center_agents);
-			//redirect
-				header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
+		$obj = new call_center;
 
-//delete the call center agents
-	if (permission_exists('call_center_agent_delete')) {
-		if ($action == 'delete' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
-			//delete
-				$obj = new call_center;
-				$obj->delete_agents($call_center_agents);
-			//redirect
-				header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('call_center_agent_add')) {
+					$obj->copy_agents($call_center_agents);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('call_center_agent_delete')) {
+					$obj->delete_agents($call_center_agents);
+				}
+				break;
 		}
+
+		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get http variables and set them to php variables

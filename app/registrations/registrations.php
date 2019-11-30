@@ -59,30 +59,24 @@
 
 //process posted data
 	if ($action != '' && is_array($registrations) && @sizeof($registrations) != 0) {
+		$obj = new registrations;
 
-		//perform action
-			switch ($action) {
-				//unregister the registrations
-					case 'unregister':
-						$obj = new registrations;
-						$obj->unregister($registrations);
-						break;
-				//provision the registrations
-					case 'provision':
-						$obj = new registrations;
-						$obj->provision($registrations);
-						break;
-				//reboot the registrations
-					case 'reboot':
-						$obj = new registrations;
-						$obj->reboot($registrations);
-						break;
-			}
+		switch ($action) {
+			case 'unregister':
+				$obj->unregister($registrations);
+				break;
 
-		//redirect
-			header('Location: registrations.php'.($search || $profile ? '?' : null).$qs['search'].$qs['profile']);
-			exit;
+			case 'provision':
+				$obj->provision($registrations);
+				break;
 
+			case 'reboot':
+				$obj->reboot($registrations);
+				break;
+		}
+
+		header('Location: registrations.php'.($search || $profile ? '?' : null).$qs['search'].$qs['profile']);
+		exit;
 	}
 
 //get the registrations

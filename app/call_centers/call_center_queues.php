@@ -50,28 +50,26 @@
 		$call_center_queues = $_POST['call_center_queues'];
 	}
 
-//copy the call center queues
-	if (permission_exists('call_center_queue_add')) {
-		if ($action == 'copy' && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-			//copy
-				$obj = new call_center;
-				$obj->copy_queues($call_center_queues);
-			//redirect
-				header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
+//process posted data by action
+	if ($action != '' && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
+		$obj = new call_center;
 
-//delete the call center queues
-	if (permission_exists('call_center_queue_delete')) {
-		if ($action == 'delete' && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-			//delete
-				$obj = new call_center;
-				$obj->delete_queues($call_center_queues);
-			//redirect
-				header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('call_center_queue_add')) {
+					$obj->copy_queues($call_center_queues);
+				}
+				break;
+
+			case 'delete':
+				if (permission_exists('call_center_queue_delete')) {
+					$obj->delete_queues($call_center_queues);
+				}
+				break;
 		}
+
+		header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get http variables and set as php variables
