@@ -43,32 +43,31 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
+//get the http post data
 	if (is_array($_POST['bridges'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$bridges = $_POST['bridges'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($bridges) && @sizeof($bridges) != 0) {
-		$obj = new bridges;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('bridge_add')) {
+					$obj = new bridges;
 					$obj->copy($bridges);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('bridge_edit')) {
+					$obj = new bridges;
 					$obj->toggle($bridges);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('bridge_delete')) {
+					$obj = new bridges;
 					$obj->delete($bridges);
 				}
 				break;
@@ -185,7 +184,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($bridges ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+	if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
@@ -210,7 +209,7 @@
 				echo "		<input type='hidden' name='bridges[$x][uuid]' value='".escape($row['bridge_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+			if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td>";
