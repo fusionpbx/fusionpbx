@@ -306,18 +306,18 @@ if (!class_exists('ring_groups')) {
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
-										$b = $c = $d = 0;
-										foreach ($rows as $a => $row) {
+										$y = $z = 0;
+										foreach ($rows as $x => $row) {
 											$new_ring_group_uuid = uuid();
 											$new_dialplan_uuid = uuid();
 
 											//copy data
-												$array[$this->table][$a] = $row;
+												$array[$this->table][$x] = $row;
 
 											//overwrite
-												$array[$this->table][$a][$this->uuid_prefix.'uuid'] = $new_ring_group_uuid;
-												$array[$this->table][$a]['dialplan_uuid'] = $new_dialplan_uuid;
-												$array[$this->table][$a]['ring_group_description'] = trim($row['ring_group_description'].' ('.$text['label-copy'].')');
+												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ring_group_uuid;
+												$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+												$array[$this->table][$x]['ring_group_description'] = trim($row['ring_group_description'].' ('.$text['label-copy'].')');
 
 											//users sub table
 												$sql_2 = "select * from v_ring_group_users where ring_group_uuid = :ring_group_uuid";
@@ -328,14 +328,14 @@ if (!class_exists('ring_groups')) {
 													foreach ($rows_2 as $row_2) {
 
 														//copy data
-															$array['ring_group_users'][$b] = $row_2;
+															$array['ring_group_users'][$y] = $row_2;
 
 														//overwrite
-															$array['ring_group_users'][$b]['ring_group_user_uuid'] = uuid();
-															$array['ring_group_users'][$b]['ring_group_uuid'] = $new_ring_group_uuid;
+															$array['ring_group_users'][$y]['ring_group_user_uuid'] = uuid();
+															$array['ring_group_users'][$y]['ring_group_uuid'] = $new_ring_group_uuid;
 
 														//increment
-															$b++;
+															$y++;
 
 													}
 												}
@@ -350,14 +350,14 @@ if (!class_exists('ring_groups')) {
 													foreach ($rows_3 as $row_3) {
 
 														//copy data
-															$array['ring_group_destinations'][$b] = $row_3;
+															$array['ring_group_destinations'][$z] = $row_3;
 
 														//overwrite
-															$array['ring_group_destinations'][$b]['ring_group_destination_uuid'] = uuid();
-															$array['ring_group_destinations'][$b]['ring_group_uuid'] = $new_ring_group_uuid;
+															$array['ring_group_destinations'][$z]['ring_group_destination_uuid'] = uuid();
+															$array['ring_group_destinations'][$z]['ring_group_uuid'] = $new_ring_group_uuid;
 
 														//increment
-															$b++;
+															$z++;
 
 													}
 												}
@@ -371,18 +371,16 @@ if (!class_exists('ring_groups')) {
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 													//copy data
-														$array['dialplans'][$c] = $dialplan;
+														$array['dialplans'][$x] = $dialplan;
 
 													//overwrite
-														$array['dialplans'][$c]['dialplan_uuid'] = $new_dialplan_uuid;
+														$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
 														$dialplan_xml = $dialplan['dialplan_xml'];
 														$dialplan_xml = str_replace($row['ring_group_uuid'], $new_ring_group_uuid, $dialplan_xml); //replace source ring_group_uuid with new
 														$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-														$array['dialplans'][$c]['dialplan_xml'] = $dialplan_xml;
-														$array['dialplans'][$c]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
+														$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
+														$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
 
-													//increment
-														$c++;
 												}
 												unset($sql_4, $parameters_4, $dialplan);
 
