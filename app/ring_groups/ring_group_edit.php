@@ -355,7 +355,7 @@
 					$array["dialplans"][0]["dialplan_continue"] = "false";
 					$array["dialplans"][0]["dialplan_xml"] = $dialplan_xml;
 					$array["dialplans"][0]["dialplan_order"] = "101";
-					$array["dialplans"][0]["dialplan_enabled"] = "true";
+					$array["dialplans"][0]["dialplan_enabled"] = $ring_group_enabled;
 					$array["dialplans"][0]["dialplan_description"] = $ring_group_description;
 					$array["dialplans"][0]["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
 
