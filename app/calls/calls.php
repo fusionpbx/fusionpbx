@@ -50,7 +50,7 @@
 		$extensions = $_POST['extensions'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($extensions) && @sizeof($extensions) != 0) {
 		switch ($action) {
 			case 'toggle_call_forward':
@@ -59,14 +59,12 @@
 					$obj->toggle($extensions);
 				}
 				break;
-
 			case 'toggle_follow_me':
 				if (permission_exists('follow_me')) {
 					$obj = new follow_me;
 					$obj->toggle($extensions);
 				}
 				break;
-
 			case 'toggle_do_not_disturb':
 				if (permission_exists('do_not_disturb')) {
 					$obj = new do_not_disturb;

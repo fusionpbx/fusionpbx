@@ -50,25 +50,24 @@
 		$call_flows = $_POST['call_flows'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($call_flows) && @sizeof($call_flows) != 0) {
-		$obj = new call_flows;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_flow_add')) {
+					$obj = new call_flows;
 					$obj->copy($call_flows);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('call_flow_edit')) {
+					$obj = new call_flows;
 					$obj->toggle($call_flows);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('call_flow_delete')) {
+					$obj = new call_flows;
 					$obj->delete($call_flows);
 				}
 				break;

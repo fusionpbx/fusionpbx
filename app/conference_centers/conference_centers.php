@@ -51,25 +51,24 @@
 	}
 
 /*
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-		$obj = new conference_centers;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('conference_center_add')) {
+					$obj = new conference_centers;
 					$obj->copy($conference_centers);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('conference_center_edit')) {
+					$obj = new conference_centers;
 					$obj->toggle($conference_centers);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('conference_center_delete')) {
+					$obj = new conference_centers;
 					$obj->delete($conference_centers);
 				}
 				break;

@@ -50,19 +50,18 @@
 		$fax_servers = $_POST['fax_servers'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($fax_servers) && @sizeof($fax_servers) != 0) {
-		$obj = new fax;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('fax_extension_copy')) {
+					$obj = new fax;
 					$obj->copy($fax_servers);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('fax_extension_delete')) {
+					$obj = new fax;
 					$obj->delete($fax_servers);
 				}
 				break;

@@ -264,13 +264,12 @@
 		$recordings = $_POST['recordings'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($recordings) && @sizeof($recordings) != 0) {
-		$obj = new switch_recordings;
-
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('recording_delete')) {
+					$obj = new switch_recordings;
 					$obj->delete($recordings);
 				}
 				break;

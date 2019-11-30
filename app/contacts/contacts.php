@@ -50,13 +50,12 @@
 		$contacts = $_POST['contacts'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($contacts) && @sizeof($contacts) != 0) {
-		$obj = new contacts;
-
 		switch ($action) {
 			case 'delete':
 				if (permission_exists('contact_delete')) {
+					$obj = new contacts;
 					$obj->delete($contacts);
 				}
 				break;

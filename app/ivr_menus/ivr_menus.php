@@ -50,25 +50,24 @@
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
-		$obj = new ivr_menu;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('ivr_menu_add')) {
+					$obj = new ivr_menu;
 					$obj->copy($ivr_menus);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('ivr_menu_edit')) {
+					$obj = new ivr_menu;
 					$obj->toggle($ivr_menus);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('ivr_menu_delete')) {
+					$obj = new ivr_menu;
 					$obj->delete($ivr_menus);
 				}
 				break;

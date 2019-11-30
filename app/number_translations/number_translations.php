@@ -43,25 +43,24 @@
 		$number_translations = $_POST['number_translations'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($number_translations) && @sizeof($number_translations) != 0) {
-		$obj = new number_translations;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('number_translation_add')) {
+					$obj = new number_translations;
 					$obj->copy($number_translations);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('number_translation_edit')) {
+					$obj = new number_translations;
 					$obj->toggle($number_translations);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('number_translation_delete')) {
+					$obj = new number_translations;
 					$obj->delete($number_translations);
 				}
 				break;

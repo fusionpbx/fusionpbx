@@ -49,25 +49,24 @@
 		$profiles = $_POST['profiles'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($profiles) && @sizeof($profiles) != 0) {
-		$obj = new device;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('device_profile_add')) {
+					$obj = new device;
 					$obj->copy_profiles($profiles);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('device_profile_edit')) {
+					$obj = new device;
 					$obj->toggle_profiles($profiles);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('device_profile_delete')) {
+					$obj = new device;
 					$obj->delete_profiles($profiles);
 				}
 				break;

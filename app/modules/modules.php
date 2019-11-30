@@ -50,19 +50,18 @@
 		$modules = $_POST['modules'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
-		$obj = new modules;
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('module_edit')) {
+					$obj = new modules;
 					$obj->toggle($modules);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('module_delete')) {
+					$obj = new modules;
 					$obj->delete($modules);
 				}
 				break;

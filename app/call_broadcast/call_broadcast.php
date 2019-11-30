@@ -46,19 +46,18 @@
 		$call_broadcasts = $_POST['call_broadcasts'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($call_broadcasts) && @sizeof($call_broadcasts) != 0) {
-		$obj = new call_broadcast;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_broadcast_add')) {
+					$obj = new call_broadcast;
 					$obj->copy($call_broadcasts);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('call_broadcast_delete')) {
+					$obj = new call_broadcast;
 					$obj->delete($call_broadcasts);
 				}
 				break;

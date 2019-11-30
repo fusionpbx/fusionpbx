@@ -51,20 +51,19 @@
 		$ring_groups = $_POST['ring_groups'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($ring_groups) && @sizeof($ring_groups) != 0) {
-		$obj = new ring_groups;
-
 		switch ($action) {
 			case 'copy':
+				$obj = new ring_groups;
 				$obj->copy($ring_groups);
 				break;
-
 			case 'toggle':
+				$obj = new ring_groups;
 				$obj->toggle($ring_groups);
 				break;
-
 			case 'delete':
+				$obj = new ring_groups;
 				$obj->delete($ring_groups);
 				break;
 		}
