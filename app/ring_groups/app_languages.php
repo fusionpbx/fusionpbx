@@ -1021,6 +1021,26 @@ $text['label-call-forward']['ru-ru'] = "Переадресация вызова"
 $text['label-call-forward']['sv-se'] = "Vidarekoppling";
 $text['label-call-forward']['uk-ua'] = "Переадресація";
 
+$text['label-forwarding']['en-us'] = "Forwarding";
+$text['label-forwarding']['ar-eg'] = "تحويل";
+$text['label-forwarding']['de-at'] = "Weiterleiten"; //copied from de-de
+$text['label-forwarding']['de-ch'] = "Weiterleiten"; //copied from de-de
+$text['label-forwarding']['de-de'] = "Weiterleiten";
+$text['label-forwarding']['es-cl'] = "Adelante";
+$text['label-forwarding']['es-mx'] = "Adelante"; //copied from es-cl
+$text['label-forwarding']['fr-ca'] = "Avant"; //copied from fr-fr
+$text['label-forwarding']['fr-fr'] = "Avant";
+$text['label-forwarding']['he-il'] = "העבר";
+$text['label-forwarding']['it-it'] = "Inoltra";
+$text['label-forwarding']['nl-nl'] = "Doorsturen";
+$text['label-forwarding']['pl-pl'] = "Przekierowanie";
+$text['label-forwarding']['pt-br'] = "Encaminhar"; //copied from pt-pt
+$text['label-forwarding']['pt-pt'] = "Encaminhar";
+$text['label-forwarding']['ro-ro'] = "";
+$text['label-forwarding']['ru-ru'] = "Переадресация";
+$text['label-forwarding']['sv-se'] = "Vidarekoppla";
+$text['label-forwarding']['uk-ua'] = "";
+
 $text['header-ring-group-forward']['en-us'] = "Ring Group Forward";
 $text['header-ring-group-forward']['ar-eg'] = "";
 $text['header-ring-group-forward']['de-at'] = "Rufgruppe weiterleiten"; //copied from de-de

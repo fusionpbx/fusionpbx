@@ -29,6 +29,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('ring_group_view')) {
@@ -43,124 +44,145 @@
 	$language = new text;
 	$text = $language->get();
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
+//get posted data
+	if (is_array($_POST['ring_groups'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$ring_groups = $_POST['ring_groups'];
+	}
 
-//get variables used to control the order
+//process posted data by action
+	if ($action != '' && is_array($ring_groups) && @sizeof($ring_groups) != 0) {
+		$obj = new ring_groups;
+
+		switch ($action) {
+			case 'copy':
+				$obj->copy($ring_groups);
+				break;
+
+			case 'toggle':
+				$obj->toggle($ring_groups);
+				break;
+
+			case 'delete':
+				$obj->delete($ring_groups);
+				break;
+		}
+
+		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-
-//show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ring_groups']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	if (permission_exists('ring_group_all')) {
-		if ($_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='ring_groups.php?show=all&search=".escape($search)."';\">\n";
-		}
+	if (strlen($search) > 0) {
+		$sql_search = "and (";
+		$sql_search .= "lower(ring_group_name) like :search ";
+		$sql_search .= "or lower(ring_group_extension) like :search ";
+		$sql_search .= "or lower(ring_group_description) like :search ";
+		$sql_search .= "or lower(ring_group_enabled) like :search ";
+		$sql_search .= "or lower(ring_group_strategy) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
 
-//get total ring group count
+//get total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
-	unset($sql, $parameters);
+	$num_rows = $total_ring_groups;
 
 //get filtered ring group count
-	$sql = "select count(*) from v_ring_groups ";
-	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
-		//$sql .= "where true ";
+	if ($search) {
+		$sql = "select count(*) from v_ring_groups where true ";
+		if (!$_GET['show'] == "all" || permission_exists('ring_group_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$sql .= $sql_search;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
 	}
-	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-	}
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "lower(ring_group_name) like :search ";
-		$sql .= "or lower(ring_group_extension) like :search ";
-		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
-		$sql .= "or lower(ring_group_strategy) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
-	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$page = $_GET['page'];
-	$param = "&search=".escape($search);
-	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
-		$param .= "&show=all";
-	}
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$param = $search ? "&search=".$search : null;
+	$param = ($_GET['show'] == "all" && permission_exists('ring_group_all')) ? "&show=all" : null;
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_ring_groups as r, v_domains as d ";
-	$sql .= "where r.domain_uuid = d.domain_uuid ";
-	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
-		$sql .= "and true ";
-	}
-	else {
-		$sql .= "and r.domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "lower(ring_group_name) like :search ";
-		$sql .= "or lower(ring_group_extension) like :search ";
-		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
-		$sql .= "or lower(ring_group_strategy) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
-	if (strlen($order_by) == 0) {
-		$sql .= "order by ring_group_name asc, ring_group_extension asc ";
-	}
-	else {
-		$sql .= order_by($order_by, $order);
-	}
+	$sql = str_replace('count(*)', '*', $sql);
+	$sql .= ($order_by) ? order_by($order_by, $order) : "order by ring_group_name asc, ring_group_extension asc ";
 	$sql .= limit_offset($rows_per_page, $offset);
 	$ring_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//set the row styles
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//additional includes
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-ring_groups']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (permission_exists('ring_group_add') && (!is_numeric($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'ring_group_edit.php']);
+	}
+	if (permission_exists('ring_group_add') && $ring_groups && (!is_numeric($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('ring_group_edit') && $ring_groups) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('ring_group_delete') && $ring_groups) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	if (permission_exists('ring_group_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
+		}
+	}
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'ring_groups.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($ring_groups ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
@@ -168,68 +190,68 @@
 	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('ring_group_strategy', $text['label-strategy'], $order_by, $order);
 	echo th_order_by('ring_group_forward_enabled', $text['label-forwarding'], $order_by, $order);
-	echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('ring_group_description', $text['header-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('ring_group_add')) {
-		if ($_SESSION['limit']['ring_groups']['numeric'] == '' || ($_SESSION['limit']['ring_groups']['numeric'] != '' && $total_ring_groups < $_SESSION['limit']['ring_groups']['numeric'])) {
-			echo "<a href='ring_group_edit.php' alt='add'>".$v_link_label_add."</a>";
-		}
+	echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('ring_group_description', $text['header-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	if (permission_exists('ring_group_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	echo "</td>\n";
 	echo "</tr>\n";
 
 	if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
-		foreach($ring_groups as $row) {
-			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."&nbsp;</td>\n";
-			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+		$x = 0;
+		foreach ($ring_groups as $row) {
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."'>".escape($row['ring_group_name'])."</a>";
+				$list_row_url = "ring_group_edit.php?id=".urlencode($row['ring_group_uuid']);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='ring_groups[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='ring_groups[$x][uuid]' value='".escape($row['ring_group_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			if ($_GET['show'] == "all" && permission_exists('ring_group_all')) {
+				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			}
+			echo "	<td>";
+			if (permission_exists('ring_group_edit')) {
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['ring_group_name'])."</a>";
 			}
 			else {
-				echo $row['ring_group_name'];
+				echo escape($row['ring_group_name']);
 			}
 			echo "	</td>\n";
-
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['ring_group_forward_enabled'] == 'true') ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['ring_group_enabled'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['ring_group_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
+			echo "	<td>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
+			echo "	<td>".($row['ring_group_forward_enabled'] == 'true' ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
 			if (permission_exists('ring_group_edit')) {
-				echo "<a href='ring_group_edit.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['ring_group_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
-			if (permission_exists('ring_group_delete')) {
-				echo "<a href='ring_group_delete.php?id=".escape($row['ring_group_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['ring_group_enabled']];
 			}
 			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['ring_group_description'])."&nbsp;</td>\n";
+			if (permission_exists('ring_group_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			$c = $c ? 0 : 1;
+			$x++;
 		}
+		unset($ring_groups);
 	}
-	unset($ring_groups, $row);
 
-	echo "<tr>\n";
-	echo "</table>";
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('ring_group_add')) {
-		if ($_SESSION['limit']['ring_groups']['numeric'] == '' || ($_SESSION['limit']['ring_groups']['numeric'] != '' && $total_ring_groups < $_SESSION['limit']['ring_groups']['numeric'])) {
-			echo "<a href='ring_group_edit.php' alt='add'>".$v_link_label_add."</a>";
-		}
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "</table>\n";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
