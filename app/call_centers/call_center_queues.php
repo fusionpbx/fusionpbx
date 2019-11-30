@@ -50,19 +50,18 @@
 		$call_center_queues = $_POST['call_center_queues'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
-		$obj = new call_center;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_center_queue_add')) {
+					$obj = new call_center;
 					$obj->copy_queues($call_center_queues);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('call_center_queue_delete')) {
+					$obj = new call_center;
 					$obj->delete_queues($call_center_queues);
 				}
 				break;

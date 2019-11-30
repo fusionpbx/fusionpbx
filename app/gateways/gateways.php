@@ -50,25 +50,24 @@
 		$gateways = $_POST['gateways'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($gateways) && @sizeof($gateways) != 0) {
-		$obj = new gateways;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('gateway_add')) {
+					$obj = new gateways;
 					$obj->copy($gateways);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('gateway_edit')) {
+					$obj = new gateways;
 					$obj->toggle($gateways);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('gateway_delete')) {
+					$obj = new gateways;
 					$obj->delete($gateways);
 				}
 				break;

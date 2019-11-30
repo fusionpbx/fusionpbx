@@ -47,25 +47,24 @@
 		$call_blocks = $_POST['call_blocks'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
-		$obj = new call_block;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_block_add')) {
+					$obj = new call_block;
 					$obj->copy($call_blocks);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('call_block_edit')) {
+					$obj = new call_block;
 					$obj->toggle($call_blocks);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('call_block_delete')) {
+					$obj = new call_block;
 					$obj->delete($call_blocks);
 				}
 				break;

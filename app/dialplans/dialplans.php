@@ -57,7 +57,7 @@
 		$app_uuid = $_REQUEST["app_uuid"];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($dialplans) && @sizeof($dialplans) != 0) {
 
 		//define redirect parameters and url
@@ -65,37 +65,39 @@
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
-			$redirect_url = 'dialplans.php'.($params ? '?'.implode('&', $params) : null);
+			$list_page = 'dialplans.php'.($params ? '?'.implode('&', $params) : null);
 			unset($params);
-
-		//create object, set app_uuid and redirect
-			$obj = new dialplan;
-			$obj->app_uuid = $app_uuid;
-			$obj->list_page = $redirect_url;
 
 		//process action
 			switch ($action) {
 				case 'copy':
 					if (permission_exists('dialplan_add')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
 						$obj->copy($dialplans);
 					}
 					break;
-
 				case 'toggle':
 					if (permission_exists('dialplan_edit')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
 						$obj->toggle($dialplans);
 					}
 					break;
-
 				case 'delete':
 					if (permission_exists('dialplan_delete')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
 						$obj->delete($dialplans);
 					}
 					break;
 			}
 
 		//redirect
-			header('Location: '.$redirect_url);
+			header('Location: '.$list_page);
 			exit;
 	}
 

@@ -50,19 +50,18 @@
 		$destinations = $_POST['destinations'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($destinations) && @sizeof($destinations) != 0) {
-		$obj = new destinations;
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('destination_edit')) {
+					$obj = new destinations;
 					$obj->toggle($destinations);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('destination_delete')) {
+					$obj = new destinations;
 					$obj->delete($destinations);
 				}
 				break;

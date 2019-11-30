@@ -50,19 +50,18 @@
 		$extensions = $_POST['extensions'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($extensions) && @sizeof($extensions) != 0) {
-		$obj = new extension;
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('extension_enabled')) {
+					$obj = new extension;
 					$obj->toggle($extensions);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('extension_delete')) {
+					$obj = new extension;
 					$obj->delete($extensions);
 				}
 				break;

@@ -50,19 +50,18 @@
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
-		$obj = new call_center;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('call_center_agent_add')) {
+					$obj = new call_center;
 					$obj->copy_agents($call_center_agents);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('call_center_agent_delete')) {
+					$obj = new call_center;
 					$obj->delete_agents($call_center_agents);
 				}
 				break;

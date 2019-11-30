@@ -50,19 +50,18 @@
 		$vendors = $_POST['vendors'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($vendors) && @sizeof($vendors) != 0) {
-		$obj = new device;
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('device_vendor_edit')) {
+					$obj = new device;
 					$obj->toggle_vendors($vendors);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('device_vendor_delete')) {
+					$obj = new device;
 					$obj->delete_vendors($vendors);
 				}
 				break;

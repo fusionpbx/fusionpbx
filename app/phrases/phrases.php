@@ -48,27 +48,26 @@
 		$phrases = $_POST['phrases'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($phrases) && @sizeof($phrases) != 0) {
-		$obj = new phrases;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('phrase_add')) {
+					$obj = new phrases;
 					$obj->copy($phrases);
 					save_phrases_xml();
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('phrase_edit')) {
+					$obj = new phrases;
 					$obj->toggle($phrases);
 					save_phrases_xml();
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('phrase_delete')) {
+					$obj = new phrases;
 					$obj->delete($phrases);
 					save_phrases_xml();
 				}

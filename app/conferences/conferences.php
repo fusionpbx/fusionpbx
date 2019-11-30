@@ -50,25 +50,24 @@
 		$conferences = $_POST['conferences'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($conferences) && @sizeof($conferences) != 0) {
-		$obj = new conferences;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('conference_add')) {
+					$obj = new conferences;
 					$obj->copy($conferences);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('conference_edit')) {
+					$obj = new conferences;
 					$obj->toggle($conferences);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('conference_delete')) {
+					$obj = new conferences;
 					$obj->delete($conferences);
 				}
 				break;

@@ -50,25 +50,24 @@
 		$pin_numbers = $_POST['pin_numbers'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-		$obj = new pin_numbers;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('pin_number_add')) {
+					$obj = new pin_numbers;
 					$obj->copy($pin_numbers);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('pin_number_edit')) {
+					$obj = new pin_numbers;
 					$obj->toggle($pin_numbers);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('pin_number_delete')) {
+					$obj = new pin_numbers;
 					$obj->delete($pin_numbers);
 				}
 				break;

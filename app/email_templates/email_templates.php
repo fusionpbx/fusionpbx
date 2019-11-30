@@ -47,25 +47,24 @@
 		$email_templates = $_POST['email_templates'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($email_templates) && @sizeof($email_templates) != 0) {
-		$obj = new email_templates;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('email_template_add')) {
+					$obj = new email_templates;
 					$obj->copy($email_templates);
 				}
 				break;
-
 			case 'toggle':
 				if (permission_exists('email_template_edit')) {
+					$obj = new email_templates;
 					$obj->toggle($email_templates);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('email_template_delete')) {
+					$obj = new email_templates;
 					$obj->delete($email_templates);
 				}
 				break;

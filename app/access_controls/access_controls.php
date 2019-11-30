@@ -46,19 +46,18 @@
 		$access_controls = $_POST['access_controls'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($access_controls) && @sizeof($access_controls) != 0) {
-		$obj = new access_controls;
-
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('access_control_add')) {
+					$obj = new access_controls;
 					$obj->copy($access_controls);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('access_control_delete')) {
+					$obj = new access_controls;
 					$obj->delete($access_controls);
 				}
 				break;

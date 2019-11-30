@@ -41,27 +41,25 @@
 		$emails = $_POST['emails'];
 	}
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($emails) && @sizeof($emails) != 0) {
-		$obj = new email_logs;
-
 		switch ($action) {
 			case 'download':
 				if (permission_exists('email_log_download')) {
+					$obj = new email_logs;
 					$obj->download($emails);
-					//download failed, set message
-					message::add($text['message-download_failed'],'negative',7000);
+					message::add($text['message-download_failed'],'negative',7000); //download failed, set message
 				}
 				break;
-
 			case 'resend':
 				if (permission_exists('email_log_resend')) {
+					$obj = new email_logs;
 					$obj->resend($emails);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('email_log_delete')) {
+					$obj = new email_logs;
 					$obj->delete($emails);
 				}
 				break;

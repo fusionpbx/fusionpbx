@@ -52,19 +52,18 @@
 //get the search
 	$search = strtolower($_REQUEST["search"]);
 
-//process posted data by action
+//process the http post data by action
 	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
-		$obj = new device;
-
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('device_edit')) {
+					$obj = new device;
 					$obj->toggle($devices);
 				}
 				break;
-
 			case 'delete':
 				if (permission_exists('device_delete')) {
+					$obj = new device;
 					$obj->delete($devices);
 				}
 				break;
