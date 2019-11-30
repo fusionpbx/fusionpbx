@@ -91,15 +91,15 @@ if (!class_exists('ring_groups')) {
 						//filter out unchecked ring groups, build where clause for below
 							foreach ($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//get necessary ring group details
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ring_group_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".implode(' or ', $record_uuids)." ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -196,13 +196,13 @@ if (!class_exists('ring_groups')) {
 						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid, ring_group_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -291,17 +291,17 @@ if (!class_exists('ring_groups')) {
 						//get checked records
 							foreach($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');

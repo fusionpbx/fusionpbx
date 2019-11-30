@@ -328,15 +328,15 @@
 							//get checked records
 								foreach($records as $x => $record) {
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+										$uuids[] = "'".$record['uuid']."'";
 									}
 								}
 
 							//create insert array from existing data
-								if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
