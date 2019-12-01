@@ -301,7 +301,7 @@ if (!class_exists('gateways')) {
 									$database->delete($array);
 									unset($array);
 
-								//syncrhonize configuration
+								//synchronize the xml config
 									save_gateway_xml();
 
 								//clear the cache
@@ -426,7 +426,7 @@ if (!class_exists('gateways')) {
 										}
 									}
 
-								//syncrhonize configuration
+								//synchronize the xml config
 									save_gateway_xml();
 
 								//clear the cache
