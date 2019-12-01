@@ -68,12 +68,35 @@ if (!class_exists('call_block')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//build the delete array
+						//filter out unchecked, build where clause for below
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$uuids[] = "'".$record['uuid']."'";
 								}
+							}
+
+						//get necessary call block details
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, call_block_number from v_".$this->table." ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$call_block_numbers[$row['uuid']] = $row['call_block_number'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//build the delete array
+							$x = 0;
+							foreach ($call_block_numbers as $call_block_uuid => $call_block_number) {
+								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_block_uuid;
+								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$x++;
 							}
 
 						//delete the checked rows
@@ -85,6 +108,12 @@ if (!class_exists('call_block')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//clear the cache
+									$cache = new cache;
+									foreach ($call_block_numbers as $call_block_number) {
+										$cache->delete("app:call_block:".$_SESSION['domain_name'].":".$call_block_number);
+									}
 
 								//set message
 									message::add($text['message-delete']);
@@ -116,13 +145,13 @@ if (!class_exists('call_block')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, call_block_number from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -131,6 +160,7 @@ if (!class_exists('call_block')) {
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
+										$call_block_numbers[] = $row['call_block_number'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -138,7 +168,7 @@ if (!class_exists('call_block')) {
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
@@ -153,6 +183,12 @@ if (!class_exists('call_block')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//clear the cache
+									$cache = new cache;
+									foreach ($call_block_numbers as $call_block_number) {
+										$cache->delete("app:call_block:".$_SESSION['domain_name'].":".$call_block_number);
+									}
 
 								//set message
 									message::add($text['message-toggle']);
@@ -185,7 +221,7 @@ if (!class_exists('call_block')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
