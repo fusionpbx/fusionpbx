@@ -89,6 +89,16 @@ if (!class_exists('access_controls')) {
 								//revoke temporary permissions
 									$p->delete('access_control_node_delete', 'temp');
 
+								//clear the cache
+									$cache = new cache;
+									$cache->delete("configuration:acl.conf");
+
+								//create the event socket connection
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									if ($fp) {
+										event_socket_request($fp, "api reloadacl");
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -187,6 +197,16 @@ if (!class_exists('access_controls')) {
 
 								//revoke temporary permissions
 									$p->delete('access_control_node_add', 'temp');
+
+								//clear the cache
+									$cache = new cache;
+									$cache->delete("configuration:acl.conf");
+
+								//create the event socket connection
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									if ($fp) {
+										event_socket_request($fp, "api reloadacl");
+									}
 
 								//set message
 									message::add($text['message-copy']);
