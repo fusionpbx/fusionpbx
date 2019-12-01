@@ -586,8 +586,12 @@ if (!class_exists('extension')) {
 											//build delete array
 												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 												$array['extension_users'][$x]['extension_uuid'] = $record['uuid'];
-												$array['follow_me'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
-												$array['follow_me_destinations'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
+
+											//include follow me destinations, if exists
+												if (is_uuid($extensions[$x]['follow_me_uuid'])) {
+													$array['follow_me'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
+													$array['follow_me_destinations'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
+												}
 
 											//include ring group destinations, if exists
 												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
