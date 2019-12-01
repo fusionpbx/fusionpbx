@@ -89,7 +89,7 @@ if (!class_exists('phrases')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked phrases, build where clause for below
-							foreach($records as $record) {
+							foreach ($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
@@ -139,6 +139,9 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_details_delete', 'temp');
+
+								//save the xml
+									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
@@ -215,6 +218,9 @@ if (!class_exists('phrases')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//save the xml
+									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
@@ -327,6 +333,9 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_detail_add', 'temp');
+
+								//save the xml
+									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
