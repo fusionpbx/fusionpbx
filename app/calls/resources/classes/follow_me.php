@@ -317,7 +317,13 @@ include "root.php";
 								}
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, follow_me_uuid from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, extension, number_alias, ";
+								$sql .= "call_timeout, do_not_disturb, ";
+								$sql .= "forward_all_enabled, forward_all_destination, ";
+								$sql .= "forward_busy_enabled, forward_busy_destination, ";
+								$sql .= "forward_no_answer_enabled, forward_no_answer_destination, ";
+								$sql .= $this->toggle_field." as toggle, follow_me_uuid ";
+								$sql .= "from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -325,6 +331,16 @@ include "root.php";
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
+										$extensions[$row['uuid']]['extension'] = $row['extension'];
+										$extensions[$row['uuid']]['number_alias'] = $row['number_alias'];
+										$extensions[$row['uuid']]['call_timeout'] = $row['call_timeout'];
+										$extensions[$row['uuid']]['do_not_disturb'] = $row['do_not_disturb'];
+										$extensions[$row['uuid']]['forward_all_enabled'] = $row['forward_all_enabled'];
+										$extensions[$row['uuid']]['forward_all_destination'] = $row['forward_all_destination'];
+										$extensions[$row['uuid']]['forward_busy_enabled'] = $row['forward_busy_enabled'];
+										$extensions[$row['uuid']]['forward_busy_destination'] = $row['forward_busy_destination'];
+										$extensions[$row['uuid']]['forward_no_answer_enabled'] = $row['forward_no_answer_enabled'];
+										$extensions[$row['uuid']]['forward_no_answer_destination'] = $row['forward_no_answer_destination'];
 										$extensions[$row['uuid']]['state'] = $row['toggle'];
 										$extensions[$row['uuid']]['follow_me_uuid'] = $row['follow_me_uuid'];
 									}
@@ -390,6 +406,43 @@ include "root.php";
 								//revoke temporary permissions
 									$p->delete('extension_edit', 'temp');
 									$p->delete('follow_me_edit', 'temp');
+
+								//send feature event notify to the phone
+									if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
+										foreach ($extensions as $uuid => $extension) {
+											$feature_event_notify = new feature_event_notify;
+											$feature_event_notify->domain_name = $_SESSION['domain_name'];
+											$feature_event_notify->extension = $extension['extension'];
+											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
+											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
+											$feature_event_notify->forward_all_enabled = $extension['forward_all_enabled'];
+											$feature_event_notify->forward_busy_enabled = $extension['forward_busy_enabled'];
+											$feature_event_notify->forward_no_answer_enabled = $extension['forward_no_answer_enabled'];
+											//workarounds: send 0 as freeswitch doesn't send NOTIFY when destination values are nil
+											$feature_event_notify->forward_all_destination = $extension['forward_all_destination'] != '' ? $extension['forward_all_destination'] : '0';
+											$feature_event_notify->forward_busy_destination = $extension['forward_busy_destination'] != '' ? $extension['forward_busy_destination'] : '0';
+											$feature_event_notify->forward_no_answer_destination = $extension['forward_no_answer_destination'] != '' ? $extension['forward_no_answer_destination'] : '0';
+											$feature_event_notify->send_notify();
+											unset($feature_event_notify);
+										}
+									}
+
+								//synchronize configuration
+									if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+										require_once "app/extensions/resources/classes/extension.php";
+										$ext = new extension;
+										$ext->xml();
+										unset($ext);
+									}
+
+								//clear the cache
+									$cache = new cache;
+									foreach ($extensions as $uuid => $extension) {
+										$cache->delete("directory:".$extension['extension']."@".$_SESSION['domain_name']);
+										if ($extension['number_alias'] != '') {
+											$cache->delete("directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
+										}
+									}
 
 								//set message
 									message::add($text['message-toggle']);
