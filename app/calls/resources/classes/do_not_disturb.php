@@ -217,8 +217,10 @@ include "root.php";
 									if ($array[$this->table][$x][$this->toggle_field] == $this->toggle_values[0]) { //true
 										$array[$this->table][$x]['forward_all_enabled'] = $this->toggle_values[1]; //false
 										$array[$this->table][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
-										$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
-										$array['follow_me'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
+										if (is_uuid($extension['follow_me_uuid'])) {
+											$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
+											$array['follow_me'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
+										}
 									}
 
 								//increment counter

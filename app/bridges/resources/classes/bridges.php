@@ -136,7 +136,7 @@ if (!class_exists('bridges')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
@@ -158,7 +158,7 @@ if (!class_exists('bridges')) {
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
@@ -205,7 +205,7 @@ if (!class_exists('bridges')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}

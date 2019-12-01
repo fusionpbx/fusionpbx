@@ -373,8 +373,10 @@ include "root.php";
 									if ($new_state != $extension['state']) {
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 										$array[$this->table][$x][$this->toggle_field] = $new_state;
-										$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
-										$array['follow_me'][$x]['follow_me_enabled'] = $new_state;
+										if (is_uuid($extension['follow_me_uuid'])) {
+											$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
+											$array['follow_me'][$x]['follow_me_enabled'] = $new_state;
+										}
 									}
 
 								//disable other features
