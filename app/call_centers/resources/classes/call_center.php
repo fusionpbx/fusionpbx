@@ -305,14 +305,45 @@
 					//delete multiple records
 						if (is_array($records) && @sizeof($records) != 0) {
 
-							//build the delete array
-								foreach($records as $x => $record) {
+							//filter out unchecked, build where clause for below
+								foreach ($records as $x => $record) {
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-										$array['call_center_tiers'][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$uuids[] = "'".$record['uuid']."'";
 									}
+								}
+
+							//get necessary details
+								if (is_array($uuids) && @sizeof($uuids) != 0) {
+									$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, queue_name from v_".$this->table." ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										foreach ($rows as $row) {
+											$call_center_queues[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+											$call_center_queues[$row['uuid']]['queue_name'] = $row['queue_name'];
+										}
+									}
+									unset($sql, $parameters, $rows, $row);
+								}
+
+							//build the delete array
+								$x = 0;
+								foreach ($call_center_queues as $call_center_queue_uuid => $call_center_queue) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $call_center_queue_uuid;
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplans'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
+									$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
+									$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array['call_center_tiers'][$x][$this->uuid_prefix.'uuid'] = $call_center_queue_uuid;
+									$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$x++;
+									$array['call_center_tiers'][$x]['queue_name'] = $call_center_queue['queue_name']."@".$_SESSION['domain_name'];
+									$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$x++;
 								}
 
 							//delete the checked rows
@@ -321,6 +352,8 @@
 									//grant temporary permissions
 										$p = new permissions;
 										$p->add('call_center_tier_delete', 'temp');
+										$p->add('dialplan_delete', 'temp');
+										$p->add('dialplan_detail_delete', 'temp');
 
 									//execute delete
 										$database = new database;
@@ -331,6 +364,20 @@
 
 									//revoke temporary permissions
 										$p->delete('call_center_tier_delete', 'temp');
+										$p->delete('dialplan_delete', 'temp');
+										$p->delete('dialplan_detail_delete', 'temp');
+
+									//clear the cache
+										$cache = new cache;
+										$cache->delete("dialplan:".$_SESSION["context"]);
+										remove_config_from_cache('configuration:callcenter.conf');
+
+									//synchronize configuration
+										save_dialplan_xml();
+										save_call_center_xml();
+
+									//apply settings reminder
+										$_SESSION["reload_xml"] = true;
 
 									//set message
 										message::add($text['message-delete']);
@@ -365,18 +412,36 @@
 					//delete multiple records
 						if (is_array($records) && @sizeof($records) != 0) {
 
-							//build the delete array
-								foreach($records as $x => $record) {
+							//filter out unchecked
+								foreach ($records as $x => $record) {
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$uuids[] = $record['uuid'];
+									}
+								}
+
+							//build the delete array
+								if (is_array($uuids) && @sizeof($uuids) != 0) {
+									foreach ($uuids as $uuid) {
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-										$array['call_center_tiers'][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array['call_center_tiers'][$x]['call_center_agent_uuid'] = $uuid;
 										$array['call_center_tiers'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 									}
 								}
 
 							//delete the checked rows
 								if (is_array($array) && @sizeof($array) != 0) {
+
+									//setup the event socket connection
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+									//delete the agent in the switch
+										if ($fp) {
+											foreach ($uuids as $uuid) {
+												$cmd = "api callcenter_config agent del ".$uuid;
+												$response = event_socket_request($fp, $cmd);
+											}
+										}
 
 									//grant temporary permissions
 										$p = new permissions;
@@ -391,6 +456,10 @@
 
 									//revoke temporary permissions
 										$p->delete('call_center_tier_delete', 'temp');
+
+									//synchronize configuration
+										save_call_center_xml();
+										remove_config_from_cache('configuration:callcenter.conf');
 
 									//set message
 										message::add($text['message-delete']);
@@ -430,7 +499,7 @@
 						if (is_array($records) && @sizeof($records) != 0) {
 
 							//get checked records
-								foreach($records as $x => $record) {
+								foreach ($records as $x => $record) {
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 										$uuids[] = "'".$record['uuid']."'";
 									}
@@ -447,16 +516,18 @@
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
-												$primary_uuid = uuid();
+												$new_call_center_queue_uuid = uuid();
+												$new_dialplan_uuid = uuid();
 
 												//copy data
 													$array[$this->table][$x] = $row;
 
 												//overwrite
-													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
+													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_call_center_queue_uuid;
+													$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
 													$array[$this->table][$x]['queue_description'] = trim($row['queue_description'].' ('.$text['label-copy'].')');
 
-												//sub table
+												//call center tiers sub table
 													$sql_2 = "select * from v_call_center_tiers where call_center_queue_uuid = :call_center_queue_uuid";
 													$parameters_2['call_center_queue_uuid'] = $row['call_center_queue_uuid'];
 													$database = new database;
@@ -469,118 +540,33 @@
 
 															//overwrite
 																$array['call_center_tiers'][$y]['call_center_tier_uuid'] = uuid();
-																$array['call_center_tiers'][$y]['call_center_queue_uuid'] = $primary_uuid;
+																$array['call_center_tiers'][$y]['call_center_queue_uuid'] = $new_call_center_queue_uuid;
 
 															$y++;
 														}
 													}
 													unset($sql_2, $parameters_2, $rows_2, $row_2);
-											}
-										}
-										unset($sql, $parameters, $rows, $row);
-								}
 
-							//save the changes and set the message
-								if (is_array($array) && @sizeof($array) != 0) {
-
-									//grant temporary permissions
-										$p = new permissions;
-										$p->add('call_center_tier_add', 'temp');
-
-									//save the array
-										$database = new database;
-										$database->app_name = $this->app_name;
-										$database->app_uuid = $this->app_uuid;
-										$database->save($array);
-										unset($array);
-
-									//revoke temporary permissions
-										$p->delete('call_center_tier_add', 'temp');
-
-									//set message
-										message::add($text['message-copy']);
-
-								}
-								unset($records);
-						}
-
-				}
-			}
-
-			public function copy_agents($records) {
-
-				//assign private variables
-					$this->permission_prefix = 'call_center_agent_';
-					$this->list_page = 'call_center_agents.php';
-					$this->table = 'call_center_agents';
-					$this->uuid_prefix = 'call_center_agent_';
-
-				if (permission_exists($this->permission_prefix.'add')) {
-
-					//add multi-lingual support
-						$language = new text;
-						$text = $language->get();
-
-					//validate the token
-						$token = new token;
-						if (!$token->validate($_SERVER['PHP_SELF'])) {
-							message::add($text['message-invalid_token'],'negative');
-							header('Location: '.$this->list_page);
-							exit;
-						}
-
-					//copy the checked records
-						if (is_array($records) && @sizeof($records) != 0) {
-
-							//get checked records
-								foreach($records as $x => $record) {
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$uuids[] = "'".$record['uuid']."'";
-									}
-								}
-
-							//create insert array from existing data
-								if (is_array($uuids) && @sizeof($uuids) != 0) {
-
-									//primary table
-										$sql = "select * from v_".$this->table." ";
-										$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-										$database = new database;
-										$rows = $database->select($sql, $parameters, 'all');
-										if (is_array($rows) && @sizeof($rows) != 0) {
-											$y = 0;
-											foreach ($rows as $x => $row) {
-												$primary_uuid = uuid();
-
-												//copy data
-													$array[$this->table][$x] = $row;
-
-												//overwrite
-													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
-													$array[$this->table][$x]['agent_name'] = trim($row['agent_name'].' ('.$text['label-copy'].')');
-													$array[$this->table][$x]['agent_id'] = null;
-
-												//sub table
-													$sql_2 = "select * from v_call_center_tiers where call_center_agent_uuid = :call_center_agent_uuid";
-													$parameters_2['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
+												//call center queue dialplan record
+													$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+													$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
 													$database = new database;
-													$rows_2 = $database->select($sql_2, $parameters_2, 'all');
-													if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-														foreach ($rows_2 as $row_2) {
+													$dialplan = $database->select($sql_3, $parameters_3, 'row');
+													if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
-															//copy data
-																$array['call_center_tiers'][$y] = $row_2;
+														//copy data
+															$array['dialplans'][$x] = $dialplan;
 
-															//overwrite
-																$array['call_center_tiers'][$y]['call_center_tier_uuid'] = uuid();
-																$array['call_center_tiers'][$y]['call_center_agent_uuid'] = $primary_uuid;
+														//overwrite
+															$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+															$dialplan_xml = $dialplan['dialplan_xml'];
+															$dialplan_xml = str_replace($row['call_center_queue_uuid'], $new_call_center_queue_uuid, $dialplan_xml); //replace source call_center_queue_uuid with new
+															$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+															$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
+															$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
 
-															//increment
-																$y++;
-
-														}
 													}
-													unset($sql_2, $parameters_2, $rows_2, $row_2);
+													unset($sql_3, $parameters_3, $dialplan);
 											}
 										}
 										unset($sql, $parameters, $rows, $row);
@@ -592,6 +578,7 @@
 									//grant temporary permissions
 										$p = new permissions;
 										$p->add('call_center_tier_add', 'temp');
+										$p->add('dialplan_add', 'temp');
 
 									//save the array
 										$database = new database;
@@ -602,6 +589,17 @@
 
 									//revoke temporary permissions
 										$p->delete('call_center_tier_add', 'temp');
+										$p->delete('dialplan_add', 'temp');
+
+									//save the xml
+										save_dialplan_xml();
+
+									//apply settings reminder
+										$_SESSION["reload_xml"] = true;
+
+									//clear the cache
+										$cache = new cache;
+										$cache->delete("dialplan:".$_SESSION["context"]);
 
 									//set message
 										message::add($text['message-copy']);
@@ -611,9 +609,9 @@
 						}
 
 				}
-			}
+			} //method
 
-		}
+		} //class
 	}
 
 /*
