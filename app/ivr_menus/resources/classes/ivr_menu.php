@@ -169,7 +169,7 @@ if (!class_exists('ivr_menu')) {
 										$ivr_menu_contexts = array_unique($ivr_menu_contexts);
 										$cache = new cache;
 										foreach ($ivr_menu_contexts as $ivr_menu_context) {
-											$cache->delete("dialplan:".$dialplan_context);
+											$cache->delete("dialplan:".$ivr_menu_context);
 										}
 									}
 
@@ -250,6 +250,9 @@ if (!class_exists('ivr_menu')) {
 
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
+
+								//synchronize the xml config
+									save_dialplan_xml();
 
 								//clear the cache
 									$cache = new cache;
