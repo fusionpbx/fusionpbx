@@ -6,6 +6,7 @@ $apps[$x]['menu'][0]['title']['fr-fr'] = '';
 $apps[$x]['menu'][0]['title']['fr-ca'] = '';
 $apps[$x]['menu'][0]['title']['nl-nl'] = 'Transacties';
 $apps[$x]['menu'][0]['title']['pl'] = '';
+$apps[$x]['menu'][0]['title']['pt-br'] = 'Transações do Banco de Dados';
 $apps[$x]['menu'][0]['title']['ru-ru'] = 'Изменения в БД';
 $apps[$x]['menu'][0]['title']['sv-se'] = '';
 $apps[$x]['menu'][0]['title']['uk'] = '';
