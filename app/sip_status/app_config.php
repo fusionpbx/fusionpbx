@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Toont de systeem informatie zoals RAM, CPU en Harddisk informatie.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Exibe informações do sistema, como memória RAM, CPU e informações do disco rígido.";
 		$apps[$x]['description']['pt-pt'] = "Exibe informações do sistema, como memória RAM, CPU e informações do disco rígido.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Отображает системную информацию о состоянии Памяти, Процессора и Дисковых накопителей.";
