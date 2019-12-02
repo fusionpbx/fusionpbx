@@ -89,7 +89,7 @@ function event_socket_request_cmd($cmd) {
 }
 
 function byte_convert($bytes, $precision = 2) {
-	static $units = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+	static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
 	$step = 1024;
 	$i = 0;
 	while (($bytes / $step) > 0.9) {

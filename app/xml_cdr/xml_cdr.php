@@ -50,16 +50,19 @@
 		$xml_cdrs = $_POST['xml_cdrs'];
 	}
 
-//delete the cdr
-	if (permission_exists('xml_cdr_delete')) {
-		if ($action == 'delete' && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
-			//delete
-				$obj = new xml_cdr;
-				$obj->delete($xml_cdrs);
-			//redirect
-				header('Location: xml_cdr.php');
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('xml_cdr_delete')) {
+					$obj = new xml_cdr;
+					$obj->delete($xml_cdrs);
+				}
+				break;
 		}
+
+		header('Location: xml_cdr.php');
+		exit;
 	}
 
 //create token
@@ -475,12 +478,12 @@
 	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
 
 //show the results
-	$col_count = 0;
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
+	$col_count = 0;
 	if (permission_exists('xml_cdr_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
@@ -631,7 +634,7 @@
 				//recording playback
 					if (permission_exists('xml_cdr_recording_play') && $record_path != '') {
 						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border-bottom: none; overflow: hidden;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
-						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy table row to maintain alternating background color
+						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
 					if (permission_exists('xml_cdr_details')) {
 						$list_row_url = "xml_cdr_details.php?id=".urlencode($row['xml_cdr_uuid']).($_REQUEST['show'] ? "&show=all" : null);
@@ -763,10 +766,10 @@
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if (permission_exists('xml_cdr_recording_play')) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
-								$content .= button::create(['type'=>'button','label'=>$text['button-label'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')",'title'=>$text['label-play'].' / '.$text['label-pause']]);
+								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
 							}
 							if (permission_exists('xml_cdr_recording_download')) {
-								$content .= button::create(['type'=>'button','title'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
+								$content .= button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
 							}
 							$content .= 	"</td>\n";
 						}

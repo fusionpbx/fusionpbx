@@ -322,7 +322,7 @@
 					$array['dialplans'][0]["dialplan_continue"] = "false";
 					$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 					$array['dialplans'][0]["dialplan_order"] = "101";
-					$array['dialplans'][0]["dialplan_enabled"] = "true";
+					$array['dialplans'][0]["dialplan_enabled"] = $ivr_menu_enabled;
 					$array['dialplans'][0]["dialplan_description"] = $ivr_menu_description;
 					$array['dialplans'][0]["app_uuid"] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
 
@@ -1130,7 +1130,7 @@
 		//phrases
 			if (is_array($phrases)) {
 				echo "<optgroup label='Phrases'>\n";
-				foreach ($result as &$row) {
+				foreach ($phrases as &$row) {
 					if ($ivr_menu_invalid_sound == "phrase:".$row["phrase_uuid"]) {
 						$tmp_selected = true;
 						echo "	<option value='phrase:".escape($row["phrase_uuid"])."' selected='selected'>".escape($row["phrase_name"])."</option>\n";

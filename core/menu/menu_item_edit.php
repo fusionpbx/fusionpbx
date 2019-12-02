@@ -59,7 +59,7 @@
 			unset($array);
 		//redirect the browser
 			message::add($text['message-delete']);
-			header("Location: menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$menu_item_uuid."&menu_uuid=".$menu_uuid);
+			header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
 			return;
 	}
 
@@ -71,10 +71,6 @@
 	else {
 		$action = "add";
 	}
-
-
-//clear the menu session so it will rebuild with the update
-	$_SESSION["menu"] = "";
 
 //get the HTTP POST variables and set them as PHP variables
 	if (count($_POST) > 0) {

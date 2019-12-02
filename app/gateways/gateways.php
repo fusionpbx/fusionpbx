@@ -50,40 +50,31 @@
 		$gateways = $_POST['gateways'];
 	}
 
-//copy the gateways
-	if (permission_exists('gateway_add')) {
-		if ($action == 'copy' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//copy
-				$obj = new gateways;
-				$obj->copy($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($gateways) && @sizeof($gateways) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('gateway_add')) {
+					$obj = new gateways;
+					$obj->copy($gateways);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('gateway_edit')) {
+					$obj = new gateways;
+					$obj->toggle($gateways);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('gateway_delete')) {
+					$obj = new gateways;
+					$obj->delete($gateways);
+				}
+				break;
 		}
-	}
 
-//toggle the gateways
-	if (permission_exists('gateway_edit')) {
-		if ($action == 'toggle' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//toggle
-				$obj = new gateways;
-				$obj->toggle($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the gateways
-	if (permission_exists('gateway_delete')) {
-		if ($action == 'delete' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//delete
-				$obj = new gateways;
-				$obj->delete($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //connect to event socket
@@ -306,7 +297,6 @@
 							echo "	<td class='no-link center'>";
 							echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-start'],'title'=>$text['button-start'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('start'); list_form_submit('form_list')"]);
 							echo "	</td>\n";
-// 							echo "	<td><a href='gateways.php?a=start&gateway=".urlencode($row["gateway_uuid"])."&profile=".urlencode($row["profile"])."' alt='".$text['label-action-start']."'>".$text['label-action-start']."</a></td>\n";
 						}
 						echo "	<td>&nbsp;</td>\n";
 					}
@@ -320,11 +310,10 @@
 								echo "	<td class='no-link center'>";
 								echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
 								echo "	</td>\n";
-// 								echo "	<td><a href='gateways.php?a=stop&gateway=".urlencode($row["gateway_uuid"])."&profile=".urlencode($row["profile"])."' alt='".$text['label-action-stop']."'>".$text['label-action-stop']."</a></td>\n";
 							}
 							echo "	<td>".escape($state)."</td>\n"; //REGED, NOREG, UNREGED
 						}
-						catch(Exception $e) {
+						catch (Exception $e) {
 								//echo $e->getMessage();
 						}
 					}

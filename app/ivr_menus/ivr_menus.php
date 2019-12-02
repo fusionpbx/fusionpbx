@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,9 +27,10 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('ivr_menu_view')) {
 		//access granted
 	}
@@ -42,7 +43,41 @@
 	$language = new text;
 	$text = $language->get();
 
-//get variables used to control the order
+//get posted data
+	if (is_array($_POST['ivr_menus'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$ivr_menus = $_POST['ivr_menus'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('ivr_menu_add')) {
+					$obj = new ivr_menu;
+					$obj->copy($ivr_menus);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('ivr_menu_edit')) {
+					$obj = new ivr_menu;
+					$obj->toggle($ivr_menus);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('ivr_menu_delete')) {
+					$obj = new ivr_menu;
+					$obj->delete($ivr_menus);
+				}
+				break;
+		}
+
+		header('Location: ivr_menus.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
@@ -52,188 +87,155 @@
 		$sql_search = "and (";
 		$sql_search .= "lower(ivr_menu_name) like :search ";
 		$sql_search .= "or lower(ivr_menu_extension) like :search ";
-		//$sql_search .= "or lower(ivr_menu_greet_long) like :search ";
-		//$sql_search .= "or lower(ivr_menu_greet_short) like :search ";
-		//$sql_search .= "or lower(ivr_menu_invalid_sound) like :search ";
-		//$sql_search .= "or lower(ivr_menu_exit_sound) like :search ";
-		//$sql_search .= "or lower(ivr_menu_confirm_macro) like :search ";
-		//$sql_search .= "or lower(ivr_menu_confirm_key) like :search ";
-		//$sql_search .= "or lower(ivr_menu_tts_engine) like :search ";
-		//$sql_search .= "or lower(ivr_menu_tts_voice) like :search ";
-		//$sql_search .= "or lower(ivr_menu_confirm_attempts) like '%".$search."%'" ;
-		//$sql_search .= "or lower(ivr_menu_timeout) like :search ";
-		//$sql_search .= "or lower(ivr_menu_exit_app) like :search ";
-		//$sql_search .= "or lower(ivr_menu_exit_data) like :search ";
-		//$sql_search .= "or lower(ivr_menu_inter_digit_timeout) like :search ";
-		//$sql_search .= "or lower(ivr_menu_max_failures) like :search ";
-		//$sql_search .= "or lower(ivr_menu_max_timeouts) like :search ";
-		//$sql_search .= "or lower(ivr_menu_digit_len) like :search ";
-		//$sql_search .= "or lower(ivr_menu_direct_dial) like :search ";
-		//$sql_search .= "or lower(ivr_menu_ringback) like :search ";
-		//$sql_search .= "or lower(ivr_menu_cid_prefix) like :search ";
 		$sql_search .= "or lower(ivr_menu_enabled) like :search ";
 		$sql_search .= "or lower(ivr_menu_description) like :search ";
 		$sql_search .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(*) from v_ivr_menus ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$total_ivr_menus = $database->select($sql, $parameters, 'column');
+	$num_rows = $total_ivr_menus;
+
+//prepare to page the results
+	if ($sql_search) {
+		$sql .= $sql_search;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+	}
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = escape($_GET['page']);
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$param = "&search=".$search;
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//additional includes
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-ivr_menus']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-ivr_menus']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (permission_exists('ivr_menu_add') && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'ivr_menu_edit.php']);
+	}
+	if (permission_exists('ivr_menu_add') && $ivr_menus && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('ivr_menu_edit') && $ivr_menus) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('ivr_menu_delete') && $ivr_menus) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'ivr_menus.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
 	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-ivr_menu']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	//echo th_order_by('ivr_menu_uuid', $text['label-ivr_menu_uuid'], $order_by, $order);
-	//echo th_order_by('dialplan_uuid', $text['label-dialplan_uuid'], $order_by, $order);
+	echo $text['description-ivr_menu']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit') || permission_exists('ivr_menu_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($ivr_menus ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('ivr_menu_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by, $order);
-	//echo th_order_by('ivr_menu_greet_long', $text['label-ivr_menu_greet_long'], $order_by, $order);
-	//echo th_order_by('ivr_menu_greet_short', $text['label-ivr_menu_greet_short'], $order_by, $order);
-	//echo th_order_by('ivr_menu_invalid_sound', $text['label-ivr_menu_invalid_sound'], $order_by, $order);
-	//echo th_order_by('ivr_menu_exit_sound', $text['label-ivr_menu_exit_sound'], $order_by, $order);
-	//echo th_order_by('ivr_menu_confirm_macro', $text['label-ivr_menu_confirm_macro'], $order_by, $order);
-	//echo th_order_by('ivr_menu_confirm_key', $text['label-ivr_menu_confirm_key'], $order_by, $order);
-	//echo th_order_by('ivr_menu_tts_engine', $text['label-ivr_menu_tts_engine'], $order_by, $order);
-	//echo th_order_by('ivr_menu_tts_voice', $text['label-ivr_menu_tts_voice'], $order_by, $order);
-	//echo th_order_by('ivr_menu_confirm_attempts', $text['label-ivr_menu_confirm_attempts'], $order_by, $order);
-	//echo th_order_by('ivr_menu_timeout', $text['label-ivr_menu_timeout'], $order_by, $order);
-	//echo th_order_by('ivr_menu_exit_app', $text['label-ivr_menu_exit_app'], $order_by, $order);
-	//echo th_order_by('ivr_menu_exit_data', $text['label-ivr_menu_exit_data'], $order_by, $order);
-	//echo th_order_by('ivr_menu_inter_digit_timeout', $text['label-ivr_menu_inter_digit_timeout'], $order_by, $order);
-	//echo th_order_by('ivr_menu_max_failures', $text['label-ivr_menu_max_failures'], $order_by, $order);
-	//echo th_order_by('ivr_menu_max_timeouts', $text['label-ivr_menu_max_timeouts'], $order_by, $order);
-	//echo th_order_by('ivr_menu_digit_len', $text['label-ivr_menu_digit_len'], $order_by, $order);
-	//echo th_order_by('ivr_menu_direct_dial', $text['label-ivr_menu_direct_dial'], $order_by, $order);
-	//echo th_order_by('ivr_menu_ringback', $text['label-ivr_menu_ringback'], $order_by, $order);
-	//echo th_order_by('ivr_menu_cid_prefix', $text['label-ivr_menu_cid_prefix'], $order_by, $order);
-	echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('ivr_menu_description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('ivr_menu_add')) {
-		if ($_SESSION['limit']['ivr_menus']['numeric'] == '' || ($_SESSION['limit']['ivr_menus']['numeric'] != '' && $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
-			echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-		}
+	echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('ivr_menu_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	if (permission_exists('ivr_menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	else {
-		echo "&nbsp;\n";
-	}
-	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
-	if (is_array($result)) {
-		foreach($result as $row) {
+	if (is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
+		$x = 0;
+		foreach($ivr_menus as $row) {
+			if (permission_exists('ivr_menu_edit')) {
+				$list_row_url = "ivr_menu_edit.php?id=".urlencode($row['ivr_menu_uuid']);
+			}
 			if (permission_exists('ivr_menu_edit')) {
 				$tr_link = "href='ivr_menu_edit.php?id=".escape($row['ivr_menu_uuid'])."'";
 			}
-			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_uuid'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['dialplan_uuid'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_extension'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_greet_long'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_greet_short'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_invalid_sound'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_exit_sound'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_confirm_macro'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_confirm_key'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_tts_engine'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_tts_voice'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_confirm_attempts'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_timeout'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_exit_app'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_exit_data'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_inter_digit_timeout'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_max_failures'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_max_timeouts'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_digit_len'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_direct_dial'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_ringback'])."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_cid_prefix'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['ivr_menu_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('ivr_menu_edit')) {
-				echo "<a href='ivr_menu_edit.php?id=".escape($row['ivr_menu_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit') || permission_exists('ivr_menu_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='ivr_menus[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='ivr_menus[$x][uuid]' value='".escape($row['ivr_menu_uuid'])."' />\n";
+				echo "	</td>\n";
 			}
-			if (permission_exists('ivr_menu_delete')) {
-				echo "<a href='ivr_menu_delete.php?id=".escape($row['ivr_menu_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo "	<td>";
+			if (permission_exists('ivr_menu_edit')) {
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['ivr_menu_name'])."</a>";
+			}
+			else {
+				echo escape($row['ivr_menu_name']);
 			}
 			echo "	</td>\n";
+			echo "	<td>".escape($row['ivr_menu_extension'])."&nbsp;</td>\n";
+			if (permission_exists('ivr_menu_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['ivr_menu_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['ivr_menu_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['ivr_menu_description'])."&nbsp;</td>\n";
+			if (permission_exists('ivr_menu_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($ivr_menus);
 
-	echo "<tr>\n";
-	echo "<td colspan='27' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('ivr_menu_add')) {
-		if ($_SESSION['limit']['ivr_menus']['numeric'] == '' || ($_SESSION['limit']['ivr_menus']['numeric'] != '' && $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
-			echo 		"<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-		}
-	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

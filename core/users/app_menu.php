@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Utenti";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer użytkowników";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerencir utiliários";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciar Usuários";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestão de Utilizadores";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Пользователи";

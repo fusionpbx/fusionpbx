@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri di Default";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Standaard instellingen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia domyślne";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações Padrão";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Predefinições";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Настройки по умолчанию";

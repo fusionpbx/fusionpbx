@@ -31,13 +31,13 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (if_group("superadmin")) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+        if (permission_exists('extension_export')) {
+                //access granted
+        }
+        else {
+                echo "access denied";
+                exit;
+        }
 
 //add multi-lingual support
 	$language = new text;

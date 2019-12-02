@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Het openbare belplan wordt gebruikt om de inkomende oproepen naar de juiste bestemming te sturen gebaseerd op een of meer voorwaarden en context";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "O dialplan público é usado para encaminhar chamadas recebidas para destinos com base em uma ou mais condições e contexto.";
 		$apps[$x]['description']['pt-pt'] = "O dialplan público é usado para encaminhar chamadas recebidas para destinos com base em uma ou mais condições e contexto.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";

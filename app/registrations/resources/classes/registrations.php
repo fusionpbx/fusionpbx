@@ -1,22 +1,56 @@
 <?php
+/*
+ FusionPBX
+ Version: MPL 1.1
 
-/**
- * registrations class
- *
- * @method array get
- */
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/
+
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the
+ License.
+
+ The Original Code is FusionPBX
+
+ The Initial Developer of the Original Code is
+ Mark J Crane <markjcrane@fusionpbx.com>
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
+ the Initial Developer. All Rights Reserved.
+
+ Contributor(s):
+ Mark J Crane <markjcrane@fusionpbx.com>
+*/
+
+//define the registrations class
 if (!class_exists('registrations')) {
 	class registrations {
 
 		/**
-		 * Called when the object is created
+		 * declare private variables
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+
+		/**
+		 * called when the object is created
 		 */
 		public function __construct() {
+
+			//assign private variables
+				$this->app_name = 'registrations';
+				$this->app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
+				$this->permission_prefix = 'registration_';
+				$this->list_page = 'registrations.php';
 
 		}
 
 		/**
-		 * Called when there are no references to a particular object
+		 * called when there are no references to a particular object
 		 * unset the variables used in the class
 		 */
 		public function __destruct() {
@@ -204,13 +238,156 @@ if (!class_exists('registrations')) {
 				return $count;
 		}
 
-	}
-}
+		/**
+		 * unregister registrations
+		 */
+		public function unregister($registrations) {
+			$this->switch_api('unregister', $registrations);
+		}
 
-/*
-$obj = new registrations;
-$registrations = $obj->get('all');
-print($registrations);
-*/
+		/**
+		 * provision registrations
+		 */
+		public function provision($registrations) {
+			$this->switch_api('provision', $registrations);
+		}
+
+		/**
+		 * reboot registrations
+		 */
+		public function reboot($registrations) {
+			$this->switch_api('reboot', $registrations);
+		}
+
+		/**
+		 * switch api calls
+		 */
+		private function switch_api($action, $records) {
+			if (permission_exists($this->permission_prefix.'domain') || permission_exists($this->permission_prefix.'all') || if_group('superadmin')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//filter out unchecked registrations
+					if (is_array($records) && @sizeof($records) != 0) {
+						foreach($records as $record) {
+							if (
+								$record['checked'] == 'true' &&
+								$record['user'] != '' &&
+								$record['profile'] != ''
+								) {
+								$registrations[] = $record;
+							}
+						}
+					}
+
+				//process checked registrations
+					if (is_array($registrations) && @sizeof($registrations) != 0) {
+
+						//retrieve sip profiles list
+							$sql = "select sip_profile_name as name from v_sip_profiles ";
+							$database = new database;
+							$sip_profiles = $database->select($sql, null, 'all');
+							unset($sql);
+
+						//create the event socket connection
+							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+						//loop through registrations
+							if ($fp) {
+								foreach ($registrations as $registration) {
+
+									//validate the submitted profile
+										if ($registration['profile'] != '' && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+											foreach ($sip_profiles as $field) {
+												if ($field['name'] == $registration['profile']) {
+													$profile = $registration['profile'];
+													break;
+												}
+											}
+										}
+										else {
+											header('Location: '.$this->list_page);
+											exit;
+										}
+
+									//validate the submitted user
+										if ($registration['user'] != '') {
+											$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $registration['user']);
+										}
+
+									//validate the submitted host
+										if ($registration['host'] != '') {
+											$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $registration['host']);
+										}
+
+									//lookup vendor by agent
+										if ($registration['agent'] != '') {
+											$vendor = device::get_vendor_by_agent($registration['agent']);
+										}
+
+									//prepare the api command
+										if ($profile && $user) {
+											switch ($action) {
+												case 'unregister':
+													$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
+													$response_message = $text['message-registrations_unregistered'];
+													break;
+												case 'provision':
+													if ($vendor && $host) {
+														$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
+														$response_message = $text['message-registrations_provisioned'];
+													}
+													break;
+												case 'reboot':
+													if ($vendor && $host) {
+														$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
+														$response_message = $text['message-registrations_rebooted'];
+													}
+													break;
+												default:
+													header('Location: '.$this->list_page);
+													exit;
+											}
+										}
+
+									//send the api command
+										if ($command && $fp) {
+											$response_api[$registration['user']]['command'] = event_socket_request($fp, "api ".$command);
+											$response_api[$registration['user']]['log'] = event_socket_request($fp, "api log notice ".$command);
+										}
+
+								}
+
+								//set message
+									if (is_array($response_api)) {
+										$message = $response_message;
+										foreach ($response_api as $registration_user => $response) {
+											$message .= "<br>\n<strong>".$registration_user."</strong>: ".$response['command'];
+										}
+										message::add($message, 'positive', '7000');
+									}
+
+							}
+							else {
+								message::add($text['error-event-socket'], 'negative', 5000);
+							}
+
+					}
+
+			}
+		} //method
+
+	} //class
+}
 
 ?>

@@ -29,6 +29,10 @@ include "root.php";
 //define the database class
 	if (!class_exists('database')) {
 		class database {
+
+			/**
+			 * Define the class variables
+			 */
 			public $db;
 			public $driver;
 			public $type;
