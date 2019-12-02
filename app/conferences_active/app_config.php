@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "AJAX gereedschap om in een gespreksruimte de aktieve gebruikers te bekijken en beheren";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Ferramenta AJAX para visualizar e gerenciar todas as chamadas ativas em uma sala de conferência.";
 		$apps[$x]['description']['pt-pt'] = "A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "AJAX утилита для просмотра и управления всеми активными участниками в конференции.";
