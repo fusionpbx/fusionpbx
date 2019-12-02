@@ -313,7 +313,7 @@
 		foreach($dialplans as $row) {
 
 			//get the application id
-			if (is_uuid($row['app_uuid']) {
+			if (is_uuid($row['app_uuid'])) {
 				$app_uuid = $row['app_uuid'];
 			}
 
