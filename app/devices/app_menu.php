@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Equipements";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "התקנים";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Dispositivi";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toestellen";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Telefoons";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Urządzenia";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Telefones IP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Telefones";

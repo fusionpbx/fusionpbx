@@ -1741,6 +1741,9 @@ $text['button-show_all']['ru-ru'] = "Показать все";
 $text['button-show_all']['sv-se'] = "Visa Allt";
 $text['button-show_all']['uk-ua'] = "Показати всі";
 
+$text['button-import']['en-us'] = "Import";
+$text['button-import']['nl-nl'] = "Importeer";
+
 $text['button-generate']['en-us'] = "Generate";
 $text['button-generate']['ar-eg'] = "";
 $text['button-generate']['de-at'] = "Erzeugen"; //copied from de-de
