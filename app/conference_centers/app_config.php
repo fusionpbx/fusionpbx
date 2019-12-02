@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Conferentie centra maakt instellen van een of meer audio en video conferenties mogelijk.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "O centro de conferências permite gerir uma ou mais salas de conferência de audio e vídeo.";
+		$apps[$x]['description']['pt-br'] = "O Centro de Conferências permite gerenciar uma ou mais salas de conferência de audio e vídeo.";
 		$apps[$x]['description']['pt-pt'] = "O centro de conferências permite gerir uma ou mais salas de conferência, audio e vídeo.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
