@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Multiple";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Omroep";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Rozsyłanie rozmów";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Chamada de Distribuição de Anúncio (Broadcast)";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Chamadas Massivas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Chamada em Broadcast";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Массовые вызовы";
