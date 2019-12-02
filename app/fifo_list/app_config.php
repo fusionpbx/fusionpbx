@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Toon alle wachtrijen waar aktieve bellers geplaatst zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Lista todas as filas ativas atualmente com um ou mais chamadores.";
 		$apps[$x]['description']['pt-pt'] = "Liste todas as filas que estão atualmente ativas com um ou mais interlocutores.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
