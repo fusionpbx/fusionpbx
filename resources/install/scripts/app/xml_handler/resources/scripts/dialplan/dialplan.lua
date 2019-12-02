@@ -115,7 +115,7 @@
 					table.insert(xml, [[		<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">]]);
 					table.insert(xml, [[			<condition field="" expression="">]]);
 					table.insert(xml, [[				<action application="set" data="call_direction=inbound" inline="true"/>]]);
-					table.insert(xml, [[				<action application="log" data="[inbound routes] 404 not found ${sip_network_ip}" inline="true"/>]]);
+					table.insert(xml, [[				<action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}" inline="true"/>]]);
 					table.insert(xml, [[			</condition>]]);
 					table.insert(xml, [[		</extension>]]);
 				end
