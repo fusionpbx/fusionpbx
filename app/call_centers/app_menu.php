@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Call-Centers";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Call Center ";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Centro de Chamadas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
