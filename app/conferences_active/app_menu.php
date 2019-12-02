@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Conferenze attive";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve conferenties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne rozmowy konferencyjne";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferência ativa";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferências Ativas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias Activas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференции Активные";
