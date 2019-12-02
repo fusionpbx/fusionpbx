@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Wachtrijen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kolejki";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Filas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Очереди";
