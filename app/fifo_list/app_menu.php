@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code Attive";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve wachtrijen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne kolejki";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas ativas";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas Ativas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Filas Activas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Активные Очереди";
