@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Methode om direct meerdere parallele oproepen naar toestellen, IVR menu, Conferentie, of een ander nummer te maken.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";
+		$apps[$x]['description']['pt-br'] = "Programação para realizar imediatamente várias chamadas para uma extensão, um menu de URA, Sala de Conferência ou qualquer outro número.";
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
