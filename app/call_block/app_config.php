@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Gereedschap om inkommende nummers te blokkeren.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números que entram.";
+		$apps[$x]['description']['pt-br'] = "Uma ferramenta para bloquear números de chamadores.";
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
