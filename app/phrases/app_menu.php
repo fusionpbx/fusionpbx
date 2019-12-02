@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Frasi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitspraken";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zwroty";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gravações";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Frases";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gravações";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Фразы";
