@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Kontacten";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Fornece um local para armazenar informações de contato para indivíduos e organizações.";
 		$apps[$x]['description']['pt-pt'] = "Fornece um local para armazenar informações de contato para indivíduos e organizações.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
