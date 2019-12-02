@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Blocco Chiamate";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep blokkade";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Blokowanie rozmów";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Bloqueio de chamadas";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Bloqueio de Chamadas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Bloqueio de Chamadas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Blocare apel";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Черный список";
