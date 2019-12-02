@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Emails";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "E-mails";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "E-maile";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Emails";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Logs de Email";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Emails";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Электронная почта";
