@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Sistema";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Systeem Status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Stan systemu";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do sistema";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do Sistema";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Estado do Sistema";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Состояние cистемы";
