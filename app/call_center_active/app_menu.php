@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Call Center Attivi";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Actieve Call-Center";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywność w Call Center ";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center ativos";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center Ativo";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Centro de Chamadas Activo";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Активные Колл-центры";
