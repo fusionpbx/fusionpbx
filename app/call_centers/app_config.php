@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Wachtrijen voor beheer van inkomede gesprekken en routering naar beschikbare agenten.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "As filas servem para gerenciar as chamadas que entram e encaminhar as mesmas para os agentes disponíveis.";
+		$apps[$x]['description']['pt-br'] = "Filas para gerenciar as chamadas entrantes e encaminhar para os agentes disponíveis.";
 		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes dispon%uFFFDveis.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
