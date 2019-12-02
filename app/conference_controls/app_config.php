@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Conferentie besturing maakt het mogelijk om functies aan cijfers toe te wijzen zodat een verbinding op stil of spreken gezet kan worden. of andere acties tijden een conferentie zitting.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Gerencia controle de conferência. Atribui dígitos à ações. Pode ser usado para silenciar, tirar do silêncio, ou executar outras ações durante chamadas em conferência.";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
