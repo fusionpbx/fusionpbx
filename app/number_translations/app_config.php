@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "Gestisci mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['nl-nl'] = "Beheer mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['pl-pl'] = "Zarządzaj mod_translate";  //translation provided by Google Translate
-		$apps[$x]['description']['pt-br'] = "Gerenciar mod_translate";  //translation provided by Google Translate
+		$apps[$x]['description']['pt-br'] = "Gerenciar traduções numéricas (mod_translate)";  //translation provided by Google Translate
 		$apps[$x]['description']['pt-pt'] = "Gerenciar mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['ro-ro'] = "Gestionați mod_translate";  //translation provided by Google Translate
 		$apps[$x]['description']['ru-ru'] = "Управление mod_translate";
