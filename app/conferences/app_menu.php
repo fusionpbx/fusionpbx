@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Conferenze";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferenties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Conferências";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Конференции";
