@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Definieer variabelen die door de Pbx, voorzieningen, en andere onderdelen gebruikt worden";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Gerenciar variáveis que são usadas pelo softwswitch, provisionamento e outros.";
 		$apps[$x]['description']['pt-pt'] = "Definir variáveis que são utilizadas pelo softswitch, aprovisionamento, e outros.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Определение переменной делает возможным управление FreeSwitch, его инициализации, и многое другое.";
