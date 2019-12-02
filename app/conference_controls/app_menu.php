@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Controlli Conferenza";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie besturing";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = 'Controles de conferência';
+	$apps[$x]['menu'][$y]['title']['pt-br'] = 'Controles de Conferência';
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = 'Конференции Управление';
