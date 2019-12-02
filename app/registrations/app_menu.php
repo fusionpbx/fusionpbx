@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Registrazioni SIP";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Registraties";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Rejestracje";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Registros";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Registros SIP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Registos";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Регистрации SIP";
