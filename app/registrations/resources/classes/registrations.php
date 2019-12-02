@@ -242,27 +242,27 @@ if (!class_exists('registrations')) {
 		 * unregister registrations
 		 */
 		public function unregister($registrations) {
-			$this->switch('unregister', $registrations);
+			$this->switch_api('unregister', $registrations);
 		}
 
 		/**
 		 * provision registrations
 		 */
 		public function provision($registrations) {
-			$this->switch('provision', $registrations);
+			$this->switch_api('provision', $registrations);
 		}
 
 		/**
 		 * reboot registrations
 		 */
 		public function reboot($registrations) {
-			$this->switch('reboot', $registrations);
+			$this->switch_api('reboot', $registrations);
 		}
 
 		/**
 		 * switch api calls
 		 */
-		private function switch($action, $records) {
+		private function switch_api($action, $records) {
 			if (permission_exists($this->permission_prefix.'domain') || permission_exists($this->permission_prefix.'all') || if_group('superadmin')) {
 
 				//add multi-lingual support
