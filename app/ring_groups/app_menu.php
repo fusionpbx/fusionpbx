@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gruppi di Squillo";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bel groepen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Grupy odbiorców rozmów.";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Grupos de chamada";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Grupos de Toque";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Grupos de Ring";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Группы вызовов";
