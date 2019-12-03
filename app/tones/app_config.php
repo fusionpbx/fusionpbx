@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "Gestione Toni";
 		$apps[$x]['description']['nl-nl'] = "Beheer geluiden";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Tons";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Менеджер Тонов";
