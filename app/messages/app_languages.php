@@ -14,7 +14,7 @@
 		$text['title-messages']['it-it'] = '';
 		$text['title-messages']['nl-nl'] = 'Boodschappen';
 		$text['title-messages']['pl-pl'] = '';
-		$text['title-messages']['pt-br'] = '';
+		$text['title-messages']['pt-br'] = 'Mensagens';
 		$text['title-messages']['pt-pt'] = '';
 		$text['title-messages']['ro-ro'] = '';
 		$text['title-messages']['ru-ru'] = '';
@@ -34,7 +34,7 @@
 		$text['title-message']['it-it'] = '';
 		$text['title-message']['nl-nl'] = 'Boodschap';
 		$text['title-message']['pl-pl'] = '';
-		$text['title-message']['pt-br'] = '';
+		$text['title-message']['pt-br'] = 'Mensagem';
 		$text['title-message']['pt-pt'] = '';
 		$text['title-message']['ro-ro'] = '';
 		$text['title-message']['ru-ru'] = '';
@@ -54,7 +54,7 @@
 		$text['title_description-message']['it-it'] = '';
 		$text['title_description-message']['nl-nl'] = '';
 		$text['title_description-message']['pl-pl'] = '';
-		$text['title_description-message']['pt-br'] = '';
+		$text['title_description-message']['pt-br'] = 'Descrição da Mensagem';
 		$text['title_description-message']['pt-pt'] = '';
 		$text['title_description-message']['ro-ro'] = '';
 		$text['title_description-message']['ru-ru'] = '';
@@ -74,7 +74,7 @@
 		$text['title-message_log']['it-it'] = '';
 		$text['title-message_log']['nl-nl'] = 'Boodschap log';
 		$text['title-message_log']['pl-pl'] = '';
-		$text['title-message_log']['pt-br'] = '';
+		$text['title-message_log']['pt-br'] = 'Log das Mensagens';
 		$text['title-message_log']['pt-pt'] = '';
 		$text['title-message_log']['ro-ro'] = '';
 		$text['title-message_log']['ru-ru'] = '';
@@ -94,7 +94,7 @@
 		$text['label-user_uuid']['it-it'] = '';
 		$text['label-user_uuid']['nl-nl'] = 'Gebruiker';
 		$text['label-user_uuid']['pl-pl'] = '';
-		$text['label-user_uuid']['pt-br'] = '';
+		$text['label-user_uuid']['pt-br'] = 'Usuário';
 		$text['label-user_uuid']['pt-pt'] = '';
 		$text['label-user_uuid']['ro-ro'] = '';
 		$text['label-user_uuid']['ru-ru'] = '';
@@ -114,7 +114,7 @@
 		$text['description-user_uuid']['it-it'] = '';
 		$text['description-user_uuid']['nl-nl'] = 'Voer het toestel uuid in.';
 		$text['description-user_uuid']['pl-pl'] = '';
-		$text['description-user_uuid']['pt-br'] = '';
+		$text['description-user_uuid']['pt-br'] = 'Entre com o UUID do ramal.';
 		$text['description-user_uuid']['pt-pt'] = '';
 		$text['description-user_uuid']['ro-ro'] = '';
 		$text['description-user_uuid']['ru-ru'] = '';
@@ -134,7 +134,7 @@
 		$text['label-message_type']['it-it'] = '';
 		$text['label-message_type']['nl-nl'] = 'Type';
 		$text['label-message_type']['pl-pl'] = '';
-		$text['label-message_type']['pt-br'] = '';
+		$text['label-message_type']['pt-br'] = 'Tipo';
 		$text['label-message_type']['pt-pt'] = '';
 		$text['label-message_type']['ro-ro'] = '';
 		$text['label-message_type']['ru-ru'] = '';
@@ -154,7 +154,7 @@
 		$text['description-message_type']['it-it'] = '';
 		$text['description-message_type']['nl-nl'] = 'Voer boodschap type in.';
 		$text['description-message_type']['pl-pl'] = '';
-		$text['description-message_type']['pt-br'] = '';
+		$text['description-message_type']['pt-br'] = 'Entre com o tipo da mensagem.';
 		$text['description-message_type']['pt-pt'] = '';
 		$text['description-message_type']['ro-ro'] = '';
 		$text['description-message_type']['ru-ru'] = '';
@@ -173,7 +173,7 @@
 		$text['label-sms']['it-it'] = '';
 		$text['label-sms']['nl-nl'] = 'SMS';
 		$text['label-sms']['pl-pl'] = '';
-		$text['label-sms']['pt-br'] = '';
+		$text['label-sms']['pt-br'] = 'SMS';
 		$text['label-sms']['pt-pt'] = '';
 		$text['label-sms']['ro-ro'] = '';
 		$text['label-sms']['ru-ru'] = '';
@@ -192,7 +192,7 @@
 		$text['label-mms']['it-it'] = '';
 		$text['label-mms']['nl-nl'] = 'MMS';
 		$text['label-mms']['pl-pl'] = '';
-		$text['label-mms']['pt-br'] = '';
+		$text['label-mms']['pt-br'] = 'MMS';
 		$text['label-mms']['pt-pt'] = '';
 		$text['label-mms']['ro-ro'] = '';
 		$text['label-mms']['ru-ru'] = '';
@@ -211,7 +211,7 @@
 		$text['label-sms']['it-it'] = '';
 		$text['label-sms']['nl-nl'] = 'SMS';
 		$text['label-sms']['pl-pl'] = '';
-		$text['label-sms']['pt-br'] = '';
+		$text['label-sms']['pt-br'] = 'SMS';
 		$text['label-sms']['pt-pt'] = '';
 		$text['label-sms']['ro-ro'] = '';
 		$text['label-sms']['ru-ru'] = '';
@@ -230,7 +230,7 @@
 		$text['label-sip']['it-it'] = '';
 		$text['label-sip']['nl-nl'] = 'SIP';
 		$text['label-sip']['pl-pl'] = '';
-		$text['label-sip']['pt-br'] = '';
+		$text['label-sip']['pt-br'] = 'SIP';
 		$text['label-sip']['pt-pt'] = '';
 		$text['label-sip']['ro-ro'] = '';
 		$text['label-sip']['ru-ru'] = '';
@@ -249,7 +249,7 @@
 		$text['label-chat']['it-it'] = '';
 		$text['label-chat']['nl-nl'] = 'Chat';
 		$text['label-chat']['pl-pl'] = '';
-		$text['label-chat']['pt-br'] = '';
+		$text['label-chat']['pt-br'] = 'Chat';
 		$text['label-chat']['pt-pt'] = '';
 		$text['label-chat']['ro-ro'] = '';
 		$text['label-chat']['ru-ru'] = '';
@@ -268,7 +268,7 @@
 		$text['label-message']['it-it'] = '';
 		$text['label-message']['nl-nl'] = 'Boodschap';
 		$text['label-message']['pl-pl'] = '';
-		$text['label-message']['pt-br'] = '';
+		$text['label-message']['pt-br'] = 'Mensagem';
 		$text['label-message']['pt-pt'] = '';
 		$text['label-message']['ro-ro'] = '';
 		$text['label-message']['ru-ru'] = '';
@@ -287,7 +287,7 @@
 		$text['label-messages']['it-it'] = '';
 		$text['label-messages']['nl-nl'] = 'Boodschappen';
 		$text['label-messages']['pl-pl'] = '';
-		$text['label-messages']['pt-br'] = '';
+		$text['label-messages']['pt-br'] = 'Mensagens';
 		$text['label-messages']['pt-pt'] = '';
 		$text['label-messages']['ro-ro'] = '';
 		$text['label-messages']['ru-ru'] = '';
@@ -307,7 +307,7 @@
 		$text['label-message_direction']['it-it'] = '';
 		$text['label-message_direction']['nl-nl'] = 'Richting';
 		$text['label-message_direction']['pl-pl'] = '';
-		$text['label-message_direction']['pt-br'] = '';
+		$text['label-message_direction']['pt-br'] = 'Direção';
 		$text['label-message_direction']['pt-pt'] = '';
 		$text['label-message_direction']['ro-ro'] = '';
 		$text['label-message_direction']['ru-ru'] = '';
@@ -327,7 +327,7 @@
 		$text['description-message_direction']['it-it'] = '';
 		$text['description-message_direction']['nl-nl'] = 'Voer de boodschap richting in.';
 		$text['description-message_direction']['pl-pl'] = '';
-		$text['description-message_direction']['pt-br'] = '';
+		$text['description-message_direction']['pt-br'] = 'Entre com a direção da mensagem';
 		$text['description-message_direction']['pt-pt'] = '';
 		$text['description-message_direction']['ro-ro'] = '';
 		$text['description-message_direction']['ru-ru'] = '';
@@ -346,7 +346,7 @@
 		$text['label-outbound']['it-it'] = '';
 		$text['label-outbound']['nl-nl'] = 'Uitgaand';
 		$text['label-outbound']['pl-pl'] = '';
-		$text['label-outbound']['pt-br'] = '';
+		$text['label-outbound']['pt-br'] = 'Saída';
 		$text['label-outbound']['pt-pt'] = '';
 		$text['label-outbound']['ro-ro'] = '';
 		$text['label-outbound']['ru-ru'] = '';
@@ -365,7 +365,7 @@
 		$text['label-inbound']['it-it'] = '';
 		$text['label-inbound']['nl-nl'] = 'Inkomend';
 		$text['label-inbound']['pl-pl'] = '';
-		$text['label-inbound']['pt-br'] = '';
+		$text['label-inbound']['pt-br'] = 'Entrada';
 		$text['label-inbound']['pt-pt'] = '';
 		$text['label-inbound']['ro-ro'] = '';
 		$text['label-inbound']['ru-ru'] = '';
@@ -384,7 +384,7 @@
 		$text['label-new_message']['it-it'] = '';
 		$text['label-new_message']['nl-nl'] = 'Nieuwe boodschap';
 		$text['label-new_message']['pl-pl'] = '';
-		$text['label-new_message']['pt-br'] = '';
+		$text['label-new_message']['pt-br'] = 'Nova Mensagem';
 		$text['label-new_message']['pt-pt'] = '';
 		$text['label-new_message']['ro-ro'] = '';
 		$text['label-new_message']['ru-ru'] = '';
@@ -403,7 +403,7 @@
 		$text['label-log']['it-it'] = '';
 		$text['label-log']['nl-nl'] = 'Log';
 		$text['label-log']['pl-pl'] = '';
-		$text['label-log']['pt-br'] = '';
+		$text['label-log']['pt-br'] = 'Log';
 		$text['label-log']['pt-pt'] = '';
 		$text['label-log']['ro-ro'] = '';
 		$text['label-log']['ru-ru'] = '';
@@ -422,7 +422,7 @@
 		$text['label-contacts']['it-it'] = '';
 		$text['label-contacts']['nl-nl'] = 'Kontacten';
 		$text['label-contacts']['pl-pl'] = '';
-		$text['label-contacts']['pt-br'] = '';
+		$text['label-contacts']['pt-br'] = 'Contatos';
 		$text['label-contacts']['pt-pt'] = '';
 		$text['label-contacts']['ro-ro'] = '';
 		$text['label-contacts']['ru-ru'] = '';
@@ -442,7 +442,7 @@
 		$text['label-message_date']['it-it'] = '';
 		$text['label-message_date']['nl-nl'] = 'Datum';
 		$text['label-message_date']['pl-pl'] = '';
-		$text['label-message_date']['pt-br'] = '';
+		$text['label-message_date']['pt-br'] = 'Data';
 		$text['label-message_date']['pt-pt'] = '';
 		$text['label-message_date']['ro-ro'] = '';
 		$text['label-message_date']['ru-ru'] = '';
@@ -462,7 +462,7 @@
 		$text['description-message_date']['it-it'] = '';
 		$text['description-message_date']['nl-nl'] = 'Voer een boodschapdatum in.';
 		$text['description-message_date']['pl-pl'] = '';
-		$text['description-message_date']['pt-br'] = '';
+		$text['description-message_date']['pt-br'] = 'Entre com a data da mensagem.';
 		$text['description-message_date']['pt-pt'] = '';
 		$text['description-message_date']['ro-ro'] = '';
 		$text['description-message_date']['ru-ru'] = '';
@@ -482,7 +482,7 @@
 		$text['label-message_from']['it-it'] = '';
 		$text['label-message_from']['nl-nl'] = 'Van';
 		$text['label-message_from']['pl-pl'] = '';
-		$text['label-message_from']['pt-br'] = '';
+		$text['label-message_from']['pt-br'] = 'De';
 		$text['label-message_from']['pt-pt'] = '';
 		$text['label-message_from']['ro-ro'] = '';
 		$text['label-message_from']['ru-ru'] = '';
@@ -502,7 +502,7 @@
 		$text['description-message_from']['it-it'] = '';
 		$text['description-message_from']['nl-nl'] = 'Voer boodschap van in.';
 		$text['description-message_from']['pl-pl'] = '';
-		$text['description-message_from']['pt-br'] = '';
+		$text['description-message_from']['pt-br'] = 'Entre com o remetente da mensagem.';
 		$text['description-message_from']['pt-pt'] = '';
 		$text['description-message_from']['ro-ro'] = '';
 		$text['description-message_from']['ru-ru'] = '';
@@ -522,7 +522,7 @@
 		$text['label-message_to']['it-it'] = '';
 		$text['label-message_to']['nl-nl'] = 'Aan';
 		$text['label-message_to']['pl-pl'] = '';
-		$text['label-message_to']['pt-br'] = '';
+		$text['label-message_to']['pt-br'] = 'Para';
 		$text['label-message_to']['pt-pt'] = '';
 		$text['label-message_to']['ro-ro'] = '';
 		$text['label-message_to']['ru-ru'] = '';
@@ -542,7 +542,7 @@
 		$text['description-message_to']['it-it'] = '';
 		$text['description-message_to']['nl-nl'] = 'Voer de boodschap aan in.';
 		$text['description-message_to']['pl-pl'] = '';
-		$text['description-message_to']['pt-br'] = '';
+		$text['description-message_to']['pt-br'] = 'Entre com o destinatário da mensagem.';
 		$text['description-message_to']['pt-pt'] = '';
 		$text['description-message_to']['ro-ro'] = '';
 		$text['description-message_to']['ru-ru'] = '';
@@ -562,7 +562,7 @@
 		$text['label-message_text']['it-it'] = '';
 		$text['label-message_text']['nl-nl'] = 'Tekst';
 		$text['label-message_text']['pl-pl'] = '';
-		$text['label-message_text']['pt-br'] = '';
+		$text['label-message_text']['pt-br'] = 'Texto';
 		$text['label-message_text']['pt-pt'] = '';
 		$text['label-message_text']['ro-ro'] = '';
 		$text['label-message_text']['ru-ru'] = '';
@@ -582,7 +582,7 @@
 		$text['label-message_media']['it-it'] = '';
 		$text['label-message_media']['nl-nl'] = 'Media';
 		$text['label-message_media']['pl-pl'] = '';
-		$text['label-message_media']['pt-br'] = '';
+		$text['label-message_media']['pt-br'] = 'Mídia';
 		$text['label-message_media']['pt-pt'] = '';
 		$text['label-message_media']['ro-ro'] = '';
 		$text['label-message_media']['ru-ru'] = '';
@@ -602,7 +602,7 @@
 		$text['description-message_text']['it-it'] = '';
 		$text['description-message_text']['nl-nl'] = 'Voer de boodschap tekst in.';
 		$text['description-message_text']['pl-pl'] = '';
-		$text['description-message_text']['pt-br'] = '';
+		$text['description-message_text']['pt-br'] = 'Entre com o texto da mensagem.';
 		$text['description-message_text']['pt-pt'] = '';
 		$text['description-message_text']['ro-ro'] = '';
 		$text['description-message_text']['ru-ru'] = '';
@@ -622,7 +622,7 @@
 		$text['label-message_media_type']['it-it'] = '';
 		$text['label-message_media_type']['nl-nl'] = 'Media Type';
 		$text['label-message_media_type']['pl-pl'] = '';
-		$text['label-message_media_type']['pt-br'] = '';
+		$text['label-message_media_type']['pt-br'] = 'Tipo de mídia';
 		$text['label-message_media_type']['pt-pt'] = '';
 		$text['label-message_media_type']['ro-ro'] = '';
 		$text['label-message_media_type']['ru-ru'] = '';
@@ -642,7 +642,7 @@
 		$text['description-message_media_type']['it-it'] = '';
 		$text['description-message_media_type']['nl-nl'] = 'Voer de boodschap media type in.';
 		$text['description-message_media_type']['pl-pl'] = '';
-		$text['description-message_media_type']['pt-br'] = '';
+		$text['description-message_media_type']['pt-br'] = 'Entre com o tipo de mídia da mensagem.';
 		$text['description-message_media_type']['pt-pt'] = '';
 		$text['description-message_media_type']['ro-ro'] = '';
 		$text['description-message_media_type']['ru-ru'] = '';
@@ -662,7 +662,7 @@
 		$text['label-message_media_url']['it-it'] = '';
 		$text['label-message_media_url']['nl-nl'] = 'Media URL';
 		$text['label-message_media_url']['pl-pl'] = '';
-		$text['label-message_media_url']['pt-br'] = '';
+		$text['label-message_media_url']['pt-br'] = 'URL de Mídia';
 		$text['label-message_media_url']['pt-pt'] = '';
 		$text['label-message_media_url']['ro-ro'] = '';
 		$text['label-message_media_url']['ru-ru'] = '';
@@ -682,7 +682,7 @@
 		$text['description-message_media_url']['it-it'] = '';
 		$text['description-message_media_url']['nl-nl'] = 'Voer de boodschap media url in.';
 		$text['description-message_media_url']['pl-pl'] = '';
-		$text['description-message_media_url']['pt-br'] = '';
+		$text['description-message_media_url']['pt-br'] = 'Entre com a mensagem da URL de mídia.';
 		$text['description-message_media_url']['pt-pt'] = '';
 		$text['description-message_media_url']['ro-ro'] = '';
 		$text['description-message_media_url']['ru-ru'] = '';
@@ -702,7 +702,7 @@
 		$text['label-message_media_content']['it-it'] = '';
 		$text['label-message_media_content']['nl-nl'] = 'Boodschap Media inhoud.';
 		$text['label-message_media_content']['pl-pl'] = '';
-		$text['label-message_media_content']['pt-br'] = '';
+		$text['label-message_media_content']['pt-br'] = 'Conteúdo da mensagem de mídia';
 		$text['label-message_media_content']['pt-pt'] = '';
 		$text['label-message_media_content']['ro-ro'] = '';
 		$text['label-message_media_content']['ru-ru'] = '';
@@ -722,7 +722,7 @@
 		$text['description-message_media_content']['it-it'] = '';
 		$text['description-message_media_content']['nl-nl'] = 'Voer de boodschap media inhoud in.';
 		$text['description-message_media_content']['pl-pl'] = '';
-		$text['description-message_media_content']['pt-br'] = '';
+		$text['description-message_media_content']['pt-br'] = 'Entre com o conteúdo da mensagem de mídia';
 		$text['description-message_media_content']['pt-pt'] = '';
 		$text['description-message_media_content']['ro-ro'] = '';
 		$text['description-message_media_content']['ru-ru'] = '';
@@ -742,7 +742,7 @@
 		$text['label-message_json']['it-it'] = '';
 		$text['label-message_json']['nl-nl'] = 'JSON';
 		$text['label-message_json']['pl-pl'] = '';
-		$text['label-message_json']['pt-br'] = '';
+		$text['label-message_json']['pt-br'] = 'JSON';
 		$text['label-message_json']['pt-pt'] = '';
 		$text['label-message_json']['ro-ro'] = '';
 		$text['label-message_json']['ru-ru'] = '';
@@ -782,7 +782,7 @@
 		$text['label-refresh_pause']['it-it'] = "Pausa";
 		$text['label-refresh_pause']['nl-nl'] = "Ververs pause";
 		$text['label-refresh_pause']['pl-pl'] = "Pauzuj odÅ›wieÅ¼anie";
-		$text['label-refresh_pause']['pt-br'] = "Pausar atualizaÃ§Ã£o";
+		$text['label-refresh_pause']['pt-br'] = "Pausar atualização";
 		$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
 		$text['label-refresh_pause']['ro-ro'] = "";
 		$text['label-refresh_pause']['ru-ru'] = "Приостановить обновление";
@@ -802,7 +802,7 @@
 		$text['label-refresh_enable']['it-it'] = "Riprendi";
 		$text['label-refresh_enable']['nl-nl'] = "Zet ververs aan";
 		$text['label-refresh_enable']['pl-pl'] = "WÅ‚Ä…cz odÅ›wieÅ¼anie";
-		$text['label-refresh_enable']['pt-br'] = "Habilitar atualizaÃ§Ã£o";
+		$text['label-refresh_enable']['pt-br'] = "Ativar atualização";
 		$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
 		$text['label-refresh_enable']['ro-ro'] = "";
 		$text['label-refresh_enable']['ru-ru'] = "Включить обновление";
@@ -822,7 +822,7 @@
 		$text['description-enter_response']['it-it'] = '';
 		$text['description-enter_response']['nl-nl'] = 'Voer antwoord in...';
 		$text['description-enter_response']['pl-pl'] = '';
-		$text['description-enter_response']['pt-br'] = '';
+		$text['description-enter_response']['pt-br'] = 'Entre com a resposta...';
 		$text['description-enter_response']['pt-pt'] = '';
 		$text['description-enter_response']['ro-ro'] = '';
 		$text['description-enter_response']['ru-ru'] = '';
@@ -842,7 +842,7 @@
 		$text['label-ctrl_enter']['it-it'] = '';
 		$text['label-ctrl_enter']['nl-nl'] = 'Ctrl + Enter';
 		$text['label-ctrl_enter']['pl-pl'] = '';
-		$text['label-ctrl_enter']['pt-br'] = '';
+		$text['label-ctrl_enter']['pt-br'] = 'Ctrl + Enter';
 		$text['label-ctrl_enter']['pt-pt'] = '';
 		$text['label-ctrl_enter']['ro-ro'] = '';
 		$text['label-ctrl_enter']['ru-ru'] = '';
@@ -862,7 +862,7 @@
 		$text['button-close']['it-it'] = '';
 		$text['button-close']['nl-nl'] = 'Sluiten';
 		$text['button-close']['pl-pl'] = '';
-		$text['button-close']['pt-br'] = '';
+		$text['button-close']['pt-br'] = 'Fechar';
 		$text['button-close']['pt-pt'] = '';
 		$text['button-close']['ro-ro'] = '';
 		$text['button-close']['ru-ru'] = '';
@@ -882,7 +882,7 @@
 		$text['label-view_contact']['it-it'] = '';
 		$text['label-view_contact']['nl-nl'] = 'Toon kontact';
 		$text['label-view_contact']['pl-pl'] = '';
-		$text['label-view_contact']['pt-br'] = '';
+		$text['label-view_contact']['pt-br'] = 'Ver contato';
 		$text['label-view_contact']['pt-pt'] = '';
 		$text['label-view_contact']['ro-ro'] = '';
 		$text['label-view_contact']['ru-ru'] = '';
@@ -902,7 +902,7 @@
 		$text['label-send_email']['it-it'] = '';
 		$text['label-send_email']['nl-nl'] = 'Zend E-mail';
 		$text['label-send_email']['pl-pl'] = '';
-		$text['label-send_email']['pt-br'] = '';
+		$text['label-send_email']['pt-br'] = 'Enviar Email';
 		$text['label-send_email']['pt-pt'] = '';
 		$text['label-send_email']['ro-ro'] = '';
 		$text['label-send_email']['ru-ru'] = '';
