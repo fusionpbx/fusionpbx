@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Gerenciador de saudações de correio de voz para ramais.";
 		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Менеджер приветствий Голосовой почты для Внутренних Номеров.";
