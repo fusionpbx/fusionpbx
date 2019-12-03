@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Istradamento Chiamate";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep routering";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "roteamento de chamadas";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Roteamento de Chamadas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Roteamento de chamadas";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация вызовов";
