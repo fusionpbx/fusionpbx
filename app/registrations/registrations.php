@@ -209,13 +209,13 @@
 				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
 				if ($_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
-					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
+					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
 				}
 				if ($_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
-					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')",'style'=>'margin-left: 0; margin-right: 0;']);
+					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
 				}
 				if ($_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
-					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
+					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
 				}
 				echo 	"</td>\n";
 				echo "</tr>\n";
