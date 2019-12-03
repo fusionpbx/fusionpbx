@@ -161,11 +161,12 @@
 			$database->save($array);
 			$message = $database->message;
 
-			//get the hostname
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_cmd = "switchname";
-				$sip_profile_hostname = event_socket_request($fp, 'api '.$switch_cmd);
+		//get the hostname
+			if ($sip_profile_hostname == '') {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$sip_profile_hostname = event_socket_request($fp, 'api switchname');
+				}
 			}
 
 		//revoke temporary permissions
