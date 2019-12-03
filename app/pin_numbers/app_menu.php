@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Numeri PIN";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "PIN codes";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Códigos PIN";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = 'PIN коды';
