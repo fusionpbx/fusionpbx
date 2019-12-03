@@ -35,6 +35,7 @@ if (!class_exists('registrations')) {
 		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
+		public $show;
 
 		/**
 		 * called when the object is created
@@ -46,6 +47,7 @@ if (!class_exists('registrations')) {
 				$this->app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
 				$this->permission_prefix = 'registration_';
 				$this->list_page = 'registrations.php';
+				$this->show = 'local';
 
 		}
 
@@ -163,7 +165,7 @@ if (!class_exists('registrations')) {
 
 									//remove unrelated domains
 										if (count($_SESSION["domains"]) > 1) {
-											if (!(permission_exists('registration_all') && $profile == "all")) {
+											if (!permission_exists('registration_all') || $this->show != 'all') {
 												if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
 												else if ($user_array[1] == $_SESSION['domain_name']) {}
 												else {
