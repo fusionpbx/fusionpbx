@@ -492,7 +492,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 								$pattern = '/'.$sub_row['dialplan_detail_data'].'/';
 								preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
 								if (count($matches) == 0) {
-										$condition_match[] = 'false';
+									$condition_match[] = 'false';
 								} 
 								else {
 									$condition_match[] = 'true';
