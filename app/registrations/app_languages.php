@@ -620,5 +620,5 @@ $text['confirm-reboot']['ro-ro'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['ru-ru'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['sv-se'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['uk-ua'] = "Do you really want to REBOOT these?";
-
 ?>
+

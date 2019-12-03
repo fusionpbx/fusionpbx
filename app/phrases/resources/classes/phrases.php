@@ -89,17 +89,17 @@ if (!class_exists('phrases')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//filter out unchecked phrases, build where clause for below
-							foreach($records as $record) {
+							foreach ($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//get phrase languages
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, phrase_language as lang from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -140,6 +140,9 @@ if (!class_exists('phrases')) {
 								//revoke temporary permissions
 									$p->delete('phrase_details_delete', 'temp');
 
+								//save the xml
+									save_phrases_xml();
+
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
@@ -179,13 +182,13 @@ if (!class_exists('phrases')) {
 						//get current toggle state and language
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, phrase_language as lang from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -215,6 +218,9 @@ if (!class_exists('phrases')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//save the xml
+									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
@@ -256,17 +262,17 @@ if (!class_exists('phrases')) {
 						//get checked records
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 								//primary table
 									$sql = "select * from v_".$this->table." ";
 									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
@@ -327,6 +333,9 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_detail_add', 'temp');
+
+								//save the xml
+									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);

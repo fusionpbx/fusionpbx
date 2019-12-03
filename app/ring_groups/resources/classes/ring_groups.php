@@ -17,22 +17,16 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2010-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the ivr_menu class
-if (!class_exists('ivr_menu')) {
-	class ivr_menu {
-
-		/**
-		 * declare public variables
-		 */
-		public $domain_uuid;
-		public $ivr_menu_uuid;
+//define the ring groups class
+if (!class_exists('ring_groups')) {
+	class ring_groups {
 
 		/**
 		 * declare private variables
@@ -52,13 +46,13 @@ if (!class_exists('ivr_menu')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'ivr_menus';
-				$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-				$this->permission_prefix = 'ivr_menu_';
-				$this->list_page = 'ivr_menus.php';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
-				$this->toggle_field = 'ivr_menu_enabled';
+				$this->app_name = 'ring_groups';
+				$this->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+				$this->permission_prefix = 'ring_group_';
+				$this->list_page = 'ring_groups.php';
+				$this->table = 'ring_groups';
+				$this->uuid_prefix = 'ring_group_';
+				$this->toggle_field = 'ring_group_enabled';
 				$this->toggle_values = ['true','false'];
 
 		}
@@ -71,21 +65,6 @@ if (!class_exists('ivr_menu')) {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
 			}
-		}
-
-		public function find() {
-			$sql = "select * from v_ivr_menus ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			if (isset($this->ivr_menu_uuid)) {
-				$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
-				$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
-			}
-			if (isset($this->order_by)) {
-				$sql .= $this->order_by;
-			}
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$database = new database;
-			return $database->select($sql, $parameters, 'all');
 		}
 
 		/**
@@ -109,25 +88,25 @@ if (!class_exists('ivr_menu')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//filter out unchecked ivr menus, build where clause for below
+						//filter out unchecked ring groups, build where clause for below
 							foreach ($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
-						//get necessary ivr menu details
+						//get necessary ring group details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ivr_menu_context from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid) ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ring_group_context from v_".$this->table." ";
+								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-										$ivr_menu_contexts[] = $row['ivr_menu_context'];
+										$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$ring_group_contexts[] = $row['ring_group_context'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -135,10 +114,15 @@ if (!class_exists('ivr_menu')) {
 
 						//build the delete array
 							$x = 0;
-							foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ivr_menu_uuid;
-								$array['ivr_menu_options'][$x]['ivr_menu_uuid'] = $ivr_menu_uuid;
-								$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
+							foreach ($ring_groups as $ring_group_uuid => $ring_group) {
+								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
+								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['ring_group_users'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
+								$array['ring_group_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['ring_group_destinations'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
+								$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['dialplans'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
+								$array['dialplan_details'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
 								$x++;
 							}
 
@@ -147,8 +131,10 @@ if (!class_exists('ivr_menu')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('ivr_menu_options_delete', 'temp');
+									$p->add('ring_group_user_delete', 'temp');
+									$p->add('ring_group_destination_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
+									$p->add('dialplan_detail_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -158,25 +144,30 @@ if (!class_exists('ivr_menu')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('ivr_menu_options_delete', 'temp');
+									$p->delete('ring_group_user_delete', 'temp');
+									$p->delete('ring_group_destination_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
+									$p->delete('dialplan_detail_delete', 'temp');
 
-								//synchronize the xml config
+								//save the xml
 									save_dialplan_xml();
 
+								//apply settings reminder
+									$_SESSION["reload_xml"] = true;
+
 								//clear the cache
-									if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
-										$ivr_menu_contexts = array_unique($ivr_menu_contexts);
+									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+										$ring_group_contexts = array_unique($ring_group_contexts);
 										$cache = new cache;
-										foreach ($ivr_menu_contexts as $ivr_menu_context) {
-											$cache->delete("dialplan:".$ivr_menu_context);
+										foreach ($ring_group_contexts as $ring_group_context) {
+											$cache->delete("dialplan:".$ring_group_context);
 										}
 									}
 
 								//set message
 									message::add($text['message-delete']);
 							}
-							unset($records, $ivr_menus);
+							unset($records);
 					}
 			}
 		}
@@ -209,7 +200,7 @@ if (!class_exists('ivr_menu')) {
 								}
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid, ring_group_context from v_".$this->table." ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -217,8 +208,9 @@ if (!class_exists('ivr_menu')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$ivr_menus[$row['uuid']]['state'] = $row['toggle'];
-										$ivr_menus[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$ring_groups[$row['uuid']]['state'] = $row['toggle'];
+										$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$ring_group_contexts[] = $row['ring_group_context'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -226,11 +218,11 @@ if (!class_exists('ivr_menu')) {
 
 						//build update array
 							$x = 0;
-							foreach ($ivr_menus as $uuid => $ivr_menu) {
+							foreach ($ring_groups as $uuid => $ring_group) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$array['dialplans'][$x]['dialplan_uuid'] = $ivr_menu['dialplan_uuid'];
-								$array['dialplans'][$x]['dialplan_enabled'] = $ivr_menu['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								$array[$this->table][$x][$this->toggle_field] = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								$array['dialplans'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
+								$array['dialplans'][$x]['dialplan_enabled'] = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
 							}
 
@@ -251,14 +243,19 @@ if (!class_exists('ivr_menu')) {
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
 
-								//synchronize the xml config
+								//save the xml
 									save_dialplan_xml();
 
+								//apply settings reminder
+									$_SESSION["reload_xml"] = true;
+
 								//clear the cache
-									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
-									foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
-										$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
+									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+										$ring_group_contexts = array_unique($ring_group_contexts);
+										$cache = new cache;
+										foreach ($ring_group_contexts as $ring_group_context) {
+											$cache->delete("dialplan:".$ring_group_context);
+										}
 									}
 
 								//set message
@@ -292,7 +289,7 @@ if (!class_exists('ivr_menu')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
+							foreach($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
@@ -311,31 +308,31 @@ if (!class_exists('ivr_menu')) {
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = $z = 0;
 										foreach ($rows as $x => $row) {
-											$new_ivr_menu_uuid = uuid();
+											$new_ring_group_uuid = uuid();
 											$new_dialplan_uuid = uuid();
 
 											//copy data
 												$array[$this->table][$x] = $row;
 
 											//overwrite
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ivr_menu_uuid;
+												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ring_group_uuid;
 												$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-												$array[$this->table][$x]['ivr_menu_description'] = trim($row['ivr_menu_description'].' ('.$text['label-copy'].')');
+												$array[$this->table][$x]['ring_group_description'] = trim($row['ring_group_description'].' ('.$text['label-copy'].')');
 
-											//ivr menu options sub table
-												$sql_2 = "select * from v_ivr_menu_options where ivr_menu_uuid = :ivr_menu_uuid";
-												$parameters_2['ivr_menu_uuid'] = $row['ivr_menu_uuid'];
+											//users sub table
+												$sql_2 = "select * from v_ring_group_users where ring_group_uuid = :ring_group_uuid";
+												$parameters_2['ring_group_uuid'] = $row['ring_group_uuid'];
 												$database = new database;
 												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
 
 														//copy data
-															$array['ivr_menu_options'][$y] = $row_2;
+															$array['ring_group_users'][$y] = $row_2;
 
 														//overwrite
-															$array['ivr_menu_options'][$y]['ivr_menu_option_uuid'] = uuid();
-															$array['ivr_menu_options'][$y]['ivr_menu_uuid'] = $new_ivr_menu_uuid;
+															$array['ring_group_users'][$y]['ring_group_user_uuid'] = uuid();
+															$array['ring_group_users'][$y]['ring_group_uuid'] = $new_ring_group_uuid;
 
 														//increment
 															$y++;
@@ -344,29 +341,51 @@ if (!class_exists('ivr_menu')) {
 												}
 												unset($sql_2, $parameters_2, $rows_2, $row_2);
 
-											//ivr menu dialplan record
-												$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
-												$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
+											//destinations sub table
+												$sql_3 = "select * from v_ring_group_destinations where ring_group_uuid = :ring_group_uuid";
+												$parameters_3['ring_group_uuid'] = $row['ring_group_uuid'];
 												$database = new database;
-												$dialplan = $database->select($sql_3, $parameters_3, 'row');
+												$rows_3 = $database->select($sql_3, $parameters_3, 'all');
+												if (is_array($rows_3) && @sizeof($rows_3) != 0) {
+													foreach ($rows_3 as $row_3) {
+
+														//copy data
+															$array['ring_group_destinations'][$z] = $row_3;
+
+														//overwrite
+															$array['ring_group_destinations'][$z]['ring_group_destination_uuid'] = uuid();
+															$array['ring_group_destinations'][$z]['ring_group_uuid'] = $new_ring_group_uuid;
+
+														//increment
+															$z++;
+
+													}
+												}
+												unset($sql_3, $parameters_3, $rows_3, $row_3);
+
+											//ring group dialplan record
+												$sql_4 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+												$parameters_4['dialplan_uuid'] = $row['dialplan_uuid'];
+												$database = new database;
+												$dialplan = $database->select($sql_4, $parameters_4, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 													//copy data
-														$array['dialplans'][$z] = $dialplan;
+														$array['dialplans'][$x] = $dialplan;
 
 													//overwrite
-														$array['dialplans'][$z]['dialplan_uuid'] = $new_dialplan_uuid;
+														$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
 														$dialplan_xml = $dialplan['dialplan_xml'];
-														$dialplan_xml = str_replace($row['ivr_menu_uuid'], $new_ivr_menu_uuid, $dialplan_xml); //replace source ivr_menu_uuid with new
+														$dialplan_xml = str_replace($row['ring_group_uuid'], $new_ring_group_uuid, $dialplan_xml); //replace source ring_group_uuid with new
 														$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-														$array['dialplans'][$z]['dialplan_xml'] = $dialplan_xml;
-														$array['dialplans'][$z]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
+														$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
+														$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
 
-													//increment
-														$z++;
 												}
-												unset($sql_3, $parameters_3, $dialplan);
+												unset($sql_4, $parameters_4, $dialplan);
 
+											//create ring group context array
+												$ring_group_contexts = $row['ring_group_context'];
 										}
 									}
 									unset($sql, $parameters, $rows, $row);
@@ -377,8 +396,9 @@ if (!class_exists('ivr_menu')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('ivr_menu_option_add', 'temp');
-									$p->add('dialplan_add', 'temp');
+									$p->add('ring_group_user_add', 'temp');
+									$p->add('ring_group_destination_add', 'temp');
+									$p->add("dialplan_add", "temp");
 
 								//save the array
 									$database = new database;
@@ -388,16 +408,24 @@ if (!class_exists('ivr_menu')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p = new permissions;
-									$p->delete('ivr_menu_option_add', 'temp');
-									$p->delete('dialplan_add', 'temp');
+									$p->delete('ring_group_user_add', 'temp');
+									$p->delete('ring_group_destination_add', 'temp');
+									$p->delete("dialplan_add", "temp");
 
-								//synchronize the xml config
+								//save the xml
 									save_dialplan_xml();
 
+								//apply settings reminder
+									$_SESSION["reload_xml"] = true;
+
 								//clear the cache
-									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+										$ring_group_contexts = array_unique($ring_group_contexts);
+										$cache = new cache;
+										foreach ($ring_group_contexts as $ring_group_context) {
+											$cache->delete("dialplan:".$ring_group_context);
+										}
+									}
 
 								//set message
 									message::add($text['message-copy']);

@@ -50,28 +50,25 @@
 		$fax_servers = $_POST['fax_servers'];
 	}
 
-//copy the fax servers
-	if (permission_exists('fax_extension_copy')) {
-		if ($action == 'copy' && is_array($fax_servers) && @sizeof($fax_servers) != 0) {
-			//copy
-				$obj = new fax;
-				$obj->copy($fax_servers);
-			//redirect
-				header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($fax_servers) && @sizeof($fax_servers) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('fax_extension_copy')) {
+					$obj = new fax;
+					$obj->copy($fax_servers);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('fax_extension_delete')) {
+					$obj = new fax;
+					$obj->delete($fax_servers);
+				}
+				break;
 		}
-	}
 
-//delete the fax servers
-	if (permission_exists('fax_extension_delete')) {
-		if ($action == 'delete' && is_array($fax_servers) && @sizeof($fax_servers) != 0) {
-			//delete
-				$obj = new fax;
-				$obj->delete($fax_servers);
-			//redirect
-				header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

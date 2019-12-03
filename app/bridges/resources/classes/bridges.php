@@ -136,15 +136,15 @@ if (!class_exists('bridges')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -158,7 +158,7 @@ if (!class_exists('bridges')) {
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 								$x++;
@@ -205,17 +205,17 @@ if (!class_exists('bridges')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
-							foreach($records as $x => $record) {
+							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');

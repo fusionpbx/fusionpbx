@@ -50,40 +50,31 @@
 		$gateways = $_POST['gateways'];
 	}
 
-//copy the gateways
-	if (permission_exists('gateway_add')) {
-		if ($action == 'copy' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//copy
-				$obj = new gateways;
-				$obj->copy($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($gateways) && @sizeof($gateways) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('gateway_add')) {
+					$obj = new gateways;
+					$obj->copy($gateways);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('gateway_edit')) {
+					$obj = new gateways;
+					$obj->toggle($gateways);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('gateway_delete')) {
+					$obj = new gateways;
+					$obj->delete($gateways);
+				}
+				break;
 		}
-	}
 
-//toggle the gateways
-	if (permission_exists('gateway_edit')) {
-		if ($action == 'toggle' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//toggle
-				$obj = new gateways;
-				$obj->toggle($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the gateways
-	if (permission_exists('gateway_delete')) {
-		if ($action == 'delete' && is_array($gateways) && @sizeof($gateways) != 0) {
-			//delete
-				$obj = new gateways;
-				$obj->delete($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //connect to event socket

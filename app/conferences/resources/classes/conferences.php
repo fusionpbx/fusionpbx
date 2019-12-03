@@ -107,10 +107,10 @@ if (!class_exists('conferences')) {
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['conference_users'][$x]['conference_uuid'] = $record['uuid'];
 										$array['conference_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-										$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
-										$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 										$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+										$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 
 								}
 							}
@@ -179,13 +179,13 @@ if (!class_exists('conferences')) {
 						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -268,73 +268,77 @@ if (!class_exists('conferences')) {
 						//get checked records
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$y = 0;
 									foreach ($rows as $x => $row) {
+										$new_conference_uuid = uuid();
+										$new_dialplan_uuid = uuid();
 
 										//copy data
 											$array[$this->table][$x] = $row;
 
 										//overwrite
-											$conference_uuid = uuid();
-											$dialplan_uuid = uuid();
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $conference_uuid;
-											$array[$this->table][$x]['dialplan_uuid'] = $dialplan_uuid;
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_conference_uuid;
+											$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
 											$array[$this->table][$x]['conference_description'] = trim($row['conference_description'].' ('.$text['label-copy'].')');
 
-										//get conference conference users
-											$sql = "select * from v_conference_users ";
-											$sql .= "where conference_uuid = :conference_uuid ";
-											$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-											$parameters['conference_uuid'] = $row['conference_uuid'];
-											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										//conference users sub table
+											$sql_2 = "select * from v_conference_users ";
+											$sql_2 .= "where conference_uuid = :conference_uuid ";
+											$sql_2 .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+											$parameters_2['conference_uuid'] = $row['conference_uuid'];
+											$parameters_2['domain_uuid'] = $_SESSION['domain_uuid'];
 											$database = new database;
-											$conference_users = $database->select($sql, $parameters, 'all');
-											unset($sql, $parameters);
-
-										//insert the conference users in array
+											$conference_users = $database->select($sql_2, $parameters_2, 'all');
 											if (is_array($conference_users) && @sizeof($conference_users) != 0) {
-												foreach ($conference_users as $user) {
-													$array['conference_users'][$y]['conference_user_uuid'] = uuid();
-													$array['conference_users'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-													$array['conference_users'][$y]['conference_uuid'] = $conference_uuid;
-													$array['conference_users'][$y]['user_uuid'] = $user['user_uuid'];
-													$y++;
+												foreach ($conference_users as $conference_user) {
+
+													//copy data
+														$array['conference_users'][$y] = $conference_user;
+
+													//overwrite
+														$array['conference_users'][$y]['conference_user_uuid'] = uuid();
+														$array['conference_users'][$y]['conference_uuid'] = $new_conference_uuid;
+
+													//increment
+														$y++;
+
 												}
 											}
+											unset($sql_2, $parameters_2, $conference_users, $conference_user);
 
-										//build the dialplan xml
-											$dialplan_xml = "<extension name=\"".$row['conference_name']."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
-											$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$row['conference_extension']."\">\n";
-											$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-											$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default+flags{'".$row['conference_flags']."}\"/>\n";
-											$dialplan_xml .= "	</condition>\n";
-											$dialplan_xml .= "</extension>\n";
+										//conference dialplan record
+											$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+											$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
+											$database = new database;
+											$dialplan = $database->select($sql_3, $parameters_3, 'row');
+											if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
-										//insert the conference dialplan in array
-											$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
-											$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-											$array['dialplans'][$x]['dialplan_name'] = $row['conference_name'];
-											$array['dialplans'][$x]['dialplan_number'] = $row['conference_extension'];
-											$array['dialplans'][$x]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
-											$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
-											$array['dialplans'][$x]['dialplan_order'] = '333';
-											$array['dialplans'][$x]['dialplan_context'] = $_SESSION['context'];
-											$array['dialplans'][$x]['dialplan_enabled'] = $row['conference_enabled'];
-											$array['dialplans'][$x]['dialplan_description'] = $row['conference_description'].' ('.$text['label-copy'].')';
+												//copy data
+													$array['dialplans'][$x] = $dialplan;
 
+												//overwrite
+													$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+													$dialplan_xml = $dialplan['dialplan_xml'];
+													$dialplan_xml = str_replace($row['conference_uuid'], $new_conference_uuid, $dialplan_xml); //replace source conference_uuid with new
+													$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+													$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
+													$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
+
+											}
+											unset($sql_3, $parameters_3, $dialplan);
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
