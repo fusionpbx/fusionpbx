@@ -14,7 +14,7 @@
 		$text['title-streams']['it-it'] = '';
 		$text['title-streams']['nl-nl'] = '';
 		$text['title-streams']['pl-pl'] = '';
-		$text['title-streams']['pt-br'] = '';
+		$text['title-streams']['pt-br'] = 'Fluxos de Áudio';
 		$text['title-streams']['pt-pt'] = '';
 		$text['title-streams']['ro-ro'] = '';
 		$text['title-streams']['ru-ru'] = '';
@@ -34,7 +34,7 @@
 		$text['title-stream']['it-it'] = '';
 		$text['title-stream']['nl-nl'] = '';
 		$text['title-stream']['pl-pl'] = '';
-		$text['title-stream']['pt-br'] = '';
+		$text['title-stream']['pt-br'] = 'Fluxo de Áudio';
 		$text['title-stream']['pt-pt'] = '';
 		$text['title-stream']['ro-ro'] = '';
 		$text['title-stream']['ru-ru'] = '';
@@ -54,7 +54,7 @@
 		$text['title_description-stream']['it-it'] = '';
 		$text['title_description-stream']['nl-nl'] = '';
 		$text['title_description-stream']['pl-pl'] = '';
-		$text['title_description-stream']['pt-br'] = '';
+		$text['title_description-stream']['pt-br'] = 'Configure os detalhes dos fluxos de áudio.';
 		$text['title_description-stream']['pt-pt'] = '';
 		$text['title_description-stream']['ro-ro'] = '';
 		$text['title_description-stream']['ru-ru'] = '';
@@ -74,7 +74,7 @@
 		$text['label-stream_name']['it-it'] = '';
 		$text['label-stream_name']['nl-nl'] = '';
 		$text['label-stream_name']['pl-pl'] = '';
-		$text['label-stream_name']['pt-br'] = '';
+		$text['label-stream_name']['pt-br'] = 'Nome';
 		$text['label-stream_name']['pt-pt'] = '';
 		$text['label-stream_name']['ro-ro'] = '';
 		$text['label-stream_name']['ru-ru'] = '';
@@ -94,7 +94,7 @@
 		$text['description-stream_name']['it-it'] = '';
 		$text['description-stream_name']['nl-nl'] = '';
 		$text['description-stream_name']['pl-pl'] = '';
-		$text['description-stream_name']['pt-br'] = '';
+		$text['description-stream_name']['pt-br'] = 'Entre com o nome.';
 		$text['description-stream_name']['pt-pt'] = '';
 		$text['description-stream_name']['ro-ro'] = '';
 		$text['description-stream_name']['ru-ru'] = '';
@@ -114,7 +114,7 @@
 		$text['label-stream_location']['it-it'] = '';
 		$text['label-stream_location']['nl-nl'] = '';
 		$text['label-stream_location']['pl-pl'] = '';
-		$text['label-stream_location']['pt-br'] = '';
+		$text['label-stream_location']['pt-br'] = 'Localização';
 		$text['label-stream_location']['pt-pt'] = '';
 		$text['label-stream_location']['ro-ro'] = '';
 		$text['label-stream_location']['ru-ru'] = '';
@@ -134,7 +134,7 @@
 		$text['description-stream_location']['it-it'] = '';
 		$text['description-stream_location']['nl-nl'] = '';
 		$text['description-stream_location']['pl-pl'] = '';
-		$text['description-stream_location']['pt-br'] = '';
+		$text['description-stream_location']['pt-br'] = 'Entre com a localização.';
 		$text['description-stream_location']['pt-pt'] = '';
 		$text['description-stream_location']['ro-ro'] = '';
 		$text['description-stream_location']['ru-ru'] = '';
@@ -154,7 +154,7 @@
 		$text['label-stream_enabled']['it-it'] = '';
 		$text['label-stream_enabled']['nl-nl'] = '';
 		$text['label-stream_enabled']['pl-pl'] = '';
-		$text['label-stream_enabled']['pt-br'] = '';
+		$text['label-stream_enabled']['pt-br'] = 'Ativado';
 		$text['label-stream_enabled']['pt-pt'] = '';
 		$text['label-stream_enabled']['ro-ro'] = '';
 		$text['label-stream_enabled']['ru-ru'] = '';
@@ -174,7 +174,7 @@
 		$text['description-stream_enabled']['it-it'] = '';
 		$text['description-stream_enabled']['nl-nl'] = '';
 		$text['description-stream_enabled']['pl-pl'] = '';
-		$text['description-stream_enabled']['pt-br'] = '';
+		$text['description-stream_enabled']['pt-br'] = 'Ativa ou desativa este fluxo.';
 		$text['description-stream_enabled']['pt-pt'] = '';
 		$text['description-stream_enabled']['ro-ro'] = '';
 		$text['description-stream_enabled']['ru-ru'] = '';
@@ -194,7 +194,7 @@
 		$text['label-stream_description']['it-it'] = '';
 		$text['label-stream_description']['nl-nl'] = '';
 		$text['label-stream_description']['pl-pl'] = '';
-		$text['label-stream_description']['pt-br'] = '';
+		$text['label-stream_description']['pt-br'] = 'Descrição';
 		$text['label-stream_description']['pt-pt'] = '';
 		$text['label-stream_description']['ro-ro'] = '';
 		$text['label-stream_description']['ru-ru'] = '';
@@ -214,7 +214,7 @@
 		$text['description-stream_description']['it-it'] = '';
 		$text['description-stream_description']['nl-nl'] = '';
 		$text['description-stream_description']['pl-pl'] = '';
-		$text['description-stream_description']['pt-br'] = '';
+		$text['description-stream_description']['pt-br'] = 'Entre com a descrição';
 		$text['description-stream_description']['pt-pt'] = '';
 		$text['description-stream_description']['ro-ro'] = '';
 		$text['description-stream_description']['ru-ru'] = '';
