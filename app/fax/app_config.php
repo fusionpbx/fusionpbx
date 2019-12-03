@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "PAra receber Fax, configure um ramal de fax e direcione os Fax entrantes com um número dedicado ou você pode detectar o tom de Fax usando a guia Pública.";
 		$apps[$x]['description']['pt-pt'] = "Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Чтобы принять факс, добавьте внутренний номер для факсов и направьте входящий вызовы на выделенный номер, или вы можете обнаружить FAX-тон, используя вкладку 'Общие'.";
