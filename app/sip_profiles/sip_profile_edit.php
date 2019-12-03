@@ -270,7 +270,7 @@
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-sip_profile']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='sip_profiles.php'\" value='".$text['button-back']."'>";
-	if ($action == 'edit' && (
+	if ($action == 'update' && (
 		permission_exists('dialplan_add')
 		|| permission_exists('inbound_route_add')
 		|| permission_exists('outbound_route_add')
