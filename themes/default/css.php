@@ -2467,26 +2467,26 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 /* WIDTH HELPERS **********************************************************************/
 
-	.min-pct-5 { min-width: 5%; }
-	.min-pct-10 { min-width: 10%; }
-	.min-pct-15 { min-width: 15%; }
-	.min-pct-20 { min-width: 20%; }
-	.min-pct-25 { min-width: 25%; }
-	.min-pct-30 { min-width: 30%; }
-	.min-pct-35 { min-width: 35%; }
-	.min-pct-40 { min-width: 40%; }
-	.min-pct-45 { min-width: 45%; }
-	.min-pct-50 { min-width: 50%; }
-	.min-pct-55 { min-width: 55%; }
-	.min-pct-60 { min-width: 60%; }
-	.min-pct-65 { min-width: 65%; }
-	.min-pct-70 { min-width: 70%; }
-	.min-pct-75 { min-width: 75%; }
-	.min-pct-80 { min-width: 80%; }
-	.min-pct-85 { min-width: 85%; }
-	.min-pct-90 { min-width: 90%; }
-	.min-pct-95 { min-width: 95%; }
-	.min-pct-100 { min-width: 100%; }
+	.pct-5 { width: 5%; }
+	.pct-10 { width: 10%; }
+	.pct-15 { width: 15%; }
+	.pct-20 { width: 20%; }
+	.pct-25 { width: 25%; }
+	.pct-30 { width: 30%; }
+	.pct-35 { width: 35%; }
+	.pct-40 { width: 40%; }
+	.pct-45 { width: 45%; }
+	.pct-50 { width: 50%; }
+	.pct-55 { width: 55%; }
+	.pct-60 { width: 60%; }
+	.pct-65 { width: 65%; }
+	.pct-70 { width: 70%; }
+	.pct-75 { width: 75%; }
+	.pct-80 { width: 80%; }
+	.pct-85 { width: 85%; }
+	.pct-90 { width: 90%; }
+	.pct-95 { width: 95%; }
+	.pct-100 { width: 100%; }
 
 /* MODAL ************************************************************************/
 
