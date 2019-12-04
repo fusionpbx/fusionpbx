@@ -108,6 +108,11 @@
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	$sql .= "and ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -134,6 +139,11 @@
 		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
+	$sql .= "and ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$sql .= order_by($order_by, $order, 'username', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
