@@ -5,6 +5,7 @@
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Module";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Module";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Πρόσθετα";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Módulos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";

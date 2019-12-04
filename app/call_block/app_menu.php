@@ -6,6 +6,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Sperrlisten";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Sperrlisten";
+	$apps[$x]['menu'][$y]['title']['el-gr'] = "Λίστα απορρίψεων";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Bloqueo de llamadas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
