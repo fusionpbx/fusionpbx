@@ -36,7 +36,7 @@ if ($domains_processed == 1) {
 
 		$sql = "CREATE VIEW view_users AS ( \n";
 		$sql .= "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_enabled, u.add_date, \n";
-		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, \n";
+		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, \n";
 		$sql .= "	( \n";
 		$sql .= "		select \n";
 		$sql .= "		string_agg(g.group_name, ', ') \n";
@@ -52,7 +52,7 @@ if ($domains_processed == 1) {
 		$sql .= "		FROM v_user_groups ug, v_groups g \n";
 		$sql .= "		WHERE (ug.group_uuid = g.group_uuid) \n";
 		$sql .= "		AND (u.user_uuid = ug.user_uuid) \n"; 
-		$sql .= "		ORDER BY group_level DESC \n"; 
+		$sql .= "		ORDER BY group_level DESC \n";
 		$sql .= "		LIMIT 1 \n";
 		$sql .= "	) AS group_level \n";
 		$sql .= "	from v_contacts as c \n";
