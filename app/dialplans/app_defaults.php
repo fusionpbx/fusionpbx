@@ -133,7 +133,7 @@
 
 					$sql = "INSERT INTO v_dialplan_details ";
 					$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
-					$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'e391530c-4078-4b49-bc11-bda4a23ad566', 'action', 'log', '[inbound routes] 404 not found \${sip_network_ip}', '20');";
+					$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'e391530c-4078-4b49-bc11-bda4a23ad566', 'action', 'log', 'WARNING [inbound routes] 404 not found \${sip_network_ip}', '20');";
 					$db->query($sql);
 					unset($sql);
 				}
