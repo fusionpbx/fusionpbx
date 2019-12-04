@@ -1,0 +1,55 @@
+<?php
+	//application details
+		$apps[$x]['name'] = "Poly";
+		$apps[$x]['uuid'] = "6af4ac15-8091-4974-a04a-322637cf8d65";
+		$apps[$x]['category'] = "Vendor";
+		$apps[$x]['subcategory'] = "";
+		$apps[$x]['version'] = "1.0";
+		$apps[$x]['license'] = "Mozilla Public License 1.1";
+		$apps[$x]['url'] = "http://www.fusionpbx.com";
+		$apps[$x]['description']['en-us'] = "";
+		$apps[$x]['description']['ar-eg'] = "";
+		$apps[$x]['description']['de-at'] = "";
+		$apps[$x]['description']['de-ch'] = "";
+		$apps[$x]['description']['de-de'] = "";
+		$apps[$x]['description']['es-cl'] = "";
+		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['he-il'] = "";
+		$apps[$x]['description']['it-it'] = "";
+		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['pl-pl'] = "";
+		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['ro-ro'] = "";
+		$apps[$x]['description']['ru-ru'] = "";
+		$apps[$x]['description']['sv-se'] = "";
+		$apps[$x]['description']['uk-ua'] = "";
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "77bd00d7-9d8f-4f55-9a43-f3e0ca0ff8af";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "poly_obi_dst_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "True";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Daylight Savings True=enabled False=disable";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3c021f6e-905d-4fc8-a353-983f4363837d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "poly_obi_timezone";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "See provision profile for codes.";
+		$y++;
+    		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "799038b2-77ca-4312-82fc-a0ccd2ed4402";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "poly_obi_logo_450";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Url of Logo file for VVX 450";
+		$y++;
+?>
