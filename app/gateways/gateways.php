@@ -70,6 +70,19 @@
 					$obj = new gateways;
 					$obj->delete($gateways);
 				}
+			case 'start':
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp && permission_exists('gateway_edit')) {
+					$obj = new gateways;
+					$obj->start($gateways);
+				}
+				break;
+			case 'stop':
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp && permission_exists('gateway_edit')) {
+					$obj = new gateways;
+					$obj->stop($gateways);
+				}
 				break;
 		}
 
@@ -79,26 +92,6 @@
 
 //connect to event socket
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-//control the gateways
-	if ($fp && is_array($gateways) && @sizeof($gateways) != 0) {
-		if ($action == 'start') {
-			//start
-				$obj = new gateways;
-				$obj->start($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-		if ($action == 'stop') {
-			//stop
-				$obj = new gateways;
-				$obj->stop($gateways);
-			//redirect
-				header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
 
 //gateway status function
 	if (!function_exists('switch_gateway_status')) {
