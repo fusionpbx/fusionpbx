@@ -2340,6 +2340,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_shadow_scroll']['text'] : '0 3px 3px 0 rgba(0,0,0,0.2)'; ?>;
 		}
 
+	div.action_bar.sub {
+		position: static;
+		}
+
 	div.action_bar > div.heading {
 		float: left;
 		}
