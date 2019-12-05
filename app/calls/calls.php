@@ -177,12 +177,15 @@
 
 //show the content
 	if ($is_included) {
-		echo "<b>".$text['header-call_routing']."</b>\n";
+		echo "<div class='action_bar sub'>\n";
+		echo "	<div class='heading'><b>".$text['header-call_routing']."</b></div>\n";
+		echo "	<div class='actions'>\n";
 		if ($num_rows > 10) {
-			echo "<div align='right'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'link'=>PROJECT_PATH.'/app/calls/calls.php']);
-			echo "</div>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'project-diagram','collapse'=>false,'link'=>PROJECT_PATH.'/app/calls/calls.php']);
 		}
+		echo "	</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
 	}
 	else {
 		echo "<div class='action_bar' id='action_bar'>\n";
