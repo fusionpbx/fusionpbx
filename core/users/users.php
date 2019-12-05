@@ -100,6 +100,9 @@
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
 		}
+		else {
+			$sql.= "where true ";
+		}
 	}
 	else {
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -130,6 +133,9 @@
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
+		}
+		else {
+			$sql.= "where true ";
 		}
 	}
 	else {
