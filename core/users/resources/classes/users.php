@@ -94,8 +94,43 @@ if (!class_exists('users')) {
 							foreach ($records as $record) {
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										//get the user_uuid
+											$user_uuid = $record['uuid'];
+
+										//get the user's domain from v_users
+											if (permission_exists('user_domain')) {
+												$sql = "select domain_uuid from v_users ";
+												$sql .= "where user_uuid = :user_uuid ";
+												$parameters['user_uuid'] = $user_uuid;
+												$database = new database;
+												$domain_uuid = $database->select($sql, $parameters, 'column');
+												unset($sql, $parameters);
+											}
+											else {
+												$domain_uuid = $_SESSION['domain_uuid'];
+											}
+
+										//required to be a superadmin to delete a member of the superadmin group
+											$superadmin_list = superadmin_list();
+											if (if_superadmin($superadmin_list, $user_uuid)) {
+												if (!if_group("superadmin")) {
+													//access denied - do not delete the user
+													header("Location: index.php");
+													return;
+												}
+											}
+
+										//delete the user settings
+											$array['user_settings'][$x]['user_uuid'] = $user_uuid;
+											$array['user_settings'][$x]['domain_uuid'] = $domain_uuid;
+
+										//delete the groups the user is assigned to
+											$array['user_groups'][$x]['user_uuid'] = $user_uuid;
+											$array['user_groups'][$x]['domain_uuid'] = $domain_uuid;
+
+										//delete the user
+											$array['users'][$x]['user_uuid'] = $user_uuid;
+											$array['users'][$x]['domain_uuid'] = $domain_uuid;
 									}
 
 								//increment the id
@@ -104,12 +139,20 @@ if (!class_exists('users')) {
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+								//execute
+									$p = new permissions;
+									$p->add('user_setting_delete', 'temp');
+									$p->add('user_group_delete', 'temp');
+
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+									$p->delete('user_setting_delete', 'temp');
+									$p->delete('user_group_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
@@ -147,9 +190,7 @@ if (!class_exists('users')) {
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -219,9 +260,7 @@ if (!class_exists('users')) {
 						//create the array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -232,7 +271,7 @@ if (!class_exists('users')) {
 
 										//add copy to the description
 											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->name.'_description'] = trim($row[$this->name.'_description']).' ('.$text['label-copy'].')';
+											$array[$this->table][$x]['username'] = $row['username'].'-'.$text['label-copy'];
 
 										//increment the id
 											$x++;
