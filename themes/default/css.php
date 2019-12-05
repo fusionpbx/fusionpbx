@@ -2427,6 +2427,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		white-space: nowrap;
 		}
 
+	.list-row > .input {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		white-space: nowrap;
+		}
+
 	.list-row > .overflow {
 		max-width: 50px;
 		overflow: hidden;
