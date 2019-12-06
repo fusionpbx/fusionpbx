@@ -93,6 +93,7 @@ $text['theme-button-close']['en-us'] = "Close";
 $text['theme-button-close']['ar-eg'] = "";
 $text['theme-button-close']['de-at'] = "Schließen"; //copied from de-de
 $text['theme-button-close']['de-ch'] = "Schließen"; //copied from de-de
+$text['theme-button-close']['de-de'] = "Schließen";
 $text['theme-button-close']['el-gr'] = "Κλείσιμο";
 $text['theme-button-close']['es-cl'] = "Cerca";
 $text['theme-button-close']['es-mx'] = "Cerca"; //copied from es-cl
