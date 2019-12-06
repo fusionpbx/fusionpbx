@@ -125,7 +125,7 @@
    <X-PRE-PROCESS cmd="set" data="hangup_on_subscriber_absent=true" category="SIP" enabled="false" uuid="c1292ccc-ad04-490d-9a30-c79e7747fb86"/>
    <X-PRE-PROCESS cmd="set" data="hangup_on_call_reject=true" category="SIP" enabled="false" uuid="62644977-03b8-41c1-9827-ccedbc743d75"/>
    <X-PRE-PROCESS cmd="set" data="unroll_loops=true" category="SIP" enabled="true" uuid="314fbf59-201b-4b3a-9e3a-34b19099ac6d"/>
-   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1" category="SIP" enabled="true" uuid="3fff6ed5-fde0-49ca-abe6-7db15f7f54d4"/>
+   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1,tlsv1.1,tlsv1.2" category="SIP" enabled="true" uuid="3fff6ed5-fde0-49ca-abe6-7db15f7f54d4"/>
 
    <!-- SIP Profile: External -->
    <X-PRE-PROCESS cmd="set" data="external_sip_port=5080" category="SIP Profile: External" enabled="true" uuid="9594ab5c-884a-4d16-87ec-1a9f5b9c3247"/>
