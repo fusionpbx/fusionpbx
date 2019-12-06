@@ -130,7 +130,7 @@
 				$array['dialplan_details'][1]['dialplan_detail_uuid'] = 'e391530c-4078-4b49-bc11-bda4a23ad566';
 				$array['dialplan_details'][1]['dialplan_detail_tag'] = 'action';
 				$array['dialplan_details'][1]['dialplan_detail_type'] = 'log';
-				$array['dialplan_details'][1]['dialplan_detail_data'] = '[inbound routes] 404 not found \${sip_network_ip}';
+				$array['dialplan_details'][1]['dialplan_detail_data'] = 'WARNING [inbound routes] 404 not found \${sip_network_ip}';
 				$array['dialplan_details'][1]['dialplan_detail_order'] = '20';
 
 				$p = new permissions;

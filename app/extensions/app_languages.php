@@ -1541,6 +1541,26 @@ $text['label-column_name']['ru-ru'] = "";
 $text['label-column_name']['sv-se'] = "";
 $text['label-column_name']['uk-ua'] = "";
 
+$text['label-destination']['en-us'] = "Destination";
+$text['label-destination']['ar-eg'] = "جهات الأتصال";
+$text['label-destination']['de-at'] = "Ziele"; //copied from de-de
+$text['label-destination']['de-ch'] = "Ziele"; //copied from de-de
+$text['label-destination']['de-de'] = "Ziele";
+$text['label-destination']['es-cl'] = "Destino";
+$text['label-destination']['es-mx'] = "Destino"; //copied from es-cl
+$text['label-destination']['fr-ca'] = "Destination"; //copied from fr-fr
+$text['label-destination']['fr-fr'] = "Destination";
+$text['label-destination']['he-il'] = "יעדים";
+$text['label-destination']['it-it'] = "Destinazioni";
+$text['label-destination']['nl-nl'] = "Bestemmingen";
+$text['label-destination']['pl-pl'] = "Destynacje";
+$text['label-destination']['pt-br'] = "Destino"; //copied from pt-pt
+$text['label-destination']['pt-pt'] = "Destino";
+$text['label-destination']['ro-ro'] = "Destinații";
+$text['label-destination']['ru-ru'] = "Направления";
+$text['label-destination']['sv-se'] = "Destinationer";
+$text['label-destination']['uk-ua'] = "Номери";
+
 $text['header-extensions']['en-us'] = "Extensions";
 $text['header-extensions']['ar-eg'] = "الأرقام الداخلية";
 $text['header-extensions']['de-at'] = "Nebenstellen"; //copied from de-de

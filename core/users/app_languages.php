@@ -1,6 +1,47 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
+
+$text['title-users']['en-us'] = "Users";
+$text['title-users']['ar-eg'] = "";
+$text['title-users']['de-at'] = "Benutzer"; //copied from de-de
+$text['title-users']['de-ch'] = "Benutzer"; //copied from de-de
+$text['title-users']['de-de'] = "Benutzer";
+$text['title-users']['es-cl'] = "Editar Usuario";
+$text['title-users']['es-mx'] = "Editar Usuario"; //copied from es-cl
+$text['title-users']['fr-ca'] = "Modifier l'utilisateur"; //copied from fr-fr
+$text['title-users']['fr-fr'] = "Modifier l'utilisateur";
+$text['title-users']['he-il'] = "משתמש";
+$text['title-users']['it-it'] = "Utente";
+$text['title-users']['nl-nl'] = "";
+$text['title-users']['pl-pl'] = "Użytkownik";
+$text['title-users']['pt-br'] = "Usuário"; //copied from pt-pt
+$text['title-users']['pt-pt'] = "Utilizador";
+$text['title-users']['ro-ro'] = "Utilizator";
+$text['title-users']['ru-ru'] = "Пользователь";
+$text['title-users']['sv-se'] = "Användare";
+$text['title-users']['uk-ua'] = "Користувач";
+
+$text['description-users']['en-us'] = "Add, edit, delete, and search users. ";
+$text['description-users']['ar-eg'] = "";
+$text['description-users']['de-at'] = "Benutzer anlegen, editieren, löschen und suchen."; //copied from de-de
+$text['description-users']['de-ch'] = "Benutzer anlegen, editieren, löschen und suchen."; //copied from de-de
+$text['description-users']['de-de'] = "Benutzer anlegen, editieren, löschen und suchen.";
+$text['description-users']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";
+$text['description-users']['es-mx'] = "Agregar, Editar, Eliminar y Buscar Usuarios. "; //copied from es-cl
+$text['description-users']['fr-ca'] = "Ajouter, modifier, supprimer et chercher des utilisateurs. "; //copied from fr-fr
+$text['description-users']['fr-fr'] = "Ajouter, modifier, supprimer et chercher des utilisateurs. ";
+$text['description-users']['he-il'] = "הוסף, ערוך, מחק וחפש משתמשים";
+$text['description-users']['it-it'] = "Aggiungi, modifica, cancella e ricerca utenti.";
+$text['description-users']['nl-nl'] = "";
+$text['description-users']['pl-pl'] = "Dodaj, edytuj, usuń i wyszukaj użytkowników.";
+$text['description-users']['pt-br'] = "Adicionar, editar, remover e pesquisar Usuários. "; //copied from pt-pt
+$text['description-users']['pt-pt'] = "Adicionar, editar, remover e pesquisar utilizadores. ";
+$text['description-users']['ro-ro'] = "";
+$text['description-users']['ru-ru'] = "Добавление, изменение, удаление и поиск пользователей. ";
+$text['description-users']['sv-se'] = "Lägg Till, editera, ta bort och sök användare.";
+$text['description-users']['uk-ua'] = "Додавання, редагування, видалення та пошук користувачів";
+
 $text['title-user_manager']['en-us'] = "User Manager";
 $text['title-user_manager']['ar-eg'] = "";
 $text['title-user_manager']['de-at'] = "Benutzerverwaltung"; //copied from de-de

@@ -13,6 +13,7 @@
 		$apps[$x]['description']['de-at'] = "Ein Werkzeug um eingehende Rufnummern zu sperren.";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-de'] = "Ein Werkzeug um eingehende Rufnummern zu sperren.";
+		$apps[$x]['description']['el-gr'] = "Εργαλείο για αποκλεισμό εισερχόμενων κλήσεων από συγκεκριμένους αριθμούς.";
 		$apps[$x]['description']['es-cl'] = "Una herramineta para bloquear números entrantes";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "Outil pour bloquer des numéros d'appelant.";

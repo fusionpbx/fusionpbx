@@ -197,6 +197,9 @@ class cache {
 
 				//remove the cache
 					recursive_delete($_SESSION['cache']['location']['text']);
+
+				//set message
+					$result = '+OK cache flushed';
 			}
 
 		//return result

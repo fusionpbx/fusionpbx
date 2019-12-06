@@ -2340,6 +2340,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_shadow_scroll']['text'] : '0 3px 3px 0 rgba(0,0,0,0.2)'; ?>;
 		}
 
+	div.action_bar.sub {
+		position: static;
+		}
+
 	div.action_bar > div.heading {
 		float: left;
 		}
@@ -2394,7 +2398,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>;
 		text-align: left;
-		vertical-align: top;
+		vertical-align: middle;
 		}
 
 	.list-row > :not(.checkbox) {
@@ -2420,6 +2424,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		margin: 0;
 		padding-top: 1px;
 		padding-bottom: 1px;
+		white-space: nowrap;
+		}
+
+	.list-row > .input {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
 		white-space: nowrap;
 		}
 

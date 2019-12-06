@@ -82,8 +82,8 @@
 	$order = $_GET["order"];
 
 //add the search string
-	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= "	lower(bridge_name) like :search ";
 		$sql_search .= "	or lower(bridge_destination) like :search ";
