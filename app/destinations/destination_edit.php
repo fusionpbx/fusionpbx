@@ -1009,7 +1009,11 @@
 		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
 			foreach($dialplan_details as $row) {
 				if ($row["dialplan_detail_tag"] != "condition") {
-					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
+					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set") {
+						if (strpos($row["dialplan_detail_data"], "accountcode") === 0) { continue; } //exclude set:accountcode actions
+						if (strpos($row["dialplan_detail_data"], "hangup_after_bridge") === 0) { continue; } //exclude set:hangup_after_bridge actions
+						if (strpos($row["dialplan_detail_data"], "continue_on_fail") === 0) { continue; } //exclude set:continue_on_fail actions
+					}
 					echo "				<tr>\n";
 					echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 					if (strlen($row['dialplan_detail_uuid']) > 0) {
