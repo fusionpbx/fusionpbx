@@ -45,7 +45,6 @@
 
 //get posted data
 	if (is_array($_POST['dialplans'])) {
-		$app_uuid = $_POST['app_uuid'];
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
 		$search = $_POST['search'];
@@ -53,53 +52,58 @@
 		$order = $_POST['order'];
 	}
 
-//process action
-	if ($action && is_array($dialplans) && @sizeof($dialplans) != 0) {
+//get the app uuid
+	if (is_uuid($_REQUEST["app_uuid"])) {
+		$app_uuid = $_REQUEST["app_uuid"];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($dialplans) && @sizeof($dialplans) != 0) {
 
 		//define redirect parameters and url
 			if (is_uuid($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
-			$redirect_url = 'dialplans.php'.($params ? '?'.implode('&', $params) : null);
+			$list_page = 'dialplans.php'.($params ? '?'.implode('&', $params) : null);
 			unset($params);
 
-		//copy the dialplans
-			if ($action == 'copy') {
-				$obj = new dialplan;
-				$obj->app_uuid = $app_uuid;
-				$obj->list_page = $redirect_url;
-				$obj->copy($dialplans);
-			}
-
-		//toggle the dialplans
-			if ($action == 'toggle') {
-				$obj = new dialplan;
-				$obj->app_uuid = $app_uuid;
-				$obj->list_page = $redirect_url;
-				$obj->toggle($dialplans);
-			}
-
-		//delete the dialplans
-			if ($action == 'delete') {
-				$obj = new dialplan;
-				$obj->app_uuid = $app_uuid;
-				$obj->list_page = $redirect_url;
-				$obj->delete($dialplans);
+		//process action
+			switch ($action) {
+				case 'copy':
+					if (permission_exists('dialplan_add')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
+						$obj->copy($dialplans);
+					}
+					break;
+				case 'toggle':
+					if (permission_exists('dialplan_edit')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
+						$obj->toggle($dialplans);
+					}
+					break;
+				case 'delete':
+					if (permission_exists('dialplan_delete')) {
+						$obj = new dialplan;
+						$obj->app_uuid = $app_uuid;
+						$obj->list_page = $list_page;
+						$obj->delete($dialplans);
+					}
+					break;
 			}
 
 		//redirect
-			header('Location: '.$redirect_url);
+			header('Location: '.$list_page);
 			exit;
-
 	}
 
 //get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//get the app uuid
-	$app_uuid = $_GET["app_uuid"];
 
 //make sure all dialplans with context of public have the inbound route app_uuid
 	if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
@@ -161,7 +165,7 @@
 
 //prepare the paging
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	if (is_uuid($app_uuid)) { $params[] = "app_uuid=".$app_uuid; }
+	$params[] = "app_uuid=".$app_uuid;
 	if ($search) { $params[] = "search=".$search; }
 	if ($order_by) { $params[] = "order_by=".$order_by; }
 	if ($order) { $params[] = "order=".$order; }
@@ -283,7 +287,7 @@
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	if (is_uuid($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
+	$params[] = "app_uuid=".urlencode($app_uuid);
 	if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 	if ($order) { $params[] = "order=".urlencode($order); }
 	if ($_GET['show'] && permission_exists('dialplan_all')) { $params[] = "show=".urlencode($_GET['show']); }
@@ -356,7 +360,9 @@
 		foreach ($dialplans as $row) {
 
 			//get the application id
-			$app_uuid = $row['app_uuid'];
+			if (is_uuid($row['app_uuid'])) {
+				$app_uuid = $row['app_uuid'];
+			}
 
 			// blank app id if doesn't match others, so will return to dialplan manager
 			switch ($app_uuid) {

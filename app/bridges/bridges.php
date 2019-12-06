@@ -43,67 +43,58 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
+//get the http post data
 	if (is_array($_POST['bridges'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$bridges = $_POST['bridges'];
 	}
 
-//copy the bridges
-	if (permission_exists('bridge_add')) {
-		if ($action == 'copy' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//copy
-				$obj = new bridges;
-				$obj->copy($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($bridges) && @sizeof($bridges) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('bridge_add')) {
+					$obj = new bridges;
+					$obj->copy($bridges);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('bridge_edit')) {
+					$obj = new bridges;
+					$obj->toggle($bridges);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('bridge_delete')) {
+					$obj = new bridges;
+					$obj->delete($bridges);
+				}
+				break;
 		}
-	}
 
-//toggle the bridges
-	if (permission_exists('bridge_edit')) {
-		if ($action == 'toggle' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//toggle
-				$obj = new bridges;
-				$obj->toggle($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the bridges
-	if (permission_exists('bridge_delete')) {
-		if ($action == 'delete' && is_array($bridges) && @sizeof($bridges) != 0) {
-			//delete
-				$obj = new bridges;
-				$obj->delete($bridges);
-			//redirect
-				header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: bridges.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search term
+//add the search string
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = " (";
-		$sql_search .= "lower(bridge_name) like :search ";
-		$sql_search .= "or lower(bridge_destination) like :search ";
-		$sql_search .= "or lower(bridge_enabled) like :search ";
-		$sql_search .= "or lower(bridge_description) like :search ";
+		$sql_search .= "	lower(bridge_name) like :search ";
+		$sql_search .= "	or lower(bridge_destination) like :search ";
+		$sql_search .= "	or lower(bridge_enabled) like :search ";
+		$sql_search .= "	or lower(bridge_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//prepare to page the results
-	$sql = "select count(*) from v_bridges ";
+//get the count
+	$sql = "select count(bridge_uuid) from v_bridges ";
 	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
@@ -121,17 +112,15 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
-		$param .= "&show=all";
-	}
+	$param = $search ? "&search=".$search : null;
+	$param = ($_GET['show'] == 'all' && permission_exists('bridge_all')) ? "&show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = str_replace('count(bridge_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'bridge_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -164,7 +153,7 @@
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('bridge_all')) {
 		if ($_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
@@ -174,7 +163,7 @@
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'bridges.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -195,13 +184,13 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($bridges ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+	if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
 	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
 	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'");
-	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-bridge_description']."</th>\n";
 	if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -220,30 +209,30 @@
 				echo "		<input type='hidden' name='bridges[$x][uuid]' value='".escape($row['bridge_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if ($_GET['show'] == "all" && permission_exists('bridge_all')) {
+			if ($_GET['show'] == 'all' && permission_exists('bridge_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td>";
+			echo "	<td>\n";
 			if (permission_exists('bridge_edit')) {
-				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['bridge_name'])."</a>";
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['bridge_name'])."</a>\n";
 			}
 			else {
-				echo escape($row['bridge_name']);
+				echo "	".escape($row['bridge_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['bridge_destination'])."</td>\n";
 			if (permission_exists('bridge_edit')) {
-				echo "	<td class='no-link center'>";
+				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['bridge_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
-				echo "	<td class='center'>";
+				echo "	<td class='center'>\n";
 				echo $text['label-'.$row['bridge_enabled']];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['bridge_description'])."</td>\n";
 			if (permission_exists('bridge_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>";
+				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
@@ -256,9 +245,7 @@
 	echo "</table>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
-
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
 	echo "</form>\n";
 
 //include the footer

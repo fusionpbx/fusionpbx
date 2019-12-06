@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,13 +25,13 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists("user_view") || if_group("superadmin")) {
+	if (permission_exists('user_view')) {
 		//access granted
 	}
 	else {
@@ -43,197 +43,255 @@
 	$language = new text;
 	$text = $language->get();
 
-//include the header
-	require_once "resources/header.php";
-	$document['title'] = $text['title-user_manager'];
+//get the http post data
+	if (is_array($_POST['users'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$users = $_POST['users'];
+	}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'u.username';
+//process the http post data by action
+	if ($action != '' && is_array($users) && @sizeof($users) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('user_add')) {
+					$obj = new users;
+					$obj->copy($users);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('user_edit')) {
+					$obj = new users;
+					$obj->toggle($users);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('user_delete')) {
+					$obj = new users;
+					$obj->delete($users);
+				}
+				break;
+		}
+
+		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by
+	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//set the variables
-	$search = $_REQUEST["search"];
-	if (strlen($search) > 0) {
-		$search = strtolower($search);
-	}
-
-//common where clause
-	$sql_where = "where true ";
-	if (!(isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all')) {
-		$sql_where .= "and u.domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
-	if (strlen($search) > 0) {
-		$sql_where .= "and ( ";
-		$sql_where .= "lower(username) like :search ";
-		$sql_where .= "or lower(groups) like :search ";
-		$sql_where .= "or lower(contact_organization) like :search ";
-		$sql_where .= "or lower(contact_name_given) like :search ";
-		$sql_where .= "or lower(contact_name_family) like :search ";
-		$sql_where .= ") ";
+//add the search string
+	if (isset($_GET["search"])) {
+		$search =  strtolower($_GET["search"]);
+		$sql_search = " (";
+		$sql_search .= "	lower(username) like :search ";
+		$sql_search .= "	or lower(groups) like :search ";
+		$sql_search .= "	or lower(contact_organization) like :search ";
+		$sql_search .= "	or lower(contact_name) like :search ";
+		//$sql_search .= "	or lower(user_status) like :search ";
+		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql_where .= "and ( ";
-	$sql_where .= "	group_level <= :group_level ";
-	$sql_where .= "	or group_level is null ";
-	$sql_where .= ") ";
-	$parameters['group_level'] = $_SESSION['user']['group_level'];
 
-//get the user count from the database
-	$sql = "select count(*) from view_users as u ";
-	$sql .= $sql_where;
+//get the count
+	$sql = "select count(*) from view_users ";
+	if ($_GET['show'] == "all" && permission_exists('user_all')) {
+		if (isset($sql_search)) {
+			$sql .= "where ".$sql_search;
+		}
+		else {
+			$sql.= "where true ";
+		}
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (isset($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= "and ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
-	unset($sql);
 
-//prepare for paging
-	$rows_per_page = is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
-	if ($_GET['show'] == "all" && permission_exists('user_all')) {
-		$param .= "&show=all";
-	}
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = $search ? "&search=".$search : null;
+	$param = ($_GET['show'] == 'all' && permission_exists('user_all')) ? "&show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
-//get the users from the database
-	$sql = "select u.domain_uuid, u.user_uuid, u.contact_uuid, u.domain_name, u.username, u.user_enabled, ";
-	$sql .= "u.contact_organization, u.contact_name_given, u.contact_name_family, u.groups, u.group_level ";
-	$sql .= "from view_users as u ";
-	$sql .= $sql_where;
-	$sql .= order_by($order_by, $order);
+//get the list
+	$sql = "select * from view_users ";
+	if ($_GET['show'] == "all" && permission_exists('user_all')) {
+		if (isset($sql_search)) {
+			$sql .= "where ".$sql_search;
+		}
+		else {
+			$sql.= "where true ";
+		}
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (isset($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= "and ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
+	$sql .= order_by($order_by, $order, 'username', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
-	unset($sql, $sql_where, $parameters);
+	unset($sql, $parameters);
 
-//page title and description
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<form method='post' action=''>";
-	echo "<tr>\n";
-	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']." (".$num_rows.")</b></td>\n";
-	echo "<td align='right' nowrap='nowrap'>";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	require_once "resources/header.php";
+
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-users']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (permission_exists('user_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'user_edit.php']);
+	}
+	if (permission_exists('user_add') && $users) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('user_edit') && $users) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('user_delete') && $users) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('user_all')) {
-		if (isset($_GET['show']) && $_GET['show'] == 'all') {
-			echo "<input type='button' class='btn' value='".$text['button-back']."' onclick=\"window.location='users.php';\">\n";
-			echo "<input type='hidden' name='show' value='all'>";
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='users.php?show=all';\">\n";
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	if (permission_exists('user_import')) {
-		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='user_imports.php'\" value='".$text['button-import']."'>\n";
+
+	//add buttons
+	if (!isset($id)) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-import']."' onclick='window.location=\"user_imports.php\"' value='".$text['button-import']."'>";
 	}
-	echo 	"<input type='text' class='txt' style='width: 150px; margin-left: 15px; margin-right: 3px;' name='search' value=\"".escape($search)."\">";
-	echo 	"<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-	echo "</td>";
-	echo "</tr>\n";
-	echo "</form>";
-
-	echo "<tr>\n";
-	echo "<td align='left' colspan='4'>\n";
-	echo $text['description-user_manager']."\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-//show the users
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr>\n";
-	if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, '', '', $param);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'users.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
-	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo th_order_by('groups', $text['label-groups'], $order_by, $order, '', '', $param);
-	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, '', '', $param);
-	echo th_order_by('contact_name_given', $text['label-name'], $order_by, $order, '', '', $param);
-	if (permission_exists('ticket_edit')) {
-		echo "<th>".$text['label-tools']."</th>\n";
-	}
-	else {
-		echo "<th>&nbsp;</th>\n";
-	}
-	echo th_order_by('user_enabled', $text['label-enabled'], $order_by, $order, '', '', $param);
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('user_add')) {
-		if (!isset($_SESSION['limit']['users']['numeric']) || (isset($_SESSION['limit']['users']['numeric']) && $num_rows < $_SESSION['limit']['users']['numeric'])) {
-			echo "<a href='user_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-		}
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	if (is_array($users) && sizeof($users) != 0) {
-		foreach($users as $row) {
-			$tr_link = (permission_exists('user_edit')) ? "href='user_edit.php?id=".escape($row['user_uuid'])."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			if (isset($_GET['show']) && permission_exists('user_all') && $_GET['show'] == 'all') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
-			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('user_edit')) {
-				echo "<a href='user_edit.php?id=".escape($row['user_uuid'])."'>".escape($row['username'])."</a>";
-			}
-			else {
-				echo escape($row['username']);
-			}
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo "		".$row['groups']."&nbsp;\n";
-			echo "	</td>\n";
-
-			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a> &nbsp;</td>\n";
-			echo "	<td class='".$row_style[$c]."'><a href='/app/contacts/contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given'])." ".escape($row['contact_name_family'])."</a> &nbsp;</td>\n";
-
-			echo "	<td class='".$row_style[$c]."'>\n";
-			if (permission_exists('ticket_edit')) {
-				echo "		<a href='/app/tickets/tickets.php?user_uuid=".urlencode($row['user_uuid'])."'><span class='fas fa-tags' title='".$text['label-tickets']."'></span></a>\n";
-			}
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if ($row['user_enabled'] == 'true') {
-				echo $text['option-true'];
-			}
-			else {
-				echo $text['option-false'];
-			}
-			echo "&nbsp;</td>\n";
-			echo "	<td valign='top' align='right' class='tr_link_void'>";
-			if (permission_exists('user_edit')) {
-				echo "<a href='user_edit.php?id=".urlencode($row['user_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('user_delete')) {
-				if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
-					echo "<a href='user_delete.php?id=".urlencode($row['user_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-				}
-				else {
-					echo "<span onclick=\"alert('".$text['message-cannot_delete_own_account']."');\">".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
-				}
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			$c = $c == 0 ? 1 : 0;
-		}
-		unset($users, $row);
-	}
-
-	echo "<tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
-
-	echo $paging_controls."\n";
+	echo $text['description-users']."\n";
 	echo "<br /><br />\n";
 
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('user_add') || permission_exists('user_edit') || permission_exists('user_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($users ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	if ($_GET['show'] == 'all' && permission_exists('user_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	}
+	echo th_order_by('username', $text['label-username'], $order_by, $order);
+	echo th_order_by('groups', $text['label-groups'], $order_by, $order);
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order);
+	echo th_order_by('contact_name', $text['label-name'], $order_by, $order);
+	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
+	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
+	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
+	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'");
+	if (permission_exists('user_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
+	if (is_array($users) && @sizeof($users) != 0) {
+		$x = 0;
+		foreach ($users as $row) {
+			if (permission_exists('user_edit')) {
+				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('user_add') || permission_exists('user_edit') || permission_exists('user_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='users[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='users[$x][uuid]' value='".escape($row['user_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			if ($_GET['show'] == 'all' && permission_exists('user_all')) {
+				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			}
+			echo "	<td>\n";
+			if (permission_exists('user_edit')) {
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['username'])."</a>\n";
+			}
+			else {
+				echo "	".escape($row['username']);
+			}
+			echo "	</td>\n";
+			echo "	<td>".escape($row['groups'])."</td>\n";
+			echo "	<td>".escape($row['contact_organization'])."</td>\n";
+			echo "	<td>".escape($row['contact_name'])."</td>\n";
+			//echo "	<td>".escape($row['contact_name_given'])."</td>\n";
+			//echo "	<td>".escape($row['contact_name_family'])."</td>\n";
+			//echo "	<td>".escape($row['user_status'])."</td>\n";
+			//echo "	<td>".escape($row['add_date'])."</td>\n";
+			if (permission_exists('user_edit')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['user_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['user_enabled']];
+			}
+			echo "	</td>\n";
+			if (permission_exists('user_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
+			echo "</tr>\n";
+			$x++;
+		}
+		unset($users);
+	}
+
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
+
 //include the footer
-	include "resources/footer.php";
+	require_once "resources/footer.php";
 
 ?>

@@ -56,9 +56,9 @@
 			//tiers table
 				$sql = "delete from v_call_center_tiers ";
 				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and agent_name = :agent_name ";
+				$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$parameters['agent_name'] = $agent_uuid;
+				$parameters['call_center_agent_uuid'] = $agent_uuid;
 				$database = new database;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);

@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	include_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -50,28 +50,25 @@
 		$extensions = $_POST['extensions'];
 	}
 
-//toggle the extensions
-	if (permission_exists('extension_enabled')) {
-		if ($action == 'toggle' && is_array($extensions) && @sizeof($extensions) != 0) {
-			//toggle
-				$obj = new extension;
-				$obj->toggle($extensions);
-			//redirect
-				header('Location: extensions.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($extensions) && @sizeof($extensions) != 0) {
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('extension_enabled')) {
+					$obj = new extension;
+					$obj->toggle($extensions);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('extension_delete')) {
+					$obj = new extension;
+					$obj->delete($extensions);
+				}
+				break;
 		}
-	}
 
-//delete the extensions
-	if (permission_exists('extension_delete')) {
-		if ($action == 'delete' && is_array($extensions) && @sizeof($extensions) != 0) {
-			//delete
-				$obj = new extension;
-				$obj->delete($extensions);
-			//redirect
-				header('Location: extensions.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: extensions.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by

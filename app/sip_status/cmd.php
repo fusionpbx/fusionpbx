@@ -39,6 +39,7 @@
 	}
 
 //set the variables
+	$profile = $_GET['profile'];
 	$command = $_GET['cmd'];
 
 //create the event socket connection
@@ -47,10 +48,8 @@
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
 			if ($command == "api reloadxml") {
 				//reloadxml
-					if ($command == "api reloadxml") {
-						message::add(rtrim(event_socket_request($fp, $command)), 'alert');
-						unset($command);
-					}
+					message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+					unset($command);
 
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
@@ -64,7 +63,9 @@
 		//cache flush
 			if ($command == "api cache flush") {
 				$cache = new cache;
-				$cache->flush();
+				$response = $cache->flush();
+
+				message::add($response, 'alert');
 			}
 
 		//reloadacl
@@ -75,7 +76,7 @@
 
 		//sofia profile
 			if (substr($command, 0, 17) == "api sofia profile") {
-				message::add(rtrim(event_socket_request($fp, $command)), 'alert');
+				message::add(($profile ? '<strong>'.$profile.'</strong>: ' : null).rtrim(event_socket_request($fp, $command)), 'alert', 3000);
 			}
 
 		//close the connection

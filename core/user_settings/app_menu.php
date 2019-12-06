@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello di Controllo";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Panel użytkowników";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel de controle do usuário (Dashboard)";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Painel de Controle";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Painel de Controle do Usuário";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Panou control utilizator";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Панель пользователя";

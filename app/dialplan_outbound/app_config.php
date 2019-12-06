@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Uitgaande kiesplannen hebben een of meer voorwaarden die met de attributen van een oproep worden vergeleken. Als een oproep aan de voorwaarden voldoet dan wordt de oproep naar de gateway gestuurd.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Rotas de saída tem uma ou mais condições que são verificadas junto aos atributos da chamada. Quando uma chamada combina com as condições ela é roteada para o tronco.";
 		$apps[$x]['description']['pt-pt'] = "Dialplans de saída tem uma ou mais condições que são compatíveis com os atributos de uma chamada. Quando uma chamada coincide com as condições da chamada é então encaminhado para o gateway.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
