@@ -30,14 +30,9 @@
 
 	//permission details
 		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = "sql_query_view";
+		$apps[$x]['permissions'][$y]['name'] = "sql_query";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "sql_query_command";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		//$apps[$x]['permissions'][$y]['name'] = "exec_sql_backup";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>
