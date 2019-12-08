@@ -1,6 +1,46 @@
 <?php
 #This file was last reorganized on 27th of September 2017 01:41:52 PM UTC
 
+$text['title-groups']['en-us'] = "Group Manager";
+$text['title-groups']['ar-eg'] = "";
+$text['title-groups']['de-at'] = "Gruppenverwaltung"; //copied from de-de
+$text['title-groups']['de-ch'] = "Gruppenverwaltung"; //copied from de-de
+$text['title-groups']['de-de'] = "Gruppenverwaltung";
+$text['title-groups']['es-cl'] = "Administración de Grupo";
+$text['title-groups']['es-mx'] = "Administración de Grupo"; //copied from es-cl
+$text['title-groups']['fr-ca'] = "Gestion de Groupe"; //copied from fr-fr
+$text['title-groups']['fr-fr'] = "Gestion de Groupe";
+$text['title-groups']['he-il'] = "מנהל קבוצה";
+$text['title-groups']['it-it'] = "Gestione Gruppo";
+$text['title-groups']['nl-nl'] = "";
+$text['title-groups']['pl-pl'] = "Menedżer grup";
+$text['title-groups']['pt-br'] = "Gerenciador de Grupos"; //copied from pt-pt
+$text['title-groups']['pt-pt'] = "Gestão de Grupos";
+$text['title-groups']['ro-ro'] = "";
+$text['title-groups']['ru-ru'] = "Управление группами";
+$text['title-groups']['sv-se'] = "Grupp Inställningar";
+$text['title-groups']['uk-ua'] = "Групи";
+
+$text['description-groups']['en-us'] = 'Groups are a logical organization of users. Groups are assigned permissions. Users inherit permissions from the group or groups they are assigned to. The default groups are global and used across all domains. A group relevant to one domain may be created and assigned to a single domain.';
+$text['description-groups']['ar-eg'] = '';
+$text['description-groups']['de-at'] = '';
+$text['description-groups']['de-ch'] = '';
+$text['description-groups']['de-de'] = '';
+$text['description-groups']['es-cl'] = '';
+$text['description-groups']['es-mx'] = '';
+$text['description-groups']['fr-ca'] = '';
+$text['description-groups']['fr-fr'] = '';
+$text['description-groups']['he-il'] = '';
+$text['description-groups']['it-it'] = '';
+$text['description-groups']['nl-nl'] = '';
+$text['description-groups']['pl-pl'] = '';
+$text['description-groups']['pt-br'] = '';
+$text['description-groups']['pt-pt'] = '';
+$text['description-groups']['ro-ro'] = '';
+$text['description-groups']['ru-ru'] = '';
+$text['description-groups']['sv-se'] = '';
+$text['description-groups']['uk-ua'] = '';
+
 $text['title-user_setting-edit']['en-us'] = "User Setting";
 $text['title-user_setting-edit']['ar-eg'] = "";
 $text['title-user_setting-edit']['de-at'] = "Benutzereinstellungen"; //copied from de-de
@@ -140,26 +180,6 @@ $text['title-group_members']['ro-ro'] = "Membri grup";
 $text['title-group_members']['ru-ru'] = "Участники группы";
 $text['title-group_members']['sv-se'] = "Grupp Medlemmar";
 $text['title-group_members']['uk-ua'] = "Учасники групи";
-
-$text['title-group_manager']['en-us'] = "Group Manager";
-$text['title-group_manager']['ar-eg'] = "";
-$text['title-group_manager']['de-at'] = "Gruppenverwaltung"; //copied from de-de
-$text['title-group_manager']['de-ch'] = "Gruppenverwaltung"; //copied from de-de
-$text['title-group_manager']['de-de'] = "Gruppenverwaltung";
-$text['title-group_manager']['es-cl'] = "Administración de Grupo";
-$text['title-group_manager']['es-mx'] = "Administración de Grupo"; //copied from es-cl
-$text['title-group_manager']['fr-ca'] = "Gestion de Groupe"; //copied from fr-fr
-$text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
-$text['title-group_manager']['he-il'] = "מנהל קבוצה";
-$text['title-group_manager']['it-it'] = "Gestione Gruppo";
-$text['title-group_manager']['nl-nl'] = "";
-$text['title-group_manager']['pl-pl'] = "Menedżer grup";
-$text['title-group_manager']['pt-br'] = "Gerenciador de Grupos"; //copied from pt-pt
-$text['title-group_manager']['pt-pt'] = "Gestão de Grupos";
-$text['title-group_manager']['ro-ro'] = "";
-$text['title-group_manager']['ru-ru'] = "Управление группами";
-$text['title-group_manager']['sv-se'] = "Grupp Inställningar";
-$text['title-group_manager']['uk-ua'] = "Групи";
 
 $text['title-group_edit']['en-us'] = "Edit Group";
 $text['title-group_edit']['ar-eg'] = "";
@@ -2120,5 +2140,45 @@ $text['button-add_member']['ro-ro'] = "";
 $text['button-add_member']['ru-ru'] = "Добавить участника";
 $text['button-add_member']['sv-se'] = "Lägg Till Medlem";
 $text['button-add_member']['uk-ua'] = "Додати учасника";
+
+$text['button-users']['en-us'] = "Users";
+$text['button-users']['ar-eg'] = "";
+$text['button-users']['de-at'] = "Benutzer"; //copied from de-de
+$text['button-users']['de-ch'] = "Benutzer"; //copied from de-de
+$text['button-users']['de-de'] = "Benutzer";
+$text['button-users']['es-cl'] = "Usuarios";
+$text['button-users']['es-mx'] = "Usuarios"; //copied from es-cl
+$text['button-users']['fr-ca'] = "Utilisateurs"; //copied from fr-fr
+$text['button-users']['fr-fr'] = "Utilisateurs";
+$text['button-users']['he-il'] = "";
+$text['button-users']['it-it'] = "Utenti";
+$text['button-users']['nl-nl'] = "";
+$text['button-users']['pl-pl'] = "Użytkownicy";
+$text['button-users']['pt-br'] = "Usuários";
+$text['button-users']['pt-pt'] = "Utilizadores";
+$text['button-users']['ro-ro'] = "";
+$text['button-users']['ru-ru'] = "Пользователи";
+$text['button-users']['sv-se'] = "Användare";
+$text['button-users']['uk-ua'] = "Користувачі";
+
+$text['button-restore_default']['en-us'] = "Restore Default";
+$text['button-restore_default']['ar-eg'] = "";
+$text['button-restore_default']['de-at'] = "Zurücksetzen"; //copied from de-de
+$text['button-restore_default']['de-ch'] = "Zurücksetzen"; //copied from de-de
+$text['button-restore_default']['de-de'] = "Zurücksetzen";
+$text['button-restore_default']['es-cl'] = "Restaurar Predeterminados";
+$text['button-restore_default']['es-mx'] = "Restaurar Predeterminados"; //copied from es-cl
+$text['button-restore_default']['fr-ca'] = "Restaurer"; //copied from fr-fr
+$text['button-restore_default']['fr-fr'] = "Restaurer";
+$text['button-restore_default']['he-il'] = "";
+$text['button-restore_default']['it-it'] = "Ripristina Default";
+$text['button-restore_default']['nl-nl'] = "";
+$text['button-restore_default']['pl-pl'] = "Przywróć do ustawień domyślnych";
+$text['button-restore_default']['pt-br'] = "Restaurar Configurações Padrão";
+$text['button-restore_default']['pt-pt'] = "Restaurar Predefinições";
+$text['button-restore_default']['ro-ro'] = "";
+$text['button-restore_default']['ru-ru'] = "Восстановить значения по умолчанию";
+$text['button-restore_default']['sv-se'] = "Återställ Standard";
+$text['button-restore_default']['uk-ua'] = "Відновити значення за замовчуванням";
 
 ?>
