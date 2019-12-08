@@ -97,6 +97,22 @@ if ($domains_processed == 1) {
 			unset($array);
 		}
 
+	//drop the view_groups
+		$database = new database;
+		$database->execute("DROP VIEW view_groups;", null);
+
+	//add or update the view
+		$sql = "CREATE VIEW view_groups AS (";
+		$sql .= "	select domain_uuid, group_uuid, group_name, ";
+		$sql .= "	(select count(*) from v_group_permissions where group_uuid = g.group_uuid) as group_permissions, ";
+		$sql .= "	(select count(*) from v_user_groups where group_uuid = g.group_uuid) as group_members, ";
+		$sql .= "	group_level, group_protected, group_description ";
+		$sql .= "	from v_groups as g ";
+		$sql .= ");";
+		$database = new database;
+		$database->execute($sql, null);
+		unset($sql);
+
 }
 
 ?>
