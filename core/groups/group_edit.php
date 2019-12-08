@@ -217,58 +217,58 @@
 		echo "	<select class='formfld' name='group_level'>\n";
 		echo "		<option value=''></option>\n";
 		if ($group_level == "10") {
-			echo "		<option value='10' selected='selected'>".$text['label-10']."</option>\n";
+			echo "		<option value='10' selected='selected'>10</option>\n";
 		}
 		else {
-			echo "		<option value='10'>".$text['label-10']."</option>\n";
+			echo "		<option value='10'>10</option>\n";
 		}
 		if ($group_level == "20") {
-			echo "		<option value='20' selected='selected'>".$text['label-20']."</option>\n";
+			echo "		<option value='20' selected='selected'>20</option>\n";
 		}
 		else {
-			echo "		<option value='20'>".$text['label-20']."</option>\n";
+			echo "		<option value='20'>20</option>\n";
 		}
 		if ($group_level == "30") {
 			echo "		<option value='30' selected='selected'>".$text['label-30']."</option>\n";
 		}
 		else {
-			echo "		<option value='30'>".$text['label-30']."</option>\n";
+			echo "		<option value='30'>30</option>\n";
 		}
 		if ($group_level == "40") {
-			echo "		<option value='40' selected='selected'>".$text['label-40']."</option>\n";
+			echo "		<option value='40' selected='selected'>40</option>\n";
 		}
 		else {
-			echo "		<option value='40'>".$text['label-40']."</option>\n";
+			echo "		<option value='40'>40</option>\n";
 		}
 		if ($group_level == "50") {
-			echo "		<option value='50' selected='selected'>".$text['label-50']."</option>\n";
+			echo "		<option value='50' selected='selected'>50</option>\n";
 		}
 		else {
-			echo "		<option value='50'>".$text['label-50']."</option>\n";
+			echo "		<option value='50'>50</option>\n";
 		}
 		if ($group_level == "60") {
-			echo "		<option value='60' selected='selected'>".$text['label-60']."</option>\n";
+			echo "		<option value='60' selected='selected'>60</option>\n";
 		}
 		else {
-			echo "		<option value='60'>".$text['label-60']."</option>\n";
+			echo "		<option value='60'>60</option>\n";
 		}
 		if ($group_level == "70") {
-			echo "		<option value='70' selected='selected'>".$text['label-70']."</option>\n";
+			echo "		<option value='70' selected='selected'>70</option>\n";
 		}
 		else {
-			echo "		<option value='70'>".$text['label-70']."</option>\n";
+			echo "		<option value='70'>70</option>\n";
 		}
 		if ($group_level == "80") {
-			echo "		<option value='80' selected='selected'>".$text['label-80']."</option>\n";
+			echo "		<option value='80' selected='selected'>80</option>\n";
 		}
 		else {
-			echo "		<option value='80'>".$text['label-80']."</option>\n";
+			echo "		<option value='80'>80</option>\n";
 		}
 		if ($group_level == "90") {
-			echo "		<option value='90' selected='selected'>".$text['label-90']."</option>\n";
+			echo "		<option value='90' selected='selected'>90</option>\n";
 		}
 		else {
-			echo "		<option value='90'>".$text['label-90']."</option>\n";
+			echo "		<option value='90'>90</option>\n";
 		}
 		echo "	</select>\n";
 	echo "<br />\n";
