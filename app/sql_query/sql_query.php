@@ -169,7 +169,7 @@
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 	echo "	<tr>";
 	echo "		<td valign='top' align='left' width='50%'>";
-	echo "			<b>".$text['label-execute']."</b>\n";
+	echo "			<b>".$text['label-sql_query']."</b>\n";
 	echo "		</td>";
 	echo "		<td valign='top' align='right' nowrap='nowrap'>";
 
@@ -209,10 +209,12 @@
 	echo "				<input type='button' class='btn' style='margin-top: 0px;' title=\"".$text['button-execute']." [Ctrl+Enter]\" value=\"    ".$text['button-execute']."    \" onclick=\"$('form#frm').submit();\">";
 	echo "				<input type='button' class='btn' style='margin-top: 0px;' title=\"\" value=\"    ".$text['button-reset']."    \" onclick=\"reset_editor();\">";
 
-	echo "		</td>";
-	echo "	</tr>";
-	echo "	<tr><td colspan='2'>\n";
-	echo 			$text['description-execute']."\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2'>\n";
+	echo 			$text['description-sql_query']."\n";
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
 	echo "<br>";
