@@ -1095,7 +1095,6 @@ include "root.php";
 										$database->app_name = $this->app_name;
 										$database->app_uuid = $this->app_uuid;
 										$database->delete($array);
-										unset($array);
 
 									//revoke temporary permissions
 										$p->delete('dialplan_delete', 'temp');
@@ -1117,7 +1116,7 @@ include "root.php";
 										message::add($text['message-delete'].': '.@sizeof($array[$this->table]));
 
 								}
-								unset($records);
+								unset($records, $array);
 
 						}
 				}
