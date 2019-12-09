@@ -62,7 +62,7 @@ if (!$included) {
 			if (if_group("superadmin") || if_group("admin")) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
-				$sql .= "accountcode, fax_send_greeting ";
+				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
 				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and fax_uuid = :fax_uuid ";
@@ -72,7 +72,7 @@ if (!$included) {
 			else {
 				//show only assigned fax extensions
 				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
-				$sql .= "f.accountcode, f.fax_send_greeting ";
+				$sql .= "f.fax_toll_allow, f.accountcode, f.fax_send_greeting ";
 				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = :domain_uuid ";
@@ -90,6 +90,7 @@ if (!$included) {
 					$fax_extension = $row["fax_extension"];
 					$fax_caller_id_name = $row["fax_caller_id_name"];
 					$fax_caller_id_number = $row["fax_caller_id_number"];
+					$fax_toll_allow = $row["fax_toll_allow"];
 					$fax_accountcode = $row["accountcode"];
 					$fax_send_greeting = $row["fax_send_greeting"];
 			}
@@ -773,7 +774,10 @@ if (!function_exists('fax_split_dtmf')) {
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
-			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
+			if (strlen($fax_toll_allow) > 0) {
+				$channel_variables["toll_allow"] = $fax_toll_allow;
+			}
+			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
