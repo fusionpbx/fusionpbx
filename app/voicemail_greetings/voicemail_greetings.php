@@ -288,7 +288,7 @@
 			while (($file = readdir($dh)) !== false) {
 				if (filetype($v_greeting_dir."/".$file) == "file" && substr($file, 0, 8) == "greeting" && substr($file, 10, 4) != ".tmp") {
 					$greeting_number = preg_replace('{\D}', '', $file);
-					if (is_array($array_greetings) && !in_array($file, $array_greetings)) {
+					if (!is_array($array_greetings) || !in_array($file, $array_greetings)) {
 						//file not found, add to database
 							$greeting_name = $text['label-greeting'].' '.$greeting_number;
 							$greeting_description = base64_decode($_GET['gd']);
