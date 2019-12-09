@@ -67,7 +67,7 @@
 
 //show the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-command'];
+	$document['title'] = $text['title-sql_query'];
 
 //pdo database connection
 	require_once "sql_query_pdo.php";
@@ -169,7 +169,7 @@
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 	echo "	<tr>";
 	echo "		<td valign='top' align='left' width='50%'>";
-	echo "			<b>".$text['label-sql_query']."</b>\n";
+	echo "			<b>".$text['title-sql_query']."</b>\n";
 	echo "		</td>";
 	echo "		<td valign='top' align='right' nowrap='nowrap'>";
 
