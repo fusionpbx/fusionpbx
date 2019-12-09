@@ -2,7 +2,7 @@
 
 	//application details
 		$apps[$x]['name'] = "SQL";
-		$apps[$x]['uuid'] = "1dd98ca6-95f1-e728-7e8f-137fe18dc23c";
+		$apps[$x]['uuid'] = "7102e551-155a-4c88-b028-f8f669c682b5";
 		$apps[$x]['category'] = "System";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
