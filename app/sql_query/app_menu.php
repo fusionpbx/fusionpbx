@@ -20,7 +20,7 @@
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Выполнение команд";
 	$apps[$x]['menu'][$y]['title']['sv-se'] = "Kommando";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Команди";
-	$apps[$x]['menu'][$y]['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
+	$apps[$x]['menu'][$y]['uuid'] = "bb3ab92d-c329-42b6-9753-b6ea88d5e700";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/sql_query/sql_query.php";
