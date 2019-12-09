@@ -46,7 +46,7 @@
 	if (is_uuid($_REQUEST["id"])) {
 		$voicemail_greeting_uuid = $_REQUEST["id"];
 	}
-	if (is_uuid($_REQUEST["voicemail_id"])) {
+	if (is_numeric($_REQUEST["voicemail_id"])) {
 		$voicemail_id = $_REQUEST["voicemail_id"];
 	}
 
