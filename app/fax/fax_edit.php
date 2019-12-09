@@ -107,6 +107,7 @@
 		$fax_email_outbound_authorized_senders = $_POST["fax_email_outbound_authorized_senders"];
 		$fax_caller_id_name = $_POST["fax_caller_id_name"];
 		$fax_caller_id_number = $_POST["fax_caller_id_number"];
+		$fax_toll_allow = $_POST["fax_toll_allow"];
 		$fax_forward_number = $_POST["fax_forward_number"];
 		if (strlen($fax_destination_number) == 0) {
 			$fax_destination_number = $fax_extension;
@@ -307,6 +308,7 @@
 						}
 						$array['fax'][0]['fax_caller_id_name'] = $fax_caller_id_name;
 						$array['fax'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+						$array['fax'][0]['fax_toll_allow'] = $fax_toll_allow;
 						if ($action == "add" && strlen($fax_forward_number) > 0) {
 							$array['fax'][0]['fax_forward_number'] = $fax_forward_number;
 						}
@@ -398,6 +400,7 @@
 			$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
+			$fax_toll_allow = $row["fax_toll_allow"];
 			$fax_forward_number = $row["fax_forward_number"];
 			$fax_description = $row["fax_description"];
 			$fax_send_greeting = $row["fax_send_greeting"];
@@ -613,6 +616,17 @@
 		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='20' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : escape($fax_forward_number))."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-forward-number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-toll_allow']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_toll_allow' maxlength='20' min='0' step='1' value=\"".escape($fax_toll_allow)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-toll_allow']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
