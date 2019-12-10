@@ -47,7 +47,7 @@
 	$order = check_str($_GET["order"]);
 
 //get fax extension
-	if (is_uuid($fax_uuid)) {
+	if (is_uuid($_GET["id"])) {
 		//get the fax uuid
 		$fax_uuid = $_GET["id"];
 
