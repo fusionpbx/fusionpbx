@@ -186,7 +186,7 @@
 		echo "	</th>\n";
 	}
 	echo th_order_by('voicemail_id', $text['label-voicemail_id'], $order_by, $order);
-	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order, null, "class='center hide-sm-dn'");
+	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order, null, "class='center hide-md-dn'");
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order, null, "class='center hide-md-dn'");
 	if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
@@ -222,7 +222,7 @@
 			}
 			echo "	</td>\n";
 
-			echo "	<td class='center hide-sm-dn'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['voicemail_mail_to'])."&nbsp;</td>\n";
 			echo "	<td class='center hide-md-dn'>".($row['voicemail_file'] == 'attach' ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td class='center hide-md-dn'>".ucwords(escape($row['voicemail_local_after_email']))."&nbsp;</td>\n";
 			if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
