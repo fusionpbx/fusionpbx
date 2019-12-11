@@ -469,20 +469,58 @@
 
 	if (!function_exists('th_order_by')) {
 		//html table header order by
-		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '', $additional_get_params='', $description='') {
-			if (strlen($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
-			if (strlen($additional_get_params) > 0) {$additional_get_params = '&'.$additional_get_params; } // you may need to pass other parameters
-			$html = "<th ".$css." nowrap>";
+		function th_order_by($field_name, $column_title, $order_by, $order, $app_uuid = '', $css = '', $http_get_params = '', $description = '') {
+			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
+
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
+			$column_title = preg_replace("#[^a-zA-Z0-9_]#", "", $column_title);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+
+			$sanitized_parameters = '';
+			if (isset($http_get_params) && strlen($http_get_params) > 0) {
+				$parameters = explode('&', $http_get_params);
+				if (is_array($parameters)) {
+					foreach ($parameters as $parameter) {
+						$array = explode('=', $parameter);
+						$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
+						$value = urldecode($array['1']);
+						if ($key == 'order_by' && strlen($value) > 0) {
+							//validate order by
+							$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+						}
+						else if ($key == 'order' && strlen($value) > 0) {
+							//validate order
+							switch ($value) {
+								case 'asc':
+									$sanitized_parameters .= "&order=asc";
+									break;
+								case 'desc':
+									$sanitized_parameters .= "&order=desc";
+									break;
+							}
+						}
+						else if (strlen($value) > 0 && is_numeric($value)) {
+							$sanitized_parameters .= "&".$key."=".$value;
+						}
+						else {
+							$sanitized_parameters .= "&".$key."=".urlencode($value);
+						}
+					}
+				}
+			}
+
+			$html = "<th ".$css." nowrap='nowrap'>";
 			$description = (strlen($description) > 0) ? $description . ', ': '';
-			if (strlen($order_by) == 0)
+			if (strlen($order_by) == 0) {
 				$order = 'asc';
+			}
 			if ($order == "asc") {
 				$description .= 'sort(ascending)';
-				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
 			}
 			else {
 				$description .= 'sort(descending)';
-				$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
 			}
 			$html .= "</th>";
 			return $html;
