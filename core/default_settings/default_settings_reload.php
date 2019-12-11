@@ -39,6 +39,7 @@ else {
 	$text = $language->get();
 
 $search = $_REQUEST['search'];
+$domain_uuid = $_GET['id'];
 
 require "resources/classes/domains.php";
 $domain = new domains();
@@ -46,6 +47,12 @@ $domain->db = $db;
 $domain->set();
 
 message::add($text['message-settings_reloaded']);
-header("Location: default_settings.php".($search != '' ? "?search=".$search : null));
+if (is_uuid($domain_uuid)) {
+	$location = PROJECT_PATH.'/core/domains/domain_edit.php?id='.$domain_uuid;
+}
+else {
+	$location = 'default_settings.php'.($search != '' ? "?search=".$search : null);
+}
+header("Location: ".$location);
 
 ?>
