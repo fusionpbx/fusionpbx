@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -367,6 +367,10 @@
 			//html select other : build a select box from distinct items in db with option for other
 			global $domain_uuid;
 
+			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+		
 			if (strlen($field_value) > 0) {
 			$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."'>\n";
 			$html .= "<option value=\"\"></option>\n";
@@ -387,18 +391,18 @@
 					if (strlen($field[$field_name]) > 0) {
 						if ($field_current_value == $field[$field_name]) {
 							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\" selected>".$field[$field_name]."</option>\n";
+								$html .= "<option value=\"".urlencode($field[$field_value])."\" selected>".urlencode($field[$field_name])."</option>\n";
 							}
 							else {
-								$html .= "<option value=\"".$field[$field_name]."\" selected>".$field[$field_name]."</option>\n";
+								$html .= "<option value=\"".urlencode($field[$field_name])."\" selected>".urlencode($field[$field_name])."</option>\n";
 							}
 						}
 						else {
 							if (strlen($field_value) > 0) {
-								$html .= "<option value=\"".$field[$field_value]."\">".$field[$field_name]."</option>\n";
+								$html .= "<option value=\"".urlencode($field[$field_value])."\">".urlencode($field[$field_name])."</option>\n";
 							}
 							else {
-								$html .= "<option value=\"".$field[$field_name]."\">".$field[$field_name]."</option>\n";
+								$html .= "<option value=\"".urlencode($field[$field_name])."\">".urlencode($field[$field_name])."</option>\n";
 							}
 						}
 					}
@@ -417,6 +421,11 @@
 		function html_select_on_change($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $onchange, $field_value = '') {
 			//html select other : build a select box from distinct items in db with option for other
 			global $domain_uuid;
+
+
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
+			$column_title = preg_replace("#[^a-zA-Z0-9_]#", "", $column_title);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 
 			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"".$onchange."\">\n";
 			$html .= "<option value=''></option>\n";
