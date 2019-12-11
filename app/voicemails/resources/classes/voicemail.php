@@ -332,7 +332,7 @@
 											$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
 											$array['voicemail_greetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];;
 										}
-
+										$x++;
 								}
 							}
 
