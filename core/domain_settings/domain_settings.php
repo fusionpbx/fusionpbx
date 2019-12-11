@@ -385,7 +385,7 @@
 
 	echo "<div style='float: right;'>\n";
 	if (permission_exists('domain_setting_add')) {
-		echo "	<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'><span class='fas fa-plus'></span> ".$text['button-add']."</button></a>";
+		echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'><span class='fas fa-plus'></span> ".$text['button-add']."</button></a>";
 	}
 	if (is_array($result) && @sizeof($result) != 0) {
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
@@ -410,6 +410,9 @@
 		if (permission_exists('default_setting_delete')) {
 			echo "	<button type='submit' name='action' class='btn btn-default' alt=\"".$text['button-delete']."\" value='delete' onclick=\"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }\"><span class='fas fa-trash'></span> ".$text['button-delete']."</button>";
 		}
+	}
+	if (permission_exists('default_setting_view') && is_array($result) && @sizeof($result) != 0) {
+		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-left: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
 	}
 	echo "</div>\n";
 	echo "<b>".$text['header-domain_settings']."</b>";
