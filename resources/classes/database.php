@@ -29,6 +29,10 @@ include "root.php";
 //define the database class
 	if (!class_exists('database')) {
 		class database {
+
+			/**
+			 * Define the class variables
+			 */
 			public $db;
 			public $driver;
 			public $type;
@@ -679,7 +683,8 @@ include "root.php";
 					unset($sql);
 			}
 
-			public function delete($array) {
+			public function delete($delete_array) {
+
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
@@ -699,9 +704,6 @@ include "root.php";
 				//debug sql
 					$this->debug["sql"] = true;
 
-				//start the atomic transaction
-					//$this->db->beginTransaction();
-
 				//debug info
 					//echo "<pre>\n";
 					//print_r($array);
@@ -709,7 +711,7 @@ include "root.php";
 					//exit;
 
 				//get the current data
-					foreach($array as $table_name => $rows) {
+					foreach($delete_array as $table_name => $rows) {
 						foreach($rows as $row) {
 							$i = 0;
 							$sql = "select * from ".$table_prefix.$table_name." ";
@@ -719,16 +721,24 @@ include "root.php";
 								$parameters[$field_name] = $field_value;
 								$i++;
 							}
-							$old_array[$table_name] = $this->execute($sql, $parameters);
+							if (strlen($field_value) > 0) {
+								$results = $this->execute($sql, $parameters, 'row');
+								if (is_array($results)) {
+									$array[$table_name][] = $results;
+								}
+							}
 							unset($parameters);
 						}
 					}
+
+				//save the array
+					$old_array = &$array;
 
 				//start the atomic transaction
 					$this->db->beginTransaction();
 
 				//delete the current data
-					foreach($array as $table_name => $rows) {
+					foreach($delete_array as $table_name => $rows) {
 						//echo "table: ".$table_name."\n";
 						foreach($rows as $row) {
 							if (permission_exists($this->singular($table_name).'_delete')) {
@@ -859,6 +869,7 @@ include "root.php";
 						$statement->execute();
 						unset($sql);
 					}
+
 			} //delete
 
 			public function count() {

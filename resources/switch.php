@@ -89,7 +89,7 @@ function event_socket_request_cmd($cmd) {
 }
 
 function byte_convert($bytes, $precision = 2) {
-	static $units = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+	static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
 	$step = 1024;
 	$i = 0;
 	while (($bytes / $step) > 0.9) {
@@ -424,7 +424,7 @@ function save_var_xml() {
 	}
 }
 
-function outbound_route_to_bridge($domain_uuid, $destination_number) {
+function outbound_route_to_bridge($domain_uuid, $destination_number, array $channel_variables=null) {
 
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
@@ -470,7 +470,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 				$sub_result = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 
-				$regex_match = false;
+				$condition_match = false;
 				if (is_array($sub_result) && @sizeof($sub_result) != 0) {
 					foreach ($sub_result as &$sub_row) {
 						if ($sub_row['dialplan_detail_tag'] == "condition") {
@@ -478,22 +478,31 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 									$pattern = '/'.$sub_row['dialplan_detail_data'].'/';
 									preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
 									if (count($matches) == 0) {
-										$regex_match = false;
+										$condition_match[] = 'false';
 									}
 									else {
-										$regex_match = true;
+										$condition_match[] = 'true';
 										$regex_match_1 = $matches[1][0];
-										$regex_match_2 = $matches[2][0];
 										$regex_match_3 = $matches[3][0];
 										$regex_match_4 = $matches[4][0];
 										$regex_match_5 = $matches[5][0];
 									}
 							}
+							elseif ($sub_row['dialplan_detail_type'] == "\${toll_allow}") {
+								$pattern = '/'.$sub_row['dialplan_detail_data'].'/';
+								preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
+								if (count($matches) == 0) {
+									$condition_match[] = 'false';
+								} 
+								else {
+									$condition_match[] = 'true';
+								}
+							}
 						}
 					}
 				}
 
-				if ($regex_match) {
+				if (!in_array('false', $condition_match)) {
 					$x = 0;
 					foreach ($sub_result as &$sub_row) {
 						$dialplan_detail_data = $sub_row['dialplan_detail_data'];
@@ -514,7 +523,6 @@ function outbound_route_to_bridge($domain_uuid, $destination_number) {
 		}
 	}
 	unset($result, $row);
-
 	return $bridge_array;
 }
 //$destination_number = '1231234';

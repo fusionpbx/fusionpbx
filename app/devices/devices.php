@@ -52,28 +52,25 @@
 //get the search
 	$search = strtolower($_REQUEST["search"]);
 
-//toggle the devices
-	if (permission_exists('device_edit')) {
-		if ($action == 'toggle' && is_array($devices) && @sizeof($devices) != 0) {
-			//toggle
-				$obj = new device;
-				$obj->toggle($devices);
-			//redirect
-				header('Location: devices.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('device_edit')) {
+					$obj = new device;
+					$obj->toggle($devices);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('device_delete')) {
+					$obj = new device;
+					$obj->delete($devices);
+				}
+				break;
 		}
-	}
 
-//delete the devices
-	if (permission_exists('device_delete')) {
-		if ($action == 'delete' && is_array($devices) && @sizeof($devices) != 0) {
-			//delete
-				$obj = new device;
-				$obj->delete($devices);
-			//redirect
-				header('Location: devices.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by and sanatize the values

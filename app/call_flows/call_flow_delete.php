@@ -87,8 +87,8 @@
 			$p = new permissions;
 			$p->add('dialplan_detail_delete', 'temp');
 
-			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-			$array['dialplans'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplan_details'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
 			$database->app_name = 'call_flows';
 			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';

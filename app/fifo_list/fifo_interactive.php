@@ -99,7 +99,7 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 }
 
 var requestTime = function() {
-	var url = 'fifo_interactive_inc.php?c=<?php echo trim($_REQUEST["c"]); ?>';
+	var url = 'fifo_interactive_inc.php?c=<?php echo trim($fifo_name); ?>';
 	new loadXmlHttp(url, 'ajax_reponse');
 	setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1222);
 }

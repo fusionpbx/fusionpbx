@@ -50,40 +50,31 @@
 		$extensions = $_POST['extensions'];
 	}
 
-//toggle the call forward feature
-	if (permission_exists('call_forward')) {
-		if ($action == 'toggle_call_forward' && is_array($extensions) && @sizeof($extensions) != 0) {
-			//toggle
-				$obj = new call_forward;
-				$obj->toggle($extensions);
-			//redirect
-				header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($extensions) && @sizeof($extensions) != 0) {
+		switch ($action) {
+			case 'toggle_call_forward':
+				if (permission_exists('call_forward')) {
+					$obj = new call_forward;
+					$obj->toggle($extensions);
+				}
+				break;
+			case 'toggle_follow_me':
+				if (permission_exists('follow_me')) {
+					$obj = new follow_me;
+					$obj->toggle($extensions);
+				}
+				break;
+			case 'toggle_do_not_disturb':
+				if (permission_exists('do_not_disturb')) {
+					$obj = new do_not_disturb;
+					$obj->toggle($extensions);
+				}
+				break;
 		}
-	}
 
-//toggle the follow me feature
-	if (permission_exists('follow_me')) {
-		if ($action == 'toggle_follow_me' && is_array($extensions) && @sizeof($extensions) != 0) {
-			//toggle
-				$obj = new follow_me;
-				$obj->toggle($extensions);
-			//redirect
-				header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//toggle the do not disturb feature
-	if (permission_exists('do_not_disturb')) {
-		if ($action == 'toggle_do_not_disturb' && is_array($extensions) && @sizeof($extensions) != 0) {
-			//toggle
-				$obj = new do_not_disturb;
-				$obj->toggle($extensions);
-			//redirect
-				header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get order and order by
@@ -186,12 +177,15 @@
 
 //show the content
 	if ($is_included) {
-		echo "<b>".$text['header-call_routing']."</b>\n";
+		echo "<div class='action_bar sub'>\n";
+		echo "	<div class='heading'><b>".$text['header-call_routing']."</b></div>\n";
+		echo "	<div class='actions'>\n";
 		if ($num_rows > 10) {
-			echo "<div align='right'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'link'=>PROJECT_PATH.'/app/calls/calls.php']);
-			echo "</div>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'project-diagram','collapse'=>false,'link'=>PROJECT_PATH.'/app/calls/calls.php']);
 		}
+		echo "	</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
 	}
 	else {
 		echo "<div class='action_bar' id='action_bar'>\n";

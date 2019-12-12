@@ -46,28 +46,25 @@
 		$access_controls = $_POST['access_controls'];
 	}
 
-//copy the access controls
-	if (permission_exists('access_control_add')) {
-		if ($action == 'copy' && is_array($access_controls) && @sizeof($access_controls) != 0) {
-			//copy
-				$obj = new access_controls;
-				$obj->copy($access_controls);
-			//redirect
-				header('Location: access_controls.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($access_controls) && @sizeof($access_controls) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('access_control_add')) {
+					$obj = new access_controls;
+					$obj->copy($access_controls);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('access_control_delete')) {
+					$obj = new access_controls;
+					$obj->delete($access_controls);
+				}
+				break;
 		}
-	}
 
-//delete the access controls
-	if (permission_exists('access_control_delete')) {
-		if ($action == 'delete' && is_array($access_controls) && @sizeof($access_controls) != 0) {
-			//delete
-				$obj = new access_controls;
-				$obj->delete($access_controls);
-			//redirect
-				header('Location: access_controls.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: access_controls.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

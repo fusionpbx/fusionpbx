@@ -2460,32 +2460,28 @@
 <!-- # Download Mode. 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - Yes, HTTPS. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-{if isset($contact_grandstream)}
-<P330>1</P330>
-{else}
-<P330>0</P330>
-{/if}
+
+<P330>{$grandstream_phonebook_download}</P330>
+
 
 <!-- # File Encoding -->
 <!-- # P1681 -->
 
 <!-- # Download Server -->
 <!-- # String -->
-{if isset($contact_grandstream)}
-<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($grandstream_phonebook_xml_server_path)}
-<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{if isset($grandstream_phonebook_xml_server_path)}
+    <P331>{$grandstream_phonebook_xml_server_path}/{$mac}</P331>
 {else}
-<P331></P331>
+    <P331></P331>
 {/if}
 
 <!-- # HTTP/HTTPS User name -->
 <!-- # String -->
-<P6713></P6713>
+<P6713>{$http_auth_username}</P6713>
 
 <!-- # HTTP/HTTPS Password -->
 <!-- # String -->
-<P6714></P6714>
+<P6714>{$http_auth_password}</P6714>
 
 <!-- # Automatic Download Interval. 0 - None, 120 - 2 Hours, 240 - 4 Hours, 360 - 6 Hours, 480 - 8 Hours, 720 - 12 Hours -->
 <!-- # Number: 0, 120, 240, 360, 480, 720 -->

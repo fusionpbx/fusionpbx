@@ -1232,12 +1232,12 @@
 		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
 			//caller id management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
-						if (permission_exists('extension_caller_id')) {
-							$is_included = true;
-							echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
-							require_once "app/extensions/extension_dashboard.php";
-							echo "</div>";
-						}
+					if (permission_exists('extension_caller_id')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/extensions/extension_dashboard.php";
+						echo "</div>";
+					}
 				}
 		}
 

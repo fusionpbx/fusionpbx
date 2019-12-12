@@ -51,40 +51,31 @@
 	}
 
 /*
-//copy the conference centers
-	if (permission_exists('conference_center_add')) {
-		if ($action == 'copy' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//copy
-				$obj = new conference_centers;
-				$obj->copy_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('conference_center_add')) {
+					$obj = new conference_centers;
+					$obj->copy($conference_centers);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('conference_center_edit')) {
+					$obj = new conference_centers;
+					$obj->toggle($conference_centers);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('conference_center_delete')) {
+					$obj = new conference_centers;
+					$obj->delete($conference_centers);
+				}
+				break;
 		}
-	}
 
-//toggle the conference centers
-	if (permission_exists('conference_center_edit')) {
-		if ($action == 'toggle' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//toggle
-				$obj = new conference_centers;
-				$obj->toggle_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the conference centers
-	if (permission_exists('conference_center_delete')) {
-		if ($action == 'delete' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
-			//delete
-				$obj = new conference_centers;
-				$obj->delete_conference_centers($conference_centers);
-			//redirect
-				header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 */
 
@@ -140,6 +131,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_centers']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('conference_active_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','link'=>PROJECT_PATH.'/app/conferences_active/conferences_active.php']);
+	}
 	echo button::create(['type'=>'button','label'=>$text['button-rooms'],'icon'=>'door-open','style'=>'margin-right: 15px;','link'=>'conference_rooms.php']);
 	if (permission_exists('conference_center_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'conference_center_edit.php']);
@@ -162,11 +156,6 @@
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
-	echo 		"<span style='margin-left: 15px;'>";
-	if (permission_exists('conference_active_advanced_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>'bolt','link'=>PROJECT_PATH.'/app/conferences_active/conferences_active.php']);
-	}
-	echo 		"</span>\n";
 	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

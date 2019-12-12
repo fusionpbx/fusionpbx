@@ -67,7 +67,12 @@
 	$sql .= "contact_uuid, ";
 	$sql .= "message_type, ";
 	$sql .= "message_direction, ";
-	$sql .= "message_date at time zone :time_zone as message_date, ";
+	if ($_SESSION['domain']['time_zone']['name'] != '') {
+		$sql .= "message_date at time zone :time_zone as message_date, ";
+	}
+	else {
+		$sql .= "message_date, ";
+	}
 	$sql .= "message_from, ";
 	$sql .= "message_to, ";
 	$sql .= "message_text ";
@@ -78,7 +83,9 @@
 	$sql .= "and (message_from like :message_number or message_to like :message_number) ";
 	$sql .= "order by message_date desc ";
 	$sql .= $limit;
-	$parameters['time_zone'] = $_SESSION['domain']['time_zone']['name'];
+	if ($_SESSION['domain']['time_zone']['name'] != '') {
+		$parameters['time_zone'] = $_SESSION['domain']['time_zone']['name'];
+	}
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['message_number'] = '%'.$number;
