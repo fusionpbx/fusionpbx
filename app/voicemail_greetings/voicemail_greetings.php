@@ -381,7 +381,13 @@
 	}
 
 //get the greetings list
-	$sql = "select * from v_voicemail_greetings ";
+	if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+		switch ($db_type) {
+			case 'pgsql': $sql_file_size = ", length(decode(greeting_base64,'base64')) as greeting_size "; break;
+			case 'mysql': $sql_file_size = ", length(from_base64(greeting_base64)) as greeting_size "; break;
+		}
+	}
+	$sql = "select * ".$sql_file_size." from v_voicemail_greetings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and voicemail_id = :voicemail_id ";
 	$sql .= order_by($order_by, $order);
@@ -468,10 +474,11 @@
 		echo "<th class='center'>".$text['label-tools']."</th>\n";
 		$col_count++;
 	}
+	echo "<th class='center no-wrap hide-xs'>".$text['label-size']."</th>\n";
+	$col_count++;
 	if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
-		echo "<th class='center no-wrap hide-xs'>".$text['label-size']."</th>\n";
 		echo "<th class='center no-wrap hide-xs'>".$text['label-uploaded']."</th>\n";
-		$col_count += 2;
+		$col_count++;
 	}
 	echo th_order_by('greeting_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", "id=".urlencode($voicemail_id));
 	if (permission_exists('voicemail_greeting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -532,7 +539,11 @@
 				}
 				echo "	</td>\n";
 			}
-			if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+			if ($_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+				$file_size = byte_convert($row['greeting_size']);
+				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
+			}
+			else {
 				$file_size = byte_convert(filesize($v_greeting_dir.'/'.$row['greeting_filename']));
 				$file_date = date("M d, Y H:i:s", filemtime($v_greeting_dir.'/'.$row['greeting_filename']));
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
