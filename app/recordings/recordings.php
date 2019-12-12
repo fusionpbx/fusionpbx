@@ -333,6 +333,16 @@
 	$document['title'] = $text['title-recordings'];
 	require_once "resources/header.php";
 
+//file type check script
+	echo "<script language='JavaScript' type='text/javascript'>\n";
+	echo "	function check_file_type(file_input) {\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
+	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-recordings']." (".$num_rows.")</b></div>\n";
@@ -346,7 +356,7 @@
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_upload_reset','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
-		echo 		"<input type='file' id='ulfile' name='ulfile' style='display: none;' onchange=\"document.getElementById('filename').value = this.files.item(0).name;\">";
+		echo 		"<input type='file' id='ulfile' name='ulfile' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
 		echo 	"</span>\n";
 		echo 	"</form>";
@@ -398,7 +408,7 @@
 		echo "<th class='center hide-md-dn'>".$text['label-uploaded']."</th>\n";
 		$col_count++;
 	}
-	echo th_order_by('recording_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 30%;'");
+	echo th_order_by('recording_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'");
 	if (permission_exists('recording_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -406,7 +416,7 @@
 
 	if (is_array($recordings) && @sizeof($recordings) != 0) {
 		$x = 0;
-		foreach($recordings as $row) {
+		foreach ($recordings as $row) {
 			//playback progress bar
 				if (permission_exists('recording_play')) {
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['recording_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['recording_uuid'])."'></span></td><td class='description hide-sm-dn' style='border-bottom: none !important;'></td></tr>\n";
