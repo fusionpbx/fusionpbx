@@ -18,6 +18,7 @@
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Copyright (C) 2008-2019 All Rights Reserved.
+
 */
 
 //includes
@@ -924,7 +925,7 @@
 				echo "			<tr>\n";
 				echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
 				$selected = "selected=\"selected\" ";
-				echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
+				echo "				<select class='formfld' name='device_lines[".$x."][line_number]'>\n";
 				echo "				<option value=''></option>\n";
 				for ($n = 1; $n <=99; $n++) {
         		            echo "					<option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
