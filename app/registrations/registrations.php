@@ -110,7 +110,7 @@
 	$reload = isset($_GET['reload']) && permission_exists('registration_reload') ? true : false;
 
 //define location url
-	$location = 'registrations'.($reload ? '_reload' : null).'.php';
+	$location = ($reload ? 'registration_reload.php' : 'registrations.php');
 
 //include the header
 	if (!$reload) {
@@ -142,9 +142,11 @@
 			echo button::create(['type'=>'button','label'=>$text['button-all_profiles'],'icon'=>'network-wired','style'=>'margin-left: 15px;','link'=>$location.($qs['show'] || $qs['search'] ? '?' : null).$qs['show'].$qs['search']]);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
+	if (!$reload) {
+		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
+	}
 	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

@@ -17,16 +17,16 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the streams class
-if (!class_exists('streams')) {
-	class streams {
+//define the vars class
+if (!class_exists('vars')) {
+	class vars {
 
 		/**
 		 * declare private variables
@@ -46,13 +46,13 @@ if (!class_exists('streams')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'streams';
-				$this->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
-				$this->permission_prefix = 'stream_';
-				$this->list_page = 'streams.php';
-				$this->table = 'streams';
-				$this->uuid_prefix = 'stream_';
-				$this->toggle_field = 'stream_enabled';
+				$this->app_name = 'vars';
+				$this->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
+				$this->permission_prefix = 'var_';
+				$this->list_page = 'vars.php';
+				$this->table = 'vars';
+				$this->uuid_prefix = 'var_';
+				$this->toggle_field = 'var_enabled';
 				$this->toggle_values = ['true','false'];
 
 		}
@@ -92,7 +92,6 @@ if (!class_exists('streams')) {
 							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
 							}
 
@@ -105,6 +104,12 @@ if (!class_exists('streams')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//unset the user defined variables
+									unset($_SESSION["user_defined_variables"]);
+
+								//rewrite the xml
+									save_var_xml();
 
 								//set message
 									message::add($text['message-delete']);
@@ -143,9 +148,7 @@ if (!class_exists('streams')) {
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -173,6 +176,12 @@ if (!class_exists('streams')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//unset the user defined variables
+									unset($_SESSION["user_defined_variables"]);
+
+								//rewrite the xml
+									save_var_xml();
 
 								//set message
 									message::add($text['message-toggle']);
@@ -214,9 +223,7 @@ if (!class_exists('streams')) {
 						//create insert array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -227,7 +234,7 @@ if (!class_exists('streams')) {
 
 										//overwrite
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
-											$array[$this->table][$x]['stream_description'] = trim($row['stream_description'].' ('.$text['label-copy'].')');
+											$array[$this->table][$x]['var_description'] = trim($row['var_description'].' ('.$text['label-copy'].')');
 
 									}
 								}
@@ -243,6 +250,12 @@ if (!class_exists('streams')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//unset the user defined variables
+									unset($_SESSION["user_defined_variables"]);
+
+								//rewrite the xml
+									save_var_xml();
 
 								//set message
 									message::add($text['message-copy']);
