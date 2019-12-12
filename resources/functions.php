@@ -378,7 +378,6 @@
 			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-			$column_title = preg_replace("#[^a-zA-Z0-9_]#", "", $column_title);
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 
 			$sanitized_parameters = '';
@@ -421,11 +420,11 @@
 			}
 			if ($order == "asc") {
 				$description .= 'sort(ascending)';
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".escape($column_title)."</a>";
 			}
 			else {
 				$description .= 'sort(descending)';
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".escape($column_title)."</a>";
 			}
 			$html .= "</th>";
 			return $html;
