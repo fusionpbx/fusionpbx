@@ -8359,13 +8359,7 @@
     <!-- detect with $template == grandstream/gxp21xx  2130=3fixed 2140=4fixed 2160=6fixed 2170=12fixed 2135=8fixed -->
 
 {$fixed_keys=6}
-{if $template == "grandstream/gxp2130"}{$fixed_keys=3}{/if}
-{if $template == "grandstream/gxp2140"}{$fixed_keys=4}{/if}
-{if $template == "grandstream/gxp2160"}{$fixed_keys=6}{/if}
-{if $template == "grandstream/gxp2170"}{$fixed_keys=12}{/if}
-{if $template == "grandstream/gxp2135"}{$fixed_keys=8}{/if}
-{if $template == "grandstream/AA-SS-gxp2135"}{$fixed_keys=8}{/if}
-{if $template == "grandstream/AA-SS-gxp2170"}{$fixed_keys=12}{/if}
+
 
 <!-- Detected {$template} with {$fixed_keys} fixed keys -->
 {$start_id=1363}
@@ -8777,7 +8771,7 @@
     <!-- # String -->
     <!-- <P23003></P23003> -->
 
-{if $template == "grandstream/grp2616"||$template == "grandstream/grp2615"}
+{if $template == "grandstream/custom/grp2616"||$template == "grandstream/custom/grp2615"}
 
 {assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 {$start_id=23000}
