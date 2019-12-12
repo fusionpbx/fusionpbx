@@ -411,21 +411,35 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		}
 
 	//list functions
-		function list_all_toggle() {
+		function list_all_toggle(modifier) {
 			var inputs = document.getElementsByTagName('input');
-			var checkbox_checked = document.getElementById('checkbox_all').checked;
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox') {
-					inputs[i].checked = checkbox_checked;
-				}
-			}
-			if (checkbox_checked) {
-				document.getElementById('btn_check_all').style.display = 'none';
-				document.getElementById('btn_check_none').style.display = '';
+			if (modifier !== undefined) {
+				var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
 			}
 			else {
-				document.getElementById('btn_check_all').style.display = '';
-				document.getElementById('btn_check_none').style.display = 'none';
+				var checkbox_checked = document.getElementById('checkbox_all').checked;
+			}
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (modifier !== undefined) {
+					if (inputs[i].type === 'checkbox' && inputs[i].className === 'checkbox_'+modifier) {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+				else {
+					if (inputs[i].type === 'checkbox') {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+			}
+			if (document.getElementById('btn_check_all') && document.getElementById('btn_check_none')) {
+				if (checkbox_checked) {
+					document.getElementById('btn_check_all').style.display = 'none';
+					document.getElementById('btn_check_none').style.display = '';
+				}
+				else {
+					document.getElementById('btn_check_all').style.display = '';
+					document.getElementById('btn_check_none').style.display = 'none';
+				}
 			}
 		}
 
@@ -748,17 +762,18 @@ if (!$default_login) {
 			echo "</nav>\n";
 	}
 
-
-	//determine menu configuration
-		$menu = new menu;
-		$menu->db = $db;
-		$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
-		$menu_array = $menu->menu_array();
-		unset($menu);
-
+	//get the menu array and save it to the session
+		if (!isset($_SESSION['menu']['array'])) {
+			$menu = new menu;
+			$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+			$_SESSION['menu']['array'] = $menu->menu_array();
+			unset($menu);
+		}
+	//get the menu style and position
 		$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 		$menu_position = ($_SESSION['theme']['menu_position']['text'] != '') ? $_SESSION['theme']['menu_position']['text'] : 'top';
 
+	//show the menu style
 		switch ($menu_style) {
 			case 'inline':
 				$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
@@ -769,14 +784,14 @@ if (!$default_login) {
 					echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px; ".$logo_style."'></a>";
 				}
 
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				break;
 			case 'static':
 				echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				break;
 			case 'fixed':
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
 				break;
 			case 'side':
@@ -826,8 +841,8 @@ if (!$default_login) {
 					}
 
 					//main menu items
-						if (is_array($menu_array) && sizeof($menu_array) != 0) {
-							foreach ($menu_array as $menu_index_main => $menu_item_main) {
+						if (is_array($_SESSION['menu']['array']) && sizeof($_SESSION['menu']['array']) != 0) {
+							foreach ($_SESSION['menu']['array'] as $menu_index_main => $menu_item_main) {
 								echo "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."'" : "onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\"")." title=\"".$menu_item_main['menu_language_title']."\">";
 								if ($menu_item_main['menu_item_icon'] != '') {
 									echo "<i class='fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
@@ -884,12 +899,9 @@ if (!$default_login) {
 		echo "</div>\n";
 
 		echo "</div>\n"; //initial div from switch statement above
-
 }
-
-// default login being used
 else {
-
+	// default login being used
 	if ($_SESSION['theme']['logo_login']['text'] != '') {
 		$logo = $_SESSION['theme']['logo_login']['text'];
 	}
@@ -909,7 +921,6 @@ else {
 	echo "</div>\n";
 
 	unset($_SESSION['background_image']);
-
 }
 
 echo "</body>\n";

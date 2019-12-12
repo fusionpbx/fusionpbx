@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Menu IVR";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "IVR menu";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zapowiedzi głosowe (IVR)";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Menu de IVR";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Menu de IVR";

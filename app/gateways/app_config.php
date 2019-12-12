@@ -19,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Gateways voorzien in toegang tot andere telefonie netwerken. Dit kunne de VOIP-providers zijn, of andere systemen die een SIP registratie behoeven.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Troncos garantem acesso à outras redes de voz. Podem ser provedores VoIP ou outros sistemas que requerem registro SIP.";
 		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";

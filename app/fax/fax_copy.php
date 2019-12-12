@@ -120,7 +120,7 @@
 			$p->delete('fax_add', 'temp');
 
 		//set message
-			message::add($text['confirm-copy']);
+			message::add($text['message-copy']);
 	}
 
 //redirect

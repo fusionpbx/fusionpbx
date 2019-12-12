@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Queues";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Wachtrijen";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kolejki";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Filas";

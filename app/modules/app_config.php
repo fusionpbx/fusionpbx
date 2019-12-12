@@ -13,13 +13,14 @@
 		$apps[$x]['description']['de-at'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-de'] = "Module erweitern die Funktionalität des Systems. Verwende diese Seite um Module zu aktivieren oder deaktivieren.";
+		$apps[$x]['description']['el-gr'] = "Τα πρόσθετα, επεκτείνουν τις δυνατότητες του συστήματος. Από αυτή τη σελίδα μπορείτε να ενεργοποιήσετε ή να απενεργοποιήστε πρόσθετα.";
 		$apps[$x]['description']['es-cl'] = "Los módulos extienden las funcionalidades del sistema. Utilice esta página para activar o desactivar los diferentes módulos.";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-fr'] = "Les Modules augmentent les fonctionnalitées du système. Ici il est possible de les activer et de les désactiver.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Modules breiden de mogelijkheden van het systeem uit. Gebruikde deze pagina om modules aan/uit te zetten.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Módulos estendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";

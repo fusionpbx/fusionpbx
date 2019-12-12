@@ -193,12 +193,7 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td width='30%' align='left'nowrap><b>".$text['header-variable_add']."</b><br><br></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap><b>".$text['header-variable_edit']."</b><br><br></td>\n";
-	}
+	echo "<td width='30%' align='left'nowrap><b>".$text['header-variable']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='vars.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

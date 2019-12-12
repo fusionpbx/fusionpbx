@@ -47,40 +47,31 @@
 		$call_blocks = $_POST['call_blocks'];
 	}
 
-//copy the call blocks
-	if (permission_exists('call_block_add')) {
-		if ($action == 'copy' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
-			//copy
-				$obj = new call_block;
-				$obj->copy($call_blocks);
-			//redirect
-				header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('call_block_add')) {
+					$obj = new call_block;
+					$obj->copy($call_blocks);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('call_block_edit')) {
+					$obj = new call_block;
+					$obj->toggle($call_blocks);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('call_block_delete')) {
+					$obj = new call_block;
+					$obj->delete($call_blocks);
+				}
+				break;
 		}
-	}
 
-//toggle the call blocks
-	if (permission_exists('call_block_edit')) {
-		if ($action == 'toggle' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
-			//toggle
-				$obj = new call_block;
-				$obj->toggle($call_blocks);
-			//redirect
-				header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the call blocks
-	if (permission_exists('call_block_delete')) {
-		if ($action == 'delete' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
-			//delete
-				$obj = new call_block;
-				$obj->delete($call_blocks);
-			//redirect
-				header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

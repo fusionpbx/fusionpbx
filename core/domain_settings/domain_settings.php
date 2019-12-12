@@ -385,7 +385,7 @@
 
 	echo "<div style='float: right;'>\n";
 	if (permission_exists('domain_setting_add')) {
-		echo "	<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'><span class='fas fa-plus'></span> ".$text['button-add']."</button></a>";
+		echo "<a href='".PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."' alt=\"".$text['button-add']."\"><button type='button' class='btn btn-default'><span class='fas fa-plus'></span> ".$text['button-add']."</button></a>";
 	}
 	if (is_array($result) && @sizeof($result) != 0) {
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
@@ -410,6 +410,9 @@
 		if (permission_exists('default_setting_delete')) {
 			echo "	<button type='submit' name='action' class='btn btn-default' alt=\"".$text['button-delete']."\" value='delete' onclick=\"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }\"><span class='fas fa-trash'></span> ".$text['button-delete']."</button>";
 		}
+	}
+	if (permission_exists('default_setting_view') && is_array($result) && @sizeof($result) != 0) {
+		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-left: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
 	}
 	echo "</div>\n";
 	echo "<b>".$text['header-domain_settings']."</b>";
@@ -517,14 +520,15 @@
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
 				echo "		".$text['option-button_icons_'.$row['domain_setting_value']]."\n";
 			}
+			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['domain_setting_value'])."</span>\n";
+			}
+			else if ($category == 'recordings' && $subcategory == 'storage_type' && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+			}
 			else {
-				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
-					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['domain_setting_value'])."</span>\n";
-				}
-				else {
-					echo "		".escape($row['domain_setting_value'])."\n";
-				}
+				echo "		".escape($row['domain_setting_value'])."\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";

@@ -19,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Configuratie voor SIP toestellen";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Utilizado para gereciar os ramais SIP";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para configurar extensões SIP.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
@@ -186,6 +186,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_copy";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_export";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings

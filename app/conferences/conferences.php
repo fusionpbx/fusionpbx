@@ -50,40 +50,31 @@
 		$conferences = $_POST['conferences'];
 	}
 
-//copy the conferences
-	if (permission_exists('conference_add')) {
-		if ($action == 'copy' && is_array($conferences) && @sizeof($conferences) != 0) {
-			//copy
-				$obj = new conferences;
-				$obj->copy($conferences);
-			//redirect
-				header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($conferences) && @sizeof($conferences) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('conference_add')) {
+					$obj = new conferences;
+					$obj->copy($conferences);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('conference_edit')) {
+					$obj = new conferences;
+					$obj->toggle($conferences);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('conference_delete')) {
+					$obj = new conferences;
+					$obj->delete($conferences);
+				}
+				break;
 		}
-	}
 
-//toggle the conferences
-	if (permission_exists('conference_edit')) {
-		if ($action == 'toggle' && is_array($conferences) && @sizeof($conferences) != 0) {
-			//toggle
-				$obj = new conferences;
-				$obj->toggle($conferences);
-			//redirect
-				header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the conferences
-	if (permission_exists('conference_delete')) {
-		if ($action == 'delete' && is_array($conferences) && @sizeof($conferences) != 0) {
-			//delete
-				$obj = new conferences;
-				$obj->delete($conferences);
-			//redirect
-				header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

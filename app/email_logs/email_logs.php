@@ -41,86 +41,33 @@
 		$emails = $_POST['emails'];
 	}
 
-//download the emails
-	if (permission_exists('email_log_download')) {
-		if ($action == 'download' && is_array($emails) && @sizeof($emails) != 0) {
-			//download
-				$obj = new email_logs;
-				$obj->download($emails);
-			//set message (download failed)
-				message::add($text['message-download_failed'],'negative',7000);
-			//redirect
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//resend the emails
-	if (permission_exists('email_log_resend')) {
-		if ($action == 'resend' && is_array($emails) && @sizeof($emails) != 0) {
-			//resend
-				$obj = new email_logs;
-				$obj->resend($emails);
-			//exit
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-//delete the emails
-	if (permission_exists('email_log_delete')) {
-		if ($action == 'delete' && is_array($emails) && @sizeof($emails) != 0) {
-			//delete
-				$obj = new email_logs;
-				$obj->delete($emails);
-			//redirect
-				header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
-
-
-//resend email (previous method)
-	/*
-	if ($_REQUEST['a'] == 'resend' && permission_exists('email_log_resend')) {
-		$email_log_uuid = $_REQUEST["id"];
-		$resend = true;
-
-		$msg_found = false;
-
-		if (is_uuid($email_log_uuid)) {
-			$sql = "select email from v_email_logs ";
-			$sql .= "where email_log_uuid = :email_log_uuid ";
-			if (!permission_exists('email_log_all') || $_REQUEST['showall'] != 'true') {
-				$sql .= "and domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-			}
-			$parameters['email_log_uuid'] = $email_log_uuid;
-			$database = new database;
-			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
-				$email = $row['email'];
-				$msg_found = true;
-			}
-			unset($sql, $parameters, $row);
+//process the http post data by action
+	if ($action != '' && is_array($emails) && @sizeof($emails) != 0) {
+		switch ($action) {
+			case 'download':
+				if (permission_exists('email_log_download')) {
+					$obj = new email_logs;
+					$obj->download($emails);
+					message::add($text['message-download_failed'],'negative',7000); //download failed, set message
+				}
+				break;
+			case 'resend':
+				if (permission_exists('email_log_resend')) {
+					$obj = new email_logs;
+					$obj->resend($emails);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('email_log_delete')) {
+					$obj = new email_logs;
+					$obj->delete($emails);
+				}
+				break;
 		}
 
-		if ($msg_found) {
-			$msg = $email;
-			require_once "secure/v_mailto.php";
-			if ($mailer_error == '') {
-				message::add($text['message-message_resent']);
-				header("Location: email_log_delete.php?id=".$email_log_uuid.(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "&showall=true" : null));
-			}
-			else {
-				message::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
-				header("Location: email_logs.php".(permission_exists('email_log_all') && $_REQUEST['showall'] == 'true' ? "?showall=true" : null));
-			}
-		}
-
+		header('Location: email_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
-	*/
 
 //get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];

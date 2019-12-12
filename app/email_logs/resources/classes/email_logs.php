@@ -133,19 +133,19 @@ if (!class_exists('email_logs')) {
 						//retrieve checked records
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $record['uuid'];
+									$uuids[] = $record['uuid'];
 								}
 							}
 
 						//resend emails
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$x = 0;
-								foreach ($record_uuids as $x => $record_uuid) {
+								foreach ($uuids as $x => $uuid) {
 
 									//get email message
 										$sql = "select email from v_email_logs ";
 										$sql .= "where email_log_uuid = :email_log_uuid ";
-										$parameters['email_log_uuid'] = $record_uuid;
+										$parameters['email_log_uuid'] = $uuid;
 										$database = new database;
 										$email = $database->select($sql, $parameters, 'column');
 										$found = $email != '' ? true : false;
@@ -159,7 +159,7 @@ if (!class_exists('email_logs')) {
 											if ($mailer_error == '') {
 
 												//build the delete array
-													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record_uuid;
+													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 
 												//grant temporary permissions
 													$p = new permissions;
@@ -222,18 +222,18 @@ if (!class_exists('email_logs')) {
 						//retrieve checked records
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $record['uuid'];
+									$uuids[] = $record['uuid'];
 								}
 							}
 
 						//download emails
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
-								foreach ($record_uuids as $x => $record_uuid) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								foreach ($uuids as $x => $uuid) {
 
 									//get email details
 										$sql = "select call_uuid, sent_date, type, email from v_email_logs ";
 										$sql .= "where email_log_uuid = :email_log_uuid ";
-										$parameters['email_log_uuid'] = $record_uuid;
+										$parameters['email_log_uuid'] = $uuid;
 										$database = new database;
 										$row = $database->select($sql, $parameters, 'row');
 										if (is_array($row) && @sizeof($row) != 0 && is_uuid($row['call_uuid'])) {
@@ -246,7 +246,7 @@ if (!class_exists('email_logs')) {
 												$email_filename = $sent_date.'_'.$type.'_'.$row['call_uuid'].'.eml';
 
 											//single email
-												if (@sizeof($record_uuids) == 1) {
+												if (@sizeof($uuids) == 1) {
 
 													//set headers
 														header("Content-Type: message/rfc822");

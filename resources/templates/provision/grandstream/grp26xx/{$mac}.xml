@@ -4562,7 +4562,7 @@
 		<item name="network.port.pc.mode">Enabled</item>
 		
 		<!-- PC Port VLAN Tag  -->
-		<item name="network.port.pc.vlan.tag">0</item>
+		
 		
 		{if isset($grandstream_pc_port_vlan) }
 		<item name="network.port.pc.vlan.tag">{$grandstream_pc_port_vlan}</item>
@@ -5364,7 +5364,7 @@
 		<item name="phonebook.download.password">{$http_auth_password}</item>
 		
 		<!-- Phonebook XML Server Path -->
-		<item name="phonebook.download.server"></item>
+		
 		
 		{if isset($grandstream_phonebook_download)}
 		<item name="phonebook.download.server">{$grandstream_phonebook_xml_server_path}{$mac}/</item>
@@ -5376,7 +5376,7 @@
 		
 		<!-- Phonebook Download Interval  -->
 		<!-- 0, 120, 240, 360, 480, 720 -->
-		<item name="phonebook.download.interval">0</item>
+		
 		
 		{if isset($grandstream_phonebook_download_interval)}
 		<item name="phonebook.download.interval">{$grandstream_phonebook_download_interval}</item>
@@ -6669,7 +6669,7 @@
 		<item name="audio.volume.lock">No</item>
 
 		<!-- # Default Ringtone. 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent. Default is 0 -->
-		<item name="audio.ring.defaultRingtone">0</item>
+
 		
 		{if isset($grandstream_default_ringtone)}
 		<item name="audio.ring.defaultRingtone">{$grandstream_default_ringtone}</item>
@@ -6781,31 +6781,104 @@
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
 		<!-- # AutoBLF (30), Default or Line(31), SharedLine (32)  -->
 
-		{$fixed_keys=4}
-		{if $template == "grandstream/grp26xx"}{$fixed_keys=12}{/if}
+<!--		{$fixed_keys=4}  -->
+<!--		{if $template == "grandstream/grp26xx"}{$fixed_keys=12}{/if}  -->
 		<!-- Detected {$template} with {$fixed_keys} fixed keys -->
 
-		{assign var=key_types value=["none"=>-1,"line"=>31,"sharedline"=>32,"speeddial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17,"dnd"=>22]}
+<!--		{assign var=key_types value=["none"=>-1,"line"=>31,"sharedline"=>32,"speeddial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17,"dnd"=>22]}  -->
 
-		{for $line=1 to 24}
+<!--		{for $line=1 to 24}  -->
 
-		{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
-		{if $line <= $fixed_keys}
+<!--		{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}  -->
+<!--		{if $line <= $fixed_keys}  -->
+<!--		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>  -->
+<!--		{else}  -->
+<!--		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]-10}</item>  -->
+<!--		{/if}  -->
+<!--		<item name="pks.vpk.{$line}.account">{$keys.line.$line.device_key_line}</item>  -->
+<!--		<item name="pks.vpk.{$line}.description">{$keys.line.$line.device_key_label}</item>  -->
+<!--		<item name="pks.vpk.{$line}.value">{$keys.line.$line.device_key_value}</item>  -->
+<!--		<item name="pks.vpk.{$line}.lockMode">{if $line == '-1'}uncheck{else}check{/if}</item>  -->
+<!--		{else}  -->
+<!--		{if $line <= $fixed_keys}  -->
+
+<!--		{/if}  -->
+<!--		{/if}  -->
+
+<!--		{/for}  -->
+
+{$fixed_keys=12}
+{if $template == "grandstream/grp2612"}{$fixed_keys=3}{/if}
+{if $template == "grandstream/grp2613"}{$fixed_keys=4}{/if}
+{if $template == "grandstream/grp2614"}{$fixed_keys=6}{/if}
+{if $template == "grandstream/grp2615"}{$fixed_keys=12}{/if}
+<!-- Detected {$template} with {$fixed_keys} fixed keys -->
+{$start_id=1}
+{assign var=key_types value=["none"=>-1,"line"=>31,"sharedline"=>32,"speeddial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17,"dnd"=>22]}
+
+{for $line=1 to 6}
+{$pid=$line*2-2}
+{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
+{if $line <= $fixed_keys}
+
+		<!-- # Key Mode for line VPK. -->
 		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
-		{else}
-		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]-10}</item>
-		{/if}
-		<item name="pks.vpk.{$line}.account">{$keys.line.$line.device_key_line}</item>
+		
+		
+		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+		
+		<item name="pks.vpk.{$line}.account">Account{$keys.line.$line.device_key_line}</item>
+		
+		<!-- # Description. Max length allowed is 32 characters. -->
+		<!-- # String -->
 		<item name="pks.vpk.{$line}.description">{$keys.line.$line.device_key_label}</item>
+
+		<!-- # Value. Max length allowed is 64 characters. -->
+		<!-- # String -->
 		<item name="pks.vpk.{$line}.value">{$keys.line.$line.device_key_value}</item>
+
+		<!-- # Locked: uncheck, check.  -->
 		<item name="pks.vpk.{$line}.lockMode">{if $line == '-1'}uncheck{else}check{/if}</item>
-		{else}
-		{if $line <= $fixed_keys}
+		<!-- # Space.  -->
 
-		{/if}
-		{/if}
+{/if}
+{/if}
 
-		{/for}
+{/for}
+
+
+
+<!-- line 7 to 48 are sequential starting at 7 in groups of 4 -->
+
+{$start_id=7}
+{for $line=7 to 48}
+{$pid=($line-6)*4-4}
+{if isset($keys.line.$line.device_key_category) && isset($keys.line.$line.device_key_type) && isset($key_types[$keys.line.$line.device_key_type])}
+{if $line <= $fixed_keys}
+
+		<!-- # Key Mode for line VPK. -->
+		<item name="pks.vpk.{$line}.keyMode">{$key_types[$keys.line.$line.device_key_type]}</item>
+		
+		
+		<!-- # Account. 0 - Account1, 1 - Account2, 2 - Account3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
+		
+		<item name="pks.vpk.{$line}.account">Account{$keys.line.$line.device_key_line}</item>
+		
+		<!-- # Description. Max length allowed is 32 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$line}.description">{$keys.line.$line.device_key_label}</item>
+
+		<!-- # Value. Max length allowed is 64 characters. -->
+		<!-- # String -->
+		<item name="pks.vpk.{$line}.value">{$keys.line.$line.device_key_value}</item>
+
+		<!-- # Locked: uncheck, check.  -->
+		<item name="pks.vpk.{$line}.lockMode">{if $line == '-1'}uncheck{else}check{/if}</item>
+
+{/if}
+{/if}
+
+{/for}
 		
 
 		<!-- ###################################################################################### -->
@@ -9529,503 +9602,36 @@
 		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
 		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
 		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.1.keyMode">None</item>
+	
+{assign var=key_types value=[""=>None,"0"=>SpeedDial, "blf"=>BLF, "2"=>PresenceWatcher, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.1.account">Account1</item>
+{$start_id=1}
+{for $mem=1 to 40}
+{$pid=$mem*3-3}
+
+{if isset($keys.memory.$mem.device_key_category) && isset($keys.memory.$mem.device_key_type) && $keys.memory.$mem.device_key_type|in_array:$key_types}
+
+		
+		<!-- Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
+		
+		<item name="pks.mpk.{$start_id+$mem-1}.account"></item>{else}<item name="pks.mpk.{$start_id+$mem-1}.account">Account{$keys.memory.$mem.device_key_line+1}</item>{/if}
 
 		<!-- MPK Display Name -->
-		<item name="pks.mpk.1.description"></item>
+		<item name="pks.mpk.{$start_id+$mem-1}.description">{$keys.memory.$mem.device_key_label}</item>
 		
 		<!-- MPK User ID -->
 		<!-- extendValue may be used based on MPK mode -->
-		<item name="pks.mpk.1.value"></item>
+		<item name="pks.mpk.{$start_id+$mem-1}.value">{$keys.memory.$mem.device_key_value}</item>
 		
-		<!-- ###################################################################################### -->
-		<!-- # MPK 2 -->
-		<!-- ###################################################################################### -->
 		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.2.keyMode">None</item>
+		<item name="pks.mpk.{$start_id+$mem-1}.keyMode">{$key_types[$keys.memory.$mem.device_key_type]}</item>
 
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.2.account">Account1</item>
+{/for}
 
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.2.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.2.value"></item>
 
-		<!-- ######################################################################################  -->
-		<!-- # MPK 3 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.3.keyMode">None</item>
 
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.3.account">Account1</item>
 
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.3.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.3.value"></item>
 
-		<!-- ###################################################################################### -->
-		<!-- # MPK 4 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.4.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.4.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.4.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.4.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 5 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.5.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.5.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.5.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.5.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 6 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.6.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.6.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.6.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.6.value"></item>
-		
-		<!-- ######################################################################################  -->
-		<!-- # MPK 7 -->
-		<!-- ######################################################################################  -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.7.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.7.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.7.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.7.value"></item>
-
-		<!-- ######################################################################################  -->
-		<!-- # MPK 8 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.8.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.8.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.8.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.8.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 9 - MPK 24 - GRP2614/GRP2616 -->
-		<!-- ######################################################################################  -->
-		<!-- # MPK 9 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.9.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.9.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.9.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.9.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 10 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.10.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.10.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.10.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.10.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 11 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.11.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.11.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.11.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.11.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 12 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.12.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.12.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.12.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.12.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 13 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.13.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.13.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.13.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.13.value"></item>
-		
-		<!-- ###################################################################################### -->
-		<!-- # MPK 14 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.14.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.14.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.14.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.14.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 15 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.15.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.15.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.15.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.15.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 16 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.16.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.16.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.16.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.16.value"></item>
-		
-		<!-- ###################################################################################### -->
-		<!-- # MPK 17 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.17.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.17.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.17.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.17.value"></item>		
-		
-		
-		<!-- ###################################################################################### -->
-		<!-- # MPK 18 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.18.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.18.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.18.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.18.value"></item>
-
-		<!-- ######################################################################################  -->
-		<!-- # MPK 19 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.19.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.19.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.19.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.19.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 20 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.20.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.20.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.20.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.20.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 21 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.21.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.21.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.21.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.21.value"></item>
-		
-		<!-- ###################################################################################### -->
-		<!-- # MPK 22 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.22.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.22.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.22.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.22.value"></item>
-
-		<!-- ######################################################################################  -->
-		<!-- # MPK 23 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.23.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.23.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.23.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.23.value"></item>
-
-		<!-- ###################################################################################### -->
-		<!-- # MPK 24 -->
-		<!-- ###################################################################################### -->
-		<!-- # Key Mode -->
-		<!-- # None (-1), SpeedDial (0), BLF (1), PresenceWatcher (2), EventlistBLF (3), SpeedDialViaActiveAccount (4)-->
-		<!-- # DialDTMF (5), VoiceMail (6), CallReturn (7), Transfer (8), CallPark (9), Intercom (10), LDAPSearch (11)-->
-		<!-- # Conference (12), MulticastPaging (13), Record (14), CallLog (15), MonitoredCallPark (16), Menu (17)-->
-		<!-- # XMLApplication (18), Information (19), Message (20), Forward (21), DND (22), Redial (23), InstantMessages (24)-->
-		<!-- # MulticastListenAddress (25), KeypadLock (26), GDSOpenDoor (27), EventListPresence (28), Provision (29)-->
-		<item name="pks.mpk.24.keyMode">None</item>
-
-		<!-- # Account. Account1, Account2, Account3, Account4, Account5, Account6 -->
-		<item name="pks.mpk.24.account">Account1</item>
-
-		<!-- MPK Display Name -->
-		<item name="pks.mpk.24.description"></item>
-		
-		<!-- MPK User ID -->
-		<!-- extendValue may be used based on MPK.keyMode -->
-		<item name="pks.mpk.24.value"></item>
 		
 		<!-- ############################################################################## -->
 		<!-- ##  Settings/Programmable Keys / Softkeys Settings -->

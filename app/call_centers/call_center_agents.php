@@ -50,28 +50,19 @@
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
-//copy the call center agents
-	if (permission_exists('call_center_agent_add')) {
-		if ($action == 'copy' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
-			//copy
-				$obj = new call_center;
-				$obj->copy_agents($call_center_agents);
-			//redirect
-				header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('call_center_agent_delete')) {
+					$obj = new call_center;
+					$obj->delete_agents($call_center_agents);
+				}
+				break;
 		}
-	}
 
-//delete the call center agents
-	if (permission_exists('call_center_agent_delete')) {
-		if ($action == 'delete' && is_array($call_center_agents) && @sizeof($call_center_agents) != 0) {
-			//delete
-				$obj = new call_center;
-				$obj->delete_agents($call_center_agents);
-			//redirect
-				header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get http variables and set them to php variables
@@ -128,12 +119,11 @@
 	echo "	<div class='heading'><b>".$text['header-call_center_agents']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'call_center_queues.php','style'=>'margin-right: 15px;']);
-	echo button::create(['type'=>'button','label'=>$text['button-status'],'icon'=>'user-clock','style'=>'margin-right: 15px;','link'=>'call_center_agent_status.php']);
+	if ($num_rows) {
+		echo button::create(['type'=>'button','label'=>$text['button-status'],'icon'=>'user-clock','style'=>'margin-right: 15px;','link'=>'call_center_agent_status.php']);
+	}
 	if (permission_exists('call_center_agent_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'call_center_agent_edit.php']);
-	}
-	if (permission_exists('call_center_agent_add') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('call_center_agent_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
@@ -159,7 +149,7 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_delete')) {
+	if (permission_exists('call_center_agent_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
@@ -187,7 +177,7 @@
 				$list_row_url = "call_center_agent_edit.php?id=".urlencode($row['call_center_agent_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_delete')) {
+			if (permission_exists('call_center_agent_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='call_center_agents[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='call_center_agents[$x][uuid]' value='".escape($row['call_center_agent_uuid'])."' />\n";

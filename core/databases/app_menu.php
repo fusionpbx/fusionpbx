@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Bazy danych";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Base de dados";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Banco de dados";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Base de Dados";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Базы данных";

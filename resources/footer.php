@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 
 //set variables if not set
-	if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
+	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
 	if (!isset($document)) { $document = null; }
 	if (!isset($v_menu)) { $v_menu = null; }
 	if (!isset($_SESSION["menu"])) { $_SESSION["menu"] = null; }
@@ -40,12 +40,12 @@
 	ob_end_clean(); //clean the buffer
 
 //clear the template
-	if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
-		$_SESSION["template_content"] = '';
-	}
+	//if (isset($_SESSION['theme']['cache']['boolean']) && $_SESSION['theme']['cache']['boolean'] == "false") {
+	//	$_SESSION["template_content"] = '';
+	//}
 
 //set a default template
-	if (strlen($_SESSION["template_content"]) == 0) { //build template if session template has no length
+	if (strlen($_SESSION["template_full_path"]) == 0) { //build template if session template has no length
 		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 		if (strlen($template_rss_sub_category) > 0) {
 			//this template was assigned by the content manager
@@ -55,8 +55,7 @@
 					$_SESSION['domain']['template']['name'] = 'default';
 					$template_full_path = $template_base_path.'/default/template.php';
 				}
-				$template = file_get_contents($template_full_path);
-				$_SESSION["template_content"] = $template;
+				$_SESSION["template_full_path"] = $template_full_path;
 		}
 		else {
 			//get the contents of the template and save it to the template variable
@@ -65,15 +64,13 @@
 					$_SESSION['domain']['template']['name'] = 'default';
 					$template_full_path = $template_base_path.'/default/template.php';
 				}
-				$template = file_get_contents($template_full_path);
-				$_SESSION["template_content"] = $template;
+				$_SESSION["template_full_path"] = $template_full_path;
 		}
 	}
 
 //get the template
 	ob_start();
-	$template = $_SESSION["template_content"];
-	eval('?>' . $template . '<?php ');
+	include($_SESSION["template_full_path"]);
 	$template = ob_get_contents(); //get the output from the buffer
 	ob_end_clean(); //clean the buffer
 

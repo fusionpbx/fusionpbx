@@ -510,13 +510,13 @@ include "root.php";
 						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -592,12 +592,12 @@ include "root.php";
 						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -665,12 +665,12 @@ include "root.php";
 						//get current toggle state
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -739,15 +739,15 @@ include "root.php";
 						//get checked records
 							foreach($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$record_uuids[] = $this->uuid_prefix."uuid = '".$record['uuid']."'";
+									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
 
 						//create insert array from existing data
-							if (is_array($record_uuids) && @sizeof($record_uuids) != 0) {
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ( ".implode(' or ', $record_uuids)." ) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');

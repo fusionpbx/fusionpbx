@@ -50,28 +50,25 @@
 		$vendors = $_POST['vendors'];
 	}
 
-//toggle the device vendors
-	if (permission_exists('device_vendor_edit')) {
-		if ($action == 'toggle' && is_array($vendors) && @sizeof($vendors) != 0) {
-			//toggle
-				$obj = new device;
-				$obj->toggle_vendors($vendors);
-			//redirect
-				header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
+//process the http post data by action
+	if ($action != '' && is_array($vendors) && @sizeof($vendors) != 0) {
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('device_vendor_edit')) {
+					$obj = new device;
+					$obj->toggle_vendors($vendors);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('device_vendor_delete')) {
+					$obj = new device;
+					$obj->delete_vendors($vendors);
+				}
+				break;
 		}
-	}
 
-//delete the device vendors
-	if (permission_exists('device_vendor_delete')) {
-		if ($action == 'delete' && is_array($vendors) && @sizeof($vendors) != 0) {
-			//delete
-				$obj = new device;
-				$obj->delete_vendors($vendors);
-			//redirect
-				header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
+		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order

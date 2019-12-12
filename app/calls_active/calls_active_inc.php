@@ -192,7 +192,7 @@
 						$cid_num = str_replace("+", "", $cid_num);
 
 					//replace gateway uuid with name
-						if (sizeof($_SESSION['gateways']) > 0) {
+						if (is_array($_SESSION['gateways']) && sizeof($_SESSION['gateways']) > 0) {
 							foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
 								$application_data = str_replace($gateway_uuid, $gateway_name, $application_data);
 							}

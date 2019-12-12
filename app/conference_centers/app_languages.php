@@ -1481,4 +1481,24 @@ $text['button-rooms']['ru-ru'] = "Комнаты";
 $text['button-rooms']['sv-se'] = "Rum";
 $text['button-rooms']['uk-ua'] = "Кімнати";
 
+$text['button-view_active']['en-us'] = "View Active";
+$text['button-view_active']['ar-eg'] = "";
+$text['button-view_active']['de-at'] = "Aktive anzeigen"; //copied from de-de
+$text['button-view_active']['de-ch'] = "Aktive anzeigen"; //copied from de-de
+$text['button-view_active']['de-de'] = "Aktive anzeigen";
+$text['button-view_active']['es-cl'] = "Ver Activo";
+$text['button-view_active']['es-mx'] = "Ver Activo"; //copied from es-cl
+$text['button-view_active']['fr-ca'] = "Voir Active"; //copied from fr-fr
+$text['button-view_active']['fr-fr'] = "Voir Active";
+$text['button-view_active']['he-il'] = "";
+$text['button-view_active']['it-it'] = "Mostra Attive";
+$text['button-view_active']['nl-nl'] = "Toon aktieve ruimten";
+$text['button-view_active']['pl-pl'] = "";
+$text['button-view_active']['pt-br'] = "Ver Ativo"; //copied from pt-pt
+$text['button-view_active']['pt-pt'] = "Ver Ativo";
+$text['button-view_active']['ro-ro'] = "";
+$text['button-view_active']['ru-ru'] = "Просмотр Активных";
+$text['button-view_active']['sv-se'] = "Visa Aktiva";
+$text['button-view_active']['uk-ua'] = "";
+
 ?>

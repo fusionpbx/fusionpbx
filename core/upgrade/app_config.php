@@ -20,7 +20,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Atualizar";
 		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema da base de dados.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Обновление или восстановление настроек системы";
