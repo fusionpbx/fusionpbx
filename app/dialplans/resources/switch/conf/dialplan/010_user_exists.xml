@@ -1,5 +1,8 @@
 <context name="{v_context}">
 	<extension name="user_exists" number="" continue="true" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca">
+		<condition field="${loopback_leg}" expression="^B$" break="never">
+			<action application="set" data="domain_name=${context}" inline="true"/>
+		</condition>
 		<condition field="" expression="" break="">
 			<action application="set" data="user_exists=${user_exists id ${destination_number} ${domain_name}}" inline="true"/>
 		</condition>
