@@ -47,6 +47,7 @@
 
 		<!-- Event Handlers -->
 		<load module="mod_event_socket"/>
+		<load module="mod_amqp"/>
 
 		<!-- File Format Interfaces -->
 		<load module="mod_sndfile"/>

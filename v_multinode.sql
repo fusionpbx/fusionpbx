@@ -1,0 +1,20 @@
+CREATE TABLE `v_multinode` (
+  `multinode_rabitMQ_id` varchar(255) NOT NULL,
+  `domain_uuid` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `node_priority` varchar(255) DEFAULT NULL,
+  `switch_name` varchar(255) DEFAULT NULL,
+  `hostname` varchar(255) DEFAULT NULL,
+  `virtualhost` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `port` varchar(255) DEFAULT NULL,
+  `exchange_name` varchar(255) DEFAULT NULL,
+  `exchange_type` varchar(255) DEFAULT NULL,
+  `circuit_breaker_ms` varchar(255) DEFAULT NULL,
+  `reconnect_interval_ms` varchar(255) DEFAULT NULL,
+  `send_queue_size` varchar(255) DEFAULT NULL,
+  `enable_fallback_format_fields` varchar(255) DEFAULT NULL,
+  `format_fields` varchar(255) DEFAULT NULL,
+  `event_filter` varchar(255) DEFAULT NULL
+)

@@ -1,0 +1,196 @@
+<?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+require_once "resources/paging.php";
+if (if_group("superadmin")) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
+
+//add multi-lingual support
+$language = new text;
+$text = $language->get();
+
+if(!empty($_FILES['fileToUpload']['name'])) {
+ 	$file_data = fopen($_FILES['fileToUpload']['tmp_name'], 'r');
+
+ 	$column = fgetcsv($file_data);
+
+ 	while($row = fgetcsv($file_data)) {
+	  	$row_data[] = array(
+	   		'extension'			=>		$row[0],
+			'line'				=>		$row[1],
+			'mac'				=>		$row[2],
+	  	);
+ 	}
+
+ 	foreach ($row_data as $akey => $mainArray) {
+ 		$extension_number 	=	$mainArray['extension'];
+ 		$line_number		=	$mainArray['line'];
+ 		$mac_address		=	$mainArray['mac'];
+		
+		/************************************************************
+			v_extension add entry
+		**************************************************************/
+		$extension_uuid 	= uuid();
+		$voicemail_uuid 	= uuid();
+		$hotel_room_uuid 	= uuid();
+		$device_line_uuid 	= uuid();
+		$str = 'abc$%123456xyz';
+		$password  			= str_shuffle($str);
+		$domain_uuid 		= $_SESSION['domain_uuid'];
+
+		$sql = "SELECT extension FROM v_extensions ";
+		$sql .= "WHERE extension = '".check_str($extension_number)."' ";
+		$sql .= "AND domain_uuid = '".check_str($domain_uuid)."'";
+
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$extension_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+		// die(print_r($result));
+		
+		if ($extension_result == null) {
+			$extension_column = array('extension_uuid', 'domain_uuid', 'extension', 'number_alias', 'password', 'accountcode');
+
+			$sql = "INSERT INTO v_extensions "; 
+			$sql .= "(";
+			$sql .= implode(", ", $extension_column);
+			$sql .= ") VALUES ";  
+			$sql .= "(";
+			$sql .= "'$extension_uuid','$domain_uuid','$extension_number','$extension_number','$password',NULL";
+			$sql .= ")";
+
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();									
+			}
+			unset($prep_statement, $sql);	
+
+
+			/************************************************************
+				v_voicemail add entry
+			**************************************************************/
+				$extension_column = array('domain_uuid', 'voicemail_uuid', 'voicemail_id', 'voicemail_password');
+
+				$sql = "INSERT INTO v_voicemails "; 
+				$sql .= "(";
+				$sql .= implode(", ", $extension_column);
+				$sql .= ") VALUES ";  
+				$sql .= "(";
+				$sql .= "'$domain_uuid','$voicemail_uuid','$extension_number','$password'";
+				$sql .= ")";
+
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();									
+				}
+				unset($prep_statement, $sql);
+
+				/************************************************************
+					v_hotel_rooms add entry
+				**************************************************************/
+				$extension_column = array('hotel_room_uuid', 'domain_uuid', 'extension_number', 'room_number','guest_room');
+
+					$sql = "INSERT INTO v_hotel_rooms "; 
+					$sql .= "(";
+					$sql .= implode(", ", $extension_column);
+					$sql .= ") VALUES ";  
+					$sql .= "(";
+					$sql .= "'$hotel_room_uuid','$domain_uuid','$extension_number','$extension_number','yes'";
+					$sql .= ")";
+					
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();									
+				}
+				unset($prep_statement, $sql);
+
+
+				/************************************************************
+					v_device_lines add entry
+				**************************************************************/
+				$sql = "SELECT device_uuid FROM v_devices ";
+				$sql .= "WHERE device_mac_address = '".check_str($mac_address)."' ";
+				$sql .= "AND domain_uuid = '".check_str($domain_uuid)."'";
+
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				
+				if ($result != null) {
+					$device_uuid_id = $result[0]['device_uuid'];
+			
+
+					//$sql = "SELECT * FROM v_device_lines ";
+					//$sql .= "WHERE display_name = '".check_str($extension_number)."' && user_id = '".check_str($extension_number)."' && auth_id = '".check_str($extension_number)."'";
+					$sql = "SELECT * FROM v_device_lines ";
+					$sql .= "WHERE device_uuid = '".check_str($device_uuid_id)."' && user_id = '".check_str($extension_number)."' && auth_id = '".check_str($extension_number)."'";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$device_line_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					
+					// die($device_line_result);
+					if ($device_line_result == null) {
+						
+						$extension_column = array('domain_uuid', 'device_line_uuid', 'device_uuid', 'line_number','server_address','outbound_proxy_primary','outbound_proxy_secondary','display_name','user_id','auth_id','password','sip_port','sip_transport','register_expires','enabled');
+
+							$sql = "INSERT INTO v_device_lines "; 
+							$sql .= "(";
+							$sql .= implode(", ", $extension_column);
+							$sql .= ") VALUES ";  
+							$sql .= "(";
+							$sql .= "'$domain_uuid','$device_line_uuid','$device_uuid_id','$line_number','".$_SESSION['domain_name']."',NULL,NULL,'$extension_number','$extension_number','$extension_number','$password','5060','udp','80','true'";
+							$sql .= ")";
+
+						$prep_statement = $db->prepare($sql);
+						if ($prep_statement) {
+							$prep_statement->execute();									
+						}
+						unset($prep_statement, $sql);	
+					}
+				}
+
+		}
+		
+
+		
+	
+
+
+
+	}
+	
+	header("location:extensions.php");
+}
+
+?>
