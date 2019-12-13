@@ -2381,7 +2381,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 
 	.list-header > th.shrink {
-		width: 1px;
+		width: 1%;
 		}
 
 	.list-row:nth-child(odd) > :not(.action-button) {
@@ -2411,8 +2411,8 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	.list-header > .checkbox,
 	.list-row > .checkbox {
-		width: 1px;
-		text-align: center;
+		width: 1%;
+		text-align: center !important;
 		cursor: default !important;
 		}
 
