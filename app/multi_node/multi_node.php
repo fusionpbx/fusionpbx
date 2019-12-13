@@ -28,11 +28,11 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/resources/classes/status_registrations.php";
+	
 
 //check permissions
-	if (permission_exists('extension_view')) {
-		//access granted
+	if (permission_exists('multi_node_view')) {
+		//echo "access granted";exit;
 	}
 	else {
 		echo "access denied";
@@ -44,7 +44,7 @@
 </style>
 <?php
 //get the registrations
-	if (permission_exists('extension_registered')) {
+/**	if (permission_exists('extension_registered')) {
 		//create the event socket connection
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if (!$fp) {
@@ -55,7 +55,7 @@
 		require_once "resources/classes/array_order.php";
 		$order = new array_order();
 		$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
-	}
+	}**/
 
 //add multi-lingual support
 	$language = new text;
@@ -188,7 +188,7 @@
 	echo "<form name='frm' method='post' action='multi_node_delete.php'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if (permission_exists('extension_delete') && is_array($multi_nodes)) {
+	if (permission_exists('multi_node_delete') && is_array($multi_nodes)) {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' id='chk_all' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo th_order_by('name', $text['label-tbl-name'], $order_by, $order);
@@ -198,19 +198,14 @@
 	// echo th_order_by('user_context', $text['label-tbl-password'], $order_by, $order);
 	echo th_order_by('port', $text['label-tbl-port'], $order_by, $order);
 
-	// if (permission_exists('extension_registered')) {
- 	// 	echo th_order_by('description', $text['label-is_registered'], $order_by, $order);
- 	// }
-	// echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
-	// echo th_order_by('description', $text['label-description'], $order_by, $order);
 
 	echo "<td class='list_control_icon'>\n";
-	if (permission_exists('extension_add')) {
+	if (permission_exists('multi_node_add')) {
 		if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_multinodes < $_SESSION['limit']['extensions']['numeric'])) {
 			echo "<a href='multi_node_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 		}
 	}
-	if (permission_exists('extension_delete') && is_array($multi_nodes)) {
+	if (permission_exists('multi_node_delete') && is_array($multi_nodes)) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "</td>\n";
@@ -219,16 +214,16 @@
 	if (is_array($multi_nodes)) {
 
 		foreach($multi_nodes as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? " href='multi_node_edit.php?id=".$row['multinode_uuid']."'" : null;
+			$tr_link = (permission_exists('multi_node_edit')) ? " href='multi_node_edit.php?id=".$row['multinode_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if (permission_exists('extension_delete')) {
+			if (permission_exists('multi_node_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
 				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['multinode_uuid']."' value='".$row['multinode_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all').checked = false; }\">";
 				echo "	</td>";
 				$ext_ids[] = 'checkbox_'.$row['multinode_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('extension_edit')) {
+			if (permission_exists('multi_node_edit')) {
 				echo "<a href='multi_node_edit.php?id=".$row['multinode_uuid']."'>".$row['name']."</a>";
 			}
 			else {
@@ -241,7 +236,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['username']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['port']."</td>\n";
 
-			if (permission_exists('extension_registered')) {
+			/**if (permission_exists('extension_registered')) {
  				echo "	<td valign='top' class='".$row_style[$c]."'>";
  				$found = false;
  				$found_count = 0;
@@ -257,15 +252,15 @@
  					echo "No";
  				}
  				echo "&nbsp;</td>\n";
- 			}
+ 			}**/
 
 			// echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
 
 			echo "	<td class='list_control_icons'>";
-			if (permission_exists('extension_edit')) {
+			if (permission_exists('multi_node_edit')) {
 				echo "<a href='multi_node_edit.php?id=".$row['multinode_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('extension_delete')) {
+			if (permission_exists('multi_node_delete')) {
 				echo "<a href='multi_node_delete.php?id[]=".$row['multinode_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "</td>\n";
@@ -278,12 +273,12 @@
 	if (is_array($multi_nodes)) {
 		echo "<tr>\n";
 		echo "	<td colspan='20' class='list_control_icons'>\n";
-		if (permission_exists('extension_add')) {
+		if (permission_exists('multi_node_add')) {
 			if ($_SESSION['limit']['extensions']['numeric'] == '' || ($_SESSION['limit']['extensions']['numeric'] != '' && $total_multinodes < $_SESSION['limit']['extensions']['numeric'])) {
 				echo "<a href='multi_node_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 			}
 		}
-		if (permission_exists('extension_delete')) {
+		if (permission_exists('multi_node_delete')) {
 			echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 		}
 		echo "	</td>\n";

@@ -21,19 +21,20 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
+		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "multi_node_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d9";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "multi_node_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "multi_node_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "multi_node_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
