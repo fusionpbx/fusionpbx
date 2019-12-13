@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_delete')) {
+	if (permission_exists('multi_node_delete')) {
 		//access granted
 	}
 	else {

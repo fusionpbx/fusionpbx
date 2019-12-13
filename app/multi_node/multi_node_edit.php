@@ -30,8 +30,8 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_add') || permission_exists('extension_edit')) {
-		//access granted
+	if (permission_exists('multi_node_add') || permission_exists('multi_node_edit')) {
+		//echo "access granted";exit;
 	}
 	else {
 		echo "access denied";
@@ -266,7 +266,7 @@
 				//exit;
 
 			//check the permissions
-				if (permission_exists('extension_add') || permission_exists('extension_edit')) {
+				if (permission_exists('multi_node_add') || permission_exists('multi_node_edit')) {
 
 					// die("welcome");
 					// //synchronize configuration
