@@ -584,9 +584,9 @@
 
 		//find the selected presets
 			if (is_array($available_presets)) {
-				foreach ($available_presets as $preset_number => &$preset) {
-					if (is_array($preset)) {
-						foreach ($preset as $preset_name => $preset_variables) {
+				foreach ($available_presets as $preset_number => &$preset1) {
+					if (is_array($preset1)) {
+						foreach ($preset1 as $preset_name => $preset_variables) {
 							$preset_checked[$preset_name] = 'false';
 							if (is_array($dialplan_details)) {
 								foreach ($dialplan_details as $row) {
@@ -604,9 +604,9 @@
 
 		//loop through available presets (if any)
 			if (is_array($available_presets)) {
-				foreach ($available_presets as $preset_number => $preset) {
-					if (is_array($preset)) {
-						foreach ($preset as $preset_name => $preset_variables) {
+				foreach ($available_presets as $preset_number => $preset2) {
+					if (is_array($preset2)) {
+						foreach ($preset2 as $preset_name => $preset_variables) {
 							//loop through each condition group
 							if (is_array($current_conditions)) {
 								foreach ($current_conditions as $group_id => $condition_variables) {
