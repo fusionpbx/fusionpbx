@@ -767,6 +767,26 @@ $text['header-domain_settings']['ru-ru'] = "Настройки домена";
 $text['header-domain_settings']['sv-se'] = "Domän Inställning";
 $text['header-domain_settings']['uk-ua'] = "Налаштування домену";
 
+$text['header_description-domain_settings']['en-us'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['ar-eg'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['de-at'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['de-ch'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['de-de'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['es-cl'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['es-mx'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['fr-ca'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['fr-fr'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['he-il'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['it-it'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['nl-nl'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['pl-pl'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['pt-br'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['pt-pt'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['ro-ro'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['ru-ru'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['sv-se'] = "Settings for this domain that should override those defined in Default Settings.";
+$text['header_description-domain_settings']['uk-ua'] = "Settings for this domain that should override those defined in Default Settings.";
+
 $text['header-domain_setting-edit']['en-us'] = "Domain Setting";
 $text['header-domain_setting-edit']['ar-eg'] = "";
 $text['header-domain_setting-edit']['de-at'] = "Domain Einstellungen"; //copied from de-de
