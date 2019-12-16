@@ -37,52 +37,35 @@
 
 --define the split function
 	require "resources.functions.split";
-
---iterator over numbers.
-	local function each_number(value)
-		local begin_value, end_value = split_first(value, "-", true)
-		if (not end_value) or (begin_value == end_value) then
-			return function()
-				local result = begin_value
-				begin_value = nil
-				return result
-			end
-		end
-
-		if string.find(begin_value, "^0") then
-			assert(#begin_value == #end_value, "number in range with leading `0` should have same length")
-		end
-
-		local number_length = ("." .. tostring(#begin_value))
-		begin_value, end_value = tonumber(begin_value), tonumber(end_value)
-		assert(begin_value and end_value and (begin_value <= end_value), "Invalid range: " .. value)
-
-		return function()
-			value, begin_value = begin_value, begin_value + 1
-			if value > end_value then return end
-			return string.format("%" .. number_length .. "d", value)
-		end
+	
+--include json library
+	local json
+	if (debug["sql"]) then
+		json = require "resources.functions.lunajson"
 	end
 
+--connect to the database
+	Database = require "resources.functions.database";
+	local dbh = Database.new('system');
+	
 --make sure the session is ready
 	if ( session:ready() ) then
 		--answer the call
 			session:answer();
 		--get the dialplan variables and set them as local variables
+			page_group_uuid = session:getVariable("page_group_uuid");
 			destination_number = session:getVariable("destination_number");
-			pin_number = session:getVariable("pin_number");
 			domain_name = session:getVariable("domain_name");
 			sounds_dir = session:getVariable("sounds_dir");
-			destinations = session:getVariable("destinations");
+			
 			rtp_secure_media = session:getVariable("rtp_secure_media");
 			if (destinations == nil) then
 				destinations = session:getVariable("extension_list");
 			end
-			destination_table = explode(",",destinations);
+			
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
 			sip_from_user = session:getVariable("sip_from_user");
-			mute = session:getVariable("mute");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -116,6 +99,23 @@
 				effective_caller_id_number = session:getVariable("effective_caller_id_number");
 				caller_id_number = effective_caller_id_number;
 			end
+			
+		--get the page group details
+			local sql = "select * from v_page_groups where page_group_uuid = :page_group_uuid ";
+			local params = {page_group_uuid = page_group_uuid};
+			dbh:query(sql, params, function(row)
+					pin_number = row.page_group_pin_number
+					mute = row.page_group_mute
+				end)
+				
+			local sql = "select * from v_page_group_destinations where page_group_uuid = :page_group_uuid ";
+			local params = {page_group_uuid = page_group_uuid};
+			i = 1;
+			destinations = {};
+			dbh:query(sql, params, function(row)
+					destinations[i] = row.page_group_destination
+					i = i + 1;
+				end)
 
 		--set conference flags
 			if (mute == "true") then
@@ -123,9 +123,9 @@
 			else
 				flags = "flags{}";
 			end
-
+		
 		--if the pin number is provided then require it
-			if (pin_number) then
+			if (#pin_number > 0) then
 				--sleep
 					session:sleep(500);
 				--get the user pin number
@@ -151,54 +151,55 @@
 						return;
 					end
 			end
-
+			
 		--originate the calls
 			destination_count = 0;
 			api = freeswitch.API();
-			for index,value in pairs(destination_table) do
-				for destination in each_number(value) do
-
+			if (#destinations ~= 0 and session:ready()) then
+				for index, destination in ipairs(destinations) do
 					--get the destination required for number-alias
-					destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
-
-					--prevent calling the user that initiated the page
-					if (sip_from_user ~= destination) then
-						--cmd = "username_exists id "..destination.."@"..domain_name;
-						--reply = trim(api:executeString(cmd));
-						--if (reply == "true") then
-							destination_status = "show channels like "..destination.."@";
-							reply = trim(api:executeString(destination_status));
-							if (reply == "0 total.") then
-								freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-								if destination == sip_from_user then
-									--this destination is the caller that initated the page
-								else
-									--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-									api:executeString(cmd_string);
-									destination_count = destination_count + 1;
-								end
-								--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
-							else
- 								--look inside the reply to check for the correct domain_name
-								if string.find(reply, domain_name, nil, true) then
-									--found: user is busy
-								else
- 									--not found
-									if (destination == tonumber(sip_from_user)) then
+						destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");
+	
+						--prevent calling the user that initiated the page
+						if (sip_from_user ~= destination) then
+							--cmd = "username_exists id "..destination.."@"..domain_name;
+							--reply = trim(api:executeString(cmd));
+							--if (reply == "true") then
+								destination_status = "show channels like "..destination.."@";
+								reply = trim(api:executeString(destination_status));
+								if (reply == "0 total.") then
+									freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
+									if destination == sip_from_user then
 										--this destination is the caller that initated the page
 									else
 										--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+											cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
 										api:executeString(cmd_string);
 										destination_count = destination_count + 1;
 									end
+									--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
+								else
+	 								--look inside the reply to check for the correct domain_name
+									if string.find(reply, domain_name, nil, true) then
+										--found: user is busy
+									else
+	 									--not found
+										if (destination == tonumber(sip_from_user)) then
+											--this destination is the caller that initated the page
+										else
+											--originate the call
+											cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+											api:executeString(cmd_string);
+											destination_count = destination_count + 1;
+										end
+									end
 								end
-							end
-						--end
+							--end
+						end
 					end
 				end
-			end
+				
+			
 
 		--send main call to the conference room
 			if (destination_count > 0) then
