@@ -184,7 +184,7 @@
 	if (permission_exists('domain_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'domain_edit.php']);
 	}
-	if (permission_exists('domain_add') && $domains) {
+	if (permission_exists('domain_copy') && $domains) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('domain_edit') && $domains) {
