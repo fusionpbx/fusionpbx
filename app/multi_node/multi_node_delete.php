@@ -119,8 +119,7 @@
 					$prep_statement->execute();
 					unset($prep_statement, $sql);
 
-
-					$event_socket_ip_address = '127.0.0.1';
+					//$event_socket_ip_address = '127.0.0.1';
                                         $cmd = "api switchname";
                                         $response = trim(event_socket_request_cmd($cmd));
                                         unset($cmd);
