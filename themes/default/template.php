@@ -37,17 +37,17 @@ echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resourc
 
 //link to custom css file
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
-		echo "<link rel='stylesheet' type='text/css' href='".escape($_SESSION['theme']['custom_css']['text'])."'>\n\n";
+		echo "<link rel='stylesheet' type='text/css' href='".$_SESSION['theme']['custom_css']['text']."'>\n\n";
 	}
 //output custom css
 	if ($_SESSION['theme']['custom_css_code']['text'] != '') {
 		echo "<style>\n";
-		echo escape($_SESSION['theme']['custom_css_code']['text']);
+		echo $_SESSION['theme']['custom_css_code']['text'];
 		echo "</style>\n\n";
 	}
 
 //set fav icon
-	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? escape($_SESSION['theme']['favicon']['text']) : '<!--{project_path}-->/themes/default/favicon.ico';
+	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? $_SESSION['theme']['favicon']['text'] : '<!--{project_path}-->/themes/default/favicon.ico';
 	echo "<link rel='icon' href='".$favicon."'>\n";
 
 echo "<title><!--{title}--></title>\n";

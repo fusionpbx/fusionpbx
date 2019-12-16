@@ -53,6 +53,14 @@
 //process the http post data by action
 	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
 		switch ($action) {
+			case 'start':
+				$obj = new modules;
+				$obj->start($modules);
+				break;
+			case 'stop':
+				$obj = new modules;
+				$obj->stop($modules);
+				break;
 			case 'toggle':
 				if (permission_exists('module_edit')) {
 					$obj = new modules;
@@ -73,26 +81,6 @@
 
 //connect to event socket
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-//control the modules
-	if ($fp && is_array($modules) && @sizeof($modules) != 0) {
-		if ($action == 'start') {
-			//start
-				$obj = new modules;
-				$obj->start($modules);
-			//redirect
-				header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-		if ($action == 'stop') {
-			//stop
-				$obj = new modules;
-				$obj->stop($modules);
-			//redirect
-				header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
-				exit;
-		}
-	}
 
 //check connection status
 	$esl_alive = false;

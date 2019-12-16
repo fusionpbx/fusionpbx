@@ -429,5 +429,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7084cb02-e07a-464d-bc55-63b22b0f726f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_config_via_keypad";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode. Default is 0";
+		$y++;
 
 ?>

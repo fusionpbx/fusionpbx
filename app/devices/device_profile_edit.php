@@ -206,6 +206,10 @@
 		$sql .= "when 'expansion' then 4 ";
 		$sql .= "when 'expansion-1' then 5 ";
 		$sql .= "when 'expansion-2' then 6 ";
+		$sql .= "when 'expansion-3' then 7 ";
+		$sql .= "when 'expansion-4' then 8 ";
+		$sql .= "when 'expansion-5' then 9 ";
+		$sql .= "when 'expansion-6' then 10 ";
 		$sql .= "else 100 end, ";
 		$sql .= "profile_key_id asc ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -437,28 +441,68 @@
 				else {
 					echo "					<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
 				}
+				if ($row['profile_key_category'] == "expansion-3") {
+					echo "					<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
+				}
+				else {
+					echo "					<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
+				}
+				if ($row['profile_key_category'] == "expansion-4") {
+					echo "					<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
+				}
+				else {
+					echo "					<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
+				}
+				if ($row['profile_key_category'] == "expansion-5") {
+					echo "					<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
+				}
+				else {
+					echo "					<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
+				}
+				if ($row['profile_key_category'] == "expansion-6") {
+					echo "					<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
+				}
+				else {
+					echo "					<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
+				}
 			}
 			else {
 				if (strtolower($row['device_key_vendor']) == "cisco" or strtolower($row['device_key_vendor']) == "yealink") {
-					if ($row['profile_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
-						echo "					<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+					if ($row['profile_key_category'] == "expansion-1" || $row['profile_key_category'] == "expansion") {
+						echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
 					}
 					else {
-						echo "					<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+						echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
 					}
 					if ($row['profile_key_category'] == "expansion-2") {
-						echo "					<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+						echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
 					}
 					else {
-						echo "					<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+						echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
 					}
-				}
-				else {
-					if ($row['profile_key_category'] == "expansion") {
-						echo "					<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+					if ($row['profile_key_category'] == "expansion-3") {
+						echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
 					}
 					else {
-						echo "					<option value='expansion'>".$text['label-expansion']."</option>\n";
+						echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
+					}
+					if ($row['profile_key_category'] == "expansion-4") {
+						echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
+					}
+					else {
+						echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
+					}
+					if ($row['profile_key_category'] == "expansion-5") {
+						echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
+					}
+					else {
+						echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
+					}
+					if ($row['profile_key_category'] == "expansion-6") {
+						echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
+					}
+					else {
+						echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
 					}
 				}
 			}
