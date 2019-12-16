@@ -57,7 +57,7 @@
 	$streams = $database->select($sql, $parameters, 'all');
 
 //get the http post data
-	if (is_array($_POST['moh']) || is_array($_POST['moh_files'])) {
+	if (is_array($_POST['moh'])) {
 		$action = $_POST['action'];
 		$moh = $_POST['moh'];
 	}
@@ -287,63 +287,6 @@
 			exit;
 	}
 
-/*
-//delete the music on hold file
-	if ($_GET['action'] == "delete"
-		&& is_uuid($_GET['id'])
-		&& is_array($streams)
-		&& @sizeof($streams) != 0) {
-
-		//get submitted values
-			$stream_uuid = $_GET['id'];
-			$stream_file = $_GET['file'];
-
-		//get the record
-			foreach($streams as $row) {
-				if ($stream_uuid == $row['music_on_hold_uuid']) {
-					$stream_domain_uuid = $row['domain_uuid'];
-					$stream_name = $row['music_on_hold_name'];
-					$stream_path = $row['music_on_hold_path'];
-					$stream_rate = $row['music_on_hold_rate'];
-					break;
-				}
-			}
-
-		//replace the sounds_dir variable in the path
-			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
-
-		//check permissions
-			if (($stream_domain_uuid == '' && permission_exists('music_on_hold_domain')) ||
-				($stream_domain_uuid != '' && permission_exists('music_on_hold_delete'))) {
-
-				//remove specified file
-					if ($stream_file != '') {
-						//define path
-							$stream_full_path = path_join($stream_path, $stream_file);
-						//sanitize path
-							$stream_full_path = str_replace('../', '', $stream_full_path);
-						//delete file
-							@unlink($stream_full_path);
-					}
-				//remove all audio files
-					else {
-						array_map('unlink', glob(path_join($stream_path, '*.wav')));
-						array_map('unlink', glob(path_join($stream_path, '*.mp3')));
-						array_map('unlink', glob(path_join($stream_path, '*.ogg')));
-					}
-				//reload moh
-					$music = new switch_music_on_hold;
-					$music->reload();
-				//set message
-					message::add($text['message-delete']);
-			}
-
-		//redirect
-			header("Location: music_on_hold.php");
-			exit;
-	}
-*/
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -412,25 +355,32 @@
 				}
 				echo "	</optgroup>\n";
 			}
-			if (permission_exists('music_on_hold_domain')) {
-				echo "	<optgroup label='".$text['option-local']."'>\n";
-			}
+			$local_found = false;
 			foreach ($streams as $row) {
-				if (strlen($row['domain_uuid']) > 0) {
-				if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
-				if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
-					echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
+				if (is_uuid($row['domain_uuid'])) {
+					$local_found = true;
+					break;
 				}
 			}
-			if (permission_exists('music_on_hold_domain')) {
-				echo "	</optgroup>\n";
+			if ($local_found) {
+				if (permission_exists('music_on_hold_domain')) {
+					echo "	<optgroup label='".$text['option-local']."'>\n";
+				}
+				foreach ($streams as $row) {
+					if (strlen($row['domain_uuid']) > 0) {
+						if (strlen($row['music_on_hold_rate']) == 0) { $option_name = $row['music_on_hold_name']; }
+						if (strlen($row['music_on_hold_rate']) > 0) { $option_name = $row['music_on_hold_name'] .'/'.$row['music_on_hold_rate']; }
+						echo "	<option value='".escape($row['music_on_hold_uuid'])."'>".escape($option_name)."</option>\n";
+					}
+				}
+				if (permission_exists('music_on_hold_domain')) {
+					echo "	</optgroup>\n";
+				}
 			}
-
 			echo "	</select>";
 			echo 	"<input class='formfld' style='width: 100px; display: none;' type='text' name='name_new' id='name_new' maxlength='255' placeholder=\"".$text['label-category']."\" value=''>";
 		//rate
 			echo 	"<select id='rate' name='rate' class='formfld' style='display: none; width: auto;'>\n";
-			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-rate']."</option>\n";
 			echo "		<option value=''>".$text['option-default']."</option>\n";
 			echo "		<option value='8000'>8 kHz</option>\n";
 			echo "		<option value='16000'>16 kHz</option>\n";
@@ -537,9 +487,6 @@
 					echo "		<th class='center shrink'>".$text['label-tools']."</th>\n";
 					echo "		<th class='right hide-xs no-wrap pct-20'>".$text['label-file-size']."</th>\n";
 					echo "		<th class='right hide-sm-dn pct-30'>".$text['label-uploaded']."</th>\n";
-// 					if (permission_exists('music_on_hold_delete')) {
-// 						echo "<a href='music_on_hold_delete.php?id=".escape($row['music_on_hold_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-// 					}
 					echo "	</tr>";
 					unset($stream_icons, $icons);
 
@@ -577,9 +524,6 @@
 							echo "	</td>\n";
 							echo "	<td class='right no-wrap hide-xs'>".escape($stream_file_size)."</td>\n";
 							echo "	<td class='right no-wrap hide-sm-dn'>".escape($stream_file_date)."</td>\n";
-// 								if ( (!is_uuid($domain_uuid) && permission_exists('music_on_hold_domain')) || (is_uuid($domain_uuid) && permission_exists('music_on_hold_delete')) ) {
-// 									echo 	"<a href='?action=delete&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-// 								}
 							echo "</tr>\n";
 							$x++;
 						}
