@@ -155,16 +155,16 @@
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile'])."&nbsp;</td>\n";
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_dir = $row['recording'];
 				$tmp_name = '';
-				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
-					$tmp_name = $row['conference_session_uuid'].".mp3";
+				if (file_exists($tmp_dir.'.mp3')) {
+					$tmp_name = $tmp_dir.'.mp3';
 				}
-				elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
-					$tmp_name = $row['conference_session_uuid'].".wav";
+				elseif (file_exists($tmp_dir.'.wav')) {
+					$tmp_name = $tmp_dir.'.wav';
 				}
 				echo "	<td class='".$row_style[$c]."'>\n";
-				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+				if (strlen($tmp_name) > 0 && file_exists($tmp_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "</tr>\n";
 					if (permission_exists('conference_session_play')) {
