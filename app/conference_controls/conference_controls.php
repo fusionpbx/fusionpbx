@@ -82,9 +82,9 @@
 	$order = $_GET["order"];
 
 //add the search string
-	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_search = "where (";
 		$sql_search .= "	lower(control_name) like :search ";
 		$sql_search .= "	or lower(control_description) like :search ";
 		$sql_search .= ") ";
@@ -93,9 +93,7 @@
 
 //get the count
 	$sql = "select count(conference_control_uuid) from v_conference_controls ";
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
+	$sql .= $sql_search;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -165,7 +163,7 @@
 		echo "	</th>\n";
 	}
 	echo th_order_by('control_name', $text['label-control_name'], $order_by, $order);
-	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center shrink'");
 	echo "	<th class='hide-sm-dn'>".$text['label-control_description']."</th>\n";
 	if (permission_exists('conference_control_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
