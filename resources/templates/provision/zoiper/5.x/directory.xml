@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Contacts>
+	<Contact id="123">
+		<Name>
+			<First></First>
+			<Middle></Middle>
+			<Last></Last>
+			<Display></Display>
+		</Name>
+		<Phone>
+			<Type></Type>
+			<!-- Possible value one of the following: Work or Home -->
+			<Type></Type>
+			<!-- Possible value one the following:  Phone, Cell, Pager, IPPhone, -->
+			<!-- Fax, Pager or Custom -->
+			<Phone></Phone>
+			<!-- The value is the actual phone number of the contact. -->
+			<!-- For the contact to show in zoiper5 at least one phone field should -->
+			<!-- be present -->
+			<Account></Account>
+			<!-- The value is the ident valueof the account that will be used for dialing,it is found in the config.xml file -->
+			<!-- If not provided Zoiper will use the XML contact service account (by default it’s the default account) -->
+			<Presence></Presence>
+			<!-- The ident valueof the account that willbe used for presence, it is found in the config.xml file -->
+			<!-- By default it’s do not use unless it is an IPPhone type -->
+			<AccountMappingType></AccountMappingType>
+			<!-- Possible value one of the following: -->
+			<!-- None = do not use  -->
+			<!-- Default = the default account used by zoiper5 -->
+			<!-- Service = the account used by XML contact service -->
+			<!-- Custom = when this is used, the ident value of the account should be provided in <Account></Account>, it is found in the config.xml -->
+			<PresenceMappingType>None/Service/Custom</PresenceMappingType>
+			<!-- Possible value one of the following: -->
+			<!-- None = do not use -->
+			<!-- Service = the account used by XML contact service. -->
+			<!-- Custom = when this is used, the ident valueof the account should be provided in <presence></Presence>, it is found in the config.xml -->
+		</Phone>
+		<!-- If required more than one phone for a contact a new phone tag should be added that includes at least the two types tags and phone tag -->
+	</Contact>
+</Contacts>
