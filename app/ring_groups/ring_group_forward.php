@@ -195,7 +195,6 @@
 	}
 	echo "</tr>\n";
 
-	$x = 0;
 	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
 		foreach ($result as $row) {
