@@ -156,7 +156,7 @@
 		echo "	</th>\n";
 	}
 	echo th_order_by('profile_name', $text['label-profile_name'], $order_by, $order);
-	echo th_order_by('profile_enabled', $text['label-profile_enabled'], $order_by, $order);
+	echo th_order_by('profile_enabled', $text['label-profile_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-profile_description']."</th>\n";
 	if (permission_exists('conference_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -184,7 +184,15 @@
 				echo "	".escape($row['profile_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['profile_enabled'])."</td>\n";
+			if (permission_exists('conference_profile_edit')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['profile_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['profile_enabled']];
+			}
+			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['profile_description'])."</td>\n";
 			if (permission_exists('conference_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
