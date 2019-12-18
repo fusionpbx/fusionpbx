@@ -64,6 +64,7 @@
 	$text = $language->get();
 
 //load the header
+	$document['title'] = $text['title-user_dashboard'];
 	require_once "resources/header.php";
 
 //start the content
@@ -1290,13 +1291,6 @@
 		}
 		echo "</div>\n";
 	}
-
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//set the title
-	$document['title'] = $text['title-user_dashboard'];
 
 //show the footer
 	require_once "resources/footer.php";

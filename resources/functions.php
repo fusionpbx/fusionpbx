@@ -1158,11 +1158,11 @@ function number_pad($number,$n) {
 				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
 
 				//return adjusted color in format received
-				if ($hash == '#') { //hex
+				if (isset($hash) && $hash == '#') { //hex
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
-						$hex .= $hex_color;
+						$hex = $hex_color;
 					}
 					return $hash.$hex;
 				}
@@ -2045,7 +2045,7 @@ function number_pad($number,$n) {
 			$limit = preg_replace($regex, '', $limit);
 			$offset = preg_replace($regex, '', $offset);
 			if (is_numeric($limit) && $limit > 0) {
-				$clause .= ' limit '.$limit;
+				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
 				$clause .= ' offset '.$offset;
 			}
