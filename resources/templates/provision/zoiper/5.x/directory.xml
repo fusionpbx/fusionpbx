@@ -25,13 +25,13 @@
 			<Presence>{$account.1.auth_id}</Presence>
 			<!-- The ident value of the account that will be used for presence, it is found in the config.xml file -->
 			<!-- By default it’s do not use unless it is an IPPhone type -->
-			<AccountMappingType>Custom</AccountMappingType>
+			<AccountMappingType>Service</AccountMappingType>
 			<!-- Possible value one of the following: -->
 			<!-- None = do not use  -->
 			<!-- Default = the default account used by zoiper5 -->
 			<!-- Service = the account used by XML contact service -->
 			<!-- Custom = when this is used, the ident value of the account should be provided in <Account></Account>, it is found in the config.xml -->
-			<PresenceMappingType>Custom</PresenceMappingType>
+			<PresenceMappingType>Service</PresenceMappingType>
 			<!-- Possible value one of the following: -->
 			<!-- None = do not use -->
 			<!-- Service = the account used by XML contact service. -->
