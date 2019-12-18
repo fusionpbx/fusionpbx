@@ -1927,7 +1927,7 @@ function number_pad($number,$n) {
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 		function view_array($array, $exit = true) {
-			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			echo "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
 			$exit and exit();
 		}
 	}
