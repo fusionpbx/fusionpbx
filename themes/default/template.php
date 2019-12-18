@@ -690,7 +690,7 @@ if (!$default_login) {
 				}
 				$mod_a_2 = ($menu_parent['menu_item_link'] != '' && !$submenu) ? $menu_parent['menu_item_link'] : '#';
 				$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-				if (isset($_SESSION['theme']['menu_main_icons']['boolean']) && $_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
+				if (isset($_SESSION['theme']['menu_main_icons']['boolean']) && $_SESSION['theme']['menu_main_icons']['boolean'] == 'true') {
 					if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'fa-') > 0) {
 						$menu_main_icon = "<span class='fas ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>\n";
 					}
