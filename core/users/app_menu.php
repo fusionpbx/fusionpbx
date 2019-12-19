@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des utilisteurs";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל משתמש";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Utenti";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gebruikers";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer użytkowników";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciar Usuários";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestão de Utilizadores";
