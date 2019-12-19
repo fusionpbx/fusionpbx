@@ -54,19 +54,19 @@
 		switch ($action) {
 			case 'copy':
 				//if (permission_exists('menu_add')) {
-				//	$obj = new menus;
+				//	$obj = new menu;
 				//	$obj->copy($menus);
 				//}
 				break;
 			case 'toggle':
 				//if (permission_exists('menu_edit')) {
-				//	$obj = new menus;
+				//	$obj = new menu;
 				//	$obj->toggle($menus);
 				//}
 				break;
 			case 'delete':
 				if (permission_exists('menu_delete')) {
-					$obj = new menus;
+					$obj = new menu;
 					$obj->delete($menus);
 				}
 				break;
