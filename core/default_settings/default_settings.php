@@ -46,6 +46,7 @@
 	if (is_array($_POST['default_settings'])) {
 		$action = $_POST['action'];
 		$search = $_POST['search'];
+		$domain_uuid = $_POST['domain_uuid'];
 		$default_settings = $_POST['default_settings'];
 	}
 
@@ -55,6 +56,7 @@
 			case 'copy':
 				if (permission_exists('default_setting_add')) {
 					$obj = new default_settings;
+					$obj->domain_uuid = $domain_uuid;
 					$obj->copy($default_settings);
 				}
 				break;
@@ -161,21 +163,21 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-default_settings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($search != '' ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
 	if (permission_exists('default_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'default_setting_edit.php']);
 	}
 	if (permission_exists('default_setting_add') && $default_settings) {
-		//echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-			echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
-			echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
-			echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
-			echo "			<option value=''>Select Domain...</option>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'button_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>'show_domains();']);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'id'=>'button_back','icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'display: none;','onclick'=>'hide_domains();']);
+			echo 		"<select class='formfld' style='display: none; width: auto;' id='target_domain_uuid' onchange=\"document.getElementById('domain_uuid').value = this.options[this.selectedIndex].value;\">\n";
+			echo "			<option value=''>".$text['label-domain']."...</option>\n";
 			foreach ($_SESSION['domains'] as $domain) {
 				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
 			}
-			echo "		</select>\n";
-			echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick=\"$('#frm').attr('action', 'default_settings.php?search='+$('#default_setting_search').val()).submit();\">";
+			echo "		</select>";
+			echo button::create(['type'=>'button','label'=>$text['button-paste'],'id'=>'button_paste','icon'=>'paste','style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		}
 	}
 	if (permission_exists('default_setting_edit') && $default_settings) {
@@ -202,6 +204,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='domain_uuid' id='domain_uuid'>";
 
 	echo "<table class='list'>\n";
 	if (is_array($default_settings) && @sizeof($default_settings) != 0) {
