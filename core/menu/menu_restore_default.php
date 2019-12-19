@@ -54,7 +54,7 @@
 	$menu->db = $db;
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
-	$menu->delete();
+	$menu->delete_unprotected();
 	$menu->restore();
 	unset($menu);
 
