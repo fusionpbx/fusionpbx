@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "Instrada le chiamate basandosi su giorno e ora.";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Stuur gesprekken door op basis van tijdstip";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Chamada directa com base na hora do dia.";
