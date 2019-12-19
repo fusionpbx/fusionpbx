@@ -9,14 +9,32 @@ if (!class_exists('call_recordings')) {
 	class call_recordings {
 
 		/**
-		 * Called when the object is created
+		* declare the variables
+		*/
+		private $app_name;
+		private $app_uuid;
+		private $name;
+		private $table;
+		private $description_field;
+		private $location;
+		public $recording_uuid;
+		public $binary;
+
+		/**
+		 * called when the object is created
 		 */
 		public function __construct() {
-
+			//assign the variables
+				$this->app_name = 'call_recordings';
+				$this->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
+				$this->name = 'call_recording';
+				$this->table = 'call_recordings';
+				$this->description_field = 'call_recording_description';
+				$this->location = 'call_recordings.php';
 		}
 
 		/**
-		 * Called when there are no references to a particular object
+		 * called when there are no references to a particular object
 		 * unset the variables used in the class
 		 */
 		public function __destruct() {
@@ -26,21 +44,66 @@ if (!class_exists('call_recordings')) {
 		}
 
 		/**
+		 * delete rows from the database
+		 */
+		public function delete($records) {
+			if (permission_exists($this->name.'_delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+									}
+
+								//increment the id
+									$x++;
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		/**
 		 * download the recordings
 		 */
 		public function download() {
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
-				//cache limiter
-					session_cache_limiter('public');
-
 				//get call recording from database
-					$call_recording_uuid = $_GET['id'];
-					if (is_uuid($call_recording_uuid)) {
+					if (is_uuid($this->recording_uuid)) {
 						$sql = "select call_recording_name, call_recording_path, call_recording_base64 ";
 						$sql .= "from v_call_recordings ";
 						$sql .= "where call_recording_uuid = :call_recording_uuid ";
-						$parameters['call_recording_uuid'] = $call_recording_uuid;
+						$parameters['call_recording_uuid'] = $this->recording_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
@@ -67,7 +130,7 @@ if (!class_exists('call_recordings')) {
 						//}
 						ob_clean();
 						$fd = fopen($full_recording_path, "rb");
-						if ($_GET['t'] == "bin") {
+						if ($this->binary) {
 							header("Content-Type: application/force-download");
 							header("Content-Type: application/octet-stream");
 							header("Content-Type: application/download");
@@ -100,7 +163,7 @@ if (!class_exists('call_recordings')) {
 		/**
 		 * delete the recordings
 		 */
-		public function delete($id) {
+		public function old_delete($id) {
 			if (permission_exists('call_recording_delete')) {
 
 				//cache limiter
