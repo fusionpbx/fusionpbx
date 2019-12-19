@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Pour recevoir un fax, configurez une extension du FAX et après diriger un numéro vers lui.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Om een Fax to ontvangen stel een fax toestel in en stuur de inkomende fax met een apart nummer of de FAX kan gedetecteerd worden met een to op een Public toestel.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.";
