@@ -117,16 +117,13 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'call_recording_edit.php']);
-	}
 	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null),'collapse'=>'hide-xs']);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>($search == '' ? 'display: none;' : null),'collapse'=>'hide-xs']);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -153,10 +150,10 @@
 	}
 	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-40'");
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
-		echo "<th class='center'>".$text['label-recording']."</th>\n";
+		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
-	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order);
+	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right'");
 	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order);
 	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order);
 	if (permission_exists('xml_cdr_details')) {
@@ -182,14 +179,7 @@
 				echo "		<input type='hidden' name='call_recordings[$x][uuid]' value='".escape($row['call_recording_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td class='overflow'>\n";
-			if (permission_exists('xml_cdr_details')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-view']."\">".escape($row['call_recording_name'])."</a>\n";
-			}
-			else {
-				echo "	".escape($row['call_recording_name']);
-			}
-			echo "	</td>\n";
+			echo "	<td class='overflow'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 				echo "	<td class='middle button center no-link no-wrap'>";
 				if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {
@@ -204,12 +194,12 @@
 						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['call_recording_uuid']),'onclick'=>"recording_play('".escape($row['call_recording_uuid'])."')"]);
 					}
 					if (permission_exists('call_recording_download')) {
-						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&t=bin']);
+						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
 				}
 				echo "	</td>\n";
 			}
-			echo "	<td>".($row['call_recording_length'] <= 59 ? '0:' : null).escape(str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT))."</td>\n";
+			echo "	<td class='right'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape(str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT))."</td>\n";
 			$call_recording_date = explode(' ', $row['call_recording_date']);
 			echo "	<td class='no-wrap'>".escape($call_recording_date['0'])." <span class='hide-sm-dn'>".escape($call_recording_date[1])."</span></td>\n";
 			echo "	<td>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
