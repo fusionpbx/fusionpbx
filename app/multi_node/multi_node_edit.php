@@ -52,10 +52,9 @@
 	}
 	$domain_uuid = check_str($_SESSION['domain_uuid']);
 
-
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
-		// echo $action;
+		 //echo $action;exit;
 		// die(print_r($_POST));
 		//get the values from the HTTP POST and save them as PHP variables
 		$name  						=	$_POST['name'];
@@ -96,7 +95,7 @@
 			}
 			unset($prep_statement, $sql);
 
-					$event_socket_ip_address = '127.0.0.1';
+					//$event_socket_ip_address = '127.0.0.1';
                                         $cmd = "api switchname";
                                         $response = trim(event_socket_request_cmd($cmd));
                                         unset($cmd);
@@ -238,7 +237,8 @@
 								// unset($ext);
 							// }
 					// }
-					$event_socket_ip_address = '127.0.0.1';
+
+					//$event_socket_ip_address = '127.0.0.1';
 				        $cmd = "api switchname";
 				        $response = trim(event_socket_request_cmd($cmd));
 				        unset($cmd);
@@ -316,9 +316,7 @@
 					}
 					// header("Location: multi_node_edit.php?id=".$multinode_uuid);
 					//synchronize settings
-
-
-					 $event_socket_ip_address = '127.0.0.1';
+					//$event_socket_ip_address = '127.0.0.1';
                                         $cmd = "api switchname";
                                         $response = trim(event_socket_request_cmd($cmd));
                                         unset($cmd);
@@ -350,9 +348,7 @@
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-
 		// die(print_r($result));
-
 		foreach ($result as &$row) {
 			$name = $row["name"];
 			$node_priority = $row["node_priority"];
@@ -378,7 +374,6 @@
 	else {
 	
 	}
-
 
 //begin the page content
 	require_once "resources/header.php";
@@ -525,6 +520,20 @@
 	echo $text['description-form-node-priority']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+
+//set the defaults
+if (strlen($exchange_name) == 0) { $exchange_name = 'TAP.Events'; }
+if (strlen($exchange_type) == 0) { $exchange_type = 'topic'; }
+
+if (strlen($circuit_breaker_ms) == 0) { $circuit_breaker_ms = '10000'; }
+if (strlen($reconnect_interval_ms) == 0) { $reconnect_interval_ms = '1000'; }
+
+if (strlen($send_queue_size) == 0) { $send_queue_size = '5000'; }
+if (strlen($enable_fallback_format_fields) == 0) { $enable_fallback_format_fields = '1'; }
+
+if (strlen($format_fields) == 0) { $format_fields = '#FreeSWITCH,FreeSWITCH-Hostname,Event-Name,Event-Subclass,Unique-ID'; }
+if (strlen($event_filter) == 0) { $event_filter = 'CUSTOM,CONFERENCE_DATA'; }
 
 	
 	//--- begin: show_advanced -----------------------
