@@ -92,7 +92,7 @@
 	}
 
 //get the count
-	$sql = "select count(*) from view_groups ";
+	$sql = "select count(*) from v_groups ";
 	if ($_GET['show'] == "all" && permission_exists('group_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;
