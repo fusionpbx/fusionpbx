@@ -17,6 +17,8 @@ if (!class_exists('call_recordings')) {
 		private $table;
 		private $description_field;
 		private $location;
+		public $recording_uuid;
+		public $binary;
 
 		/**
 		 * called when the object is created
@@ -96,16 +98,12 @@ if (!class_exists('call_recordings')) {
 		public function download() {
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
-				//cache limiter
-					session_cache_limiter('public');
-
 				//get call recording from database
-					$call_recording_uuid = $_GET['id'];
-					if (is_uuid($call_recording_uuid)) {
+					if (is_uuid($this->recording_uuid)) {
 						$sql = "select call_recording_name, call_recording_path, call_recording_base64 ";
 						$sql .= "from v_call_recordings ";
 						$sql .= "where call_recording_uuid = :call_recording_uuid ";
-						$parameters['call_recording_uuid'] = $call_recording_uuid;
+						$parameters['call_recording_uuid'] = $this->recording_uuid;
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
@@ -132,7 +130,7 @@ if (!class_exists('call_recordings')) {
 						//}
 						ob_clean();
 						$fd = fopen($full_recording_path, "rb");
-						if ($_GET['t'] == "bin") {
+						if ($this->binary) {
 							header("Content-Type: application/force-download");
 							header("Content-Type: application/octet-stream");
 							header("Content-Type: application/download");
