@@ -40,7 +40,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion App";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toepassing beheer";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer aplikacji";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de aplicações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestor de Aplicações";
