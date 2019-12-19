@@ -1348,7 +1348,7 @@
 						$tmp = $row["destination_description"];
 					}
 					if(strlen($tmp) > 0){
-						if ($emergency_caller_id_name == $tmp) {
+						if ($emergency_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
 						else {
