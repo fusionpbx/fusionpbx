@@ -102,13 +102,15 @@ class text {
 
 		//reduce to specific language
 			if ($language_code != 'all') {
-				if (is_array($text)) foreach ($text as $key => $value) {
-					if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
-						$text[$key] = $value[$language_code];
-					}
-					else {
-						//fallback to en-us
-						$text[$key] = $value['en-us'];
+				if (is_array($text)) {
+					foreach ($text as $key => $value) {
+						if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
+							$text[$key] = $value[$language_code];
+						}
+						else {
+							//fallback to en-us
+							$text[$key] = $value['en-us'];
+						}
 					}
 				}
 			}

@@ -925,7 +925,7 @@
 				echo "			<tr>\n";
 				echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
 				$selected = "selected=\"selected\" ";
-				echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
+				echo "				<select class='formfld' name='device_lines[".$x."][line_number]'>\n";
 				echo "				<option value=''></option>\n";
 				for ($n = 1; $n <=99; $n++) {
         		            echo "					<option value='$n' ".($row['line_number'] == "$n" ? $selected:"").">$n</option>\n";
@@ -1171,16 +1171,40 @@
 				if ($row['device_key_vendor'] !== "polycom") {
 					if (strlen($device_vendor) == 0) {
 						if ($row['device_key_category'] == "expansion") {
-							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']." 1</option>\n";
 						}
 						else {
-							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+							echo "	<option value='expansion'>".$text['label-expansion']." 1</option>\n";
 						}
 						if ($row['device_key_category'] == "expansion-2") {
 							echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
 						}
 						else {
 							echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+						}
+						if ($row['device_key_category'] == "expansion-3") {
+							echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
+						}
+						if ($row['device_key_category'] == "expansion-4") {
+							echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
+						}
+						if ($row['device_key_category'] == "expansion-5") {
+							echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
+						}
+						if ($row['device_key_category'] == "expansion-6") {
+							echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
 						}
 					}
 					else {

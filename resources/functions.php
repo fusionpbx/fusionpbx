@@ -375,10 +375,10 @@
 	if (!function_exists('th_order_by')) {
 		//html table header order by
 		function th_order_by($field_name, $column_title, $order_by, $order, $app_uuid = '', $css = '', $http_get_params = '', $description = '') {
+			global $text;
 			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-			$column_title = preg_replace("#[^a-zA-Z0-9_]#", "", $column_title);
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
 
 			$sanitized_parameters = '';
@@ -420,12 +420,12 @@
 				$order = 'asc';
 			}
 			if ($order == "asc") {
-				$description .= 'sort(ascending)';
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
+				$description .= $text['label-order'].': '.$text['label-ascending'];
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			else {
-				$description .= 'sort(descending)';
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title='".urlencode($description)."'>".urlencode($column_title)."</a>";
+				$description .= $text['label-order'].': '.$text['label-descending'];
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			$html .= "</th>";
 			return $html;
@@ -1158,11 +1158,11 @@ function number_pad($number,$n) {
 				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
 
 				//return adjusted color in format received
-				if ($hash == '#') { //hex
+				if (isset($hash) && $hash == '#') { //hex
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
-						$hex .= $hex_color;
+						$hex = $hex_color;
 					}
 					return $hash.$hex;
 				}
@@ -1927,7 +1927,7 @@ function number_pad($number,$n) {
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 		function view_array($array, $exit = true) {
-			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			echo "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
 			$exit and exit();
 		}
 	}
@@ -2045,7 +2045,7 @@ function number_pad($number,$n) {
 			$limit = preg_replace($regex, '', $limit);
 			$offset = preg_replace($regex, '', $offset);
 			if (is_numeric($limit) && $limit > 0) {
-				$clause .= ' limit '.$limit;
+				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
 				$clause .= ' offset '.$offset;
 			}

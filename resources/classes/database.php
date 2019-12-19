@@ -706,7 +706,7 @@ include "root.php";
 
 				//debug info
 					//echo "<pre>\n";
-					//print_r($array);
+					//print_r($delete_array);
 					//echo "</pre>\n";
 					//exit;
 
@@ -777,6 +777,7 @@ include "root.php";
 									if ($this->debug["sql"]) {
 										$message["details"][$m]["sql"] = $sql;
 									}
+
 									$this->message = $message;
 									$m++;
 								}
@@ -799,7 +800,9 @@ include "root.php";
 						$sql = "insert into v_database_transactions ";
 						$sql .= "(";
 						$sql .= "database_transaction_uuid, ";
-						$sql .= "domain_uuid, ";
+						if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
+							$sql .= "domain_uuid, ";
+						}
 						if (isset($user_uuid) && is_uuid($user_uuid)) {
 							$sql .= "user_uuid, ";
 						}
@@ -820,7 +823,9 @@ include "root.php";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
-						$sql .= "'".$this->domain_uuid."', ";
+						if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
+							$sql .= "'".$this->domain_uuid."', ";
+						}
 						if (isset($user_uuid) && is_uuid($user_uuid)) {
 							$sql .= ":user_uuid, ";
 						}

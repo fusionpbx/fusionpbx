@@ -1,11 +1,35 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('conference_profile_view')) {
 		//access granted
 	}
@@ -18,131 +42,174 @@
 	$language = new text;
 	$text = $language->get();
 
-//get variables used to control the order
+//get the http post data
+	if (is_array($_POST['conference_profiles'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$conference_profiles = $_POST['conference_profiles'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($conference_profiles) && @sizeof($conference_profiles) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('conference_profile_add')) {
+					$obj = new conference_profiles;
+					$obj->copy($conference_profiles);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('conference_profile_edit')) {
+					$obj = new conference_profiles;
+					$obj->toggle($conference_profiles);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('conference_profile_delete')) {
+					$obj = new conference_profiles;
+					$obj->delete($conference_profiles);
+				}
+				break;
+		}
+
+		header('Location: conference_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search term
-	$search = $_GET["search"];
-	if (strlen($search) > 0) {
-		$sql_search = "where (";
-		$sql_search .= "profile_name like :search";
-		$sql_search .= "or profile_enabled like :search";
-		$sql_search .= "or profile_description like :search";
-		$sql_search .= ")";
+//add the search string
+	if (isset($_GET["search"])) {
+		$search =  strtolower($_GET["search"]);
+		$sql_search = " (";
+		$sql_search .= "	lower(profile_name) like :search ";
+		$sql_search .= "	or lower(profile_description) like :search ";
+		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
-//prepare to page the results
-	$sql = "select count(*) from v_conference_profiles ";
-	//$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= $sql_search;
-	//$parameters['domain_uuid'] = $domain_uuid;
+//get the count
+	$sql = "select count(conference_profile_uuid) from v_conference_profiles ";
+	if (isset($sql_search)) {
+		$sql .= "where ".$sql_search;
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
-//prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
 //get the list
-	$sql = "select * from v_conference_profiles ";
-	//$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= $sql_search;
-	$sql .= order_by($order_by, $order);
+	$sql = str_replace('count(conference_profile_uuid)', '*', $sql);
+	$sql .= order_by($order_by, $order, 'profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$conference_profiles = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_profiles']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['title_description-conference_profile']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('profile_name', $text['label-profile_name'], $order_by, $order);
-	echo th_order_by('profile_enabled', $text['label-profile_enabled'], $order_by, $order);
-	echo th_order_by('profile_description', $text['label-profile_description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_profiles']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('conference_profile_add')) {
-		echo "<a href='conference_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'conference_profile_edit.php']);
 	}
-	else {
-		echo "&nbsp;\n";
+	if (permission_exists('conference_profile_add') && $conference_profiles) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo "</td>\n";
-	echo "<tr>\n";
+	if (permission_exists('conference_profile_edit') && $conference_profiles) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('conference_profile_delete') && $conference_profiles) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'conference_profiles.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	if (is_array($result) && sizeof($result) != 0) {
-		foreach($result as $row) {
+	echo $text['description-conference_profiles']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit') || permission_exists('conference_profile_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($conference_profiles ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('profile_name', $text['label-profile_name'], $order_by, $order);
+	echo th_order_by('profile_enabled', $text['label-profile_enabled'], $order_by, $order, null, "class='center'");
+	echo "	<th class='hide-sm-dn'>".$text['label-profile_description']."</th>\n";
+	if (permission_exists('conference_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
+	if (is_array($conference_profiles) && @sizeof($conference_profiles) != 0) {
+		$x = 0;
+		foreach ($conference_profiles as $row) {
 			if (permission_exists('conference_profile_edit')) {
-				$tr_link = "href='conference_profile_edit.php?id=".$row['conference_profile_uuid']."'";
+				$list_row_url = "conference_profile_edit.php?id=".urlencode($row['conference_profile_uuid']);
 			}
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit') || permission_exists('conference_profile_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='conference_profiles[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='conference_profiles[$x][uuid]' value='".escape($row['conference_profile_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>\n";
 			if (permission_exists('conference_profile_edit')) {
-				echo "<a href='conference_profile_edit.php?id=".escape($row['conference_profile_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['profile_name'])."</a>\n";
 			}
-			if (permission_exists('conference_profile_delete')) {
-				echo "<a href='conference_profile_delete.php?id=".escape($row['conference_profile_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "	".escape($row['profile_name']);
 			}
 			echo "	</td>\n";
+			if (permission_exists('conference_profile_edit')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['profile_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['profile_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['profile_description'])."</td>\n";
+			if (permission_exists('conference_profile_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+			$x++;
+		}
+		unset($conference_profiles);
+	}
 
-	echo "<tr>\n";
-	echo "<td colspan='4' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('conference_profile_add')) {
-		echo 		"<a href='conference_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
