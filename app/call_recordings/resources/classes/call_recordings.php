@@ -15,8 +15,6 @@ if (!class_exists('call_recordings')) {
 		private $app_uuid;
 		private $name;
 		private $table;
-		private $toggle_field;
-		private $toggle_values;
 		private $description_field;
 		private $location;
 
@@ -29,8 +27,6 @@ if (!class_exists('call_recordings')) {
 				$this->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 				$this->name = 'call_recording';
 				$this->table = 'call_recordings';
-				$this->toggle_field = '';
-				$this->toggle_values = ['true','false'];
 				$this->description_field = 'call_recording_description';
 				$this->location = 'call_recordings.php';
 		}
