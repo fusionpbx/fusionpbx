@@ -49,13 +49,18 @@
 			foreach ($message_uuids as $index => $message_uuid) {
 				$array['messages'][$index]['message_uuid'] = $message_uuid;
 				$array['messages'][$index]['domain_uuid'] = $domain_uuid;
+				$array['message_media'][$index]['message_uuid'] = $message_uuid;
 			}
-
+			
+			$p = new permissions;
+			$p->add('message_media_delete', 'temp');
 			$database = new database;
 			$database->app_name = 'messages';
 			$database->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
 			$database->delete($array);
 			unset($array);
+			
+			$p->delete('message_media_delete', 'temp');
 
 		//set message
 			message::add($text['message-delete']);
