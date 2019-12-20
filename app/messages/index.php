@@ -138,33 +138,46 @@
 //convert the array to json
 	$array_json = json_encode($array);
 	
-//check if we need to forward to a registered endpoint
-	$sql = "select user_setting_value from v_user_settings ";
+//get the messages forwarding settings
+	$sql = "select * from v_user_settings ";
 	$sql .= "where user_uuid = :user_uuid ";
 	$sql .= "and user_setting_category = 'message' ";
-	$sql .= "and user_setting_subcategory = 'extension_forward' ";
+	$sql .= "and (user_setting_subcategory = 'extension_forward' ";
+	$sql .= "or user_setting_subcategory = 'email_forward' ";
+	$sql .= ") ";
 	$sql .= "and user_setting_value = 'true' ";
 	$sql .= "and user_setting_enabled = 'true' ";
 	$parameters['user_uuid'] = $user_uuid;
 	$database = new database;
-	$extension_forward = $database->select($sql, $parameters, 'column');
+	$user_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	if ($extension_forward) {
-
-		//get the list of extensions using the user_uuid
-			$sql = "select * from v_domains as d, v_extensions as e ";
-			$sql .= "where extension_uuid in ( ";
-			$sql .= "	select extension_uuid ";
-			$sql .= "	from v_extension_users ";
-			$sql .= "	where user_uuid = :user_uuid ";
-			$sql .= ") ";
-			$sql .= "and e.domain_uuid = d.domain_uuid ";
-			$sql .= "and e.enabled = 'true' ";
-			$parameters['user_uuid'] = $user_uuid;
-			$database = new database;
-			$extensions = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
+	foreach($user_settings as $row) {
+		
+		if ($row['user_setting_subcategory'] == "extension_forward") {
+			$extension_forward = $row['user_setting_value'];
+		}
+		elseif ($row['user_setting_subcategory'] == "email_forward") {
+			$email_forward = $row['user_setting_value'];
+		}
+	}
+	
+	if (is_array($user_settings) && @sizeof($user_settings) != 0) {
+		
+		if ($extension_forward == "true") {	
+			///get the list of extensions using the user_uuid
+				$sql = "select * from v_domains as d, v_extensions as e ";
+				$sql .= "where extension_uuid in ( ";
+				$sql .= "	select extension_uuid ";
+				$sql .= "	from v_extension_users ";
+				$sql .= "	where user_uuid = :user_uuid ";
+				$sql .= ") ";
+				$sql .= "and e.domain_uuid = d.domain_uuid ";
+				$sql .= "and e.enabled = 'true' ";
+				$parameters['user_uuid'] = $user_uuid;
+				$database = new database;
+				$extensions = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
 		
 		//create the event socket connection
 			if (is_array($extensions)) {
@@ -187,6 +200,14 @@
 				}
 			}
 			unset($extensions, $row);
+	}
+	
+	
+		if ($email_forward == "true") {
+			//send the email
+			
+		}
+	
 	}
 
 //set the file
