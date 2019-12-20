@@ -3,6 +3,10 @@
 		<condition>
 			<action application="export" data="origination_callee_id_name=${destination_number}"/>
 			<action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
+			<action application="set" data="max_calls=-1" inline="true"/>
+		</condition>
+		<condition field="${limit_max}" expression="^$">
+			<action application="set" data="limit_max=-1" inline="true"/>
 		</condition>
 	</extension>
 </context>
