@@ -115,6 +115,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//include the header
+	require_once "resources/header.php";
+
 //copy settings javascript
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "<script language='javascript' type='text/javascript'>\n";
@@ -136,28 +139,8 @@
 		echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
 		echo "		});\n";
 		echo "	}\n";
-		echo "\n";
-		echo "	$( document ).ready(function() {\n";
-		echo "		$('#default_setting_search').trigger('focus').trigger('select');\n";
-		if ($search == '') {
-			echo "		// scroll to previous category\n";
-			echo "		var category_span_id;\n";
-			echo "		var url = document.location.href;\n";
-			echo "		var hashindex = url.indexOf('#');\n";
-			echo "		if (hashindex == -1) { }\n";
-			echo "		else {\n";
-			echo "			category_span_id = url.substr(hashindex + 1);\n";
-			echo "		}\n";
-			echo "		if (category_span_id) {\n";
-			echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
-			echo "		}\n";
-		}
-		echo "	});\n";
 		echo "</script>";
 	}
-
-//include the header
-	require_once "resources/header.php";
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -210,8 +193,7 @@
 	if (is_array($default_settings) && @sizeof($default_settings) != 0) {
 		$x = 0;
 		foreach ($default_settings as $row) {
-			$default_setting_category = $row['default_setting_category'];
-			$default_setting_category = strtolower($default_setting_category);
+			$default_setting_category = strtolower($row['default_setting_category']);
 
 			$label_default_setting_category = $row['default_setting_category'];
 			switch (strtolower($label_default_setting_category)) {
@@ -225,13 +207,15 @@
 					$label_default_setting_category = ucwords($label_default_setting_category);
 			}
 
-			if ($previous_default_setting_category !== $row['default_setting_category']) {
-				echo "		<tr>";
-				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
-				echo "		</tr>";
-				echo "		<tr>";
-				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($label_default_setting_category)."</b></td>\n";
-				echo "		</tr>";
+			if ($previous_default_setting_category != $row['default_setting_category']) {
+				if ($previous_default_setting_category != '') {
+					echo "</table>\n";
+
+					echo "<br>\n";
+				}
+				echo "<b>".escape($label_default_setting_category)."</b><br>\n";
+
+				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('default_setting_add') || permission_exists('default_setting_edit') || permission_exists('default_setting_delete')) {
 					echo "	<th class='checkbox'>\n";
@@ -241,11 +225,11 @@
 				if ($_GET['show'] == 'all' && permission_exists('default_setting_all')) {
 					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 				}
-				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order);
-				echo th_order_by('default_setting_name', $text['label-name'], $order_by, $order);
-				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order);
+				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
+				echo th_order_by('default_setting_name', $text['label-name'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
+				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-				echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
+				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
 				if (permission_exists('default_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
@@ -265,11 +249,9 @@
 			if ($_GET['show'] == 'all' && permission_exists('default_setting_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td>".escape($row['default_setting_subcategory'])."</td>\n";
-			echo "	<td>".escape($row['default_setting_name'])."</td>\n";
-
-			//echo "	<td>".escape($row['default_setting_value'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
+			echo "	<td class='overflow no-wrap'>".escape($row['default_setting_subcategory'])."</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
+			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['default_setting_category'];
 			$subcategory = $row['default_setting_subcategory'];
 			$name = $row['default_setting_name'];
