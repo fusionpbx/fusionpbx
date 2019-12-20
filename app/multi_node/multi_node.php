@@ -98,9 +98,10 @@
 	if ($db_type == "pgsql") {
 		$sql .= ",(select count(*) as count from v_multinode ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension ~ '^[0-9]+$') as numeric_multinode ";
+		$sql .= "as numeric_multinode ";
+
 	}
-	
+
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -110,7 +111,7 @@
 			$numeric_extensions = $row['numeric_multinode'];
 		}
 	}
-	// die($total_multinodes);
+
 	unset($prep_statement, $row);
 
 //prepare to page the results
@@ -124,7 +125,7 @@
 
 //to cast or not to cast
 	if ($db_type == "pgsql") {
-		$order_text = ($total_multinodes == $numeric_extensions) ? "cast(extension as bigint)" : "extension asc";
+		$order_text = "hostname asc";
 	}
 	else {
 		$order_text = "hostname asc";
@@ -135,14 +136,14 @@
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_mod; //add search mod from above
 	if (strlen($order_by) > 0) {
-		$sql .= ($order_by == 'extension') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
+		$sql .= ($order_by == 'name') ? "order by $order_text ".$order." " : "order by ".$order_by." ".$order." ";
 	}
 	else {
 		$sql .= "order by $order_text ";
 	}
 	$sql .= "limit $rows_per_page offset $offset ";
 
-	// echo $sql;
+	//echo $sql;exit;
 
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

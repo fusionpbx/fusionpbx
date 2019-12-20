@@ -14,7 +14,7 @@ $text['title-extensions']['ar-eg'] = "الأرقام الداخلية";
 $text['title-extensions']['he'] = "שלוחות";
 $text['title-extensions']['it-it'] = "Interni";
 
-$text['title-extension-edit']['en-us'] = "Multi node Edit";
+$text['title-extension-edit']['en-us'] = "Multi Node Edit";
 $text['title-extension-edit']['es-cl'] = "Extensión";
 $text['title-extension-edit']['pt-pt'] = "Extensão";
 $text['title-extension-edit']['fr-fr'] = "Extension";
