@@ -1,4 +1,3 @@
-
 <context name="{v_context}">
 	<extension name="bind_digit_action" number="" continue="true" app_uuid="3746fc9c-f331-48c0-82d8-a80b1bfffa06" enabled="false" order="45">
 		<condition field="${sip_authorized}" expression="true" break="never">
