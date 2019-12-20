@@ -100,7 +100,7 @@
 
 //get the list
 	$sql = str_replace('count(call_recording_uuid)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'call_recording_name', 'asc');
+	$sql .= order_by($order_by, $order, 'call_recording_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$call_recordings = $database->select($sql, $parameters, 'all');
