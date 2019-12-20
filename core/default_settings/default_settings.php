@@ -315,7 +315,7 @@
 				echo $text['label-'.$row['default_setting_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['default_setting_description'])."</td>\n";
+			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['default_setting_description'])."\">".escape($row['default_setting_description'])."</td>\n";
 			if (permission_exists('default_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
