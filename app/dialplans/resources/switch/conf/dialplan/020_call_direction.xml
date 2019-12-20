@@ -1,7 +1,16 @@
 <context name="{v_context}">
 	<extension name="call-direction" number="" continue="true" app_uuid="3780f814-5543-4350-b65d-563512d1fe71" enabled="true">
+		<condition field="context" expression="^(public$|outbound@)" break="on-true">
+			<action application="set" data="call_direction=inbound" inline="true"/>
+		</condition>
+		<condition field="destination_number" expression="^([\d\D]{1,6})$" break="on-true">
+			<action application="set" data="call_direction=local" inline="true"/>
+		</condition>
+		<condition field="destination_number" expression="^([\d\D]{7,})$" break="on-true">
+			<action application="set" data="call_direction=outbound" inline="true"/>
+		</condition>
 		<condition field="${call_direction}" expression="^(inbound|outbound|local)$" break="never">
-			<anti-action application="export" data="call_direction=local" inline="true"/>
+			<anti-action application="set" data="call_direction=local" inline="true"/>
 		</condition>
 	</extension>
 </context>
