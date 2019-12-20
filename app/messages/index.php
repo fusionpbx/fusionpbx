@@ -179,28 +179,28 @@
 				$extensions = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 		
-		//create the event socket connection
-			if (is_array($extensions)) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			}
-		
-		//send the sip message
-			if (is_array($extensions) && @sizeof($extensions) != 0) {
-				foreach ($extensions as $row) {
-					$domain_name = $row['domain_name'];
-					$extension = $row['extension'];
-					$number_alias = $row['number_alias'];
-		
-					//send the sip messages
-					$command = "luarun app/messages/resources/send.lua ".$message["from"]."@".$domain_name." ".$extension."@".$domain_name."  '".$message["text"]."'";
-		
-					//send the command
-					$response = event_socket_request($fp, "api ".$command);
-					$response = event_socket_request($fp, "api log notice ".$command);
+			//create the event socket connection
+				if (is_array($extensions)) {
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				}
-			}
-			unset($extensions, $row);
-	}
+
+			//send the sip message
+				if (is_array($extensions) && @sizeof($extensions) != 0) {
+					foreach ($extensions as $row) {
+						$domain_name = $row['domain_name'];
+						$extension = $row['extension'];
+						$number_alias = $row['number_alias'];
+
+						//send the sip messages
+						$command = "luarun app/messages/resources/send.lua ".$message["from"]."@".$domain_name." ".$extension."@".$domain_name."  '".$message["text"]."'";
+
+						//send the command
+						$response = event_socket_request($fp, "api ".$command);
+						$response = event_socket_request($fp, "api log notice ".$command);
+					}
+				}
+				unset($extensions, $row);
+		}
 	
 	
 		if ($email_forward == "true") {
