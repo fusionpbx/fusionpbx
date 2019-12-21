@@ -83,7 +83,7 @@
 //add the search string
 	if (isset($_GET["search"])) {
 		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
+		$sql_search = "and (";
 		$sql_search .= "	lower(call_recording_name) like :search ";
 		$sql_search .= "	or lower(call_recording_path) like :search ";
 		$sql_search .= ") ";
@@ -92,9 +92,11 @@
 
 //get the count
 	$sql = "select count(call_recording_uuid) from v_call_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (isset($sql_search)) {
-		$sql .= "where ".$sql_search;
+		$sql .= $sql_search;
 	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
