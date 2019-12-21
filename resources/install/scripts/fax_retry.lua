@@ -92,6 +92,8 @@
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 
 --set default values
+	default_language = 'en';
+	default_dialect = 'us';
 	if (not origination_caller_id_name) then
 		origination_caller_id_name = '000000000000000';
 	end
