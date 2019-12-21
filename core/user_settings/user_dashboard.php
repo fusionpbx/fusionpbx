@@ -45,7 +45,7 @@
 	require_once "resources/check_auth.php";
 
 //disable login message
-	if ($_GET['msg'] == 'dismiss') {
+	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);
 
 		$sql = "update v_default_settings ";
@@ -88,7 +88,7 @@
 	echo "<br />";
 
 //display login message
-	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
+	if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
@@ -378,7 +378,7 @@
 					}
 				}
 
-				$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
+				$hud[$n]['html'] = "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
 
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$messages['new']."</span>";
 				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-new_messages']."</span>\n";
@@ -808,7 +808,7 @@
 				$show_stat = false;
 			}
 
-			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
+			$hud[$n]['html'] = "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
 
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
@@ -961,7 +961,7 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
+			$hud[$n]['html'] = "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
@@ -1031,7 +1031,7 @@
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
 					$cut = shell_exec("/usr/bin/which cut");
-					$uptime = shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime"));
+					$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
 					$tmp['h'] = $uptime/60/60%24;
