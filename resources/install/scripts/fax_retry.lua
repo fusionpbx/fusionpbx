@@ -331,13 +331,12 @@
 	sql = sql .. "  OR template_subcategory = 'fail_invalid' ";
 	sql = sql .. ") "
 	sql = sql .. "AND template_enabled = 'true' "
-	sql = sql .. "ORDER BY domain_uuid DESC "
 	local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 	end
 	dbh:query(sql, params, function(row)
-		if (template_subcategory == 'success_default') then
+		if (row["template_subcategory"] == 'success_default') then
 			email_subject_success_default = row["template_subject"];
 			email_body_success_default = row["template_body"];
 
@@ -346,7 +345,7 @@
 			email_body_success_default = email_body_success_default:gsub("${number_dialed}", number_dialed);
 			email_body_success_default = email_body_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
 		end
-		if (template_subcategory == 'fail_default') then
+		if (row["template_subcategory"] == 'fail_default') then
 			email_subject_fail_default = row["template_subject"];
 			email_body_fail_default = row["template_body"];
 
@@ -355,7 +354,7 @@
 			email_body_fail_default = email_body_fail_default:gsub("${number_dialed}", number_dialed);
 			email_body_fail_default = email_body_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
 		end
-		if (template_subcategory == 'fail_busy') then
+		if (row["template_subcategory"] == 'fail_busy') then
 			email_subject_fail_busy = row["template_subject"];
 			email_body_fail_busy = row["template_body"];
 
@@ -364,12 +363,12 @@
 			email_body_fail_busy = email_body_fail_busy:gsub("${number_dialed}", number_dialed);
 			email_body_fail_busy = email_body_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
 		end
-		if (template_subcategory == 'fail_invalid') then
+		if (row["template_subcategory"] == 'fail_invalid') then
 			email_subject_fail_invalid = row["template_subject"];
 			email_body_fail_invalid = row["template_body"];
 
 			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${number_dialed}", number_dialed);
-			email_subject_fail_invalid = email_subject_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
 			email_body_fail_invalid = email_body_fail_invalid:gsub("${number_dialed}", number_dialed);
 			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
 		end
