@@ -375,16 +375,6 @@
 		end
 	end);
 
---prepare the subject
-	subject = subject:gsub("${number_dialed}", number_dialed);
-	subject = subject:gsub("${fax_busy_attempts}", fax_busy_attempts);
-	subject = trim(subject);
-	subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
-
---prepare the body
-	body = body:gsub("${number_dialed}", number_dialed);
-	body = body:gsub("${fax_busy_attempts}", fax_busy_attempts);
-
 --add the fax files
 	if (fax_success ~= nil) then
 		if (fax_success =="1") then
