@@ -69,7 +69,7 @@
 	assert(dbh:connected());
 
 --set debug
-	debug["sql"] = true;
+	debug["sql"] = false;
 
 --include json library
 	local json
@@ -168,7 +168,7 @@
 
 		--show debug info
 		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[call_center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+			freeswitch.consoleLog("notice", "[MESSAGES] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 		end
 
 		--run the query
