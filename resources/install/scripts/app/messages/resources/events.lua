@@ -20,7 +20,7 @@
 
 -- Start the script
 	--	<!-- Subscribe to events -->
-	--	<hook event="CUSTOM" subclass="SMS::SEND_MESSAGE" script="app/messages/resources/events.lua"/>
+	--	<hook event="MESSAGE" script="app/messages/resources/events.lua"/>
 
 --prepare the api object
 	api = freeswitch.API();
