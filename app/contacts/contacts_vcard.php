@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -85,7 +85,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 			$e = 0;
 			foreach ($result as &$row) {
 				$vcard->data['email'.$e] = $row["email_address"];
-				if (++$e == 2) { break; } //limit to 2 rows
+				if ($e++ == 2) { break; } //limit to 2 rows
 			}
 		}
 		unset($sql, $parameters, $result, $row);
