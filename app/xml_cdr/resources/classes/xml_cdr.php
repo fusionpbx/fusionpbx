@@ -232,9 +232,11 @@ if (!class_exists('xml_cdr')) {
 
 			//parse the xml to get the call detail record info
 				try {
-					//$this->log($xml_string);
-					$xml = simplexml_load_string($xml_string);
-					//$this->log("\nxml load done\n");
+					//disable xml entities
+					libxml_disable_entity_loader(true);
+
+					//load the string into an xml object
+					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				}
 				catch(Exception $e) {
 					echo $e->getMessage();
