@@ -17,19 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_view')) {
+	if (permission_exists('xml_cdr_statistics')) {
 		//access granted
 	}
 	else {
