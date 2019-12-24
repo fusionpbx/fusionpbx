@@ -195,6 +195,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_statistics";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y=0;
