@@ -303,6 +303,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable SRTP 0=Disabled - 1=Enabled ";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5a832c3e-ac9e-4390-a41a-a30da68a4791";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_forward";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Forward key 1=enabled 0=disable";
+                $y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4a9376ca-ab6b-4bf9-86a9-de8a9b95f477";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_srtp_offer";
@@ -319,5 +327,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require SRTP line 0=Disabled - 1=Enabled ";
 		$y++;
+
 
 ?>
