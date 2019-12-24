@@ -160,7 +160,9 @@
 	if ($_GET['call_result'] != 'missed') {
 		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?call_result=missed']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-statistics'],'icon'=>'chart-area','link'=>'xml_cdr_statistics.php']);
+	if (permission_exists('xml_cdr_statistics')) {
+		echo button::create(['type'=>'button','label'=>$text['button-statistics'],'icon'=>'chart-area','link'=>'xml_cdr_statistics.php']);
+	}
 	if (permission_exists('xml_cdr_archive')) {
 		echo button::create(['type'=>'button','label'=>$text['button-archive'],'icon'=>'archive','link'=>'xml_cdr_archive.php'.($_REQUEST['show'] == 'all' ? '?show=all' : null)]);
 	}
