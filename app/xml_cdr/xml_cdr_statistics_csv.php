@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('xml_cdr_statistics')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //include the xml cdr statistics backend
 	require_once "xml_cdr_statistics_inc.php";
@@ -70,4 +74,5 @@ else {
 		echo "\n";
 		$x++;
 	}
+
 ?>
