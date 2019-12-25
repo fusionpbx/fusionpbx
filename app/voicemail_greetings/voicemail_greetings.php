@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 	//check permissions
-	if (!permission_exists('voicemail_greeting_view') || !extension_assigned($_REQUEST["id"])) {
+	if (!permission_exists('voicemail_greeting_view') || (!permission_exists('voicemail_view') && !extension_assigned($_REQUEST["id"]))) {
 		echo "access denied";
 		return;
 	}
