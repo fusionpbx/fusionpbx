@@ -38,10 +38,10 @@
 		//move config.php from the includes to resources directory.
 		rename($_SERVER["PROJECT_ROOT"]."/includes/config.php", $_SERVER["PROJECT_ROOT"]."/resources/config.php");
 	}
-	else if (file_exists("/etc/fusionpbx/config.php")){
+	else if (file_exists("/etc/fusionpbx/config.php")) {
 		//linux
 	}
-	else if (file_exists("/usr/local/etc/fusionpbx/config.php")){
+	else if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		//bsd
 	}
 	else {
@@ -50,7 +50,7 @@
 	}
 
 //use custom login, if present, otherwise use default login
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
 		require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
 	}
 	else {
