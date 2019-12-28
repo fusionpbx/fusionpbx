@@ -100,7 +100,7 @@
 	switch ($_GET['type']) {
 		case 'inbound': $destination_type = 'inbound'; break;
 		case 'outbound': $destination_type = 'outbound'; break;
-		case 'local': $destination_type = 'local'; break;
+		//case 'local': $destination_type = 'local'; break;
 		default: $destination_type = 'inbound';
 	}
 
