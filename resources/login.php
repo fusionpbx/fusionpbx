@@ -40,6 +40,7 @@
 		$username = $key_part[0];
 		$domain_uuid = $key_part[1];
 		$password_submitted = $key_part[2];
+
 		//get current salt, see if same as submitted salt
 		$sql = "select password from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -266,7 +267,7 @@
 				echo "	<option value='' disabled selected hidden>".$text['label-domain']."</option>\n";
 				sort($_SESSION['login']['domain_name']);
 				foreach ($_SESSION['login']['domain_name'] as &$row) {
-					echo "	<option value='$row'>$row</option>\n";
+					echo "	<option value='".escape($row)."'>".escape($row)."</option>\n";
 				}
 				echo "</select><br />\n";
 			}
@@ -324,32 +325,32 @@
 		echo "		}\n";
 		echo "	}\n";
 
-		$req['length'] = $_SESSION['users']['password_length']['numeric'];
-		$req['number'] = ($_SESSION['users']['password_number']['boolean'] == 'true') ? true : false;
-		$req['lowercase'] = ($_SESSION['users']['password_lowercase']['boolean'] == 'true') ? true : false;
-		$req['uppercase'] = ($_SESSION['users']['password_uppercase']['boolean'] == 'true') ? true : false;
-		$req['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
+		$setting['length'] = $_SESSION['users']['password_length']['numeric'];
+		$setting['number'] = ($_SESSION['users']['password_number']['boolean'] == 'true') ? true : false;
+		$setting['lowercase'] = ($_SESSION['users']['password_lowercase']['boolean'] == 'true') ? true : false;
+		$setting['uppercase'] = ($_SESSION['users']['password_uppercase']['boolean'] == 'true') ? true : false;
+		$setting['special'] = ($_SESSION['users']['password_special']['boolean'] == 'true') ? true : false;
 
 		echo "	function check_password_strength(pwd) {\n";
 		echo "		if ($('#password').val() != '' || $('#password_confirm').val() != '') {\n";
 		echo "			var msg_errors = [];\n";
-		if (is_numeric($req['length']) && $req['length'] != 0) {
-			echo "		var re = /.{".$req['length'].",}/;\n"; //length
-			echo "		if (!re.test(pwd)) { msg_errors.push('".$req['length']."+ ".$text['label-characters']."'); }\n";
+		if (is_numeric($setting['length']) && $setting['length'] != 0) {
+			echo "		var re = /.{".$setting['length'].",}/;\n"; //length
+			echo "		if (!re.test(pwd)) { msg_errors.push('".$setting['length']."+ ".$text['label-characters']."'); }\n";
 		}
-		if ($req['number']) {
+		if ($setting['number']) {
 			echo "		var re = /(?=.*[\d])/;\n";  //number
 			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-numbers']."'); }\n";
 		}
-		if ($req['lowercase']) {
+		if ($setting['lowercase']) {
 			echo "		var re = /(?=.*[a-z])/;\n";  //lowercase
 			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-lowercase_letters']."'); }\n";
 		}
-		if ($req['uppercase']) {
+		if ($setting['uppercase']) {
 			echo "		var re = /(?=.*[A-Z])/;\n";  //uppercase
 			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-uppercase_letters']."'); }\n";
 		}
-		if ($req['special']) {
+		if ($setting['special']) {
 			echo "		var re = /(?=.*[\W])/;\n";  //special
 			echo "		if (!re.test(pwd)) { msg_errors.push('1+ ".$text['label-special_characters']."'); }\n";
 		}
@@ -387,11 +388,11 @@
 		echo "<script>\n";
 		echo "	$('#username').trigger('focus');\n";
 		// convert password fields to text
-			echo "	function submit_form() {\n";
-			echo "		$('input:password').css('visibility','hidden');\n";
-			echo "		$('input:password').attr({type:'text'});\n";
-			echo "		$('form#frm').submit();\n";
-			echo "	}\n";
+		echo "	function submit_form() {\n";
+		echo "		$('input:password').css('visibility','hidden');\n";
+		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		$('form#frm').submit();\n";
+		echo "	}\n";
 		echo "</script>\n";
 		echo "</span>";
 
