@@ -1,7 +1,6 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
-
 $text['title-users']['en-us'] = "Users";
 $text['title-users']['ar-eg'] = "";
 $text['title-users']['de-at'] = "Benutzer"; //copied from de-de
@@ -21,6 +20,26 @@ $text['title-users']['ro-ro'] = "Utilizator";
 $text['title-users']['ru-ru'] = "Пользователь";
 $text['title-users']['sv-se'] = "Användare";
 $text['title-users']['uk-ua'] = "Користувач";
+
+$text['title-user_edit']['en-us'] = "User Edit";
+$text['title-user_edit']['ar-eg'] = "";
+$text['title-user_edit']['de-at'] = "";
+$text['title-user_edit']['de-ch'] = "";
+$text['title-user_edit']['de-de'] = "";
+$text['title-user_edit']['es-cl'] = "";
+$text['title-user_edit']['es-mx'] = "";
+$text['title-user_edit']['fr-ca'] = "";
+$text['title-user_edit']['fr-fr'] = "";
+$text['title-user_edit']['he-il'] = "";
+$text['title-user_edit']['it-it'] = "";
+$text['title-user_edit']['nl-nl'] = "";
+$text['title-user_edit']['pl-pl'] = "";
+$text['title-user_edit']['pt-br'] = "";
+$text['title-user_edit']['pt-pt'] = "";
+$text['title-user_edit']['ro-ro'] = "";
+$text['title-user_edit']['ru-ru'] = "";
+$text['title-user_edit']['sv-se'] = "";
+$text['title-user_edit']['uk-ua'] = "";
 
 $text['description-users']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-users']['ar-eg'] = "";
