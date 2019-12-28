@@ -184,14 +184,14 @@
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout.."}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								tmp_pos = string.find(agent_contact, "}");
 								tmp_first = string.sub(agent_contact, 0, tmp_pos);
 								tmp_last = string.sub(agent_contact, tmp_pos);
 								agent_contact = tmp_first..',call_timeout='..agent_call_timeout..tmp_last;
-								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout.."}"..agent_contact;
+								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							end
 						else
 							--found
@@ -202,7 +202,7 @@
 										pos = string.find(agent_contact, "}");
 										first = string.sub(agent_contact, 0, pos);
 										last = string.sub(agent_contact, tmp_pos);
-										agent_contact = first..[[,call_timeout=]]..agent_call_timeout..last;
+										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
 								else
 										--the string has the call timeout
 										agent_contact = agent_contact;
@@ -214,10 +214,10 @@
 								last = string.sub(agent_contact, pos);
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
-									agent_contact = first..','..confirm..',call_timeout='..agent_call_timeout..last;
+									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination}call_timeout='..agent_call_timeout..last;
 								else
 									--add confirm
-									agent_contact = tmp_first..','..confirm..tmp_last;
+									agent_contact = tmp_first..',sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;
 								end
 							end
 						end
