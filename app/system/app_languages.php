@@ -321,6 +321,26 @@ $text['label-git_branch']['ru-ru'] = "Ветка";
 $text['label-git_branch']['sv-se'] = "Branch";
 $text['label-git_branch']['uk-ua'] = "філія";
 
+$text['label-php']['en-us'] = "PHP";
+$text['label-php']['ar-eg'] = "PHP";
+$text['label-php']['de-at'] = "PHP";
+$text['label-php']['de-ch'] = "PHP";
+$text['label-php']['de-de'] = "PHP";
+$text['label-php']['es-cl'] = "PHP";
+$text['label-php']['es-mx'] = "PHP";
+$text['label-php']['fr-ca'] = "PHP";
+$text['label-php']['fr-fr'] = "PHP";
+$text['label-php']['he-il'] = "PHP";
+$text['label-php']['it-it'] = "PHP";
+$text['label-php']['nl-nl'] = "PHP";
+$text['label-php']['pl-pl'] = "PHP";
+$text['label-php']['pt-br'] = "PHP";
+$text['label-php']['pt-pt'] = "PHP";
+$text['label-php']['ro-ro'] = "PHP";
+$text['label-php']['ru-ru'] = "PHP";
+$text['label-php']['sv-se'] = "PHP";
+$text['label-php']['uk-ua'] = "PHP";
+
 $text['label-git_commit']['en-us'] = "Commit";
 $text['label-git_commit']['ar-eg'] = "";
 $text['label-git_commit']['de-at'] = "Übergeben"; //copied from de-de
