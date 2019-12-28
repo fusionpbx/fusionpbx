@@ -713,15 +713,6 @@ if (!$default_login) {
 						if ($mod_a_2 == '') {
 							$mod_a_2 = '#';
 						}
-						else if (($menu_sub['menu_item_category'] == 'internal') || (($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2,0,1) == '/')) {
-							// accomodate adminer auto-login, if enabled
-								if (substr($mod_a_2,0,22) == '/app/adminer/index.php') {
-									global $db_type;
-									$mod_a_2 .= '?'.(($db_type == 'mysql') ? 'server' : $db_type).'&db=fusionpbx&ns=public';
-									$mod_a_2 .= ($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? "&username=auto" : null;
-								}
-							$mod_a_2 = PROJECT_PATH.$mod_a_2;
-						}
 						$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 						if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 							if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
