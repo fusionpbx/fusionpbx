@@ -86,7 +86,7 @@
 
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach($result as $row) {
-			$map_query = escape($row['address_street'])." ".escape($row['address_extended']).", ".escape($row['address_locality']).", ".escape($row['address_region']).", ".escape($row['address_region']).", ".escape($row['address_postal_code']);
+			$map_query = $row['address_street']." ".$row['address_extended'].", ".$row['address_locality'].", ".$row['address_region'].", ".$row['address_region'].", ".$row['address_postal_code'];
 			if (permission_exists('contact_address_edit')) {
 				$tr_link = "href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid'])."'";
 			}
