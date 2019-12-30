@@ -234,7 +234,6 @@
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
-
 			}
 			if (permission_exists('default_setting_edit')) {
 				$list_row_url = "default_setting_edit.php?id=".urlencode($row['default_setting_uuid']);
@@ -305,7 +304,6 @@
 				echo "		".escape($row['default_setting_value'])."\n";
 			}
 			echo "	</td>\n";
-
 			if (permission_exists('default_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
