@@ -3474,7 +3474,7 @@
     </P>
     <P>
       <N>X_DisplayNumber</N>
-      <V X_UD="Y" X_DV=""/>{$account.1.user_id</V>
+      <V X_UD="Y" X_DV=""/>{$account.1.user_id}</V>
     </P>
     <P>
       <N>X_ServProvProfile</N>
