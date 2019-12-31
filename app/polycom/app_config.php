@@ -30,7 +30,6 @@
 
 	//default settings
 		$y=0;
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1752b247-873b-4d41-9846-b9df93efe8df";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_gmt_offset";
@@ -326,7 +325,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require SRTP line 0=Disabled - 1=Enabled ";
-		$y++;
-
 
 ?>
