@@ -801,6 +801,26 @@ $text['header-destination_import']['ru-ru'] = "Импорт";
 $text['header-destination_import']['sv-se'] = "Importera";
 $text['header-destination_import']['uk-ua'] = "Імпортувати";
 
+$text['description-domain_name']['en-us'] = "Select the Domain";
+$text['description-domain_name']['ar-eg'] = "";
+$text['description-domain_name']['de-at'] = "";
+$text['description-domain_name']['de-ch'] = "";
+$text['description-domain_name']['de-de'] = "";
+$text['description-domain_name']['es-cl'] = "";
+$text['description-domain_name']['es-mx'] = "";
+$text['description-domain_name']['fr-ca'] = "";
+$text['description-domain_name']['fr-fr'] = "";
+$text['description-domain_name']['he-il'] = "";
+$text['description-domain_name']['it-it'] = "";
+$text['description-domain_name']['nl-nl'] = "";
+$text['description-domain_name']['pl-pl'] = "";
+$text['description-domain_name']['pt-br'] = "";
+$text['description-domain_name']['pt-pt'] = "";
+$text['description-domain_name']['ro-ro'] = "";
+$text['description-domain_name']['ru-ru'] = "";
+$text['description-domain_name']['sv-se'] = "";
+$text['description-domain_name']['uk-ua'] = "";
+
 $text['description-destination_import']['en-us'] = "Upload delimitted data to add multiple destinations.";
 $text['description-destination_import']['ar-eg'] = "";
 $text['description-destination_import']['de-at'] = "";
