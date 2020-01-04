@@ -453,7 +453,7 @@
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' type='text' name='hostname' maxlength='255' value=\"".escape($hostname)."\">\n";
 	echo "		<br />\n";
-	echo "		".$text['description-hostname']."\n";
+	//echo "		".$text['description-hostname']."\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
@@ -567,14 +567,14 @@
 		}
 		echo "		</select>\n";
 		echo "		<br />\n";
-		echo "		".$text['description-domain_name']."\n";
+		//echo "		".$text['description-domain_name']."\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 	}
 
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "		".$text['label-enabled']."\n";
+	//echo "		".$text['label-enabled']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='dialplan_enabled'>\n";
