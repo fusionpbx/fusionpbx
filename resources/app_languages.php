@@ -1400,6 +1400,26 @@ $text['button-install']['sv-se'] = "Install";
 $text['button-install']['uk-ua'] = "Install";
 $text['button-install']['tr-tr'] = "Install";
 
+$text['button-upgrade']['en-us'] = "Upgrade";
+$text['button-upgrade']['ar-eg'] = "";
+$text['button-upgrade']['de-at'] = "Aktualisieren"; //copied from de-de
+$text['button-upgrade']['de-ch'] = "Aktualisieren"; //copied from de-de
+$text['button-upgrade']['de-de'] = "Aktualisieren";
+$text['button-upgrade']['es-cl'] = "Actualizar";
+$text['button-upgrade']['es-mx'] = "Actualizar"; //copied from es-cl
+$text['button-upgrade']['fr-ca'] = "Mise à jour"; //copied from fr-fr
+$text['button-upgrade']['fr-fr'] = "Mise à jour";
+$text['button-upgrade']['he-il'] = "";
+$text['button-upgrade']['it-it'] = "Aggiornamento";
+$text['button-upgrade']['nl-nl'] = "";
+$text['button-upgrade']['pl-pl'] = "Aktualizacja";
+$text['button-upgrade']['pt-br'] = "Atualizar";
+$text['button-upgrade']['pt-pt'] = "Actualizar";
+$text['button-upgrade']['ro-ro'] = "";
+$text['button-upgrade']['ru-ru'] = "Обновление";
+$text['button-upgrade']['sv-se'] = "Uppgradera";
+$text['button-upgrade']['uk-ua'] = "Оновлення";
+
 $text['button-remove']['en-us'] = "Remove";
 $text['button-remove']['ar-eg'] = "";
 $text['button-remove']['de-at'] = "Löschen"; //copied from de-de
