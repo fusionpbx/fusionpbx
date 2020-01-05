@@ -76,7 +76,7 @@
 		<!-- Account 1 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.1.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.1.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.1.network.dnsMode">SRV</item>{/if}
@@ -796,7 +796,7 @@
 		<!-- Account 2 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.2.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.2.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.2.network.dnsMode">SRV</item>{/if}
@@ -1530,7 +1530,7 @@
 		<!-- Account 3 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.3.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.3.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.3.network.dnsMode">SRV</item>{/if}
@@ -2256,7 +2256,7 @@
 		<!-- Account 4 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.4.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.4.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.4.network.dnsMode">SRV</item>{/if}
@@ -2981,7 +2981,7 @@
 		<!-- Account 5 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.5.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.5.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.5.network.dnsMode">SRV</item>{/if}
@@ -3706,7 +3706,7 @@
 		<!-- Account 6 Network Settings -->
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv, UseConfiguredIP -->
-		<item name="account.6.network.dnsMode">ARecord</item>
+
 		
 		{if $grandstream_dns_mode == '0'}<item name="account.6.network.dnsMode">ARecord</item>{/if}
 		{if $grandstream_dns_mode == '1'}<item name="account.6.network.dnsMode">SRV</item>{/if}
