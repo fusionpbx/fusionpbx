@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('message_view')) {
@@ -83,10 +84,6 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //prepare to page the results
 	$sql = "select count(*) from v_messages ";
 	if ($_GET['show'] == "all" && permission_exists('message_all')) {
@@ -131,6 +128,10 @@
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//include header
+	$document['title'] = $text['title-message_log'];
+	require_once "resources/header.php";
 
 //define the checkbox_toggle function
 	echo "<script type=\"text/javascript\">\n";
