@@ -1,25 +1,25 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
-$text['title']['en-us'] = "Call Routing";
-$text['title']['ar-eg'] = "توجيه الدعوة";
-$text['title']['de-at'] = "Call Routing"; //copied from de-de
-$text['title']['de-ch'] = "Call Routing"; //copied from de-de
-$text['title']['de-de'] = "Call Routing";
-$text['title']['es-cl'] = "enrutamiento de llamadas";
-$text['title']['es-mx'] = "enrutamiento de llamadas"; //copied from es-cl
-$text['title']['fr-ca'] = "routage des appels"; //copied from fr-fr
-$text['title']['fr-fr'] = "routage des appels";
-$text['title']['he-il'] = "ניתוב שיחות";
-$text['title']['it-it'] = "Istradamento Chiamate";
-$text['title']['nl-nl'] = "Oproep routering";
-$text['title']['pl-pl'] = "Call Routing";
-$text['title']['pt-br'] = "Roteamento de chamadas"; //copied from pt-pt
-$text['title']['pt-pt'] = "Roteamento de chamadas";
-$text['title']['ro-ro'] = "rutare de apel";
-$text['title']['ru-ru'] = "Маршрутизация вызовов";
-$text['title']['sv-se'] = "Call Routing";
-$text['title']['uk-ua'] = "маршрутизація викликів";
+$text['title-call_routing']['en-us'] = "Call Routing";
+$text['title-call_routing']['ar-eg'] = "توجيه الدعوة";
+$text['title-call_routing']['de-at'] = "Call Routing"; //copied from de-de
+$text['title-call_routing']['de-ch'] = "Call Routing"; //copied from de-de
+$text['title-call_routing']['de-de'] = "Call Routing";
+$text['title-call_routing']['es-cl'] = "enrutamiento de llamadas";
+$text['title-call_routing']['es-mx'] = "enrutamiento de llamadas"; //copied from es-cl
+$text['title-call_routing']['fr-ca'] = "routage des appels"; //copied from fr-fr
+$text['title-call_routing']['fr-fr'] = "routage des appels";
+$text['title-call_routing']['he-il'] = "ניתוב שיחות";
+$text['title-call_routing']['it-it'] = "Istradamento Chiamate";
+$text['title-call_routing']['nl-nl'] = "Oproep routering";
+$text['title-call_routing']['pl-pl'] = "Call Routing";
+$text['title-call_routing']['pt-br'] = "Roteamento de chamadas"; //copied from pt-pt
+$text['title-call_routing']['pt-pt'] = "Roteamento de chamadas";
+$text['title-call_routing']['ro-ro'] = "rutare de apel";
+$text['title-call_routing']['ru-ru'] = "Маршрутизация вызовов";
+$text['title-call_routing']['sv-se'] = "Call Routing";
+$text['title-call_routing']['uk-ua'] = "маршрутизація викликів";
 
 $text['table-tools']['en-us'] = "Tools";
 $text['table-tools']['ar-eg'] = "";

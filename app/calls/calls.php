@@ -163,7 +163,7 @@
 
 //include header
 	if (!$is_included) {
-		$document['title'] = $text['title'];
+		$document['title'] = $text['title-call_routing'];
 	}
 	require_once "resources/header.php";
 
