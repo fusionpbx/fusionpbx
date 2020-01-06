@@ -3,6 +3,7 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	require_once "resources/check_auth.php";
@@ -21,10 +22,6 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(*) from v_conference_profile_params ";
@@ -57,13 +54,10 @@
 	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['title_description-conference_profile_param']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "<b>".$text['title-conference_profile_params']."</b>\n";
+	echo "<br /><br />\n";
+	echo $text['title_description-conference_profile_param']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -87,9 +81,9 @@
 				$tr_link = "href='conference_profile_param_edit.php?conference_profile_uuid=".$row['conference_profile_uuid']."&id=".$row['conference_profile_param_uuid']."'";
 			}
 			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a ".$tr_link.">".escape($row['profile_param_name'])."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_value'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['profile_param_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile_param_description'])."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_profile_param_edit')) {
