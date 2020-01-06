@@ -88,6 +88,7 @@
 	unset($sql);
 
 //additional includes
+	$document['title'] = $text['title-database_transactions'];
 	require_once "resources/header.php";
 
 //show the content
