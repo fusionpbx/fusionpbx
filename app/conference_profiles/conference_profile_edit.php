@@ -3,9 +3,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit')) {
 		//access granted
 	}
@@ -55,6 +55,7 @@
 			if (strlen($profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
 			//if (strlen($profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-conference_profile'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -121,6 +122,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-conference_profile'];
 	require_once "resources/header.php";
 
 //show the content
@@ -186,7 +188,6 @@
 		echo "			<input type='hidden' name='conference_profile_uuid' value='".escape($conference_profile_uuid)."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
