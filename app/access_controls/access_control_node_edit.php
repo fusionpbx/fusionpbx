@@ -188,11 +188,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-access_control_node'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control_node']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";

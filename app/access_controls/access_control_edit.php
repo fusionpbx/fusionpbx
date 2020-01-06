@@ -167,6 +167,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-access_control'];
 	require_once "resources/header.php";
 
 //show the content
@@ -234,7 +235,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
