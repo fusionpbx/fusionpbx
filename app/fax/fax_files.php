@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('fax_file_view')) {
@@ -162,10 +163,6 @@
 			}
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //prepare to page the results
 	$sql = "select count(*) from v_fax_files ";
 	$sql .= "where fax_uuid = :fax_uuid ";
@@ -197,6 +194,15 @@
 	$fax_files = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters, $num_rows);
 
+//include header
+	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
+		$document['title'] = $text['title-inbox'].": ".escape($fax_name)." (".escape($fax_extension).")";
+	}
+	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
+		$document['title'] = $text['title-sent_faxes'].": ".escape($fax_name)." (".escape($fax_extension).")";
+	}
+	require_once "resources/header.php";
+
 //show the header
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -205,7 +211,7 @@
 		echo "			<b>".$text['header-inbox'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
 	}
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "			<b>".$text['header-sent'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
+		echo "			<b>".$text['header-sent_faxes'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
 	}
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right' valign='top'>\n";
