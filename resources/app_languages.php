@@ -1552,7 +1552,7 @@ $text['header-import']['sv-se'] = "Importera";
 $text['header-import']['uk-ua'] = "";
 $text['header-import']['tr-tr'] = "İçe Aktar";
 
-$text['description-import']['en-us'] = "Upload delimitted data to add multiple records.";
+$text['description-import']['en-us'] = "Upload delimited data to add multiple records.";
 $text['description-import']['ar-eg'] = "";
 $text['description-import']['de-at'] = "";
 $text['description-import']['de-ch'] = "";
