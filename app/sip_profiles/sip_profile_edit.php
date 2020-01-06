@@ -27,9 +27,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('sip_profile_add') || permission_exists('sip_profile_edit')) {
 		//access granted
 	}
@@ -250,6 +250,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-sip_profile'];
 	require_once "resources/header.php";
 	
 //label to form input
