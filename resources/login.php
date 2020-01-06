@@ -192,6 +192,7 @@
 	}
 
 //add the header
+	$document['title'] = $text['title-login'];
 	include "resources/header.php";
 
 //show the message
