@@ -186,13 +186,13 @@ else {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_url-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-contact_url-add'];
 	}
+	require_once "resources/header.php";
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>";
