@@ -1,6 +1,26 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
+$text['title-active_conferences']['en-us'] = "Active Conferences";
+$text['title-active_conferences']['ar-eg'] = "";
+$text['title-active_conferences']['de-at'] = "Aktive Konferenzen"; //copied from de-de
+$text['title-active_conferences']['de-ch'] = "Aktive Konferenzen"; //copied from de-de
+$text['title-active_conferences']['de-de'] = "Aktive Konferenzen";
+$text['title-active_conferences']['es-cl'] = "Conferencias Activas";
+$text['title-active_conferences']['es-mx'] = "Conferencias Activas"; //copied from es-cl
+$text['title-active_conferences']['fr-ca'] = "Conférences Avtives"; //copied from fr-fr
+$text['title-active_conferences']['fr-fr'] = "Conférences Avtives";
+$text['title-active_conferences']['he-il'] = "";
+$text['title-active_conferences']['it-it'] = "Conferenze Attive";
+$text['title-active_conferences']['nl-nl'] = "Aktieve conferenties";
+$text['title-active_conferences']['pl-pl'] = "Aktywne konferencje";
+$text['title-active_conferences']['pt-br'] = "Conferências ativas";
+$text['title-active_conferences']['pt-pt'] = "Conferências Activas";
+$text['title-active_conferences']['ro-ro'] = "";
+$text['title-active_conferences']['ru-ru'] = "Активные конференции";
+$text['title-active_conferences']['sv-se'] = "Aktiva Konferenser";
+$text['title-active_conferences']['uk-ua'] = "Активні кноференції";
+
 $text['message-denied']['en-us'] = "access denied";
 $text['message-denied']['ar-eg'] = "";
 $text['message-denied']['de-at'] = "Zugang verweigert"; //copied from de-de
@@ -840,26 +860,6 @@ $text['label-capabilities']['ro-ro'] = "";
 $text['label-capabilities']['ru-ru'] = "Возможности";
 $text['label-capabilities']['sv-se'] = "Möjligheter";
 $text['label-capabilities']['uk-ua'] = "Можливості";
-
-$text['label-active']['en-us'] = "Active Conferences";
-$text['label-active']['ar-eg'] = "";
-$text['label-active']['de-at'] = "Aktive Konferenzen"; //copied from de-de
-$text['label-active']['de-ch'] = "Aktive Konferenzen"; //copied from de-de
-$text['label-active']['de-de'] = "Aktive Konferenzen";
-$text['label-active']['es-cl'] = "Conferencias Activas";
-$text['label-active']['es-mx'] = "Conferencias Activas"; //copied from es-cl
-$text['label-active']['fr-ca'] = "Conférences Avtives"; //copied from fr-fr
-$text['label-active']['fr-fr'] = "Conférences Avtives";
-$text['label-active']['he-il'] = "";
-$text['label-active']['it-it'] = "Conferenze Attive";
-$text['label-active']['nl-nl'] = "Aktieve conferenties";
-$text['label-active']['pl-pl'] = "Aktywne konferencje";
-$text['label-active']['pt-br'] = "Conferências ativas";
-$text['label-active']['pt-pt'] = "Conferências Activas";
-$text['label-active']['ro-ro'] = "";
-$text['label-active']['ru-ru'] = "Активные конференции";
-$text['label-active']['sv-se'] = "Aktiva Konferenser";
-$text['label-active']['uk-ua'] = "Активні кноференції";
 
 $text['description-interactive']['en-us'] = "Use this to monitor and interact with the members of the conference.";
 $text['description-interactive']['ar-eg'] = "";
