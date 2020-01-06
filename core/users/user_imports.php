@@ -133,6 +133,7 @@
 	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//form to match the fields to the column names
+			$document['title'] = $text['title-user_import'];
 			require_once "resources/header.php";
 
 			echo "<form action='user_imports.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
@@ -140,7 +141,7 @@
 
 			echo "	<tr>\n";
 			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
-			echo "		<b>".$text['header-import']."</b><br />\n";
+			echo "		<b>".$text['header-user_import']."</b><br />\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>\n";
@@ -233,6 +234,7 @@
 	if (file_exists($_SESSION['file']) && $action == 'import') {
 
 		//form to match the fields to the column names
+			//$document['title'] = $text['title-user_import'];
 			//require_once "resources/header.php";
 
 		//user selected fields
@@ -386,13 +388,14 @@
 	}
 
 //include the header
+	$document['title'] = $text['title-user_import'];
 	require_once "resources/header.php";
 
 //begin the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "	<td valign='top' align='left' width='30%' nowrap='nowrap'>\n";
-	echo "		<b>".$text['header-import']."</b><br />\n";
+	echo "		<b>".$text['header-user_import']."</b><br />\n";
 	echo "		".$text['description-import']."\n";
 	echo "	</td>\n";
 	echo "	<td valign='top' width='70%' align='right'>\n";
