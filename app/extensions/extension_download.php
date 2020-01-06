@@ -157,6 +157,7 @@
 	$row_style["1"] = "row_style1";
 
 //begin the page content
+	$document['title'] = $text['title-extension_export'];
 	require_once "resources/header.php";
 
 	echo "<form method='post' name='frm' action='extension_download.php' autocomplete='off'>\n";
@@ -165,7 +166,7 @@
 	echo "<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
 	echo "<input type='submit' class='btn' value='".$text['button-export']."'>\n";
 	echo "</div>\n";
-	echo "<b>".$text['header-export']."</b>\n";
+	echo "<b>".$text['header-extension_export']."</b>\n";
 	echo "<br /><br />\n";
 
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
