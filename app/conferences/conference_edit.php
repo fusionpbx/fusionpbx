@@ -157,6 +157,7 @@
 			//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-conference'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -309,6 +310,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-conference'];
 	require_once "resources/header.php";
 
 //show the content
