@@ -169,6 +169,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the header
+	if ($action == "add") {
+		$document['title'] = $text['title-settings_add'];
+	}
+	else if ($action == "update") {
+		$document['title'] = $text['title-settings_update'];
+	}
 	require_once "resources/header.php";
 
 //show the content
