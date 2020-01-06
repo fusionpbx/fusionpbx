@@ -309,6 +309,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-device_profile'];
 	require_once "resources/header.php";
 
 //show the content
