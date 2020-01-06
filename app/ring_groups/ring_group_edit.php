@@ -529,6 +529,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-ring_group'];
 	require_once "resources/header.php";
 
 //option to change select to text

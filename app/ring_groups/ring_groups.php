@@ -130,6 +130,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
+	$document['title'] = $text['title-ring_groups'];
 	require_once "resources/header.php";
 
 //show the content
