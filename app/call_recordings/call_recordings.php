@@ -121,6 +121,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-call_recordings'];
 	require_once "resources/header.php";
 
 //show the content
