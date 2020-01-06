@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_email_edit') || permission_exists('contact_email_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_email_edit') || permission_exists('contact_email_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -185,13 +189,13 @@ if (is_uuid($_GET["contact_uuid"])) {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_email-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-contact_email-add'];
 	}
+	require_once "resources/header.php";
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>";
