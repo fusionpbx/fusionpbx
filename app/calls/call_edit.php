@@ -156,6 +156,7 @@
 
 		//check for all required data
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-call_routing'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -412,6 +413,7 @@
 	}
 
 //show the header
+	$document['title'] = $text['title-call_routing'];
 	require_once "resources/header.php";
 
 //pre-populate the form
@@ -501,7 +503,7 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>\n";
-	echo "	<b>".$text['title']."</b>\n";
+	echo "	<b>".$text['title-call_routing']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='calls.php'\" value='".$text['button-back']."'>\n";
