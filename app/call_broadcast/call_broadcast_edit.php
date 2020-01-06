@@ -280,15 +280,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //begin header
+	$document['title'] = $text['title-call_broadcast'];
 	require_once "resources/header.php";
 
 //begin content
 	echo "<form method='post' name='frm' action='' enctype='multipart/form-data'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	echo "<tr>\n";
-	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<div style='float: right;'>\n";
 	echo "	<input type='button' class='btn' style='margin-right: 15px;' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		if (permission_exists('call_broadcast_delete')) {
@@ -299,15 +297,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<input type='button' class='btn' style='margin-right: 15px;' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".urlencode($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
 	}
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</div>\n";
+
+	echo "<b>".$text['title-call_broadcast']."</b>\n";
+	echo "<br><br>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' width='30%' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"".escape($broadcast_name)."\" required='required'>\n";
+	echo "	<input class='formfld' width='70%' type='text' name='broadcast_name' maxlength='255' value=\"".escape($broadcast_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
