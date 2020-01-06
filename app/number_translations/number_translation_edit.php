@@ -163,7 +163,7 @@
 	}
 
 //add an empty row
-	$x = count($number_translation_details);
+	$x = is_array($number_translation_details) ? count($number_translation_details) : 0;
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
 	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
@@ -175,6 +175,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-number_translation'];
 	require_once "resources/header.php";
 
 //show the content
@@ -187,11 +188,6 @@
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='number_translations.php'\" value='".$text['button-back']."'>";
 	//echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='number_translation_copy.php'\" value='".$text['button-copy']."'>";
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	".$text['description-number_translations']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
