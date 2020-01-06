@@ -4062,4 +4062,26 @@ $text['description-domain_name']['ru-ru'] = "";
 $text['description-domain_name']['sv-se'] = "";
 $text['description-domain_name']['uk-ua'] = "";
 
+$text['title-login']['en-us'] = "Login";
+$text['title-login']['ar-eg'] = "دخول";
+$text['title-login']['de-at'] = "Anmelden"; //copied from de-de
+$text['title-login']['de-ch'] = "Anmelden"; //copied from de-de
+$text['title-login']['de-de'] = "Anmelden";
+$text['title-login']['el-gr'] = "Είσοδος";
+$text['title-login']['es-cl'] = "Ingresar";
+$text['title-login']['es-mx'] = "Ingresar"; //copied from es-cl
+$text['title-login']['fr-ca'] = "connexion"; //copied from fr-fr
+$text['title-login']['fr-fr'] = "connexion";
+$text['title-login']['he-il'] = "כניסה";
+$text['title-login']['it-it'] = "Login";
+$text['title-login']['nl-nl'] = "";
+$text['title-login']['pl-pl'] = "Użytkownik";
+$text['title-login']['pt-br'] = "Entrar"; //copied from pt-pt
+$text['title-login']['pt-pt'] = "Iniciar Sessão";
+$text['title-login']['ro-ro'] = "Autentificare";
+$text['title-login']['ru-ru'] = "Вход";
+$text['title-login']['sv-se'] = "Logga In";
+$text['title-login']['uk-ua'] = "Логін";
+$text['title-login']['tr-tr'] = "Giriş Yap";
+
 ?>
