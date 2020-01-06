@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "xml_cdr_statistics_inc.php";
 
 //check permissions
 	if (permission_exists('xml_cdr_statistics')) {
@@ -43,7 +44,7 @@
 	$text = $language->get();
 
 //additional includes
-	require_once "xml_cdr_statistics_inc.php";
+	$document['title'] = $text['title-call-statistics'];
 	require_once "resources/header.php";
 
 //search url
@@ -133,7 +134,7 @@
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
+	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('xml_cdr_search_advanced')) {

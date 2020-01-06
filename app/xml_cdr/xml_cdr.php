@@ -70,6 +70,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
+	$document['title'] = $text['title-call_detail_records'];
 	require_once "resources/header.php";
 
 //xml cdr include
