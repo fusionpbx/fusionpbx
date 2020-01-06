@@ -855,6 +855,7 @@ if (!$included) {
 		$token = $object->create($_SERVER['PHP_SELF']);
 
 	//show the header
+		$document['title'] = $text['title-new_fax'];
 		require_once "resources/header.php";
 
 	//javascript to toggle input/select boxes, add fax numbers
@@ -909,7 +910,7 @@ if (!$included) {
 		echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td align='left' valign='top' width='30%'>\n";
-		echo "		<span class='title'>".$text['header-send']."</span>\n";
+		echo "		<span class='title'>".$text['header-new_fax']."</span>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' align='right' valign='top'>\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";

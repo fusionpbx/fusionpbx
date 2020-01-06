@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('fax_log_view')) {
@@ -50,8 +51,8 @@
 	$fax_uuid = $_GET["id"];
 
 //additional includes
+	$document['title'] = $text['title-fax_logs'];
 	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
