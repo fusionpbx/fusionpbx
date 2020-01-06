@@ -44,6 +44,7 @@
 	$text = $language->get();
 
 //include the header
+	$document['title'] = $text['title-active_conferences'];
 	require_once "resources/header.php";
 
 ?>
@@ -104,7 +105,7 @@ else if (window.attachEvent) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "  <tr>\n";
 	echo "	<td align='left'>";
-	echo "		<b>".$text['label-active']."</b>";
+	echo "		<b>".$text['title-active_conferences']."</b>";
 	echo "		<br><br>\n";
 	echo "		".$text['description-active']."\n";
 	echo "	</td>\n";
