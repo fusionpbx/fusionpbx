@@ -329,7 +329,6 @@
 	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
-		require_once "resources/header.php";
 		echo "<script>\n";
 		echo "var Objs;\n";
 		echo "\n";
@@ -471,6 +470,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-call_flow'];
 	require_once "resources/header.php";
 
 //show the content
