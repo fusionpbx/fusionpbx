@@ -123,6 +123,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include header
+	$document['title'] = $text['title-streams'];
 	require_once "resources/header.php";
 
 //audio control styles
