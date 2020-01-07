@@ -40,7 +40,10 @@
 
 //set fav icon
 	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? escape($_SESSION['theme']['favicon']['text']) : '<!--{project_path}-->/themes/default/favicon.ico';
+	$touchicon = (isset($_SESSION['theme']['touchicon']['text'])) ? escape($_SESSION['theme']['touchicon']['text']) : $favicon;
 	echo "<link rel='icon' href='".$favicon."'>\n";
+	echo "<link rel='apple-touch-icon' sizes='180x180' href='".$touchicon."'>\n";
+	echo "<link rel='icon' sizes='192x192' href='".$touchicon."'>\n";
 ?>
 
 <title><!--{title}--></title>
