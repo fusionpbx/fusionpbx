@@ -2501,4 +2501,23 @@ $text['button-advanced_search']['ru-ru'] = "Расширенный поиск";
 $text['button-advanced_search']['sv-se'] = "Avancerad Sökning";
 $text['button-advanced_search']['uk-ua'] = "";
 
+$text['button-archive']['en-us'] = "Archive";
+$text['button-archive']['ar-eg'] = "";
+$text['button-archive']['de-at'] = "Archiv"; //copied from de-de
+$text['button-archive']['de-ch'] = "Archiv"; //copied from de-de
+$text['button-archive']['de-de'] = "Archiv";
+$text['button-archive']['es-cl'] = "Archivo";
+$text['button-archive']['es-mx'] = "Archivo"; //copied from es-cl
+$text['button-archive']['fr-ca'] = "Archiver"; //copied from fr-fr
+$text['button-archive']['fr-fr'] = "Archiver";
+$text['button-archive']['he-il'] = "";
+$text['button-archive']['it-it'] = "Archivio";
+$text['button-archive']['nl-nl'] = "";
+$text['button-archive']['pl-pl'] = "Archiwum";
+$text['button-archive']['pt-br'] = "Archiwum";
+$text['button-archive']['pt-pt'] = "Arquivo";
+$text['button-archive']['ro-ro'] = "";
+$text['button-archive']['ru-ru'] = "архив";
+$text['button-archive']['sv-se'] = "archív";
+$text['button-archive']['uk-ua'] = "архів";
 ?>
