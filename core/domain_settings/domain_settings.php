@@ -23,12 +23,13 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check prmissions
+//check permissions
 	if (permission_exists('domain_setting_view')) {
 		//access granted
 	}
@@ -214,7 +215,7 @@
 					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 				}
 				echo th_order_by('domain_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
-				echo th_order_by('domain_setting_name', $text['label-name'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
+				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
 				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
 				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
