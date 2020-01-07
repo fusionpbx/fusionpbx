@@ -1442,6 +1442,26 @@ $text['button-remove']['sv-se'] = "Ta Bort";
 $text['button-remove']['uk-ua'] = "Видалити";
 $text['button-remove']['tr-tr'] = "Sil";
 
+$text['button-continue']['en-us'] = "Continue";
+$text['button-continue']['ar-eg'] = "";
+$text['button-continue']['de-at'] = "Fortfahren"; //copied from de-de
+$text['button-continue']['de-ch'] = "Fortfahren"; //copied from de-de
+$text['button-continue']['de-de'] = "Fortfahren";
+$text['button-continue']['es-cl'] = "Continuar";
+$text['button-continue']['es-mx'] = "Continuar"; //copied from es-cl
+$text['button-continue']['fr-ca'] = "Continue"; //copied from fr-fr
+$text['button-continue']['fr-fr'] = "Continue";
+$text['button-continue']['he-il'] = "המשך";
+$text['button-continue']['it-it'] = "";
+$text['button-continue']['nl-nl'] = "Kontinue";
+$text['button-continue']['pl-pl'] = "Kontynuuj";
+$text['button-continue']['pt-br'] = "Continuar"; //copied from pt-pt
+$text['button-continue']['pt-pt'] = "Continuar";
+$text['button-continue']['ro-ro'] = "";
+$text['button-continue']['ru-ru'] = "Продолжить";
+$text['button-continue']['sv-se'] = "Fortsätt";
+$text['button-continue']['uk-ua'] = "Продовжити";
+
 $text['label-installed']['en-us'] = "Installed";
 $text['label-installed']['ar-eg'] = "Installed";
 $text['label-installed']['de-at'] = "Installed";
