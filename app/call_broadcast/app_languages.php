@@ -1,27 +1,27 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
-$text['title']['en-us'] = "Call Broadcasts";
-$text['title']['ar-eg'] = "";
-$text['title']['de-at'] = "Rundrufe"; //copied from de-de
-$text['title']['de-ch'] = "Rundrufe"; //copied from de-de
-$text['title']['de-de'] = "Rundrufe";
-$text['title']['es-cl'] = "Llamada Masiva (Broadcast)";
-$text['title']['es-mx'] = "Llamada Masiva (Broadcast)"; //copied from es-cl
-$text['title']['fr-ca'] = "Campagne d'appels"; //copied from fr-fr
-$text['title']['fr-fr'] = "Campagne d'appels";
-$text['title']['he-il'] = "הגדרת חשבון";
-$text['title']['it-it'] = "Chiamate Multiple";
-$text['title']['nl-nl'] = "Omroep";
-$text['title']['pl-pl'] = "Rozsyłanie rozmów";
-$text['title']['pt-br'] = "Configurações da Conta";
-$text['title']['pt-pt'] = "Chamadas de Broadcast";
-$text['title']['ro-ro'] = "";
-$text['title']['ru-ru'] = "Массовые вызовы";
-$text['title']['sv-se'] = "Samtalsdistributioner";
-$text['title']['uk-ua'] = "Трансляція дзвінків";
+$text['title-call_broadcasts']['en-us'] = "Call Broadcasts";
+$text['title-call_broadcasts']['ar-eg'] = "";
+$text['title-call_broadcasts']['de-at'] = "Rundrufe"; //copied from de-de
+$text['title-call_broadcasts']['de-ch'] = "Rundrufe"; //copied from de-de
+$text['title-call_broadcasts']['de-de'] = "Rundrufe";
+$text['title-call_broadcasts']['es-cl'] = "Llamada Masiva (Broadcast)";
+$text['title-call_broadcasts']['es-mx'] = "Llamada Masiva (Broadcast)"; //copied from es-cl
+$text['title-call_broadcasts']['fr-ca'] = "Campagne d'appels"; //copied from fr-fr
+$text['title-call_broadcasts']['fr-fr'] = "Campagne d'appels";
+$text['title-call_broadcasts']['he-il'] = "הגדרת חשבון";
+$text['title-call_broadcasts']['it-it'] = "Chiamate Multiple";
+$text['title-call_broadcasts']['nl-nl'] = "Omroep";
+$text['title-call_broadcasts']['pl-pl'] = "Rozsyłanie rozmów";
+$text['title-call_broadcasts']['pt-br'] = "Configurações da Conta";
+$text['title-call_broadcasts']['pt-pt'] = "Chamadas de Broadcast";
+$text['title-call_broadcasts']['ro-ro'] = "";
+$text['title-call_broadcasts']['ru-ru'] = "Массовые вызовы";
+$text['title-call_broadcasts']['sv-se'] = "Samtalsdistributioner";
+$text['title-call_broadcasts']['uk-ua'] = "Трансляція дзвінків";
 
-$text['title-call_broadcast']['en-us'] = "Call Broadcasts";
+$text['title-call_broadcast']['en-us'] = "Call Broadcast";
 $text['title-call_broadcast']['ar-eg'] = "";
 $text['title-call_broadcast']['de-at'] = "Rundrufe"; //copied from de-de
 $text['title-call_broadcast']['de-ch'] = "Rundrufe"; //copied from de-de

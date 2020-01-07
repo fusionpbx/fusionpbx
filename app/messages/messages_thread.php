@@ -224,6 +224,7 @@
 					$media_source = format_phone($message['message_from']);
 				}
 				if ($message['message_direction'] == 'outbound') {
+					$message_from = $message['message_from'];
 					$media_source = format_phone($message['message_to']);
 				}
 

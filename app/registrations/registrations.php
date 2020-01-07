@@ -125,9 +125,11 @@
 	if (!$reload) {
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-unregister']."')) { list_action_set('unregister'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	echo button::create(['type'=>'button','label'=>$text['button-provision'],'title'=>$text['button-provision'],'icon'=>'fax','onclick'=>"if (confirm('".$text['confirm-provision']."')) { list_action_set('provision'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	echo button::create(['type'=>'button','label'=>$text['button-reboot'],'title'=>$text['button-reboot'],'icon'=>'power-off','onclick'=>"if (confirm('".$text['confirm-reboot']."')) { list_action_set('reboot'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	if ($registrations) {
+		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-unregister']."')) { list_action_set('unregister'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'title'=>$text['button-provision'],'icon'=>'fax','onclick'=>"if (confirm('".$text['confirm-provision']."')) { list_action_set('provision'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-reboot'],'title'=>$text['button-reboot'],'icon'=>'power-off','onclick'=>"if (confirm('".$text['confirm-reboot']."')) { list_action_set('reboot'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('registration_all')) {
 		if ($show == 'all') {

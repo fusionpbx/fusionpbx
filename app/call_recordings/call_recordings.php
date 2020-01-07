@@ -70,8 +70,16 @@
 					$obj->delete($call_recordings);
 				}
 				break;
+			case 'download':
+				if (permission_exists('call_recording_download_add')) {
+					$obj = new call_recording_downloads;
+					$obj->save($call_recordings);
+					header("Location: ".PROJECT_PATH."/app/call_recording_downloads/call_recording_downloads.php");
+				}
+				break;
 		}
 
+		//redirect the user
 		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
@@ -83,7 +91,7 @@
 //add the search string
 	if (isset($_GET["search"])) {
 		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
+		$sql_search = "and (";
 		$sql_search .= "	lower(call_recording_name) like :search ";
 		$sql_search .= "	or lower(call_recording_path) like :search ";
 		$sql_search .= ") ";
@@ -92,15 +100,17 @@
 
 //get the count
 	$sql = "select count(call_recording_uuid) from v_call_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if (isset($sql_search)) {
-		$sql .= "where ".$sql_search;
+		$sql .= $sql_search;
 	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //get the list
 	$sql = str_replace('count(call_recording_uuid)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'call_recording_name', 'asc');
+	$sql .= order_by($order_by, $order, 'call_recording_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$call_recordings = $database->select($sql, $parameters, 'all');
@@ -111,6 +121,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-call_recordings'];
 	require_once "resources/header.php";
 
 //show the content
@@ -119,6 +130,9 @@
 	echo "	<div class='actions'>\n";
 	if (permission_exists('call_recording_delete') && $call_recordings) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('call_recording_download_add') && $call_recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";

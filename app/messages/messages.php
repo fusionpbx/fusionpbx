@@ -71,6 +71,7 @@
 	}
 
 //additional includes
+	$document['title'] = $text['title-messages'];
 	require_once "resources/header.php";
 
 //resize thread window on window resize

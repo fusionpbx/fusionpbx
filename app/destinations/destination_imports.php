@@ -756,11 +756,11 @@
 			switch ($destination_type) {
 				case "inbound" : 	$selected[1] = "selected='selected'";	break;
 				case "outbound" : 	$selected[2] = "selected='selected'";	break;
-				case "local" : 	$selected[2] = "selected='selected'";	break;
+				//case "local" : 	$selected[2] = "selected='selected'";	break;
 			}
 			echo "	<option value='inbound' ".$selected[1].">".$text['option-inbound']."</option>\n";
 			echo "	<option value='outbound' ".$selected[2].">".$text['option-outbound']."</option>\n";
-			echo "	<option value='local' ".$selected[3].">".$text['option-local']."</option>\n";
+			//echo "	<option value='local' ".$selected[3].">".$text['option-local']."</option>\n";
 			unset($selected);
 			echo "	</select>\n";
 			echo "<br />\n";

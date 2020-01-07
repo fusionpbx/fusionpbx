@@ -11,10 +11,10 @@
 <Resync_From_SIP>Yes</Resync_From_SIP>
 <Resync_After_Upgrade_Attempt>Yes</Resync_After_Upgrade_Attempt>
 <Resync_At__HHmm_>{$spa_resync_time}</Resync_At__HHmm_>
-{if isset ($http_auth_username)}
-<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
+{if isset ($spa_provision_url)}
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$spa_provision_url}</Profile_Rule>
 {else}
-<Profile_Rule>http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
+<Profile_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/provision/?mac=$MA</Profile_Rule>
 {/if}
 <Upgrade_Enable>{$spa_upgrade_enable}</Upgrade_Enable>
 <Upgrade_Rule>[--uid {$http_auth_username} --pwd {$http_auth_password}]http://{$domain_name}/app/cisco/resources/firmware/spa112-1.4.1.bin</Upgrade_Rule>

@@ -68,7 +68,25 @@ if (!class_exists('call_recordings')) {
 							foreach ($records as $record) {
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+										//add the uuid
+											$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+
+										//get the information to delete
+											$sql = "select call_recording_name, call_recording_path ";
+											$sql .= "from v_call_recordings ";
+											$sql .= "where call_recording_uuid = :call_recording_uuid ";
+											$parameters['call_recording_uuid'] = $record['uuid'];
+											$database = new database;
+											$field = $database->select($sql, $parameters, 'row');
+											if (is_array($field) && @sizeof($field) != 0) {
+												//delete the file on the file system
+													if (file_exists($field['call_recording_path'].'/'.$field['call_recording_name'])) {
+														unlink($field['call_recording_path'].'/'.$field['call_recording_name']);
+													}
+												//build call recording delete array
+													$array['call_recordings'][]['call_recording_uuid'] = $row['call_recording_uuid'];
+											}
+											unset($sql, $parameters, $field);
 									}
 
 								//increment the id
@@ -158,87 +176,8 @@ if (!class_exists('call_recordings')) {
 						@unlink($full_recording_path);
 					}
 			}
+
 		} //end download method
-
-		/**
-		 * delete the recordings
-		 */
-		public function old_delete($id) {
-			if (permission_exists('call_recording_delete')) {
-
-				//cache limiter
-					session_cache_limiter('public');
-
-				//delete single call recording
-					if (is_uuid($id)) {
-						//build delete array
-							$array['call_recordings'][]['call_recording_uuid'] = $id;
-						//grant temporary permissions
-							$p = new permissions;
-							$p->add('call_recording_delete', 'temp');
-						//execute delete
-							$database = new database;
-							$database->app_name = 'call_recordings';
-							$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-							$database->delete($array);
-							unset($array);
-						//revoke temporary permissions
-							$p->delete('call_recording_delete', 'temp');
-					}
-
-				//delete multiple call recordings
-					if (is_array($id) && @sizeof($id) != 0) {
-						//set the array
-							$call_recordings = $id;
-						//get the action
-							foreach ($call_recordings as $row) {
-								if ($row['action'] == 'delete') {
-									$action = 'delete';
-									break;
-								}
-							}
-						//delete the checked rows
-							if ($action == 'delete') {
-								foreach ($call_recordings as $row) {
-									if ($row['checked'] == 'true') {
-										//get the information to delete
-											$sql = "select call_recording_name, call_recording_path ";
-											$sql .= "from v_call_recordings ";
-											$sql .= "where call_recording_uuid = :call_recording_uuid ";
-											$parameters['call_recording_uuid'] = $row['call_recording_uuid'];
-											$database = new database;
-											$field = $database->select($sql, $parameters, 'row');
-											if (is_array($field) && @sizeof($field) != 0) {
-												//delete the file on the file system
-													if (file_exists($field['call_recording_path'].'/'.$field['call_recording_name'])) {
-														unlink($field['call_recording_path'].'/'.$field['call_recording_name']);
-													}
-												//build call recording delete array
-													$array['call_recordings'][]['call_recording_uuid'] = $row['call_recording_uuid'];
-
-											}
-											unset($sql, $parameters, $field);
-									}
-								}
-								if (is_array($array) && @sizeof($array) != 0) {
-									//grant temporary permissions
-										$p = new permissions;
-										$p->add('call_recording_delete', 'temp');
-									//execute delete
-										$database = new database;
-										$database->app_name = 'call_recordings';
-										$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
-										$database->delete($array);
-										unset($array);
-									//revoke temporary permissions
-										$p->delete('call_recording_delete', 'temp');
-								}
-							}
-							unset($call_recordings, $row);
-					}
-			}
-		} //end the delete function
-
 	}  //end the class
 }
 

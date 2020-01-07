@@ -130,12 +130,15 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-groups'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-groups']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-users'],'icon'=>$_SESSION['theme']['button_icon_users'],'onclick'=>"window.location='../users/users.php'"]);
+	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_sync'],'style'=>'margin-right: 15px;','onclick'=>"window.location='permissions_default.php'"]);
 	if (permission_exists('group_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'group_edit.php']);
 	}
@@ -157,10 +160,6 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-
-	echo button::create(['type'=>'button','label'=>$text['button-users'],'icon'=>$_SESSION['theme']['button_icon_users'],'onclick'=>"window.location='../users/users.php'"]);
-	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_sync'],'onclick'=>"window.location='permissions_default.php'"]);
-
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'groups.php','style'=>($search == '' ? 'display: none;' : null)]);

@@ -27,9 +27,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('database_transaction_add') || permission_exists('database_transaction_edit')) {
 		//access granted
 	}
@@ -110,6 +110,7 @@
 	}
 
 //show the header
+	$document['title'] = $text['title-database_transaction'];
 	require_once "resources/header.php";
 
 //show the content
@@ -117,10 +118,10 @@
 	echo "	<tr>\n";
 	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
 	echo "		<td width='80%' align='right' valign='top'>\n";
-	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo "			<a href='database_transaction_edit.php?id=".urlencode($database_transaction_uuid)."&action=undo".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-undo']."'>".$text['button-undo']."</button></a>";
-	}
 	echo "			<a href='database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
+	if ($transaction_type == 'delete' || $transaction_type == 'update') {
+		echo "			<a href='database_transaction_edit.php?id=".urlencode($database_transaction_uuid)."&action=undo".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' alt='".$text['button-undo']."'>".$text['button-undo']."</button></a>";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

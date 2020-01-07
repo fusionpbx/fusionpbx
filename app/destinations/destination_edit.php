@@ -55,7 +55,7 @@
 	switch ($_GET['type']) {
 		case 'inbound': $destination_type = 'inbound'; break;
 		case 'outbound': $destination_type = 'outbound'; break;
-		case 'local': $destination_type = 'local'; break;
+		//case 'local': $destination_type = 'local'; break;
 		default: $destination_type = 'inbound';
 	}
 
@@ -801,7 +801,7 @@
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
-	if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
+	//if ($destination_type =="local") { $destination_context = $_SESSION['domain_name']; }
 
 //create token
 	$object = new token;
@@ -843,18 +843,18 @@
 	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
 	echo "		}\n";
-	echo "		else if (dir == 'local') {\n";
-	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
-	echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
-	echo "			document.getElementById('tr_actions').style.display = '';\n";
-	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
-	echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
-	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
-	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
-	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
-	echo "			document.getElementById('tr_account_code').style.display = '';\n";
+	//echo "		else if (dir == 'local') {\n";
+	//echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = 'none'; }\n";
+	//echo "			if (document.getElementById('tr_caller_id_number')) { document.getElementById('tr_caller_id_number').style.display = 'none'; }\n";
+	//echo "			document.getElementById('tr_actions').style.display = '';\n";
+	//echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	//echo "			document.getElementById('tr_cid_name_prefix').style.display = 'none';\n";
+	//echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
+	//echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
+	//echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	//echo "			document.getElementById('tr_account_code').style.display = '';\n";
 //	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
-	echo "		}\n";
+	//echo "		}\n";
 	echo "		";
 	echo "	}\n";
 	echo "	\n";
@@ -902,11 +902,11 @@
 	switch ($destination_type) {
 		case "inbound" :	$selected[0] = "selected='selected'";	break;
 		case "outbound" :	$selected[1] = "selected='selected'";	break;
-		case "local" :	$selected[2] = "selected='selected'";	break;
+		//case "local" :	$selected[2] = "selected='selected'";	break;
 	}
 	echo "	<option value='inbound' ".$selected[0].">".$text['option-inbound']."</option>\n";
 	echo "	<option value='outbound' ".$selected[1].">".$text['option-outbound']."</option>\n";
-	echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
+	//echo "	<option value='local' ".$selected[2].">".$text['option-local']."</option>\n";
 	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";

@@ -21,6 +21,26 @@ $text['title-conferences']['ru-ru'] = "Конференции";
 $text['title-conferences']['sv-se'] = "Konferenser";
 $text['title-conferences']['uk-ua'] = "";
 
+$text['title-conference']['en-us'] = "Conference";
+$text['title-conference']['ar-eg'] = "";
+$text['title-conference']['de-at'] = "Konferenzen"; //copied from de-de
+$text['title-conference']['de-ch'] = "Konferenzen"; //copied from de-de
+$text['title-conference']['de-de'] = "Konferenzen";
+$text['title-conference']['es-cl'] = "Conferencias";
+$text['title-conference']['es-mx'] = "Conferencias"; //copied from es-cl
+$text['title-conference']['fr-ca'] = "Conférences"; //copied from fr-fr
+$text['title-conference']['fr-fr'] = "Conférences";
+$text['title-conference']['he-il'] = "";
+$text['title-conference']['it-it'] = "Conferenze";
+$text['title-conference']['nl-nl'] = "Conferenties";
+$text['title-conference']['pl-pl'] = "";
+$text['title-conference']['pt-br'] = "Conferências"; //copied from pt-pt
+$text['title-conference']['pt-pt'] = "Conferências";
+$text['title-conference']['ro-ro'] = "";
+$text['title-conference']['ru-ru'] = "Конференции";
+$text['title-conference']['sv-se'] = "Konferenser";
+$text['title-conference']['uk-ua'] = "";
+
 $text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
 $text['description']['ar-eg'] = "";
 $text['description']['de-at'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de

@@ -181,6 +181,26 @@ $text['title-inbound_routes']['ru-ru'] = "Входящие маршруты";
 $text['title-inbound_routes']['sv-se'] = "Inkommande Router";
 $text['title-inbound_routes']['uk-ua'] = "Маршрути вхідних дзвінків";
 
+$text['title-queues']['en-us'] = "Queues";
+$text['title-queues']['ar-eg'] = "";
+$text['title-queues']['de-at'] = "Warteschlangen"; //copied from de-de
+$text['title-queues']['de-ch'] = "Warteschlangen"; //copied from de-de
+$text['title-queues']['de-de'] = "Warteschlangen";
+$text['title-queues']['es-cl'] = "Colas";
+$text['title-queues']['es-mx'] = "Colas"; //copied from es-cl
+$text['title-queues']['fr-ca'] = "Les files d'attente";
+$text['title-queues']['fr-fr'] = "Les files d'attente";
+$text['title-queues']['he-il'] = "תור";
+$text['title-queues']['it-it'] = "";
+$text['title-queues']['nl-nl'] = "Wachtrijen";
+$text['title-queues']['pl-pl'] = "Kolejki";
+$text['title-queues']['pt-br'] = "Filas"; //copied from pt-pt
+$text['title-queues']['pt-pt'] = "Filas";
+$text['title-queues']['ro-ro'] = "";
+$text['title-queues']['ru-ru'] = "Очереди";
+$text['title-queues']['sv-se'] = "Kö:er";
+$text['title-queues']['uk-ua'] = "Черги";
+
 $text['title-other']['en-us'] = "Other";
 $text['title-other']['ar-eg'] = "";
 $text['title-other']['de-at'] = "Sonstiges"; //copied from de-de

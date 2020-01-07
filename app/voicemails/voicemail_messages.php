@@ -31,8 +31,11 @@
 	require_once "resources/paging.php";
 
 //set the voicemail_uuid
-	if (is_uuid($_REQUEST["id"])) {
-		$voicemail_uuid = $_REQUEST["id"];
+	if (is_uuid($_REQUEST['id'])) {
+		$voicemail_uuid = $_REQUEST['id'];
+	}
+	else if (is_numeric($_REQUEST['id'])) {
+		$voicemail_id = $_REQUEST['id'];
 	}
 
 //download the message
@@ -161,7 +164,12 @@
 //get the voicemail
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	$vm->voicemail_uuid = $voicemail_uuid;
+	if (is_uuid($voicemail_uuid)) {
+		$vm->voicemail_uuid = $voicemail_uuid;
+	}
+	else if (is_numeric($voicemail_id)) {
+		$vm->voicemail_id = $voicemail_id;
+	}
 	$vm->order_by = $order_by;
 	$vm->order = $order;
 	$voicemails = $vm->messages();

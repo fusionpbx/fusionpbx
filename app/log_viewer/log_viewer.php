@@ -78,13 +78,14 @@
 	}
 
 //include the header
+	$document['title'] = $text['title-log_viewer'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' valign='top' width='100%' style='padding-right: 15px;' nowrap>\n";
-	echo "			<b>".$text['label-log_viewer']."</b><br />\n";
+	echo "			<b>".$text['title-log_viewer']."</b><br />\n";
 	echo "		</td>\n";
 	echo "		<td align='right' valign='middle' nowrap>\n";
 	echo "			<form action='log_viewer.php' method='POST'>\n";

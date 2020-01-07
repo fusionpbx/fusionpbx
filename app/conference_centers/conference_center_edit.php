@@ -247,6 +247,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-conference_center'];
 	require_once "resources/header.php";
 
 //show the content

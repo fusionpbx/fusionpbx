@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('conference_room_view')) {
@@ -41,10 +42,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //get the meeting_uuid using the pin number
 	$search = preg_replace('{\D}', '', $_GET["search"]);
@@ -154,6 +151,10 @@
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
+
+//include header
+	$document['title'] = $text['title-conference_rooms'];
+	require_once "resources/header.php";
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";

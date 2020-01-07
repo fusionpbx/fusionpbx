@@ -89,10 +89,11 @@
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
-
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 
 --set default values
+	default_language = 'en';
+	default_dialect = 'us';
 	if (not origination_caller_id_name) then
 		origination_caller_id_name = '000000000000000';
 	end
@@ -313,9 +314,65 @@
 	end
 	uri_array = explode("/",fax_uri);
 	number_dialed = uri_array[4];
+	if (number_dialed == nil) then
+		number_dialed = '0';
+	end
 	--do not use apostrophies in message, they are not escaped and the mail will fail.
-	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
-	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
+
+--get the templates
+	local sql = "SELECT * FROM v_email_templates ";
+	sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	sql = sql .. "AND template_language = :template_language ";
+	sql = sql .. "AND template_category = 'fax' "
+	sql = sql .. "AND ( ";
+	sql = sql .. "	template_subcategory = 'success_default' ";
+	sql = sql .. "  OR template_subcategory = 'fail_default' ";
+	sql = sql .. "  OR template_subcategory = 'fail_busy' ";
+	sql = sql .. "  OR template_subcategory = 'fail_invalid' ";
+	sql = sql .. ") "
+	sql = sql .. "AND template_enabled = 'true' "
+	local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+	dbh:query(sql, params, function(row)
+		if (row["template_subcategory"] == 'success_default') then
+			email_subject_success_default = row["template_subject"];
+			email_body_success_default = row["template_body"];
+
+			email_subject_success_default = email_subject_success_default:gsub("${number_dialed}", number_dialed);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_success_default = email_body_success_default:gsub("${number_dialed}", number_dialed);
+			email_body_success_default = email_body_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		end
+		if (row["template_subcategory"] == 'fail_default') then
+			email_subject_fail_default = row["template_subject"];
+			email_body_fail_default = row["template_body"];
+
+			email_subject_fail_default = email_subject_fail_default:gsub("${number_dialed}", number_dialed);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_default = email_body_fail_default:gsub("${number_dialed}", number_dialed);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		end
+		if (row["template_subcategory"] == 'fail_busy') then
+			email_subject_fail_busy = row["template_subject"];
+			email_body_fail_busy = row["template_body"];
+
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${number_dialed}", number_dialed);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_busy = email_body_fail_busy:gsub("${number_dialed}", number_dialed);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		end
+		if (row["template_subcategory"] == 'fail_invalid') then
+			email_subject_fail_invalid = row["template_subject"];
+			email_body_fail_invalid = row["template_body"];
+
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${number_dialed}", number_dialed);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${number_dialed}", number_dialed);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		end
+	end);
 
 --add the fax files
 	if (fax_success ~= nil) then
@@ -435,7 +492,7 @@
 -- if the fax failed then try again
 	if (fax_success == "0") then
 		--DEBUG
-		--email_cmd = "/bin/echo '"..email_message_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
+		--email_cmd = "/bin/echo '"..email_subject_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
 
 		--to keep the originate command shorter these are things we always send. One place to adjust for all.
 		--originate_same = "for_fax=1,accountcode='"..accountcode.."',domain_uuid="..domain_uuid..",domain_name="..domain_name..",mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
@@ -456,8 +513,6 @@
 			--unallocated number
 			elseif (hangup_cause_q850 == 1 ) then
 				fax_retry_attempts = 10;
-				email_message_fail = "We are sorry the fax failed to go through. The number you specified is not a working number.  The fax has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
-
 			elseif (fax_retry_attempts < 5 ) then
 				freeswitch.consoleLog("INFO","[FAX] Last Fax Failed, try a different way. Wait first.\n");
 				freeswitch.msleep(fax_retry_sleep * 500);
@@ -476,7 +531,7 @@
 				else
 					cmd = "originate {fax_retry_attempts="..fax_retry_attempts..","..originate_same..",fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false,fax_busy_attempts='"..fax_busy_attempts.."',api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
 				end
-			
+
 			elseif (fax_retry_attempts == 2) then
 				--send t38 off, ECM on
 				freeswitch.consoleLog("INFO","[FAX] TRYING ["..fax_retry_attempts.."] of [4] to: "..number_dialed.." with: t38 OFF ECM ON, Fast\n");
@@ -510,12 +565,12 @@
 			elseif (fax_retry_attempts == 10) then
 				freeswitch.consoleLog("INFO","[FAX] RETRY FAILED: BAD NUMBER\n");
 				freeswitch.consoleLog("INFO", "[FAX] RETRY_STATS FAILURE BAD NUMBER: GATEWAY[".. fax_uri .."]");
-				email_message_fail = email_message_fail.."We tried sending, but the number entered was not a working phone number "
+
 				email_address = email_address:gsub("\\,", ",");
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was INVALID\n"..x_headers,
-									email_message_fail ,
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_invalid.."\n"..x_headers,
+									email_body_fail_invalid,
 									fax_file
 								);
 
@@ -523,12 +578,12 @@
 			elseif (fax_retry_attempts == 17) then
 				freeswitch.consoleLog("INFO","[FAX] RETRY FAILED: TRIED ["..fax_busy_attempts.."] of [4]: BUSY NUMBER\n");
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE BUSY: GATEWAY[".. fax_uri .."], BUSY NUMBER");
-				email_message_fail = email_message_fail.."  We tried sending, but the call was busy "..fax_busy_attempts.." of those times."
+
 				email_address = email_address:gsub("\\,", ",");
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." was BUSY\n"..x_headers,
-									email_message_fail ,
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_busy.."\n"..x_headers,
+									email_body_fail_busy,
 									fax_file
 								);
 
@@ -537,13 +592,11 @@
 				freeswitch.consoleLog("INFO","[FAX] RETRY FAILED: tried ["..fax_retry_attempts.."] of [4]: GIVING UP\n");
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success");
 
-				email_message_fail = email_message_fail.."  We tried sending 5 times.  You may also want to know that the call was busy "..fax_busy_attempts.." of those times."
 				email_address = email_address:gsub("\\,", ",");
-
 				freeswitch.email(email_address,
 									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." FAILED\n"..x_headers,
-									email_message_fail ,
+									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_default.."\n"..x_headers,
+									email_body_fail_default,
 									fax_file
 								);
 
@@ -590,8 +643,8 @@
 
 		freeswitch.email(email_address,
 				email_address,
-				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT\n"..x_headers,
-				email_message_success ,
+				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_success_default.."\n"..x_headers,
+				email_body_success_default,
 				fax_file
 			);
 

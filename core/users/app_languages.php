@@ -1,7 +1,6 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
-
 $text['title-users']['en-us'] = "Users";
 $text['title-users']['ar-eg'] = "";
 $text['title-users']['de-at'] = "Benutzer"; //copied from de-de
@@ -21,6 +20,48 @@ $text['title-users']['ro-ro'] = "Utilizator";
 $text['title-users']['ru-ru'] = "Пользователь";
 $text['title-users']['sv-se'] = "Användare";
 $text['title-users']['uk-ua'] = "Користувач";
+
+$text['title-user_edit']['en-us'] = "User Edit";
+$text['title-user_edit']['ar-eg'] = "";
+$text['title-user_edit']['de-at'] = "";
+$text['title-user_edit']['de-ch'] = "";
+$text['title-user_edit']['de-de'] = "";
+$text['title-user_edit']['es-cl'] = "";
+$text['title-user_edit']['es-mx'] = "";
+$text['title-user_edit']['fr-ca'] = "";
+$text['title-user_edit']['fr-fr'] = "";
+$text['title-user_edit']['he-il'] = "";
+$text['title-user_edit']['it-it'] = "";
+$text['title-user_edit']['nl-nl'] = "";
+$text['title-user_edit']['pl-pl'] = "";
+$text['title-user_edit']['pt-br'] = "";
+$text['title-user_edit']['pt-pt'] = "";
+$text['title-user_edit']['ro-ro'] = "";
+$text['title-user_edit']['ru-ru'] = "";
+$text['title-user_edit']['sv-se'] = "";
+$text['title-user_edit']['uk-ua'] = "";
+
+$text['title-user_import']['en-us'] = "User Import";
+$text['title-user_import']['ar-eg'] = "";
+$text['title-user_import']['de-at'] = "Importieren"; //copied from de-de
+$text['title-user_import']['de-ch'] = "Importieren"; //copied from de-de
+$text['title-user_import']['de-de'] = "Importieren";
+$text['title-user_import']['el-gr'] = "Εισαγωγή";
+$text['title-user_import']['es-cl'] = "Importar";
+$text['title-user_import']['es-mx'] = "Importar"; //copied from es-cl
+$text['title-user_import']['fr-ca'] = "Importer"; //copied from fr-fr
+$text['title-user_import']['fr-fr'] = "Importer";
+$text['title-user_import']['he-il'] = "";
+$text['title-user_import']['it-it'] = "";
+$text['title-user_import']['nl-nl'] = "";
+$text['title-user_import']['pl-pl'] = "Importuj";
+$text['title-user_import']['pt-br'] = "Importar";
+$text['title-user_import']['pt-pt'] = "Importat";
+$text['title-user_import']['ro-ro'] = "";
+$text['title-user_import']['ru-ru'] = "Импорт";
+$text['title-user_import']['sv-se'] = "Importera";
+$text['title-user_import']['uk-ua'] = "";
+$text['title-user_import']['tr-tr'] = "İçe Aktar";
 
 $text['description-users']['en-us'] = "Add, edit, delete, and search users. ";
 $text['description-users']['ar-eg'] = "";
@@ -1503,6 +1544,28 @@ $text['header-user_add']['ro-ro'] = "";
 $text['header-user_add']['ru-ru'] = "Пользователь";
 $text['header-user_add']['sv-se'] = "Användare";
 $text['header-user_add']['uk-ua'] = "Користувач";
+
+$text['header-user_import']['en-us'] = "User Import";
+$text['header-user_import']['ar-eg'] = "";
+$text['header-user_import']['de-at'] = "Importieren"; //copied from de-de
+$text['header-user_import']['de-ch'] = "Importieren"; //copied from de-de
+$text['header-user_import']['de-de'] = "Importieren";
+$text['header-user_import']['el-gr'] = "Εισαγωγή";
+$text['header-user_import']['es-cl'] = "Importar";
+$text['header-user_import']['es-mx'] = "Importar"; //copied from es-cl
+$text['header-user_import']['fr-ca'] = "Importer"; //copied from fr-fr
+$text['header-user_import']['fr-fr'] = "Importer";
+$text['header-user_import']['he-il'] = "";
+$text['header-user_import']['it-it'] = "";
+$text['header-user_import']['nl-nl'] = "";
+$text['header-user_import']['pl-pl'] = "Importuj";
+$text['header-user_import']['pt-br'] = "Importar";
+$text['header-user_import']['pt-pt'] = "Importat";
+$text['header-user_import']['ro-ro'] = "";
+$text['header-user_import']['ru-ru'] = "Импорт";
+$text['header-user_import']['sv-se'] = "Importera";
+$text['header-user_import']['uk-ua'] = "";
+$text['header-user_import']['tr-tr'] = "İçe Aktar";
 
 $text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
 $text['description-user_setting-edit']['ar-eg'] = "";

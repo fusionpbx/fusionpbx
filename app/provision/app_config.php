@@ -326,6 +326,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94d7d463-770e-48d9-8ba7-6009a54be413";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA Provision URL";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c9886a0-92f6-4dd7-8c1b-d04f240d9a9b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_back_light_timer";

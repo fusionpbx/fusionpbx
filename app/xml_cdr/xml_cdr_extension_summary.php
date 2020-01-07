@@ -28,9 +28,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //permisisions
-	require_once "resources/check_auth.php";
 	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
@@ -44,6 +44,7 @@
 	$text = $language->get();
 
 //additional includes
+	$document['title'] = $text['title-extension_summary'];
 	require_once "resources/header.php";
 
 //retrieve submitted data

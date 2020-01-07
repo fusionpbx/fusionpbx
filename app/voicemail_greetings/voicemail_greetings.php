@@ -29,12 +29,10 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check permissions
-	if (!permission_exists('voicemail_greeting_view')) {
-		if (!is_extension_assigned($voicemail_id)) {
-			echo "access denied";
-			return;
-		}
+	//check permissions
+	if (!permission_exists('voicemail_greeting_view') || (!permission_exists('voicemail_view') && !extension_assigned($_REQUEST["id"]))) {
+		echo "access denied";
+		return;
 	}
 
 //add multi-lingual support
@@ -56,14 +54,13 @@
 	}
 
 //used (above) to search the array to determine if an extension is assigned to the user
-	function is_extension_assigned($number) {
-		$result = false;
+	function extension_assigned($number) {
 		foreach ($_SESSION['user']['extension'] as $row) {
-			if ($row['user'] == $number) {
-				$result = true;
+			if ((is_numeric($row['number_alias']) && $row['number_alias'] == $number) || $row['user'] == $number) {
+				return true;
 			}
 		}
-		return $result;
+		return false;
 	}
 
 //get currently selected greeting

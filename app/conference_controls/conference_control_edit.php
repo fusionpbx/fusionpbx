@@ -3,9 +3,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('conference_control_add') || permission_exists('conference_control_edit')) {
 		//access granted
 	}
@@ -56,6 +56,7 @@
 			if (strlen($control_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-control_enabled']."<br>\n"; }
 			//if (strlen($control_description) == 0) { $msg .= $text['message-required']." ".$text['label-control_description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-conference_control'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -124,6 +125,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-conference_control'];
 	require_once "resources/header.php";
 
 //show the content

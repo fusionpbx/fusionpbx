@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -158,7 +158,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo $text['title_description-call_flows']."\n";
+	echo $text['description-call_flows']."\n";
 	echo "<br /><br />\n";
 
 	echo "<form id='form_list' method='post'>\n";

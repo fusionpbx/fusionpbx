@@ -484,7 +484,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
-			if ($row['default_setting_value'] == $key) {
+			if ($row['domain_setting_value'] == $value) {
 				echo "		<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 			}
 			else {

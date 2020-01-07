@@ -133,6 +133,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
+	$document['title'] = $text['title-fax'];
 	require_once "resources/header.php";
 
 //show the content
