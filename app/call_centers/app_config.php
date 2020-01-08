@@ -284,6 +284,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_extension";
@@ -368,6 +369,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
