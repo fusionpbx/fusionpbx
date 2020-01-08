@@ -112,14 +112,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference extension number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional pin number to secure access to the conference.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_profile";
@@ -136,6 +139,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_enabled";
