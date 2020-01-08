@@ -1,5 +1,4 @@
 <?php
-#This file was last reorgantitle-device_vendor_functionized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-devices']['en-us'] = "Devices";
 $text['title-devices']['ar-eg'] = "الأجهزة";
