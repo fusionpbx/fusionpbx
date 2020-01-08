@@ -60,7 +60,7 @@ if (!class_exists('button')) {
 				$button .= $array['onmouseover'] ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
  				$button .= $array['onmouseout'] ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
 				$button .= "class='btn btn-".($array['class'] ? $array['class'] : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
-				//ensure margin* styles are not applied to the button element
+				//ensure margin* styles are not applied to the button element when a link is defined
 				if (is_array($array['style']) && @sizeof($array['style']) != 0) {
 					foreach ($array['style'] as $property => $value) {
 						if (!$array['link'] || !substr_count($property, 'margin')) {
