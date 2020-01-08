@@ -1,5 +1,5 @@
 <?php
-#This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
+#This file was last reorgantitle-device_vendor_functionized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-devices']['en-us'] = "Devices";
 $text['title-devices']['ar-eg'] = "الأجهزة";
@@ -5290,6 +5290,46 @@ $text['title-device_vendor']['ru-ru'] = "Производитель";
 $text['title-device_vendor']['sv-se'] = "Tillverkare";
 $text['title-device_vendor']['uk-ua'] = "";
 
+$text['title-device_vendor_functions']['en-us'] = "Vendor Functions";
+$text['title-device_vendor_functions']['ar-eg'] = "Vendor Functions";
+$text['title-device_vendor_functions']['de-at'] = "Vendor Functions";
+$text['title-device_vendor_functions']['de-ch'] = "Vendor Functions";
+$text['title-device_vendor_functions']['de-de'] = "Vendor Functions";
+$text['title-device_vendor_functions']['es-cl'] = "Vendor Functions";
+$text['title-device_vendor_functions']['es-mx'] = "Vendor Functions";
+$text['title-device_vendor_functions']['fr-ca'] = "Vendor Functions";
+$text['title-device_vendor_functions']['fr-fr'] = "Vendor Functions";
+$text['title-device_vendor_functions']['he-il'] = "Vendor Functions";
+$text['title-device_vendor_functions']['it-it'] = "Vendor Functions";
+$text['title-device_vendor_functions']['nl-nl'] = "Vendor Functions";
+$text['title-device_vendor_functions']['pl-pl'] = "Vendor Functions";
+$text['title-device_vendor_functions']['pt-br'] = "Vendor Functions";
+$text['title-device_vendor_functions']['pt-pt'] = "Vendor Functions";
+$text['title-device_vendor_functions']['ro-ro'] = "Vendor Functions";
+$text['title-device_vendor_functions']['ru-ru'] = "Vendor Functions";
+$text['title-device_vendor_functions']['sv-se'] = "Vendor Functions";
+$text['title-device_vendor_functions']['uk-ua'] = "Vendor Functions";
+
+$text['title-device_vendor_function']['en-us'] = "Vendor Function";
+$text['title-device_vendor_function']['ar-eg'] = "Vendor Function";
+$text['title-device_vendor_function']['de-at'] = "Vendor Function";
+$text['title-device_vendor_function']['de-ch'] = "Vendor Function";
+$text['title-device_vendor_function']['de-de'] = "Vendor Function";
+$text['title-device_vendor_function']['es-cl'] = "Vendor Function";
+$text['title-device_vendor_function']['es-mx'] = "Vendor Function";
+$text['title-device_vendor_function']['fr-ca'] = "Vendor Function";
+$text['title-device_vendor_function']['fr-fr'] = "Vendor Function";
+$text['title-device_vendor_function']['he-il'] = "Vendor Function";
+$text['title-device_vendor_function']['it-it'] = "Vendor Function";
+$text['title-device_vendor_function']['nl-nl'] = "Vendor Function";
+$text['title-device_vendor_function']['pl-pl'] = "Vendor Function";
+$text['title-device_vendor_function']['pt-br'] = "Vendor Function";
+$text['title-device_vendor_function']['pt-pt'] = "Vendor Function";
+$text['title-device_vendor_function']['ro-ro'] = "Vendor Function";
+$text['title-device_vendor_function']['ru-ru'] = "Vendor Function";
+$text['title-device_vendor_function']['sv-se'] = "Vendor Function";
+$text['title-device_vendor_function']['uk-ua'] = "Vendor Function";
+
 $text['description-device_vendor']['en-us'] = "Defines the list of vendors used with provisioning devices.";
 $text['description-device_vendor']['ar-eg'] = "";
 $text['description-device_vendor']['de-at'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
@@ -5329,5 +5369,25 @@ $text['button-vendors']['ro-ro'] = "";
 $text['button-vendors']['ru-ru'] = "Производители";
 $text['button-vendors']['sv-se'] = "Tillverkare";
 $text['button-vendors']['uk-ua'] = "";
+
+$text['label-column_name']['en-us'] = "Column Name";
+$text['label-column_name']['ar-eg'] = "";
+$text['label-column_name']['de-at'] = "";
+$text['label-column_name']['de-ch'] = "";
+$text['label-column_name']['de-de'] = "";
+$text['label-column_name']['es-cl'] = "";
+$text['label-column_name']['es-mx'] = "";
+$text['label-column_name']['fr-ca'] = "Nom de colonne";
+$text['label-column_name']['fr-fr'] = "Nom de colonne";
+$text['label-column_name']['he-il'] = "";
+$text['label-column_name']['it-it'] = "";
+$text['label-column_name']['nl-nl'] = "Kolomnaam";
+$text['label-column_name']['pl-pl'] = "";
+$text['label-column_name']['pt-br'] = "Nome da Coluna";
+$text['label-column_name']['pt-pt'] = "";
+$text['label-column_name']['ro-ro'] = "";
+$text['label-column_name']['ru-ru'] = "";
+$text['label-column_name']['sv-se'] = "";
+$text['label-column_name']['uk-ua'] = "";
 
 ?>
