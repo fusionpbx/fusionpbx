@@ -32,6 +32,18 @@ if (!class_exists('button')) {
 
 		static function create($array) {
 			$button_icons = $_SESSION['theme']['button_icons']['text'] != '' ? $_SESSION['theme']['button_icons']['text'] : 'auto';
+			//parse styles into array
+				if ($array['style']) {
+					$tmp = explode(';',$array['style']);
+					foreach ($tmp as $style) {
+						if ($style) {
+							$style = explode(':', $style);
+							$styles[trim($style[0])] = trim($style[1]);
+						}
+					}
+					$array['style'] = $styles;
+					unset($styles);
+				}
 			//button: open
 				$button = "<button ";
 				$button .= "type='".($array['type'] ? $array['type'] : 'button')."' ";
@@ -48,7 +60,16 @@ if (!class_exists('button')) {
 				$button .= $array['onmouseover'] ? "onmouseenter=".self::quote($array['onmouseover'])." " : null;
  				$button .= $array['onmouseout'] ? "onmouseleave=".self::quote($array['onmouseout'])." " : null;
 				$button .= "class='btn btn-".($array['class'] ? $array['class'] : 'default')." ".($array['disabled'] ? 'disabled' : null)."' ";
-				$button .= $array['style'] ? "style=".self::quote($array['style'])." " : null;
+				//ensure margin* styles are not applied to the button element
+				if (is_array($array['style']) && @sizeof($array['style']) != 0) {
+					foreach ($array['style'] as $property => $value) {
+						if (!$array['link'] || !substr_count($property, 'margin')) {
+							$styles .= $property.': '.$value.'; ';
+						}
+					}
+					$button .= $styles ? "style=".self::quote($styles)." " : null;
+					unset($styles);
+				}
 				$button .= $array['disabled'] ? "disabled='disabled' " : null;
 				$button .= ">";
 			//icon
@@ -85,6 +106,16 @@ if (!class_exists('button')) {
 					$anchor = "<a ";
 					$anchor .= "href='".$array['link']."' ";
 					$anchor .= "target='".($array['target'] ? $array['target'] : '_self')."' ";
+					//ensure only margin* styles are applied to the anchor element
+					if (is_array($array['style']) && @sizeof($array['style']) != 0) {
+						foreach ($array['style'] as $property => $value) {
+							if (substr_count($property, 'margin')) {
+								$styles .= $property.': '.$value.'; ';
+							}
+						}
+						$anchor .= $styles ? "style=".self::quote($styles)." " : null;
+						unset($styles);
+					}
 					$anchor .= $array['disabled'] ? "class='disabled' onclick='return false;' " : null;
 					$anchor .= ">";
 					$button = $anchor.$button."</a>";
