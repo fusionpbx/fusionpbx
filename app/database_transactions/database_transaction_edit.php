@@ -343,24 +343,25 @@
 		}
 		echo "<br />\n";
 		echo "<table border='0'>\n";
-		foreach($array as $row) {
-			if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
-				echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
-				echo "<tr>\n";
-				echo "	<th>".escape($row['schema'])."</th>\n";
-				echo "	<th>value</th>\n";
+		if (is_array($array)) {
+			foreach($array as $row) {
+				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
+					echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
+					echo "<tr>\n";
+					echo "	<th>".escape($row['schema'])."</th>\n";
+					echo "	<th>value</th>\n";
+					echo "</tr>\n";
+				}
+				echo "<tr class='list-row'>\n";
+				echo "	<td class=\"vtable\" style='color: #000000;'>".escape($row['name'])."</td>\n";
+				echo "	<td class=\"vtable\" style='color: #ff0000;'>".escape($row['value'])."</td>\n";
 				echo "</tr>\n";
+	
+				$previous_schema = $row['schema'];
+				$previous_row = $row['row'];
 			}
-			echo "<tr class='list-row'>\n";
-			echo "	<td class=\"vtable\" style='color: #000000;'>".escape($row['name'])."</td>\n";
-			echo "	<td class=\"vtable\" style='color: #ff0000;'>".escape($row['value'])."</td>\n";
-			echo "</tr>\n";
-
-			$previous_schema = $row['schema'];
-			$previous_row = $row['row'];
+			echo "</table>\n";
 		}
-		echo "</table>\n";
-
 		/*
 		if (is_array($after)) {
 			//create the table header
@@ -422,8 +423,8 @@
 				echo "	</tr>\n";
 			}
 		}
-		echo "</table>\n";
 	}
+		echo "</table>\n";
 
 //add a few lines at the end
 	echo "<br />\n";
