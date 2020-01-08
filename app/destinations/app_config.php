@@ -154,11 +154,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_type";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the type.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_number";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prefix";
@@ -171,10 +173,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_cid_name_prefix";
@@ -183,6 +187,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
@@ -191,6 +196,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_voice";
@@ -211,6 +217,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_alternate_app";
@@ -223,10 +230,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 ?>
