@@ -146,12 +146,12 @@
 			require_once "resources/header.php";
 
 		//form to match the fields to the column names
-			echo "<form name='frmUpload' method='POST' enctype='multipart/form-data'>\n";
+			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
 			echo "<div class='action_bar' id='action_bar'>\n";
 			echo "	<div class='heading'><b>".$text['header-user_import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'users.php']);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'user_imports.php']);
 			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import']]);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
