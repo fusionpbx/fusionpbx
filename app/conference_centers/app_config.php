@@ -204,10 +204,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference center name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference center extension number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_pin_length";
@@ -216,10 +218,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_greeting";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference greeting.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the center description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_enabled";
