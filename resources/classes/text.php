@@ -31,17 +31,23 @@ class text {
 			$text = array();
 
 		//get the global app_languages.php so we can get the list of languages
-			include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
+				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			}
 
 		//get the list of languages, remove en-us, sort it then put en-us in front
 			unset($text['language-name']['en-us']);
-			$languages = array_keys($text['language-name']);
-			asort($languages);
-			array_unshift($languages, 'en-us');
+			if (is_array($text['language-name'])) {
+				$languages = array_keys($text['language-name']);
+				asort($languages);
+				array_unshift($languages, 'en-us');
+			}
 
 		//support legacy variable
-			$_SESSION['app']['languages'] = $languages;
-			$this->languages = $languages;
+			if (is_array($languages)) {
+				$_SESSION['app']['languages'] = $languages;
+				$this->languages = $languages;
+			}
 	}
 
 	/**
