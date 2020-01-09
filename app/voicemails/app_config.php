@@ -340,7 +340,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select to enable or disable this voicemail.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_description";
