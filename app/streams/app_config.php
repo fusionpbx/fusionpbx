@@ -63,7 +63,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enable or disable this stream. ';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_description';
