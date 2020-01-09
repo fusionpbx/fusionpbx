@@ -76,6 +76,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_permission_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "view_groups";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y=0;
