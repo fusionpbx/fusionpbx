@@ -126,7 +126,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the control.";
 
 ?>
