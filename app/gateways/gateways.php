@@ -123,7 +123,6 @@
 		$sql_search .= "or lower(auth_username) like :search ";
 		$sql_search .= "or lower(from_user) like :search ";
 		$sql_search .= "or lower(from_domain) like :search ";
-		$sql_search .= "or lower(from_domain) like :search ";
 		$sql_search .= "or lower(proxy) like :search ";
 		$sql_search .= "or lower(register_proxy) like :search ";
 		$sql_search .= "or lower(outbound_proxy) like :search ";
