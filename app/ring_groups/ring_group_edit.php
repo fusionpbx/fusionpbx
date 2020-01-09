@@ -286,6 +286,12 @@
 					$dialplan_xml = "<extension name=\"ring group\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+					if (strlen($ring_group_caller_id_name) > 0) {
+					  $dialplan_xml .= "    <action application=\"set\" data=\"effective_caller_id_name=".$ring_group_caller_id_name."#\${caller_id_name}\"/>\n";
+					}
+					if (strlen($ring_group_caller_id_number) > 0) {
+					  $dialplan_xml .= "    <action application=\"set\" data=\"effective_caller_id_number=".$ring_group_caller_id_number."\"/>\n";
+					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
 					$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
