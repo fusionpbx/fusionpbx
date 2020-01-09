@@ -80,6 +80,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'number_translation_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number translation name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'number_translation_enabled';
@@ -88,6 +89,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'number_translation_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number translation description.';
 		$z++;
 
