@@ -381,16 +381,19 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_mac_address";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_mac_address";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_label";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_vendor";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_vendor";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_model";
@@ -406,6 +409,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "device_provision_enable";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_enabled_date";
@@ -415,6 +419,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_template";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_template";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_user_uuid";
@@ -453,6 +458,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_date";
@@ -461,10 +467,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_method";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_provisioned_ip";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
@@ -711,6 +719,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_profile_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_profile_enabled";
@@ -719,6 +728,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_profile_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
@@ -873,22 +883,27 @@
 		$z++;
 		//$apps[$x]['db'][$y]['fields'][$z]['name'] = "label";
 		//$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		//$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the label.";
 		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "value";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the value.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the function.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;
