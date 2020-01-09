@@ -79,7 +79,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enable or Disable the PIN Number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";
