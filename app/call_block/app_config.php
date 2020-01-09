@@ -73,6 +73,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_block_voicemail";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "view_call_block";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y=0;
