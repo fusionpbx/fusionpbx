@@ -314,27 +314,27 @@
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-device_profile']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'device_profiles.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'link'=>'device_profile_copy.php?id='.urlencode($device_profile_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-device_profiles']."\n";
+	echo "<br /><br />\n";
+
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-device_profile']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_profiles.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='device_profile_copy.php?id=".urlencode($device_profile_uuid)."'\" value='".$text['button-copy']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	".$text['description-device_profiles']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_profile_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_profile_name' maxlength='255' value='".escape($device_profile_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-device_profile_name']."\n";
@@ -363,7 +363,7 @@
 		}
 		echo "			<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-		echo "			<td class='vtable'></td>\n";
+		echo "			<td></td>\n";
 		echo "		</tr>\n";
 	}
 
@@ -383,11 +383,11 @@
 		//set the column names
 		if ($previous_profile_key_vendor != $row['profile_key_vendor']) {
 			echo "			<tr>\n";
-			echo "				<td class='vtablereq'>".$text['label-device_key_category']."</td>\n";
-			echo "				<td class='vtablereq'>".$text['label-device_key_id']."</td>\n";
-			echo "				<td class='vtablereq'>".$text['label-device_vendor']."</td>\n";
-			echo "				<td class='vtablereq'>".$text['label-device_key_type']."</td>\n";
-			echo "				<td class='vtablereq'>".$text['label-device_key_line']."</td>\n";
+			echo "				<th class='vtablereq'>".$text['label-device_key_category']."</td>\n";
+			echo "				<th class='vtablereq'>".$text['label-device_key_id']."</td>\n";
+			echo "				<th class='vtablereq'>".$text['label-device_vendor']."</td>\n";
+			echo "				<th class='vtablereq'>".$text['label-device_key_type']."</td>\n";
+			echo "				<th class='vtablereq'>".$text['label-device_key_line']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 			if (permission_exists('device_key_extension')) {
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
@@ -633,7 +633,7 @@
 	echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
 	echo "			<th class='vtablereq'>".$text['label-enabled']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-	echo "			<td class='vtable'></td>\n";
+	echo "			<td></td>\n";
 	echo "		</tr>\n";
 	$x = 0;
 	foreach($device_profile_settings as $row) {
@@ -736,7 +736,6 @@
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

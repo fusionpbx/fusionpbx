@@ -533,51 +533,13 @@
 //show the header
 	require_once "resources/header.php";
 
-//javascript to change select to input and back again
-	?>
-	<script language="javascript">
-		var objs;
-
-		function change_to_input(obj){
-			tb=document.createElement('INPUT');
-			tb.type='text';
-			tb.name=obj.name;
-			tb.className='formfld';
-			//tb.setAttribute('id', 'ivr_menu_option_param');
-			tb.setAttribute('style', 'width:175px;');
-			tb.value=obj.options[obj.selectedIndex].value;
-			tbb=document.createElement('INPUT');
-			tbb.setAttribute('class', 'btn');
-			tbb.setAttribute('style', 'margin-left: 4px;');
-			tbb.type='button';
-			tbb.value=$("<div />").html('&#9665;').text();
-			tbb.objs=[obj,tb,tbb];
-			tbb.onclick=function(){ replace_param(this.objs); }
-			obj.parentNode.insertBefore(tb,obj);
-			obj.parentNode.insertBefore(tbb,obj);
-			obj.parentNode.removeChild(obj);
-			replace_param(this.objs);
-		}
-
-		function replace_param(obj){
-			obj[2].parentNode.insertBefore(obj[0],obj[2]);
-			obj[0].parentNode.removeChild(obj[1]);
-			obj[0].parentNode.removeChild(obj[2]);
-		}
-
-	</script>
-
-<?php
-
 //select file download javascript
 	if (permission_exists("device_files")) {
 		echo "<script language='javascript' type='text/javascript'>\n";
 		echo "	var fade_speed = 400;\n";
 		echo "	function show_files() {\n";
 		echo "		document.getElementById('file_action').value = 'files';\n";
-		echo "		$('#button_back_location').fadeOut(fade_speed);\n";
 		echo "		$('#button_files').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_back').fadeIn(fade_speed);\n";
 		echo "			$('#target_file').fadeIn(fade_speed);\n";
 		echo "			$('#button_download').fadeIn(fade_speed);\n";
 		echo "		});";
@@ -586,10 +548,6 @@
 		echo "		document.getElementById('file_action').value = '';\n";
 		echo "		$('#button_download').fadeOut(fade_speed);\n";
 		echo "		$('#target_file').fadeOut(fade_speed);\n";
-		echo "		$('#button_back').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_files').fadeIn(fade_speed)\n";
-		echo "			$('#button_back_location').fadeIn(fade_speed);\n";
-		echo "		});";
 		echo "		document.getElementById('target_file').selectedIndex = 0;\n";
 		echo "	}\n";
 
@@ -733,17 +691,15 @@
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<input type='hidden' name='file_action' id='file_action' value='' />\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' nowrap='nowrap' valign='top'>";
-	echo "	<b>".$text['header-device']."</b>";
-	echo "</td>\n";
-	echo "<td align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' id='button_back_location' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'/>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'devices.php']);
 	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".escape($sip_profile_name)."&user=".escape($user_id)."@".escape($server_address)."&domain=".$server_address."&agent=".escape($device_vendor)."';\">&nbsp;\n";
+	echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".urlencode($sip_profile_name)."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
 	if (permission_exists("device_files")) {
 		//get the template directory
 			$prov = new provision;
@@ -751,9 +707,8 @@
 			$template_dir = $prov->template_dir;
 			$files = glob($template_dir.'/'.$device_template.'/*');
 		//add file buttons and the file list
-			echo "		<input type='button' class='btn' id='button_files' name='' alt='".$text['button-files']."' onclick='show_files();' value='".$text['button-files']."'/>";
-			echo "		<input type='button' class='btn' style='display: none;' id='button_back' name='' alt='".$text['button-back']."' onclick='hide_files();' value='".$text['button-back']."'/> ";
-			echo "		<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
+			echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
+			echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
 			echo "			<option value=''>".$text['label-download']."</option>\n";
 			foreach ($files as $file) {
 				//format the mac address and
@@ -764,23 +719,19 @@
 				//add the select option
 					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 			}
-			echo "		</select>\n";
-			//echo "		<input type='button' class='btn' id='button_download' style='display: none;' alt='".$text['button-download']."' value='".$text['button-download']."' onclick='document.forms.frm.submit();'>";
+			echo "		</select>";
 	}
 
 	if (permission_exists('device_add') && $action != "add") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }\" value='".$text['button-copy']."'/>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }"]);
 	}
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	".$text['description-device'];
-	echo "	<br><br>";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','onclick'=>'submit_form()']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-device']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -1619,8 +1570,6 @@
 		echo "		<input type='hidden' name='device_uuid' value='".escape($device_uuid)."'/>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'/>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

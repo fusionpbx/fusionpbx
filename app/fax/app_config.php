@@ -402,10 +402,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxextension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_destination_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_prefix";
@@ -415,11 +417,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxname";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_email";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxemail";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_email_connection_type";
@@ -472,10 +476,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_toll_allow";
@@ -489,6 +495,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_forward_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "fax_send_greeting";
@@ -507,6 +514,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "fax_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxdescription";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "accountcode";

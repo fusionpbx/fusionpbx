@@ -69,10 +69,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_destination';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the destination.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_enabled';
@@ -81,6 +83,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 

@@ -578,6 +578,12 @@
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
+				
+				// reload ACL if allowed
+					if (permission_exists("extension_cidr")) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						if ($fp) { event_socket_request($fp, "api reloadacl"); }
+					}
 
 				//check the permissions
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {

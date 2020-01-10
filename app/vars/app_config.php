@@ -71,14 +71,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "var_category";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "var_cat";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "var_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "var_value";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "var_command";
@@ -89,6 +92,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(255)";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "var_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -101,6 +105,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "var_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "var_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

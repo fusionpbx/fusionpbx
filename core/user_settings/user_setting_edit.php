@@ -352,39 +352,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo $text['header-user_setting-edit'];
+		echo "<b>".$text['header-user_setting-edit']."</b>";
 	}
 	if ($action == "add") {
-		echo $text['header-user_setting-add'];
+		echo "<b>".$text['header-user_setting-add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/core/users/user_edit.php?id=".escape($user_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'/core/users/user_edit.php?id='.urlencode($user_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>'submit_form();']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	if ($action == "update") {
-		echo $text['description-user_setting-edit'];
+		echo $text['description-user_setting-edit']."\n";
 	}
 	if ($action == "add") {
-		echo $text['description-user_setting-add'];
+		echo $text['description-user_setting-add']."\n";
 	}
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	if (permission_exists('user_setting_category_edit')) {
 		echo "	<input type='text' class='formfld' name='user_setting_category' id='user_setting_category' maxlength='255' value=\"".escape($user_setting_category)."\">\n";
 	}
@@ -713,8 +713,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='user_setting_uuid' value='".escape($user_setting_uuid)."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

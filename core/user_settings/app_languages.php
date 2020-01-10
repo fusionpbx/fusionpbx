@@ -2162,4 +2162,44 @@ $text['button-voicemail']['ru-ru'] = "Голосовая почта";
 $text['button-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['button-voicemail']['uk-ua'] = "Голосова пошта";
 
+$text['description-user_setting-edit']['en-us'] = "Edit a setting for this user.";
+$text['description-user_setting-edit']['ar-eg'] = "";
+$text['description-user_setting-edit']['de-at'] = "Eine Einstellung für diesen Benutzer bearbeiten."; //copied from de-de
+$text['description-user_setting-edit']['de-ch'] = "Eine Einstellung für diesen Benutzer bearbeiten."; //copied from de-de
+$text['description-user_setting-edit']['de-de'] = "Eine Einstellung für diesen Benutzer bearbeiten.";
+$text['description-user_setting-edit']['es-cl'] = "Editar un escenario de este usuario.";
+$text['description-user_setting-edit']['es-mx'] = "Editar un escenario de este usuario."; //copied from es-cl
+$text['description-user_setting-edit']['fr-ca'] = "Modifier un réglage pour cet utilisateur."; //copied from fr-fr
+$text['description-user_setting-edit']['fr-fr'] = "Modifier un réglage pour cet utilisateur.";
+$text['description-user_setting-edit']['he-il'] = "";
+$text['description-user_setting-edit']['it-it'] = "Modifica un parametro per questo utente.";
+$text['description-user_setting-edit']['nl-nl'] = "";
+$text['description-user_setting-edit']['pl-pl'] = "";
+$text['description-user_setting-edit']['pt-br'] = "Editar uma configuração para este usuário."; //copied from pt-pt
+$text['description-user_setting-edit']['pt-pt'] = "Editar uma configuração para este usuário.";
+$text['description-user_setting-edit']['ro-ro'] = "";
+$text['description-user_setting-edit']['ru-ru'] = "Изменить настройки этого пользователя.";
+$text['description-user_setting-edit']['sv-se'] = "Ändra en inställning för denna användfare.";
+$text['description-user_setting-edit']['uk-ua'] = "";
+
+$text['description-user_setting-add']['en-us'] = "Add a setting for this user.";
+$text['description-user_setting-add']['ar-eg'] = "";
+$text['description-user_setting-add']['de-at'] = "Eine Einstellung für diesen Benutzer hinzufügen."; //copied from de-de
+$text['description-user_setting-add']['de-ch'] = "Eine Einstellung für diesen Benutzer hinzufügen."; //copied from de-de
+$text['description-user_setting-add']['de-de'] = "Eine Einstellung für diesen Benutzer hinzufügen.";
+$text['description-user_setting-add']['es-cl'] = "Añadir un entorno para este usuario.";
+$text['description-user_setting-add']['es-mx'] = "Añadir un entorno para este usuario."; //copied from es-cl
+$text['description-user_setting-add']['fr-ca'] = "Ajouter un cadre pour cet utilisateur."; //copied from fr-fr
+$text['description-user_setting-add']['fr-fr'] = "Ajouter un cadre pour cet utilisateur.";
+$text['description-user_setting-add']['he-il'] = "";
+$text['description-user_setting-add']['it-it'] = "Aggiungi un parametro per questo utente.";
+$text['description-user_setting-add']['nl-nl'] = "";
+$text['description-user_setting-add']['pl-pl'] = "";
+$text['description-user_setting-add']['pt-br'] = "Adicionar uma definição para esse usuário."; //copied from pt-pt
+$text['description-user_setting-add']['pt-pt'] = "Adicionar uma definição para esse usuário.";
+$text['description-user_setting-add']['ro-ro'] = "";
+$text['description-user_setting-add']['ru-ru'] = "Добавьте параметр для этого пользователя.";
+$text['description-user_setting-add']['sv-se'] = "Lägg till en inställning för denna användare.";
+$text['description-user_setting-add']['uk-ua'] = "";
+
 ?>

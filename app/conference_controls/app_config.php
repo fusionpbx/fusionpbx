@@ -79,6 +79,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference control name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
@@ -87,6 +88,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;
@@ -109,14 +111,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_digits";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the digits.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_action";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the action.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
