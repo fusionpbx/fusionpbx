@@ -91,14 +91,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_category";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_subcategory";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the subcategory.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_value";
@@ -115,6 +118,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>
