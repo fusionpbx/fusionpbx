@@ -24,9 +24,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('email_template_add') || permission_exists('email_template_edit')) {
 		//access granted
 	}
@@ -170,6 +170,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-email_template'];
 	require_once "resources/header.php";
 
 //show the content

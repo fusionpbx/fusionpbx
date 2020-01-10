@@ -116,6 +116,7 @@
 	//apt install qrencode
 
 //additional includes
+	$document['title'] = $text['title-gswave'];
 	require_once "resources/header.php";
 
 //show the content

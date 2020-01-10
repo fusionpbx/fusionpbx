@@ -638,6 +638,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
 
 ?>
@@ -792,9 +793,9 @@
 								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 							}
 						}
-						h = 23;
-						m = 59;
-						sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						//h = 23;
+						//m = 59;
+						//sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 						break;
 
 				}
@@ -900,7 +901,7 @@ echo "<form method='post' name='frm' action='' onsubmit=\"return check_submit();
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
 echo "		<td align='left' valign='top'>\n";
-echo "			<span class='title'>".$text['title-time_conditions']."</span>";
+echo "			<span class='title'>".$text['title-time_condition']."</span>";
 echo "			<br /><br />\n";
 echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";

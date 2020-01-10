@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -258,7 +258,7 @@
 		$value = urldecode($value);
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", TRUE)."&nbsp;</td>\n";
+		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", TRUE))."&nbsp;</td>\n";
 		echo "</tr>\n";
 		$c = $c ? 0 : 1;
 	}
@@ -318,7 +318,7 @@
 					echo "</td>\n";
 				}
 				else {
-					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
 			}
@@ -352,7 +352,7 @@
 			$app_data = urldecode($row["@attributes"]["app_data"]);
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($app_data),75,"<br />\n", true)."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
 			echo "</tr>\n";
 			$c = $c ? 0 : 1;
 		}
@@ -388,7 +388,7 @@
 						$value = urldecode($value);
 						echo "		<tr>\n";
 						echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-						echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+						echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 						echo "		</tr>\n";
 						$c = $c ? 0 : 1;
 					}
@@ -416,7 +416,7 @@
 						$value = urldecode($value);
 						echo "		<tr >\n";
 						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 						echo "		</tr>\n";
 						$c = $c ? 0 : 1;
 					}
@@ -445,7 +445,7 @@
 						$app_data = urldecode($tmp_row["@attributes"]["app_data"]);
 						echo "		<tr >\n";
 						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
-						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($app_data),75,"<br />\n", true)."&nbsp;</td>\n";
+						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
 						echo "		</tr>\n";
 						$c = $c ? 0 : 1;
 					}
@@ -477,7 +477,7 @@
 							if (is_array($value)) { $value = implode($value); }
 							$value = urldecode($value);
 							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 						}
 						else {
 							echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
@@ -489,7 +489,7 @@
 									echo "				<tr >\n";
 									echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
 									if ($key != "uuid") {
-										echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+										echo "					<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 									}
 									else {
 										echo "					<td valign='top' align='left' class='".$row_style[$c]."'><a href='xml_cdr_details.php?id=".urlencode($value)."'>".escape($value)."</a>&nbsp;</td>\n";
@@ -525,7 +525,7 @@
 						$value = urldecode($value);
 						echo "		<tr >\n";
 						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
-						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap(escape($value),75,"<br />\n", true)."&nbsp;</td>\n";
+						echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
 						echo "		</tr>\n";
 						$c = $c ? 0 : 1;
 					}

@@ -128,7 +128,7 @@ if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				</td>";
 }
 
-if (sizeof($groups) > 0) {
+if (is_array($groups) && @sizeof($groups) > 0) {
 	echo "				<td valign='top' nowrap='nowrap'>";
 	echo "					<input type='hidden' id='group' value=\"".escape($_REQUEST['group'])."\">";
 	if (sizeof($groups) > 5) {

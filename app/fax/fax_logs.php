@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('fax_log_view')) {
@@ -50,8 +51,8 @@
 	$fax_uuid = $_GET["id"];
 
 //additional includes
+	$document['title'] = $text['title-fax_logs'];
 	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -82,10 +83,12 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&id=".$fax_uuid."&order_by=".$order_by."&order=".$order;
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
+	if (isset($_GET['page'])) {
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
+	}
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);

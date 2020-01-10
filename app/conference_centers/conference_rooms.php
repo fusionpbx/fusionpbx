@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('conference_room_view')) {
@@ -41,10 +42,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //get the meeting_uuid using the pin number
 	$search = preg_replace('{\D}', '', $_GET["search"]);
@@ -155,6 +152,10 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//include header
+	$document['title'] = $text['title-conference_rooms'];
+	require_once "resources/header.php";
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
@@ -184,10 +185,12 @@
 	//prepare to page the results
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = '';
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($row_count, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+		if (isset($_GET['page'])) {
+			$page = $_GET['page'];
+			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+			list($paging_controls, $rows_per_page, $var3) = paging($row_count, $param, $rows_per_page);
+			$offset = $rows_per_page * $page;
+		}
 
 	//get the conference rooms
 		$conference_center->rows_per_page = $rows_per_page;

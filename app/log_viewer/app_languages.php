@@ -1,6 +1,26 @@
 <?php
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
+$text['title-log_viewer']['en-us'] = "Log Viewer";
+$text['title-log_viewer']['ar-eg'] = "";
+$text['title-log_viewer']['de-at'] = "Log Datei"; //copied from de-de
+$text['title-log_viewer']['de-ch'] = "Log Datei"; //copied from de-de
+$text['title-log_viewer']['de-de'] = "Log Datei";
+$text['title-log_viewer']['es-cl'] = "Visor de Eventos";
+$text['title-log_viewer']['es-mx'] = "Visor de Eventos"; //copied from es-cl
+$text['title-log_viewer']['fr-ca'] = "Afficher les Logs"; //copied from fr-fr
+$text['title-log_viewer']['fr-fr'] = "Afficher les Logs";
+$text['title-log_viewer']['he-il'] = "";
+$text['title-log_viewer']['it-it'] = "Log Viewer";
+$text['title-log_viewer']['nl-nl'] = "Bekijk logs";
+$text['title-log_viewer']['pl-pl'] = "Podgląd logów freeswitcha";
+$text['title-log_viewer']['pt-br'] = "Visualizar os logs";
+$text['title-log_viewer']['pt-pt'] = "Visualização de Logs";
+$text['title-log_viewer']['ro-ro'] = "";
+$text['title-log_viewer']['ru-ru'] = "Просмотр Логов";
+$text['title-log_viewer']['sv-se'] = "Log Viewer";
+$text['title-log_viewer']['uk-ua'] = "Логи";
+
 $text['label-syntax']['en-us'] = "Syntax Highlighted";
 $text['label-syntax']['ar-eg'] = "";
 $text['label-syntax']['de-at'] = "Syntax Highlighted"; //copied from de-de
@@ -80,26 +100,6 @@ $text['label-open_at']['ro-ro'] = "";
 $text['label-open_at']['ru-ru'] = "Открытие на";
 $text['label-open_at']['sv-se'] = "Öppnar vid";
 $text['label-open_at']['uk-ua'] = "відкрито о";
-
-$text['label-log_viewer']['en-us'] = "Log Viewer";
-$text['label-log_viewer']['ar-eg'] = "";
-$text['label-log_viewer']['de-at'] = "Log Datei"; //copied from de-de
-$text['label-log_viewer']['de-ch'] = "Log Datei"; //copied from de-de
-$text['label-log_viewer']['de-de'] = "Log Datei";
-$text['label-log_viewer']['es-cl'] = "Visor de Eventos";
-$text['label-log_viewer']['es-mx'] = "Visor de Eventos"; //copied from es-cl
-$text['label-log_viewer']['fr-ca'] = "Afficher les Logs"; //copied from fr-fr
-$text['label-log_viewer']['fr-fr'] = "Afficher les Logs";
-$text['label-log_viewer']['he-il'] = "";
-$text['label-log_viewer']['it-it'] = "Log Viewer";
-$text['label-log_viewer']['nl-nl'] = "Bekijk logs";
-$text['label-log_viewer']['pl-pl'] = "Podgląd logów freeswitcha";
-$text['label-log_viewer']['pt-br'] = "Visualizar os logs";
-$text['label-log_viewer']['pt-pt'] = "Visualização de Logs";
-$text['label-log_viewer']['ro-ro'] = "";
-$text['label-log_viewer']['ru-ru'] = "Просмотр Логов";
-$text['label-log_viewer']['sv-se'] = "Log Viewer";
-$text['label-log_viewer']['uk-ua'] = "Логи";
 
 $text['label-line_number']['en-us'] = "Show Line Numbers";
 $text['label-line_number']['ar-eg'] = "";

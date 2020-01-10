@@ -21,6 +21,26 @@ $text['title-time_conditions']['ru-ru'] = "Временные условия";
 $text['title-time_conditions']['sv-se'] = "Tidsstyrning";
 $text['title-time_conditions']['uk-ua'] = "Часові умови";
 
+$text['title-time_condition']['en-us'] = "Time Condition";
+$text['title-time_condition']['ar-eg'] = "";
+$text['title-time_condition']['de-at'] = "Zeitschaltung"; //copied from de-de
+$text['title-time_condition']['de-ch'] = "Zeitschaltung"; //copied from de-de
+$text['title-time_condition']['de-de'] = "Zeitschaltung";
+$text['title-time_condition']['es-cl'] = "Condiciones Temporales";
+$text['title-time_condition']['es-mx'] = "Condiciones Temporales"; //copied from es-cl
+$text['title-time_condition']['fr-ca'] = "Conditions Temporelles"; //copied from fr-fr
+$text['title-time_condition']['fr-fr'] = "Conditions Temporelles";
+$text['title-time_condition']['he-il'] = "";
+$text['title-time_condition']['it-it'] = "Condizioni Temporali";
+$text['title-time_condition']['nl-nl'] = "";
+$text['title-time_condition']['pl-pl'] = "Warunki czasowe";
+$text['title-time_condition']['pt-br'] = "Condições temporarias";
+$text['title-time_condition']['pt-pt'] = "Condições Temporais";
+$text['title-time_condition']['ro-ro'] = "";
+$text['title-time_condition']['ru-ru'] = "Временные условия";
+$text['title-time_condition']['sv-se'] = "Tidsstyrning";
+$text['title-time_condition']['uk-ua'] = "Часові умови";
+
 $text['button-dialplan']['en-us'] = "Dialplan";
 $text['button-dialplan']['ar-eg'] = "";
 $text['button-dialplan']['de-at'] = "Wählplan"; //copied from de-de

@@ -161,6 +161,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-users'];
 	require_once "resources/header.php";
 
 //show the content
@@ -168,6 +169,9 @@
 	echo "	<div class='heading'><b>".$text['title-users']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_add')) {
+		if (!isset($id)) {
+			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'user_imports.php']);
+		}
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'user_edit.php']);
 	}
 	if (permission_exists('user_add') && $users) {
@@ -187,11 +191,6 @@
 		else {
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
-	}
-
-	//add buttons
-	if (!isset($id)) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-import']."' onclick='window.location=\"user_imports.php\"' value='".$text['button-import']."'>";
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);

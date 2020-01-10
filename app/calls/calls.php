@@ -162,7 +162,9 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include header
-	$document['title'] = $text['title'];
+	if (!$is_included) {
+		$document['title'] = $text['title-call_routing'];
+	}
 	require_once "resources/header.php";
 
 //javascript for toggle select box

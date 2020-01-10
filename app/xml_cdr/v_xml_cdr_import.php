@@ -101,8 +101,16 @@
 
 		//parse the xml to get the call detail record info
 			try {
+				//send info to lthe log
 				xml_cdr_log($xml_string);
-				$xml = simplexml_load_string($xml_string);
+
+				//disable xml entities
+				libxml_disable_entity_loader(true);
+
+				//load the string into an xml object
+				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+				//send info to the log
 				xml_cdr_log("\nxml load done\n");
 			}
 			catch(Exception $e) {
@@ -556,7 +564,11 @@
 
 				//parse the xml to get the call detail record info
 					try {
-						$conf_xml = simplexml_load_string($conf_xml_string);
+						//disable xml entities
+						libxml_disable_entity_loader(true);
+
+						//load the string into an xml object
+						$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);	
 					}
 					catch(Exception $e) {
 						echo $e->getMessage();

@@ -30,7 +30,7 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists('call_recording_view')) {
+	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		//access granted
 	}
 	else {
@@ -39,7 +39,11 @@
 	}
 
 //download
-	$obj = new call_recordings;
-	$obj->download();
+	if (is_uuid($_GET['id'])) {
+		$obj = new call_recordings;
+		$obj->recording_uuid = $_GET['id'];
+		$obj->binary = isset($_GET['binary']) ? true : false;
+		$obj->download();
+	}
 
 ?>

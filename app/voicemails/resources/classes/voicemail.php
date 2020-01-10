@@ -108,7 +108,7 @@
 			//set the voicemail id and voicemail uuid arrays
 				if (isset($_SESSION['user']['extension'])) {
 					foreach ($_SESSION['user']['extension'] as $index => $row) {
-						$voicemail_ids[$index]['voicemail_id'] = strlen($row['number_alias']) > 0 ? $row['number_alias'] : $row['user'];
+						$voicemail_ids[$index] = is_numeric($row['number_alias']) ? $row['number_alias'] : $row['user'];
 					}
 				}
 				if (isset($_SESSION['user']['voicemail'])) {
@@ -149,15 +149,21 @@
 				else {
 					if (is_array($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
 						//show only the assigned voicemail ids
-						$x = 0;
-						$sql .= "and ( ";
-						foreach($voicemail_ids as $row) {
-							$sql_where_or[] = "voicemail_id = :voicemail_id_".$x;
-							$parameters['voicemail_id_'.$x] = $row['voicemail_id'];
-							$x++;
+						$sql .= "and ";
+						if (is_numeric($this->voicemail_id) && in_array($this->voicemail_id, $voicemail_ids)) {
+							$sql_where = 'voicemail_id = :voicemail_id ';
+							$parameters['voicemail_id'] = $this->voicemail_id;
 						}
-						$sql .= implode(' or ', $sql_where_or);
-						$sql .= ") ";
+						else {
+							$x = 0;
+							foreach($voicemail_ids as $voicemail_id) {
+								$sql_where_or[] = "voicemail_id = :voicemail_id_".$x;
+								$parameters['voicemail_id_'.$x] = $voicemail_id;
+								$x++;
+							}
+							$sql_where .= '('.implode(' or ', $sql_where_or).') ';
+						}
+						$sql .= $sql_where;
 						unset($sql_where_or);
 					}
 					else {

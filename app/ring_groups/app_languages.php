@@ -21,6 +21,26 @@ $text['title-ring_groups']['ru-ru'] = "Группа вызовов";
 $text['title-ring_groups']['sv-se'] = "Ringgrupper";
 $text['title-ring_groups']['uk-ua'] = "Групи";
 
+$text['title-ring_group']['en-us'] = "Ring Group";
+$text['title-ring_group']['ar-eg'] = "";
+$text['title-ring_group']['de-at'] = "Rufgruppen"; //copied from de-de
+$text['title-ring_group']['de-ch'] = "Rufgruppen"; //copied from de-de
+$text['title-ring_group']['de-de'] = "Rufgruppen";
+$text['title-ring_group']['es-cl'] = "Grupo de llamado";
+$text['title-ring_group']['es-mx'] = "Grupo de llamado"; //copied from es-cl
+$text['title-ring_group']['fr-ca'] = "Groupes de Sonnerie"; //copied from fr-fr
+$text['title-ring_group']['fr-fr'] = "Groupes de Sonnerie";
+$text['title-ring_group']['he-il'] = "קבוצות חיוג";
+$text['title-ring_group']['it-it'] = "Gruppi di Squillo";
+$text['title-ring_group']['nl-nl'] = "Bel groepen";
+$text['title-ring_group']['pl-pl'] = "Grupy odbiorców rozmów";
+$text['title-ring_group']['pt-br'] = "Configurações da Conta";
+$text['title-ring_group']['pt-pt'] = "Grupos";
+$text['title-ring_group']['ro-ro'] = "";
+$text['title-ring_group']['ru-ru'] = "Группа вызовов";
+$text['title-ring_group']['sv-se'] = "Ringgrupper";
+$text['title-ring_group']['uk-ua'] = "Групи";
+
 $text['option-simultaneous']['en-us'] = "Simultaneous";
 $text['option-simultaneous']['ar-eg'] = "";
 $text['option-simultaneous']['de-at'] = "gleichzeitig"; //copied from de-de

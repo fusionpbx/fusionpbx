@@ -301,9 +301,9 @@
 
 			$html = "<table border='0' cellpadding='1' cellspacing='0'>\n";
 			$html .= "<tr>\n";
-			$html .= "<td id=\"cell".urlencode($field_name)."1\">\n";
+			$html .= "<td id=\"cell".escape($field_name)."1\">\n";
 			$html .= "\n";
-			$html .= "<select id=\"".urlencode($field_name)."\" name=\"".urlencode($field_name)."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
+			$html .= "<select id=\"".escape($field_name)."\" name=\"".escape($field_name)."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
 			$html .= "<option value=''></option>\n";
 
 			$sql = "select distinct(".$field_name.") as ".$field_name." ";
@@ -313,7 +313,7 @@
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						$html .= "<option value=\"".urlencode($field[$field_name])."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".urlencode($field[$field_name])."</option>\n";
+						$html .= "<option value=\"".escape($field[$field_name])."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".escape($field[$field_name])."</option>\n";
 					}
 				}
 			}
@@ -1158,11 +1158,11 @@ function number_pad($number,$n) {
 				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
 
 				//return adjusted color in format received
-				if ($hash == '#') { //hex
+				if (isset($hash) && $hash == '#') { //hex
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
-						$hex .= $hex_color;
+						$hex = $hex_color;
 					}
 					return $hash.$hex;
 				}
@@ -1927,7 +1927,7 @@ function number_pad($number,$n) {
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 		function view_array($array, $exit = true) {
-			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			echo "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
 			$exit and exit();
 		}
 	}
@@ -2045,7 +2045,7 @@ function number_pad($number,$n) {
 			$limit = preg_replace($regex, '', $limit);
 			$offset = preg_replace($regex, '', $offset);
 			if (is_numeric($limit) && $limit > 0) {
-				$clause .= ' limit '.$limit;
+				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
 				$clause .= ' offset '.$offset;
 			}

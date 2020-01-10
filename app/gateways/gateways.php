@@ -123,7 +123,6 @@
 		$sql_search .= "or lower(auth_username) like :search ";
 		$sql_search .= "or lower(from_user) like :search ";
 		$sql_search .= "or lower(from_domain) like :search ";
-		$sql_search .= "or lower(from_domain) like :search ";
 		$sql_search .= "or lower(proxy) like :search ";
 		$sql_search .= "or lower(register_proxy) like :search ";
 		$sql_search .= "or lower(outbound_proxy) like :search ";
@@ -171,6 +170,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
+	$document['title'] = $text['title-gateways'];
 	require_once "resources/header.php";
 
 //show the content

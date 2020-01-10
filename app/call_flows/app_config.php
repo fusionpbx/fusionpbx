@@ -97,18 +97,22 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_feature_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the feature code.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_status";
@@ -117,10 +121,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the PIN number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the label.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_sound";
@@ -138,6 +144,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_flow_alternate_label";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_label";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the alternate label.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_alternate_sound";
@@ -156,6 +163,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 ?>

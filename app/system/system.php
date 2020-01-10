@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -166,6 +166,12 @@
 				echo "	<td class=\"row_style1\">$switch_git_info</td>\n";
 				echo "</tr>\n";
 			}
+			echo "<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "	".$text['label-php']." ".$text['label-version']."\n";
+			echo "	</td>\n";
+			echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
+			echo "</tr>\n";
 		}
 
 		echo "<tr>\n";

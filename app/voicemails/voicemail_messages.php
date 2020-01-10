@@ -31,8 +31,11 @@
 	require_once "resources/paging.php";
 
 //set the voicemail_uuid
-	if (is_uuid($_REQUEST["id"])) {
-		$voicemail_uuid = $_REQUEST["id"];
+	if (is_uuid($_REQUEST['id'])) {
+		$voicemail_uuid = $_REQUEST['id'];
+	}
+	else if (is_numeric($_REQUEST['id'])) {
+		$voicemail_id = $_REQUEST['id'];
 	}
 
 //download the message
@@ -161,7 +164,12 @@
 //get the voicemail
 	$vm = new voicemail;
 	$vm->domain_uuid = $_SESSION['domain_uuid'];
-	$vm->voicemail_uuid = $voicemail_uuid;
+	if (is_uuid($voicemail_uuid)) {
+		$vm->voicemail_uuid = $voicemail_uuid;
+	}
+	else if (is_numeric($voicemail_id)) {
+		$vm->voicemail_id = $voicemail_id;
+	}
 	$vm->order_by = $order_by;
 	$vm->order = $order;
 	$voicemails = $vm->messages();
@@ -284,8 +292,8 @@
 						echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 						echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					$style = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? "style='font-weight: bold;'" : null;
-					$list_row_link = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
-					echo "<tr class='list-row' href=\"".$list_row_link."\">\n";
+					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
+					echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
 					echo "	<td class='checkbox'>\n";
 					echo "		<input type='checkbox' name='voicemail_messages[$x][checked]' id='checkbox_".$x."' class='checkbox_".$field['voicemail_id']."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$field['voicemail_id']."').checked = false; }\">\n";
 					echo "		<input type='hidden' name='voicemail_messages[$x][uuid]' value='".escape($row['voicemail_message_uuid'])."' />\n";

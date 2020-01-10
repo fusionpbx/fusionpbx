@@ -41,6 +41,26 @@ $text['title-database_transaction']['ru-ru'] = "Изменение в базе �
 $text['title-database_transaction']['sv-se'] = "Transaktionsdatabas";
 $text['title-database_transaction']['uk-ua'] = "";
 
+$text['description-database_transactions']['en-us'] = "Track changes to the database. Track when the changes were made, the user and address of the user that made the changes. Provide an option to undo delete and update transactions.";
+$text['description-database_transactions']['ar-eg'] = "";
+$text['description-database_transactions']['de-at'] = "Datenbank Transaktionen"; //copied from de-de
+$text['description-database_transactions']['de-ch'] = "Datenbank Transaktionen"; //copied from de-de
+$text['description-database_transactions']['de-de'] = "Datenbank Transaktionen";
+$text['description-database_transactions']['es-cl'] = "";
+$text['description-database_transactions']['es-mx'] = "";
+$text['description-database_transactions']['fr-ca'] = "Transactions de base de données";
+$text['description-database_transactions']['fr-fr'] = "Transactions de base de données";
+$text['description-database_transactions']['he-il'] = "";
+$text['description-database_transactions']['it-it'] = "";
+$text['description-database_transactions']['nl-nl'] = "Database transacties";
+$text['description-database_transactions']['pl-pl'] = "";
+$text['description-database_transactions']['pt-br'] = "";
+$text['description-database_transactions']['pt-pt'] = "";
+$text['description-database_transactions']['ro-ro'] = "";
+$text['description-database_transactions']['ru-ru'] = "Изменения в базе данных";
+$text['description-database_transactions']['sv-se'] = "Databas Transaktioner";
+$text['description-database_transactions']['uk-ua'] = "";
+
 $text['label-user_uuid']['en-us'] = "User";
 $text['label-user_uuid']['ar-eg'] = "";
 $text['label-user_uuid']['de-at'] = "Benutzer"; //copied from de-de

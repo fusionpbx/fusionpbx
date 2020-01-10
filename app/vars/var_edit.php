@@ -180,13 +180,8 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include header
+	$document['title'] = $text['title-variable'];
 	require_once "resources/header.php";
-	if ($action == "add") {
-		$document['title'] = $text['title-var_add'];
-	}
-	if ($action == "update") {
-		$document['title'] = $text['title-var_edit'];
-	}
 
 //show contents
 	echo "<form method='post' name='frm' action=''>\n";

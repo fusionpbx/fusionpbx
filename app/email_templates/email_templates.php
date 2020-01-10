@@ -140,6 +140,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
+	$document['title'] = $text['title-email_templates'];
 	require_once "resources/header.php";
 
 //show the content

@@ -74,6 +74,21 @@
 				$domain_uuid = $_POST["domain_uuid"];
 			}
 
+		//delete the domain
+			if (permission_exists('domain_delete')) {
+				if ($_POST['action'] == 'delete' && is_uuid($domain_uuid)) {
+					//prepare
+						$array[0]['checked'] = 'true';
+						$array[0]['uuid'] = $domain_uuid;
+					//delete
+						$obj = new domains;
+						$obj->delete($array);
+					//redirect
+						header('Location: domains.php');
+						exit;
+				}
+			}
+
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -574,46 +589,49 @@
 	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
+	echo "<form method='post' id='frm' action=''>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo $text['header-domain-edit'];
+		echo "<b>".$text['header-domain']."</b>";
 	}
 	if ($action == "add") {
-		echo $text['header-domain-add'];
+		echo "<b>".$text['header-domain-add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('domain_add')) { //only for superadmin, not admin editing their own domain
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'domains.php']);
+	}
+	if (permission_exists('domain_delete') && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1 && $domain_uuid != $_SESSION['domain_uuid']) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists("domain_select") && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1) {
-		echo "		<select id='domains' class='formfld' style='width: auto; margin-right: 15px;' onchange=\"window.location.href='?id=' + document.getElementById('domains').options[document.getElementById('domains').selectedIndex].value;\">\n";
+		echo "<select id='domains' class='formfld' style='width: auto;' onchange=\"window.location.href='?id=' + document.getElementById('domains').options[document.getElementById('domains').selectedIndex].value;\">\n";
 		foreach ($_SESSION['domains'] as $domain) {
 			$selected = $domain["domain_uuid"] == $domain_uuid ? "selected='selected'" : null;
-			echo "		<option value='".escape($domain["domain_uuid"])."' ".$selected.">".escape($domain["domain_name"])."</option>\n";
+			echo "	<option value='".escape($domain["domain_uuid"])."' ".$selected.">".escape($domain["domain_name"])."</option>\n";
 		}
-		echo "		</select>\n";
+		echo "</select>";
 	}
 	if (permission_exists('domain_export')) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)."'\" value='".$text['button-export']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>PROJECT_PATH."/app/domain_export/index.php?id=".escape($domain_uuid)]);
 	}
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	if ($action == "update") {
-		echo $text['description-domain-edit'];
+		echo $text['description-domain-edit']."\n";
 	}
 	if ($action == "add") {
-		echo $text['description-domain-add'];
+		echo $text['description-domain-add']."\n";
 	}
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -657,8 +675,6 @@
 		echo "		<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
