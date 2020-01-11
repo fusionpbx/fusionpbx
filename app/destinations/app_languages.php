@@ -61,6 +61,26 @@ $text['title-destination-add']['ru-ru'] = "Направление";
 $text['title-destination-add']['sv-se'] = "Destination";
 $text['title-destination-add']['uk-ua'] = "Номер";
 
+$text['title-destination_import']['en-us'] = "Destination Import";
+$text['title-destination_import']['ar-eg'] = "";
+$text['title-destination_import']['de-at'] = "Importieren"; //copied from de-de
+$text['title-destination_import']['de-ch'] = "Importieren"; //copied from de-de
+$text['title-destination_import']['de-de'] = "Importieren";
+$text['title-destination_import']['es-cl'] = "Importar";
+$text['title-destination_import']['es-mx'] = "Importar"; //copied from es-cl
+$text['title-destination_import']['fr-ca'] = "Importe"; //copied from fr-fr
+$text['title-destination_import']['fr-fr'] = "Importe";
+$text['title-destination_import']['he-il'] = "";
+$text['title-destination_import']['it-it'] = "";
+$text['title-destination_import']['nl-nl'] = "Importeer Bestemmingen";
+$text['title-destination_import']['pl-pl'] = "Importuj";
+$text['title-destination_import']['pt-br'] = "Importar"; //copied from pt-pt
+$text['title-destination_import']['pt-pt'] = "Importar";
+$text['title-destination_import']['ro-ro'] = "";
+$text['title-destination_import']['ru-ru'] = "Импорт";
+$text['title-destination_import']['sv-se'] = "Importera";
+$text['title-destination_import']['uk-ua'] = "Імпортувати";
+
 $text['button-outbound']['en-us'] = "Outbound";
 $text['button-outbound']['ar-eg'] = "صادر";
 $text['button-outbound']['de-at'] = "Ausgehend"; //copied from de-de
@@ -781,7 +801,7 @@ $text['header-destination-add']['ru-ru'] = "Направление";
 $text['header-destination-add']['sv-se'] = "Destination";
 $text['header-destination-add']['uk-ua'] = "Номер";
 
-$text['header-destination_import']['en-us'] = "Import Destinations";
+$text['header-destination_import']['en-us'] = "Destination Import";
 $text['header-destination_import']['ar-eg'] = "";
 $text['header-destination_import']['de-at'] = "Importieren"; //copied from de-de
 $text['header-destination_import']['de-ch'] = "Importieren"; //copied from de-de
