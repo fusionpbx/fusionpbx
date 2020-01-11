@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -71,6 +71,14 @@
 //process the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
 		//build the dialplan array
 			$x = 0;
 			//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
@@ -108,9 +116,13 @@
 	$setting_indenting = $_SESSION["editor"]["indent_guides"]["boolean"] != '' ? $_SESSION["editor"]["indent_guides"]["boolean"] : 'false';
 	$setting_numbering = $_SESSION["editor"]["line_numbers"]["boolean"] != '' ? $_SESSION["editor"]["line_numbers"]["boolean"] : 'true';
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
-	require_once "resources/header.php";
 	$document['title'] = $text['title-dialplan_edit'].' XML';
+	require_once "resources/header.php";
 
 //scripts and styles
 	echo "<script language='JavaScript' type='text/javascript'>\n";
@@ -178,26 +190,20 @@
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
-	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
-	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-dialplan_edit']." XML</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','onclick'=>"set_value(); $('#frm').submit();"]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-dialplan-edit']."\n";
+	echo "<br />\n";
+
 	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".$dialplan_xml."</textarea>";
-	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
-	echo "		<tr>\n";
-	echo "			<td align='left' width='30%'>\n";
-	echo "				<span class='title'>".$text['title-dialplan_edit']." XML</span><br />\n";
-	echo "			</td>\n";
-	echo "			<td width='70%' align='right'>\n";
-	echo "				<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
-	echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick=\"set_value(); $('#frm').submit();\">\n";
-	echo "			</td>\n";
-	echo "		</tr>\n";
-	echo "		<tr>\n";
-	echo "			<td align='left' colspan='2'>\n";
-	echo "				".$text['description-dialplan-edit']."\n";
-	echo "			</td>\n";
-	echo "		</tr>\n";
-	echo "	</table>";
-	//echo "	<br />\n";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "		<tr>\n";
 	echo "			<td valign='middle' style='padding: 0 6px;' width='100%'><span id='description'></span></td>\n";
@@ -208,7 +214,7 @@
 // 	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_replace.png' title='Show Find/Replace [Ctrl+H]' class='control' onclick=\"editor.execCommand('replace');\"></td>\n";
 	echo "			<td valign='middle' style='padding-left: 6px;'><img src='resources/images/icon_goto.png' title='Show Go To Line' class='control' onclick=\"editor.execCommand('gotoline');\"></td>\n";
 	echo "			<td valign='middle' style='padding-left: 4px;'>\n";
-	echo "				<select id='size' style='height: 23px;' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
+	echo "				<select id='size' class='formfld' onchange=\"document.getElementById('editor').style.fontSize = this.options[this.selectedIndex].value; focus_editor();\">\n";
 	$sizes = explode(',','9px,10px,11px,12px,14px,16px,18px,20px');
 	if (!in_array($setting_size, $sizes)) {
 		echo "				<option value='".$setting_size."'>".escape($setting_size)."</option>\n";
@@ -221,7 +227,7 @@
 	echo "				</select>\n";
 	echo "			</td>\n";
 	echo "			<td valign='middle' style='padding-left: 4px; padding-right: 0px;'>\n";
-	echo "				<select id='theme' style='height: 23px;' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
+	echo "				<select id='theme' class='formfld' onchange=\"editor.setTheme('ace/theme/' + this.options[this.selectedIndex].value); focus_editor();\">\n";
 	$themes['Light']['chrome']= 'Chrome';
 	$themes['Light']['clouds']= 'Clouds';
 	$themes['Light']['crimson_editor']= 'Crimson Editor';
@@ -270,9 +276,13 @@
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	<div id='editor'></div>\n";
+	echo "	<br />\n";
+
+	echo "	<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
+	echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";
-
 
 	echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/ace/ace.js' charset='utf-8'></script>\n";
 	echo "<script type='text/javascript'>\n";
