@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,9 +43,10 @@
 	$text = $language->get();
 
 //get the http post data
+	$search = $_REQUEST['search'];
+	$default_setting_category = $_REQUEST['default_setting_category'];
 	if (is_array($_POST['default_settings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
 		$domain_uuid = $_POST['domain_uuid'];
 		$default_settings = $_POST['default_settings'];
 	}
@@ -82,24 +83,23 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search string
-	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
-		$sql_search .= "	lower(default_setting_category) like :search ";
-		$sql_search .= "	or lower(default_setting_subcategory) like :search ";
-		$sql_search .= "	or lower(default_setting_name) like :search ";
-		$sql_search .= "	or lower(default_setting_value) like :search ";
-		$sql_search .= "	or lower(default_setting_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
 //get the count
 	$sql = "select count(default_setting_uuid) from v_default_settings ";
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
+	if (isset($search) && strlen($search) > 0) {
+		$sql .= "where (";
+		$sql .= "	lower(default_setting_category) like :search ";
+		$sql .= "	or lower(default_setting_subcategory) like :search ";
+		$sql .= "	or lower(default_setting_name) like :search ";
+		$sql .= "	or lower(default_setting_value) like :search ";
+		$sql .= "	or lower(default_setting_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($default_setting_category) && strlen($default_setting_category) > 0) {
+		$sql .= (stripos($sql,'WHERE') === false) ? 'where ' : 'and ';
+		$sql .= "lower(default_setting_category) = :default_setting_category ";
+		$parameters['default_setting_category'] = strtolower($default_setting_category);
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -111,7 +111,7 @@
 	$default_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//determine categories
+//get the list of categories
 	if (is_array($default_settings) && @sizeof($default_settings) != 0) {
 		foreach ($default_settings as $default_setting) {
 			$category = strtolower($default_setting['default_setting_category']);
@@ -143,44 +143,19 @@
 //copy settings javascript
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "<script language='javascript' type='text/javascript'>\n";
-		echo "	var fade_speed = 400;\n";
 		echo "	function show_domains() {\n";
 		echo "		document.getElementById('action').value = 'copy';\n";
-		echo "		$('#button_copy').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_back').fadeIn(fade_speed);\n";
-		echo "			$('#target_domain_uuid').fadeIn(fade_speed);\n";
-		echo "			$('#button_paste').fadeIn(fade_speed);\n";
-		echo "		});";
+		echo "		document.getElementById('button_copy').style.display = 'none'; \n";
+		echo "		document.getElementById('button_back').style.display = 'inline'; \n";
+		echo "		document.getElementById('target_domain_uuid').style.display = 'inline'; \n";
+		echo "		document.getElementById('button_paste').style.display = 'inline'; \n";
 		echo "	}";
 		echo "	function hide_domains() {\n";
 		echo "		document.getElementById('action').value = '';\n";
-		echo "		$('#button_back').fadeOut(fade_speed);\n";
-		echo "		$('#target_domain_uuid').fadeOut(fade_speed);\n";
-		echo "		$('#button_paste').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_copy').fadeIn(fade_speed);\n";
-		echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
-		echo "		});\n";
-		echo "	}\n";
-		echo "</script>";
-	}
-
-//show category javascript
-	if (is_array($categories) && @sizeof($categories) != 0) {
-		echo "<script language='javascript' type='text/javascript'>\n";
-		echo "	function show_category(category) {\n";
-		echo "		var n;\n";
-		echo "		var c = document.getElementsByClassName('category');\n";
-		echo "		if (category != '') {\n";
-		echo "			for (n = 0; n < c.length; n++) {\n";
-		echo "				c[n].style.display = 'none';\n";
-		echo "			}\n";
-		echo "			document.getElementById('category_'+category).style.display = 'block';\n";
-		echo "		}\n";
-		echo "		else {\n";
-		echo "			for (n = 0; n < c.length; n++) {\n";
-		echo "				c[n].style.display = 'block';\n";
-		echo "			}\n";
-		echo "		}\n";
+		echo "		document.getElementById('button_back').style.display = 'none'; \n";
+		echo "		document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
+		echo "		document.getElementById('button_paste').style.display = 'none'; \n";
+		echo "		document.getElementById('button_copy').style.display = 'inline'; \n";
 		echo "	}\n";
 		echo "</script>";
 	}
@@ -197,7 +172,7 @@
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'button_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>'show_domains();']);
 			echo button::create(['type'=>'button','label'=>$text['button-back'],'id'=>'button_back','icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'display: none;','onclick'=>'hide_domains();']);
-			echo 		"<select class='formfld' style='display: none; width: auto;' id='target_domain_uuid' onchange=\"document.getElementById('domain_uuid').value = this.options[this.selectedIndex].value;\">\n";
+			echo 		"<select name='domain_uuid'; class='formfld' style='display: none; width: auto;' id='target_domain_uuid' onchange=\"document.getElementById('domain_uuid').value = this.options[this.selectedIndex].value;\">\n";
 			echo "			<option value=''>".$text['label-domain']."...</option>\n";
 			foreach ($_SESSION['domains'] as $domain) {
 				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
@@ -214,17 +189,19 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (is_array($categories) && @sizeof($categories) != 0) {
-		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='show_category(this.options[this.selectedIndex].value);'>\n";
-		echo "			<option value='' selected='selected'>".$text['label-category']."...</option>\n";
-		foreach ($categories as $category_original => $category) {
-			echo "		<option value='".escape($category_original)."'>".escape($category['formatted'])." (".$category['count'].")</option>\n";
+		echo 		"<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
+		echo "			<option value=''>".$text['label-category']."...</option>\n";
+		foreach ($categories as $category_name => $category) {
+			$selected = ($_GET['default_setting_category'] == $category_name) ? " selected='selected'" : "";
+			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted'])." (".$category['count'].")</option>\n";
 		}
 		echo "			<option value=''>".$text['label-all']." (".$num_rows.")</option>\n";
 		echo "		</select>";
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? '' : null)]);
+	//echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
