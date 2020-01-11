@@ -96,26 +96,26 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 
 	if ($page_number > 0) {
 		$page = $page_number - 1;
-		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>($mini ? 'chevron-left' : null),'link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
-		$first = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>($mini ? 'chevron-left' : null),'link'=>$self."?page=1".$sanitized_parameters]);
+		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-left','link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$first = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-left','link'=>$self."?page=1".$sanitized_parameters]);
 	}
 	else {
-		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>($mini ? 'chevron-left' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
+		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-left','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	if (($page_number + 1) < $max_page) {
 		$page = $page_number + 1;
-		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
-		$last = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$max_page.$sanitized_parameters]);
+		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$last = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-right','link'=>$self."?page=".$max_page.$sanitized_parameters]);
 	}
 	else {
-		$last = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>($mini ? 'chevron-right' : null),'link'=>$self."?page=".$max_page.$sanitized_parameters]);
-		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>($mini ? 'chevron-right' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
+		$last = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','link'=>$self."?page=".$max_page.$sanitized_parameters]);
+		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	//if the result count is less than the rows per page then this is the last page of results
 	if ($result_count > 0 and $result_count < $rows_per_page) {
-		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>($mini ? 'chevron-right' : null),'onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
+		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>'chevron-right','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	$array = array();
