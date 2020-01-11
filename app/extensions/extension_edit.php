@@ -1719,7 +1719,6 @@
 	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 	echo "		<td width=\"70%\" class=\"vtable\">\n";
 	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
-// 	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
