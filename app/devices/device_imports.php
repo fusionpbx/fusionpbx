@@ -93,7 +93,7 @@
 
 		//get the schema
 			$x = 0;
-			include ("app/devices/app_config.php");
+			include "app/devices/app_config.php";
 			$i = 0;
 			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
@@ -113,7 +113,7 @@
 					$table_name == "device_keys" || $table_name == "device_settings") {
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
-					foreach($table['fields'] as $row) {
+					foreach ($table['fields'] as $row) {
 						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
@@ -136,6 +136,18 @@
 
 //match the column names to the field names
 	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: device_imports.php');
+				exit;
+			}
+
+		//create token
+			$object = new token;
+			$token = $object->create($_SERVER['PHP_SELF']);
 
 		//include header
 			$document['title'] = $text['title-device_import'];
@@ -163,13 +175,13 @@
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
-				echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
-				echo "</td>\n";
-				echo "<td width='70%' class='vtable' align='left'>\n";
-				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
-				echo "    			<option value=''></option>\n";
+				echo "	</td>\n";
+				echo "	<td width='70%' class='vtable' align='left'>\n";
+				echo "    	<select class='formfld' style='' name='fields[$x]'>\n";
+				echo "    		<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
@@ -183,26 +195,21 @@
 					}
 					echo "			</optgroup>\n";
 				}
-				echo "    			</select>\n";
+				echo "    	</select>\n";
 				//echo "<br />\n";
 				//echo $text['description-zzz']."\n";
-				echo "			</td>\n";
-				echo "		</tr>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				$x++;
 			}
 
-			echo "		<tr>\n";
-			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "				<input name='action' type='hidden' value='import'>\n";
-			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+			echo "</table>\n";
 
-			echo "	</table>\n";
-
-			echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+			echo "<input name='action' type='hidden' value='import'>\n";
+			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
 
@@ -237,13 +244,9 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: users.php');
+				header('Location: device_imports.php');
 				exit;
 			}
-
-		//form to match the fields to the column names
-			//$document['title'] = $text['title-device_import'];
-			//require_once "resources/header.php";
 
 		//user selected fields
 			$fields = $_POST['fields'];
@@ -441,25 +444,20 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "			".$text['label-import_file_upload']."\n";
+	echo "	".$text['label-import_file_upload']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "			<input name='ulfile' type='file' class='formfld fileinput' id='ulfile'>\n";
-	echo "<br />\n";
+	echo "	<input name='ulfile' type='file' class='formfld fileinput' id='ulfile'>\n";
+	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td valign='bottom'>\n";
-	echo "			&nbsp;\n";
-	echo "		</td>\n";
-	echo "		<td valign='bottom' align='right' nowrap>\n";
-	echo "			<input name='type' type='hidden' value='csv'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
+	echo "</table>\n";
 	echo "<br><br>";
+
+	echo "<input name='type' type='hidden' value='csv'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

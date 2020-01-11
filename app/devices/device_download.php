@@ -77,12 +77,12 @@
 
 
 //define possible columns in the array
-	$allowed_columns[] = 'device_uuid';
-	$allowed_columns[] = 'domain_uuid';
-	$allowed_columns[] = 'device_mac_address';
-	$allowed_columns[] = 'device_label';
-	$allowed_columns[] = 'device_template';
-	$allowed_columns[] = 'device_description';
+	$available_columns[] = 'device_uuid';
+	$available_columns[] = 'domain_uuid';
+	$available_columns[] = 'device_mac_address';
+	$available_columns[] = 'device_label';
+	$available_columns[] = 'device_template';
+	$available_columns[] = 'device_description';
 
 //get the devices and send them as output
 	$column_group = $_REQUEST["column_group"];
@@ -98,7 +98,7 @@
 
 		//validate columns
 			foreach ($column_group as $index => $column_name) {
-				if (!in_array($column_name, $allowed_columns)) {
+				if (!in_array($column_name, $available_columns)) {
 					unset($column_group[$index]);
 				}
 			}
@@ -115,7 +115,7 @@
 				//print_r($extensions);
 
 				if (is_array($devices) && @sizeof($devices) != 0) {
-					download_send_headers("data_export_".date("Y-m-d").".csv");
+					download_send_headers("device_export_".date("Y-m-d").".csv");
 					echo array2csv($devices);
 					exit;
 				}
@@ -134,7 +134,7 @@
 //show the content
 	echo "<form method='post' name='frm'>\n";
 
-	echo "<div class='action_bar sub'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device_export']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'devices.php']);
@@ -146,21 +146,20 @@
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($allowed_columns ?: "style='visibility: hidden;'").">\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
 	echo "	</th>\n";
 	echo "	<th>".$text['label-column_name']."</th>\n";
-	echo "	<th>".$text['label-description']."</th>\n";
 	echo "</tr>\n";
 
-	if (is_array($allowed_columns) && @sizeof($allowed_columns) != 0) {
+	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
 		$x = 0;
-		foreach ($allowed_columns as $column_name) {
+		foreach ($available_columns as $column_name) {
+			$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
 			echo "	</td>\n";
-			echo "	<td>".$column_name."</td>";
-			echo "	<td class='description overflow hide-sm-dn'>&nbsp;</td>";
+			echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
 			echo "</tr>";
 			$x++;
 		}
