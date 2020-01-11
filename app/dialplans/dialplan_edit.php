@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -258,7 +258,6 @@
 		$dialplan_destination = 'false';
 	}
 
-
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
 	$sql .= "where dialplan_uuid = :dialplan_uuid ";
@@ -360,8 +359,8 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	$document['title'] = $text['title-dialplan_edit'];
+	require_once "resources/header.php";
 
 //javascript to change select to input and back again
 	?><script language="javascript">
@@ -394,34 +393,28 @@
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 	</script>
-<?php
+	<?php
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='1'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width='30%'>\n";
-	echo "			<span class='title'>".$text['title-dialplan_edit']."</span><br />\n";
-	echo "		</td>\n";
-	echo "		<td width='70%' align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".(is_uuid($app_uuid) ? "?app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-back']."'>\n";
-	if (permission_exists('dialplan_xml')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-xml']."' onclick=\"window.location='dialplan_xml.php?id=".escape($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".escape($app_uuid) : null)."';\" value='".$text['button-xml']."'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-dialplan_edit']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'dialplans.php'.(is_uuid($app_uuid) ? "?app_uuid=".urlencode($app_uuid) : null)]);
+	if ($action == 'update') {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>'margin-left: 15px;','link'=>'dialplan_copy.php?id='.urlencode($dialplan_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+		if (permission_exists('dialplan_xml')) {
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','link'=>'dialplan_xml.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "?app_uuid=".urlencode($app_uuid) : null)]);
+		}
 	}
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){ window.location='dialplan_copy.php?id=".escape($dialplan_uuid)."'; }\" value='".$text['button-copy']."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-dialplan-edit']."\n";
-	echo "			\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>";
-	echo "<br />\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-dialplan-edit']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -885,15 +878,14 @@
 
 	} //end if update
 
-	echo "<br>\n";
-	echo "<div align='right'>\n";
+	echo "<br /><br />\n";
+
+	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
 	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</div>\n";
-	echo "<br><br>\n";
+
 	echo "</form>";
 
 //show the footer
