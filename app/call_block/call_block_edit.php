@@ -359,7 +359,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	function call_block_action_select($label = false) {
 		global $text, $call_block_app, $call_block_data, $extensions, $voicemails;
-		echo "	<select class='formfld' name='call_block_action'>\n";
+		echo "<select class='formfld' name='call_block_action'>\n";
 		if ($label) {
 			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
 		}
@@ -401,7 +401,7 @@
 				echo "	</optgroup>\n";
 			}
 		}
-		echo "	</select>\n";
+		echo "	</select>";
 	}
 	call_block_action_select();
 	echo "<br />\n";
@@ -503,7 +503,7 @@
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'call_block.php']);
 		if (permission_exists('call_block_all')) {
-			echo "	<select class='formfld' name='extension_uuid'>\n";
+			echo 	"<select class='formfld' name='extension_uuid'>\n";
 			echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
 			echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
 			if (is_array($extensions) && sizeof($extensions) != 0) {
@@ -512,11 +512,11 @@
 					echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
 				}
 			}
-			echo "	</select>\n";
+			echo "	</select>";
 		}
 		call_block_action_select(true);
 		echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-		echo "	</div>\n";
+		echo 	"</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
 
