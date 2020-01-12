@@ -378,11 +378,21 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		}
 
 	//handle action bar style on scroll
-		window.addEventListener('scroll', action_bar_scroll , false);
-		function action_bar_scroll() {
-			if (document.getElementById('action_bar')) {
-				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
-				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
+		window.addEventListener('scroll', function(){
+			action_bar_scroll('action_bar', 20);
+		}, false);
+		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
+			if (document.getElementById(action_bar_id)) {
+				//sticky
+					if (this.scrollY > scroll_position) {
+						document.getElementById(action_bar_id).classList.add('scroll');
+						if (typeof function_sticky === 'function') { function_sticky(); }
+					}
+				//inline
+					if (this.scrollY < scroll_position) {
+						document.getElementById(action_bar_id).classList.remove('scroll');
+						if (typeof function_inline === 'function') { function_inline(); }
+					}
 			}
 		}
 
