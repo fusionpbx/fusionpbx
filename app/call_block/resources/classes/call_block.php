@@ -21,6 +21,13 @@ if (!class_exists('call_block')) {
 		private $toggle_values;
 
 		/**
+		 * declare public variables
+		 */
+		public $extension_uuid;
+		public $call_block_app;
+		public $call_block_data;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
@@ -270,7 +277,131 @@ if (!class_exists('call_block')) {
 			}
 		}
 
-	}
+		/**
+		 * add records
+		 */
+		public function add($records) {
+			if (permission_exists($this->permission_prefix.'add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//add the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter checked records
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+
+						//get the caller id info from cdrs
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select caller_id_name, caller_id_number from v_xml_cdr ";
+								$sql .= "where xml_cdr_uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								unset($sql);
+							}
+
+						//loop through records
+							if (is_array($rows) && @sizeof($rows) != 0) {
+								foreach ($rows as $x => $row) {
+
+									//build insert array
+										if (permission_exists('call_block_all')) {
+											$array['call_block'][$x]['call_block_uuid'] = uuid();
+											$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											if (is_uuid($this->extension_uuid)) {
+												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
+											}
+											$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+											$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+											$array['call_block'][$x]['call_block_count'] = 0;
+											$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
+											$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
+											$array['call_block'][$x]['call_block_enabled'] = 'true';
+											$array['call_block'][$x]['date_added'] = time();
+											$x++;
+										}
+										else {
+											if (is_array($_SESSION['user']['extension'])) {
+												foreach ($_SESSION['user']['extension'] as $field) {
+													if (is_uuid($field['extension_uuid'])) {
+														$array['call_block'][$x]['call_block_uuid'] = uuid();
+														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
+														$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+														$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+														$array['call_block'][$x]['call_block_count'] = 0;
+														$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
+														$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
+														$array['call_block'][$x]['call_block_enabled'] = 'true';
+														$array['call_block'][$x]['date_added'] = time();
+														$x++;
+													}
+												}
+											}
+										}
+
+								}
+							}
+
+						//add records
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//ensure call block is enabled in the dialplan (build update array)
+									$sql = "select dialplan_uuid from v_dialplans ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and app_uuid = '".$this->app_uuid."' ";
+									$sql .= "and dialplan_enabled <> 'true' ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$database = new database;
+									$rows = $database->select($sql, $parameters);
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										foreach ($rows as $x => $row) {
+											$array['dialplans'][$x]['dialplan_uuid'] = $row['dialplan_uuid'];
+											$array['dialplans'][$x]['dialplan_enabled'] = 'true';
+										}
+									}
+									unset($rows, $parameters);
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('dialplan_edit', 'temp');
+
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									$response = $database->message;
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('dialplan_edit', 'temp');
+
+								//set message
+									message::add($text['message-add']);
+
+							}
+
+					}
+
+			}
+		} //method
+
+	} //class
 }
 
 ?>
