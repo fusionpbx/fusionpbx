@@ -872,39 +872,39 @@
 	echo "</script>";
 
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
-	if (is_numeric($page)) {
-		echo "<input type='hidden' name='page' value='".$page."'>\n";
-	}
-	echo "<table width='100%' border='0' cellpdding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
-		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-add']."</b></td>\n";
+		echo "<b>".$text['header-extension-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-edit']."</b></td>\n";
+		echo "<b>".$text['header-extension-edit']."</b>";
 	}
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php".(is_numeric($page) ? '?page='.$page : null)."'\" value='".$text['button-back']."'>\n";
+	echo 	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extensions.php'.(is_numeric($page) ? '?page='.$page : null)]);
 	if ($action == 'update' && permission_exists('xml_cdr_view')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-cdr']."' onclick=\"window.location='../xml_cdr/xml_cdr.php?extension_uuid=".urlencode($extension_uuid)."';\" value='".$text['button-cdr']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
 	}
-	
 	if ($action == 'update' && (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
-		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".urlencode($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-call_routing'],'icon'=>'project-diagram','link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
 	}
 	if ($action == "update" && permission_exists('extension_copy')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"copy_extension();"]);
 	}
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
-	echo "	<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-extension']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
@@ -1006,8 +1006,7 @@
 			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
-		echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
-
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
 		echo "			<br />\n";
@@ -1178,7 +1177,7 @@
 			echo "</select>\n";
 			echo "		</td>\n";
 			echo "		<td>\n";
-			echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
+			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 			echo "		</td>\n";
 			echo "		</table>\n";
 			echo "		<br />\n";
@@ -1719,7 +1718,7 @@
 	echo "		<tr>\n";
 	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
@@ -1955,24 +1954,24 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
-		echo "		<input type='hidden' name='id' id='id' value='".escape($extension_uuid)."'>";
-		if (!permission_exists('extension_domain')) {
-			echo "		<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
-		}
-		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
-		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if (is_numeric($page)) {
+		echo "<input type='hidden' name='page' value='".$page."'>\n";
+	}
+	if ($action == "update") {
+		echo "<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
+		echo "<input type='hidden' name='id' id='id' value='".escape($extension_uuid)."'>";
+		if (!permission_exists('extension_domain')) {
+			echo "<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+		}
+		echo "<input type='hidden' name='delete_type' id='delete_type' value=''>";
+		echo "<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

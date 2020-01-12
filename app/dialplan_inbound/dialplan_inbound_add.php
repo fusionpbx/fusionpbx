@@ -27,9 +27,10 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('inbound_route_add')) {
@@ -43,11 +44,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//includes and title
-	require_once "resources/header.php";
-	$document['title'] = $text['title-dialplan-inbound-add'];
-	require_once "resources/paging.php";
 
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"];
@@ -123,6 +119,14 @@
 
 //process the http post data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: '.PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4');
+				exit;
+			}
 
 		//check for all required data
 			if (strlen($domain_uuid) == 0) { $msg .= "".$text['label-required-domain_uuid']."<br>\n"; }
@@ -427,6 +431,14 @@
 //initialize the destinations object
 	$destination = new destinations;
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-dialplan-inbound-add'];
+	require_once "resources/header.php";
+
 ?>
 
 <script type="text/javascript">
@@ -458,36 +470,29 @@
 </script>
 
 <?php
+
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['title-dialplan-inbound-add']."</span>\n";
-	echo "		</td>\n";
-	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'\" value='".$text['button-back']."'>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-dialplan-inbound-add']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4']);
 	if (permission_exists("inbound_route_advanced")) {
 		if (permission_exists("inbound_route_edit") && $action == "advanced") {
-			echo "			<input type='button' class='btn' name='' alt='".$text['button-basic']."' onclick=\"window.location='dialplan_inbound_add.php?action=basic'\" value='".$text['button-basic']."'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-basic'],'icon'=>'hammer','style'=>'margin-left: 15px;','link'=>'dialplan_inbound_add.php?action=basic']);
 		}
 		else {
-			echo "			<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"window.location='dialplan_inbound_add.php?action=advanced'\" value='".$text['button-advanced']."'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>'margin-left: 15px;','link'=>'dialplan_inbound_add.php?action=advanced']);
 		}
 	}
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			<br />";
-	echo "			".$text['description-dialplan-inbound-add']."\n";
-	echo "			<br />\n";
-	echo "			</span>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>";
-	echo "<br />\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-dialplan-inbound-add']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -799,18 +804,14 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "	<td colspan='5' align='right'>\n";
+	echo "</table>";
+	echo "<br><br>";
+
 	if ($action == "update" && permission_exists("inbound_route_edit")) {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
-	echo "		<br>";
-	echo "		<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</table>";
-	echo "<br><br>";
 	echo "</form>";
 
 //include the footer
