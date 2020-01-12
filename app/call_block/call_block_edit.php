@@ -288,11 +288,11 @@
 
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'call_block.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
 	if ($action == 'update' && permission_exists('call_block_delete')) {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -498,9 +498,10 @@
 		echo "<form id='form_list' method='post'>\n";
 		echo "<input type='hidden' id='action' name='action' value='add'>\n";
 
-		echo "<div class='action_bar sub'>\n";
-		echo "	<div class='heading'><b>".$text['label-edit-add-recent']."</b></div>\n";
+		echo "<div class='action_bar' id='action_bar_sub'>\n";
+		echo "	<div class='heading'><b id='heading_sub'>".$text['heading-recent_calls']."</b></div>\n";
 		echo "	<div class='actions'>\n";
+		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'call_block.php']);
 		if (permission_exists('call_block_all')) {
 			echo "	<select class='formfld' name='extension_uuid'>\n";
 			echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
@@ -514,7 +515,7 @@
 			echo "	</select>\n";
 		}
 		call_block_action_select(true);
-		echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
@@ -537,11 +538,11 @@
 				$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
 				$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 				if (strlen($row['caller_id_number']) >= 7) {
-					if (defined('TIME_24HR') && TIME_24HR == 1) {
+					if ($_SESSION['domain']['time_format']['text'] == '24h') {
 						$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
 					}
 					else {
-						$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('h:i:sa', $row['start_epoch']).'</span>';
+						$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('h:i:s a', $row['start_epoch']).'</span>';
 					}
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td class='checkbox'>\n";
@@ -580,7 +581,7 @@
 					}
 					echo "	<td ".$list_row_onclick_toggle.">".$row['caller_id_name']." </td>\n";
 					echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_id_number'])."</td>\n";
-					echo "	<td ".$list_row_onclick_toggle.">".$tmp_start_epoch."</td>\n";
+					echo "	<td class='no-wrap' ".$list_row_onclick_toggle.">".$tmp_start_epoch."</td>\n";
 					$seconds = ($row['hangup_cause'] == "ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //if they cancelled, show the ring time, not the bill time.
 					echo "	<td class='right hide-sm-dn' ".$list_row_onclick_toggle.">".gmdate("G:i:s", $seconds)."</td>\n";
 					echo "</tr>\n";
@@ -597,6 +598,24 @@
 		echo "</form>\n";
 
 	}
+
+//make sub action bar sticky
+	echo "<script>\n";
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 480, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('heading_sub').innerHTML = \"".$text['heading-block_recent_calls']."\";\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('heading_sub').innerHTML = \"".$text['heading-recent_calls']."\";\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
