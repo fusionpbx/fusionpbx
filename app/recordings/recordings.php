@@ -152,7 +152,7 @@
 	}
 
 //get existing recordings
-	$sql = "select recording_uuid, recording_filename, recording_base64 ";
+	$sql = "select recording_uuid, recording_filename, case when recording_base64 = '' then false else true end as base64_exists ";
 	$sql .= "from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
@@ -161,11 +161,21 @@
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as &$row) {
 			$array_recordings[$row['recording_uuid']] = $row['recording_filename'];
-			$array_base64_exists[$row['recording_uuid']] = ($row['recording_base64'] != '') ? true : false;
+			$array_base64_exists[$row['recording_uuid']] = $row['base64_exists'];
 			//if not base64, convert back to local files and remove base64 from db
-			if ($_SESSION['recordings']['storage_type']['text'] != 'base64' && $row['recording_base64'] != '') {
+			if ($_SESSION['recordings']['storage_type']['text'] != 'base64' && $row['base64_exists'] === true) {
 				if (!file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'])) {
-					$recording_decoded = base64_decode($row['recording_base64']);
+					$sql2 = "select recording_base64 ";
+					$sql2 .= "from v_recordings ";
+					$sql2 .= "where domain_uuid = :domain_uuid ";
+					$sql2 .= "and recording_uuid = :recording_uuid ";
+					$parameters2['recording_uuid'] = $row['recording_uuid'];
+					$parameters2['domain_uuid'] = $domain_uuid;
+					$database = new database;
+					$result2 = $database->select($sql2, $parameters2, 'all');
+					foreach ($result2 as &$row2) {
+						$recording_decoded = base64_decode($row2['recording_base64']);
+					}
 					file_put_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['recording_filename'], $recording_decoded);
 					//build array
 						$array['recordings'][0]['recording_uuid'] = $row['recording_uuid'];
@@ -186,7 +196,7 @@
 			}
 		}
 	}
-	unset($sql, $parameters, $result, $row);
+	unset($sql, $parameters, $result, $result2, $row, $row2);
 
 //add recordings to the database
 	if (is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/')) {
