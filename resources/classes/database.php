@@ -1286,6 +1286,9 @@ include "root.php";
 														elseif ($array_value === "now()") {
 															$sql .= "now(), ";
 														}
+														elseif ($array_value === "NOW() at time zone 'utc'") {
+															$sql .= "NOW() at time zone 'utc', ";
+														}
 														else {
 															//$sql .= "'".check_str($array_value)."', ";
 															$sql .= ':'.$array_key.", ";
