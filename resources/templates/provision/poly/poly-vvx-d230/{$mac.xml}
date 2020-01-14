@@ -1295,11 +1295,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="{literal}([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli)){/literal}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{literal}{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}{/literal}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1307,7 +1307,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{literal}{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}{/literal}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1412,11 +1412,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1424,7 +1424,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1529,11 +1529,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1541,7 +1541,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1646,11 +1646,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1658,7 +1658,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1763,11 +1763,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1775,7 +1775,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1880,11 +1880,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -1892,7 +1892,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -1997,11 +1997,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -2009,7 +2009,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -2114,11 +2114,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -2126,7 +2126,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -2231,11 +2231,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -2243,7 +2243,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -2348,11 +2348,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]S9|[1-9][0-9]S9|911|**0|***|#|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{***:aa2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundServices</N>
@@ -2360,7 +2360,7 @@
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
-      <V X_UD="Y" X_DV="{pli:(xx.)},{sp1:(&lt;**1&gt;xx.)},{sp2:(&lt;**2&gt;xx.)},{sp3:(&lt;**3&gt;xx.)},{sp4:(&lt;**4&gt;xx.)},{li:(&lt;**8&gt;xx.)},{pp:(&lt;**9&gt;xx.)}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -5808,11 +5808,11 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV="([1-9]x?*(Mpli)|[1-9]|[1-9][0-9]|&lt;00:$1&gt;|0|**1(Msp1)|**2(Msp2)|**3(Msp3)|**4(Msp4)|**6(Msp6)|**7(Msp7)|**8(Msp8)|**9(Mpp)|(Mpli))"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV="{([1-9]x?*(Mpli)):pp},{0:dt1,dt2},{(&lt;**1:&gt;(Msp1)):sp1},{(&lt;**2:&gt;(Msp2)):sp2},{(&lt;**3:&gt;(Msp3)):sp3},{(&lt;**4:&gt;(Msp4)):sp4},{(&lt;**6:&gt;(Msp6)):sp6},{(&lt;**7:&gt;(Msp7)):sp7},{(&lt;**8:&gt;(Msp8)):sp8},{(&lt;**9:&gt;(Mpp)):pp},{(Mpli):pli}"/>
+      <V X_UD="Y" X_DV=""/>
     </P>
     <P>
       <N>PrimaryLine</N>
@@ -8132,7 +8132,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -8672,7 +8672,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -9212,7 +9212,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -9752,7 +9752,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -10292,7 +10292,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -10832,7 +10832,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -11372,7 +11372,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
@@ -11912,7 +11912,7 @@
     </P>
     <P>
       <N>X_UserAgentName</N>
-      <V X_UD="Y" X_DV="OBIHAI/${DM}-${FWV}"/>
+      <V X_UD="Y" X_DV="{literal}OBIHAI/${DM}-${FWV}{/literal}"/>
     </P>
     <P>
       <N>X_ProcessDateHeader</N>
