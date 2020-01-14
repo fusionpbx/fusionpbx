@@ -61,6 +61,27 @@ $text['title_description-conference_centers']['ru-ru'] = "Конференс-ц�
 $text['title_description-conference_centers']['sv-se'] = "Konferenscenter är en grupp med konferensrum. De kan sorteras på kostnadscenter, geografisk placering eller andra kriterier.";
 $text['title_description-conference_centers']['uk-ua'] = "Конференц-центри є група конференц-залів. Вони можуть бути організовані МВЗ, географічно або інших критеріїв.";
 
+$text['title_description-conference_rooms']['en-us'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['ar-eg'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['de-at'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['de-ch'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['de-de'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['es-cl'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['es-mx'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['fr-ca'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['fr-fr'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['he-il'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['it-it'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['nl-nl'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['pl-pl'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['pt-br'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['pt-pt'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['ro-ro'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['ru-ru'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['sv-se'] = "Conference Rooms are individual meeting places within a Conference Center.";
+$text['title_description-conference_rooms']['uk-ua'] = "Conference Rooms are individual meeting places within a Conference Center.";
+
+
 $text['label-conference_center_name']['en-us'] = "Name";
 $text['label-conference_center_name']['ar-eg'] = "";
 $text['label-conference_center_name']['de-at'] = "Name"; //copied from de-de
