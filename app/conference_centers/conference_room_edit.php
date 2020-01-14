@@ -561,24 +561,24 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference_room']."</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_room']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'conference_rooms.php']);
 	if (is_uuid($meeting_uuid)) {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".escape($meeting_uuid)."'\" value='".$text['button-sessions']."'>\n";
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".escape($meeting_uuid)."'\" value='".$text['button-view']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-left: 15px;','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($meeting_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-sessions'],'icon'=>'list','link'=>'conference_sessions.php?id='.urlencode($meeting_uuid)]);
 	}
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference_name']."</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference_name']."</td>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
 	foreach ($conference_centers as &$row) {
 		if ($conference_center_uuid == $row["conference_center_uuid"]) {
@@ -865,21 +865,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "	<td colspan='2' align='right'>\n";
-	echo "		<br>";
-	if ($action == "update") {
-		echo "	<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
-		echo "	<input type='hidden' name='meeting_uuid' value='".escape($meeting_uuid)."'>\n";
-		echo "	<input type='hidden' name='conference_room_uuid' value='".escape($conference_room_uuid)."'>\n";
-	}
-	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>";
+	echo "</table>\n";
+	echo "<br><br>\n";
 
-	echo "</table>";
-	echo "<br>";
+	if ($action == "update") {
+		echo "<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
+		echo "<input type='hidden' name='meeting_uuid' value='".escape($meeting_uuid)."'>\n";
+		echo "<input type='hidden' name='conference_room_uuid' value='".escape($conference_room_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
 
