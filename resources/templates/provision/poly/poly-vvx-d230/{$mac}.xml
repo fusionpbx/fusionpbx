@@ -121,7 +121,7 @@
     </P>
     <P>
       <N>DaylightSavingTimeEnable</N>
-      <V X_UD="N" X_DV="true"/>{$poly_obi_dst_enabled}</V>
+      <V X_UD="N" X_DV="true">{$poly_obi_dst_enabled}</V>
     </P>
     <P>
       <N>DaylightSavingTimeStart</N>
@@ -3474,7 +3474,7 @@
     </P>
     <P>
       <N>X_DisplayNumber</N>
-      <V X_UD="Y" X_DV=""/>{$account.1.user_id}</V>
+      <V X_UD="Y" X_DV="">{$account.1.user_id}</V>
     </P>
     <P>
       <N>X_ServProvProfile</N>
@@ -3556,7 +3556,7 @@
     <N>VoiceService.1.VoiceProfile.1.Line.1.SIP.</N>
     <P>
       <N>AuthUserName</N>
-      <V X_UD="N" X_DV=""/>{$account.1.user_id}</V>
+      <V X_UD="N" X_DV="">{$account.1.user_id}</V>
     </P>
     <P>
       <N>AuthPassword</N>
@@ -7960,7 +7960,7 @@
     <N>VoiceService.1.VoiceProfile.1.SIP.</N>
     <P>
       <N>ProxyServer</N>
-      <V X_UD="N" X_DV=""/>{$account.1.server_address}</V>
+      <V X_UD="N" X_DV="">{$account.1.server_address}</V>
     </P>
     <P>
       <N>ProxyServerPort</N>
@@ -7976,7 +7976,7 @@
     </P>
     <P>
       <N>RegistrarServer</N>
-      <V X_UD="Y" X_DV=""/>{$server_address}</V>
+      <V X_UD="Y" X_DV="">{$server_address}</V>
     </P>
     <P>
       <N>RegistrarServerPort</N>
