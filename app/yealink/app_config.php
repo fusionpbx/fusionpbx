@@ -558,7 +558,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "48ce4fef-e6bd-4be6-9c76-1590e8498408";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c786b947-2d08-4a48-a2b3-cb508c179c3b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
