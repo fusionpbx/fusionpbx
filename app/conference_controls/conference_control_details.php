@@ -144,9 +144,11 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
-	echo "	</th>\n";
+	if (permission_exists('conference_control_detail_edit') || permission_exists('conference_control_detail_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('control_digits', $text['label-control_digits'], $order_by, $order, null, "class='pct-5 center'", $param);
 	echo th_order_by('control_action', $text['label-control_action'], $order_by, $order, null, null, $param);
 	echo th_order_by('control_data', $text['label-control_data'], $order_by, $order, null, "class='pct-50 hide-xs'", $param);
