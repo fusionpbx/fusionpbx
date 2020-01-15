@@ -561,8 +561,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "48ce4fef-e6bd-4be6-9c76-1590e8498408";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_enable";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Local";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable phone to query the contact names from the remote phonebook when receiving incoming calls. 0-Disabled (default), 1-Enabled;";
 		$y++;
