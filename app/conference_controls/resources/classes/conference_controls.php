@@ -261,9 +261,6 @@ if (!class_exists('conference_controls')) {
 			}
 		}
 
-		/**
-		 * toggle a field between two values
-		 */
 		public function toggle_details($records) {
 
 			//assign the variables
@@ -373,25 +370,47 @@ if (!class_exists('conference_controls')) {
 
 						//create the array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = 0;
-									foreach ($rows as $row) {
-										//copy data
-											$array[$this->table][$x] = $row;
 
-										//add copy to the description
-											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+								//primary table
+									$sql = "select * from v_".$this->table." ";
+									$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										$y = 0;
+										foreach ($rows as $x => $row) {
+											$primary_uuid = uuid();
 
-										//increment the id
-											$x++;
+											//copy data
+												$array[$this->table][$x] = $row;
+
+											//add copy to the description
+												$array[$this->table][$x][$this->name.'_uuid'] = $primary_uuid;
+												$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+
+											//details sub table
+												$sql_2 = "select * from v_conference_control_details where conference_control_uuid = :conference_control_uuid";
+												$parameters_2['conference_control_uuid'] = $row['conference_control_uuid'];
+												$database = new database;
+												$rows_2 = $database->select($sql_2, $parameters_2, 'all');
+												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+													foreach ($rows_2 as $row_2) {
+
+														//copy data
+															$array['conference_control_details'][$y] = $row_2;
+
+														//overwrite
+															$array['conference_control_details'][$y]['conference_control_detail_uuid'] = uuid();
+															$array['conference_control_details'][$y]['conference_control_uuid'] = $primary_uuid;
+
+														//increment
+															$y++;
+
+													}
+												}
+												unset($sql_2, $parameters_2, $rows_2, $row_2);										}
 									}
-								}
-								unset($sql, $parameters, $rows, $row);
+									unset($sql, $parameters, $rows, $row);
 							}
 
 						//save the changes and set the message
