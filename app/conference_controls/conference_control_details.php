@@ -160,7 +160,7 @@
 
 	if (is_array($result) && @sizeof($result) != 0) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach ($result as $row) {
 			if (permission_exists('conference_control_detail_edit')) {
 				$list_row_url = 'conference_control_detail_edit.php?conference_control_uuid='.urlencode($row['conference_control_uuid']).'&id='.urlencode($row['conference_control_detail_uuid']);
 			}

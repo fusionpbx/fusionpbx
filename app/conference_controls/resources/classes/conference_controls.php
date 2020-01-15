@@ -55,11 +55,9 @@ if (!class_exists('conference_controls')) {
 		 * called when the object is created
 		 */
 		public function __construct() {
-
 			//assign the variables
 				$this->app_name = 'conference_controls';
 				$this->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-
 		}
 
 		/**
@@ -198,7 +196,6 @@ if (!class_exists('conference_controls')) {
 				$this->table = 'conference_controls';
 				$this->toggle_field = 'control_enabled';
 				$this->toggle_values = ['true','false'];
-				$this->description_field = 'control_description';
 				$this->location = 'conference_controls.php';
 
 			if (permission_exists($this->name.'_edit')) {
@@ -343,6 +340,13 @@ if (!class_exists('conference_controls')) {
 		 * copy rows from the database
 		 */
 		public function copy($records) {
+
+			//assign the variables
+				$this->name = 'conference_control';
+				$this->table = 'conference_controls';
+				$this->description_field = 'control_description';
+				$this->location = 'conference_controls.php';
+
 			if (permission_exists($this->name.'_add')) {
 
 				//add multi-lingual support
