@@ -122,7 +122,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['title-conference_control_details']."</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['title-conference_control_details']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'conference_controls.php']);
 	if (permission_exists('conference_control_detail_add')) {
