@@ -185,7 +185,7 @@
 	echo th_order_by('conference_name', $text['table-name'], $order_by, $order);
 	echo th_order_by('conference_extension', $text['table-extension'], $order_by, $order);
 	echo th_order_by('conference_profile', $text['table-profile'], $order_by, $order);
-	echo th_order_by('conference_order', $text['table-order'], $order_by, $order);
+	echo th_order_by('conference_order', $text['table-order'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('conference_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -209,7 +209,7 @@
 			echo "	<td><a href='".$list_row_url."'>".str_replace('-', ' ', $row['conference_name'])."</a>&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_extension'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_profile'])."&nbsp;</td>\n";
-			echo "	<td>".escape($row['conference_order'])."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['conference_order'])."&nbsp;</td>\n";
 			if (permission_exists('conference_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['conference_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
