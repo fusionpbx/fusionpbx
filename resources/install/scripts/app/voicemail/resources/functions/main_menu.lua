@@ -29,7 +29,14 @@
 			--clear the value
 				dtmf_digits = '';
 			--flush dtmf digits from the input buffer
-				session:flushDigits();
+				if (session ~= nil) then
+					session:flushDigits();
+				end
+			--answer the session
+				if (session ~= nil) then
+					session:answer();
+					session:execute("sleep", "1000");
+				end
 			--new voicemail count
 				if (session:ready()) then
 					local sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
