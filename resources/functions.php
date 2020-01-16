@@ -25,6 +25,25 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
+	// Deprecated, backwards compatibility. This functions will be gone in 4.7+
+        if (!function_exists('software_version')) {
+                function software_version() {
+                        return software::version();
+                }
+        }
+
+        if (!function_exists('version')) {
+                function version() {
+                        return software::version();
+                }
+        }
+
+        if (!function_exists('numeric_version')) {
+                function numeric_version() {
+                        return software::numeric_version();
+                }
+        }
+
 	if (!function_exists('mb_strtoupper')) {
 		function mb_strtoupper($string) {
 			return strtoupper($string);
