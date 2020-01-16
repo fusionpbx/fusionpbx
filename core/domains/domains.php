@@ -61,6 +61,7 @@
 
 			//update the domain session variables
 				$domain_uuid = $_GET["domain_uuid"];
+			        $_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
