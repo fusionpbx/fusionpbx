@@ -4,7 +4,7 @@
 		<condition field="${call_direction}" expression="^inbound$"/>
 		<condition field="${module_exists(mod_cidlookup)}" expression="^true$"/>
 		<condition field="caller_id_number" expression="^\+?1?(\d{10})$">
-			<action application="set" data="effective_caller_id_name=${cidlookup($1)}"/>
+			<action application="set" data="effective_caller_id_name=${cidlookup(1$1)}"/>
 		</condition>
 	</extension>
 </context>
