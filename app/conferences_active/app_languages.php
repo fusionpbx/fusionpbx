@@ -121,7 +121,7 @@ $text['label-yes']['ru-ru'] = "Да";
 $text['label-yes']['sv-se'] = "Ja";
 $text['label-yes']['uk-ua'] = "Так";
 
-$text['label-volume']['en-us'] = "Vol";
+$text['label-volume']['en-us'] = "Volume";
 $text['label-volume']['ar-eg'] = "";
 $text['label-volume']['de-at'] = "Lautstärke"; //copied from de-de
 $text['label-volume']['de-ch'] = "Lautstärke"; //copied from de-de

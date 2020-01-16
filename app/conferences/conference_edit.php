@@ -244,8 +244,8 @@
 					header("Location: conferences.php");
 					exit;
 
-			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
+			}
+	}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
@@ -314,31 +314,31 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' nowrap='nowrap' valign='top'>";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
 		echo "<b>".$text['label-conference-add']."</b>";
 	}
 	if ($action == "update") {
 		echo "<b>".$text['label-conference-edit']."</b>";
 	}
-	echo "	<br /><br />";
-	echo 	$text['description'];
-	echo "	<br /><br />";
-	echo "	</td>\n";
-	echo "	<td align='right' valign='top'>";
-	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$text['button-back']."'>";
-	if (permission_exists('conference_active_view')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".escape(str_replace(" ", "-", $conference_name))."';\" value='".$text['button-view']."'>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'conferences.php']);
+	if ($action == 'update' && permission_exists('conference_active_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-right: 15px;','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
 	}
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo $text['description']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -380,12 +380,12 @@
 			echo "		<td class='vtable'>";
 
 			if (is_array($conference_users) && @sizeof($conference_users) != 0) {
-				echo "		<table width='52%'>\n";
+				echo "		<table width='50%'>\n";
 				foreach ($conference_users as $field) {
 					echo "		<tr>\n";
 					echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
 					echo "			<td>\n";
-					echo "				<a href='conference_edit.php?id=".escape($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".escape($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+					echo "				<a href='conference_edit.php?id=".urlencode($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
 					echo "			</td>\n";
 					echo "		</tr>\n";
 				}
@@ -399,7 +399,7 @@
 				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 			echo "			</select>";
-			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 
 			echo "			<br>\n";
 			echo "			".$text['description-user-add']."\n";
@@ -414,16 +414,16 @@
 	echo "	".$text['table-profile']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='conference_profile'>\n";
+	echo "	<select class='formfld' name='conference_profile'>\n";
 	foreach ($conference_profiles as $row) {
 		if ($conference_profile === $row['profile_name']) {
-				echo "<option value='".escape($row['profile_name'])."' selected='selected'>".escape($row['profile_name'])."</option>\n";
+			echo "		<option value='".escape($row['profile_name'])."' selected='selected'>".escape($row['profile_name'])."</option>\n";
 		}
 		else {
-				echo "<option value='".escape($row['profile_name'])."'>".escape($row['profile_name'])."</option>\n";
+			echo "		<option value='".escape($row['profile_name'])."'>".escape($row['profile_name'])."</option>\n";
 		}
 	}
-	echo "    </select>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo "".$text['description-profile']."\n";
 	echo "</td>\n";
@@ -445,18 +445,18 @@
 	echo "	".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "              <select name='conference_order' class='formfld'>\n";
+	echo "	<select name='conference_order' class='formfld'>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "              <option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+		echo "		<option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
 	$i=0;
 	while($i<=999) {
-		if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
-		if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
-		if (strlen($i) == 3) { echo "              <option value='$i'>$i</option>\n"; }
+		if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
+		if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
+		if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
 		$i++;
 	}
-	echo "              </select>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo "".$text['description-order']."\n";
 	echo "</td>\n";
@@ -468,9 +468,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_enabled'>\n";
-	$selected = $conference_enabled == 'false' ? "selected='selected'" : null;
 	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".$selected.">".$text['label-false']."</option>\n";
+	echo "		<option value='false' ".($conference_enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "".$text['description-conference-enable']."\n";
@@ -488,19 +487,15 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "	<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value=\"".escape($dialplan_uuid)."\">\n";
-		echo "	<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
-	}
-	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		<br>";
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='conference_uuid' value='".escape($conference_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

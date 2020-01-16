@@ -1462,6 +1462,26 @@ $text['button-continue']['ru-ru'] = "Продолжить";
 $text['button-continue']['sv-se'] = "Fortsätt";
 $text['button-continue']['uk-ua'] = "Продовжити";
 
+$text['button-play']['en-us'] = "Play";
+$text['button-play']['ar-eg'] = "";
+$text['button-play']['de-at'] = "Play"; //copied from de-de
+$text['button-play']['de-ch'] = "Play"; //copied from de-de
+$text['button-play']['de-de'] = "Play";
+$text['button-play']['es-cl'] = "Reproducir";
+$text['button-play']['es-mx'] = "Reproducir"; //copied from es-cl
+$text['button-play']['fr-ca'] = "Lire"; //copied from fr-fr
+$text['button-play']['fr-fr'] = "Lire";
+$text['button-play']['he-il'] = "נגן";
+$text['button-play']['it-it'] = "Suona";
+$text['button-play']['nl-nl'] = "Spelen";
+$text['button-play']['pl-pl'] = "Odtwórz";
+$text['button-play']['pt-br'] = "Tocar"; //copied from pt-pt
+$text['button-play']['pt-pt'] = "Tocar";
+$text['button-play']['ro-ro'] = "";
+$text['button-play']['ru-ru'] = "Проиграть";
+$text['button-play']['sv-se'] = "Spela Upp";
+$text['button-play']['uk-ua'] = "Відтворити";
+
 $text['label-installed']['en-us'] = "Installed";
 $text['label-installed']['ar-eg'] = "Installed";
 $text['label-installed']['de-at'] = "Installed";
