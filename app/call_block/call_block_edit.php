@@ -151,77 +151,82 @@
 						}
 					}
 
-				if ($action == "add") {
-					$array['call_block'][0]['call_block_uuid'] = uuid();
-					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					if (is_uuid($extension_uuid)) {
-						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+				//if user doesn't have call block all then use the assigned extension_uuid
+					if (!permission_exists('call_block_all')) {
+						$extension_uuid = $_SESSION['user']['extension'][0]['extension_uuid'];
 					}
-					$array['call_block'][0]['call_block_name'] = $call_block_name;
-					$array['call_block'][0]['call_block_number'] = $call_block_number;
-					$array['call_block'][0]['call_block_count'] = 0;
-					$array['call_block'][0]['call_block_app'] = $call_block_app;
-					$array['call_block'][0]['call_block_data'] = $call_block_data;
-					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
-					$array['call_block'][0]['date_added'] = time();
-					$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-					$database = new database;
-					$database->app_name = 'call_block';
-					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-					$database->save($array);
-					$response = $database->message;
-					unset($array);
+				//save the data to the database
+					if ($action == "add") {
+						$array['call_block'][0]['call_block_uuid'] = uuid();
+						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (is_uuid($extension_uuid)) {
+							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+						}
+						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_number'] = $call_block_number;
+						$array['call_block'][0]['call_block_count'] = 0;
+						$array['call_block'][0]['call_block_app'] = $call_block_app;
+						$array['call_block'][0]['call_block_data'] = $call_block_data;
+						$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+						$array['call_block'][0]['date_added'] = time();
+						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-					message::add($text['label-add-complete']);
-					header("Location: call_block.php");
-					return;
-				}
+						$database = new database;
+						$database->app_name = 'call_block';
+						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+						$database->save($array);
+						$response = $database->message;
+						unset($array);
 
-				if ($action == "update") {
-					$sql = "select c.call_block_number, d.domain_name ";
-					$sql .= "from v_call_block as c ";
-					$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
-					$sql .= "where c.domain_uuid = :domain_uuid ";
-					$sql .= "and c.call_block_uuid = :call_block_uuid ";
-					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$parameters['call_block_uuid'] = $call_block_uuid;
-					$database = new database;
-					$result = $database->select($sql, $parameters);
-					if (is_array($result) && sizeof($result) != 0) {
-						//set the domain_name
-						$domain_name = $result[0]["domain_name"];
-
-						//clear the cache
-						$cache = new cache;
-						$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+						message::add($text['label-add-complete']);
+						header("Location: call_block.php");
+						return;
 					}
-					unset($sql, $parameters);
+					if ($action == "update") {
+						$sql = "select c.call_block_number, d.domain_name ";
+						$sql .= "from v_call_block as c ";
+						$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
+						$sql .= "where c.domain_uuid = :domain_uuid ";
+						$sql .= "and c.call_block_uuid = :call_block_uuid ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['call_block_uuid'] = $call_block_uuid;
+						$database = new database;
+						$result = $database->select($sql, $parameters);
+						if (is_array($result) && sizeof($result) != 0) {
+							//set the domain_name
+							$domain_name = $result[0]["domain_name"];
 
-					$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
-					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					if (is_uuid($extension_uuid)) {
-						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+							//clear the cache
+							$cache = new cache;
+							$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+						}
+						unset($sql, $parameters);
+
+						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
+						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (is_uuid($extension_uuid)) {
+							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+						}
+						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_number'] = $call_block_number;
+						$array['call_block'][0]['call_block_app'] = $call_block_app;
+						$array['call_block'][0]['call_block_data'] = $call_block_data;
+						$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+						$array['call_block'][0]['date_added'] = time();
+						$array['call_block'][0]['call_block_description'] = $call_block_description;
+
+						$database = new database;
+						$database->app_name = 'call_block';
+						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+						$database->save($array);
+						$response = $database->message;
+						unset($array);
+
+						message::add($text['label-update-complete']);
+						header("Location: call_block.php");
+						return;
 					}
-					$array['call_block'][0]['call_block_name'] = $call_block_name;
-					$array['call_block'][0]['call_block_number'] = $call_block_number;
-					$array['call_block'][0]['call_block_app'] = $call_block_app;
-					$array['call_block'][0]['call_block_data'] = $call_block_data;
-					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
-					$array['call_block'][0]['date_added'] = time();
-					$array['call_block'][0]['call_block_description'] = $call_block_description;
-
-					$database = new database;
-					$database->app_name = 'call_block';
-					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-					$database->save($array);
-					$response = $database->message;
-					unset($array);
-
-					message::add($text['label-update-complete']);
-					header("Location: call_block.php");
-					return;
-				}
 			}
 	}
 
@@ -248,13 +253,15 @@
 	}
 
 //get the extensions
-	$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and enabled = 'true' ";
-	$sql .= "order by extension asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$extensions = $database->select($sql, $parameters);
+	if (permission_exists('call_block_all')) {
+		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and enabled = 'true' ";
+		$sql .= "order by extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$extensions = $database->select($sql, $parameters);
+	}
 
 //get the extensions
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
