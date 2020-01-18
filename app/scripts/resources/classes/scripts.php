@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 /**
  * scripts class provides methods for creating the config.lua and copying switch scripts
  *
@@ -104,7 +103,7 @@ if (!class_exists('scripts')) {
 						$source_directory = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
-						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/resources/scripts';
+						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/scripts';
 					}
 					if (is_readable($source_directory)) {
 						//copy the main scripts
