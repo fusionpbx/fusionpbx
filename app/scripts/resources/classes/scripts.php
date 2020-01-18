@@ -112,7 +112,7 @@ if (!class_exists('scripts')) {
 						unset($source_directory);
 
 						//copy the app/*/resource/install/scripts
-						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/scripts');
 						foreach ($app_scripts as $app_script) {
 							recursive_copy($app_script, $destination_directory);
 						}
