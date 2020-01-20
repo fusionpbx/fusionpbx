@@ -3,7 +3,7 @@
 		<condition field="${user_exists}" expression="^true$" break="never"/>
 		<condition field="${call_direction}" expression="^inbound$" break="never"/>
 		<condition field="${module_exists(mod_cidlookup)}" expression="^true$" break="never"/>
-		<condition field="caller_id_number" expression="^\+?1?(\d{10})$" break="never"/>
+		<condition field="caller_id_number" expression="^\+?1?(\d{10})$" break="never">
 			<action application="set" data="cidlookup_caller_id_name=${cidlookup(1$1)}" inline="true"/>
 		</condition>
 		<condition field="${cidlookup_caller_id_name}" expression="^(?!UNKNOWN)">
