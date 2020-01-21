@@ -587,42 +587,44 @@ if (!class_exists('destinations')) {
 			}
 		} //method
 
-		//define singular function to convert a word in english to singular
-			public function singular($word) {
-				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
-				if (substr($word, -2) == "es") {
-					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
-						return substr($word,0,-2);
-					}
-					elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
-						return substr($word,0,-1);
-					}
-					elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
-						return substr($word,0,-3)."y";
-					}
-					elseif (substr($word, -3, 1) == "x") {
-						return substr($word,0,-2);
-					}
-					elseif (substr($word, -3, 1) == "s") {
-						return substr($word,0,-2);
-					}
-					elseif (substr($word, -3, 1) == "z") {
-						return substr($word,0,-2);
-					}
-					elseif (substr($word, -4, 2) == "sh") {
-						return substr($word,0,-2);
-					}
-					elseif (substr($word, -4, 2) == "ch") {
-						return substr($word,0,-2);
-					}
-					else {
-						return rtrim($word, "s");
-					}
+		/**
+		* define singular function to convert a word in english to singular
+		*/
+		public function singular($word) {
+			//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
+			if (substr($word, -2) == "es") {
+				if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
+					return substr($word,0,-2);
+				}
+				elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
+					return substr($word,0,-1);
+				}
+				elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
+					return substr($word,0,-3)."y";
+				}
+				elseif (substr($word, -3, 1) == "x") {
+					return substr($word,0,-2);
+				}
+				elseif (substr($word, -3, 1) == "s") {
+					return substr($word,0,-2);
+				}
+				elseif (substr($word, -3, 1) == "z") {
+					return substr($word,0,-2);
+				}
+				elseif (substr($word, -4, 2) == "sh") {
+					return substr($word,0,-2);
+				}
+				elseif (substr($word, -4, 2) == "ch") {
+					return substr($word,0,-2);
 				}
 				else {
 					return rtrim($word, "s");
 				}
-			} //method
+			}
+			else {
+				return rtrim($word, "s");
+			}
+		} //method
 
 	} //class
 }
