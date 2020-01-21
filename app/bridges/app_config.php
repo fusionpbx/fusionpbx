@@ -31,6 +31,10 @@
 		$apps[$x]['permissions'][$y]['name'] = 'bridge_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'bridge_destinations';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 
 	//destination details
 		$y = 0;
