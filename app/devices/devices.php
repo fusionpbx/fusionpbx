@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -196,10 +196,12 @@
 
 //alternate_found
 	$device_alternate = false;
-	foreach($devices as $row) {
-		if (is_uuid($row['device_uuid_alternate'])) {
-			$device_alternate = true;
-			break;
+	if (is_array($devices)) {
+		foreach($devices as $row) {
+			if (is_uuid($row['device_uuid_alternate'])) {
+				$device_alternate = true;
+				break;
+			}
 		}
 	}
 
