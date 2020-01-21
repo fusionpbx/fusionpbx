@@ -92,6 +92,11 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y = 0;
