@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -278,6 +278,10 @@
 					message::add($text['message-upload_completed']);
 			}
 
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("configuration:local_stream.conf");
+
 		//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 			$music = new switch_music_on_hold;
 			$music->reload();
@@ -519,7 +523,7 @@
 							echo "	<td class='button center no-link no-wrap'>";
 							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' type='".escape($stream_file_type)."'></audio>";
 							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."');"]);
-// 							echo button::create(['type'=>'button','title'=>$text['label-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"recording_stop('".$row_uuid."'); this.blur(); return false;"]);
+ 							//echo button::create(['type'=>'button','title'=>$text['label-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"recording_stop('".$row_uuid."'); this.blur(); return false;"]);
 							echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"?action=download&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)]);
 							echo "	</td>\n";
 							echo "	<td class='right no-wrap hide-xs'>".escape($stream_file_size)."</td>\n";
