@@ -87,6 +87,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${dialplan_context}";

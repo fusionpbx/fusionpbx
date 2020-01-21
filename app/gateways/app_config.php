@@ -69,6 +69,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_channels";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;
