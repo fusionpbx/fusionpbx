@@ -713,9 +713,9 @@
     <P>
       <N>ConfigURL</N>
       {if isset($poly_provision_url)}
-      <V X_UD="Y" X_DV="{$poly_provision_url}"/>
+      <V X_UD="N" X_DV="{$poly_provision_url}"/>
       {else}
-      <V X_UD="Y" X_DV="https://{$domain_name}/app/provision/${mac}.xml"/>
+      <V X_UD="N" X_DV="https://{$domain_name}/app/provision/${mac}.xml"/>
       {/if}
     </P>
     <P>
