@@ -712,7 +712,11 @@
     </P>
     <P>
       <N>ConfigURL</N>
-      <V X_UD="Y" X_DV="tftp://$DHCPOPT66/$DM.xml;$DHCPOPT66;"/>
+      {if isset($poly_provision_url)}
+      <V X_UD="Y" X_DV="{$poly_provision_url}"/>
+      {else}
+      <V X_UD="Y" X_DV="{$domain_name}/app/provision/"/>
+      {/if}
     </P>
     <P>
       <N>DnsLookupType</N>
