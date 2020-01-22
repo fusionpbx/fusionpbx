@@ -8,6 +8,10 @@
       <V X_UD="Y" X_DV="DHCP"/>
     </P>
     <P>
+      <N>AdminPassword</N>
+      <V X_UD="Y" X_DV=""/>
+    </P>
+    <P>
       <N>IPAddress</N>
       <V X_UD="Y" X_DV=""/>
     </P>
@@ -713,9 +717,9 @@
     <P>
       <N>ConfigURL</N>
       {if isset($poly_provision_url)}
-      <V X_UD="N" X_DV="{$poly_provision_url}"/>
+      <V X_UD="N" X_DV="{$poly_provision_url}/{literal}${mac}{/literal}.xml"/>
       {else}
-      <V X_UD="N" X_DV="https://{$domain_name}/app/provision/${mac}.xml"/>
+      <V X_UD="N" X_DV="https://{$domain_name}/app/provision/{literal}${mac}{/literal}.xml"/>
       {/if}
     </P>
     <P>
