@@ -10,9 +10,9 @@
     <P>
       <N>AdminPassword</N>
       {if isset($admin_password)}
-      <V X_UD="N" X_DV="{$admin_password}"/>
+      <V X_UD="N" X_DV="admin">{$admin_password}</V>
       {else}
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="admin"/>
       {/if}
     </P>
     <P>
@@ -721,9 +721,9 @@
     <P>
       <N>ConfigURL</N>
       {if isset($poly_provision_url)}
-      <V X_UD="N" X_DV="{$poly_provision_url}/{literal}${mac}{/literal}.xml"/>
+      <V X_UD="N" X_DV="">{$poly_provision_url}/{literal}${mac}{/literal}.xml</V>
       {else}
-      <V X_UD="N" X_DV="https://{$domain_name}/app/provision/{literal}${mac}{/literal}.xml"/>
+      <V X_UD="N" X_DV="">https://{$domain_name}/app/provision/{literal}${mac}{/literal}.xml</V>
       {/if}
     </P>
     <P>
