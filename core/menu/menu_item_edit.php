@@ -513,7 +513,7 @@
 			}
 		}
 		echo "</select>";
-		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 	}
 	echo "		</td>";
 	echo "	</tr>";
