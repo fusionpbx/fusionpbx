@@ -9,11 +9,15 @@
     </P>
     <P>
       <N>AdminPassword</N>
+      {if isset($admin_password)}
+      <V X_UD="N" X_DV="{$admin_password}"/>
+      {else}
       <V X_UD="Y" X_DV=""/>
+      {/if}
     </P>
     <P>
       <N>IPAddress</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="N" X_DV=""/>
     </P>
     <P>
       <N>SubnetMask</N>
