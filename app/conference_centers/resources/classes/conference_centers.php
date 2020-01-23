@@ -58,20 +58,6 @@ if (!class_exists('conference_centers')) {
 		private $toggle_values;
 
 		/**
-		 * declare private variables
-		 */
-		/*
-		private $app_name;
-		private $app_uuid;
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-		*/
-
-		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
@@ -315,7 +301,6 @@ if (!class_exists('conference_centers')) {
 		/**
 		 * delete records
 		 */
-		/*
 		public function delete_conference_centers($records) {
 
 			//assign private variables
@@ -350,7 +335,7 @@ if (!class_exists('conference_centers')) {
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and conference_center_uuid = :conference_center_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-										$parameters['conference_center_uuid'] = $conference_center_uuid;
+										$parameters['conference_center_uuid'] = $record['uuid'];
 										$database = new database;
 										$dialplan_uuid = $database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
@@ -401,7 +386,6 @@ if (!class_exists('conference_centers')) {
 					}
 			}
 		}
-		*/
 
 		public function delete_conference_rooms($records) {
 
@@ -474,7 +458,6 @@ if (!class_exists('conference_centers')) {
 		/**
 		 * toggle records
 		 */
-		/*
 		public function toggle_conference_centers($records) {
 
 			//assign private variables
@@ -570,7 +553,6 @@ if (!class_exists('conference_centers')) {
 
 			}
 		}
-		*/
 
 		public function toggle_conference_rooms($records) {
 
