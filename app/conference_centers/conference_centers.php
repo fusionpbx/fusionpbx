@@ -50,26 +50,27 @@
 		$conference_centers = $_POST['conference_centers'];
 	}
 
-/*
 //process the http post data by action
 	if ($action != '' && is_array($conference_centers) && @sizeof($conference_centers) != 0) {
 		switch ($action) {
+			/*
 			case 'copy':
 				if (permission_exists('conference_center_add')) {
 					$obj = new conference_centers;
-					$obj->copy($conference_centers);
+					$obj->copy_conference_centers($conference_centers);
 				}
 				break;
+			*/
 			case 'toggle':
 				if (permission_exists('conference_center_edit')) {
 					$obj = new conference_centers;
-					$obj->toggle($conference_centers);
+					$obj->toggle_conference_centers($conference_centers);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('conference_center_delete')) {
 					$obj = new conference_centers;
-					$obj->delete($conference_centers);
+					$obj->delete_conference_centers($conference_centers);
 				}
 				break;
 		}
@@ -77,7 +78,6 @@
 		header('Location: conference_centers.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
-*/
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -143,13 +143,13 @@
 	if (permission_exists('conference_center_add') && $conference_centers) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
+	*/
 	if (permission_exists('conference_center_edit') && $conference_centers) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('conference_center_delete') && $conference_centers) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	*/
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
@@ -171,18 +171,16 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	/*
-	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
+	if (permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($conference_centers ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	*/
 	echo th_order_by('conference_center_name', $text['label-conference_center_name'], $order_by, $order);
 	echo th_order_by('conference_center_extension', $text['label-conference_center_extension'], $order_by, $order);
 	echo th_order_by('conference_center_greeting', $text['label-conference_center_greeting'], $order_by, $order);
-	echo th_order_by('conference_center_pin_length', $text['label-conference_center_pin_length'], $order_by, $order);
-	echo th_order_by('conference_center_enabled', $text['label-conference_center_enabled'], $order_by, $order);
+	echo th_order_by('conference_center_pin_length', $text['label-conference_center_pin_length'], $order_by, $order, null, "class='center shrink'");
+	echo th_order_by('conference_center_enabled', $text['label-conference_center_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('conference_center_description', $text['label-conference_center_description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('conference_center_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -191,24 +189,30 @@
 
 	if (is_array($conference_centers) && @sizeof($conference_centers) != 0) {
 		$x = 0;
-		foreach($conference_centers as $row) {
+		foreach ($conference_centers as $row) {
 			if (permission_exists('conference_center_edit')) {
 				$list_row_url = "conference_center_edit.php?id=".$row['conference_center_uuid'];
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			/*
-			if (permission_exists('conference_center_add') || permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
+			if (permission_exists('conference_center_edit') || permission_exists('conference_center_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='conference_centers[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='conference_centers[$x][uuid]' value='".escape($row['conference_center_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			*/
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['conference_center_name'])."</a>&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_center_extension'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_center_greeting'])."&nbsp;</td>\n";
-			echo "	<td>".escape($row['conference_center_pin_length'])."&nbsp;</td>\n";
-			echo "	<td>".$text['label-'.$row['conference_center_enabled']]."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['conference_center_pin_length'])."&nbsp;</td>\n";
+			if (permission_exists('conference_center_edit')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['conference_center_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['conference_center_enabled']];
+			}
+			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['conference_center_description'])."&nbsp;</td>\n";
 			if (permission_exists('conference_center_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
