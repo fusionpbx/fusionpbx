@@ -787,108 +787,108 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1488>ring1</P1488>
+    <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1489>5</P1489>
+    <P1489>{$grandstream_distinctive_ringtone_1}</P1489>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- # String -->
-    <P1490>ring2</P1490>
+    <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
     <!-- # Matching Rule 2 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1491>2</P1491>
+    <P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
     <!-- # String -->
-    <P1492>ring3</P1492>
+    <P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
     <!-- # Matching Rule 3 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1493>3</P1493>
+    <P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 4 -->
     <!-- # String -->
-    <P6716></P6716>
+    <P6716>{$grandstream_distinctive_ringtone_name_4}</P6716>
 
     <!-- # Matching Rule 4 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6717>5</P6717>
+    <P6717>{$grandstream_distinctive_ringtone_4}</P6717>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 5 -->
     <!-- # String -->
-    <P6718></P6718>
+    <P6718>{$grandstream_distinctive_ringtone_name_5}</P6718>
 
     <!-- # Matching Rule 5 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6719>5</P6719>
+    <P6719>{$grandstream_distinctive_ringtone_5}</P6719>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 6 -->
     <!-- # String -->
-    <P6720></P6720>
+    <P6720>{$grandstream_distinctive_ringtone_name_6}</P6720>
 
     <!-- # Matching Rule 6 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6721>5</P6721>
+    <P6721>{$grandstream_distinctive_ringtone_6}</P6721>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 7 -->
     <!-- # String -->
-    <P26064></P26064>
+    <P26064>{$grandstream_distinctive_ringtone_name_7}</P26064>
 
     <!-- # Matching Rule 7 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26065>5</P26065>
+    <P26065>{$grandstream_distinctive_ringtone_7}</P26065>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 8 -->
     <!-- # String -->
-    <P26066></P26066>
+    <P26066>{$grandstream_distinctive_ringtone_name_8}</P26066>
 
     <!-- # Matching Rule 8 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26067>5</P26067>
+    <P26067>{$grandstream_distinctive_ringtone_8}</P26067>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 9 -->
     <!-- # String -->
-    <P26068></P26068>
+    <P26068>{$grandstream_distinctive_ringtone_name_9}</P26068>
 
     <!-- # Matching Rule 9 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26069>5</P26069>
+    <P26069>{$grandstream_distinctive_ringtone_9}</P26069>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 10 -->
     <!-- # String -->
-    <P26096></P26096>
+    <P26096>{$grandstream_distinctive_ringtone_name_10}</P26096>
 
     <!-- # Matching Rule 10 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26097>5</P26097>
+    <P26097>{$grandstream_distinctive_ringtone_10}</P26097>
 
     <!-- # Ring Timeout (in seconds). Default is 60 -->
     <!-- # Number: 30 - 3600 -->
     <!-- # Mandatory -->
-    <P1328>60</P1328>
+    <P1328>{$grandstream_ring_timeout}</P1328>
 
     <!-- ############################################################### -->
     <!-- # Account 1/Intercom Settings -->
