@@ -38,86 +38,72 @@
 		exit;
 	}
 
-//javascript function: send_cmd
-	echo "<script type=\"text/javascript\">\n";
-	echo "function send_cmd(url) {\n";
-	echo "	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari\n";
-	echo "		xmlhttp=new XMLHttpRequest();\n";
-	echo "	}\n";
-	echo "	else {// code for IE6, IE5\n";
-	echo "		xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\n";
-	echo "	}\n";
-	echo "	xmlhttp.open(\"GET\",url,true);\n";
-	echo "	xmlhttp.send(null);\n";
-	echo "	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
-	echo "}\n";
-	echo "</script>\n";
+//get the extension list
+	$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
+	$sql .= "from v_extensions e, v_extension_users eu, v_users u ";
+	$sql .= "where e.extension_uuid = eu.extension_uuid ";
+	$sql .= "and u.user_uuid = eu.user_uuid ";
+	$sql .= "and e.domain_uuid = :domain_uuid ";
+	$sql .= "and u.contact_uuid = :contact_uuid ";
+	$sql .= "order by e.extension asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_extensions']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-	//get the extension list
-		$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
-		$sql .= "from v_extensions e, v_extension_users eu, v_users u ";
-		$sql .= "where e.extension_uuid = eu.extension_uuid ";
-		$sql .= "and u.user_uuid = eu.user_uuid ";
-		$sql .= "and e.domain_uuid = :domain_uuid ";
-		$sql .= "and u.contact_uuid = :contact_uuid ";
-		$sql .= "order by e.extension asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th>".$text['label-extension']."</th>\n";
-	echo "<th>".$text['label-enabled']."</th>\n";
-	echo "<th>".$text['label-description']."</th>\n";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('extension_add')) {
-		echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	echo "<div class='action_bar sub shrink'>\n";
+	echo "	<div class='heading'><b>".$text['label-contact_extensions']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	/*
+	if (permission_exists('contact_url_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>PROJECT_PATH.'/app/extensions/extension_edit.php']);
 	}
-	echo "</td>\n";
+	*/
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	echo "<th>".$text['label-extension']."</th>\n";
+	echo "<th class='center'>".$text['label-enabled']."</th>\n";
+	echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
+	if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('extension_edit')) ? "href='/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+
+	if (is_array($contact_extensions) && @sizeof($contact_extensions) != 0) {
+		$x = 0;
+		foreach ($contact_extensions as $row) {
 			if (permission_exists('extension_edit')) {
-				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
+				$list_row_url = PROJECT_PATH.'/app/extensions/extension_edit.php?id='.urlencode($row['extension_uuid']);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."' ".($row['url_primary'] ? "style='font-weight: bold;'" : null).">\n";
+			echo "	<td>";
+			if (permission_exists('extension_edit')) {
+				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".urlencode($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
 			}
 			else {
 				echo $row['extension'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('extension_edit')) {
-				echo "<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
+			if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
 			}
-			if (permission_exists('extension_delete')) {
-				echo "<a href='".PROJECT_PATH."/app/extensions/extension_delete.php?id=".escape($row['extension_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
-			echo "	</td>\n";
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
+			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($contact_extensions);
 
 	echo "</table>";
+	echo "<br />\n";
 
 ?>

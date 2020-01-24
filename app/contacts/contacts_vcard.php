@@ -98,8 +98,8 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'column');
-		$vcard->data['url'] = $row["url_address"];
+		$url_address = $database->select($sql, $parameters, 'column');
+		$vcard->data['url'] = $url_address;
 		unset($sql, $parameters, $row);
 
 
