@@ -199,33 +199,33 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_setting_edit'];
 	}
 	elseif ($action == "add") {
 		$document['title'] = $text['title-contact_setting_add'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td valign='top' align='left' width='30%' nowrap='nowrap'><b>";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo $text['header-contact_setting_edit'];
+		echo "<b>".$text['header-contact_setting_edit']."</b>";
 	}
-	if ($action == "add") {
-		echo $text['header-contact_setting_add'];
+	else if ($action == "add") {
+		echo "<b>".$text['header-contact_setting_add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td valign='top' width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	if ($action == "update") {
 		echo $text['description-contact_setting_edit'];
 	}
@@ -233,8 +233,8 @@
 		echo $text['description-contact_setting_add'];
 	}
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -343,19 +343,15 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>";
-	echo "			<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_setting_uuid' value='".$contact_setting_uuid."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='contact_uuid' value='".$contact_uuid."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_setting_uuid' value='".$contact_setting_uuid."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

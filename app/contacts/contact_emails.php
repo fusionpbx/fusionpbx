@@ -38,65 +38,76 @@
 		exit;
 	}
 
+//get the contact list
+	$sql = "select * from v_contact_emails ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
+	$sql .= "order by email_primary desc, email_label asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_emails = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-emails']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-	//get the contact list
-		$sql = "select * from v_contact_emails ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and contact_uuid = :contact_uuid ";
-		$sql .= "order by email_primary desc, email_label asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
-
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr>\n";
-	echo "<th>".$text['label-email_label']."</th>\n";
-	echo "<th>".$text['label-email_address']."</th>\n";
-	echo "<th>".$text['label-email_description']."</th>\n";
-	echo "<td class='list_control_icons'>";
+	echo "<div class='action_bar sub shrink'>\n";
+	echo "	<div class='heading'><b>".$text['label-emails']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	/*
 	if (permission_exists('contact_email_add')) {
-		echo "<a href='contact_email_edit.php?contact_uuid=".escape($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_email_edit.php?contact_uuid='.urlencode($_GET['id'])]);
 	}
-	echo "</td>\n";
+	if (permission_exists('contact_email_delete') && $contact_emails) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	*/
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('contact_email_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all_emails' name='checkbox_all' onclick=\"list_all_toggle('emails');\" ".($contact_emails ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo "<th class='pct-15'>".$text['label-email_label']."</th>\n";
+	echo "<th>".$text['label-email_address']."</th>\n";
+	echo "<th class='hide-md-dn'>".$text['label-email_description']."</th>\n";
+	if (permission_exists('contact_email_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
+	if (is_array($contact_emails) && @sizeof($contact_emails) != 0) {
+		$x = 0;
+		foreach ($contact_emails as $row) {
 			if (permission_exists('contact_email_edit')) {
-				$tr_link = "href='contact_email_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."'";
+				$list_row_url = "contact_email_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_email_uuid']);
 			}
-			echo "<tr ".$tr_link." ".((escape($row['email_primary'])) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['email_label'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['email_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('contact_email_edit')) {
-				echo "<a href='contact_email_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('contact_email_delete')) {
-				echo "<a href='contact_email_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_email_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='contact_emails[$x][checked]' id='checkbox_".$x."' class='checkbox_emails' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_emails').checked = false; }\">\n";
+				echo "		<input type='hidden' name='contact_emails[$x][uuid]' value='".escape($row['contact_email_uuid'])."' />\n";
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
+			echo "	<td>".escape($row['email_label'])." ".($row['email_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
+			echo "	<td class='no-link'><a href='mailto:".escape($row['email_address'])."'>".escape($row['email_address'])."</a>&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".escape($row['email_description'])."&nbsp;</td>\n";
+			if (permission_exists('contact_email_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
+			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($contact_emails);
 
 	echo "</table>";
+	echo "<br />\n";
 
 ?>
