@@ -1702,8 +1702,9 @@ function number_pad($number,$n) {
 				}
 			//add prefix
 				if (strlen($prefix) > 0) {
-					if (strlen($prefix) == 1) {
-						$prefix = $prefix.'?';
+					if (strlen($prefix) > 0 && strlen($prefix) < 4) {
+						$plus = (substr($string, 0, 1) == "+") ? '' : '\+?';
+						$prefix = $plus.$prefix.'?';
 					}
 					else {
 						$prefix = '(?:'.$prefix.')?';
