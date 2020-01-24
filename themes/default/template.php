@@ -486,6 +486,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			document.getElementById('btn_search').style.display = '';
 		}
 
+		function modal_close() {
+			document.location.href='#';
+		}
+
 </script>
 
 <?php
