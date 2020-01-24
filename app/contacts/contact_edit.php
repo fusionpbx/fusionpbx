@@ -452,28 +452,39 @@
 		if (permission_exists('contact_attachment_add')) { echo "<option value='attachment'>".$text['label-attachment']."</option>\n"; }
 		echo "		</select>";
 	}
-	if (
-		$action == "update" && (
-		permission_exists('contact_phone_delete') ||
-		permission_exists('contact_deleteress_delete') ||
-		permission_exists('contact_email_delete') ||
-		permission_exists('contact_url_delete') ||
-		permission_exists('contact_relation_delete') ||
-		permission_exists('contact_note_delete') ||
-		permission_exists('contact_time_delete') ||
-		permission_exists('contact_setting_delete') ||
-		permission_exists('contact_attachment_delete')
-		)) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
-		echo modal::create([
-			'id'=>'modal-delete',
-			'title'=>$text['modal_title-confirmation'],
-			'message'=>$text['message-delete_selection'],
-			'actions'=>
-				button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','onclick'=>'modal_close();']).
-				button::create(['type'=>'button','label'=>$text['label-contact'],'icon'=>$_SESSION['theme']['button_icon_user'],'style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); if (confirm('".$text['confirm-delete']."')) { document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit(); } else { this.blur(); return false; }"]).
-				button::create(['type'=>'button','label'=>$text['label-properties'],'icon'=>'check-square','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])
-			]);
+	if ($action == "update") {
+		if (
+			permission_exists('contact_delete') && (
+			permission_exists('contact_phone_delete') ||
+			permission_exists('contact_address_delete') ||
+			permission_exists('contact_email_delete') ||
+			permission_exists('contact_url_delete') ||
+			permission_exists('contact_relation_delete') ||
+			permission_exists('contact_note_delete') ||
+			permission_exists('contact_time_delete') ||
+			permission_exists('contact_setting_delete') ||
+			permission_exists('contact_attachment_delete')
+			)) {
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
+			echo modal::create([
+				'id'=>'modal-delete',
+				'title'=>$text['modal_title-confirmation'],
+				'message'=>$text['message-delete_selection'],
+				'actions'=>
+					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','onclick'=>'modal_close();']).
+					button::create(['type'=>'button','label'=>$text['label-contact'],'icon'=>$_SESSION['theme']['button_icon_user'],'style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); if (confirm('".$text['confirm-delete']."')) { document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit(); } else { this.blur(); return false; }"]).
+					button::create(['type'=>'button','label'=>$text['label-properties'],'icon'=>'check-square','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])
+				]);
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
+			if (permission_exists('contact_delete')) {
+				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit();"])]);
+			}
+			else {
+				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])]);
+			}
+		}
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>($action != 'update' ?: 'margin-left: 15px;'),'collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('frm').submit();"]);
 	echo "	</div>\n";
