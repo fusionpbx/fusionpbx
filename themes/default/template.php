@@ -906,7 +906,7 @@ if (!$default_login) {
 		echo "</div>\n"; //initial div from switch statement above
 }
 else {
-	// default login being used
+	//default login being used
 	if ($_SESSION['theme']['logo_login']['text'] != '') {
 		$logo = $_SESSION['theme']['logo_login']['text'];
 	}
@@ -917,8 +917,22 @@ else {
 		$logo = PROJECT_PATH."/themes/default/images/logo_login.png";
 	}
 
+	//set the login logo width and height
+	if (isset($_SESSION['theme']['login_logo_weight']['text'])) {
+		$login_logo_weight = $_SESSION['theme']['login_logo_weight']['text'];
+	}
+	else {
+		$login_logo_weight = '300px';
+	}
+	if (isset($_SESSION['theme']['login_logo_height']['text'])) {
+		$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+	}
+	else {
+		$login_logo_height = '';
+	}
+
 	echo "<div id='default_login'>\n";
-	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' src='".escape($logo)."'></a><br />\n";
+	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' width='$login_logo_weight' height='$login_logo_height' src='".escape($logo)."'></a><br />\n";
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";
