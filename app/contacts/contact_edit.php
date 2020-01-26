@@ -68,7 +68,7 @@
 				}
 
 				header('Location: contact_edit.php?id='.urlencode($contact_uuid));
-				break;
+				exit;
 			case 'delete_contact':
 				if (permission_exists('contact_delete')) {
 					$array[0]['checked'] = 'true';
@@ -79,10 +79,8 @@
 				}
 
 				header('Location: contacts.php');
-				break;
+				exit;
 		}
-
-		exit;
 	}
 
 
@@ -471,7 +469,7 @@
 				'title'=>$text['modal_title-confirmation'],
 				'message'=>$text['message-delete_selection'],
 				'actions'=>
-					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','onclick'=>'modal_close();']).
+					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','collapse'=>'hide-xs','onclick'=>'modal_close();']).
 					button::create(['type'=>'button','label'=>$text['label-contact'],'icon'=>$_SESSION['theme']['button_icon_user'],'style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); if (confirm('".$text['confirm-delete']."')) { document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit(); } else { this.blur(); return false; }"]).
 					button::create(['type'=>'button','label'=>$text['label-properties'],'icon'=>'check-square','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])
 				]);
