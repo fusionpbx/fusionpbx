@@ -128,7 +128,7 @@
 	if (permission_exists('fax_log_delete') && $fax_logs) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'margin-left: 15px;','link'=>'fax_logs.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'margin-left: 15px;','link'=>'fax_logs.php?id='.urlencode($fax_uuid)]);
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='hidden' name='id' value='".escape($fax_uuid)."'>";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
