@@ -227,7 +227,7 @@
 				echo "		<a href='fax_files.php?order_by=fax_date&order=desc&id=".urlencode($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('fax_log_view')) {
-				echo "		<a href='fax_logs.php?order_by=fax_epoch&order=desc&id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>";
+				echo "		<a href='fax_logs.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>";
 			}
 			if (permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 				echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>";

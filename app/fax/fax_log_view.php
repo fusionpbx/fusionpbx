@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,6 +48,25 @@
 	}
 	if (is_uuid($_REQUEST["fax_uuid"])) {
 		$fax_uuid = $_REQUEST["fax_uuid"];
+	}
+
+//process the http post data by submitted action
+	if ($_POST['action'] != '' && is_uuid($fax_log_uuid) && is_uuid($fax_uuid)) {
+		$array[0]['checked'] = 'true';
+		$array[0]['uuid'] = $fax_log_uuid;
+
+		switch ($_POST['action']) {
+			case 'delete':
+				if (permission_exists('fax_log_delete')) {
+					$obj = new fax;
+					$obj->fax_uuid = $fax_uuid;
+					$obj->delete_logs($array);
+				}
+				break;
+		}
+
+		header('Location: fax_logs.php?id='.urlencode($fax_uuid));
+		exit;
 	}
 
 //pre-populate the form
@@ -83,13 +102,27 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
+	$document['title'] = $text['title-fax_logs'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<table cellpadding='0' cellspacing='0' border='0' align='right'><tr><td><input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='fax_logs.php?id=".urlencode($fax_uuid)."'\" value='".$text['button-back']."'></td></tr></table>";
-	echo "<b>".$text['title-fax_log']."</b>\n";
-	echo "<br /><br />\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-fax_log']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'fax_logs.php?id='.urlencode($fax_uuid)]);
+	if (permission_exists('fax_log_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>'margin-left: 15px;','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+	}
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -185,6 +218,10 @@
 
 	echo "</table>";
 	echo "<br /><br />";
+
+	echo "<input type='hidden' name='id' value='".escape($fax_log_uuid)."'>\n";
+	echo "<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
 
