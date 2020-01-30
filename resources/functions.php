@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1921,7 +1921,15 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		if (is_array($string)) {
+			return false;
+		}
+		elseif (isset($string) && strlen($string)) {
+			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+		else {
+			return false;
+		}
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
