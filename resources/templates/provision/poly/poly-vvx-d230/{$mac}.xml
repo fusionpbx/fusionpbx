@@ -9,7 +9,7 @@
     </P>
     <P>
       <N>IPAddress</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="N" X_DV=""/>
     </P>
     <P>
       <N>SubnetMask</N>
@@ -292,43 +292,43 @@
     <N>DeviceInfo.</N>
     <P>
       <N>ModelName</N>
-      <V>VVX D230</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>MACAddress</N>
-      <V>9CADEFA80215</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>SerialNumber</N>
-      <V>88K01NAZZZL6</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>X_OBiNumber</N>
-      <V>230 353 619</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>HardwareVersion</N>
-      <V>1.0</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>SoftwareVersion</N>
-      <V>7.0.0 (Build: 6932)</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>SystemTime</N>
-      <V>18:52:33     12/26/2019, Thursday</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>UpTime</N>
-      <V> 0 Days  1:08:04    (0)</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>X_CertificatesStatus</N>
-      <V>Installed</V>
+      <V X_UD="Y"/>
     </P>
     <P>
       <N>X_CustomizationStatus</N>
-      <V>Generic</V>
+      <V X_UD="Y"/>
     </P>
   </O>
   <O>
@@ -340,6 +340,22 @@
     <P>
       <N>PasswordMinimumLength</N>
       <V X_UD="Y" X_DV="0"/>
+    </P>
+    <P>
+      <N>AdminPassword</N>
+      {if isset($admin_password)}
+      <V X_UD="N" X_DV="admin">{$admin_password}</V>
+      {else}
+      <V X_UD="Y" X_DV="admin"/>
+      {/if}
+    </P>
+    <P>
+      <N>UserPassword</N>
+      {if isset($user_password)}
+      <V X_UD="N" X_DV="">{$user_password}</V>
+      {else}
+      <V X_UD="Y" X_DV=""/>
+      {/if}
     </P>
   </O>
   <O>
@@ -712,7 +728,11 @@
     </P>
     <P>
       <N>ConfigURL</N>
-      <V X_UD="Y" X_DV="tftp://$DHCPOPT66/$DM.xml;$DHCPOPT66;"/>
+      {if isset($poly_provision_url)}
+      <V X_UD="N" X_DV="">{$poly_provision_url}/{literal}${mac}{/literal}.xml</V>
+      {else}
+      <V X_UD="N" X_DV="">https://{$domain_name}/app/provision/{literal}${mac}{/literal}.xml</V>
+      {/if}
     </P>
     <P>
       <N>DnsLookupType</N>

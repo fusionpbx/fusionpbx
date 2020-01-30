@@ -188,17 +188,12 @@
 		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
-
 //create the sql query to get the xml cdr records
 	if (strlen($order_by) == 0) { $order_by  = "start_stamp"; }
 	if (strlen($order) == 0) { $order  = "desc"; }
 
 //set a default number of rows to show
 	$num_rows = '0';
-
-//disable the paging
-	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
-	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //count the records in the database
 	/*
@@ -512,7 +507,7 @@
 	if (strlen($order_by) > 0) {
 		$sql .= order_by($order_by, $order);
 	}
-	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
 			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
@@ -541,7 +536,9 @@
 	unset($database, $sql, $parameters);
 
 //return the paging
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+	}
 
 ?>

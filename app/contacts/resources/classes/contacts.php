@@ -39,6 +39,11 @@ if (!class_exists('contacts')) {
 		private $uuid_prefix;
 
 		/**
+		 * declare public variables
+		 */
+		public $contact_uuid;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
@@ -136,6 +141,57 @@ if (!class_exists('contacts')) {
 							unset($records);
 					}
 			}
+		}
+
+		public function delete_properties($records) {
+			//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->list_page);
+					exit;
+				}
+
+			//delete multiple records
+				if (is_array($records) && @sizeof($records) != 0) {
+
+					//check permissions and build the delete array
+						$x = 0;
+						foreach ($records as $property_name => $properties) {
+							$database = new database;
+							if (permission_exists($database->singular($property_name).'_delete')) {
+								if (is_array($properties) && @sizeof($properties) != 0) {
+									foreach ($properties as $property) {
+										if ($property['checked'] == 'true' && is_uuid($property['uuid'])) {
+											$array[$property_name][$x][$database->singular($property_name).'_uuid'] = $property['uuid'];
+											$array[$property_name][$x]['contact_uuid'] = $this->contact_uuid;
+											$array[$property_name][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$x++;
+										}
+									}
+								}
+							}
+						}
+
+					//delete the checked rows
+						if (is_array($array) && @sizeof($array) != 0) {
+
+							//execute delete
+								$database = new database;
+								$database->app_name = $this->app_name;
+								$database->app_uuid = $this->app_uuid;
+								$database->delete($array);
+								unset($array);
+
+							//set message
+								message::add($text['message-delete']);
+						}
+						unset($records);
+				}
 		} //method
 
 	} //class

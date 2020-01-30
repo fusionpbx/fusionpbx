@@ -49,14 +49,11 @@
 //get the format
 	$export_format = $_REQUEST['export_format'];
 
-//get the format
-	$showall = $_REQUEST['showall'];
-
-//exprot the csv
+//export the csv
 	if ($export_format == 'csv') {
 
 		//define file name
-			if ($_REQUEST['showall'] == 'true') {
+			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
 				$csv_filename = "cdr_".date("Ymd_His").".csv";
 			}
 			else {

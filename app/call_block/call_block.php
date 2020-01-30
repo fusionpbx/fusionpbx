@@ -92,7 +92,7 @@
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'] && count($_SESSION['user']['extension']) > 0)) {
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {
@@ -122,7 +122,7 @@
 //get the list
 	$sql = "select * from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'] && count($_SESSION['user']['extension']) > 0)) {
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {

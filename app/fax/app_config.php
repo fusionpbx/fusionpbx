@@ -169,6 +169,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "fax_send_greeting";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;

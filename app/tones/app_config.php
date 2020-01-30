@@ -44,4 +44,10 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:playback tone_stream://\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "tone_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+
 ?>

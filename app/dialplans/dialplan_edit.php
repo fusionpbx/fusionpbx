@@ -405,7 +405,7 @@
 	if ($action == 'update') {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>'margin-left: 15px;','link'=>'dialplan_copy.php?id='.urlencode($dialplan_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
 		if (permission_exists('dialplan_xml')) {
-			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','link'=>'dialplan_xml.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "?app_uuid=".urlencode($app_uuid) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','link'=>'dialplan_xml.php?id='.urlencode($dialplan_uuid).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);

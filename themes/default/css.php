@@ -2353,6 +2353,16 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		white-space: nowrap;
 		}
 
+	/* used primarily in contacts */
+	div.action_bar.shrink {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		}
+
+	div.action_bar.shrink > div.heading > b {
+		font-size: 100%;
+		}
+
 /* LIST ************************************************************************/
 
 	.list {
@@ -2501,6 +2511,79 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 /* MODAL ************************************************************************/
 
-	div.modal-footer {
-		justify-content: space-between;
+	.modal-window {
+		z-index: 999999;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		opacity: 0;
+		pointer-events: none;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
+		background-color: rgba(0, 0, 0, 0.3);
+		}
+
+	.modal-window:target {
+		opacity: 1;
+		pointer-events: auto;
+		}
+
+	.modal-window > div {
+		position: relative;
+		padding: 15px 20px 20px 20px;
+		text-align: left;
+		color: #444;
+		background: #fff;
+		overflow: auto;
+		}
+
+	@media(min-width: 0px) and (max-width: 699px) {
+		.modal-window > div {
+			width: 100%;
+			min-width: 200px;
+			margin: 50px auto;
+			border-radius: 0;
+			}
+		}
+
+	@media(min-width: 700px) {
+		.modal-window > div {
+			width: 40%;
+			min-width: 400px;
+			max-width: 500px;
+			margin: 10% auto;
+			border-radius: 5px;
+			}
+		}
+
+	.modal-window .modal-title {
+		display: block;
+		font-weight: bold;
+		font-size: 120%;
+		margin-bottom: 15px;
+		}
+
+	.modal-close {
+		color: #aaa;
+		line-height: 50px;
+		font-size: 150%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 50px;
+		text-align: center;
+		text-decoration: none !important;
+		}
+
+	.modal-close:hover {
+		color: #000;
+		}
+
+	.modal-window .modal-message {
+		display: block;
+		text-align: left;
+		margin-bottom: 20px;
 		}
