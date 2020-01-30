@@ -501,6 +501,23 @@ if (!class_exists('destinations')) {
 		}
 
 		/**
+		* valid destination
+		*/
+		public function valid($destination) {
+			$destinations = $this->all('dialplan');
+			foreach($destinations as $category => $array) {
+				if (is_array($array)) {
+					foreach ($array as $key => $value) {
+						if ($destination == $value) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
 		* delete records
 		*/
 		public function delete($records) {
