@@ -209,7 +209,11 @@
 
 		//get the caller details
 			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
-			$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
+			if ($xml->variables->call_direction == 'inbound' ){
+				$database->fields['caller_id_number'] = urldecode($xml->variables->caller_id_number);
+			} else {
+				$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
+			}
 
 		//get the values from the callflow.
 			$i = 0;
