@@ -208,10 +208,12 @@
 			}
 
 		//get the caller details
-			$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
-			if ($xml->variables->call_direction == 'inbound' ){
-				$database->fields['caller_id_number'] = urldecode($xml->variables->caller_id_number);
-			} else {
+			$database->fields['caller_id_name'] = urldecode($xml->variables->caller_id_name);
+			$database->fields['caller_id_number'] = urldecode($xml->variables->caller_id_number);
+			if (isset($xml->variables->effective_caller_id_name)) {
+				$database->fields['caller_id_name'] = urldecode($xml->variables->effective_caller_id_name);
+			}
+			if (isset($xml->variables->effective_caller_id_number)) {
 				$database->fields['caller_id_number'] = urldecode($xml->variables->effective_caller_id_number);
 			}
 
