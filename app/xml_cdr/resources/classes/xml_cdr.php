@@ -317,6 +317,12 @@ if (!class_exists('xml_cdr')) {
 					//get the caller details
 						$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						if (isset($xml->variables->effective_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
+						}
+						if (isset($xml->variables->effective_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
 						$caller_id_destination = urldecode($xml->variables->caller_destination);
 						foreach ($xml->callflow as $row) {
 							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
