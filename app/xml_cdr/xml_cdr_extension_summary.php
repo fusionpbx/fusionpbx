@@ -216,7 +216,7 @@
 //show the results
 	echo "<table xclass='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	if ($_GET['show'] != "all" && permission_exists('xml_cdr_all')) {
+	if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
