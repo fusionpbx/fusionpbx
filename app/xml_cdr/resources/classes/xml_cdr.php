@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2019
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1048,19 +1048,25 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " hangup_cause, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
-				$sql .= " where domain_uuid = :domain_uuid \n";
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+					$sql .= " where domain_uuid = :domain_uuid \n";
+				}
+				else {
+					$sql .= " where true \n";
+				}
 				$sql .= $sql_date_range;
 				$sql .= ") as c \n";
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-
-				$parameters['domain_uuid'] = $this->domain_uuid;
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
 				$database = new database;
 				$summary = $database->select($sql, $parameters, 'all');
 				unset($parameters);
