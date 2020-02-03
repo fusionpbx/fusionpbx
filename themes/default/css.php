@@ -151,6 +151,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		else if ($background_colors[0] == '' && $background_colors[1] != '') { // use color 2
 			$background_color = "background: ".$background_colors[1].";";
 		}
+		else if ($background_colors[0] != '' && $background_colors[1] != '' && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient
+			$background_color = "background: ".$background_colors[0].";\n";
+			$background_color .= "background: -ms-radial-gradient(center, circle, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: radial-gradient(circle at center, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		}
 		else if ($background_colors[0] != '' && $background_colors[1] != '') { // vertical gradient
 			$background_color = "background: ".$background_colors[0].";\n";
 			$background_color .= "background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
