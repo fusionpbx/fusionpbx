@@ -1093,6 +1093,9 @@ include "root.php";
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
 					$view->assign("microtime",microtime(true));
+			
+			        //Make a key available in the template for whitelisting.
+                                        $view->assign("device_whitelist_key" , md5($device_uuid.$mac));
 
 				//personal ldap password
 					global $laddr_salt;
