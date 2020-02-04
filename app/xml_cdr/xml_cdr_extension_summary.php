@@ -118,8 +118,8 @@
 		echo "type=csv';\">\n";
 	}
 
-	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
-		echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_extension_summary.php?showall=true';\">\n";
+	if (permission_exists('xml_cdr_all') && $_GET['show'] != 'all') {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_extension_summary.php?show=all']);
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -128,7 +128,11 @@
 
 	if (permission_exists('xml_cdr_search')) {
 		echo "<form name='frm' id='frm' method='get' action=''>\n";
-
+		if (permission_exists('xml_cdr_all')) {
+			if ($_GET['show'] == 'all') {
+				echo "		<input type='hidden' name='show' value='all'>";
+			}
+		}
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
 
@@ -212,7 +216,7 @@
 //show the results
 	echo "<table xclass='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+	if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
@@ -228,29 +232,27 @@
 	echo "		<th style='text-align: left;'>".$text['label-description']."</th>\n";
 	echo "	</tr>\n";
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	if (isset($summary)) foreach ($summary as $key => $row) {
-		$tr_link = "xhref='xml_cdr.php?'";
-		echo "<tr ".$tr_link.">\n";
-		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
+	if (is_array($summary)) {
+		foreach ($summary as $key => $row) {
+			$tr_link = "xhref='xml_cdr.php?'";
+			echo "<tr class='list-row' ".$tr_link.">\n";
+			if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['domain_name'])."</td>\n";
+			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['extension'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_alias'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['answered'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['missed'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['no_answer'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['busy'])."&nbsp;</td>\n";
+			echo "  <td valign='top' class='".$row_style[$c]."'>".format_hours($row['aloc'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". escape($row['inbound_calls']) ."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? format_hours($row['inbound_duration']) : '0:00:00')."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? escape($row['outbound_calls']) : "0")."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? format_hours($row['outbound_duration']) : '0:00:00')."</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['description'])."&nbsp;</td>\n";
+			echo "</tr>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['extension'])."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_alias'])."&nbsp;</td>\n";
-		//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['answered'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['missed'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['no_answer'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['busy'])."&nbsp;</td>\n";
-		echo "  <td valign='top' class='".$row_style[$c]."'>".format_hours($row['aloc'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;". escape($row['inbound_calls']) ."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['inbound_duration'] != '0') ? format_hours($row['inbound_duration']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($row['outbound_calls'] != '') ? escape($row['outbound_calls']) : "0")."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['outbound_duration'] != '') ? format_hours($row['outbound_duration']) : '0:00:00')."</td>\n";
-		echo "	<td valign='top' class='row_stylebg'>".escape($row['description'])."&nbsp;</td>\n";
-		echo "</tr>\n";
-		$c = ($c==0) ? 1 : 0;
 	}
 
 	echo "</table>";

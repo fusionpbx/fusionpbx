@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -689,14 +689,14 @@ if (!function_exists('fax_split_dtmf')) {
 		else {
 			if (!$included) {
 				//nothing to send, redirect the browser
-				message::add($text['message-invalid-fax'], 'negative');
+				message::add($text['message-invalid-fax'], 'negative', 4000);
 				header("Location: fax_send.php?id=".$fax_uuid);
 				exit;
 			}
 		}
 
 		//preview, if requested
-		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == $text['button-preview'])) {
+		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == 'preview')) {
 			unset($file_type);
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
 				$file_type = 'pdf';
@@ -905,29 +905,23 @@ if (!$included) {
 
 		echo "</script>";
 
-	//fax extension form
-		echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "	<td align='left' valign='top' width='30%'>\n";
-		echo "		<span class='title'>".$text['header-new_fax']."</span>\n";
-		echo "	</td>\n";
-		echo "	<td width='70%' align='right' valign='top'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
-		echo "		<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
-		echo "		<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "<br>\n";
+	//show the content
+		echo "<form method='post' name='frm' enctype='multipart/form-data'>\n";
+
+		echo "<div class='action_bar' id='action_bar'>\n";
+		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
+		echo "	<div class='actions'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'fax.php']);
+		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'name'=>'submit','value'=>'preview','icon'=>'eye']);
+		echo button::create(['type'=>'submit','label'=>$text['button-send'],'name'=>'submit','value'=>'send','icon'=>'paper-plane','style'=>'margin-left: 15px;']);
+		echo "	</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
+
+		echo $text['description-2']." ".(if_group('superadmin') ? $text['description-3'] : null)."\n";
+		echo "<br /><br />\n";
 
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='left'>\n";
-		echo "			".$text['description-2']." ".((if_group('superadmin')) ? $text['description-3'] : null)." \n";
-		echo "			<br /><br />\n";
-		echo "		</td>\n";
-		echo "	</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -1068,7 +1062,9 @@ if (!$included) {
 		echo "<td class='vtable' align='left'>\n";
 		for ($f = 1; $f <= 3; $f++) {
 			echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';\"><br />";
+			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'>";
+			echo button::create(['type'=>'button','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'onclick'=>"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';"]);
+			echo 	"<br />";
 			echo "	<span id='file_list_".$f."'></span>";
 			echo "	</span>\n";
 		}
@@ -1139,22 +1135,17 @@ if (!$included) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<br>\n";
-		echo "			<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
-		echo "			<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
-		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
-		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
-		echo "			<input type='hidden' name='action' value='send'>\n";
-		echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
-		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
 		echo "</table>";
+		echo "<br /><br />\n";
+
+		echo "<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
+		echo "<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
+		echo "<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
+		echo "<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
+		echo "<input type='hidden' name='action' value='send'>\n";
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 		echo "</form>\n";
-		echo "<br />\n";
 
 	//show the footer
 		require_once "resources/footer.php";

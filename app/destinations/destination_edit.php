@@ -697,10 +697,10 @@
 			if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".escape($destination_uuid)."&type=".$destination_type);
+			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type));
 			return;
 
-	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //initialize the destinations object
 	$destination = new destinations;
@@ -773,7 +773,7 @@
 	unset($limit);
 
 //remove previous fax details
-	$x=0;
+	$x = 0;
 	foreach($dialplan_details as $row) {
 		if ($row['dialplan_detail_data'] == "tone_detect_hits=1") {
 			unset($dialplan_details[$x]);
@@ -807,14 +807,14 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	require_once "resources/header.php";
+//include the header
 	if ($action == "update") {
 		$document['title'] = $text['title-destination-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-destination-add'];
 	}
+	require_once "resources/header.php";
 
 //js controls
 	echo "<script type='text/javascript'>\n";
@@ -853,14 +853,14 @@
 	//echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	//echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
 	//echo "			document.getElementById('tr_account_code').style.display = '';\n";
-//	echo "			document.getElementById('destination_context').value = '".$destination_context."'";
+	//echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	//echo "		}\n";
 	echo "		";
 	echo "	}\n";
 	echo "	\n";
 	echo "	function context_control() {\n";
 	echo "		destination_type = document.getElementById('destination_type');\n";
-	echo" 		destination_domain = document.getElementById('destination_domain');\n";
+	echo " 		destination_domain = document.getElementById('destination_domain');\n";
 	echo "		if (destination_type.options[destination_type.selectedIndex].value == 'outbound') {\n";
 	echo "			if (destination_domain.options[destination_domain.selectedIndex].value != '') {\n";
 	echo "				document.getElementById('destination_context').value = destination_domain.options[destination_domain.selectedIndex].innerHTML;\n";
@@ -873,31 +873,34 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-add']."</b></td>\n";
+		echo "<b>".$text['header-destination-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['header-destination-edit']."</b></td>\n";
+		echo "<b>".$text['header-destination-edit']."</b>";
 	}
-	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='destinations.php?type=".escape($destination_type)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo $text['description-destinations']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo 	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-destinations']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_type']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type' id='destination_type' onchange='type_control(this.options[this.selectedIndex].value);context_control();'>\n";
 	switch ($destination_type) {
 		case "inbound" :	$selected[0] = "selected='selected'";	break;
@@ -1190,20 +1193,17 @@
 	echo $text['description-destination_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='db_destination_number' value='".escape($destination_number)."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-		echo "		<input type='hidden' name='destination_uuid' value='".escape($destination_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='db_destination_number' value='".escape($destination_number)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='destination_uuid' value='".escape($destination_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //adjust form if outbound destination

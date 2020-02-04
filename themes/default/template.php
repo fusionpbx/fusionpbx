@@ -378,11 +378,21 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		}
 
 	//handle action bar style on scroll
-		window.addEventListener('scroll', action_bar_scroll , false);
-		function action_bar_scroll() {
-			if (document.getElementById('action_bar')) {
-				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
-				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
+		window.addEventListener('scroll', function(){
+			action_bar_scroll('action_bar', 20);
+		}, false);
+		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
+			if (document.getElementById(action_bar_id)) {
+				//sticky
+					if (this.scrollY > scroll_position) {
+						document.getElementById(action_bar_id).classList.add('scroll');
+						if (typeof function_sticky === 'function') { function_sticky(); }
+					}
+				//inline
+					if (this.scrollY < scroll_position) {
+						document.getElementById(action_bar_id).classList.remove('scroll');
+						if (typeof function_inline === 'function') { function_inline(); }
+					}
 			}
 		}
 
@@ -474,6 +484,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		function list_search_reset() {
 			document.getElementById('btn_reset').style.display = 'none';
 			document.getElementById('btn_search').style.display = '';
+		}
+
+		function modal_close() {
+			document.location.href='#';
 		}
 
 </script>
@@ -892,7 +906,7 @@ if (!$default_login) {
 		echo "</div>\n"; //initial div from switch statement above
 }
 else {
-	// default login being used
+	//default login being used
 	if ($_SESSION['theme']['logo_login']['text'] != '') {
 		$logo = $_SESSION['theme']['logo_login']['text'];
 	}
@@ -903,8 +917,22 @@ else {
 		$logo = PROJECT_PATH."/themes/default/images/logo_login.png";
 	}
 
+	//set the login logo width and height
+	if (isset($_SESSION['theme']['login_logo_weight']['text'])) {
+		$login_logo_weight = $_SESSION['theme']['login_logo_weight']['text'];
+	}
+	else {
+		$login_logo_weight = '300px';
+	}
+	if (isset($_SESSION['theme']['login_logo_height']['text'])) {
+		$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+	}
+	else {
+		$login_logo_height = '';
+	}
+
 	echo "<div id='default_login'>\n";
-	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' src='".escape($logo)."'></a><br />\n";
+	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' width='$login_logo_weight' height='$login_logo_height' src='".escape($logo)."'></a><br />\n";
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";

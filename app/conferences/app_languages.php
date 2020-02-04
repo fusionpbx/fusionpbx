@@ -43,9 +43,9 @@ $text['title-conference']['uk-ua'] = "";
 
 $text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
 $text['description']['ar-eg'] = "";
-$text['description']['de-at'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
-$text['description']['de-ch'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
-$text['description']['de-de'] = "Konferenzen wird verwendet, um KOnferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen.";
+$text['description']['de-at'] = "Konferenzen wird verwendet, um Konferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
+$text['description']['de-ch'] = "Konferenzen wird verwendet, um Konferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
+$text['description']['de-de'] = "Konferenzen wird verwendet, um Konferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen.";
 $text['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso pin (opcional).";
 $text['description']['es-mx'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso pin (opcional)."; //copied from es-cl
 $text['description']['fr-ca'] = "Ce menu est utilisé pour créer des salles de conférence avec un nom, une description et en option un code PIN."; //copied from fr-fr

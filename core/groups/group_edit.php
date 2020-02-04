@@ -191,7 +191,7 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='domain_uuid'>\n";
 	if (strlen($domain_uuid) == 0) {
-		echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
+		echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 	}
 	else {
 		echo "		<option value=''>".$text['label-global']."</option>\n";
@@ -283,19 +283,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='group_protected'>\n";
-	echo "		<option value=''></option>\n";
-	if ($group_protected == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($group_protected == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
+	echo "		<option value='false'>".$text['label-false']."</option>\n";
+	echo "		<option value='true' ".($group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-group_protected']."\n";

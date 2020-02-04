@@ -92,7 +92,7 @@
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'] && count($_SESSION['user']['extension']) > 0)) {
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {
@@ -122,7 +122,7 @@
 //get the list
 	$sql = "select * from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'] && count($_SESSION['user']['extension']) > 0)) {
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
 		foreach ($_SESSION['user']['extension'] as $field) {
@@ -195,11 +195,11 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
-	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center'");
+	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order);
-	echo "	<th class='hide-md-dn'>".$text['label-description']."</th>\n";
+	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
+	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
 	if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -223,29 +223,19 @@
 				echo $text['label-all'];
 			}
 			else {
-				echo "<a href='".$list_row_url."'>".escape($row['extension'])."</a>";
+				echo escape($row['extension']);
 			}
 			echo "	</td>\n";
-
+			echo "	<td>".escape($row['call_block_name'])."</td>\n";
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a href='".$list_row_url."'>".escape($row['call_block_name'])."</a>";
+				echo "<a href='".$list_row_url."'>".escape(format_phone($row['call_block_number']))."</a>";
 			}
 			else {
-				echo escape($row['call_block_name']);
+				echo escape(format_phone($row['call_block_number']));
 			}
 			echo "	</td>\n";
-
-			echo "	<td>";
-			if (permission_exists('call_block_edit')) {
-				echo "<a href='".$list_row_url."'>".escape($row['call_block_number'])."</a>";
-			}
-			else {
-				echo escape($row['call_block_number']);
-			}
-			echo "	</td>\n";
-
-			echo "	<td class='center'>".escape($row['call_block_count'])."</td>\n";
+			echo "	<td class='center hide-sm-dn'>".escape($row['call_block_count'])."</td>\n";
 			echo "	<td>".$text['label-'.$row['call_block_app']]." ".escape($row['call_block_data'])."</td>\n";
 			if (permission_exists('call_block_edit')) {
 				echo "	<td class='no-link center'>";
@@ -256,7 +246,7 @@
 				echo $text['label-'.$row['call_block_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td>".date("j M Y H:i:s".(defined('TIME_24HR') && TIME_24HR == 1 ? 'a' : null), $row['date_added'])."</td>\n";
+			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date(($_SESSION['domain']['time_format']['text'] == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
 			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
 			if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";

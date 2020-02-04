@@ -30,32 +30,32 @@ if (!class_exists('conference_centers')) {
 	class conference_centers {
 
 		/**
-		* define the variables
-		*/
+		 * declare public variables
+		 */
 		public $domain_uuid;
 		public $meeting_uuid;
 		public $order_by;
 		public $order;
 		public $rows_per_page;
 		public $offset;
-		private $fields;
 		public $search;
 		public $count;
 		public $created_by;
 
+		public $toggle_field;
+
 		/**
 		 * declare private variables
 		 */
-		/*
+		private $fields;
+
 		private $app_name;
 		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
-		private $toggle_field;
 		private $toggle_values;
-		*/
 
 		/**
 		 * Called when the object is created
@@ -63,10 +63,8 @@ if (!class_exists('conference_centers')) {
 		public function __construct() {
 
 			//assign private variables
-			/*
 				$this->app_name = 'conference_centers';
 				$this->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
-			*/
 
 		}
 
@@ -303,7 +301,6 @@ if (!class_exists('conference_centers')) {
 		/**
 		 * delete records
 		 */
-		/*
 		public function delete_conference_centers($records) {
 
 			//assign private variables
@@ -338,7 +335,7 @@ if (!class_exists('conference_centers')) {
 										$sql .= "where domain_uuid = :domain_uuid ";
 										$sql .= "and conference_center_uuid = :conference_center_uuid ";
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-										$parameters['conference_center_uuid'] = $conference_center_uuid;
+										$parameters['conference_center_uuid'] = $record['uuid'];
 										$database = new database;
 										$dialplan_uuid = $database->select($sql, $parameters, 'column');
 										unset($sql, $parameters);
@@ -389,12 +386,78 @@ if (!class_exists('conference_centers')) {
 					}
 			}
 		}
-		*/
+
+		public function delete_conference_rooms($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'conference_room_';
+				$this->list_page = 'conference_rooms.php';
+				$this->table = 'conference_rooms';
+				$this->uuid_prefix = 'conference_room_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+
+									//create array
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										if (is_uuid($record['meeting_uuid'])) {
+											$array['meeting_users'][$x]['meeting_uuid'] = $record['meeting_uuid'];
+											$array['meeting_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array['meetings'][$x]['meeting_uuid'] = $record['meeting_uuid'];
+											$array['meetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+										}
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('meeting_user_delete', 'temp');
+									$p->add('meeting_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('meeting_user_delete', 'temp');
+									$p->delete('meeting_delete', 'temp');
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
 
 		/**
 		 * toggle records
 		 */
-		/*
 		public function toggle_conference_centers($records) {
 
 			//assign private variables
@@ -490,7 +553,114 @@ if (!class_exists('conference_centers')) {
 
 			}
 		}
-		*/
+
+		public function toggle_conference_rooms($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'conference_room_';
+				$this->list_page = 'conference_rooms.php';
+				$this->table = 'conference_rooms';
+				$this->uuid_prefix = 'conference_room_';
+				$this->toggle_values = ['true','false'];
+
+			if (permission_exists($this->permission_prefix.'edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//toggle the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//validate submitted toggle field
+							if (!in_array($this->toggle_field, ['record','wait_mod','announce','mute','sounds','enabled'])) {
+								header('Location: '.$this->list_page);
+								exit;
+							}
+
+						//get current toggle state
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[$x] = "'".$record['uuid']."'";
+									if (($this->toggle_field == 'record' || $this->toggle_field == 'enabled') && is_uuid($record['meeting_uuid'])) {
+										$meeting_uuid[$record['uuid']] = $record['meeting_uuid'];
+									}
+								}
+							}
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
+								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$states[$row['uuid']] = $row['toggle'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//build update array
+							$x = 0;
+							foreach ($states as $uuid => $state) {
+								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								if ($this->toggle_field == 'enabled' && is_uuid($meeting_uuid[$uuid])) {
+									$array['meetings'][$x]['meeting_uuid'] = $meeting_uuid[$uuid];
+									$array['meetings'][$x]['enabled'] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								}
+/*
+								//if toggling to true, start recording
+									if ($this->toggle_field == 'record' && is_uuid($meeting_uuid[$uuid]) && $state == $this->toggle_values[1]) {
+										//prepare the values and commands
+											$default_language = 'en';
+											$default_dialect = 'us';
+											$default_voice = 'callie';
+// 											$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+//											$switch_cmd_record = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." record ".$recording_dir.'/'.$meeting_uuid[$uuid].'.wav';
+											$switch_cmd_notice = "conference ".$meeting_uuid[$uuid]."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+										//execute api commands
+// 											if (!file_exists($recording_dir.'/'.$meeting_uuid[$uuid].'.wav')) {
+												$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+												if ($fp) {
+//													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_record);
+													$switch_result = event_socket_request($fp, 'api '.$switch_cmd_notice);
+												}
+// 											}
+									}
+*/
+								$x++;
+							}
+
+						//save the changes
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-toggle']);
+
+							}
+							unset($records, $states, $state);
+					}
+
+			}
+		}
 
 		/**
 		 * copy records

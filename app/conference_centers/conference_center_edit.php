@@ -54,6 +54,19 @@
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//delete the conference center
+			if ($_POST['action'] == 'delete' && permission_exists('conference_center_delete') && is_uuid($conference_center_uuid)) {
+				//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $conference_center_uuid;
+				//delete
+					$obj = new conference_centers;
+					$obj->delete_conference_centers($array);
+				//redirect
+					header('Location: conference_centers.php');
+					exit;
+			}
+
 		//get http post variables and set them to php variables
 			$conference_center_uuid = $_POST["conference_center_uuid"];
 			$dialplan_uuid = $_POST["dialplan_uuid"];
@@ -252,23 +265,26 @@
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_center']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' style='margin-right: 15px;' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>";
-	if (permission_exists('conference_center_delete') && $action == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'link'=>'conference_center_delete.php?id='.urlencode($conference_center_uuid),'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_center']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'conference_centers.php']);
+	if ($action == 'update' && permission_exists('conference_center_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }",'style'=>'margin-right: 15px;']);
 	}
-	echo 	"<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-conference_center_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_name' maxlength='255' value=\"".escape($conference_center_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-conference_center_name']."\n";
@@ -411,19 +427,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_enabled'>\n";
-	echo "	<option value=''></option>\n";
-	if ($conference_center_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($conference_center_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
+	echo "		<option value='true'>".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".($conference_center_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";
@@ -439,20 +444,17 @@
 	echo "<br />\n";
 	echo $text['description-conference_center_description']."\n";
 	echo "</td>\n";
-	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "			<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-		echo "			<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='conference_center_uuid' value='".escape($conference_center_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

@@ -81,7 +81,7 @@ $text['title-inbox']['ru-ru'] = "Входящий";
 $text['title-inbox']['sv-se'] = "Inbox";
 $text['title-inbox']['uk-ua'] = "";
 
-$text['title-sent_faxes']['en-us'] = "Sent Faxes";
+$text['title-sent_faxes']['en-us'] = "Sent";
 $text['title-sent_faxes']['ar-eg'] = "";
 $text['title-sent_faxes']['de-at'] = "Gesendete Faxe"; //copied from de-de
 $text['title-sent_faxes']['de-ch'] = "Gesendete Faxe"; //copied from de-de
@@ -2061,7 +2061,7 @@ $text['label-copy']['ru-ru'] = "Copy";
 $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
 
-$text['header-sent_faxes']['en-us'] = "Sent Faxes";
+$text['header-sent_faxes']['en-us'] = "Sent";
 $text['header-sent_faxes']['ar-eg'] = "";
 $text['header-sent_faxes']['de-at'] = "Gesendete Faxe"; //copied from de-de
 $text['header-sent_faxes']['de-ch'] = "Gesendete Faxe"; //copied from de-de

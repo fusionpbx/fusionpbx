@@ -17,13 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
 
 /**
  * scripts class provides methods for creating the config.lua and copying switch scripts
@@ -104,16 +103,16 @@ if (!class_exists('scripts')) {
 						$source_directory = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
-						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/scripts';
 					}
 					if (is_readable($source_directory)) {
 						//copy the main scripts
-						recursive_copy($source_directory,$destination_directory);
+						recursive_copy($source_directory, $destination_directory);
 						unset($source_directory);
 
 						//copy the app/*/resource/install/scripts
-						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
-						foreach ($app_scripts as $app_script){
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/scripts');
+						foreach ($app_scripts as $app_script) {
 							recursive_copy($app_script, $destination_directory);
 						}
 						unset($app_scripts);

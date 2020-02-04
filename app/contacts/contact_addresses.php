@@ -43,15 +43,7 @@
 		$contact_uuid = $_GET['id'];
 	}
 
-//show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-addresses']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-//get the contact list
+//get the address list
 	$sql = "select * from v_contact_addresses ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and contact_uuid = :contact_uuid ";
@@ -59,67 +51,76 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$contact_addresses = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 //show the content
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<div class='action_bar sub shrink'>\n";
+	echo "	<div class='heading'><b>".$text['label-addresses']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	/*
+	if (permission_exists('contact_address_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_address_edit.php?contact_uuid='.urlencode($_GET['id'])]);
+	}
+	if (permission_exists('contact_address_delete') && $contact_addresses) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	*/
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<tr>\n";
-	echo "<th>".$text['label-address_label']."</th>\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('contact_address_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all_addresses' name='checkbox_all' onclick=\"list_all_toggle('addresses');\" ".($contact_addresses ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo "<th class='pct-15'>".$text['label-address_label']."</th>\n";
 	echo "<th>".$text['label-address_address']."</th>\n";
 	echo "<th>".$text['label-address_locality'].", ".$text['label-address_region']."</th>\n";
-	echo "<th style='text-align: center;'>".$text['label-address_country']."</th>\n";
-	echo "<th>&nbsp;</th>\n";
-	echo "<th>".$text['label-address_description']."</th>\n";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('contact_address_add')) {
-		echo "<a href='contact_address_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	echo "<th class='center'>".$text['label-address_country']."</th>\n";
+	echo "<th class='shrink'>&nbsp;</th>\n";
+	echo "<th class='hide-md-dn'>".$text['label-address_description']."</th>\n";
+	if (permission_exists('contact_address_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
+	if (is_array($contact_addresses) && @sizeof($contact_addresses) != 0) {
+		$x = 0;
+		foreach ($contact_addresses as $row) {
 			$map_query = $row['address_street']." ".$row['address_extended'].", ".$row['address_locality'].", ".$row['address_region'].", ".$row['address_region'].", ".$row['address_postal_code'];
 			if (permission_exists('contact_address_edit')) {
-				$tr_link = "href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid'])."'";
+				$list_row_url = "contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_address_uuid']);
 			}
-			echo "<tr ".$tr_link." ".((escape($row['address_primary'])) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['address_label'])."&nbsp;</td>\n";
-			$address='';
-			if ($row['address_extended'] != '') {
-				$address= escape($row['address_street'])." ".escape($row['address_extended']);
-			}
-			else {
-				$address= escape($row['address_street']);
-			}
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 25%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$address."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['address_locality']).(($row['address_locality'] != '' && $row['address_region'] != '') ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['address_country'])."&nbsp;</td>\n";
-			echo "	<td valign='middle' class='".$row_style[$c]." tr_link_void' style='padding: 0px;'>\n";
-			echo "		<a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='resources/images/icon_gmaps.png' style='width: 21px; height: 21px; alt='".$text['label-google_map']."' title='".$text['label-google_map']."'></a>\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['address_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('contact_address_edit')) {
-				echo "<a href='contact_address_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('contact_address_delete')) {
-				echo "<a href='contact_address_delete.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".escape($row['contact_address_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='contact_addresses[$x][checked]' id='checkbox_".$x."' class='checkbox_addresses' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_addresses').checked = false; }\">\n";
+				echo "		<input type='hidden' name='contact_addresses[$x][uuid]' value='".escape($row['contact_address_uuid'])."' />\n";
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
+			echo "	<td>".escape($row['address_label'])." ".($row['address_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
+			$address = escape($row['address_street']).($row['address_extended'] != '' ? " ".escape($row['address_extended']) : null);
+			echo "	<td class='pct-25 overflow no-wrap'><a href='".$list_row_url."'>".$address."</a>&nbsp;</td>\n";
+			echo "	<td class='no-wrap'>".escape($row['address_locality']).(($row['address_locality'] != '' && $row['address_region'] != '') ? ", " : null).escape($row['address_region'])."&nbsp;</td>\n";
+			echo "	<td class='center'>".escape($row['address_country'])."&nbsp;</td>\n";
+			echo "	<td class='button no-link'><a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='resources/images/icon_gmaps.png' style='width: 21px; height: 21px; alt='".$text['label-google_map']."' title='".$text['label-google_map']."'></a></td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".escape($row['address_description'])."&nbsp;</td>\n";
+			if (permission_exists('contact_address_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
+			$x++;
 		}
-		unset($result, $row);
+		unset($contact_addresses);
 	}
 
-	echo "</table>";
+	echo "</table>\n";
+	echo "<br />\n";
 
 ?>

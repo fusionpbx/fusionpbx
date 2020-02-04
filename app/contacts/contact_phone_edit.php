@@ -215,13 +215,13 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_phones-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-contact_phones-add'];
 	}
+	require_once "resources/header.php";
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>\n";
@@ -235,26 +235,26 @@
 	echo "</script>";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' nowrap='nowrap'><b>";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo $text['header-contact_phones-edit'];
+		echo "<b>".$text['header-contact_phones-edit']."</b>";
 	}
 	else if ($action == "add") {
-		echo $text['header-contact_phones-add'];
+		echo "<b>".$text['header-contact_phones-add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-phone_label']."\n";
@@ -366,19 +366,15 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_phone_uuid' value='".escape($contact_phone_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_phone_uuid' value='".escape($contact_phone_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

@@ -558,6 +558,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Remote Phonebook Extensions on Yealink";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c786b947-2d08-4a48-a2b3-cb508c179c3b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_remote_phonebook_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable phone to query the contact names from the remote phonebook when receiving incoming calls. 0-Disabled (default), 1-Enabled;";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "765e18d9-9440-42be-a858-2c0ef90ee50f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_1";

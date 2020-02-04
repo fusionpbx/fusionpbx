@@ -324,7 +324,7 @@
 
 //get the assigned groups
 	$sql = "select ";
-	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "	mig.*, g.group_name, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
 	$sql .= "	v_menu_item_groups as mig, ";
 	$sql .= "	v_groups as g ";
@@ -506,14 +506,14 @@
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($groups as $row) {
-			if ($row['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
-			if ($row['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!in_array($row["group_uuid"], $assigned_groups)) {
-				echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
+				if (!in_array($row["group_uuid"], $assigned_groups)) {
+					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+				}
 			}
 		}
 		echo "</select>";
-		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 	}
 	echo "		</td>";
 	echo "	</tr>";

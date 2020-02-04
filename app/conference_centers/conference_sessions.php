@@ -27,6 +27,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('conference_session_view')) {
@@ -41,10 +42,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //set variables from the http values
 	$meeting_uuid = $_GET["id"];
 	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'start_epoch';
@@ -54,19 +51,6 @@
 	if (is_uuid($meeting_uuid)) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
 	}
-
-//show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference_sessions']."</b></td>\n";
-	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'></td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-conference_sessions']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
 
 //prepare to page the results
 	$sql = "select count(*) from v_conference_sessions ";
@@ -82,9 +66,9 @@
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = '';
 	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 		$offset = $rows_per_page * $page;
 	}
 
@@ -100,12 +84,10 @@
 	$conference_sessions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//includes the header
+	require_once "resources/header.php";
 
-//show the content
+//styles
 	echo "\n";
 	echo "<style>\n";
 	echo "audio {\n";
@@ -120,15 +102,32 @@
 	echo "</style>\n";
 	echo "\n";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th>".$text['label-time']."</th>\n";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_sessions']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'conference_rooms.php']);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-conference_sessions']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
 	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
+	echo "<th>".$text['label-time']."</th>\n";
 	echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 	//echo th_order_by('recording', $text['label-recording'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
-	echo "<td class='list_control_icon'>&nbsp;</td>\n";
+	if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
 
 	if (is_array($conference_sessions) && sizeof($conference_sessions) != 0) {
@@ -151,12 +150,12 @@
 			}
 
 			if (strlen( $row['start_epoch']) > 0) {
-				$tr_link = "href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."'";
-				echo "<tr ".$tr_link.">\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['profile'])."&nbsp;</td>\n";
+				$list_row_url = "conference_session_details.php?uuid=".urlencode($row['conference_session_uuid']);
+				echo "<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "	<td><a href='".$list_row_url."'>".$start_date."</a>&nbsp;</td>\n";
+				echo "	<td>".$end_date."&nbsp;</td>\n";
+				echo "	<td>".$time_difference."&nbsp;</td>\n";
+				echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
 				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 				$tmp_name = '';
 				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
@@ -165,67 +164,42 @@
 				elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
 					$tmp_name = $row['conference_session_uuid'].".wav";
 				}
-				echo "	<td class='".$row_style[$c]."'>\n";
+				echo "	<td class='button no-link'>\n";
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
-					echo "</tr>\n";
+					echo "<tr>\n";
+					echo "<td>\n";
+					echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-right: 15px;','link'=>'download.php?id='.urlencode($row['conference_session_uuid'])]);
+					echo "</td>\n";
 					if (permission_exists('conference_session_play')) {
-						echo "<td valign=\"bottom\">\n";
-						echo "		<audio controls=\"controls\">\n";
-  						echo "			<source src=\"download.php?id=".escape($row['conference_session_uuid'])."\" type=\"audio/x-wav\">\n";
-						echo "		</audio>\n";
+						echo "<td>\n";
+						echo "	<audio controls=\"controls\">\n";
+  						echo "		<source src=\"download.php?id=".escape($row['conference_session_uuid'])."\" type=\"audio/x-wav\">\n";
+						echo "	</audio>\n";
 						//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 						//echo "			".$text['label-play']."\n";
 						//echo "		</a>\n";
-						//echo "		&nbsp;\n";
 						echo "</td>\n";
 					}
-					echo "<td>\n";
-					echo "	&nbsp;\n";
-					echo "</td>\n";
-					echo "<td>\n";
-					echo "		<a href=\"download.php?id=".escape($row['conference_session_uuid'])."\" valign='middle'>";
-					//echo "			".$text['label-download']."\n";
-					echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' value='".$text['label-download']."'>";
-					echo "		</a>\n";
-					echo "</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
-					//echo "		&nbsp;\n";
-				}
-				else {
-					echo "&nbsp;";
 				}
 				echo "	</td>\n";
-				echo "	<td class='list_control_icon'>\n";
-				echo "		<a href='conference_session_details.php?uuid=".escape($row['conference_session_uuid'])."' alt='".$text['button-view']."'>\n";
-				//echo "			<input type='button' class='btn' name='' alt='".$text['label-view']."' value='".$text['label-view']."'>";
-				echo "			$v_link_label_view\n";
-				echo "		</a>\n";
-				echo "	</td>\n";
+				if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					echo "	<td class='action-button'>\n";
+					echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
+					echo "	</td>\n";
+				}
 				echo "</tr>\n";
+
 			}
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
+		}
+		unset($result);
+	}
 
-	echo "<tr>\n";
-	echo "<td colspan='12' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
-	echo "			&nbsp;\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
 //include the footer
 	require_once "resources/footer.php";

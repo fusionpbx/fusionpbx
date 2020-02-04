@@ -145,7 +145,7 @@
 				end
 				if (call_block_app ~= nil and call_block_app == 'hold') then
 					if (session:ready()) then
-						session:execute("respond", '607');
+						session:execute("respond", '600');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
 						session:execute('set', 'call_block_app=hold');
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Hold\n");
@@ -153,7 +153,7 @@
 				end
 				if (call_block_app ~= nil and call_block_app == 'reject') then
 					if (session:ready()) then
-						session:execute("respond", '607');
+						session:execute("respond", '600');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
 						session:execute('set', 'call_block_app=reject');
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Reject\n");

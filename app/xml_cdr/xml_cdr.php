@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -137,6 +137,9 @@
 	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr)."'>\n";
 	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
 	echo "		<input type='hidden' name='leg' value='".escape($leg)."'>\n";
+	if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
+		echo "<input type='hidden' name='show' value='all'>\n";
+	}
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
@@ -154,7 +157,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('xml_cdr_all')) {
-		if (!$_REQUEST['show'] == 'all') {
+		if ($_REQUEST['show'] !== 'all') {
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
@@ -239,6 +242,9 @@
 		if (permission_exists('xml_cdr_search_extension')) {
 			$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
+			if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
+				$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
+			}
 			$sql .= "order by extension asc, number_alias asc ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
@@ -694,7 +700,7 @@
 						$content .= "	<td class='middle no-link no-wrap'>";
 						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_id_number'])) {
-							$content .= "		".format_phone(substr($row['caller_id_number'], 0, 20)).' ';
+							$content .= "		".escape(format_phone(substr($row['caller_id_number'], 0, 20))).' ';
 						}
 						else {
 							$content .= "		".escape(substr($row['caller_id_number'], 0, 20)).' ';
