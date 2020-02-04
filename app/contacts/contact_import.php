@@ -291,9 +291,9 @@
 									$parent = get_parent($schema, $table_name);
 	
 									//remove formatting from the phone number
-								//	if ($field_name == "phone_number") {
-								//		$result[$key] = preg_replace('{\D}', '', $result[$key]);
-								//	}
+									if ($field_name == "phone_number") {
+										$result[$key] = preg_replace('{(?!^\+)[\D]}', '', $result[$key]);
+									}
 	
 									//build the data array
 									if (strlen($table_name) > 0) {
