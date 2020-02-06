@@ -58,23 +58,46 @@
 	}
 
 //get total ivr menu count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($_SESSION['limit']['ivr_menus']['numeric'] != '') {
-			$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$total_ivr_menus = $database->select($sql, $parameters, 'column');
-			if ($total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
-				message::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
-				header('Location: ivr_menus.php');
-				exit;
-			}
-			unset($sql, $parameters, $total_ivr_menus);
+	if (is_numeric($_SESSION['limit']['ivr_menus']['numeric'])) {
+		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$total_ivr_menus = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($action == 'add' && $total_ivr_menus >= $_SESSION['limit']['ivr_menus']['numeric']) {
+			message::add($text['message-maximum_ivr_menus'].' '.$_SESSION['limit']['ivr_menus']['numeric'], 'negative');
+			header('Location: ivr_menus.php');
+			exit;
 		}
 	}
 
 //get http post values and set them to php variables
 	if (count($_POST) > 0) {
+
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($ivr_menu_uuid)) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $ivr_menu_uuid;
+
+				switch ($_POST['action']) {
+					case 'copy':
+						if (permission_exists('ivr_menu_add')) {
+							$obj = new ivr_menu;
+							$obj->copy($array);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('ivr_menu_delete')) {
+							$obj = new ivr_menu;
+							$obj->delete($array);
+						}
+						break;
+				}
+
+				header('Location: ivr_menus.php');
+				exit;
+			}
 
 		//get ivr menu
 			$ivr_menu_name = $_POST["ivr_menu_name"];
@@ -508,10 +531,11 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//content
-	require_once "resources/header.php";
+//included the header
 	$document['title'] = $text['title-ivr_menu'];
+	require_once "resources/header.php";
 
+//show the content
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
 	echo "function enable_change(enable_over) {\n";
@@ -527,27 +551,28 @@
 	echo "}\n";
 	echo "</script>";
 
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm'>\n";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td align='left' valign='top'>";
-	echo "		<b>".$text['header-ivr_menu']."</b>";
-	echo "		<br><br>";
-	echo "	</td>\n";
-	echo "	<td align='right' nowrap='nowrap' valign='top'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ivr_menus.php'\" value='".$text['button-back']."'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='ivr_menu_copy.php?id=".escape($ivr_menu_uuid)."';}\" value='".$text['button-copy']."'>\n";
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "	<td colspan='2' align='left' valign='top'>";
-	echo "		".$text['description-ivr_menu'];
-	echo "		<br><br>";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-ivr_menu']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'ivr_menus.php']);
+	$button_margin = 'margin-left: 15px;';
+	if (permission_exists('ivr_menu_add') && $action == "update" && (!is_numeric($_SESSION['limit']['ivr_menus']['numeric']) || $total_ivr_menus < $_SESSION['limit']['ivr_menus']['numeric'])) {
+		echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
+	if (permission_exists('ivr_menu_delete') && $action == "update") {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-ivr_menu']."\n";
+	echo "<br><br>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -1083,7 +1108,7 @@
 		echo "		<tr>\n";
 		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 		echo "		<td width=\"70%\" class=\"vtable\">\n";
-		echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input></a>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
 		echo "		</td>\n";
 		echo "		</tr>\n";
 		echo "		</table>\n";
@@ -1443,19 +1468,15 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if (is_uuid($ivr_menu_uuid)) {
-		echo "		<input type='hidden' name='ivr_menu_uuid' value='".escape($ivr_menu_uuid)."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if (is_uuid($ivr_menu_uuid)) {
+		echo "<input type='hidden' name='ivr_menu_uuid' value='".escape($ivr_menu_uuid)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
 
