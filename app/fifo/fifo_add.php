@@ -24,9 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
+require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/paging.php";
+
 if (permission_exists('fifo_add')) {
 	//access granted
 }
@@ -38,11 +40,6 @@ else {
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//includes and title
-	require_once "resources/header.php";
-	$document['title'] = $text['title-queue_add'];
-	require_once "resources/paging.php";
 
 //get http values and set them as variables
 	if (count($_POST)>0) {
@@ -293,34 +290,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//includes and title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-queue_add'];
+
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class='title'>".$text['header-queue_add']."</span></span></td>\n";
-	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7'\" value='".$text['button-back']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			<span class=\"vexpl\">\n";
-	echo "			".$text['description-queue_add']."\n";
-	echo "			</span>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>";
+	echo "<form method='post' name='frm'>\n";
 
-	echo "<br />\n";
-	echo "<br />\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-queue_add']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo $text['description-queue_add']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "	<tr>\n";
-	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "		".$text['label-name']."\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable' align='left'>\n";
+	echo "	<td width='70%' class='vtable' align='left'>\n";
 	echo "		<input class='formfld' type='text' name='extension_name' maxlength='255' value=\"$extension_name\" required='required'>\n";
 	echo "		<br />\n";
 	echo "		".$text['description-name']."\n";
@@ -344,8 +339,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
-	$i=300;
-	while($i<=999) {
+	$i = 300;
+	while ($i <= 999) {
 		$selected = ($dialplan_order == $i) ? "selected" : null;
 		if (strlen($i) == 1) { echo "<option value='00$i' ".$selected.">00$i</option>\n"; }
 		if (strlen($i) == 2) { echo "<option value='0$i' ".$selected.">0$i</option>\n"; }
@@ -392,21 +387,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vtable' valign='top' align='left' nowrap>\n";
-	echo "	<br /><br />\n";
-	echo "	<b>".$text['header-agent_details']."</b>\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    &nbsp\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br><br>\n";
+
+	echo "<b>".$text['header-agent_details']."</b>\n";
+	echo "<br /><br />\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-agent_queue_extension']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='agent_queue_extension_number' maxlength='255' min='0' step='1' value=\"$agent_queue_extension_number\">\n";
 	echo "<br />\n";
 	echo $text['description-agent_queue_extension']."\n";
@@ -423,21 +416,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-agent_loginout_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "</table>\n";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td colspan='5' align='right'>\n";
+	echo "</table>\n";
+	echo "<br><br>\n";
+
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		<br>";
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>";
-	echo "</table>";
-	echo "<br><br>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //show the footer
