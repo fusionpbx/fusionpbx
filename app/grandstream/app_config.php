@@ -35,7 +35,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0=enabled 1=disable";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 1=enabled 2=disable";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a8841f3-e1c0-4eb1-abd3-068a3e3701a5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
