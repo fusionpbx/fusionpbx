@@ -337,6 +337,29 @@ $text['message-invalid_email']['ru-ru'] = "Неверный адрес элек�
 $text['message-invalid_email']['sv-se'] = "Ogiltig E-postadress";
 $text['message-invalid_email']['uk-ua'] = "Некоректна адреса E-Mail";
 
+$text['message-email_assigned_mutliple_users']['en-us'] = "Email Address Assigned to Multiple Users";
+$text['message-email_assigned_mutliple_users']['ar-eg'] = "";
+$text['message-email_assigned_mutliple_users']['de-at'] = "Bereits vorhanden"; //copied from de-de
+$text['message-email_assigned_mutliple_users']['de-ch'] = "Bereits vorhanden"; //copied from de-de
+$text['message-email_assigned_mutliple_users']['de-de'] = "Bereits vorhanden";
+$text['message-email_assigned_mutliple_users']['el-gr'] = "Εντοπίστηκε διπλοεγγραφή";
+$text['message-email_assigned_mutliple_users']['es-cl'] = "duplicar detectado";
+$text['message-email_assigned_mutliple_users']['es-mx'] = "duplicar detectado"; //copied from es-cl
+$text['message-email_assigned_mutliple_users']['fr-ca'] = "Donblons détectés"; //copied from fr-fr
+$text['message-email_assigned_mutliple_users']['fr-fr'] = "Donblons détectés";
+$text['message-email_assigned_mutliple_users']['he-il'] = "זוהותה כפילות";
+$text['message-email_assigned_mutliple_users']['it-it'] = "Duplicato Rilevato";
+$text['message-email_assigned_mutliple_users']['nl-nl'] = "";
+$text['message-email_assigned_mutliple_users']['pl-pl'] = "Wykryto duplikat";
+$text['message-email_assigned_mutliple_users']['pt-br'] = "Detectado duplicidade";
+$text['message-email_assigned_mutliple_users']['pt-pt'] = "Detectado um duplicado";
+$text['message-email_assigned_mutliple_users']['ro-ro'] = "";
+$text['message-email_assigned_mutliple_users']['ru-ru'] = "Обнаружено дублирование";
+$text['message-email_assigned_mutliple_users']['sv-se'] = "Dubblett Upptäckt";
+$text['message-email_assigned_mutliple_users']['uk-ua'] = "Знайдено дублікат";
+$text['message-email_assigned_mutliple_users']['tr-tr'] = "Kopya Algılandı";
+
+
 $text['login-message_dismiss']['en-us'] = "Dismiss";
 $text['login-message_dismiss']['ar-eg'] = "تجاهل";
 $text['login-message_dismiss']['de-at'] = "Verwerfen"; //copied from de-de
