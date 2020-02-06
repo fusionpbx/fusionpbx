@@ -918,21 +918,21 @@ else {
 	}
 
 	//set the login logo width and height
-	if (isset($_SESSION['theme']['login_logo_weight']['text'])) {
-		$login_logo_weight = $_SESSION['theme']['login_logo_weight']['text'];
+	if (isset($_SESSION['theme']['login_logo_width']['text'])) {
+		$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
 	}
 	else {
-		$login_logo_weight = '300px';
+		$login_logo_width = 'auto; max-width: 300px';
 	}
 	if (isset($_SESSION['theme']['login_logo_height']['text'])) {
 		$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
 	}
 	else {
-		$login_logo_height = '';
+		$login_logo_height = 'auto; max-height: 300px';
 	}
 
 	echo "<div id='default_login'>\n";
-	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' width='$login_logo_weight' height='$login_logo_height' src='".escape($logo)."'></a><br />\n";
+	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' style='width: ".$login_logo_width."; height: ".$login_logo_height.";' src='".escape($logo)."'></a><br />\n";
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";
