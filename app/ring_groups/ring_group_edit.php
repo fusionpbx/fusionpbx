@@ -466,11 +466,11 @@
 	}
 
 //add an empty row to the options array
-	if (count($ring_group_destinations) == 0) {
+	if (!is_array($ring_group_destinations) || count($ring_group_destinations) == 0) {
 		$rows = $_SESSION['ring_group']['destination_add_rows']['numeric'];
 		$id = 0;
 	}
-	if (count($ring_group_destinations) > 0) {
+	if (is_array($ring_group_destinations) && count($ring_group_destinations) > 0) {
 		$rows = $_SESSION['ring_group']['destination_edit_rows']['numeric'];
 		$id = count($ring_group_destinations)+1;
 	}
@@ -566,20 +566,22 @@
 	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-ring_group']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'ring_groups.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description']."\n";
+	echo "<br /><br />\n";
+
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['label-ring-group']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='ring_groups.php'\" value='".$text['button-back']."'>\n";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2' valign='top'>\n";
-	echo $text['description']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -834,9 +836,9 @@
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 	echo "		<td class='vtable'>";
-	echo "			<table width='300px'>\n";
 	if (is_array($ring_group_users) && @sizeof($ring_group_users) != 0) {
-		foreach($ring_group_users as $field) {
+		echo "		<table width='300px'>\n";
+		foreach ($ring_group_users as $field) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 			echo "				<td>\n";
@@ -844,18 +846,21 @@
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
+		echo "		</table>\n";
+		echo "		<br />\n";
 	}
-	echo "			</table>\n";
-	echo "			<br />\n";
 	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
 	if (is_array($users) && @sizeof($users) != 0) {
-		foreach($users as $field) {
+		foreach ($users as $field) {
+			foreach ($ring_group_users as $user) {
+				if ($user['user_uuid'] == $field['user_uuid']) { continue 2; } //skip already assigned
+			}
 			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 	}
 	echo "			</select>";
-	echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'never']);
 	echo "			<br>\n";
 	echo "			".$text['description-user_list']."\n";
 	echo "			<br />\n";
@@ -983,21 +988,17 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if (is_uuid($dialplan_uuid)) {
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-	}
-	if (is_uuid($ring_group_uuid)) {
-		echo "		<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if (is_uuid($dialplan_uuid)) {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	}
+	if (is_uuid($ring_group_uuid)) {
+		echo "<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer
