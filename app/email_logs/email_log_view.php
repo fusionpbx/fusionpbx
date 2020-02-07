@@ -25,9 +25,11 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/pop3/mime_parser.php";
+	require_once "resources/pop3/rfc822_addresses.php";
 
 //check permissions
 	if (permission_exists('email_log_view')) {
@@ -70,11 +72,6 @@
 		header("Location: email_logs.php");
 		exit;
 	}
-
-
-//includes
-	require('resources/pop3/mime_parser.php');
-	require('resources/pop3/rfc822_addresses.php');
 
 //parse the email message
 	$mime = new mime_parser_class;
@@ -131,24 +128,20 @@
 	$document['title'] = $text['title-view_email'];
 	require_once "resources/header.php";
 
-//show content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>";
-	echo "		<td valign='top' align='left' nowrap='nowrap'>";
-	echo "			<b>".$text['header-view_email']."</b>\n";
-	echo "		</td>";
-	echo "		<td valign='top' align='right' nowrap='nowrap'>";
-	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location.href='email_logs.php';\" value='".$text['button-back']."'>";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-view_email']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'email_logs.php']);
 	if (permission_exists('email_download')) {
-		echo "		<input type='button' class='btn' alt='".$text['button-download']."' onclick=\"document.location.href='email_logs.php?id=".$email_log_uuid."&a=download';\" value='".$text['button-download']."'>";
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'email_logs.php?id='.urlencode($email_log_uuid).'&a=download']);
 	}
 	if (permission_exists('email_resend')) {
-		echo "		<input type='button' class='btn' alt='".$text['button-resend']."' onclick=\"document.location.href='email_logs.php?id=".$email_log_uuid."&a=resend';\" value='".$text['button-resend']."'>";
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'paper-plane','link'=>'email_logs.php?id='.urlencode($email_log_uuid).'&a=resend']);
 	}
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "<br>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
