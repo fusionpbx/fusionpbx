@@ -333,7 +333,7 @@
 
 	$sql_where = ' where ';
 	// concatenate the 'ands's array, add to where clause
-	if (sizeof($sql_where_ands) > 0) {
+	if (is_array($sql_where_ands) && @sizeof($sql_where_ands) > 0) {
 		$sql_where .= implode(" and ", $sql_where_ands)." and ";
 	}
 
