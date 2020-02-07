@@ -45,7 +45,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "[*]xxxx|[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-9]xxT|**x.T";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit Timeouts";
-                $y++;
+        $y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6f7cd49-23a6-42c5-8e77-d1ebbd274884";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_digitmap_timeout";
@@ -190,7 +190,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Contact List Read Only 0=Disabled - 1=Enabled.";
 		$y++;
-	        $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c3e2ebd-afed-4f61-99b6-52e4d7ec972e";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c3e2ebd-afed-4f61-99b6-52e4d7ec972e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_video_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -286,7 +286,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Render Level 0 to 6";
 		$y++;
-                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7291e23-cd85-4815-9d7a-9d7bcd7ab7da";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7291e23-cd85-4815-9d7a-9d7bcd7ab7da";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_syslog_prependmac";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -325,5 +325,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require SRTP line 0=Disabled - 1=Enabled ";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b067a2a-20d0-4186-ba55-3dfb3c5f7409";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_cert_validation";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require SIP/TLS Cert Validation 0=Disabled - 1=Enabled ";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4f91f125-fb21-47ab-ba1a-ce12935681ef";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_cert_validate";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require Provisioning Cert Validation 0=Disabled - 1=Enabled ";
 
 ?>
