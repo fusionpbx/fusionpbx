@@ -42,6 +42,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -208,7 +211,9 @@
 								$array['voicemail_options'][$index]['domain_uuid'] = $domain_uuid;
 								$array['voicemail_options'][$index]['voicemail_option_digits'] = $voicemail_option['voicemail_option_digits'];
 								$array['voicemail_options'][$index]['voicemail_option_action'] = $voicemail_option['voicemail_option_action'];
-								$array['voicemail_options'][$index]['voicemail_option_param'] = $voicemail_option['voicemail_option_param'];
+								if ($destination->valid(preg_replace('/\s/', ':', $voicemail_option['voicemail_option_param'], 1))) {
+									$array['voicemail_options'][$index]['voicemail_option_param'] = $voicemail_option['voicemail_option_param'];
+								}
 								$array['voicemail_options'][$index]['voicemail_option_order'] = $voicemail_option['voicemail_option_order'];
 								$array['voicemail_options'][$index]['voicemail_option_description'] = $voicemail_option['voicemail_option_description'];
 						}
@@ -245,9 +250,6 @@
 					exit;
 			}
 	}
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (count($_GET)>0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
