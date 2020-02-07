@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -304,9 +304,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	require_once "resources/header.php";
+//include the header
 	$document['title'] = $text['title-voicemail'];
+	require_once "resources/header.php";
 
 //password complexity
 	$password_complexity = $_SESSION['voicemail']['password_complexity']['boolean'];
@@ -351,29 +351,24 @@
 	}
 
 //show the content
-	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-voicemail']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>$back_button_location]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>($password_complexity == "true" ? "if (check_password_strength(document.getElementById('password').value)) { submit_form(); }" : 'submit_form();')]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
-	echo "	<b>".$text['title-voicemail']."</b>";
-	echo "	<br><br>";
-	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$back_button_location."'\" value='".$text['button-back']."'>\n";
-	if ($password_complexity == "true") {
-		echo "		<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
-	}
-	else {
-		echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-voicemail_id']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' value='".escape($voicemail_id)."'>\n";
 	echo "	<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
@@ -441,7 +436,7 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-options']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		echo "			<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "			<table width='60%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vtable'>".$text['label-option']."</td>\n";
 		echo "					<td class='vtable'>".$text['label-destination']."</td>\n";
@@ -530,7 +525,7 @@
 			echo "</td>\n";
 
 			echo "					<td>\n";
-			echo "						<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'onclick'=>'submit_form();']);
 			echo "					</td>\n";
 			echo "				</tr>\n";
 		}
@@ -694,7 +689,8 @@
 		}
 		unset($sql, $parameters, $result, $field);
 		echo "			</select>";
-		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'never','onclick'=>'submit_form();']);
+// 		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
 		echo "			<br>\n";
 		echo "			".$text['description-forward_destinations']."\n";
 		echo "			<br />\n";
@@ -736,26 +732,18 @@
 	echo $text['description-voicemail_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
-	}
-	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
-	echo "				<input type='hidden' name='referer_path' value='".escape($http_referer['path'])."'>\n";
-	echo "				<input type='hidden' name='referer_query' value='".escape($http_referer['query'])."'>\n";
-	echo "				<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "				<br>";
-	if ($password_complexity == "true") {
-		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
-	}
-	else {
-		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	}
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
+	}
+	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
+	echo "<input type='hidden' name='referer_path' value='".escape($http_referer['path'])."'>\n";
+	echo "<input type='hidden' name='referer_query' value='".escape($http_referer['query'])."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	echo "<script>\n";
