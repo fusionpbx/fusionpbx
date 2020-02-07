@@ -52,6 +52,9 @@
 		$action = "add";
 	}
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 
@@ -207,10 +210,14 @@
 			$array["call_flows"][$i]["call_flow_sound"] = $call_flow_sound;
 			$array["call_flows"][$i]["call_flow_alternate_label"] = $call_flow_alternate_label;
 			$array["call_flows"][$i]["call_flow_alternate_sound"] = $call_flow_alternate_sound;
-			$array["call_flows"][$i]["call_flow_app"] = $call_flow_app;
-			$array["call_flows"][$i]["call_flow_data"] = $call_flow_data;
-			$array["call_flows"][$i]["call_flow_alternate_app"] = $call_flow_alternate_app;
-			$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
+			if ($destination->valid($call_flow_app.':'.$call_flow_data)) {
+				$array["call_flows"][$i]["call_flow_app"] = $call_flow_app;
+				$array["call_flows"][$i]["call_flow_data"] = $call_flow_data;
+			}
+			if ($destination->valid($call_flow_alternate_app.':'.$call_flow_alternate_data)) {
+				$array["call_flows"][$i]["call_flow_alternate_app"] = $call_flow_alternate_app;
+				$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
+			}
 			$array["call_flows"][$i]["call_flow_context"] = $call_flow_context;
 			$array["call_flows"][$i]["call_flow_description"] = $call_flow_description;
 
@@ -261,9 +268,6 @@
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
