@@ -502,7 +502,7 @@
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td>\n";
-	echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'style'=>'white-space: nowrap;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 	echo "	</td>\n";
 
 	echo "	</tr>\n";

@@ -622,6 +622,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-weight: <?php echo ($_SESSION['theme']['button_text_weight']['text'] != '') ? $_SESSION['theme']['button_text_weight']['text'] : 'bold'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['button_text_size']['text'] != '') ? $_SESSION['theme']['button_text_size']['text'] : '11px'; ?>;
 		vertical-align: middle;
+		white-space: nowrap;
 		}
 
 	input.btn:hover,
