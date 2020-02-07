@@ -690,7 +690,6 @@
 		unset($sql, $parameters, $result, $field);
 		echo "			</select>";
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'never','onclick'=>'submit_form();']);
-// 		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
 		echo "			<br>\n";
 		echo "			".$text['description-forward_destinations']."\n";
 		echo "			<br />\n";
