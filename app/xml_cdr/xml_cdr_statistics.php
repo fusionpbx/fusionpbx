@@ -56,127 +56,118 @@
 		$search_url .= '&showall=true';
 	}
 	if (strlen($_GET['direction']) > 0) {
-		$search_url .= '&direction='.escape($_GET['direction']);
+		$search_url .= '&direction='.urlencode($_GET['direction']);
 	}
 	if (strlen($_GET['leg']) > 0) {
-		$search_url .= '&leg='.escape($_GET['leg']);
+		$search_url .= '&leg='.urlencode($_GET['leg']);
 	}
 	if (strlen($_GET['caller_id_name']) > 0) {
-		$search_url .= '&caller_id_name='.escape($_GET['caller_id_name']);
+		$search_url .= '&caller_id_name='.urlencode($_GET['caller_id_name']);
 	}
 	if (strlen($_GET['caller_extension_uuid']) > 0) {
-		$search_url .= '&caller_extension_uuid='.escape($_GET['caller_extension_uuid']);
+		$search_url .= '&caller_extension_uuid='.urlencode($_GET['caller_extension_uuid']);
 	}
 	if (strlen($_GET['caller_id_number']) > 0) {
-		$search_url .= '&caller_id_number='.escape($_GET['caller_id_number']);
+		$search_url .= '&caller_id_number='.urlencode($_GET['caller_id_number']);
 	}
 	if (strlen($_GET['destination_number']) > 0) {
-		$search_url .= '&destination_number='.escape($_GET['destination_number']);
+		$search_url .= '&destination_number='.urlencode($_GET['destination_number']);
 	}
 	if (strlen($_GET['context']) > 0) {
-		$search_url .= '&context='.escape($_GET['context']);
+		$search_url .= '&context='.urlencode($_GET['context']);
 	}
 	if (strlen($_GET['start_stamp_begin']) > 0) {
-		$search_url .= '&start_stamp_begin='.escape($_GET['start_stamp_begin']);
+		$search_url .= '&start_stamp_begin='.urlencode($_GET['start_stamp_begin']);
 	}
 	if (strlen($_GET['start_stamp_end']) > 0) {
-		$search_url .= '&start_stamp_end='.escape($_GET['start_stamp_end']);
+		$search_url .= '&start_stamp_end='.urlencode($_GET['start_stamp_end']);
 	}
 	if (strlen($_GET['answer_stamp_begin']) > 0) {
-		$search_url .= '&answer_stamp_begin='.escape($_GET['answer_stamp_begin']);
+		$search_url .= '&answer_stamp_begin='.urlencode($_GET['answer_stamp_begin']);
 	}
 	if (strlen($_GET['answer_stamp_end']) > 0) {
-		$search_url .= '&answer_stamp_end='.escape($_GET['answer_stamp_end']);
+		$search_url .= '&answer_stamp_end='.urlencode($_GET['answer_stamp_end']);
 	}
 	if (strlen($_GET['end_stamp_begin']) > 0) {
-		$search_url .= '&end_stamp_begin='.escape($_GET['end_stamp_begin']);
+		$search_url .= '&end_stamp_begin='.urlencode($_GET['end_stamp_begin']);
 	}
 	if (strlen($_GET['end_stamp_end']) > 0) {
-		$search_url .= '&end_stamp_end='.escape($_GET['end_stamp_end']);
+		$search_url .= '&end_stamp_end='.urlencode($_GET['end_stamp_end']);
 	}
 	if (strlen($_GET['duration']) > 0) {
-		$search_url .= '&duration='.escape($_GET['duration']);
+		$search_url .= '&duration='.urlencode($_GET['duration']);
 	}
 	if (strlen($_GET['billsec']) > 0) {
-		$search_url .= '&billsec='.escape($_GET['billsec']);
+		$search_url .= '&billsec='.urlencode($_GET['billsec']);
 	}
 	if (strlen($_GET['hangup_cause']) > 0) {
-		$search_url .= '&hangup_cause='.escape($_GET['hangup_cause']);
+		$search_url .= '&hangup_cause='.urlencode($_GET['hangup_cause']);
 	}
 	if (strlen($_GET['uuid']) > 0) {
-		$search_url .= '&uuid='.escape($_GET['uuid']);
+		$search_url .= '&uuid='.urlencode($_GET['uuid']);
 	}
 	if (strlen($_GET['bleg_uuid']) > 0) {
-		$search_url .= '&bleg_uuid='.escape($_GET['bleg_uuid']);
+		$search_url .= '&bleg_uuid='.urlencode($_GET['bleg_uuid']);
 	}
 	if (strlen($_GET['accountcode']) > 0) {
-		$search_url .= '&accountcode='.escape($_GET['accountcode']);
+		$search_url .= '&accountcode='.urlencode($_GET['accountcode']);
 	}
 	if (strlen($_GET['read_codec']) > 0) {
-		$search_url .= '&read_codec='.escape($_GET['read_codec']);
+		$search_url .= '&read_codec='.urlencode($_GET['read_codec']);
 	}
 	if (strlen($_GET['write_codec']) > 0) {
-		$search_url .= '&write_codec='.escape($_GET['write_codec']);
+		$search_url .= '&write_codec='.urlencode($_GET['write_codec']);
 	}
 	if (strlen($_GET['remote_media_ip']) > 0) {
-		$search_url .= '&remote_media_ip='.escape($_GET['remote_media_ip']);
+		$search_url .= '&remote_media_ip='.urlencode($_GET['remote_media_ip']);
 	}
 	if (strlen($_GET['network_addr']) > 0) {
-		$search_url .= '&network_addr='.escape($_GET['network_addr']);
+		$search_url .= '&network_addr='.urlencode($_GET['network_addr']);
 	}
 	if (strlen($_GET['mos_comparison']) > 0) {
-		$search_url .= '&mos_comparison='.escape($_GET['mos_comparison']);
+		$search_url .= '&mos_comparison='.urlencode($_GET['mos_comparison']);
 	}
 	if (strlen($_GET['mos_score']) > 0) {
-		$search_url .= '&mos_score='.escape($_GET['mos_score']);
+		$search_url .= '&mos_score='.urlencode($_GET['mos_score']);
 	}
 
-//page title and description
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-call-statistics']."</b></td>\n";
-	echo "	<td width='70%' align='right' valign='top'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call-statistics']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (substr_count($_SERVER['HTTP_REFERER'], 'app/xml_cdr/xml_cdr.php') != 0) {
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'xml_cdr.php']);
+	}
 	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php?type=advanced".$search_url."';\">\n";
+		echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>'xml_cdr_search.php?type=advanced'.$search_url]);
 	}
-	if (permission_exists('xml_cdr_all')) {
-		if ($_GET['showall'] != 'true') {
-			echo "<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_statistics.php?showall=true".$search_url."';\">\n";
-		}
+	if (permission_exists('xml_cdr_all') && $_GET['showall'] != 'true') {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'xml_cdr_statistics.php?showall=true'.$search_url]);
 	}
-	echo "		<input type='button' class='btn' value='".$text['button-extension_summary']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
-	echo "		<input type='button' class='btn' value='".$text['button-download_csv']."' onclick=\"document.location.href='xml_cdr_statistics_csv.php?type=csv".$search_url."';\">\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['label-call-statistics-description']." \n";
-	echo "			<br />\n";
-	echo "			<br />\n";
-	echo "		</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-extension_summary'],'icon'=>'list','link'=>'xml_cdr_extension_summary.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'xml_cdr_statistics_csv.php?type=csv'.$search_url]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-//set the style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	echo $text['label-call-statistics-description']."\n";
+	echo "<br /><br />\n";
 
-?>
+	?>
+
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
 	<div align='center'>
 	<table>
 		<tr>
-			<td align='left'>
+			<td align='left' colspan='2'>
 				<div id="placeholder-legend" style="padding:2px;margin-bottom: 8px;border-radius: 3px 3px 3px 3px;border: 1px solid #E6E6E6;display: inline-block;margin: 0 auto;"></div>
 			</td>
 		</tr>
 		<tr>
 			<td align='left'>
-				<div id="placeholder" style="width:700px;height:180px;"></div>
+				<div id="placeholder" style="width:700px;height:180px;margin-right:25px;"></div>
 			</td>
 			<td align='left' valign='top'>
 				<p id="choices"></p>
@@ -224,10 +215,10 @@
 		// insert checkboxes
 		var choiceContainer = $("#choices");
 		$.each(datasets, function(key, val) {
-			choiceContainer.append('<br /><input type="checkbox" name="' + key +
-								   '" checked="checked" id="id' + key + '">' +
+			choiceContainer.append('<br /><span style="white-space: nowrap;"><input type="checkbox" name="' + key +
+								   '" checked="checked" id="id' + key + '">&nbsp;' +
 								   '<label for="id' + key + '">'
-									+ val.label + '</label>');
+									+ val.label + '</label></span>');
 		});
 		choiceContainer.find("input").on('click', plotAccordingToChoices);
 
@@ -265,27 +256,28 @@
 		plotAccordingToChoices();
 	});
 	</script>
+
 	<?php
 
 //show the results
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
 	echo "	<th>".$text['table-hours']."</th>\n";
 	echo "	<th>".$text['table-date']."</th>\n";
-	echo "	<th nowrap='nowrap'>".$text['table-time']."</th>\n";
+	echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
 	echo "	<th>Volume</th>\n";
 	echo "	<th>".$text['table-minutes']."</th>\n";
 	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
-	echo "	<th>".$text['table-missed']."</th>\n";
+	echo "	<th class='center'>".$text['table-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
 	echo "	<th>ALOC</th>\n";
 	echo "</tr>\n";
 
 	$i = 0;
 	foreach ($stats as $row) {
-		echo "<tr >\n";
+		echo "<tr class='list-row'>\n";
 		if ($i <= $hours) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".($i+1)."</td>\n";
+			echo "	<td>".($i+1)."</td>\n";
 		}
 		else if ($i == $hours+1) {
 			echo "	<br /><br />\n";
@@ -295,44 +287,43 @@
 			echo "		<br /><br />\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
-			echo "<tr>\n";
-			echo "	<th nowrap='nowrap'>".$text['table-days']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$text['table-date']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$text['table-time']."</th>\n";
+			echo "<tr class='list-header'>\n";
+			echo "	<th class='no-wrap'>".$text['table-days']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['table-date']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['table-time']."</th>\n";
 			echo "	<th>Volume</th>\n";
 			echo "	<th>".$text['table-minutes']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$text['table-calls-per-minute']."</th>\n";
-			echo "	<th>".$text['table-missed']."</th>\n";
+			echo "	<th class='no-wrap'>".$text['table-calls-per-minute']."</th>\n";
+			echo "	<th class='center'>".$text['table-missed']."</th>\n";
 			echo "	<th>ASR</th>\n";
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";
-			echo "<tr>\n";
+			echo "<tr class='list-row'>\n";
 		}
 		if ($i > $hours) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>" . floor(escape($row['hours'])/24) . "</td>\n";
+			echo "	<td>" . floor(escape($row['hours'])/24) . "</td>\n";
 		}
 		if ($i <= $hours) {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".date('j M', $row['start_epoch'])."</td>\n";
+			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('H:i', $row['stop_epoch'])."&nbsp;</td>\n";
 		}
 		else {
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date('j M', $row['start_epoch'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".date('H:i', $row['start_epoch'])." - ".date('j M H:i', $row['stop_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".date('j M', $row['start_epoch'])."&nbsp;</td>\n";
+			echo "	<td>".date('H:i', $row['start_epoch'])." - ".date('j M H:i', $row['stop_epoch'])."&nbsp;</td>\n";
 		}
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['volume'])."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
+		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
+		echo "	<td>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
+		echo "	<td>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
+		echo "	<td class='center'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
+		echo "	<td>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
+		echo "	<td>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
 		echo "</tr >\n";
-		$c = $c ? 0 : 1;
 		$i++;
 	}
 	echo "</table>\n";
 	echo "<br><br>";
 
-//show the footer
+//include the footer
 	require_once "resources/footer.php";
 
 ?>

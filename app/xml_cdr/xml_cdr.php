@@ -466,20 +466,19 @@
 		echo "</div>\n";
 
 		button::$collapse = false;
-		echo "<div style='float: right; padding-top: 8px; margin-left: 20px; white-space: nowrap;'>";
+		echo "<div style='float: right; padding-top: 15px; margin-left: 20px; white-space: nowrap;'>";
 		if (permission_exists('xml_cdr_all') && $_REQUEST['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>\n";
 		}
 		if (permission_exists('xml_cdr_search_advanced')) {
-			echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'bolt','link'=>"xml_cdr_search.php".($_REQUEST['show'] == 'all' ? '?show=all' : null),'style'=>'margin-right: 15px;']);
+			echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>"xml_cdr_search.php".($_REQUEST['show'] == 'all' ? '?show=all' : null),'style'=>'margin-right: 15px;']);
 		}
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button', 'link'=>'xml_cdr.php']);
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','name'=>'submit']);
 		echo "</div>\n";
-		echo "<div style='font-size: 85%; padding-top: 8px;'>".$text['description_search']."</div>\n";
+		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
 
 		echo "</form>";
-		echo "<br /><br />";
 	}
 
 //mod paging parameters for inclusion in column sort heading links
