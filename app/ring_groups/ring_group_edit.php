@@ -45,6 +45,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //action add or update
 	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ring_group_uuid"])) {
 		$action = "update";
@@ -299,7 +302,7 @@
 					$array["ring_groups"][0]["ring_group_distinctive_ring"] = $ring_group_distinctive_ring;
 					$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
 					$array["ring_groups"][0]["ring_group_follow_me_enabled"] = $ring_group_follow_me_enabled;
-					if (permission_exists('ring_group_missed_call')) {
+					if (permission_exists('ring_group_missed_call') && $destination->valid($ring_group_missed_call_app.':'.$ring_group_missed_call_data)) {
 						$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
 						$array["ring_groups"][0]["ring_group_missed_call_data"] = $ring_group_missed_call_data;
 					}
@@ -312,8 +315,10 @@
 					$array["ring_groups"][0]["ring_group_enabled"] = $ring_group_enabled;
 					$array["ring_groups"][0]["ring_group_description"] = $ring_group_description;
 					$array["ring_groups"][0]["dialplan_uuid"] = $dialplan_uuid;
-					$array["ring_groups"][0]["ring_group_timeout_app"] = $ring_group_timeout_app;
-					$array["ring_groups"][0]["ring_group_timeout_data"] = $ring_group_timeout_data;
+					if ($destination->valid($ring_group_timeout_app.':'.$ring_group_timeout_data)) {
+						$array["ring_groups"][0]["ring_group_timeout_app"] = $ring_group_timeout_app;
+						$array["ring_groups"][0]["ring_group_timeout_data"] = $ring_group_timeout_data;
+					}
 
 					$y = 0;
 					foreach ($_POST["ring_group_destinations"] as $row) {
@@ -400,9 +405,6 @@
 			}
 
 	}
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (is_uuid($ring_group_uuid)) {
