@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2020
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 
 /**
  * destinations
@@ -86,50 +110,53 @@ if (!class_exists('destinations')) {
 					}
 				}
 				//put the array in order
-				foreach ($this->destinations as $row) {
-					$option_groups[] = $row['label'];
+				if ($this->destinations !== null && is_array($this->destinations)) {
+					foreach ($this->destinations as $row) {
+						$option_groups[] = $row['label'];
+					}
+					array_multisort($option_groups, SORT_ASC, $this->destinations);
 				}
-				array_multisort($option_groups, SORT_ASC, $this->destinations);
-
 				//add the sql and data to the array
-				$x = 0;
-				foreach ($this->destinations as $row) {
-					if ($row['type'] = 'sql') {
-						$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
-						if (isset($row['sql'])) {
-							if (is_array($row['sql'])) {
-								$sql = trim($row['sql'][$db_type])." ";
+				if ($this->destinations !== null && is_array($this->destinations)) {
+					$x = 0;
+					foreach ($this->destinations as $row) {
+						if ($row['type'] = 'sql') {
+							$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
+							if (isset($row['sql'])) {
+								if (is_array($row['sql'])) {
+									$sql = trim($row['sql'][$db_type])." ";
+								}
+								else {
+									$sql = trim($row['sql'])." ";
+								}
 							}
 							else {
-								$sql = trim($row['sql'])." ";
+								$field_count = count($row['field']);
+								$fields = '';
+								$c = 1;
+								foreach ($row['field'] as $key => $value) {
+									$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
+									$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
+									if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
+									$fields .= $value." as ".$key.$delimiter." ";
+									$c++;
+								}
+								$sql = "select ".$fields;
+								$sql .= " from v_".$table_name." ";
 							}
-						}
-						else {
-							$field_count = count($row['field']);
-							$fields = '';
-							$c = 1;
-							foreach ($row['field'] as $key => $value) {
-								$key = preg_replace('#[^a-zA-Z0-9_]#', '', $key);
-								$value = preg_replace('#[^a-zA-Z0-9_]#', '', $value);
-								if ($field_count != $c) { $delimiter = ','; } else { $delimiter = ''; }
-								$fields .= $value." as ".$key.$delimiter." ";
-								$c++;
+							if (isset($row['where'])) {
+								$sql .= trim($row['where'])." ";
 							}
-							$sql = "select ".$fields;
-							$sql .= " from v_".$table_name." ";
-						}
-						if (isset($row['where'])) {
-							$sql .= trim($row['where'])." ";
-						}
-						$sql .= "order by ".trim($row['order_by']);
-						$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
-						$database = new database;
-						$result = $database->select($sql, null, 'all');
+							$sql .= "order by ".trim($row['order_by']);
+							$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
+							$database = new database;
+							$result = $database->select($sql, null, 'all');
 
-						$this->destinations[$x]['result']['sql'] = $sql;
-						$this->destinations[$x]['result']['data'] = $result;
+							$this->destinations[$x]['result']['sql'] = $sql;
+							$this->destinations[$x]['result']['data'] = $result;
+						}
+						$x++;
 					}
-					$x++;
 				}
 
 				$this->destinations[$x]['type'] = 'array';
