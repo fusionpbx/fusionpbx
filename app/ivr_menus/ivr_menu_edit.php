@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,6 +44,9 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//initialize the destinations object
+	$destination = new destinations;
 
 //action add or update
 	if (is_uuid($_REQUEST["id"]) || is_uuid($_REQUEST["ivr_menu_uuid"])) {
@@ -284,7 +287,7 @@
 							if (is_numeric($row["ivr_menu_option_param"])) {
 								//add the ivr menu syntax
 								$ivr_menu_option_action = "menu-exec-app";
-								$ivr_menu_option_param = "transfer ".$row["ivr_menu_option_param"]." XML ".$_SESSION['domain_name'];
+								$ivr_menu_option_param = "transfer ".$row["ivr_menu_option_param"]." XML ".$ivr_menu_context;
 							}
 							else {
 								//seperate the action and the param
@@ -297,7 +300,9 @@
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_uuid"] = $ivr_menu_option_uuid;
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_digits"] = $row["ivr_menu_option_digits"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_action"] = $ivr_menu_option_action;
-							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_param"] = $ivr_menu_option_param;
+							if ($destination->valid(preg_replace('/\s/', ':', $ivr_menu_option_param, 1))) {
+								$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_param"] = $ivr_menu_option_param;
+							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
 							$y++;
@@ -390,9 +395,6 @@
 
 			}
 	}
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (!is_uuid($ivr_menu_uuid)) { $ivr_menu_uuid = $_REQUEST["id"]; }
