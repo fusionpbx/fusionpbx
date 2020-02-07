@@ -190,7 +190,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Contact List Read Only 0=Disabled - 1=Enabled.";
 		$y++;
-	    $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c3e2ebd-afed-4f61-99b6-52e4d7ec972e";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c3e2ebd-afed-4f61-99b6-52e4d7ec972e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_video_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -286,7 +286,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Render Level 0 to 6";
 		$y++;
-        $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7291e23-cd85-4815-9d7a-9d7bcd7ab7da";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7291e23-cd85-4815-9d7a-9d7bcd7ab7da";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_syslog_prependmac";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -341,4 +341,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require Provisioning Cert Validation 0=Disabled - 1=Enabled ";
+
 ?>
