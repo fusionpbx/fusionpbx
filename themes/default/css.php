@@ -2515,6 +2515,54 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.pct-95 { width: 95%; }
 	.pct-100 { width: 100%; }
 
+/* SIDE PADDING & MARGIN HELPERS **********************************************************************/
+
+	.pl-1 { padding-left: 1px !important; }		.pr-1 { padding-right: 1px !important; }
+	.pl-2 { padding-left: 2px !important; }		.pr-2 { padding-right: 2px !important; }
+	.pl-3 { padding-left: 3px !important; }		.pr-3 { padding-right: 3px !important; }
+	.pl-4 { padding-left: 4px !important; }		.pr-4 { padding-right: 4px !important; }
+	.pl-5 { padding-left: 5px !important; }		.pr-5 { padding-right: 5px !important; }
+	.pl-6 { padding-left: 6px !important; }		.pr-6 { padding-right: 6px !important; }
+	.pl-7 { padding-left: 7px !important; }		.pr-7 { padding-right: 7px !important; }
+	.pl-8 { padding-left: 8px !important; }		.pr-8 { padding-right: 8px !important; }
+	.pl-9 { padding-left: 9px !important; }		.pr-9 { padding-right: 9px !important; }
+	.pl-10 { padding-left: 10px !important; }	.pr-10 { padding-right: 10px !important; }
+	.pl-11 { padding-left: 11px !important; }	.pr-11 { padding-right: 11px !important; }
+	.pl-12 { padding-left: 12px !important; }	.pr-12 { padding-right: 12px !important; }
+	.pl-13 { padding-left: 13px !important; }	.pr-13 { padding-right: 13px !important; }
+	.pl-14 { padding-left: 14px !important; }	.pr-14 { padding-right: 14px !important; }
+	.pl-15 { padding-left: 15px !important; }	.pr-15 { padding-right: 15px !important; }
+	.pl-20 { padding-left: 20px !important; }	.pr-20 { padding-right: 20px !important; }
+	.pl-25 { padding-left: 25px !important; }	.pr-25 { padding-right: 25px !important; }
+	.pl-30 { padding-left: 30px !important; }	.pr-30 { padding-right: 30px !important; }
+	.pl-35 { padding-left: 35px !important; }	.pr-35 { padding-right: 35px !important; }
+	.pl-40 { padding-left: 40px !important; }	.pr-40 { padding-right: 40px !important; }
+	.pl-45 { padding-left: 45px !important; }	.pr-45 { padding-right: 45px !important; }
+	.pl-50 { padding-left: 50px !important; }	.pr-50 { padding-right: 50px !important; }
+
+	.ml-1 { margin-left: 1px !important; }		.mr-1 { margin-right: 1px !important; }
+	.ml-2 { margin-left: 2px !important; }		.mr-2 { margin-right: 2px !important; }
+	.ml-3 { margin-left: 3px !important; }		.mr-3 { margin-right: 3px !important; }
+	.ml-4 { margin-left: 4px !important; }		.mr-4 { margin-right: 4px !important; }
+	.ml-5 { margin-left: 5px !important; }		.mr-5 { margin-right: 5px !important; }
+	.ml-6 { margin-left: 6px !important; }		.mr-6 { margin-right: 6px !important; }
+	.ml-7 { margin-left: 7px !important; }		.mr-7 { margin-right: 7px !important; }
+	.ml-8 { margin-left: 8px !important; }		.mr-8 { margin-right: 8px !important; }
+	.ml-9 { margin-left: 9px !important; }		.mr-9 { margin-right: 9px !important; }
+	.ml-10 { margin-left: 10px !important; }	.mr-10 { margin-right: 10px !important; }
+	.ml-11 { margin-left: 11px !important; }	.mr-11 { margin-right: 11px !important; }
+	.ml-12 { margin-left: 12px !important; }	.mr-12 { margin-right: 12px !important; }
+	.ml-13 { margin-left: 13px !important; }	.mr-13 { margin-right: 13px !important; }
+	.ml-14 { margin-left: 14px !important; }	.mr-14 { margin-right: 14px !important; }
+	.ml-15 { margin-left: 15px !important; }	.mr-15 { margin-right: 15px !important; }
+	.ml-20 { margin-left: 20px !important; }	.mr-20 { margin-right: 20px !important; }
+	.ml-25 { margin-left: 25px !important; }	.mr-25 { margin-right: 25px !important; }
+	.ml-30 { margin-left: 30px !important; }	.mr-30 { margin-right: 30px !important; }
+	.ml-35 { margin-left: 35px !important; }	.mr-35 { margin-right: 35px !important; }
+	.ml-40 { margin-left: 40px !important; }	.mr-40 { margin-right: 40px !important; }
+	.ml-45 { margin-left: 45px !important; }	.mr-45 { margin-right: 45px !important; }
+	.ml-50 { margin-left: 50px !important; }	.mr-50 { margin-right: 50px !important; }
+
 /* MODAL ************************************************************************/
 
 	.modal-window {
