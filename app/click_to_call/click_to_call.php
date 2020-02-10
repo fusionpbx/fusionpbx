@@ -69,7 +69,7 @@
 			$context = $_SESSION['context'];
 
 		//clean up variable values
-			$src = str_replace(array('.','(',')','-',' '), '', $src);
+			$src = str_replace(array('(',')',' '), '', $src);
 			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
 
 		//adjust variable values
@@ -148,13 +148,14 @@
 				$source_common .= ",record_name='".$record_name."'";
 			}
 
-			if (strlen($src) < 7) {
+			if (user_exists($src)) {
 				//source is a local extension
 				$source = $source_common.$sip_auto_answer.
 					",domain_uuid=".$domain_uuid.
 					",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/".$src."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
 			}
 			else {
+				$src = str_replace(array('.','-'), '', $src);
 				//source is an external number
 				$bridge_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $src);
 				$source = $source_common."}".$bridge_array[0];
@@ -163,7 +164,7 @@
 
 		//define b leg - set destination to display the defined caller id name and number
 			$destination_common = " &bridge({origination_caller_id_name='".$dest_cid_name."',origination_caller_id_number=".$dest_cid_number;
-			if (strlen($dest) < 7) {
+			if (user_exists($dest)) {
 				//destination is a local extension
 				if (strpbrk($dest, '@') != FALSE) { //sip-uri
 					$switch_cmd = $destination_common.",call_direction=outbound}sofia/external/".$dest.")";
