@@ -175,7 +175,7 @@
 			}
 			else {
 				//local extension (source) > external number (destination)
-				if (strlen($src) < 7 && strlen($dest_cid_number) == 0) {
+				if (user_exists($src) && strlen($dest_cid_number) == 0) {
 					//retrieve outbound caller id from the (source) extension
 					$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
