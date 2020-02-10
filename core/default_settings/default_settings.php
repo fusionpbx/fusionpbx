@@ -278,7 +278,14 @@
 			if ($_GET['show'] == 'all' && permission_exists('default_setting_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td class='overflow no-wrap'>".escape($row['default_setting_subcategory'])."</td>\n";
+			echo "	<td class='overflow no-wrap'>";
+			if (permission_exists('default_setting_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['default_setting_subcategory'])."</a>";
+			}
+			else {
+				echo escape($row['default_setting_subcategory']);
+			}
+			echo "	</td>\n";
 			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['default_setting_category'];
