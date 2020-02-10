@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -138,7 +138,7 @@
 	echo "	<div class='heading'><b>".$text['title-groups']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-users'],'icon'=>$_SESSION['theme']['button_icon_users'],'onclick'=>"window.location='../users/users.php'"]);
-	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_sync'],'style'=>'margin-right: 15px;','onclick'=>"window.location='permissions_default.php'"]);
+	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_sync'],'style'=>'margin-right: 15px;','link'=>'permissions_default.php']);
 	if (permission_exists('group_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'group_edit.php']);
 	}
@@ -189,12 +189,10 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('group_name', $text['label-group_name'], $order_by, $order);
-	//echo "<th style=''>".$text['label-group_permissions']."</th>\n";
-	//echo "<th style=''>".$text['label-group_members']."</th>\n";
-	echo "<th style=''>".$text['label-tools']."</th>\n";
-	echo th_order_by('group_level', $text['label-group_level'], $order_by, $order);
+	echo "	<th>".$text['label-tools']."</th>\n";
+	echo th_order_by('group_level', $text['label-group_level'], $order_by, $order, null, "class='center'");
 	echo th_order_by('group_protected', $text['label-group_protected'], $order_by, $order, null, "class='center'");
-	echo "	<th class='hide-sm-dn'>".$text['label-group_description']."</th>\n";
+	echo "	<th class='pct-30 hide-sm-dn'>".$text['label-group_description']."</th>\n";
 	if (permission_exists('group_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -224,14 +222,12 @@
 				echo "	".escape($row['group_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top'>\n";
+			echo "	<td class='no-link no-wrap'>\n";
 			echo "		<a href=\"/core/groups/group_permissions.php?group_uuid=".urlencode($row['group_uuid'])."\">".$text['label-group_permissions']."</a>\n";
-			//echo "	</td>\n";
-			//echo "	<td valign='top'>\n";
 			echo "		&nbsp;&nbsp;\n";
 			echo "		<a href=\"/core/groups/groupmembers.php?group_uuid=".urlencode($row['group_uuid'])."\">".$text['label-group_members']." (".$row['group_members'].")</a>\n";
 			echo "	</td>\n";
-			echo "	<td>".escape($row['group_level'])."</td>\n";
+			echo "	<td class='center'>".escape($row['group_level'])."</td>\n";
 			if (permission_exists('group_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['group_protected']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
