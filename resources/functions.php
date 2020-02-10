@@ -2004,4 +2004,27 @@ function number_pad($number,$n) {
 		}
 	}
 
+// User exists
+        if (!function_exists('user_exists')){
+                function user_exists($login, $domain_name = null){
+                //connect to fs
+                        $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+                        if (!$fp) {
+                                return false;
+                        }
+                //send the user_exists command to freeswitch
+                        if ($fp) {
+                                //build and send the mkdir command to freeswitch
+                                        if (is_null($domain_name)){
+                                                $domain_name = $_SESSION['domain_name'];
+                                        }
+                                        $switch_cmd = "user_exists id '$login' '$domain_name'";
+                                        $switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+                                        fclose($fp);
+                                        return ($switch_result == 'true'?true:false);
+                        }
+                //can not create directory
+                        return null;
+                }
+        }
 ?>
