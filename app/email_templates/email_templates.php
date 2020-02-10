@@ -198,11 +198,11 @@
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo th_order_by('template_language', $text['label-template_language'], $order_by, $order, null, "class='shrink'", $param);
-	echo th_order_by('template_category', $text['label-template_category'], $order_by, $order, null, "class='shrink' style='min-width: 15%'", $param);
-	echo th_order_by('template_subcategory', $text['label-template_subcategory'], $order_by, $order, null, "class='shrink' style='min-width: 15%'", $param);
-	echo th_order_by('template_subject', $text['label-template_subject'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 20%'", $param);
-	echo th_order_by('template_type', $text['label-template_type'], $order_by, $order, null, "class='shrink'", $param);
-	echo th_order_by('template_enabled', $text['label-template_enabled'], $order_by, $order, null, "class='center' style='min-width: 15%'", $param);
+	echo th_order_by('template_category', $text['label-template_category'], $order_by, $order, null, "class='pct-15'", $param);
+	echo th_order_by('template_subcategory', $text['label-template_subcategory'], $order_by, $order, null, "class='pct-15'", $param);
+	echo th_order_by('template_subject', $text['label-template_subject'], $order_by, $order, null, "class='hide-xs pct-30'", $param);
+	echo th_order_by('template_type', $text['label-template_type'], $order_by, $order, null, null, $param);
+	echo th_order_by('template_enabled', $text['label-template_enabled'], $order_by, $order, null, "class='center pct-10'", $param);
 	echo th_order_by('template_description', $text['label-template_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
 	if (permission_exists('email_template_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -235,7 +235,7 @@
 			echo "	<td>".escape($row['template_language'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['template_category'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['template_subcategory'])."&nbsp;</td>\n";
-			echo "	<td class='overflow hide-sm-dn'>";
+			echo "	<td class='overflow hide-xs'>";
 			if (permission_exists('email_template_edit')) {
 				echo "<a href='".$list_row_url."'>".escape($row['template_subject'])."</a>";
 			}
