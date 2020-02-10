@@ -48,6 +48,29 @@
 	$language = new text;
 	$text = $language->get();
 
+//get the http post data
+	if (is_array($_POST['group_members'])) {
+		$action = $_POST['action'];
+		$group_uuid = $_POST['group_uuid'];
+		$group_members = $_POST['group_members'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($group_members) && @sizeof($group_members) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('group_member_delete') && is_uuid($group_uuid)) {
+					$obj = new groups;
+					$obj->group_uuid = $group_uuid;
+					$obj->delete_members($group_members);
+				}
+				break;
+		}
+
+		header('Location: groupmembers.php?group_uuid='.urlencode($group_uuid));
+		exit;
+	}
+
 //get the group uuid, lookup domain uuid (if any) and name
 	$group_uuid = $_REQUEST['group_uuid'];
 	$sql = "select domain_uuid, group_name from v_groups ";
@@ -107,91 +130,91 @@
 	$parameters['group_uuid'] = $group_uuid;
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
+	$num_rows = is_array($result) && @sizeof($result) != 0 ? sizeof($result) : 0;
 	unset($sql, $parameters);
 
 //create token
 	$object = new token;
-	$token = $object->create('/core/groups/groupmembers.php');
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
-	require_once "resources/header.php";
 	$document['title'] = $text['title-group_members'];
+	require_once "resources/header.php";
 
 //show the content
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='100%' align='left' valign='top'>\n";
-	echo "			<b>".$text['header-group_members'].$group_name."</b>\n";
-	echo "		</td>\n";
-	echo "		<td align='right' nowrap='nowrap' valign='middle'>\n";
-	echo "			<input type='button' class='btn' style='margin-right: 15px;' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'>";
-	echo "		</td>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-group_members']." <i>".$group_name."</i> (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
+	if (permission_exists('group_member_delete') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
 	if (permission_exists('group_member_add')) {
-		echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
-		echo "			<form method='post' action='groupmemberadd.php'>";
-		echo "			<select name='user_uuid' style='width: 200px;' class='formfld'>\n";
-		echo "				<option value=''></option>\n";
-		foreach($users as $field) {
+		echo 	"<form class='inline' method='post' action='groupmemberadd.php'>\n";
+		echo "	<select name='user_uuid' class='formfld'>\n";
+		echo "		<option value=''>".$text['label-select']."...</option>\n";
+		foreach ($users as $field) {
 			if (is_group_member($group_uuid, $field['user_uuid'])) {
-				echo "		<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				echo "<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 			}
 		}
 		unset($sql, $users);
-		echo "			</select>";
-		echo "			<input type='hidden' name='domain_uuid' value='".(($domain_uuid != '') ? $domain_uuid : $_SESSION['domain_uuid'])."'>";
-		echo "			<input type='hidden' name='group_uuid' value='".$group_uuid."'>";
-		echo "			<input type='hidden' name='group_name' value='".$group_name."'>";
-		echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo "			<input type='submit' class='btn' value='".$text['button-add_member']."'>";
-		echo "			</form>";
-		echo "		</td>\n";
+		echo "	</select>";
+		echo 	"<input type='hidden' name='domain_uuid' value='".(is_uuid($domain_uuid) ? escape($domain_uuid) : $_SESSION['domain_uuid'])."'>";
+		echo 	"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>";
+		echo 	"<input type='hidden' name='group_name' value='".escape($group_name)."'>";
+		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>";
+		echo button::create(['type'=>'submit','label'=>$text['button-add_member'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-xs']);
+		echo "	</form>\n";
 	}
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br>";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	$echo = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	$echo .= "<tr>\n";
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('group_member_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	if (permission_exists('user_all')) {
-		$echo .= "<th width='30%' align='left' nowrap>".$text['label-domain']."</th>\n";
+		echo "<th class='pct-30'>".$text['label-domain']."</th>\n";
 	}
-	$echo .= "	<th align='left' nowrap>".$text['label-username']."</th>\n";
-	$echo .= "	<td width='25' align='right' nowrap>&nbsp;</td>\n";
-	$echo .= "</tr>\n";
+	echo "	<th>".$text['label-username']."</th>\n";
+	echo "</tr>\n";
 
-	$count = 0;
-	if (is_array($result) && sizeof($result) != 0) {
+	if (is_array($result) && @sizeof($result) != 0) {
+		$x = 0;
 		foreach ($result as &$row) {
-			$username = $row["username"];
-			$user_uuid = $row["user_uuid"];
-			$domain_uuid = $row["domain_uuid"];
-			$group_uuid = $row["group_uuid"];
-			$echo .= "<tr>";
-			if (permission_exists('user_all')) {
-				$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$_SESSION['domains'][$domain_uuid]['domain_name']."</td>\n";
-			}
-			$echo .= "<td align='left' class='".$row_style[$c]."' nowrap='nowrap'>".$username."</td>\n";
-			$echo .= "<td class='list_control_icons' style='width: 25px;'>";
+			echo "<tr class='list-row' href='".$list_row_url."'>";
 			if (permission_exists('group_member_delete')) {
-				$echo .= "<a href='groupmemberdelete.php?user_uuid=".$user_uuid."&group_name=".$group_name."&group_uuid=".$group_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='group_members[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='group_members[$x][uuid]' value='".escape($row['user_uuid'])."' />\n";
+				echo "	</td>\n";
 			}
-			$echo .= "</td>\n";
-			$echo .= "</tr>\n";
+			if (permission_exists('user_all')) {
+				echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."</td>\n";
+			}
+			echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$row["username"]."</td>\n";
+			echo "</tr>\n";
+			$x++;
 
-			$c = ($c) ? 0 : 1;
+// 			echo "<a href='groupmemberdelete.php?user_uuid=".$row["user_uuid"]."&group_name=".$group_name."&group_uuid=".$row["group_uuid"]."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 
 			$user_groups[] = $row["user_uuid"];
-			$count++;
 		}
 	}
 
-	$echo .= "</table>\n";
-	$echo .= "<br /><br />";
-	echo $echo;
+	echo "</table>\n";
+	echo "<br />";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>";
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

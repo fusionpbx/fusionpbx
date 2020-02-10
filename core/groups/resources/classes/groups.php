@@ -44,6 +44,7 @@ if (!class_exists('groups')) {
 		private $toggle_field;
 		private $toggle_values;
 		private $location;
+		public $group_uuid;
 
 		/**
 		 * called when the object is created
@@ -52,11 +53,6 @@ if (!class_exists('groups')) {
 			//assign the variables
 				$this->app_name = 'groups';
 				$this->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-				$this->name = 'group';
-				$this->table = 'groups';
-				$this->toggle_field = 'group_protected';
-				$this->toggle_values = ['true','false'];
-				$this->location = 'groups.php';
 		}
 
 		/**
@@ -73,6 +69,11 @@ if (!class_exists('groups')) {
 		 * delete rows from the database
 		 */
 		public function delete($records) {
+			//assign the variables
+				$this->name = 'group';
+				$this->table = 'groups';
+				$this->location = 'groups.php';
+
 			if (permission_exists($this->name.'_delete')) {
 
 				//add multi-lingual support
@@ -122,10 +123,72 @@ if (!class_exists('groups')) {
 			}
 		}
 
+		public function delete_members($records) {
+			//assign the variables
+				$this->name = 'group_member';
+				$this->table = 'user_groups';
+				$this->location = 'groupmembers.php?group_uuid='.$this->group_uuid;
+
+			if (permission_exists($this->name.'_delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build array of checked records
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x]['user_uuid'] = $record['uuid'];
+									$array[$this->table][$x]['group_uuid'] = $this->group_uuid;
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('user_group_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('user_group_delete', 'temp');
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
 		/**
 		 * toggle a field between two values
 		 */
 		public function toggle($records) {
+			//assign the variables
+				$this->name = 'group';
+				$this->table = 'groups';
+				$this->toggle_field = 'group_protected';
+				$this->toggle_values = ['true','false'];
+				$this->location = 'groups.php';
+
 			if (permission_exists($this->name.'_edit')) {
 
 				//add multi-lingual support
@@ -195,6 +258,11 @@ if (!class_exists('groups')) {
 		 * copy rows from the database
 		 */
 		public function copy($records) {
+			//assign the variables
+				$this->name = 'group';
+				$this->table = 'groups';
+				$this->location = 'groups.php';
+
 			if (permission_exists($this->name.'_add')) {
 
 				//add multi-lingual support
