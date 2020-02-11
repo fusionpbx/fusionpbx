@@ -220,7 +220,6 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid) {
 	$parameters['menu_uuid'] = $menu_uuid;
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
-	$num_rows = is_array($result) && @sizeof($result) != 0 ? sizeof($result) : 0;
 	unset($sql, $parameters);
 
 //create token
@@ -233,7 +232,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid) {
 	echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['header-menu_items']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['header-menu_items']." (<span id='num_rows'></span>)</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'menu.php']);
 	if (permission_exists('menu_item_add')) {
@@ -413,6 +412,9 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid) {
 	echo "	function heading_restore() {\n";
 	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
 	echo "	}\n";
+
+//update number of menu items
+	echo "	document.getElementById('num_rows').innerHTML = '".$x."';\n";
 
 	echo "</script>\n";
 
