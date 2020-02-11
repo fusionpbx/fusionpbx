@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -62,32 +62,28 @@
 
 		$file_lines = file($error_file, FILE_SKIP_EMPTY_LINES);
 
-		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td align='left' valign='top' width='100%' style='padding-right: 15px;' nowrap>\n";
-		echo "			<b>".$text['header-server_errors']."</b><br />\n";
-		echo "		</td>\n";
-		echo "		<td align='right' valign='middle' nowrap>\n";
-		echo "			<form method='post'>\n";
-		echo "			".$text['label-log'];
-		echo "			<select class='formfld' name='log' style='margin-right: 20px; margin-top: 4px;'>\n";
-		echo "				<option value='current'>".$text['label-current']."</option>\n";
+		echo "<div class='action_bar' id='action_bar'>\n";
+		echo "	<div class='heading'><b>".$text['header-server_errors']."</b></div>\n";
+		echo "	<div class='actions'>\n";
+		echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
+		echo "		".$text['label-log'];
+		echo "		<select class='formfld' name='log' style='margin-right: 20px; margin-top: 4px;'>\n";
+		echo 			"<option value='current'>".$text['label-current']."</option>\n";
 		if (file_exists($_SESSION['server']['error']['text'].'.1')) {
-			echo "			<option value='previous' ".($_POST['log'] == 'previous' ? 'selected' : null).">".$text['label-previous']."</option>\n";
+			echo 		"<option value='previous' ".($_POST['log'] == 'previous' ? 'selected' : null).">".$text['label-previous']."</option>\n";
 		}
-		echo "			</select>\n";
-		echo "			".$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
-		echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".(($_POST['line_number'] == 1) ? 'checked' : null)."> ".$text['label-line_numbers']."</label>";
-		echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".(($_POST['sort'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
-		echo "			".$text['label-display']." <input type='text' class='formfld' style='min-width: 50px; max-width: 50px; width: 50px; text-align: center;' name='lines' maxlength='5' value=\"".escape($_POST['lines'])."\" onclick='this.select();'> of ".count($file_lines)." ".$text['label-lines'];
-		echo "			<input type='submit' class='btn' style='margin-left: 20px;' name='submit' value=\"".$text['button-reload']."\">";
-		echo "			</form>\n";
-		echo "		</td>\n";
-		echo "	</tr>\n";
-		echo "</table>\n";
-		echo "<br>\n";
+		echo 		"</select>\n";
+		echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
+		echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".($_POST['line_number'] == 1 ? 'checked' : null)."> ".$text['label-line_numbers']."</label>";
+		echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".($_POST['sort'] == 'desc' ? 'checked' : null)."> ".$text['label-sort']."</label>";
+		echo 		$text['label-display']." <input type='text' class='formfld' style='width: 50px; text-align: center;' name='lines' maxlength='5' value=\"".escape($_POST['lines'])."\" onclick='this.select();'> : ".count($file_lines)." ".$text['label-lines'];
+		echo button::create(['type'=>'submit','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-left: 15px;','name'=>'submit']);
+		echo 		"</form>\n";
+		echo "	</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
 
-		echo "<div id='file_content' style='max-height: 600px; overflow: auto; color: #aaa; background-color: #1c1c1c; border-radius: 4px; padding: 8px; text-align: left;'>\n";
+		echo "<div id='file_content' style='max-height: 800px; overflow: auto; color: #aaa; background-color: #1c1c1c; border-radius: 4px; padding: 8px; text-align: left;'>\n";
 
 		if (is_array($file_lines) && sizeof($file_lines) > 0) {
 			echo "<span style='font-family: monospace;'>\n";
