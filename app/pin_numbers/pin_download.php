@@ -105,65 +105,48 @@
 		}
 	}
 
-//set the row styles
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-//begin the page content
+//include the header
+	$document['title'] = $text['title-pin_numbers'];
 	require_once "resources/header.php";
 
-	echo "<form method='post' name='frm' action='pin_download.php' autocomplete='off'>\n";
+//show the content
+	echo "<form method='post' name='frm'>\n";
 
-	echo "<div style='float: right;'>\n";
-	echo "<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='pin_numbers.php'\" value='".$text['button-back']."'>\n";
-	echo "<input type='submit' class='btn' value='".$text['button-export']."'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-export']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	echo "<b>".$text['header-export']."</b>\n";
-	echo "<br /><br />\n";
 
-	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<th style='padding: 0;'><input type='checkbox' id='selectall' onclick='checkbox_toggle();'/></th>\n";
-	echo "	<th width='100%'>".$text['label-column_name']."</th>\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	echo "	<th class='checkbox'>\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
+	echo "	</th>\n";
+	echo "	<th>".$text['label-column_name']."</th>\n";
 	echo "</tr>\n";
 
-	foreach ($available_columns as $column_name) {
-		$tr_link = "onclick=\"document.getElementById('checkbox_".$column_name."').checked = document.getElementById('checkbox_".$column_name."').checked ? false : true;\"";
-		echo "<tr>\n";
-		echo "  <td valign='middle' class='".$row_style[$c]."' style='padding: 0;'><input class='checkbox1' type='checkbox' name='column_group[]' id=\"checkbox_".$column_name."\" value=\"".$column_name."\" /></td>\n";
-		echo "  <td valign='middle' class='".$row_style[$c]."' ".$tr_link.">".$column_name."</td>\n";
-		echo "</tr>\n";
-		$c = $c ? 0 : 1;
+	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
+		$x = 0;
+		foreach ($available_columns as $column_name) {
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "	<td class='checkbox'>\n";
+			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+			echo "	</td>\n";
+			echo "  <td onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$column_name."</td>\n";
+			echo "</tr>\n";
+			$x++;
+		}
+		unset($available_columns);
 	}
-
-	echo "<tr>\n";
-	echo "	<td colspan='2' align='right'>\n";
-	echo "		<br>\n";
-	echo "		<input type='submit' class='btn' value='".$text['button-export']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
 
 	echo "</table>\n";
 	echo "<br><br>\n";
-	echo "</form>\n";
 
-	//define the checkbox_toggle function
-	echo "<script type=\"text/javascript\">\n";
-	echo "	function checkbox_toggle(item) {\n";
-	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "			if (inputs[i].type === 'checkbox') {\n";
-	echo "				if (document.getElementById('selectall').checked == true) {\n";
-	echo "				inputs[i].checked = true;\n";
-	echo "			}\n";
-	echo "				else {\n";
-	echo "					inputs[i].checked = false;\n";
-	echo "				}\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "</script>\n";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
