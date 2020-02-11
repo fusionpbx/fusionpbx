@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -44,6 +44,7 @@
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
 //get the format
@@ -111,15 +112,15 @@
 
 		//determine page size
 		switch ($_SESSION['fax']['page_size']['text']) {
-			case 'a4' :
+			case 'a4':
 				$page_width = 11.7; //in
 				$page_height = 8.3; //in
 				break;
-			case 'legal' :
+			case 'legal':
 				$page_width = 14; //in
 				$page_height = 8.5; //in
 				break;
-			case 'letter' :
+			case 'letter':
 			default	:
 				$page_width = 11; //in
 				$page_height = 8.5; //in
@@ -183,7 +184,7 @@
 		$z = 0; // total counter
 		$p = 0; // per page counter
 		if (sizeof($result) > 0) {
-			foreach($result as $cdr_num => $fields) {
+			foreach ($result as $cdr_num => $fields) {
 				$data_body[$p] .= '<tr>';
 				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
