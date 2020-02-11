@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('xml_cdr_view')) {
@@ -37,9 +38,6 @@
 		echo "access denied";
 		exit;
 	}
-
-//additional includes
-	require_once "resources/paging.php";
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -109,7 +107,7 @@
 	}
 
 //check to see if permission does not exist
-	if(!permission_exists('xml_cdr_b_leg')){
+	if (!permission_exists('xml_cdr_b_leg')) {
 		$leg = 'a';
 	}
 
@@ -520,16 +518,14 @@
 	}
 	$sql = str_replace("  ", " ", $sql);
 	$database = new database;
-	if ($archive_request == 'true') {
-		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
-			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
-			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
-			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
-			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
-			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
-			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
-			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
-		}
+	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+		$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+		$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+		$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+		$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+		$database->password = $_SESSION['cdr']['archive_database_password']['text'];
 	}
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = (count($result) ? count($result) : 0);
