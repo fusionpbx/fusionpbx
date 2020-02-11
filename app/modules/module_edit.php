@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -165,39 +165,41 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	require_once "resources/header.php";
 	if ($action == "add") {
 		$document['title'] = $text['title-module_add'];
 	}
 	if ($action == "update") {
 		$document['title'] = $text['title-module_edit'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($action == "add") {
+		echo "<b>".$text['header-module_add']."</b>";
+	}
+	if ($action == "update") {
+		echo "<b>".$text['header-module_edit']."</b>";
+	}
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'modules.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['header-module_add']."</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['header-module_edit']."</b></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='modules.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-label']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_label' maxlength='255' value=\"".escape($module_label)."\">\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -207,8 +209,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_name' maxlength='255' value=\"".escape($module_name)."\">\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -218,8 +218,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_order' maxlength='255' value=\"".escape($module_order)."\">\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -233,8 +231,6 @@
 	$sql_where_optional = '';
 	$field_current_value = $module_category;
 	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -257,8 +253,6 @@
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -281,8 +275,6 @@
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -292,23 +284,17 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_description' maxlength='255' value=\"".escape($module_description)."\">\n";
-	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='module_uuid' value='".escape($module_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='module_uuid' value='".escape($module_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer
