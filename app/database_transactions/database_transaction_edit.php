@@ -109,23 +109,24 @@
 		}
 	}
 
-//show the header
+//include the header
 	$document['title'] = $text['title-database_transaction'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
-	echo "		<td width='80%' align='right' valign='top'>\n";
-	echo "			<a href='database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' style='margin-right: 15px;' alt='".$text['button-back']."'>".$text['button-back']."</button></a>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-database_transaction']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'database_transactions.php?'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo "			<a href='database_transaction_edit.php?id=".urlencode($database_transaction_uuid)."&action=undo".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null)."'><button type='button' class='btn btn-default' alt='".$text['button-undo']."'>".$text['button-undo']."</button></a>";
+		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='400'  border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "<td valign='top'>\n";
 	echo "	<table>\n";
 	echo "		<tr>\n";
@@ -193,13 +194,13 @@
 	echo "</table>\n";
 
 	if ($_REQUEST["debug"] == "true") {
-		echo "<table width='350px'  border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table width='50%'  border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-transaction_old']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_old' style='width: 265px; height: 80px;'>".escape($transaction_old)."</textarea>\n";
+		echo "	<textarea name='transaction_old' style='width: 100%; height: 80px;'>".escape($transaction_old)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -208,7 +209,7 @@
 		echo "	".$text['label-transaction_new']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_new' style='width: 265px; height: 80px;'>".escape($transaction_new)."</textarea>\n";
+		echo "	<textarea name='transaction_new' style='width: 100%; height: 80px;'>".escape($transaction_new)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -217,7 +218,7 @@
 		echo "	".$text['label-transaction_result']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_result' style='width: 265px; height: 80px;'>".escape($transaction_result)."</textarea>\n";
+		echo "	<textarea name='transaction_result' style='width: 100%; height: 80px;'>".escape($transaction_result)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
@@ -228,7 +229,7 @@
 	function array_difference($array1, $array2) {
 		$array = array();
 		if (is_array($array1)) {
-			foreach($array1 as $key => $value) {
+			foreach ($array1 as $key => $value) {
 				if (is_array($array2[$key])) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
@@ -238,7 +239,7 @@
 			}
 		}
 		if (is_array($array2)) {
-			foreach($array2 as $key => $value) {
+			foreach ($array2 as $key => $value) {
 				if (is_array($value)) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
@@ -312,14 +313,14 @@
 		//multiple dimensional array into a 2 dimensional array
 		if (is_array($after)) {
 			$x = 0;
-			foreach($after as $key => $value) {
+			foreach ($after as $key => $value) {
 				$id = 0;
-				foreach($value as $row) {
+				foreach ($value as $row) {
 					$sub_id = 0;
-					foreach($row as $sub_key => $val) {
+					foreach ($row as $sub_key => $val) {
 						if (is_array($val)) {
-							foreach($val as $sub_row) {
-								foreach($sub_row as $k => $v) {
+							foreach ($val as $sub_row) {
+								foreach ($sub_row as $k => $v) {
 									$array[$x]['schema'] = $sub_key;
 									$array[$x]['row'] = $sub_id;
 									$array[$x]['name'] = $k;
@@ -342,9 +343,9 @@
 			}
 		}
 		echo "<br />\n";
-		echo "<table border='0'>\n";
+		echo "<table width='100%'>\n";
 		if (is_array($array)) {
-			foreach($array as $row) {
+			foreach ($array as $row) {
 				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
 					echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
 					echo "<tr>\n";
@@ -398,7 +399,7 @@
 			
 			//show the difference
 				echo "<br />\n";
-				echo "<table border='0'>\n";
+				echo "<table width='100%'>\n";
 				show_difference($array);
 				echo "</table>\n";
 		}
@@ -407,8 +408,8 @@
 //show the delete
 	if ($transaction_type == "delete") {
 		echo "<br /><br />\n";
-		echo "<table>\n";
-		foreach($before as $table_name => $rows) {
+		echo "<table width='100%'>\n";
+		foreach ($before as $table_name => $rows) {
 			echo "	<tr>\n";
 			echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
 			echo "	</tr>\n";
@@ -424,11 +425,10 @@
 			}
 		}
 	}
-		echo "</table>\n";
+	echo "</table>\n";
 
 //add a few lines at the end
-	echo "<br />\n";
-	echo "<br />\n";
+	echo "<br /><br />\n";
 
 //include the footer
 	require_once "resources/footer.php";
