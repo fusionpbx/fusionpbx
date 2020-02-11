@@ -205,8 +205,6 @@
 			echo "</tr>\n";
 			$x++;
 
-// 			echo "<a href='groupmemberdelete.php?user_uuid=".$row["user_uuid"]."&group_name=".$group_name."&group_uuid=".$row["group_uuid"]."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-
 			$user_groups[] = $row["user_uuid"];
 		}
 	}
