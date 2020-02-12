@@ -136,8 +136,10 @@
 //process the http post
 	if (count($_POST)>0) {
 
-		foreach ($_POST['permissions_form'] as $permission) {
-			$permissions_form[$permission] = "true";
+		if (is_array($_POST['permissions_form']) && @sizeof($_POST['permissions_form'])) {
+			foreach ($_POST['permissions_form'] as $permission) {
+				$permissions_form[$permission] = "true";
+			}
 		}
 
 		//list all the permissions
