@@ -554,10 +554,6 @@
 			}
 			echo "</tr>\n";
 			$x++;
-
-			/*
-			echo "<a href='voicemail_greeting_delete.php?id=".escape($row['voicemail_greeting_uuid'])."&voicemail_id=".escape($voicemail_id)."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>";
-			*/
 		}
 		unset($greetings);
 	}
