@@ -158,7 +158,6 @@
 			}
 			echo "</tr>\n";
 			$x++;
-// 			echo "<a href='access_control_node_delete.php?access_control_uuid=".urlencode($row['access_control_uuid'])."&id=".urlencode($row['access_control_node_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 		}
 		unset($access_control_nodes);
 	}
