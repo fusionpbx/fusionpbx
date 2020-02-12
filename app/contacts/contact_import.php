@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if(!function_exists('str_getcsv')) {
+	if (!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
@@ -58,12 +58,10 @@
 	ini_set('max_execution_time',7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$from_row = check_str($_POST["from_row"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
+	$action = $_POST["action"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -75,7 +73,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -93,19 +91,19 @@
 
 		//get the schema
 			$x = 0;
-			include ("app/contacts/app_config.php");
+			include "app/contacts/app_config.php";
 			$i = 0;
-			foreach($apps[0]['db'] as $table) {
+			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
 				$table_name = $table["table"]['name'];
 				$parent_name = $table["table"]['parent'];
 
 				//remove the v_ table prefix
 				if (substr($table_name, 0, 2) == 'v_') {
-						$table_name = substr($table_name, 2);
+					$table_name = substr($table_name, 2);
 				}
 				if (substr($parent_name, 0, 2) == 'v_') {
-						$parent_name = substr($parent_name, 2);
+					$parent_name = substr($parent_name, 2);
 				}
 
 				//filter for specific tables and build the schema array
@@ -115,7 +113,7 @@
 
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
-					foreach($table['fields'] as $row) {
+					foreach ($table['fields'] as $row) {
 						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
@@ -141,46 +139,51 @@
 //match the column names to the field names
 	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
 
-		//form to match the fields to the column names
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extension_imports.php');
+				exit;
+			}
+
+		//create token
+			$object = new token;
+			$token = $object->create($_SERVER['PHP_SELF']);
+
+		//include header
+			$document['title'] = $text['title-contacts_import'];
 			require_once "resources/header.php";
 
-			echo "<form action='contact_import.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
+		//form to match the fields to the column names
+			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
+
+			echo "<div class='action_bar' id='action_bar'>\n";
+			echo "	<div class='heading'><b>".$text['header-contacts_import']."</b></div>\n";
+			echo "	<div class='actions'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'contact_import.php']);
+			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import']]);
+			echo "	</div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo $text['description-contacts_import']."\n";
+			echo "<br /><br />\n";
+
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-			echo "	<tr>\n";
-			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
-			echo "		<b>".$text['header-contacts_import']."</b><br />\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-back']."'>\n";
-			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-			echo "	</td>\n";
-			echo "	</tr>\n";
-			echo "	<tr>\n";
-			echo "	<td colspan='2' align='left'>\n";
-			echo "		".$text['description-contacts_import']."\n";
-			echo "	</td>\n";
-			echo "	</tr>\n";
-
-			//echo "<tr>\n";
-			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-contacts_import']."</b></td>\n";
-			//echo "<td width='70%' align='right'>\n";
-			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-back']."'>\n";
-			//echo "</td>\n";
-			//echo "</tr>\n";
 
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
-				echo "</td>\n";
-				echo "<td class='vtable' align='left'>\n";
-				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
-				echo "    			<option value=''></option>\n";
+				echo "	</td>\n";
+				echo "	<td width='70%' class='vtable' align='left'>\n";
+				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
+				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
@@ -189,31 +192,30 @@
 							$selected = "selected='selected'";
 						}
 						if (substr($field, -5) != '_uuid') {
-							echo "    			<option value='".$row['table'].".$field' $selected>$field</option>\n";
+							echo "				<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
 				}
-				echo "    			</select>\n";
+				echo "		</select>\n";
 				//echo "<br />\n";
 				//echo $text['description-zzz']."\n";
-				echo "			</td>\n";
-				echo "		</tr>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				$x++;
 			}
 
-			echo "		<tr>\n";
-			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "				<input name='action' type='hidden' value='import'>\n";
-			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
-			echo "				<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+			echo "</table>\n";
+			echo "<br /><br />\n";
 
-			echo "	</table>\n";
+			echo "<input name='action' type='hidden' value='import'>\n";
+			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 			echo "</form>\n";
+
 			require_once "resources/footer.php";
 
 		//normalize the column names
@@ -238,11 +240,16 @@
 		}
 	}
 
-//upload the contact csv
+//upload the csv
 	if (file_exists($_SESSION['file']) && $action == 'import') {
 
-		//form to match the fields to the column names
-			//require_once "resources/header.php";
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extension_imports.php');
+				exit;
+			}
 
 		//user selected fields
 			$fields = $_POST['fields'];
@@ -261,14 +268,14 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$users = $database->select($sql, $parameters, 'all');
-			unset($sql);
+			unset($sql, $parameters);
 
 		//get the contents of the csv file and convert them into an array
 			$handle = @fopen($_SESSION['file'], "r");
 			if ($handle) {
-				//pre-set the numbers
-					$row_number = 1;
+				//set the starting identifiers
 					$row_id = 0;
+					$row_number = 1;
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
@@ -309,28 +316,28 @@
 										}
 	
 										if ($field_name == "group_name") {
-												foreach ($groups as $field) {
-													if ($field['group_name'] == $result[$key]) {
-														//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
-														$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
-														//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-														$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
-													}
+											foreach ($groups as $field) {
+												if ($field['group_name'] == $result[$key]) {
+													//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
+													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+													$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
 												}
+											}
 										}
 	
 										if ($field_name == "username") {
-												foreach ($users as $field) {
-													if ($field['username'] == $result[$key]) {
-														//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
-														$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
-														//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-														$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
-													}
+											foreach ($users as $field) {
+												if ($field['username'] == $result[$key]) {
+													//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
+													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
+													$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
 												}
+											}
 										}
-									} //if (strlen($table_name) > 0)
-								} //end foreach
+									}
+								}
 	
 							//process a chunk of the array
 								if ($row_id === 1000) {
@@ -340,24 +347,19 @@
 										$database->app_name = 'contacts';
 										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 										$database->save($array);
+
+									//clear the array
 										unset($array);
 										
 									//set the row id back to 0
 										$row_id = 0;
 								}
 	
-							//increment row id
-								$row_id++;
 						} //if ($from_row <= $row_number)
 						$row_number++;
-					}
+						$row_id++;
+					} //end while
 					fclose($handle);
-	
-				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
 
 				//save to the data
 					if (is_array($array)) {
@@ -372,84 +374,39 @@
 					header("Location: contacts.php");
 					exit;
 			}
-
-		//show the header
-			require_once "resources/header.php";
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-contacts_import']."</b></td>\n";
-			echo "<td width='70%' align='right'>\n";
-			echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php'\" value='".$text['button-back']."'>\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n";
-			echo "<td align='left' colspan='2'>\n";
-			echo "	".$text['message-results']."<br /><br />\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
-
-		//show the results
-			echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
-			echo "<tr>\n";
-			echo "	<th>".$text['label-contact_name']."</th>\n";
-			echo "	<th>".$text['label-contact_organization']."</th>\n";
-			//echo "	<th>".$text['label-contact_email']."</th>\n";
-			echo "	<th>".$text['label-contact_url']."</th>\n";
-			echo "</tr>\n";
-			if ($results) {
-				foreach($results as $row) {
-					echo "<tr>\n";
-					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		escape($row['FirstName'])." ".escape($row['LastName']);
-					echo "	</td>\n";
-					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 	escape($row['Company'])."&nbsp;\n";
-					echo "	</td>\n";
-					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		escape($row['EmailAddress'])."&nbsp;\n";
-					echo "	</td>\n";
-					echo "	<td class='vncell' valign='top' align='left'>\n";
-					echo 		escape($row['Web Page'])."&nbsp;\n";
-					echo "	</td>\n";
-					echo "</tr>\n";
-				}
-			}
-			echo "</table>\n";
-
-		//include the footer
-			require_once "resources/footer.php";
-			exit;
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
+	$document['title'] = $text['title-contacts_import'];
 	require_once "resources/header.php";
 
-//begin the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "	<td valign='top' align='left' width='30%' nowrap='nowrap'>\n";
-	echo "		<b>".$text['header-contacts_import']."</b><br />\n";
-	echo "		".$text['description-contacts_import']."\n";
-	echo "	</td>\n";
-	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php'\" value='".$text['button-back']."'>\n";
-	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-	echo "</table>";
+//show content
+	echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
-	echo "<br />\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-contacts_import']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'contacts.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
-	echo "	<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+	echo $text['description-contacts_import']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -511,20 +468,18 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td valign='bottom'>\n";
+	echo "</table>\n";
+	echo "<br />\n";
+
 	if (function_exists('curl_version') && $_SESSION['contact']['google_oauth_client_id']['text'] != '' && $_SESSION['contact']['google_oauth_client_secret']['text'] != '') {
-		echo "		<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
+		echo "<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	}
-	echo "		</td>\n";
-	echo "		<td valign='bottom' align='right' nowrap>\n";
-	echo "			<input name='type' type='hidden' value='csv'>\n";
-	echo "			<br />\n";
-	echo "			<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "<br><br>";
+
+	echo "<br />\n";
+
+	echo "<input name='type' type='hidden' value='csv'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer
