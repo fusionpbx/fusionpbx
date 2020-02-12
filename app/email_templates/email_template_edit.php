@@ -301,6 +301,8 @@
 		echo "		<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-template_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
