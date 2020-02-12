@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -146,6 +146,8 @@
 	require_once "resources/header.php";
 
 //show the content
+	echo "<form name='frm' id='frm' method='post'>\n";
+
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-device_vendor']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -154,8 +156,6 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
 
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -194,20 +194,20 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "			<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
 
 	if ($action == "update") {
+		echo "<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
+
+	if ($action == "update") {
 		require "device_vendor_functions.php";
+		echo "<br><br>";
 	}
 
 //include the footer
