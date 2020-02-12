@@ -1183,7 +1183,6 @@ if (!class_exists('xml_cdr')) {
 
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
 
 									//increment counter
@@ -1214,14 +1213,9 @@ if (!class_exists('xml_cdr')) {
 							unset($records);
 					}
 			}
-		}
+		} //method
 
-	} //end the class
+	} //class
 }
-/*
-//example use
-	$cdr = new xml_cdr;
-	$cdr->read_files();
-*/
 
 ?>
