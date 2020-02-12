@@ -1060,12 +1060,7 @@
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
 			echo "				</td>\n";
-
-			echo "				<td>\n";
-			//if (permission_exists('device_delete')) {
-			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			//}
-			echo "				</td>\n";
+			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 			foreach($device_lines as $row) {
 				$device_mac_address = $row['device_mac_address'];
