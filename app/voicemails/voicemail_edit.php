@@ -482,8 +482,8 @@
 					echo "					<td class='vtable'>\n";
 					echo "						".escape($field['voicemail_option_description'])."&nbsp;\n";
 					echo "					</td>\n";
-					echo "					<td class='list_control_icons'>";
-					echo 						"<a href='voicemail_option_edit.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					echo "					<td class='list_control_icons' style='text-align: left;'>";
+					//echo 						"<a href='voicemail_option_edit.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 					if (permission_exists('voicemail_option_delete')) {
 						echo 						"<a href='voicemail_option_delete.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
