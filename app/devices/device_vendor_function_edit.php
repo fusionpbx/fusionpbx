@@ -330,7 +330,7 @@
 		foreach ($groups as $field) {
 			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
 			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!in_array($field["group_uuid"], $assigned_groups)) {
+			if (!is_array($assigned_groups) || (is_array($assigned_groups) && @sizeof($assigned_groups) != 0 && !in_array($field["group_uuid"], $assigned_groups))) {
 				echo "	<option value='".escape($field['group_uuid'])."|".escape($field['group_name'])."'>".escape($field['group_name']).(($field['domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$field['domain_uuid']]['domain_name']) : null)."</option>\n";
 			}
 		}
