@@ -273,7 +273,10 @@
 	echo "	".$text['label-template_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='template_type' maxlength='255' value=\"".escape($template_type)."\">\n";
+	echo "	<select class='formfld' name='template_type'>\n";
+	echo "		<option value='html'>HTML</option>\n";
+	echo "		<option value='text' ".($template_type == 'text' ? "selected='selected'" : null).">".$text['label-template_text']."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-template_type']."\n";
 	echo "</td>\n";
@@ -298,8 +301,6 @@
 		echo "		<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-template_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
