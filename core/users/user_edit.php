@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1025,27 +1025,30 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>";
-	echo "		<td colspan='2' align='right' style='white-space: nowrap;'>";
+	if ($unsaved) {
+		echo "<tr>";
+		echo "<td colspan='2' align='right' style='white-space: nowrap;'>";
+		echo "	<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
+		echo "</td>";
+		echo "</tr>";
+	}
+
+	echo "</table>";
+	echo "<br /><br />";
+
 	if ($action == 'edit') {
-		echo "		<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
+		echo "<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
 		if (permission_exists("user_edit")) {
-			echo "		<input type='hidden' name='username_old' value=\"".escape($username)."\">";
+			echo "<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	if ($unsaved) {
-		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
-	}
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
-		echo "<br><br>";
 		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/user_settings/user_settings.php";
+		echo "<br><br>";
 	}
 
 //uuid generation script
