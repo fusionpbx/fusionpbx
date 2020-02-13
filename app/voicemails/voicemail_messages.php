@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -27,16 +27,7 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-
-//set the voicemail_uuid
-	if (is_uuid($_REQUEST['id'])) {
-		$voicemail_uuid = $_REQUEST['id'];
-	}
-	else if (is_numeric($_REQUEST['id'])) {
-		$voicemail_id = $_REQUEST['id'];
-	}
 
 //download the message
 	if (
@@ -47,13 +38,17 @@
 		) {
 		$voicemail = new voicemail;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-		$voicemail->voicemail_id = $_REQUEST["id"];
-		$voicemail->voicemail_uuid = $_REQUEST["voicemail_uuid"];
-		$voicemail->voicemail_message_uuid = $_REQUEST["uuid"];
+		$voicemail->type = $_REQUEST['t'];
+		$voicemail->voicemail_id = $_REQUEST['id'];
+		$voicemail->voicemail_uuid = $_REQUEST['voicemail_uuid'];
+		$voicemail->voicemail_message_uuid = $_REQUEST['uuid'];
 		$result = $voicemail->message_download();
 		unset($voicemail);
 		exit;
 	}
+
+//include after download function
+	require_once "resources/check_auth.php";
 
 //check permissions
 	if (permission_exists('voicemail_message_view')) {
@@ -62,6 +57,14 @@
 	else {
 		echo "access denied";
 		exit;
+	}
+
+//set the voicemail_uuid
+	if (is_uuid($_REQUEST['id'])) {
+		$voicemail_uuid = $_REQUEST['id'];
+	}
+	else if (is_numeric($_REQUEST['id'])) {
+		$voicemail_id = $_REQUEST['id'];
 	}
 
 //get the http post data
@@ -305,7 +308,7 @@
 					echo "	<td class='button center no-link no-wrap'>";
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."');"]);
-					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&t=bin&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid']),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
+					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' ".$style.">".escape($row['message_length_label'])."</td>\n";
 					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
