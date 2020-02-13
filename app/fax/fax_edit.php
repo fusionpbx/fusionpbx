@@ -671,7 +671,7 @@
 				echo "		<td class='vtable'>";
 
 				if (is_array($fax_users) && @sizeof($fax_users) != 0) {
-					echo "		<table width='52%'>\n";
+					echo "		<table style='width: 50%; min-width: 200px; max-width: 450px;'>\n";
 					foreach($fax_users as $field) {
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
@@ -684,20 +684,19 @@
 					echo "		<br />\n";
 				}
 				unset($fax_users);
-
-				echo "			<select name='user_uuid' class='formfld' style='width: auto;'>\n";
-				echo "				<option value=''></option>\n";
 				if (is_array($available_users) && @sizeof($available_users) != 0) {
+					echo "		<select name='user_uuid' class='formfld' style='width: auto;'>\n";
+					echo "			<option value=''></option>\n";
 					foreach($available_users as $field) {
-						echo "		<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+						echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 					}
+					echo "		</select>";
+					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+					echo "		<br>\n";
+					echo "		".$text['description-user-add']."\n";
+					echo "		<br />\n";
+					unset($available_users);
 				}
-				unset($available_users);
-				echo "			</select>";
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-				echo "			<br>\n";
-				echo "			".$text['description-user-add']."\n";
-				echo "			<br />\n";
 				echo "		</td>";
 				echo "	</tr>";
 			}
