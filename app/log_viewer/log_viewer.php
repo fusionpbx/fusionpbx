@@ -168,6 +168,9 @@
 			else {
 				$user_file_size = $_POST['size'] * 1024;
 			}
+			if (strlen($_REQUEST['filter']) > 0) {
+				$filter = $_REQUEST['filter'];
+			}
 		}
 		//echo "Log File Size: " . $file_size . " bytes. <br />";
 		echo "	".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].".";
