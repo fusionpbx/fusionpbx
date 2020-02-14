@@ -186,11 +186,14 @@
 					$array['conferences'][0]['conference_description'] = $conference_description;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
+				//conference pin number
+					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
+
 				//build the xml
 					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default".$pin_number."+flags{'".$conference_flags."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
