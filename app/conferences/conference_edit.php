@@ -209,7 +209,7 @@
 						//<action application="answer" />
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'conference';
-						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
+						$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
 						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
 						$dialplan_detail_data = $conference_name.'@'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
 						$dialplan_detail_order = '020';
