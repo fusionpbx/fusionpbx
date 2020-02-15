@@ -82,45 +82,47 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						foreach ($row['permissions'] as $permission) {
-							//set the variables
-							if ($permission['groups']) {
-								foreach ($permission['groups'] as $group_name) {
-									//check group protection
-									$sql = "select group_uuid, group_protected from v_groups ";
-									$sql .= "where group_name = :group_name ";
-									$parameters['group_name'] = $group_name;
-									$database = new database;
-									$result = $database->select($sql, $parameters, 'row');
-									if (is_array($result) && @sizeof($result) != 0) {
-										$group_uuid = $result['group_uuid'];
-										$group_protected = $result['group_protected'] == 'true' ? true : false;
-									}
-									else {
-										$group_protected = false;
-									}
-									unset($sql, $parameters);
-
-									if (!$group_protected) {
-										//if the item uuid is not currently in the db then add it
-										$sql = "select count(*) from v_group_permissions ";
-										$sql .= "where permission_name = :permission_name ";
-										$sql .= "and group_name = :group_name ";
-										$parameters['permission_name'] = $permission['name'];
+						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+							foreach ($row['permissions'] as $permission) {
+								//set the variables
+								if ($permission['groups']) {
+									foreach ($permission['groups'] as $group_name) {
+										//check group protection
+										$sql = "select group_uuid, group_protected from v_groups ";
+										$sql .= "where group_name = :group_name ";
 										$parameters['group_name'] = $group_name;
 										$database = new database;
-										$num_rows = $database->select($sql, $parameters, 'column');
+										$result = $database->select($sql, $parameters, 'row');
+										if (is_array($result) && @sizeof($result) != 0) {
+											$group_uuid = $result['group_uuid'];
+											$group_protected = $result['group_protected'] == 'true' ? true : false;
+										}
+										else {
+											$group_protected = false;
+										}
 										unset($sql, $parameters);
 
-										if ($num_rows == 0) {
-											//build default permissions insert array
-												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
-												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
-												$array['group_permissions'][$x]['group_name'] = $group_name;
-												if (is_uuid($group_uuid)) {
-													$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
-												}
-											$x++;
+										if (!$group_protected) {
+											//if the item uuid is not currently in the db then add it
+											$sql = "select count(*) from v_group_permissions ";
+											$sql .= "where permission_name = :permission_name ";
+											$sql .= "and group_name = :group_name ";
+											$parameters['permission_name'] = $permission['name'];
+											$parameters['group_name'] = $group_name;
+											$database = new database;
+											$num_rows = $database->select($sql, $parameters, 'column');
+											unset($sql, $parameters);
+
+											if ($num_rows == 0) {
+												//build default permissions insert array
+													$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+													$array['group_permissions'][$x]['permission_name'] = $permission['name'];
+													$array['group_permissions'][$x]['group_name'] = $group_name;
+													if (is_uuid($group_uuid)) {
+														$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
+													}
+												$x++;
+											}
 										}
 									}
 								}
