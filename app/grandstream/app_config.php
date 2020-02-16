@@ -605,7 +605,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring Timeout (in seconds). Default is 60 (30-3600)";
 		$y++;
-
-
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06a35172-1bea-4611-87d0-9d66475ae709";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_wallpaper_source";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background";
+                $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7ee552de-4634-4d61-8869-e0f5230858fa";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_display_language";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "Auto";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Language. See provision profile for codes.";
+                $y++;
 
 ?>
