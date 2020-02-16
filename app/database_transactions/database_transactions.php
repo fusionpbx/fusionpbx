@@ -56,6 +56,7 @@
 		$sql_search .= "	or lower(t.transaction_address) like :search ";
 		$sql_search .= "	or lower(t.transaction_type) like :search ";
 		$sql_search .= "	or cast(t.transaction_date as text) like :search ";
+		$sql_search .= "	or lower(u.username) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
