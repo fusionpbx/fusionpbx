@@ -128,7 +128,7 @@ if (!class_exists('phrases')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('phrase_details_delete', 'temp');
+									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -138,7 +138,7 @@ if (!class_exists('phrases')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('phrase_details_delete', 'temp');
+									$p->delete('phrase_detail_delete', 'temp');
 
 								//save the xml
 									save_phrases_xml();
