@@ -189,19 +189,19 @@ if (!class_exists('domains')) {
 												}
 
 												//delete the dialplan
-												unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/'.$domain_name);
 												}
 
 												//delete the dialplan public
-												unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);
 												}
 
 												//delete the extension
-												unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
 												}
@@ -221,7 +221,7 @@ if (!class_exists('domains')) {
 															} else {
 																//check if file extension is xml
 																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+																	@unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
 																}
 															}
 														}
@@ -238,7 +238,7 @@ if (!class_exists('domains')) {
 																//this is a directory
 															} else {
 																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+																	@unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
 																}
 															}
 														}
@@ -247,7 +247,7 @@ if (!class_exists('domains')) {
 												}
 
 												//delete the recordings
-												if (strlen($_SESSION['switch'][recordings]['dir']) > 0) {
+												if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
 												}
 
