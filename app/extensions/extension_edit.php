@@ -622,7 +622,7 @@
 							$row_style["1"] = "row_style1";
 
 						//show the action and redirect the user
-							if (count($generated_users) == 0) {
+							if (!is_array($generated_users) || count($generated_users) == 0) {
 								//action add
 									header("Location: extension_edit.php?id=".$extension_uuid);
 							}
