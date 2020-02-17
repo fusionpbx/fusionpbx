@@ -495,7 +495,7 @@
 		echo "	<option value=''></option>\n";
 		foreach($groups as $row) {
 			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
-				if (!in_array($row["group_uuid"], $assigned_groups)) {
+				if (!is_array($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
 					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
 				}
 			}
