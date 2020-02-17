@@ -316,11 +316,6 @@
 											}
 										}
 
-								//enabled
-									if (!permission_exists('extension_enabled')) {
-										$enabled = "true";
-									}
-
 								//generate a password
 									if ($action == "add" && strlen($password) == 0) {
 										$password = generate_password();
@@ -407,7 +402,9 @@
 									if (permission_exists('extension_dial_string')) {
 										$array["extensions"][$i]["dial_string"] = $dial_string;
 									}
-									$array["extensions"][$i]["enabled"] = $enabled;
+									if (permission_exists('extension_enabled')) {
+										$array["extensions"][$i]["enabled"] = $enabled;
+									}
 									$array["extensions"][$i]["description"] = $description;
 
 							}
