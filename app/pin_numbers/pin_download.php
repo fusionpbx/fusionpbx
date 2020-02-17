@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -85,6 +85,15 @@
 
 //get the pin numbers from the database and send them as output
 	if (is_array($_REQUEST["column_group"]) && @sizeof($_REQUEST["column_group"]) != 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: pin_numbers.php');
+				exit;
+			}
+
 		//validate submitted columns
 		foreach($_REQUEST["column_group"] as $column_name) {
 			if (in_array($column_name, $available_columns)) {
@@ -104,6 +113,10 @@
 			exit;
 		}
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	$document['title'] = $text['title-pin_numbers'];
@@ -145,6 +158,8 @@
 
 	echo "</table>\n";
 	echo "<br><br>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";
 
