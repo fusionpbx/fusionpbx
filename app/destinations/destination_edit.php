@@ -331,7 +331,6 @@
 							$sql .= "	dialplan_detail_data like '%tone_detect%' ";
 							$sql .= "	or dialplan_detail_type = 'tone_detect' ";
 							$sql .= "	or dialplan_detail_type = 'record_session' ";
-							$sql .= "	or (dialplan_detail_type = 'sleep' and  dialplan_detail_data = '3000') ";
 							$sql .= ")";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['dialplan_uuid'] = $dialplan_uuid;
@@ -454,25 +453,6 @@
 
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
-
-								//answer
-									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-									$y++;
-
-								//increment the dialplan detail order
-									$dialplan_detail_order = $dialplan_detail_order + 10;
-
-								//execute on tone detect
-									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000";
-									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-									$y++;
 
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
@@ -789,12 +769,6 @@
 			unset($dialplan_details[$x]);
 		}
  		if ($row['dialplan_detail_type'] == "tone_detect") {
-			unset($dialplan_details[$x]);
-		}
- 		if ($row['dialplan_detail_type'] == "answer") {
-			unset($dialplan_details[$x]);
-		}
- 		if ($row['dialplan_detail_type'] == "sleep") {
 			unset($dialplan_details[$x]);
 		}
 		if (substr($dialplan_detail_data,0,22) == "execute_on_tone_detect") {
