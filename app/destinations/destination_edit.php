@@ -307,9 +307,8 @@
 						if (strlen($fax_uuid) > 0) {
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
-							$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +5000\"/>\n";
-							$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
-							$dialplan["dialplan_xml"] .= "		<action application=\"sleep\" data=\"3000\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +3000\"/>\n";
+
 						}
 						if ($destination->valid($destination_app.':'.$destination_data)) {
 							$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
