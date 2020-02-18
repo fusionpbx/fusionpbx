@@ -2609,26 +2609,6 @@ $text['description-accountcode']['ru-ru'] = "Введите здесь код с
 $text['description-accountcode']['sv-se'] = "Ange 'account code' här.";
 $text['description-accountcode']['uk-ua'] = "";
 
-$text['checkbox-range']['en-us'] = "Auto-generate user with extension as login name";
-$text['checkbox-range']['ar-eg'] = "";
-$text['checkbox-range']['de-at'] = "Benutzer automatisch anlegen (Nebenstelle als Login Name)"; //copied from de-de
-$text['checkbox-range']['de-ch'] = "Benutzer automatisch anlegen (Nebenstelle als Login Name)"; //copied from de-de
-$text['checkbox-range']['de-de'] = "Benutzer automatisch anlegen (Nebenstelle als Login Name)";
-$text['checkbox-range']['es-cl'] = "Generar automáticamente usuario con su nombre de inicio de sesión como extensión";
-$text['checkbox-range']['es-mx'] = "Generar automáticamente usuario con su nombre de inicio de sesión como extensión"; //copied from es-cl
-$text['checkbox-range']['fr-ca'] = "Auto-générer l'usager avec l'extension comme ID de login"; //copied from fr-fr
-$text['checkbox-range']['fr-fr'] = "Auto-générer l'usager avec l'extension comme ID de login";
-$text['checkbox-range']['he-il'] = "";
-$text['checkbox-range']['it-it'] = "Genera automaticamente l'utente con l'interno come login.";
-$text['checkbox-range']['nl-nl'] = "Genereer een usernaam met met toestel als loginnaam.";
-$text['checkbox-range']['pl-pl'] = " Wygeneruj użytkownika z numerem wewnętrznym jako login.";
-$text['checkbox-range']['pt-br'] = "Gerar automaticamente o usuário com o ramal como nome de login";
-$text['checkbox-range']['pt-pt'] = "Geração Automática do utilizador com a extensão como nome de login";
-$text['checkbox-range']['ro-ro'] = "";
-$text['checkbox-range']['ru-ru'] = "Автоматическая генерация Пользователю Внутреннего Номера Логина и Имени";
-$text['checkbox-range']['sv-se'] = "Auto-generera användare med anknytning som inloggningsnamn.";
-$text['checkbox-range']['uk-ua'] = "";
-
 $text['button-call_routing']['en-us'] = "Call Routing";
 $text['button-call_routing']['ar-eg'] = "توجيه الدعوة";
 $text['button-call_routing']['de-at'] = "Call Routing"; //copied from de-de
