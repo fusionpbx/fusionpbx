@@ -414,7 +414,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid) {
 	echo "	}\n";
 
 //update number of menu items
-	echo "	document.getElementById('num_rows').innerHTML = '".$x."';\n";
+	echo "	document.getElementById('num_rows').innerHTML = '".($x ?: 0)."';\n";
 
 	echo "</script>\n";
 
