@@ -6120,26 +6120,4 @@ $text['label-contact']['ru-ru'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['uk-ua'] = "Контакт";
 
-$text['message-delete_selection']['en-us'] = "What do you wish to delete?";
-$text['message-delete_selection']['ar-eg'] = "What do you wish to delete?";
-$text['message-delete_selection']['de-at'] = "What do you wish to delete?";
-$text['message-delete_selection']['de-ch'] = "What do you wish to delete?";
-$text['message-delete_selection']['de-de'] = "What do you wish to delete?";
-$text['message-delete_selection']['el-gr'] = "What do you wish to delete?";
-$text['message-delete_selection']['es-cl'] = "What do you wish to delete?";
-$text['message-delete_selection']['es-mx'] = "What do you wish to delete?";
-$text['message-delete_selection']['fr-ca'] = "What do you wish to delete?";
-$text['message-delete_selection']['fr-fr'] = "What do you wish to delete?";
-$text['message-delete_selection']['he-il'] = "What do you wish to delete?";
-$text['message-delete_selection']['it-it'] = "What do you wish to delete?";
-$text['message-delete_selection']['nl-nl'] = "What do you wish to delete?";
-$text['message-delete_selection']['pl-pl'] = "What do you wish to delete?";
-$text['message-delete_selection']['pt-br'] = "What do you wish to delete?";
-$text['message-delete_selection']['pt-pt'] = "What do you wish to delete?";
-$text['message-delete_selection']['ro-ro'] = "What do you wish to delete?";
-$text['message-delete_selection']['ru-ru'] = "What do you wish to delete?";
-$text['message-delete_selection']['sv-se'] = "What do you wish to delete?";
-$text['message-delete_selection']['uk-ua'] = "What do you wish to delete?";
-$text['message-delete_selection']['tr-tr'] = "What do you wish to delete?";
-
 ?>

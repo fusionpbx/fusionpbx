@@ -2605,9 +2605,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	@media(min-width: 700px) {
 		.modal-window > div {
-			width: 40%;
-			min-width: 400px;
-			max-width: 500px;
+			width: 500px;
 			margin: 10% auto;
 			border-radius: 5px;
 			}

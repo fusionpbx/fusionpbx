@@ -72,6 +72,7 @@ if (!class_exists('extension')) {
 		public $dial_string;
 		public $enabled;
 		public $description;
+		public $delete_voicemail;
 
 		/**
 		 * declare private variables
@@ -577,7 +578,7 @@ if (!class_exists('extension')) {
 										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 										$parameters['extension_uuid'] = $record['uuid'];
 										$database = new database;
-										$row = $database->execute($sql, $parameters, 'row');
+										$row = $database->select($sql, $parameters, 'row');
 										if (is_array($row) && @sizeof($row) != 0) {
 
 											//for use below and to clear cache (bottom)
@@ -597,11 +598,17 @@ if (!class_exists('extension')) {
 												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
 													$array['ring_group_destinations'][$x]['destination_number'] = $extensions[$x]['extension'];
 													$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-													if ($extensions[$x]['number_alias'] != '') {
+													if (is_numeric($extensions[$x]['number_alias'])) {
 														$array['ring_group_destinations'][$y]['destination_number'] = $extensions[$x]['number_alias'];
 														$array['ring_group_destinations'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 													}
 													$y++;
+												}
+
+											//create array of voicemail ids
+												if ($this->delete_voicemail && permission_exists('voicemail_delete')) {
+													if (is_numeric($extensions[$x]['extension'])) { $voicemail_ids[] = $extensions[$x]['extension']; }
+													if (is_numeric($extensions[$x]['number_alias'])) { $voicemail_ids[] = $extensions[$x]['number_alias']; }
 												}
 
 										}
@@ -612,6 +619,34 @@ if (!class_exists('extension')) {
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+
+								//delete extension voicemail boxes
+									if (
+										$this->delete_voicemail
+										&& permission_exists('voicemail_delete')
+										&& is_array($voicemail_ids)
+										&& @sizeof($voicemail_ids)
+										) {
+										//retrieve voicemail uuids
+											$sql = "select voicemail_uuid as uuid from v_voicemails ";
+											$sql .= "where domain_uuid = :domain_uuid ";
+											$sql .= "and voicemail_id in (".implode(',', $voicemail_ids).") ";
+											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+											$database = new database;
+											$rows = $database->select($sql, $parameters, 'all');
+											if (is_array($rows) && @sizeof($rows) != 0) {
+												foreach ($rows as $r => $row) {
+													$voicemails[$r]['checked'] = 'true';
+													$voicemails[$r]['uuid'] = $row['uuid'];
+												}
+											}
+
+										//delete voicemail boxes
+											if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+												$obj = new voicemail;
+												$obj->voicemail_delete($voicemails);
+											}
+									}
 
 								//grant temporary permissions
 									$p = new permissions;
