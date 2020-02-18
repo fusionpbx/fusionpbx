@@ -92,7 +92,7 @@ if (!class_exists('domains')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build the delete array
-							$x = 0;
+							$d = 0;
 							foreach ($records as $record) {
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -268,11 +268,11 @@ if (!class_exists('domains')) {
 											unset($_SESSION['switch']);
 
 										//remove the domain and save to transactions
-											$domain_array['domains'][$x]['domain_uuid'] = $record['uuid'];
-									}
+											$domain_array['domains'][$d]['domain_uuid'] = $id;
 
-								//increment the id
-									$x++;
+										//increment the id
+											$d++;
+									}
 							}
 
 						//delete the checked rows
