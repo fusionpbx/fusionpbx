@@ -296,7 +296,7 @@
 					echo "<tr class='list-row' id='recording_progress_bar_".escape($row['voicemail_message_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['voicemail_message_uuid'])."'></span></td></tr>\n";
 					echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 
-					$bold = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? "style='font-weight: bold;'" : null;
+					$bold = ($row['message_status'] == '' && $_REQUEST["uuid"] != $row['voicemail_message_uuid']) ? 'font-weight: bold;' : null;
 					$list_row_url = "javascript:recording_play('".escape($row['voicemail_message_uuid'])."');";
 					echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
 					echo "	<td class='checkbox'>\n";
