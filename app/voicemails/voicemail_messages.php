@@ -274,10 +274,6 @@
 					echo "<th class='right pct-15 hide-sm-dn'>".$text['label-message_size']."</th>\n";
 					$col_count++;
 				}
-				if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
-					echo "<th class='pct-10'>".$text['label-transcription']."</th>\n";
-					$col_count++;
-				}
 				echo "</tr>\n";
 			}
 
@@ -311,15 +307,24 @@
 					echo 		"<audio id='recording_audio_".escape($row['voicemail_message_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_message_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_message_uuid'])."');\" src='voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".urlencode($row['voicemail_uuid'])."&uuid=".urlencode($row['voicemail_message_uuid'])."&r=".uuid()."'></audio>";
 					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_message_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_message_uuid'])."');"]);
 					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_messages.php?action=download&id=".urlencode($row['voicemail_id'])."&voicemail_uuid=".escape($row['voicemail_uuid'])."&uuid=".escape($row['voicemail_message_uuid'])."&t=bin&r=".uuid(),'onclick'=>"$(this).closest('tr').children('td').css('font-weight','normal');"]);
+					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
+						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','onclick'=>"document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display = document.getElementById('transcription_".$row['voicemail_message_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
+					}
 					echo "	</td>\n";
 					echo "	<td class='right no-wrap hide-xs' style='".$bold."'>".escape($row['message_length_label'])."</td>\n";
 					if ($_SESSION['voicemail']['storage_type']['text'] != 'base64') {
 						echo "	<td class='right no-wrap hide-sm-dn' style='".$bold."'>".escape($row['file_size_label'])."</td>\n";
 					}
-					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
-						echo "	<td class='hide-sm-dn' style='".$bold."'>".escape($row['message_transcription'])."</td>\n";
-					}
 					echo "</tr>\n";
+					if ($_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true' && $row['message_transcription'] != '') {
+						echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
+						echo "<tr id='transcription_".$row['voicemail_message_uuid']."' class='list-row' style='display: none;'>\n";
+						echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
+						echo "		<strong style='display: inline-block; font-size: 90%; margin-bottom: 10px;'>".$text['label-transcription']."...</strong><br />\n";
+						echo 		escape($row['message_transcription'])."\n";
+						echo "	</td>\n";
+						echo "</tr>\n";
+					}
 					$x++;
 				}
 				unset($row);
