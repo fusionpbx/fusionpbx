@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_view')) {
+	if (permission_exists('xml_cdr_statistics')) {
 		//access granted
 	}
 	else {
@@ -283,7 +283,7 @@
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
-		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
+		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
 			// create simple user extension array
 			foreach ($_SESSION['user']['extension'] as $row) {
 				$user_extensions[] = $row['user'];
@@ -333,7 +333,7 @@
 
 	$sql_where = ' where ';
 	// concatenate the 'ands's array, add to where clause
-	if (sizeof($sql_where_ands) > 0) {
+	if (is_array($sql_where_ands) && @sizeof($sql_where_ands) > 0) {
 		$sql_where .= implode(" and ", $sql_where_ands)." and ";
 	}
 

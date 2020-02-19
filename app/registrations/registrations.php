@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,299 +43,202 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http values and set them as variables
-	$search = $_REQUEST["search"];
+//get common submitted data
+	$show = $_REQUEST['show'];
+	$search = $_REQUEST['search'];
+	$profile = $_REQUEST['profile'];
 
-//set the format
-	$template = true;
-	if ($_REQUEST["template"] == "false" && permission_exists('registration_reload')) {
-		$template = false;
+//define query string array
+	if ($show) { $qs['show'] = "&show=".urlencode($show); }
+	if ($search) { $qs['search'] = "&search=".urlencode($search); }
+	if ($profile) { $qs['profile'] = "&profile=".urlencode($profile); }
+
+//get posted data
+	if (is_array($_POST['registrations'])) {
+		$action = $_POST['action'];
+		$registrations = $_POST['registrations'];
 	}
 
-//show the header
-	if ($template) {
-		require_once "resources/header.php";
-		$document['title'] = $text['header-registrations'];
-	}
+//process posted data
+	if ($action != '' && is_array($registrations) && @sizeof($registrations) != 0) {
+		$obj = new registrations;
 
-//check permissions
-	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
-		//access granted
-	}
-	else {
-		echo "access denied";
+		switch ($action) {
+			case 'unregister':
+				$obj->unregister($registrations);
+				break;
+
+			case 'provision':
+				$obj->provision($registrations);
+				break;
+
+			case 'reboot':
+				$obj->reboot($registrations);
+				break;
+		}
+
+		header('Location: registrations.php'.($show || $search || $profile ? '?' : null).$qs['show'].$qs['search'].$qs['profile']);
 		exit;
 	}
 
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+//get the registrations
+	$obj = new registrations;
+	$obj->show = $show;
+	$registrations = $obj->get($profile);
 
-//debug
-	//echo "<pre>\n";
-	//print_r($_REQUEST);
-	//echo "</pre>\n";
+//order the array
+	require_once "resources/classes/array_order.php";
+	$order = new array_order();
+	$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
 
-//get the HTTP values and set as variables
-	$profile = trim($_REQUEST["profile"]);
-	$search = trim($_REQUEST["search"]);
-	$show = trim($_REQUEST["show"]);
-	if ($show == "all") {
-		$profile = 'all';
-	}
-
-//set the registrations variable
-	$registrations = $_REQUEST["registrations"];
-
-//get the action and remove items from the array that are not checked
+//get registration count
+	$num_rows = 0;
 	if (is_array($registrations)) {
+		foreach ($registrations as $row) {
+			$matches = preg_grep("/".$search."/i", $row);
+			if ($matches != false) {
+				$num_rows++;
+			}
+		}
+	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//detect page reload via ajax
+	$reload = isset($_GET['reload']) && permission_exists('registration_reload') ? true : false;
+
+//define location url
+	$location = ($reload ? 'registration_reload.php' : 'registrations.php');
+
+//include the header
+	if (!$reload) {
+		$document['title'] = $text['header-registrations'];
+		require_once "resources/header.php";
+	}
+
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-registrations']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if (!$reload) {
+		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);
+	}
+	if ($registrations) {
+		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-unregister']."')) { list_action_set('unregister'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'title'=>$text['button-provision'],'icon'=>'fax','onclick'=>"if (confirm('".$text['confirm-provision']."')) { list_action_set('provision'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-reboot'],'title'=>$text['button-reboot'],'icon'=>'power-off','onclick'=>"if (confirm('".$text['confirm-reboot']."')) { list_action_set('reboot'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	if (permission_exists('registration_all')) {
+		if ($show == 'all') {
+			echo 	"<input type='hidden' name='show' value='".escape($show)."'>";
+			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.'?show=all'.$qs['search'].$qs['profile']]);
+		}
+		if ($profile != '') {
+			echo 	"<input type='hidden' name='profile' value='".escape($profile)."'>";
+			echo button::create(['type'=>'button','label'=>$text['button-all_profiles'],'icon'=>'network-wired','style'=>'margin-left: 15px;','link'=>$location.($qs['show'] || $qs['search'] ? '?' : null).$qs['show'].$qs['search']]);
+		}
+	}
+	if (!$reload) {
+		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-registrations']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='profile' value='".escape($profile)."'>";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	echo "	<th class='checkbox'>\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($registrations ?: "style='visibility: hidden;'").">\n";
+	echo "	</th>\n";
+	echo "	<th>".$text['label-user']."</th>\n";
+	echo "	<th class='pct-25'>".$text['label-agent']."</th>\n";
+	echo "	<th class='hide-md-dn'>".$text['label-contact']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-lan_ip']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-ip']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-port']."</th>\n";
+	echo "	<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
+	echo "	<th class='pct-35' style='width: 35%;'>".$text['label-status']."</th>\n";
+	echo "	<th class='hide-md-dn'>".$text['label-ping']."</th>\n";
+	echo "	<th class='hide-md-dn'>".$text['label-sip_profile_name']."</th>\n";
+	echo "	<td class='action-button'>&nbsp;</td>\n";
+	echo "</tr>\n";
+
+	if (is_array($registrations) && @sizeof($registrations) != 0) {
 		$x = 0;
-		foreach ($registrations as &$row) {
-			//get the action
-				switch ($row['action']) {
-					case "unregister":
-						$row['checked'] = 'true';
-						$action = 'unregister';
-						break;
-					case "provision":
-						$row['checked'] = 'true';
-						$action = 'provision';
-						break;
-					case "reboot":
-						$row['checked'] = 'true';
-						$action = 'reboot';
-						break;
+		foreach ($registrations as $row) {
+			$matches = preg_grep('/'.$search.'/i', $row);
+			if ($matches != false) {
+				$user = explode('@', $row['user']);
+				if ($user[1] == $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name']) {
+					$user = "<span class='hide-sm-dn'>".escape($row['user'])."</span><span class='hide-md-up cursor-help' title='".$row['user']."'>".escape($user[0])."@...</span>";
 				}
-			//unset rows that were not selected
-				if (!isset($row['checked'])) {
-					unset($registrations[$x]);
+				else {
+					$user = escape($row['user']);
 				}
-			//increment the id
+				echo "<tr class='list-row' href='#'>\n";
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='registrations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='registrations[$x][user]' value='".escape($row['user'])."' />\n";
+				echo "		<input type='hidden' name='registrations[$x][profile]' value='".escape($row['sip_profile_name'])."' />\n";
+				echo "		<input type='hidden' name='registrations[$x][agent]' value='".escape($row['agent'])."' />\n";
+				echo "		<input type='hidden' name='registrations[$x][host]' value='".escape($row['host'])."' />\n";
+				echo "		<input type='hidden' name='registrations[$x][domain]' value='".escape($row['sip-auth-realm'])."' />\n";
+				echo "	</td>\n";
+				echo "	<td>".$user."</td>\n";
+				echo "	<td class='overflow' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
+				echo "	<td class='hide-md-dn'>".escape(explode('"',$row['contact'])[1])."</td>\n";
+				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
+				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
+				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
+				echo "	<td class='hide-md-dn'>".escape($row['host'])."</td>\n";
+				echo "	<td class='overflow' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($row['status'])."</span></td>\n";
+				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
+				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
+				echo "	<td class='action-button'>\n";
+				if ($_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
+					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
+				}
+				if ($_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
+					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
+				}
+				if ($_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
+					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
+				}
+				echo 	"</td>\n";
+				echo "</tr>\n";
 				$x++;
-		}
-	}
-
-//get the list
-	$sql = "select sip_profile_name as name from v_sip_profiles ";
-	$database = new database;
-	$sip_profiles = $database->select($sql, null, 'all');
-
-//create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-//user registrations
-	if (isset($action)) {
-		if (is_array($registrations)) {
-			foreach ($registrations as $row) {
-				if ($fp) {
-					//validate the profile
-						foreach($sip_profiles as $field) {
-							if ($field['name'] == $row['profile']) {
-								$profile = $row['profile'];
-							}
-						}
-					//validate the user
-						if (strlen($row['user']) > 0) {
-							$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $row['user']);
-						}
-					//validate the host
-						if (strlen($row['host']) > 0) {
-							$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $row['host']);
-						}
-					//get the vendor
-						$vendor = device::get_vendor_by_agent($row['agent']);
-					//prepare and send the command
-						if (strlen($profile) > 0 && strlen($user) > 0) {
-							if ($action == "unregister") {
-								$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
-							}
-							if (strlen($vendor) > 0 && $action == "provision" && strlen($host) > 0) {
-								$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
-							}
-							if (strlen($vendor) > 0 && $action == "reboot" && strlen($host) > 0) {
-								$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
-							}
-							$response = event_socket_request($fp, "api ".$command);
-							$response = event_socket_request($fp, "api log notice ".$command);
-						}
-				}
 			}
 		}
 	}
+	unset($registrations);
 
-//show the response
-	if (isset($response)) {
-		message::add($text['label-event']." ".escape(ucwords($cmd))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].escape($response));
-	}
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
-//define variables
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-//show the error message or show the content
-	if (strlen($msg) > 0) {
-		echo "<div style='align: center'>\n";
-		echo "<table width='40%'>\n";
-		echo "<tr>\n";
-		echo "<th align='left'>".$text['label-message']."</th>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
-	}
-	else {
-
-		//get the registrations
-			$obj = new registrations;
-			$registrations = $obj->get($profile);
-
-		//count the registrations
-			$registration_count = 0;
-			if (is_array($registrations)) {
-				foreach ($registrations as $row) {
-					$matches = preg_grep ("/$search/i",$row);
-					if ($matches != FALSE) {
-						$registration_count++;
-					}
-				}
-			}
-
-		//define the checkbox_toggle function
-			echo "<script type=\"text/javascript\">\n";
-			echo "	function checkbox_toggle(item) {\n";
-			echo "		var inputs = document.getElementsByTagName(\"input\");\n";
-			echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-			echo "		    if (inputs[i].type === 'checkbox') {\n";
-			echo "		       	if (document.getElementById('checkbox_all').checked == true) { \n";
-			echo "				inputs[i].checked = true;\n";
-			echo "			}\n";
-			echo "				else {\n";
-			echo "					inputs[i].checked = false;\n";
-			echo "				}\n";
-			echo "			}\n";
-			echo "		}\n";
-			echo "	}\n";
-			echo "</script>\n";
-
-		//show the registrations
-			echo "<form method='post' action=''>\n";
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
-			echo "<tr>\n";
-			echo "<td width='100%'>\n";
-			echo "	<b>".$text['header-registrations']." (".escape($registration_count).")</b>\n";
-			echo "</td>\n";
-			echo "<td nowrap='nowrap' style='padding-right: 15px;'>";
-			if ($template) {
-				echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>";
-				echo "				<input type='hidden' name='show' value='".escape($show)."'>";
-				echo "				<input type='hidden' name='profile' value='".escape($sip_profile_name)."'>";
-				echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
-			}
-			echo "</td>";
-			echo "<td valign='top' nowrap='nowrap'>";
-			if (permission_exists('registration_all')) {
-				if ($template) {
-					$location = 'registrations.php';
-				}
-				else {
-					$location = 'registration_reload.php';
-				}
-				if ($show == "all") {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".escape($location)."?profile=".escape($sip_profile_name)."'\" value='".$text['button-back']."'>\n";
-				}
-				else {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='".escape($location)."?profile=".escape($sip_profile_name)."&show=all'\" value='".$text['button-show_all']."'>\n";
-				}
-			}
-			if ($template) {
-				echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='".escape($location)."?search=".escape($search)."&show=".escape($show)."'\" value='".$text['button-refresh']."'>\n";
-			}
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
-			echo "<br />\n";
-
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
-			echo "<tr>\n";
-			echo "	<th style='width:30px; vertical-align:middle; display: table-cell;'>\n";
-			echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' style='' value='' onclick=\"checkbox_toggle();\">";
-			echo "	</th>\n";
-			echo "	<th>".$text['label-user']."</th>\n";
-			echo "	<th>".$text['label-agent']."</th>\n";
-			echo "	<th>".$text['label-contact']."</th>\n";
-			echo "	<th>".$text['label-lan_ip']."</th>\n";
-			echo "	<th>".$text['label-ip']."</th>\n";
-			echo "	<th>".$text['label-port']."</th>\n";
-			echo "	<th>".$text['label-hostname']."</th>\n";
-			echo "	<th>".$text['label-status']."</th>\n";
-			echo "	<th>".$text['label-ping']."</th>\n";
-			echo "	<th>".$text['label-sip_profile_name']."</th>\n";		
-			echo "	<th>".$text['label-tools']."&nbsp;</th>\n";
-			echo "</tr>\n";
-
-		//order the array
-			require_once "resources/classes/array_order.php";
-			$order = new array_order();
-			$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
-
-		//display the array
-			if (is_array($registrations)) {
-				$x = 0;
-				foreach ($registrations as $row) {
-					//search 
-						$matches = preg_grep ("/$search/i",$row);
-						if ($matches != FALSE) {
-							//set the user agent
-								$agent = $row['agent'];
-
-							//set the user id
-								$user_id = str_replace('@', '_', $row['user']);
-
-							//show the registrations
-								echo "<tr>\n";
-								echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='vertical-align:middle; display: table-cell; align: center;'>\n";
-								echo "		<input type='checkbox' name=\"registrations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".escape($row['user'])."').checked = false; }\">\n";
-								echo "		<input type='hidden' name=\"registrations[$x][user]\" value='".escape($row['user'])."' />\n";
-								echo "		<input type='hidden' name=\"registrations[$x][profile]\" value='".escape($row['sip_profile_name'])."' />\n";
-								echo "		<input type='hidden' name=\"registrations[$x][agent]\" value='".escape($row['agent'])."' />\n";
-								echo "		<input type='hidden' name=\"registrations[$x][host]\" value='".escape($row['host'])."' />\n";
-								echo "		<input type='hidden' name=\"registrations[$x][domain]\" value='".escape($row['sip-auth-realm'])."' />\n";
-								echo "	</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['user'])."&nbsp;</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['agent'])."&nbsp;</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
-								echo "	<td class='".$row_style[$c]."'><a href='https://".escape($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['network-port'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['host'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['status'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['ping-time'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."'>".escape($row['sip_profile_name'])."</td>\n";
-								echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
-								echo "		<button type='submit' class='btn-default' name=\"registrations[$x][action]\" value='unregister'>".$text['button-unregister']."</button>\n";
-								echo "		<button type='submit' class='btn-default' name=\"registrations[$x][action]\" value='provision'>".$text['button-provision']."</button>\n";
-								echo "		<button type='submit' class='btn-default' name=\"registrations[$x][action]\" value='reboot'>".$text['button-reboot']."</button>\n";
-								echo "	</td>\n";
-								echo "</tr>\n";
-								if ($c==0) { $c=1; } else { $c=0; }
-								$x++;
-						}
-				}
-			}
-			echo "</table>\n";
-			echo "<input type='hidden' name=\"show\" value='".escape($show)."' />\n";
-			echo "</form>\n";
-
-		//close the connection and unset the variable
-			fclose($fp);
-			unset($xml);
-	}
+	echo "</form>\n";
 
 //get the footer
-	if ($template) {
+	if (!$reload) {
 		require_once "resources/footer.php";
 	}
 

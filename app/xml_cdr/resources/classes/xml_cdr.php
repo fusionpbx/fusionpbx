@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2019
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,6 +51,16 @@ if (!class_exists('xml_cdr')) {
 		public $extensions;
 
 		/**
+		 * delete method
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+
+		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
@@ -61,6 +71,14 @@ if (!class_exists('xml_cdr')) {
 				$database->connect();
 				$this->db = $database->db;
 			}
+
+			//assign private variables (for delete method)
+				$this->app_name = 'xml_cdr';
+				$this->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+				$this->permission_prefix = 'xml_cdr_';
+				$this->list_page = 'xml_cdr.php';
+				$this->table = 'xml_cdr';
+				$this->uuid_prefix = 'xml_cdr_';
 		}
 
 		/**
@@ -236,9 +254,11 @@ if (!class_exists('xml_cdr')) {
 
 			//parse the xml to get the call detail record info
 				try {
-					//$this->log($xml_string);
-					$xml = simplexml_load_string($xml_string);
-					//$this->log("\nxml load done\n");
+					//disable xml entities
+					libxml_disable_entity_loader(true);
+
+					//load the string into an xml object
+					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				}
 				catch(Exception $e) {
 					echo $e->getMessage();
@@ -295,8 +315,14 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//get the caller details
-						$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
-						$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						$caller_id_name = urldecode($xml->variables->caller_id_name);
+						$caller_id_number = urldecode($xml->variables->caller_id_number);
+						if (isset($xml->variables->effective_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
+						}
+						if (isset($xml->variables->effective_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
 						$caller_id_destination = urldecode($xml->variables->caller_destination);
 						foreach ($xml->callflow as $row) {
 							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
@@ -792,7 +818,11 @@ if (!class_exists('xml_cdr')) {
 
 							//parse the xml to get the call detail record info
 								try {
-									$conf_xml = simplexml_load_string($conf_xml_string);
+									//disable xml entities
+									libxml_disable_entity_loader(true);
+
+									//load the string into an xml object
+									$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 								}
 								catch(Exception $e) {
 									echo $e->getMessage();
@@ -1018,19 +1048,25 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " hangup_cause, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
-				$sql .= " where domain_uuid = :domain_uuid \n";
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+					$sql .= " where domain_uuid = :domain_uuid \n";
+				}
+				else {
+					$sql .= " where true \n";
+				}
 				$sql .= $sql_date_range;
 				$sql .= ") as c \n";
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-
-				$parameters['domain_uuid'] = $this->domain_uuid;
+				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
 				$database = new database;
 				$summary = $database->select($sql, $parameters, 'all');
 				unset($parameters);
@@ -1104,12 +1140,82 @@ if (!class_exists('xml_cdr')) {
 			}
 		} //end download method
 
-	} //end the class
+		/**
+		 * delete records
+		 */
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						$records_deleted = 0;
+
+						//loop through records
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+
+									//get the call recordings
+										$sql = "select * from v_call_recordings ";
+										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
+										$parameters['xml_cdr_uuid'] = $record['uuid'];
+										$database = new database;
+										$row = $database->select($sql, $parameters, 'row');
+										unset($sql, $parameters);
+
+									//delete the call recording (file)
+										$call_recording_path = realpath($row['call_recording_path']);
+										$call_recording_name = $row['call_recording_name'];
+										if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+											@unlink($call_recording_path.'/'.$call_recording_name);
+										}
+
+									//build the delete array
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
+
+									//increment counter
+										$records_deleted++;
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('call_recording_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('call_recording_delete', 'temp');
+
+								//set message
+									message::add($text['message-delete'].": ".$records_deleted);
+							}
+							unset($records);
+					}
+			}
+		} //method
+
+	} //class
 }
-/*
-//example use
-	$cdr = new xml_cdr;
-	$cdr->read_files();
-*/
 
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,15 +91,12 @@
 		}
 		unset($results);
 	}
+	$num_rows = @sizeof($rows);
 
-
-//set the alternating color for each row
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 //if the connnection is available then run it and return the results
 	if (!$fp) {
+
 		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -111,112 +108,140 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
+
 	}
 	else {
-		//define js function call var
-			$onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
+
+		//create token
+			$object = new token;
+			$token = $object->create('/app/calls_active/calls_active_inc.php');
 
 		//show content
-			echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
-			echo "	<tr>";
-			echo "		<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
-			echo "			<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
-			echo "		</td>";
-			echo "		<td valign='top' nowrap='nowrap'>";
+			echo "<div class='action_bar' id='action_bar'>\n";
+			echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
+			echo "	<div class='actions'>\n";
+			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
+			if (permission_exists('call_active_hangup') && $rows) {
+				echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','onclick'=>"if (confirm('".$text['confirm-hangups']."')) { list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+			}
 			if (permission_exists('call_active_all')) {
 				if ($show == "all") {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"document.location='calls_active.php';\" value='".$text['button-back']."' ".$onhover_pause_refresh.">\n";
+					echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'calls_active.php','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 				}
 				else {
-					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"document.location='calls_active.php?show=all';\" value='".$text['button-show_all']."' ".$onhover_pause_refresh.">\n";
+					echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'calls_active.php?show=all','onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 				}
 			}
-			echo "		</td>";
-			echo "	</tr>";
-			echo "</table>";
+			echo "	</div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
 
-			echo "<b>".$text['title']." (" . count($rows) . ")"."</b>";
-			echo "<br><br>\n";
 			echo $text['description']."\n";
-			echo "<br><br>\n";
+			echo "<br /><br />\n";
 
 		//show the results
 			echo "<div id='cmd_reponse'></div>\n";
 
-			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<th>".$text['label-profile']."</th>\n";
-			echo "<th>".$text['label-created']."</th>\n";
+			echo "<form id='form_list' method='post' action='calls_exec.php'>\n";
+			echo "<input type='hidden' id='action' name='action' value=''>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
+			if (permission_exists('call_active_hangup')) {
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='if (this.checked) { refresh_stop(); } else { refresh_start(); } list_all_toggle();' ".($rows ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
+			}
+			echo "	<th>".$text['label-profile']."</th>\n";
+			echo "	<th>".$text['label-created']."</th>\n";
 			if ($show == 'all') {
-				echo "<th>".$text['label-domain']."</th>\n";
+				echo "	<th>".$text['label-domain']."</th>\n";
 			}
-			echo "<th>".$text['label-number']."</th>\n";
-			echo "<th>".$text['label-cid-name']."</th>\n";
-			echo "<th>".$text['label-cid-number']."</th>\n";
-			echo "<th>".$text['label-destination']."</th>\n";
-			echo "<th>".$text['label-app']."</th>\n";
-			echo "<th>".$text['label-codec']."</th>\n";
-			echo "<th>".$text['label-secure']."</th>\n";
-			echo "<td class='list_control_icon'></td>\n";
+			echo "	<th>".$text['label-number']."</th>\n";
+			echo "	<th>".$text['label-cid-name']."</th>\n";
+			echo "	<th>".$text['label-cid-number']."</th>\n";
+			echo "	<th>".$text['label-destination']."</th>\n";
+			echo "	<th>".$text['label-app']."</th>\n";
+			echo "	<th>".$text['label-codec']."</th>\n";
+			echo "	<th>".$text['label-secure']."</th>\n";
+			if (permission_exists('call_active_hangup')) {
+				echo "	<td class='action-button'>&nbsp;</td>\n";
+			}
 			echo "</tr>\n";
 
-			foreach ($rows as &$row) {
-				//set the php variables
-					foreach ($row as $key => $value) {
-						$$key = $value;
-					}
-					//if (if_group("superadmin") && isset($_REQUEST['debug'])) {
-					//	echo "<tr><td colspan='20'><pre>".print_r(escape($row), true)."</pre></td></tr>";
-					//}
+			if (is_array($rows)) {
+				$x = 0;
+				foreach ($rows as &$row) {
 
-				//get the sip profile
-					$name_array = explode("/", $name);
-					$sip_profile = $name_array[1];
-					$sip_uri = $name_array[2];
-
-				//get the number
-					$temp_array = explode("@", $sip_uri);
-					$tmp_number = $temp_array[0];
-					$tmp_number = str_replace("sip:", "", $tmp_number);
-
-				//remove the '+' because it breaks the call recording
-					$cid_num = str_replace("+", "", $cid_num);
-
-				//replace gateway uuid with name
-					if (sizeof($_SESSION['gateways']) > 0) {
-						foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
-							$application_data = str_replace($gateway_uuid, $gateway_name, $application_data);
+					//set the php variables
+						foreach ($row as $key => $value) {
+							$$key = $value;
 						}
-					}
 
-				// reduce too long app data
-					if(strlen($application_data) > 512) {
-						$application_data = substr($application_data, 0, 512) . ' <b>...</b>';
-					}
+					//get the sip profile
+						$name_array = explode("/", $name);
+						$sip_profile = $name_array[1];
+						$sip_uri = $name_array[2];
 
-				//send the html
-					echo "<tr>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($sip_profile)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($created)."&nbsp;</td>\n";
-					if ($show == 'all') {
-						echo "<td valign='top' class='".$row_style[$c]."'>".escape($domain_name)."&nbsp;</td>\n";
-					}
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($tmp_number)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($cid_name)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($cid_num)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($dest)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".((strlen($application) > 0) ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".escape($secure)."&nbsp;</td>\n";
-					echo "<td class='list_control_icons' style='width: 25px; text-align: left;'><a href='javascript:void(0);' alt='".$text['label-hangup']."' onclick=\"hangup('".escape($uuid)."');\">".$v_link_label_delete."</a></td>\n";
-					echo "</tr>\n";
+					//get the number
+						$temp_array = explode("@", $sip_uri);
+						$tmp_number = $temp_array[0];
+						$tmp_number = str_replace("sip:", "", $tmp_number);
 
-				//alternate the row style
-					$c = ($c) ? 0 : 1;
+					//remove the '+' because it breaks the call recording
+						$cid_num = str_replace("+", "", $cid_num);
+
+					//replace gateway uuid with name
+						if (is_array($_SESSION['gateways']) && sizeof($_SESSION['gateways']) > 0) {
+							foreach ($_SESSION['gateways'] as $gateway_uuid => $gateway_name) {
+								$application_data = str_replace($gateway_uuid, $gateway_name, $application_data);
+							}
+						}
+
+					// reduce too long app data
+						if(strlen($application_data) > 512) {
+							$application_data = substr($application_data, 0, 512) . '...';
+						}
+
+					//send the html
+						echo "<tr class='list-row'>\n";
+						if (permission_exists('call_active_hangup')) {
+							echo "	<td class='checkbox'>\n";
+							echo "		<input type='checkbox' name='calls[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (this.checked) { refresh_stop(); } else { document.getElementById('checkbox_all').checked = false; }\">\n";
+							echo "		<input type='hidden' name='calls[$x][uuid]' value='".escape($uuid)."' />\n";
+							echo "	</td>\n";
+						}
+						echo "	<td>".escape($sip_profile)."&nbsp;</td>\n";
+						echo "	<td>".escape($created)."&nbsp;</td>\n";
+						if ($show == 'all') {
+							echo "	<td>".escape($domain_name)."&nbsp;</td>\n";
+						}
+						echo "	<td>".escape($tmp_number)."&nbsp;</td>\n";
+						echo "	<td>".escape($cid_name)."&nbsp;</td>\n";
+						echo "	<td>".escape($cid_num)."&nbsp;</td>\n";
+						echo "	<td>".escape($dest)."&nbsp;</td>\n";
+						echo "	<td>".(strlen($application) > 0 ? escape($application).":".escape($application_data) : null)."&nbsp;</td>\n";
+						echo "	<td>".escape($read_codec).":".escape($read_rate)." / ".escape($write_codec).":".escape($write_rate)."&nbsp;</td>\n";
+						echo "	<td>".escape($secure)."&nbsp;</td>\n";
+						if (permission_exists('call_active_hangup')) {
+							echo "	<td class='action-button'>";
+							echo button::create(['type'=>'button','title'=>$text['label-hangup'],'icon'=>'phone-slash','onclick'=>"if (confirm('".$text['confirm-hangup']."')) { list_self_check('checkbox_".$x."'); list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+							echo "	</td>\n";
+						}
+						echo "</tr>\n";
+
+					//increment counter
+						$x++;
+				}
+				unset($rows);
 			}
-			echo "</td>\n";
-			echo "</tr>\n";
+
 			echo "</table>\n";
+
+			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+			echo "</form>\n";
+
 	}
 
 ?>

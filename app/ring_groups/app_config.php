@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Een gereedschap om meerdere toestellen te bellen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para chamar várias extensões.";
@@ -122,6 +122,13 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;
@@ -170,10 +177,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_greeting";
@@ -216,6 +225,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_strategy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the strategy.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_timeout_app";
@@ -252,6 +262,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_uuid";

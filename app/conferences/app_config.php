@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Les conferences servent à configurer des salles avec un nom, une description et un code pin facultatif";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Conferenties worden gebruikt om gespreksruimtes op te zetten met een naam omschrijving en optionele PIN code.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Conferências é usado para configurar salas de conferências com um nome, descrição e número de pin opcional.";
@@ -58,10 +58,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "conference_delete";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -116,14 +112,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference extension number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional pin number to secure access to the conference.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_profile";
@@ -140,6 +139,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_enabled";

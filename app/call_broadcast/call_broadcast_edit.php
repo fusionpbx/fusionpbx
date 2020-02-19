@@ -96,7 +96,6 @@
 		$broadcast_description = $_POST["broadcast_description"];
 		$broadcast_timeout = $_POST["broadcast_timeout"];
 		$broadcast_concurrent_limit = $_POST["broadcast_concurrent_limit"];
-		//$recording_uuid = $_POST["recording_uuid"];
 		$broadcast_caller_id_name = $_POST["broadcast_caller_id_name"];
 		$broadcast_caller_id_number = $_POST["broadcast_caller_id_number"];
 		$broadcast_destination_type = $_POST["broadcast_destination_type"];
@@ -125,6 +124,21 @@
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+	//delete the call broadcast
+		if (permission_exists('call_broadcast_delete')) {
+			if ($_POST['action'] == 'delete' && is_uuid($call_broadcast_uuid)) {
+				//prepare
+					$call_broadcasts[0]['checked'] = 'true';
+					$call_broadcasts[0]['uuid'] = $call_broadcast_uuid;
+				//delete
+					$obj = new call_broadcast;
+					$obj->delete($call_broadcasts);
+				//redirect
+					header('Location: call_broadcast.php');
+					exit;
+			}
+		}
 
 	$msg = '';
 	if ($action == "update") {
@@ -211,7 +225,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['call_broadcasts'][0]['broadcast_description'] = $broadcast_description;
 					$array['call_broadcasts'][0]['broadcast_timeout'] = strlen($broadcast_timeout) != 0 ? $broadcast_timeout : null;
 					$array['call_broadcasts'][0]['broadcast_concurrent_limit'] = strlen($broadcast_concurrent_limit) != 0 ? $broadcast_concurrent_limit : null;
-					//$array['call_broadcasts'][0]['recording_uuid'] = $recording_uuid;
 					$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
 					$array['call_broadcasts'][0]['broadcast_caller_id_number'] = $broadcast_caller_id_number;
 					$array['call_broadcasts'][0]['broadcast_destination_type'] = $broadcast_destination_type;
@@ -251,7 +264,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_description = $row["broadcast_description"];
 			$broadcast_timeout = $row["broadcast_timeout"];
 			$broadcast_concurrent_limit = $row["broadcast_concurrent_limit"];
-			//$recording_uuid = $row["recording_uuid"];
 			$broadcast_caller_id_name = $row["broadcast_caller_id_name"];
 			$broadcast_caller_id_number = $row["broadcast_caller_id_number"];
 			$broadcast_destination_type = $row["broadcast_destination_type"];
@@ -268,30 +280,35 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //begin header
+	$document['title'] = $text['title-call_broadcast'];
 	require_once "resources/header.php";
 
 //begin content
-	echo "<form method='post' name='frm' action='' enctype='multipart/form-data'>\n";
+	echo "<form name='frm' method='post' enctype='multipart/form-data'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call_broadcast']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'call_broadcast.php']);
+	if ($action == "update") {
+		if (permission_exists('call_broadcast_delete')) {
+			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>'margin-right: 15px;','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		}
+		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid)]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
-	if ($action == "update") {
-		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-send']."' onclick=\"window.location='call_broadcast_send.php?id=".urlencode($call_broadcast_uuid)."'\" value='".$text['button-send']."'>\n";
-		echo "<input type='button' class='btn' name='' alt='".$text['button-stop']."' onclick=\"window.location='call_broadcast_stop.php?id=".urlencode($call_broadcast_uuid)."'\" value='".$text['button-stop']."'>\n";
-	}
-	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"".escape($broadcast_name)."\" required='required'>\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
@@ -468,15 +485,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='call_broadcast_uuid' value='".escape($call_broadcast_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	/*

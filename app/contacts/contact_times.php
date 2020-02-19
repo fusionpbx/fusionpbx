@@ -53,105 +53,80 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header_contact_times']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th id='th_filler' style='display: none; padding: 0px;'>".img_spacer('21px', '1px')."</th>\n";
-	echo "<th width='20%'>".$text['label-time_user']."</th>\n";
-	echo "<th width='20%'>".$text['label-time_start']."</th>\n";
-	echo "<th width='20%'>".$text['label-time_duration']."</th>\n";
-	echo "<th width='40%'>".$text['label-time_description']."</th>\n";
-	echo "<td class='list_control_icons' nowrap>";
-	echo 	img_spacer('25px', '1px');
+	echo "<div class='action_bar sub shrink'>\n";
+	echo "	<div class='heading'><b>".$text['header_contact_times']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	/*
 	if (permission_exists('contact_time_add')) {
-		echo "<a href='contact_time_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_time_edit.php?contact_uuid='.urlencode($contact_uuid)]);
 	}
-	else {
-		echo img_spacer('25px', '1px');
+	if (permission_exists('contact_time_delete') && $contact_times) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	*/
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<div id='div_contact_times' style='width: 100%; overflow: auto; direction: rtl; text-align: right; margin-bottom: 23px;'>";
-	echo "<table id='table_contact_times' class='tr_hover' style='width: 100%; direction: ltr;' border='0' cellpadding='0' cellspacing='0'>\n";
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('contact_time_edit') && $row['user_uuid'] == $_SESSION["user"]["user_uuid"]) ? "href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."'" : null;
-			echo "<tr ".$tr_link.">\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('contact_time_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all_times' name='checkbox_all' onclick=\"list_all_toggle('times');\" ".($contact_times ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo "<th class='pct-20'>".$text['label-time_user']."</th>\n";
+	echo "<th class='pct-20'>".$text['label-time_start']."</th>\n";
+	echo "<th class='pct-20'>".$text['label-time_duration']."</th>\n";
+	echo "<th class='pct-40 hide-md-dn'>".$text['label-time_description']."</th>\n";
+	if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
+	if (is_array($contact_times) && @sizeof($contact_times) != 0) {
+		$x = 0;
+		foreach ($contact_times as $row) {
 			if ($row["time_start"] != '' && $row['time_stop'] != '') {
 				$time_start = strtotime($row["time_start"]);
 				$time_stop = strtotime($row['time_stop']);
 				$time = gmdate("H:i:s", ($time_stop - $time_start));
 			}
-			else { unset($time); }
+			else {
+				unset($time);
+			}
 			$tmp = explode(' ', $row['time_start']);
 			$time_start = $tmp[0];
-			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'><span ".(($row['user_domain_uuid'] != $domain_uuid) ? "title='".$_SESSION['domains'][escape($row['user_domain_uuid'])]['domain_name']."' style='cursor: help;'" : null).">".escape($row["username"])."</span>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time_start."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='20%'>".$time."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' style='width: 40%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['time_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' nowrap>";
 			if (permission_exists('contact_time_edit')) {
-				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
-					echo "<a href='contact_time_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
-				}
-				else {
-					echo "<span onclick=\"alert('".$text['message-access_denied']."');\" alt='".$text['button-edit']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_edit)."</span>";
-				}
+				$list_row_url = "contact_time_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_time_uuid']);
 			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('contact_time_delete')) {
-				if ($row['user_uuid'] == $_SESSION["user"]["user_uuid"]) {
-					echo "<a href='contact_time_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_time_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
-				}
-				else {
-					echo "<span onclick=\"alert('".$text['message-access_denied']."');\" alt='".$text['button-delete']."'>".str_replace("list_control_icon", "list_control_icon_disabled", $v_link_label_delete)."</span>";
-				}
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='contact_times[$x][checked]' id='checkbox_".$x."' class='checkbox_times' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_times').checked = false; }\">\n";
+				echo "		<input type='hidden' name='contact_times[$x][uuid]' value='".escape($row['contact_time_uuid'])."' />\n";
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
+			echo "	<td><span ".($row['user_domain_uuid'] != $domain_uuid ? "title='".$_SESSION['domains'][escape($row['user_domain_uuid'])]['domain_name']."' style='cursor: help;'" : null).">".escape($row["username"])."</span>&nbsp;</td>\n";
+			echo "	<td>".$time_start."&nbsp;</td>\n";
+			echo "	<td>".$time."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".escape($row['time_description'])."&nbsp;</td>\n";
+			if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			$c = $c ? 0 : 1;
-		} //end foreach
-		unset($result, $row);
-	} //end if results
-	echo "</table>";
-	echo "</div>\n";
+			$x++;
+		}
+		unset($contact_times);
+	}
 
-	echo "<script>";
-	echo "	var div_times = document.getElementById('div_contact_times');";
-	echo "	var table_times = document.getElementById('table_contact_times');";
-	echo "	var th_filler = document.getElementById('th_filler');";
-
-	echo "	if (div_times.offsetHeight > 200) { ";
-	echo "		div_times.style.height = 200; ";
-	echo "	}";
-	echo "	else {";
-	echo "		div_times.style.height = div_times.scrollHeight + 1; ";
-	echo "	}";
-
-	echo "	if (div_times.scrollHeight > div_times.clientHeight) {";
-	echo "		th_filler.style.display = ''; ";
-	echo "		table_times.style.paddingLeft = 1;";
-	echo "	}";
-	echo "	else {";
-	echo "		th_filler.style.display = 'none'; ";
-	echo "		table_times.style.paddingLeft = 0;";
-	echo "	}";
-	echo "</script>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
 ?>

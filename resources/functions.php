@@ -17,33 +17,13 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-
-	if (!function_exists('software_version')) {
-		function software_version() {
-			return '4.5.9';
-		}
-	}
-
-	if (!function_exists('version')) {
-		function version() {
-			return software_version();
-		}
-	}
-
-	if (!function_exists('numeric_version')) {
-		function numeric_version() {
-			$v = explode('.', software_version());
-			$n = ($v[0] * 10000 + $v[1] * 100 + $v[2]);
-			return $n;
-		}
-	}
 
 	if (!function_exists('mb_strtoupper')) {
 		function mb_strtoupper($string) {
@@ -304,7 +284,7 @@
 	if (!function_exists('if_superadmin')) {
 		function if_superadmin($superadmin_list, $user_uuid) {
 			if (stripos($superadmin_list, "||".$user_uuid."||") === false) {
-				return false; //user_uuid does not exist
+				return false;
 			}
 			else {
 				return true; //user_uuid exists
@@ -316,12 +296,14 @@
 		function html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value) {
 			//html select other: build a select box from distinct items in db with option for other
 			global $domain_uuid;
+			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 
 			$html = "<table border='0' cellpadding='1' cellspacing='0'>\n";
 			$html .= "<tr>\n";
-			$html .= "<td id=\"cell".$field_name."1\">\n";
+			$html .= "<td id=\"cell".escape($field_name)."1\">\n";
 			$html .= "\n";
-			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
+			$html .= "<select id=\"".escape($field_name)."\" name=\"".escape($field_name)."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
 			$html .= "<option value=''></option>\n";
 
 			$sql = "select distinct(".$field_name.") as ".$field_name." ";
@@ -331,7 +313,7 @@
 			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $field) {
 					if (strlen($field[$field_name]) > 0) {
-						$html .= "<option value=\"".$field[$field_name]."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".$field[$field_name]."</option>\n";
+						$html .= "<option value=\"".escape($field[$field_name])."\" ".($field_current_value == $field[$field_name] ? "selected='selected'" : null).">".escape($field[$field_name])."</option>\n";
 					}
 				}
 			}
@@ -351,18 +333,24 @@
 	}
 
 	if (!function_exists('html_select')) {
-		function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $onchange = '') {
+		function html_select($table_name, $field_name, $sql_where_optional, $field_current_value, $field_value = '', $style = '', $on_change = '') {
 			//html select: build a select box from distinct items in db
 			global $domain_uuid;
 
+			$table_name = preg_replace("#[^a-zA-Z0-9_]#", "", $table_name);
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+		
 			if (strlen($field_value) > 0) {
-				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "<select id=\"".$field_value."\" name=\"".$field_value."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
+
 				$sql = "select distinct(".$field_name.") as ".$field_name.", ".$field_value." from ".$table_name." ".$sql_where_optional." order by ".$field_name." asc ";
 			}
 			else {
-				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".($onchange != '' ? "onchange=\"".$onchange."\"" : null).">\n";
+				$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='".$style."' ".($on_change != '' ? "onchange=\"".$on_change."\"" : null).">\n";
 				$html .= "	<option value=\"\"></option>\n";
+
 				$sql = "select distinct(".$field_name.") as ".$field_name." from ".$table_name." ".$sql_where_optional." ";
 			}
 
@@ -373,7 +361,7 @@
 					if (strlen($field[$field_name]) > 0) {
 						$selected = $field_current_value == $field[$field_name] ? "selected='selected'" : null;
 						$array_key = strlen($field_value) > 0 ? $field_value : $field_name;
-						$html .= "<option value=\"".$field[$array_key]."\" ".$selected.">".$field[$field_name]."</option>\n";
+						$html .= "<option value=\"".urlencode($field[$array_key])."\" ".$selected.">".urlencode($field[$field_name])."</option>\n";
 					}
 				}
 			}
@@ -386,20 +374,58 @@
 
 	if (!function_exists('th_order_by')) {
 		//html table header order by
-		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '', $additional_get_params='', $description='') {
-			if (strlen($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
-			if (strlen($additional_get_params) > 0) {$additional_get_params = '&'.$additional_get_params; } // you may need to pass other parameters
-			$html = "<th ".$css." nowrap>";
+		function th_order_by($field_name, $column_title, $order_by, $order, $app_uuid = '', $css = '', $http_get_params = '', $description = '') {
+			global $text;
+			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
+
+			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
+			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
+
+			$sanitized_parameters = '';
+			if (isset($http_get_params) && strlen($http_get_params) > 0) {
+				$parameters = explode('&', $http_get_params);
+				if (is_array($parameters)) {
+					foreach ($parameters as $parameter) {
+						$array = explode('=', $parameter);
+						$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
+						$value = urldecode($array['1']);
+						if ($key == 'order_by' && strlen($value) > 0) {
+							//validate order by
+							$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+						}
+						else if ($key == 'order' && strlen($value) > 0) {
+							//validate order
+							switch ($value) {
+								case 'asc':
+									$sanitized_parameters .= "&order=asc";
+									break;
+								case 'desc':
+									$sanitized_parameters .= "&order=desc";
+									break;
+							}
+						}
+						else if (strlen($value) > 0 && is_numeric($value)) {
+							$sanitized_parameters .= "&".$key."=".$value;
+						}
+						else {
+							$sanitized_parameters .= "&".$key."=".urlencode($value);
+						}
+					}
+				}
+			}
+
+			$html = "<th ".$css." nowrap='nowrap'>";
 			$description = (strlen($description) > 0) ? $description . ', ': '';
-			if (strlen($order_by) == 0)
+			if (strlen($order_by) == 0) {
 				$order = 'asc';
+			}
 			if ($order == "asc") {
-				$description .= 'sort(ascending)';
-				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
+				$description .= $text['label-order'].': '.$text['label-ascending'];
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			else {
-				$description .= 'sort(descending)';
-				$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."$additional_get_params' title='$description'>$columntitle</a>";
+				$description .= $text['label-order'].': '.$text['label-descending'];
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			$html .= "</th>";
 			return $html;
@@ -694,15 +720,17 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		$phone_number = trim($phone_number, "+");
-		if (is_numeric($phone_number)) {
-			if (isset($_SESSION["format"]["phone"])) foreach ($_SESSION["format"]["phone"] as &$format) {
-				$format_count = substr_count($format, 'x');
-				$format_count = $format_count + substr_count($format, 'R');
-				$format_count = $format_count + substr_count($format, 'r');
-				if ($format_count == strlen($phone_number)) {
-					//format the number
-					$phone_number = format_string($format, $phone_number);
+		if (is_numeric(trim($phone_number, ' +'))) {
+			if (isset($_SESSION["format"]["phone"])) {
+				$phone_number = trim($phone_number, ' +');
+				foreach ($_SESSION["format"]["phone"] as &$format) {
+					$format_count = substr_count($format, 'x');
+					$format_count = $format_count + substr_count($format, 'R');
+					$format_count = $format_count + substr_count($format, 'r');
+					if ($format_count == strlen($phone_number)) {
+						//format the number
+						$phone_number = format_string($format, $phone_number);
+					}
 				}
 			}
 		}
@@ -1132,11 +1160,11 @@ function number_pad($number,$n) {
 				$color = hsl_to_rgb($hsl[0], $hsl[1], $hsl[2]);
 
 				//return adjusted color in format received
-				if ($hash == '#') { //hex
+				if (isset($hash) && $hash == '#') { //hex
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
-						$hex .= $hex_color;
+						$hex = $hex_color;
 					}
 					return $hash.$hex;
 				}
@@ -1676,7 +1704,13 @@ function number_pad($number,$n) {
 				}
 			//add prefix
 				if (strlen($prefix) > 0) {
-					$prefix = $prefix.'?';
+					if (strlen($prefix) > 0 && strlen($prefix) < 4) {
+						$plus = (substr($string, 0, 1) == "+") ? '' : '\+?';
+						$prefix = $plus.$prefix.'?';
+					}
+					else {
+						$prefix = '(?:'.$prefix.')?';
+					}
 				}
 			//convert N,X,Z syntax to regex
 				$string = str_ireplace("N", "[2-9]", $string);
@@ -1690,7 +1724,7 @@ function number_pad($number,$n) {
 				if (substr($string, -1) != "$") {
 					$string = $string."$";
 				}
-			//add the round brackets ( and )
+			//add the round brackets
 				if (!strstr($string, '(')) {
 					if (strstr($string, '^')) {
 						$string = str_replace("^", "^".$prefix."(", $string);
@@ -1698,8 +1732,6 @@ function number_pad($number,$n) {
 					else {
 						$string = '^('.$string;
 					}
-				}
-				if (!strstr($string, ')')) {
 					if (strstr($string, '$')) {
 						$string = str_replace("$", ")$", $string);
 					}
@@ -1891,14 +1923,22 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		if (is_array($string)) {
+			return false;
+		}
+		elseif (isset($string) && strlen($string)) {
+			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+		else {
+			return false;
+		}
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
 		function view_array($array, $exit = true) {
-			echo '<br><pre>'.print_r($array, true).'</pre><br>';
+			echo "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
 			$exit and exit();
 		}
 	}
@@ -2000,8 +2040,12 @@ function number_pad($number,$n) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
 			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
-			if ($col != '') { return ' order by '.$col.' '.$dir.' '; }
-			else if ($col_default != '') { return ' order by '.$col_default.' '.$dir.' '; }
+			if ($col != '') {
+				return ' order by '.$col.' '.$dir.' ';
+			}
+			else if ($col_default != '') {
+				return ' order by '.$col_default.' '.$dir_default.' ';
+			}
 		}
 	}
 
@@ -2012,7 +2056,7 @@ function number_pad($number,$n) {
 			$limit = preg_replace($regex, '', $limit);
 			$offset = preg_replace($regex, '', $offset);
 			if (is_numeric($limit) && $limit > 0) {
-				$clause .= ' limit '.$limit;
+				$clause = ' limit '.$limit;
 				$offset = is_numeric($offset) ? $offset : 0;
 				$clause .= ' offset '.$offset;
 			}

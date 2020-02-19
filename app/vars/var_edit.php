@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -180,36 +180,28 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include header
+	$document['title'] = $text['title-variable'];
 	require_once "resources/header.php";
-	if ($action == "add") {
-		$document['title'] = $text['title-var_add'];
-	}
-	if ($action == "update") {
-		$document['title'] = $text['title-var_edit'];
-	}
 
 //show contents
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-variable']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'vars.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td width='30%' align='left'nowrap><b>".$text['header-variable_add']."</b><br><br></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap><b>".$text['header-variable_edit']."</b><br><br></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='vars.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	$table_name = 'v_vars';
 	$field_name = 'var_category';
 	$sql_where_optional = "";
@@ -336,16 +328,6 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 
 	//if variable is a code then show the codec info
 	if ($var_name == "global_codec_prefs" || $var_name == "outbound_codec_prefs") {
@@ -422,6 +404,11 @@
 
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>";
 
 //include header

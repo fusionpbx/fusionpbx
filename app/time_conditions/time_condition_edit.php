@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -123,6 +123,19 @@
 			else {
 				if ($action == 'add') {
 					$dialplan_context = $_SESSION['domain_name'];
+				}
+				if ($action == 'update') {
+					$sql = "select * from v_dialplans ";
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$parameters['dialplan_uuid'] = $dialplan_uuid;
+					$database = new database;
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$domain_uuid = $row["domain_uuid"];
+						$dialplan_context = $row["dialplan_context"];
+					}
+					unset($sql, $parameters, $row);
+					
 				}
 			}
 
@@ -407,8 +420,10 @@
 							$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
 							$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
-							$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_action_app;
-							$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_action_data;
+							if ($destination->valid($dialplan_action_app.':'.$dialplan_action_data)) {
+								$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_action_app;
+								$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_action_data;
+							}
 							$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
 							$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 							$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
@@ -447,8 +462,10 @@
 				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
-				$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_anti_action_app;
-				$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_anti_action_data;
+				if ($destination->valid($dialplan_anti_action_app.':'.$dialplan_anti_action_data)) {
+					$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_anti_action_app;
+					$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_anti_action_data;
+				}
 				$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
@@ -461,6 +478,7 @@
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('dialplan_detail_add', 'temp');
+					$p->add('dialplan_detail_edit', 'temp');
 
 				//execute insert
 					$database = new database;
@@ -471,6 +489,7 @@
 
 				//revoke temporary permissions
 					$p->delete('dialplan_detail_add', 'temp');
+					$p->delete('dialplan_detail_edit', 'temp');
 			}
 
 		//update the dialplan xml
@@ -494,8 +513,12 @@
 			else if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
-			exit;
+
+		//redirect the browser
+			if (is_uuid($dialplan_uuid)) {
+				header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
+				exit;
+			}
 
 	}
 
@@ -536,7 +559,7 @@
 			$sql .= "	) ";
 			$sql .= "	or ( ";
 			$sql .= "		dialplan_detail_tag = 'action' ";
-			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
+			//$sql .= "		and dialplan_detail_data not like 'preset=%' ";
 			$sql .= "	) ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
@@ -563,6 +586,26 @@
 				}
 			}
 
+		//find the selected presets
+			if (is_array($available_presets)) {
+				foreach ($available_presets as $preset_number => &$preset) {
+					if (is_array($preset)) {
+						foreach ($preset as $preset_name => $preset_variables) {
+							$preset_checked[$preset_name] = 'false';
+							if (is_array($dialplan_details)) {
+								foreach ($dialplan_details as $row) {
+									if ($row['dialplan_detail_tag'] == 'action') {
+										if ($row['dialplan_detail_data'] == 'preset='.$preset_name) {
+											$preset_checked[$preset_name] = 'true';
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 		//loop through available presets (if any)
 			if (is_array($available_presets)) {
 				foreach ($available_presets as $preset_number => $preset) {
@@ -580,6 +623,7 @@
 									}
 									//if all preset variables found, then condition is a preset
 									if ($matches == sizeof($preset_variables)) {
+										
 										$current_presets[$preset_number] = $group_id;
 									}
 								}
@@ -588,7 +632,6 @@
 					}
 				}
 			}
-
 	}
 
 //set the defaults
@@ -599,6 +642,7 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
 
 ?>
@@ -753,9 +797,9 @@
 								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 							}
 						}
-						h = 23;
-						m = 59;
-						sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+						//h = 23;
+						//m = 59;
+						//sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
 						break;
 
 				}
@@ -856,37 +900,30 @@
 </script>
 
 <?php
-echo "<form method='post' name='frm' action='' onsubmit=\"return check_submit();\">\n";
+echo "<form method='post' name='frm' onsubmit=\"return check_submit();\">\n";
 
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-echo "	<tr>\n";
-echo "		<td align='left' valign='top'>\n";
-echo "			<span class='title'>".$text['title-time_conditions']."</span>";
-echo "			<br /><br />\n";
-echo "		</td>\n";
-echo "		<td align='right' valign='top'>\n";
-echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
+echo "<div class='action_bar' id='action_bar'>\n";
+echo "	<div class='heading'><b>".$text['title-time_condition']."</b></div>\n";
+echo "	<div class='actions'>\n";
+echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
 if (if_group("superadmin") && $action == 'update') {
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-dialplan']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplans/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-dialplan']."'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-dialplan'],'icon'=>'list','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/dialplans/dialplan_edit.php?id='.urlencode($dialplan_uuid).'&app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
 }
-echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-echo "		</td>\n";
-echo "	</tr>\n";
-echo "	<tr>\n";
-echo "		<td colspan='2'>\n";
-echo "			".$text['description-time_conditions']."\n";
-echo "		</td>\n";
-echo "	</tr>\n";
-echo "</table>";
-echo "<br />\n";
+echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+echo "	</div>\n";
+echo "	<div style='clear: both;'></div>\n";
+echo "</div>\n";
+
+echo $text['description-time_conditions']."\n";
+echo "<br /><br />\n";
 
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 echo "<tr>\n";
-echo "<td width='20%' class='vncellreq' valign='top' align='left' nowrap>\n";
+echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-name']."\n";
 echo "</td>\n";
-echo "<td width='80%' class='vtable' align='left'>\n";
+echo "<td width='70%' class='vtable' align='left'>\n";
 echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-name']."\n";
@@ -941,6 +978,7 @@ function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	echo "	".$text['description-settings'];
 	echo "</td>\n";
 	echo "</tr>\n";
+
 }
 
 if ($action == 'update') {
@@ -1012,12 +1050,12 @@ if ($action == 'update') {
 		echo "	".$text['label-presets']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-
 		if (is_array($available_presets)) {
 			foreach ($available_presets as $preset_number => $preset) {
 				if (is_array($preset)) {
 					foreach ($preset as $preset_name => $preset_variables) {
-						$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
+						$checked = (is_array($current_presets) && $preset_checked[$preset_name] == 'true') ? "checked='checked'" : null;
+
 						$preset_group_id = ($checked) ? $current_presets[$preset_number] : $preset_group_id = $preset_number * 5 + 100;
 						if (strlen($text['label-preset_'.$preset_name]) > 0) {
 							$label_preset_name = $text['label-preset_'.$preset_name];
@@ -1045,6 +1083,7 @@ if ($action == 'update') {
 						echo "	</table>";
 						echo "	<br />";
 						echo "</div>";
+/*****/
 						if ($action == 'update' && is_array($current_presets) && $current_presets[$preset_number] != '') {
 							//add (potentially customized) preset conditions and populate
 							if (is_array($current_conditions[$preset_group_id])) {
@@ -1102,6 +1141,7 @@ if ($action == 'update') {
 								}
 							}
 						}
+/**/
 					}
 				}
 			}
@@ -1111,7 +1151,7 @@ if ($action == 'update') {
 		echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
 		echo "		<tr>";
 		echo "			<td>";
-		echo "				<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });\" value='".$text['button-advanced']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });"]);
 		echo "				<span id='default_preset_destination' style=' display: none;'>";
 		echo 				$destination->select('dialplan', 'default_preset_action', $dialplan_action);
 		echo "				</span>";
@@ -1214,18 +1254,14 @@ if ($action == 'update') {
 	echo "</tr>\n";
 
 	echo "</table>\n";
-	echo "<br />";
+	echo "<br /><br />\n";
 
-	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
-	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</div>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
-	echo "<br />";
 
 //include the footer
 	require_once "resources/footer.php";

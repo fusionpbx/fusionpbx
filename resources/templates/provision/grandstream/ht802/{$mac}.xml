@@ -536,7 +536,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -873,7 +873,7 @@
     <!-- # Enable Call Features. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P191>1</P191>
+    <P191>0</P191>
 
     <!-- # Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
     <!-- # String: 0-9, #, * -->
@@ -933,7 +933,11 @@
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_call_waiting)}
+    <P91>{$grandstream_call_waiting}</P91>
+    {else}
     <P91>0</P91>
+    {/if}
 
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -1429,7 +1433,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P747>{$account.2.server_address}</P747>
+<P747>{$account.2.server_address}:{$account.2.sip_port}</P747>
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -1810,7 +1814,11 @@
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_call_waiting)}
+    <P791>{$grandstream_call_waiting}</P791>
+    {else}
     <P791>0</P791>
+    {/if}
 
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->

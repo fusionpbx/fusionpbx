@@ -17,16 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 */
 
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('stream_add') || permission_exists('stream_edit')) {
 		//access granted
 	}
@@ -51,6 +51,7 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
+		$domain_uuid = $_POST['domain_uuid'];
 		$stream_uuid = $_POST["stream_uuid"];
 		$stream_name = $_POST["stream_name"];
 		$stream_location = $_POST["stream_location"];
@@ -154,26 +155,29 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
+//include the header
+	$document['title'] = $text['title-stream'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-stream']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'streams.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-stream']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='streams.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-stream_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='stream_name' maxlength='255' value=\"".escape($stream_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_name']."\n";
@@ -185,7 +189,7 @@
 	echo "	".$text['label-stream_location']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_location' maxlength='255' value=\"".escape($stream_location)."\">\n";
+	echo "	<input class='formfld' type='text' name='stream_location' style='min-width: 250px; width: 50%;' maxlength='255' value=\"".escape($stream_location)."\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_location']."\n";
 	echo "</td>\n";
@@ -252,16 +256,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	echo "<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

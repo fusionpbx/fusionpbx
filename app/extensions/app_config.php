@@ -19,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Utilisé pour configurer des extentions SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Configuratie voor SIP toestellen";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Utilizado para gereciar os ramais SIP";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para configurar extensões SIP.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
@@ -187,6 +187,15 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_copy";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_export";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+
 
 	//default settings
 		$y=0;
@@ -303,10 +312,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "extension";
 		$apps[$x]['db'][$y]['fields'][$z]['uuid'] = "15607400-7d58-475d-8f4e-7ffb858aa3e7";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "number_alias";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "password";
@@ -339,35 +350,43 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "effective_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "effective_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "outbound_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "outbound_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "emergency_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "emergency_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "directory_first_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "directory_full_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "directory_last_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "directory_visible";
@@ -416,6 +435,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "toll_allow";
@@ -429,6 +449,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_group";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "callgroup";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_screen_enabled";
@@ -552,6 +573,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "absolute_codec_string";

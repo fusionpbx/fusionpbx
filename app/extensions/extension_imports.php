@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -43,7 +43,7 @@
 	$text = $language->get();
 
 //built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if(!function_exists('str_getcsv')) {
+	if (!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
@@ -57,8 +57,6 @@
 //get the http get values and set them as php variables
 	$action = $_POST["action"];
 	$from_row = $_POST["from_row"];
-	$order_by = $_POST["order_by"];
-	$order = $_POST["order"];
 	$delimiter = $_POST["data_delimiter"];
 	$enclosure = $_POST["data_enclosure"];
 
@@ -90,9 +88,9 @@
 
 		//get the schema
 			$x = 0;
-			include ("app/extensions/app_config.php");
+			include "app/extensions/app_config.php";
 			$i = 0;
-			foreach($apps[0]['db'] as $table) {
+			foreach ($apps[0]['db'] as $table) {
 				//get the table name and parent name
 				$table_name = $table["table"]['name'];
 				$parent_name = $table["table"]['parent'];
@@ -109,7 +107,7 @@
 				if ($table_name == "extensions") {
 					$schema[$i]['table'] = $table_name;
 					$schema[$i]['parent'] = $parent_name;
-					foreach($table['fields'] as $row) {
+					foreach ($table['fields'] as $row) {
 						if ($row['deprecated'] !== 'true') {
 							if (is_array($row['name'])) {
 								$field_name = $row['name']['text'];
@@ -133,44 +131,49 @@
 //match the column names to the field names
 	if (strlen($delimiter) > 0 && file_exists($_SESSION['file']) && $action != 'import') {
 
-		//form to match the fields to the column names
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extension_imports.php');
+				exit;
+			}
+
+		//create token
+			$object = new token;
+			$token = $object->create($_SERVER['PHP_SELF']);
+
+		//include header
+			$document['title'] = $text['title-extension_import'];
 			require_once "resources/header.php";
 
-			echo "<form action='extension_imports.php' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
+		//form to match the fields to the column names
+			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
+
+			echo "<div class='action_bar' id='action_bar'>\n";
+			echo "	<div class='heading'><b>".$text['header-extension_import']."</b></div>\n";
+			echo "	<div class='actions'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extension_imports.php']);
+			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import']]);
+			echo "	</div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo $text['description-import']."\n";
+			echo "<br /><br />\n";
+
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-			echo "<tr>\n";
-			echo "	<td valign='top' align='left' nowrap='nowrap'>\n";
-			echo "		<b>".$text['header-import']."</b><br />\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../extensions/extensions.php'\" value='".$text['button-back']."'>\n";
-			echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n";
-			echo "	<td colspan='2' align='left'>\n";
-			echo "		".$text['description-import']."\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-
-			//echo "<tr>\n";
-			//echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-import']."</b></td>\n";
-			//echo "<td width='70%' align='right'>\n";
-			//echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='../extensions/extensions.php'\" value='".$text['button-back']."'>\n";
-			//echo "</td>\n";
-			//echo "</tr>\n";
 
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
-				echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
 				echo "	</td>\n";
-				echo "	<td class='vtable' align='left'>\n";
+				echo "	<td width='70%' class='vtable' align='left'>\n";
 				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
 				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
@@ -194,18 +197,17 @@
 				$x++;
 			}
 
-			echo "<tr>\n";
-			echo "	<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "		<input name='action' type='hidden' value='import'>\n";
-			echo "		<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "		<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "		<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
-			echo "		<input type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-
 			echo "</table>\n";
+			echo "<br /><br />\n";
+
+			echo "<input name='action' type='hidden' value='import'>\n";
+			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 			echo "</form>\n";
+
 			require_once "resources/footer.php";
 
 		//normalize the column names
@@ -233,8 +235,13 @@
 //upload the csv
 	if (file_exists($_SESSION['file']) && $action == 'import') {
 
-		//form to match the fields to the column names
-			//require_once "resources/header.php";
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: extension_imports.php');
+				exit;
+			}
 
 		//user selected fields
 			$fields = $_POST['fields'];
@@ -323,7 +330,7 @@
 										$row_id = 0;
 								}
 
-						} //if ($from_row <= $row_id)
+						} //if ($from_row <= $row_number)
 						$row_number++;
 						$row_id++;
 					} //end while
@@ -344,34 +351,37 @@
 			}
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
+	$document['title'] = $text['title-extension_import'];
 	require_once "resources/header.php";
 
-//begin the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "	<td valign='top' align='left' width='30%' nowrap='nowrap'>\n";
-	echo "		<b>".$text['header-import']."</b><br />\n";
-	echo "		".$text['description-import']."\n";
-	echo "	</td>\n";
-	echo "	<td valign='top' width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
-	//echo "		<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-	echo "</table>";
+//show content
+	echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
-	echo "<br />\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-extension_import']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extensions.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
-	echo "	<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+	echo $text['description-import']."\n";
+	echo "<br /><br />\n";
+
+	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";
@@ -433,18 +443,12 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td valign='bottom'>\n";
-	echo "			&nbsp;\n";
-	echo "		</td>\n";
-	echo "		<td valign='bottom' align='right' nowrap>\n";
-	echo "			<input name='type' type='hidden' value='csv'>\n";
-	echo "			<br />\n";
-	echo "			<input name='submit' type='submit' class='btn' id='import' value=\"".$text['button-import']."\">\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
+	echo "</table>\n";
 	echo "<br><br>";
+
+	echo "<input name='type' type='hidden' value='csv'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

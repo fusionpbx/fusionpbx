@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Appeler à partir d'une URL";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Start oproepen met een URL";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Gera chamadas a partir de um URL";
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com um URL.";

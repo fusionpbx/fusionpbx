@@ -103,7 +103,6 @@
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$user_context = $_POST["user_context"];
 			$range = $_POST["range"];
-			$autogen_users = $_POST["autogen_users"];
 			$missed_call_app = $_POST["missed_call_app"];
 			$missed_call_data = $_POST["missed_call_data"];
 			$toll_allow = $_POST["toll_allow"];
@@ -269,23 +268,6 @@
 							break;
 					}
 
-				//add the user to the database
-					$user_email = '';
-					if ($_SESSION["users"]["unique"]["text"] != "global") {
-						if ($autogen_users == "true") {
-							$auto_user = $extension;
-							for ($i=1; $i<=$range; $i++) {
-								$user_last_name = $auto_user;
-								$user_password = generate_password();
-								user_add($auto_user, $user_password, $user_email);
-								$generated_users[$i]['username'] = $auto_user;
-								$generated_users[$i]['password'] = $user_password;
-								$auto_user++;
-							}
-							unset($auto_user);
-						}
-					}
-
 				//build the data array
 					if (!isset($range)) { $range = 1; }
 					for ($i=0; $i<$range; $i++) {
@@ -315,11 +297,6 @@
 												}
 											}
 										}
-
-								//enabled
-									if (!permission_exists('extension_enabled')) {
-										$enabled = "true";
-									}
 
 								//generate a password
 									if ($action == "add" && strlen($password) == 0) {
@@ -407,7 +384,9 @@
 									if (permission_exists('extension_dial_string')) {
 										$array["extensions"][$i]["dial_string"] = $dial_string;
 									}
-									$array["extensions"][$i]["enabled"] = $enabled;
+									if (permission_exists('extension_enabled')) {
+										$array["extensions"][$i]["enabled"] = $enabled;
+									}
 									$array["extensions"][$i]["description"] = $description;
 
 							}
@@ -549,6 +528,7 @@
 							$array["devices"][0]["device_uuid"] = $device_uuid;
 							$array["devices"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$array["devices"][0]["device_mac_address"] = $device_mac_address;
+							$array["devices"][0]["device_label"] = $extension;
 							if (strlen($device_template) > 0) {
 								$array["devices"][0]["device_template"] = $device_template;
 							}
@@ -577,6 +557,12 @@
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
+				
+				// reload ACL if allowed
+					if (permission_exists("extension_cidr")) {
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						if ($fp) { event_socket_request($fp, "api reloadacl"); }
+					}
 
 				//check the permissions
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {
@@ -606,50 +592,20 @@
 							}
 					}
 
-				//show the action and redirect the user
+				//set the message and redirect
 					if ($action == "add") {
-							message::add($text['message-add']);
-						//prepare for alternating the row style
-							$c = 0;
-							$row_style["0"] = "row_style0";
-							$row_style["1"] = "row_style1";
-
-						//show the action and redirect the user
-							if (count($generated_users) == 0) {
-								//action add
-									header("Location: extension_edit.php?id=".$extension_uuid);
-							}
-							else {
-								//auto-generate user with extension as login name
-									require_once "resources/header.php";
-									echo "<br />\n";
-									echo "<div align='center'>\n";
-									echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
-									echo "		<tr>\n";
-									echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
-									echo "		</tr>\n";
-									echo "		<tr>\n";
-									echo "			<th>Username</th>\n";
-									echo "			<th>Password</th>\n";
-									echo "		</tr>\n";
-									foreach ($generated_users as $tmp_user) {
-										echo "		<tr>\n";
-										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['username']."</td>\n";
-										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['password']."</td>\n";
-										echo "		</tr>\n";
-									}
-									$c = $c ? 0 : 1;
-									echo "	</table>";
-									echo "</div>\n";
-									require_once "resources/footer.php";
-							}
-							exit;
+						message::add($text['message-add']);
 					}
 					if ($action == "update") {
 						message::add($text['message-update']);
-						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
-						return;
 					}
+					if ($range > 1) {
+						header("Location: extensions.php");
+					}
+					else {
+						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
+					}
+					exit;
 			}
 	}
 
@@ -818,6 +774,7 @@
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
+	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
 
 //create token
 	$object = new token;
@@ -865,39 +822,39 @@
 	echo "</script>";
 
 	echo "<form method='post' name='frm' id='frm' action=''>\n";
-	if (is_numeric($page)) {
-		echo "<input type='hidden' name='page' value='".$page."'>\n";
-	}
-	echo "<table width='100%' border='0' cellpdding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
-		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-add']."</b></td>\n";
+		echo "<b>".$text['header-extension-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-edit']."</b></td>\n";
+		echo "<b>".$text['header-extension-edit']."</b>";
 	}
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='extensions.php".(is_numeric($page) ? '?page='.$page : null)."'\" value='".$text['button-back']."'>\n";
+	echo 	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extensions.php'.(is_numeric($page) ? '?page='.$page : null)]);
 	if ($action == 'update' && permission_exists('xml_cdr_view')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-cdr']."' onclick=\"window.location='../xml_cdr/xml_cdr.php?extension_uuid=".urlencode($extension_uuid)."';\" value='".$text['button-cdr']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
 	}
-	
 	if ($action == 'update' && (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
-		echo "	<input type='button' class='btn' alt='".$text['button-call_routing']."' onclick=\"window.location='../calls/call_edit.php?id=".urlencode($extension_uuid)."';\" value='".$text['button-call_routing']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-call_routing'],'icon'=>'project-diagram','link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
 	}
 	if ($action == "update" && permission_exists('extension_copy')) {
-		echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"copy_extension();"]);
 	}
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
-	echo "	<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-extension']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='extension' autocomplete='new-password' maxlength='255' value=\"".escape($extension)."\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
@@ -966,10 +923,7 @@
 		echo "    <option value='5000'>5000</option>\n";
 		echo "    </select>\n";
 		echo "<br />\n";
-		echo $text['description-range']."<br />\n";
-		if ($_SESSION["user"]["unique"]["text"] != "global") {
-			echo "<input type=\"checkbox\" name=\"autogen_users\" value=\"true\"> ".$text['checkbox-range']."<br>\n";
-		}
+		echo $text['description-range']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -999,8 +953,7 @@
 			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
-		echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
-
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
 		echo "			<br />\n";
@@ -1054,12 +1007,7 @@
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
 			echo "				</td>\n";
-
-			echo "				<td>\n";
-			//if (permission_exists('device_delete')) {
-			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			//}
-			echo "				</td>\n";
+			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 			foreach($device_lines as $row) {
 				$device_mac_address = $row['device_mac_address'];
@@ -1152,10 +1100,10 @@
 			if (is_dir($template_dir) && is_array($device_vendors)) {
 				foreach($device_vendors as $row) {
 					echo "		<optgroup label='".escape($row["name"])."'>\n";
-					$templates = scandir($template_dir.'/'.$row["name"]);
-					foreach($templates as $dir) {
-						if ($file != "." && $dir != ".." && $dir[0] != '.') {
-							if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
+					if (is_dir($template_dir.'/'.$row["name"])) {
+						$templates = scandir($template_dir.'/'.$row["name"]);
+						foreach($templates as $dir) {
+							if ($file != "." && $dir != ".." && $dir[0] != '.' && is_dir($template_dir.'/'.$row["name"].'/'.$dir)) {
 								if ($device_template == $row["name"]."/".$dir) {
 									echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
 								}
@@ -1171,7 +1119,7 @@
 			echo "</select>\n";
 			echo "		</td>\n";
 			echo "		<td>\n";
-			echo "			<input type='submit' class='btn' value=\"".$text['button-add']."\" onclick=''>\n";
+			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 			echo "		</td>\n";
 			echo "		</table>\n";
 			echo "		<br />\n";
@@ -1347,7 +1295,7 @@
 						$tmp = $row["destination_description"];
 					}
 					if(strlen($tmp) > 0){
-						if ($emergency_caller_id_name == $tmp) {
+						if ($emergency_caller_id_number == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
 						else {
@@ -1712,7 +1660,7 @@
 	echo "		<tr>\n";
 	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
@@ -1948,24 +1896,24 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
-		echo "		<input type='hidden' name='id' id='id' value='".escape($extension_uuid)."'>";
-		if (!permission_exists('extension_domain')) {
-			echo "		<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
-		}
-		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
-		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."' onclick=''>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if (is_numeric($page)) {
+		echo "<input type='hidden' name='page' value='".$page."'>\n";
+	}
+	if ($action == "update") {
+		echo "<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
+		echo "<input type='hidden' name='id' id='id' value='".escape($extension_uuid)."'>";
+		if (!permission_exists('extension_domain')) {
+			echo "<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+		}
+		echo "<input type='hidden' name='delete_type' id='delete_type' value=''>";
+		echo "<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

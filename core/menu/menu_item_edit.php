@@ -59,7 +59,7 @@
 			unset($array);
 		//redirect the browser
 			message::add($text['message-delete']);
-			header("Location: menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$menu_item_uuid."&menu_uuid=".$menu_uuid);
+			header("Location: menu_item_edit.php?id=".urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid));
 			return;
 	}
 
@@ -71,10 +71,6 @@
 	else {
 		$action = "add";
 	}
-
-
-//clear the menu session so it will rebuild with the update
-	$_SESSION["menu"] = "";
 
 //get the HTTP POST variables and set them as PHP variables
 	if (count($_POST) > 0) {
@@ -328,7 +324,7 @@
 
 //get the assigned groups
 	$sql = "select ";
-	$sql .= "	mig.*, g.domain_uuid as group_domain_uuid ";
+	$sql .= "	mig.*, g.group_name, g.domain_uuid as group_domain_uuid ";
 	$sql .= "from ";
 	$sql .= "	v_menu_item_groups as mig, ";
 	$sql .= "	v_groups as g ";
@@ -374,46 +370,34 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
+	$document['title'] = $text['title-menu_item'];
 	require_once "resources/header.php";
-	if ($action == "update") {
-		$document['title'] = $text['title-menu_item-edit'];
-	}
-	if ($action == "add") {
-		$document['title'] = $text['title-menu_item-add'];
-	}
 
-	echo "<form method='post' action=''>\n";
+	echo "<form method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-menu_item']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'menu_edit.php?id='.urlencode($menu_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'>\n";
-	echo "	<b>\n";
-	if ($action == "update") {
-		echo "		".$text['header-menu_item-edit']."\n";
-	}
-	if ($action == "add") {
-		echo "		".$text['header-menu_item-add']."\n";
-	}
-	echo "	</b>\n";
-	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".escape($menu_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-	echo "	<br><br>";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='".escape($menu_item_title)."'></td>";
+	echo "		<td width='30%' class='vncellreq'>".$text['label-title']."</td>";
+	echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='menu_item_title' value='".escape($menu_item_title)."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
+	echo "		<td class='vncell'>".$text['label-link']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='".escape($menu_item_link)."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-category']."</td>";
+	echo "		<td class='vncell'>".$text['label-category']."</td>";
 	echo "		<td class='vtable'>";
 	echo "            <select name=\"menu_item_category\" class='formfld'>\n";
 	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>".$text['option-internal']."</option>\n"; } else { echo "<option value=\"internal\">".$text['option-internal']."</option>\n"; }
@@ -504,20 +488,20 @@
 			}
 		}
 		echo "</table>\n";
+		echo "<br />\n";
 	}
 	if (is_array($groups)) {
-		echo "<br />\n";
 		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($groups as $row) {
-			if ($row['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
-			if ($row['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
-			if (!in_array($row["group_uuid"], $assigned_groups)) {
-				echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+			if ($field['group_level'] <= $_SESSION['user']['group_level']) {
+				if (!is_array($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
+					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].(($row['domain_uuid'] != '') ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+				}
 			}
 		}
 		echo "</select>";
-		echo "<input type='submit' class='btn' name='submit' value=\"".$text['button-add']."\">\n";
+		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'never']);
 	}
 	echo "		</td>";
 	echo "	</tr>";
@@ -560,30 +544,18 @@
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_description' value='".escape($menu_item_description)."'></td>";
 	echo "	</tr>";
 
-	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<table width='100%'>";
-		echo "			<tr>";
-		echo "			<td align='left'>";
-		echo "			</td>\n";
-		echo "			<td align='right'>";
-		if ($action == "update") {
-			echo "			<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
-		}
-		echo "				<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>";
-		echo "				<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
-		echo "				<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo "				<br>";
-		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-		echo "			</td>";
-		echo "			</tr>";
-		echo "			</table>";
-		echo "		</td>";
-		echo "	</tr>";
-	}
 	echo "</table>";
 	echo "<br><br>";
+
+	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+		if ($action == "update") {
+			echo "<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
+		}
+		echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>";
+		echo "<input type='hidden' name='menu_item_uuid' value='".escape($menu_item_uuid)."'>";
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	}
+
 	echo "</form>";
 
 //include the footer

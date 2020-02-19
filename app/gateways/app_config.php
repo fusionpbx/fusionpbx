@@ -19,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Gateways voorzien in toegang tot andere telefonie netwerken. Dit kunne de VOIP-providers zijn, of andere systemen die een SIP registratie behoeven.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Troncos garantem acesso à outras redes de voz. Podem ser provedores VoIP ou outros sistemas que requerem registro SIP.";
 		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
@@ -68,6 +68,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "gateway_channels";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
@@ -119,10 +122,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "gateway";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "username";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "password";
@@ -135,6 +140,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "auth_username";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "realm";
@@ -143,22 +149,27 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "from_user";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "from_domain";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "proxy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "register_proxy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "outbound_proxy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "expire_seconds";
@@ -228,6 +239,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

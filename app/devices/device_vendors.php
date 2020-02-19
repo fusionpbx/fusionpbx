@@ -27,9 +27,10 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('device_vendor_view')) {
 		//access granted
 	}
@@ -42,24 +43,48 @@
 	$language = new text;
 	$text = $language->get();
 
+//get posted data
+	if (is_array($_POST['vendors'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$vendors = $_POST['vendors'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($vendors) && @sizeof($vendors) != 0) {
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('device_vendor_edit')) {
+					$obj = new device;
+					$obj->toggle_vendors($vendors);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('device_vendor_delete')) {
+					$obj = new device;
+					$obj->delete_vendors($vendors);
+				}
+				break;
+		}
+
+		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
 //add the search term
-	$search = $_GET["search"];
-	if ($search != '') {
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
 		$sql_where = "where (";
-		$sql_where .= "name like :search ";
-		$sql_where .= "or enabled like :search ";
-		$sql_where .= "or description like :search ";
+		$sql_where .= "lower(name) like :search ";
+		$sql_where .= "or lower(enabled) like :search ";
+		$sql_where .= "or lower(description) like :search ";
 		$sql_where .= ")";
 		$parameters['search'] = '%'.$search.'%';
 	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendors ";
@@ -69,105 +94,122 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql .= order_by($order_by, $order, 'name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-device_vendors'];
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_vendors']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-device_vendors']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'devices.php']);
 	if (permission_exists('device_vendor_restore')) {
-		echo "                          <input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"document.location='device_vendor_restore.php'\" value='".$text['button-restore']."'>";
+		echo button::create(['type'=>'button','label'=>$text['button-restore'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'margin-right: 15px;','link'=>'device_vendor_restore.php']);
 	}
-	echo "				<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>";
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-device_vendor']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('name', $text['label-name'], $order_by, $order);
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
 	if (permission_exists('device_vendor_add')) {
-		echo "<a href='device_vendor_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'device_vendor_edit.php']);
 	}
-	else {
-		echo "&nbsp;\n";
+	if (permission_exists('device_vendor_edit') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo "</td>\n";
-	echo "<tr>\n";
+	if (permission_exists('device_vendor_delete') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'device_vendors.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-device_vendor']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('device_vendor_edit') || permission_exists('device_vendor_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('name', $text['label-name'], $order_by, $order);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-xs'");
+	if (permission_exists('device_vendor_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
 
 	if (is_array($result) && @sizeof($result) != 0) {
+		$x = 0;
 		foreach($result as $row) {
 			if (permission_exists('device_vendor_edit')) {
-				$tr_link = "href='device_vendor_edit.php?id=".escape($row['device_vendor_uuid'])."'";
+				$list_row_url = "device_vendor_edit.php?id=".urlencode($row['device_vendor_uuid']);
 			}
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('device_vendor_edit') || permission_exists('device_vendor_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='vendors[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='vendors[$x][uuid]' value='".escape($row['device_vendor_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td><a href='".$list_row_url."'>".escape($row['name'])."</a>&nbsp;</td>\n";
 			if (permission_exists('device_vendor_edit')) {
-				echo "<a href='device_vendor_edit.php?id=".escape($row['device_vendor_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
-			if (permission_exists('device_vendor_delete')) {
-				echo "<a href='device_vendor_delete.php?id=".escape($row['device_vendor_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['enabled']];
 			}
-			echo "	</td>\n";
+			echo "	<td class='description overflow hide-xs'>".escape($row['description'])."&nbsp;</td>\n";
+			if (permission_exists('device_vendor_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($result);
 
-	echo "<tr>\n";
-	echo "<td colspan='4' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('device_vendor_add')) {
-		echo 		"<a href='device_vendor_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

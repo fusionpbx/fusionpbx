@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2019
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -67,7 +67,12 @@
 	$sql .= "contact_uuid, ";
 	$sql .= "message_type, ";
 	$sql .= "message_direction, ";
-	$sql .= "message_date at time zone :time_zone as message_date, ";
+	if ($_SESSION['domain']['time_zone']['name'] != '') {
+		$sql .= "message_date at time zone :time_zone as message_date, ";
+	}
+	else {
+		$sql .= "message_date, ";
+	}
 	$sql .= "message_from, ";
 	$sql .= "message_to, ";
 	$sql .= "message_text ";
@@ -78,7 +83,9 @@
 	$sql .= "and (message_from like :message_number or message_to like :message_number) ";
 	$sql .= "order by message_date desc ";
 	$sql .= $limit;
-	$parameters['time_zone'] = $_SESSION['domain']['time_zone']['name'];
+	if ($_SESSION['domain']['time_zone']['name'] != '') {
+		$parameters['time_zone'] = $_SESSION['domain']['time_zone']['name'];
+	}
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['message_number'] = '%'.$number;
@@ -217,6 +224,7 @@
 					$media_source = format_phone($message['message_from']);
 				}
 				if ($message['message_direction'] == 'outbound') {
+					$message_from = $message['message_from'];
 					$media_source = format_phone($message['message_to']);
 				}
 
@@ -294,9 +302,13 @@
 			echo "</table>\n";
 			echo "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin-top: 15px;'>\n";
 			echo "	<tr>\n";
-			echo "		<td align='left' width='50%'><input type='reset' class='btn' value='".$text['button-clear']."' onclick=\"$('#message_text').trigger('focus');\"></td>\n";
+			echo "		<td align='left' width='50%'>";
+			echo button::create(['label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'reset','onclick'=>"$('#message_text').trigger('focus');"]);
+			echo "		</td>\n";
 			echo "		<td align='center'><span id='thread_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; cursor: pointer;' onclick=\"refresh_thread_stop('".$number."','".$contact_uuid."');\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span></td>\n";
-			echo "		<td align='right' width='50%'><input type='submit' class='btn' value='".$text['button-send']."' title=\"".$text['label-ctrl_enter']."\"></td>\n";
+			echo "		<td align='right' width='50%'>";
+			echo button::create(['type'=>'submit','label'=>$text['button-send'],'title'=>$text['label-ctrl_enter'],'icon'=>'paper-plane']);
+			echo "		</td>\n";
 			echo "	</td>\n";
 			echo "</table>\n";
 			echo "</form>\n";

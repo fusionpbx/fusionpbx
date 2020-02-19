@@ -50,76 +50,87 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
 	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
+	$contact_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_settings']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	echo "<div class='action_bar sub shrink'>\n";
+	echo "	<div class='heading'><b>".$text['label-contact_settings']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	/*
+	if (permission_exists('contact_setting_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_setting_edit.php?contact_uuid='.urlencode($contact_uuid)]);
+	}
+	if (permission_exists('contact_setting_delete') && $contact_settings) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	*/
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th>".$text['label-contact_setting_category']."</th>";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('contact_setting_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"list_all_toggle('settings');\" ".($contact_settings ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo "<th class='pct-15'>".$text['label-contact_setting_category']."</th>";
 	echo "<th>".$text['label-contact_setting_subcategory']."</th>";
 	echo "<th>".$text['label-contact_setting_type']."</th>";
 	echo "<th>".$text['label-contact_setting_value']."</th>";
-	echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
-	echo "<th>".$text['label-description']."</th>";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('contact_setting_add')) {
-		echo "<a href='contact_setting_edit.php?contact_uuid=".$contact_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	echo "<th class='center'>".$text['label-enabled']."</th>";
+	echo "<th class='hide-md-dn'>".$text['label-description']."</th>";
+	if (permission_exists('contact_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	echo "</td>\n";
 	echo "</tr>\n";
-	if (is_array($result) && @sizeof($result) != 0) {
-		$previous_category = '';
-		foreach($result as $row) {
+
+	if (is_array($contact_settings) && @sizeof($contact_settings) != 0) {
+		$x = 0;
+		foreach ($contact_settings as $row) {
 			if (permission_exists('contact_setting_edit')) {
-				$tr_link = " href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_setting_uuid'])."'";
+				$list_row_url = "contact_setting_edit.php?contact_uuid=".urlencode($contact_uuid)."&id=".urlencode($row['contact_setting_uuid']);
 			}
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['contact_setting_category'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_setting_edit.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_setting_uuid'])."'>".escape($row['contact_setting_subcategory'])."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['contact_setting_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('contact_setting_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='contact_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_settings' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_settings').checked = false; }\">\n";
+				echo "		<input type='hidden' name='contact_settings[$x][uuid]' value='".escape($row['contact_setting_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>".escape($row['contact_setting_category'])."&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".escape($row['contact_setting_subcategory'])."</a></td>\n";
+			echo "	<td>".escape($row['contact_setting_name'])."&nbsp;</td>\n";
+			echo "	<td>\n";
 			$category = escape($row['contact_setting_category']);
 			$subcategory = escape($row['contact_setting_subcategory']);
 			$name = escape($row['contact_setting_name']);
 			if ($category == "callingcard" && $subcategory == "username" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
+				echo "		********\n";
 			}
-			elseif ($category == "callingcard" && $subcategory == "password" && $name == "var" ) {
-				echo "		******** &nbsp;\n";
-			} else {
+			else if ($category == "callingcard" && $subcategory == "password" && $name == "var" ) {
+				echo "		********\n";
+			}
+			else {
 				echo escape($row['contact_setting_value']);
 			}
-			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$text['label-'.escape($row['contact_setting_enabled'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['contact_setting_description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' nowrap='nowrap'>";
-			if (permission_exists('contact_setting_edit')) {
-				echo "<a href='contact_setting_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			echo "	<td class='center'>".$text['label-'.escape($row['contact_setting_enabled'])]."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".$row['contact_setting_description']."&nbsp;</td>\n";
+			if (permission_exists('contact_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
 			}
-			if (permission_exists('contact_setting_delete')) {
-				echo 	"<a href='contact_setting_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
-			echo "	</td>\n";
 			echo "</tr>\n";
-			$previous_category = escape($row['contact_setting_category']);
-			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($result, $row);
-	} //end if results
+			$x++;
+		}
+		unset($contact_settings);
+	}
 
 	echo "</table>";
+	echo "<br />\n";
 
 ?>

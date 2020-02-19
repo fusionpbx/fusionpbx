@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,6 +51,9 @@
 	else {
 		$action = "add";
 	}
+
+//initialize the destinations object
+	$destination = new destinations;
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
@@ -207,10 +210,14 @@
 			$array["call_flows"][$i]["call_flow_sound"] = $call_flow_sound;
 			$array["call_flows"][$i]["call_flow_alternate_label"] = $call_flow_alternate_label;
 			$array["call_flows"][$i]["call_flow_alternate_sound"] = $call_flow_alternate_sound;
-			$array["call_flows"][$i]["call_flow_app"] = $call_flow_app;
-			$array["call_flows"][$i]["call_flow_data"] = $call_flow_data;
-			$array["call_flows"][$i]["call_flow_alternate_app"] = $call_flow_alternate_app;
-			$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
+			if ($destination->valid($call_flow_app.':'.$call_flow_data)) {
+				$array["call_flows"][$i]["call_flow_app"] = $call_flow_app;
+				$array["call_flows"][$i]["call_flow_data"] = $call_flow_data;
+			}
+			if ($destination->valid($call_flow_alternate_app.':'.$call_flow_alternate_data)) {
+				$array["call_flows"][$i]["call_flow_alternate_app"] = $call_flow_alternate_app;
+				$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
+			}
 			$array["call_flows"][$i]["call_flow_context"] = $call_flow_context;
 			$array["call_flows"][$i]["call_flow_description"] = $call_flow_description;
 
@@ -261,9 +268,6 @@
 				return;
 			}
 	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -329,7 +333,6 @@
 	unset($parameters, $sql);
 
 	if (if_group("superadmin")) {
-		require_once "resources/header.php";
 		echo "<script>\n";
 		echo "var Objs;\n";
 		echo "\n";
@@ -471,24 +474,28 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-call_flow'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-call_flow']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_flows.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call_flow']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'call_flows.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_flow_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"".escape($call_flow_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_name']."\n";
@@ -585,7 +592,7 @@
 	echo "</tr>\n";
 
 	sound_select_list($call_flow_sound, 'call_flow_sound', 'call_flow_sound', true);
-	
+
 	/*
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -682,19 +689,17 @@
 	echo $text['description-call_flow_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "			<input type='hidden' name='call_flow_uuid' value='".escape($call_flow_uuid)."'>\n";
-		echo "			<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='call_flow_uuid' value='".escape($call_flow_uuid)."'>\n";
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

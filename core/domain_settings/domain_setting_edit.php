@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -165,7 +165,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
 							$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
-							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone=".$domain_setting_value."';
+							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
 							$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
 							$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
 							$p->add('dialplan_detail_add', 'temp');
@@ -347,49 +347,49 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	require_once "resources/header.php";
+//include the header
 	if ($action == "update") {
 		$document['title'] = $text['title-domain_setting-edit'];
 	}
 	elseif ($action == "add") {
 		$document['title'] = $text['title-domain_setting-add'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo $text['header-domain_setting-edit'];
+		echo "<b>".$text['header-domain_setting-edit']."</b>";
 	}
 	if ($action == "add") {
-		echo $text['header-domain_setting-add'];
+		echo "<b>".$text['header-domain_setting-add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/core/domains/domain_edit.php?id=".escape($domain_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/domains/domain_edit.php?id='.urlencode($domain_uuid)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>'submit_form();']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	if ($action == "update") {
-		echo $text['description-domain_setting-edit'];
+		echo $text['description-domain_setting-edit']."\n";
 	}
 	if ($action == "add") {
-		echo $text['description-domain_setting-add'];
+		echo $text['description-domain_setting-add']."\n";
 	}
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	if (permission_exists('domain_setting_category_edit')) {
 		if ($action == 'add') {
 			$domain_setting_category = $_GET['domain_setting_category'];
@@ -484,7 +484,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
-			if ($row['default_setting_value'] == $key) {
+			if ($row['domain_setting_value'] == $value) {
 				echo "		<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 			}
 			else {
@@ -588,13 +588,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>";
 	}
 	elseif ($category == "provision" && $subcategory == "aastra_time_format" && $name == "text" ) {
-		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "		<option value='1' ".(($domain_setting_value == "1") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
 		echo "		<option value='0' ".(($domain_setting_value == "0") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif ($category == "provision" && $subcategory == "aastra_date_format" && $name == "text" ) {
-		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "		<option value='0' ".(($domain_setting_value == "0") ? "selected='selected'" : null).">WWW MMM DD</option>\n";
 		echo "		<option value='1' ".(($domain_setting_value == "1") ? "selected='selected'" : null).">DD-MMM-YY</option>\n";
 		echo "		<option value='2' ".(($domain_setting_value == "2") ? "selected='selected'" : null).">YYYY-MM-DD</option>\n";
@@ -664,6 +664,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='always' ".($row['domain_setting_value'] == "always" ? "selected='selected'" : null).">".$text['option-button_icons_always']."</option>\n";
 		echo "    	<option value='never' ".($row['domain_setting_value'] == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
 		echo "    </select>\n";
+	}
+	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='listen' ".(($row['domain_setting_value'] == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
+		echo "    	<option value='link' ".(($row['domain_setting_value'] == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
+		echo "    	<option value='attach' ".(($row['domain_setting_value'] == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "voicemail" && $subcategory == "keep_local" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='true' ".(($row['domain_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "recordings" && $subcategory == "storage_type" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='file'>".$text['label-file']."</option>\n";
+		echo "    	<option value='base64' ".(($row['domain_setting_value'] == "base64") ? "selected='selected'" : null).">".$text['label-base64']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif (is_json($row['domain_setting_value'])) {
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='domain_setting_value' name='domain_setting_value' wrap='off'>".$row['domain_setting_value']."</textarea>\n";
 	}
 	else {
 		echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'])."\">\n";
@@ -743,19 +765,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='domain_setting_uuid' value='".escape($domain_setting_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "<br />";
+	echo "<br /><br />";
+
+	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='domain_setting_uuid' value='".escape($domain_setting_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	echo "<script>\n";

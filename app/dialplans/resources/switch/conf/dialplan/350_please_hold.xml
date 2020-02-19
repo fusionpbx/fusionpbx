@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="please_hold" number="" continue="true" app_uuid="c3ea29d1-db41-421e-91b7-b0984e50bcae" enabled="false">
+	<extension name="please_hold" number="" continue="true" app_uuid="c3ea29d1-db41-421e-91b7-b0984e50bcae" enabled="false" order="350">
 		<condition field="${user_exists}" expression="^true$">
 			<action application="set" data="transfer_ringback=$${hold_music}"/>
 			<action application="answer"/>

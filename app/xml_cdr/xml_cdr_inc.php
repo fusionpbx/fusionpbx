@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('xml_cdr_view')) {
@@ -37,9 +38,6 @@
 		echo "access denied";
 		exit;
 	}
-
-//additional includes
-	require_once "resources/paging.php";
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -109,7 +107,7 @@
 	}
 
 //check to see if permission does not exist
-	if(!permission_exists('xml_cdr_b_leg')){
+	if (!permission_exists('xml_cdr_b_leg')) {
 		$leg = 'a';
 	}
 
@@ -128,7 +126,7 @@
 	}
 
 //set the assigned extensions
-	if (!permission_exists('xml_cdr_domain')) {
+	if (!permission_exists('xml_cdr_domain') && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
 				$extension_uuids[] = $row['extension_uuid'];
@@ -188,17 +186,12 @@
 		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
-
 //create the sql query to get the xml cdr records
 	if (strlen($order_by) == 0) { $order_by  = "start_stamp"; }
 	if (strlen($order) == 0) { $order  = "desc"; }
 
 //set a default number of rows to show
 	$num_rows = '0';
-
-//disable the paging
-	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
-	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
 
 //count the records in the database
 	/*
@@ -286,7 +279,7 @@
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
+	if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids)) { //only show the user their calls
 		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
 	}
 	if ($missed == true) {
@@ -511,9 +504,8 @@
 	//end where
 	if (strlen($order_by) > 0) {
 		$sql .= order_by($order_by, $order);
-		//$sql .= " order by $order_by $order ";
 	}
-	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
 			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
@@ -526,28 +518,23 @@
 	}
 	$sql = str_replace("  ", " ", $sql);
 	$database = new database;
-	if ($archive_request == 'true') {
-		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
-			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
-			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
-			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
-			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
-			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
-			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
-			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
-		}
+	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+		$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+		$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+		$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+		$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+		$database->password = $_SESSION['cdr']['archive_database_password']['text'];
 	}
 	$result = $database->select($sql, $parameters, 'all');
-	$result_count = count($result);
+	$result_count = (count($result) ? count($result) : 0);
 	unset($database, $sql, $parameters);
 
 //return the paging
-	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
-
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+	}
 
 ?>

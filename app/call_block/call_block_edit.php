@@ -24,8 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
-	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
+	Original version of Call Block was written by Gerrit Visser <gerrit308@gmail.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
@@ -40,32 +41,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//define the call_block_get_extensions function
-	function call_block_get_extensions($select_extension) {
-		global $text;
-
-		//list voicemail
-		$sql = "select extension, user_context, description from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and enabled = 'true' ";
-		$sql .= "order by extension asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters);
-
-		if (is_array($result) && sizeof($result) != 0) {
-			echo "<optgroup label='".$text['label-voicemail']."'>\n";
-			foreach ($result as &$row) {
-				$extension = $row["extension"];
-				$context = $row["user_context"];
-				$description = $row["description"];
-				$selected = $extension == $select_extension ? "selected='selected'" : null;
-				echo "<option value='Voicemail ".$context." ".$extension."' ".$selected.">".$extension." ".$description."</option>\n";
-			}
-			echo "</optgroup>\n";
-		}
-	}
-
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -77,20 +52,49 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
 		$call_block_number = $_POST["call_block_number"];
-		$call_block_action = $_POST["call_block_action"];
 		$call_block_enabled = $_POST["call_block_enabled"];
+		$call_block_description = $_POST["call_block_description"];
+		
+		$action_array = explode(':', $_POST["call_block_action"]);
+		$call_block_app = $action_array[0];
+		$call_block_data = $action_array[1];
 	}
 
 //handle the http post
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
-	
-		$msg = '';
-		if ($action == "update") {
-			//$call_block_uuid = check_str($_POST["call_block_uuid"]);
-		}
-	
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//handle action
+			if ($_POST['action'] != '') {
+				switch ($_POST['action']) {
+					case 'delete':
+						if (permission_exists('call_block_delete') && is_uuid($call_block_uuid)) {
+							//prepare
+								$array[0]['checked'] = 'true';
+								$array[0]['uuid'] = $call_block_uuid;
+							//delete
+								$obj = new call_block;
+								$obj->delete($array);
+						}
+						break;
+					case 'add':
+						$xml_cdrs = $_POST['xml_cdrs'];
+						if (permission_exists('call_block_add') && is_array($xml_cdrs) && @sizeof($xml_cdrs) != 0) {
+							$obj = new call_block;
+							$obj->extension_uuid = $extension_uuid;
+							$obj->call_block_app = $call_block_app;
+							$obj->call_block_data = $call_block_data;
+							$obj->add($xml_cdrs);
+						}
+						break;
+				}
+
+				header('Location: call_block.php');
+				exit;
+			}
+
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -100,10 +104,9 @@
 			}
 
 		//check for all required data
-			if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
-			if ($action == "add") {
-				if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
-			}
+			$msg = '';
+			//if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
+			//if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
 			if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
@@ -117,10 +120,10 @@
 				require_once "resources/footer.php";
 				return;
 			}
-	
+
 		//add or update the database
 			if (is_array($_POST) && sizeof($_POST) != 0 && $_POST["persistformvar"] != "true") {
-	
+
 				//ensure call block is enabled in the dialplan
 					if ($action == "add" || $action == "update") {
 						$sql = "select dialplan_uuid from v_dialplans where true ";
@@ -147,71 +150,84 @@
 							$p->delete('dialplan_edit', 'temp');
 						}
 					}
-	
-				if ($action == "add") {
-					$array['call_block'][0]['call_block_uuid'] = uuid();
-					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$array['call_block'][0]['call_block_name'] = $call_block_name;
-					$array['call_block'][0]['call_block_number'] = $call_block_number;
-					$array['call_block'][0]['call_block_count'] = 0;
-					$array['call_block'][0]['call_block_action'] = $call_block_action;
-					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
-					$array['call_block'][0]['date_added'] = time();
 
-					$database = new database;
-					$database->app_name = 'call_block';
-					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-					$database->save($array);
-					$response = $database->message;
-					unset($array);
-	
-					message::add($text['label-add-complete']);
-					header("Location: call_block.php");
-					return;
-				}
-	
-				if ($action == "update") {
-					$sql = "select c.call_block_number, d.domain_name ";
-					$sql .= "from v_call_block as c ";
-					$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
-					$sql .= "where c.domain_uuid = :domain_uuid ";
-					$sql .= "and c.call_block_uuid = :call_block_uuid ";
-					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$parameters['call_block_uuid'] = $call_block_uuid;
-					$database = new database;
-					$result = $database->select($sql, $parameters);
-					if (is_array($result) && sizeof($result) != 0) {
-						//set the domain_name
-						$domain_name = $result[0]["domain_name"];
-	
-						//clear the cache
-						$cache = new cache;
-						$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+				//if user doesn't have call block all then use the assigned extension_uuid
+					if (!permission_exists('call_block_all')) {
+						$extension_uuid = $_SESSION['user']['extension'][0]['extension_uuid'];
 					}
-					unset($sql, $parameters);
-	
-					$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
-					$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$array['call_block'][0]['call_block_name'] = $call_block_name;
-					$array['call_block'][0]['call_block_number'] = $call_block_number;
-					$array['call_block'][0]['call_block_action'] = $call_block_action;
-					$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
-					$array['call_block'][0]['date_added'] = time();
 
-					$database = new database;
-					$database->app_name = 'call_block';
-					$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
-					$database->save($array);
-					$response = $database->message;
-					unset($array);
-	
-					message::add($text['label-update-complete']);
-					header("Location: call_block.php");
-					return;
-				}
+				//save the data to the database
+					if ($action == "add") {
+						$array['call_block'][0]['call_block_uuid'] = uuid();
+						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (is_uuid($extension_uuid)) {
+							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+						}
+						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_number'] = $call_block_number;
+						$array['call_block'][0]['call_block_count'] = 0;
+						$array['call_block'][0]['call_block_app'] = $call_block_app;
+						$array['call_block'][0]['call_block_data'] = $call_block_data;
+						$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+						$array['call_block'][0]['date_added'] = time();
+						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
+						$database = new database;
+						$database->app_name = 'call_block';
+						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+						$database->save($array);
+						$response = $database->message;
+						unset($array);
+
+						message::add($text['label-add-complete']);
+						header("Location: call_block.php");
+						return;
+					}
+					if ($action == "update") {
+						$sql = "select c.call_block_number, d.domain_name ";
+						$sql .= "from v_call_block as c ";
+						$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
+						$sql .= "where c.domain_uuid = :domain_uuid ";
+						$sql .= "and c.call_block_uuid = :call_block_uuid ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['call_block_uuid'] = $call_block_uuid;
+						$database = new database;
+						$result = $database->select($sql, $parameters);
+						if (is_array($result) && sizeof($result) != 0) {
+							//set the domain_name
+							$domain_name = $result[0]["domain_name"];
+
+							//clear the cache
+							$cache = new cache;
+							$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+						}
+						unset($sql, $parameters);
+
+						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
+						$array['call_block'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						if (is_uuid($extension_uuid)) {
+							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
+						}
+						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_number'] = $call_block_number;
+						$array['call_block'][0]['call_block_app'] = $call_block_app;
+						$array['call_block'][0]['call_block_data'] = $call_block_data;
+						$array['call_block'][0]['call_block_enabled'] = $call_block_enabled;
+						$array['call_block'][0]['date_added'] = time();
+						$array['call_block'][0]['call_block_description'] = $call_block_description;
+
+						$database = new database;
+						$database->app_name = 'call_block';
+						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
+						$database->save($array);
+						$response = $database->message;
+						unset($array);
+
+						message::add($text['label-update-complete']);
+						header("Location: call_block.php");
+						return;
+					}
 			}
-
 	}
 
 //pre-populate the form
@@ -225,80 +241,121 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
+			$extension_uuid = $row["extension_uuid"];
 			$call_block_name = $row["call_block_name"];
 			$call_block_number = $row["call_block_number"];
-			$call_block_action = $row["call_block_action"];
-			$blocked_call_destination = $row["blocked_call_destination"];
+			$call_block_app = $row["call_block_app"];
+			$call_block_data = $row["call_block_data"];
 			$call_block_enabled = $row["call_block_enabled"];
+			$call_block_description = $row["call_block_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//get the extensions
+	if (permission_exists('call_block_all')) {
+		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and enabled = 'true' ";
+		$sql .= "order by extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$extensions = $database->select($sql, $parameters);
+	}
+
+//get the extensions
+	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
+	$sql .= "from v_voicemails ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and voicemail_enabled = 'true' ";
+	$sql .= "order by voicemail_id asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$voicemails = $database->select($sql, $parameters);
 
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-call-block'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
-	echo "	function call_block_recent(cdr_uuid, cur_name) {\n";
-	echo "		var new_name = prompt('".$text['prompt-block_recent_name']."', cur_name);\n";
-	echo "		if (new_name != null) {\n";
-	echo "			block_name = (new_name != '') ? new_name : cur_name;\n";
-	echo "			document.location.href='call_block_cdr_add.php?cdr_id=' + cdr_uuid + '&name=' + escape(block_name)\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "</script>";
+	echo "<form method='post' name='frm'>\n";
 
-	// Show last 5-10 calls first, with add button
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($action == "add") {
+		echo "<b>".$text['label-edit-add']."</b>\n";
+	}
+	if ($action == "update") {
+		echo "<b>".$text['label-edit-edit']."</b>\n";
+	}
 
-	echo "<form method='post' name='frm' action=''>\n";
+	echo 	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
+	if ($action == 'update' && permission_exists('call_block_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	if ($action == "add") {
+		echo $text['label-add-note']."\n";
+	}
+	if ($action == "update") {
+		echo $text['label-edit-note']."\n";
+	}
+	echo "<br /><br />\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-edit-add']."</b></td>\n";
+
+	if (permission_exists('call_block_all')) {
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-extension']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='extension_uuid'>\n";
+		echo "		<option value=''>".$text['label-all']."</option>\n";
+		if (is_array($extensions) && sizeof($extensions) != 0) {
+			foreach ($extensions as $row) {
+				$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+				echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+			}
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-extension']."\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-edit-edit']."</b></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_block.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	if ($action == "add") {
-	echo $text['label-add-note']."<br /><br />\n";
-	}
-	if ($action == "update") {
-	echo $text['label-edit-note']."<br /><br />\n";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\" required='required'>\n";
-	echo "<br />\n";
-	echo $text['description-number']."\n";
-	echo "<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\" required='required'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
 	echo "<br />\n";
-	echo $text['description-name']."\n";
+	echo $text['description-call_block_name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-number']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\">\n";
+	echo "<br />\n";
+	echo $text['description-call_block_number']."\n";
+	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -307,30 +364,53 @@
 	echo "	".$text['label-action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='call_block_action'>\n";
-	$pieces = explode(" ", $call_block_action);
-	$action = $pieces[0];
-	$extension = $pieces[2];
-	if ($action == "Reject") {
-		echo "	<option value='Reject' selected='selected'>".$text['label-reject']."</option>\n";
+	function call_block_action_select($label = false) {
+		global $text, $call_block_app, $call_block_data, $extensions, $voicemails;
+		echo "<select class='formfld' name='call_block_action'>\n";
+		if ($label) {
+			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
+		}
+		if ($call_block_app == "reject") {
+			echo "	<option value='reject' selected='selected'>".$text['label-reject']."</option>\n";
+		}
+		else {
+			echo "	<option value='reject' >".$text['label-reject']."</option>\n";
+		}
+		if ($call_block_app == "busy") {
+			echo "	<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
+		}
+		else {
+			echo "	<option value='busy'>".$text['label-busy']."</option>\n";
+		}
+		if ($call_block_app == "hold") {
+			echo "	<option value='hold' selected='selected'>".$text['label-hold']."</option>\n";
+		}
+		else {
+			echo "	<option value='hold'>".$text['label-hold']."</option>\n";
+		}
+		if (permission_exists('call_block_extension')) {
+			if (is_array($extensions) && sizeof($extensions) != 0) {
+				echo "	<optgroup label='".$text['label-extension']."'>\n";
+				foreach ($extensions as &$row) {
+					$selected = ($call_block_app == 'extension' && $call_block_data == $row['extension']) ? "selected='selected'" : null;
+					echo "		<option value='extension:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+				}
+				echo "	</optgroup>\n";
+			}
+		}
+		if (permission_exists('call_block_voicemail')) {
+			if (is_array($voicemails) && sizeof($voicemails) != 0) {
+				echo "	<optgroup label='".$text['label-voicemail']."'>\n";
+				foreach ($voicemails as &$row) {
+					$selected = ($call_block_app == 'voicemail' && $call_block_data == $row['voicemail_id']) ? "selected='selected'" : null;
+					echo "		<option value='voicemail:".urlencode($row["voicemail_id"])."' ".$selected.">".escape($row['voicemail_id'])." ".escape($row['voicemail_description'])."</option>\n";
+				}
+				echo "	</optgroup>\n";
+			}
+		}
+		echo "	</select>";
 	}
-	else {
-		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
-	}
-	if ($action == "Busy") {
-		echo "	<option value='Busy' selected='selected'>".$text['label-busy']."</option>\n";
-	}
-	else {
-		echo "	<option value='Busy'>".$text['label-busy']."</option>\n";
-	}
-	if ($action == "Hold") {
-		echo "	<option value='Hold' selected='selected'>".$text['label-hold']."</option>\n";
-	}
-	else {
-		echo "	<option value='Hold'>".$text['label-hold']."</option>\n";
-	}
-	call_block_get_extensions($extension);
-	echo "	</select>\n";
+	call_block_action_select();
 	echo "<br />\n";
 	echo $text['description-action']."\n";
 	echo "\n";
@@ -352,117 +432,197 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='call_block_uuid' value='".escape($call_block_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_description' maxlength='255' value=\"".escape($call_block_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "</table>";
 	echo "<br><br>";
-	echo "</form>";
 
+	if ($action == "update") {
+		echo "<input type='hidden' name='call_block_uuid' value='".escape($call_block_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //get recent calls from the db (if not editing an existing call block record)
 	if (!is_uuid($_REQUEST["id"])) {
-		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
-		$sql .= "from v_xml_cdr where true ";
-		$sql .= "and domain_uuid = :domain_uuid ";
-		$sql .= "and direction != 'outbound' ";
-		$sql .= "order by start_stamp desc ";
-		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$database = new database;
-		$result = $database->select($sql, $parameters);
-		unset($sql, $parameters);
 
-		echo "<b>".$text['label-edit-add-recent']."</b>";
-		echo "<br><br>";
-		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-		echo "<th style='width: 25px;'>&nbsp;</th>\n";
+		if (permission_exists('call_block_all')) {
+			$sql = "select caller_id_number, caller_id_name, caller_id_number, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
+			$sql .= "from v_xml_cdr where true ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$sql .= "and direction != 'outbound' ";
+			$sql .= "order by start_stamp desc ";
+			$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters);
+			unset($sql, $parameters);
+		}
+
+		if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension'])) {
+			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+			}
+
+			$sql = "select caller_id_number, caller_id_name, caller_id_number, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
+			$sql .= "from v_xml_cdr ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+				if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
+					$x = 0;
+					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+						//$sql_where_array[] = "caller_id_number = :caller_id_number_".$x;
+						//$sql_where_array[] = "destination_number = :destination_number_1_".$x;
+						//$sql_where_array[] = "destination_number = :destination_number_2_".$x;
+						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+						//$parameters['caller_id_number_'.$x] = $assigned_extension;
+						//$parameters['destination_number_1_'.$x] = $assigned_extension;
+						//$parameters['destination_number_2_'.$x] = '*99'.$assigned_extension;
+						$x++;
+					}
+					if (is_array($sql_where_array) && sizeof($sql_where_array) != 0) {
+						$sql .= "and (".implode(' or ', $sql_where_array).") ";
+					}
+					unset($sql_where_array);
+				}
+			$sql .= "order by start_stamp desc";
+			$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+		}
+
+		echo "<form id='form_list' method='post'>\n";
+		echo "<input type='hidden' id='action' name='action' value='add'>\n";
+
+		echo "<div class='action_bar' id='action_bar_sub'>\n";
+		echo "	<div class='heading'><b id='heading_sub'>".$text['heading-recent_calls']."</b></div>\n";
+		echo "	<div class='actions'>\n";
+		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'call_block.php']);
+		if (permission_exists('call_block_all')) {
+			echo 	"<select class='formfld' name='extension_uuid'>\n";
+			echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
+			echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
+			if (is_array($extensions) && sizeof($extensions) != 0) {
+				foreach ($extensions as $row) {
+					$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+					echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+				}
+			}
+			echo "	</select>";
+		}
+		call_block_action_select(true);
+		echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo 	"</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
+
+		echo "<table class='list'>\n";
+		echo "<tr class='list-header'>\n";
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+		echo "<th style='width: 1%;'>&nbsp;</th>\n";
 		echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
 		echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
 		echo th_order_by('start_stamp', $text['label-called-on'], $order_by, $order);
-		echo th_order_by('duration', $text['label-duration'], $order_by, $order);
-		echo "<td>&nbsp;</td>\n";
+		echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "class='right hide-sm-dn'");
 		echo "</tr>";
-		$c = 0;
-		$row_style["0"] = "row_style0";
-		$row_style["1"] = "row_style1";
 
-		if (is_array($result) && sizeof($result) != 0) {
-			foreach($result as $row) {
-				$tr_onclick = " onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" ";
+		if (is_array($result) && @sizeof($result) != 0) {
+			$x = 0;
+			foreach ($result as $row) {
+				$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
+				$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 				if (strlen($row['caller_id_number']) >= 7) {
-					if (defined('TIME_24HR') && TIME_24HR == 1) {
-						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
-					} else {
-						$tmp_start_epoch = date("j M Y h:i:sa", $row['start_epoch']);
+					if ($_SESSION['domain']['time_format']['text'] == '24h') {
+						$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
 					}
-					echo "<tr>\n";
+					else {
+						$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('h:i:s a', $row['start_epoch']).'</span>';
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					echo "	<td class='checkbox'>\n";
+					echo "		<input type='checkbox' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"".$list_row_onclick_uncheck."\">\n";
+					echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
+					echo "	</td>\n";
 					if (
-						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
-						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png") &&
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_voicemail.png") &&
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png") &&
 						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png") &&
-						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png")
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_answered.png")
 						) {
-						echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>";
+						echo "	<td class='center' ".$list_row_onclick_toggle.">";
 						switch ($row['direction']) {
 							case "inbound" :
-								if ($row['billsec'] == 0)
-									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' alt='".$text['label-inbound']." ".$text['label-missed']."'>\n";
-								else
-									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' alt='".$text['label-inbound']."'>\n";
+								if ($row['billsec'] == 0) {
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_voicemail.png' style='border: none;' alt='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+								}
+								else {
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' alt='".$text['label-inbound']."'>\n";
+								}
 								break;
 							case "local" :
-								if ($row['billsec'] == 0)
+								if ($row['billsec'] == 0) {
 									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' alt='".$text['label-local']." ".$text['label-failed']."'>\n";
-								else
-									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' alt='".$text['label-local']."'>\n";
+								}
+								else {
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_answered.png' style='border: none;' alt='".$text['label-local']."'>\n";
+								}
 								break;
 						}
 						echo "	</td>\n";
 					}
 					else {
-						echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
+						echo "	<td ".$list_row_onclick_toggle.">&nbsp;</td>";
 					}
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
-					echo 	$row['caller_id_name'].' ';
-					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
-					if (is_numeric($row['caller_id_number'])) {
-						echo 	format_phone($row['caller_id_number']).' ';
-					}
-					else {
-						echo 	$row['caller_id_number'].' ';
-					}
-					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".$tmp_start_epoch."</td>\n";
-					$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //If they cancelled, show the ring time, not the bill time.
-					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".gmdate("G:i:s", $seconds)."</td>\n";
-					echo "	<td class='list_control_icons' ".((!(if_group("admin") || if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
-					if (if_group("admin") || if_group("superadmin")) {
-						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".escape($row['xml_cdr_uuid'])."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
-					}
-					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".escape($row['xml_cdr_uuid'])."','".urlencode(escape($row['caller_id_name']))."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-					echo "  </td>";
+					echo "	<td ".$list_row_onclick_toggle.">".$row['caller_id_name']." </td>\n";
+					echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_id_number'])."</td>\n";
+					echo "	<td class='no-wrap' ".$list_row_onclick_toggle.">".$tmp_start_epoch."</td>\n";
+					$seconds = ($row['hangup_cause'] == "ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //if they cancelled, show the ring time, not the bill time.
+					echo "	<td class='right hide-sm-dn' ".$list_row_onclick_toggle.">".gmdate("G:i:s", $seconds)."</td>\n";
 					echo "</tr>\n";
-					$c = $c == 1 ? 0 : 1;
+					$x++;
 				}
 			}
 			unset($result);
 
 		}
 
-		echo "</table>";
-		echo "<br>";
+		echo "</table>\n";
+		echo "<br />\n";
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+		echo "</form>\n";
 
 	}
+
+//make sub action bar sticky
+	echo "<script>\n";
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 480, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('heading_sub').innerHTML = \"".$text['heading-block_recent_calls']."\";\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('heading_sub').innerHTML = \"".$text['heading-recent_calls']."\";\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

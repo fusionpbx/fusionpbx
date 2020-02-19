@@ -37,23 +37,22 @@ echo "<link rel='stylesheet' type='text/css' href='<!--{project_path}-->/resourc
 
 //link to custom css file
 	if ($_SESSION['theme']['custom_css']['text'] != '') {
-		echo "<link rel='stylesheet' type='text/css' href='".escape($_SESSION['theme']['custom_css']['text'])."'>\n\n";
+		echo "<link rel='stylesheet' type='text/css' href='".$_SESSION['theme']['custom_css']['text']."'>\n\n";
 	}
 //output custom css
 	if ($_SESSION['theme']['custom_css_code']['text'] != '') {
 		echo "<style>\n";
-		echo escape($_SESSION['theme']['custom_css_code']['text']);
+		echo $_SESSION['theme']['custom_css_code']['text'];
 		echo "</style>\n\n";
 	}
 
 //set fav icon
-	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? escape($_SESSION['theme']['favicon']['text']) : '<!--{project_path}-->/themes/default/favicon.ico';
+	$favicon = (isset($_SESSION['theme']['favicon']['text'])) ? $_SESSION['theme']['favicon']['text'] : '<!--{project_path}-->/themes/default/favicon.ico';
 	echo "<link rel='icon' href='".$favicon."'>\n";
 
 echo "<title><!--{title}--></title>\n";
 
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery-3.4.1.min.js'></script>\n";
-//echo "<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/jquery/jquery.autosize.input.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/momentjs/moment-with-locales.min.js'></script>\n";
 echo "<script language='JavaScript' type='text/javascript' src='<!--{project_path}-->/resources/bootstrap/js/bootstrap.min.js'></script>\n";
@@ -205,8 +204,8 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		?>
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-			$('.tr_hover tr').each(function(i,e) {
-				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').on('click', function() {
+			$('.tr_hover tr,.list tr').each(function(i,e) {
+				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
 					var href = $(this).closest("tr").attr("href");
 					var target = $(this).closest('tr').attr('target');
 					if (href) {
@@ -329,10 +328,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (recording_audio.paused) {
 				recording_audio.volume = 1;
 				recording_audio.play();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_pause']['text']; ?> fa-fw'></span>";
 				audio_clock = setInterval(function () { update_progress(recording_id); }, 20);
 
-				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<?php echo $v_link_label_play; ?>");
+				$("[id*=recording_button]").not("[id*=recording_button_"+recording_id+"]").html("<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?> fa-fw'></span>");
 				$("[id*=recording_progress_bar]").not("[id*=recording_progress_bar_"+recording_id+"]").css('display', 'none');
 
 				$('audio').each(function(){$('#menu_side_container').width()
@@ -344,7 +343,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 			else {
 				recording_audio.pause();
-				document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+				document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?> fa-fw'></span>";
 				clearInterval(audio_clock);
 			}
 		}
@@ -361,7 +360,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
 				document.getElementById('recording_progress_bar_'+recording_id).style.display='none';
 			}
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<span class='<?php echo $_SESSION['theme']['button_icon_play']['text']; ?> fa-fw'></span>";
 			clearInterval(audio_clock);
 		}
 
@@ -378,13 +377,117 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			}
 		}
 
-		//handle action bar style on scroll
-		window.addEventListener('scroll', action_bar_scroll , false);
-		function action_bar_scroll() {
-			if (document.getElementById('action_bar')) {
-				if (this.scrollY > 20) { document.getElementById('action_bar').classList.add('scroll'); }
-				if (this.scrollY < 20) { document.getElementById('action_bar').classList.remove('scroll'); }
+	//handle action bar style on scroll
+		window.addEventListener('scroll', function(){
+			action_bar_scroll('action_bar', 20);
+		}, false);
+		function action_bar_scroll(action_bar_id, scroll_position, function_sticky, function_inline) {
+			if (document.getElementById(action_bar_id)) {
+				//sticky
+					if (this.scrollY > scroll_position) {
+						document.getElementById(action_bar_id).classList.add('scroll');
+						if (typeof function_sticky === 'function') { function_sticky(); }
+					}
+				//inline
+					if (this.scrollY < scroll_position) {
+						document.getElementById(action_bar_id).classList.remove('scroll');
+						if (typeof function_inline === 'function') { function_inline(); }
+					}
 			}
+		}
+
+	//enable button class button
+		function button_enable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = false;
+			button.classList.remove('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.remove('disabled');
+				anchor.setAttribute('onclick','');
+			}
+		}
+
+	//disable button class button
+		function button_disable(button_id) {
+			button = document.getElementById(button_id);
+			button.disabled = true;
+			button.classList.add('disabled');
+			if (button.parentElement.nodeName == 'A') {
+				anchor = button.parentElement;
+				anchor.classList.add('disabled');
+				anchor.setAttribute('onclick','return false;');
+			}
+		}
+
+	//list functions
+		function list_all_toggle(modifier) {
+			var inputs = document.getElementsByTagName('input');
+			if (modifier !== undefined) {
+				var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
+			}
+			else {
+				var checkbox_checked = document.getElementById('checkbox_all').checked;
+			}
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (modifier !== undefined) {
+					if (inputs[i].type === 'checkbox' && inputs[i].className === 'checkbox_'+modifier) {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+				else {
+					if (inputs[i].type === 'checkbox') {
+						inputs[i].checked = checkbox_checked;
+					}
+				}
+			}
+			if (document.getElementById('btn_check_all') && document.getElementById('btn_check_none')) {
+				if (checkbox_checked) {
+					document.getElementById('btn_check_all').style.display = 'none';
+					document.getElementById('btn_check_none').style.display = '';
+				}
+				else {
+					document.getElementById('btn_check_all').style.display = '';
+					document.getElementById('btn_check_none').style.display = 'none';
+				}
+			}
+		}
+
+		function list_all_check() {
+			var inputs = document.getElementsByTagName('input');
+			document.getElementById('checkbox_all').checked;
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = true;
+				}
+			}
+		}
+
+		function list_self_check(checkbox_id) {
+			var inputs = document.getElementsByTagName('input');
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox') {
+					inputs[i].checked = false;
+				}
+			}
+			document.getElementById(checkbox_id).checked = true;
+		}
+
+		function list_action_set(action) {
+			document.getElementById('action').value = action;
+		}
+
+		function list_form_submit(form_id) {
+			document.getElementById(form_id).submit();
+		}
+
+		function list_search_reset() {
+			document.getElementById('btn_reset').style.display = 'none';
+			document.getElementById('btn_search').style.display = '';
+		}
+
+		function modal_close() {
+			document.location.href='#';
 		}
 
 </script>
@@ -424,13 +527,13 @@ echo "	<div id='message_container'></div>\n";
 		echo "		<div id='domains_list'>\n";
 
 		//alternating background colors of inactive domains
-		if ($_SESSION['theme']['domain_inactive_background_color'][0]['text'] != '') {
+		if ($_SESSION['theme']['domain_inactive_background_color'][0] != '') {
 			$bgcolor1 = $_SESSION['theme']['domain_inactive_background_color'][0];
 		}
 		else {
 			$bgcolor1 = "#eaedf2";
 		}	
-		if ($_SESSION['theme']['domain_inactive_background_color'][1]['text'] != '') {
+		if ($_SESSION['theme']['domain_inactive_background_color'][1] != '') {
 			$bgcolor2 = $_SESSION['theme']['domain_inactive_background_color'][1];
 		}	
 		else {
@@ -457,17 +560,19 @@ echo "	<div id='message_container'></div>\n";
 				echo "<div id=\"".$domain['domain_name']."\" class='domains_list_item' style='background-color: ".$bgcolor."' onclick=\"document.location.href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true';\">";
 			}
 			echo "<a href='".escape($domain_path)."?domain_uuid=".escape($domain['domain_uuid'])."&domain_change=true' ".(($domain['domain_uuid'] == $_SESSION['domain_uuid']) ? "style='font-weight: bold;'" : null).">".escape($domain['domain_name'])."</a>\n";
-			//active domain description text color
-			if ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
-				echo "<span class=\"domain_active_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
-			}
-			//inactive domains description text color
-			else if ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '' && $domain['domain_description'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
-				echo "<span class=\"domain_inactive_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
-			}
-			//default domain description text color
-			else {
-				echo "<span class=\"domain_list_item_description\"> - ".escape($domain['domain_description'])."</span>\n";
+			if ($domain['domain_description'] != '') {
+				//active domain description text color
+				if ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '' && $domain['domain_uuid'] == $_SESSION['domain_uuid']) {
+					echo "<span class='domain_active_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
+				//inactive domains description text color
+				else if ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '' && $domain['domain_uuid'] != $_SESSION['domain_uuid']) {
+					echo "<span class='domain_inactive_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
+				//default domain description text color
+				else {
+					echo "<span class='domain_list_item_description' title=\"".escape($domain['domain_description'])."\"> - ".escape($domain['domain_description'])."</span>\n";
+				}
 			}
 			echo "</div>\n";
 			$ary_domain_names[] = $domain['domain_name'];
@@ -528,7 +633,9 @@ if (!$default_login) {
 				default:
 					$menu_position = ($menu_position != '') ? $menu_position : 'top';
 					$menu_type = 'fixed-'.$menu_position;
-					$menu_width = !http_user_agent('mobile') ? 'calc(90% - 20px)' : null;
+					if (!http_user_agent('mobile')) {
+						$menu_width = $_SESSION['theme']['menu_width_fixed']['text'] != '' ? $_SESSION['theme']['menu_width_fixed']['text'] : 'calc(90% - 20px)';
+					}
 					$menu_brand = true;
 					$menu_corners = null;
 			}
@@ -569,7 +676,7 @@ if (!$default_login) {
 							$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
 							echo "			<a href='".$menu_brand_link."'>";
 							echo "				<img id='menu_brand_image' class='navbar-logo' src='".$menu_brand_image."' title=\"".escape($menu_brand_text)."\">";
-							if ($_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
+							if (isset($_SESSION['theme']['menu_brand_image_hover']['text']) && $_SESSION['theme']['menu_brand_image_hover']['text'] != '') {
 								echo 			"<img id='menu_brand_image_hover' class='navbar-logo' style='display: none;' src='".$_SESSION['theme']['menu_brand_image_hover']['text']."' title=\"".escape($menu_brand_text)."\">";
 							}
 							echo 			"</a>\n";
@@ -597,7 +704,7 @@ if (!$default_login) {
 				}
 				$mod_a_2 = ($menu_parent['menu_item_link'] != '' && !$submenu) ? $menu_parent['menu_item_link'] : '#';
 				$mod_a_3 = ($menu_parent['menu_item_category'] == 'external') ? "target='_blank' " : null;
-				if ($_SESSION['theme']['menu_main_icons']['boolean'] != 'false') {
+				if (isset($_SESSION['theme']['menu_main_icons']['boolean']) && $_SESSION['theme']['menu_main_icons']['boolean'] == 'true') {
 					if ($menu_parent['menu_item_icon'] != '' && substr_count($menu_parent['menu_item_icon'], 'fa-') > 0) {
 						$menu_main_icon = "<span class='fas ".$menu_parent['menu_item_icon']."' title=\"".escape($menu_parent['menu_language_title'])."\"></span>\n";
 					}
@@ -620,15 +727,6 @@ if (!$default_login) {
 						if ($mod_a_2 == '') {
 							$mod_a_2 = '#';
 						}
-						else if (($menu_sub['menu_item_category'] == 'internal') || (($menu_sub['menu_item_category'] == 'external') && substr($mod_a_2,0,1) == '/')) {
-							// accomodate adminer auto-login, if enabled
-								if (substr($mod_a_2,0,22) == '/app/adminer/index.php') {
-									global $db_type;
-									$mod_a_2 .= '?'.(($db_type == 'mysql') ? 'server' : $db_type).'&db=fusionpbx&ns=public';
-									$mod_a_2 .= ($_SESSION['adminer']['auto_login']['boolean'] == 'true') ? "&username=auto" : null;
-								}
-							$mod_a_2 = PROJECT_PATH.$mod_a_2;
-						}
 						$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
 						if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 							if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
@@ -647,8 +745,7 @@ if (!$default_login) {
 
 			echo "			</ul>\n";
 
-			echo "			<ul class='navbar-nav ml-auto'>
-\n";
+			echo "			<ul class='navbar-nav ml-auto'>\n";
 			//domain name/selector
 				if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 					echo "		<li class='nav-item'>\n";
@@ -670,17 +767,18 @@ if (!$default_login) {
 			echo "</nav>\n";
 	}
 
-
-	//determine menu configuration
-		$menu = new menu;
-		$menu->db = $db;
-		$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
-		$menu_array = $menu->menu_array();
-		unset($menu);
-
+	//get the menu array and save it to the session
+		if (!isset($_SESSION['menu']['array'])) {
+			$menu = new menu;
+			$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+			$_SESSION['menu']['array'] = $menu->menu_array();
+			unset($menu);
+		}
+	//get the menu style and position
 		$menu_style = ($_SESSION['theme']['menu_style']['text'] != '') ? $_SESSION['theme']['menu_style']['text'] : 'fixed';
 		$menu_position = ($_SESSION['theme']['menu_position']['text'] != '') ? $_SESSION['theme']['menu_position']['text'] : 'top';
 
+	//show the menu style
 		switch ($menu_style) {
 			case 'inline':
 				$logo_align = ($_SESSION['theme']['logo_align']['text'] != '') ? $_SESSION['theme']['logo_align']['text'] : 'left';
@@ -691,14 +789,14 @@ if (!$default_login) {
 					echo "<a href='".((PROJECT_PATH != '') ? PROJECT_PATH : '/')."'><img src='".$logo."' style='padding: 15px 20px; ".$logo_style."'></a>";
 				}
 
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				break;
 			case 'static':
 				echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				break;
 			case 'fixed':
-				show_menu($menu_array, $menu_style, $menu_position);
+				show_menu($_SESSION['menu']['array'], $menu_style, $menu_position);
 				echo "<div class='container-fluid' style='padding: 0;' align='center'>\n";
 				break;
 			case 'side':
@@ -748,8 +846,8 @@ if (!$default_login) {
 					}
 
 					//main menu items
-						if (is_array($menu_array) && sizeof($menu_array) != 0) {
-							foreach ($menu_array as $menu_index_main => $menu_item_main) {
+						if (is_array($_SESSION['menu']['array']) && sizeof($_SESSION['menu']['array']) != 0) {
+							foreach ($_SESSION['menu']['array'] as $menu_index_main => $menu_item_main) {
 								echo "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."'" : "onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\"")." title=\"".$menu_item_main['menu_language_title']."\">";
 								if ($menu_item_main['menu_item_icon'] != '') {
 									echo "<i class='fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
@@ -802,16 +900,13 @@ if (!$default_login) {
 		echo "	<!--{body}-->\n";
 		echo "</div>\n";
 		echo "<div id='footer'>\n";
-		echo "	<span class='footer'>".($_SESSION['theme']['footer']['text'] != '' ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'])."</span>\n";
+		echo "	<span class='footer'>".(isset($_SESSION['theme']['footer']['text']) && $_SESSION['theme']['footer']['text'] != '' ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'])."</span>\n";
 		echo "</div>\n";
 
 		echo "</div>\n"; //initial div from switch statement above
-
 }
-
-// default login being used
 else {
-
+	//default login being used
 	if ($_SESSION['theme']['logo_login']['text'] != '') {
 		$logo = $_SESSION['theme']['logo_login']['text'];
 	}
@@ -822,8 +917,22 @@ else {
 		$logo = PROJECT_PATH."/themes/default/images/logo_login.png";
 	}
 
+	//set the login logo width and height
+	if (isset($_SESSION['theme']['login_logo_width']['text'])) {
+		$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
+	}
+	else {
+		$login_logo_width = 'auto; max-width: 300px';
+	}
+	if (isset($_SESSION['theme']['login_logo_height']['text'])) {
+		$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+	}
+	else {
+		$login_logo_height = 'auto; max-height: 300px';
+	}
+
 	echo "<div id='default_login'>\n";
-	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' src='".escape($logo)."'></a><br />\n";
+	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' style='width: ".$login_logo_width."; height: ".$login_logo_height.";' src='".escape($logo)."'></a><br />\n";
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";
@@ -831,7 +940,6 @@ else {
 	echo "</div>\n";
 
 	unset($_SESSION['background_image']);
-
 }
 
 echo "</body>\n";

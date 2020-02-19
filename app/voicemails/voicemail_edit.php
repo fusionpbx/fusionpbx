@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -41,6 +41,9 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//initialize the destinations object
+	$destination = new destinations;
 
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
@@ -208,7 +211,9 @@
 								$array['voicemail_options'][$index]['domain_uuid'] = $domain_uuid;
 								$array['voicemail_options'][$index]['voicemail_option_digits'] = $voicemail_option['voicemail_option_digits'];
 								$array['voicemail_options'][$index]['voicemail_option_action'] = $voicemail_option['voicemail_option_action'];
-								$array['voicemail_options'][$index]['voicemail_option_param'] = $voicemail_option['voicemail_option_param'];
+								if ($destination->valid(preg_replace('/\s/', ':', $voicemail_option['voicemail_option_param'], 1))) {
+									$array['voicemail_options'][$index]['voicemail_option_param'] = $voicemail_option['voicemail_option_param'];
+								}
 								$array['voicemail_options'][$index]['voicemail_option_order'] = $voicemail_option['voicemail_option_order'];
 								$array['voicemail_options'][$index]['voicemail_option_description'] = $voicemail_option['voicemail_option_description'];
 						}
@@ -245,9 +250,6 @@
 					exit;
 			}
 	}
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //pre-populate the form
 	if (count($_GET)>0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
@@ -304,9 +306,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	require_once "resources/header.php";
+//include the header
 	$document['title'] = $text['title-voicemail'];
+	require_once "resources/header.php";
 
 //password complexity
 	$password_complexity = $_SESSION['voicemail']['password_complexity']['boolean'];
@@ -351,29 +353,24 @@
 	}
 
 //show the content
-	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-voicemail']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>$back_button_location]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>($password_complexity == "true" ? "if (check_password_strength(document.getElementById('password').value)) { submit_form(); }" : 'submit_form();')]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
-	echo "	<b>".$text['title-voicemail']."</b>";
-	echo "	<br><br>";
-	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".$back_button_location."'\" value='".$text['button-back']."'>\n";
-	if ($password_complexity == "true") {
-		echo "		<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
-	}
-	else {
-		echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-voicemail_id']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='voicemail_id' maxlength='255' value='".escape($voicemail_id)."'>\n";
 	echo "	<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
@@ -441,7 +438,7 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-options']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		echo "			<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "			<table width='60%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vtable'>".$text['label-option']."</td>\n";
 		echo "					<td class='vtable'>".$text['label-destination']."</td>\n";
@@ -485,8 +482,8 @@
 					echo "					<td class='vtable'>\n";
 					echo "						".escape($field['voicemail_option_description'])."&nbsp;\n";
 					echo "					</td>\n";
-					echo "					<td class='list_control_icons'>";
-					echo 						"<a href='voicemail_option_edit.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					echo "					<td class='list_control_icons' style='text-align: left;'>";
+					//echo 						"<a href='voicemail_option_edit.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
 					if (permission_exists('voicemail_option_delete')) {
 						echo 						"<a href='voicemail_option_delete.php?id=".escape($field['voicemail_option_uuid'])."&voicemail_uuid=".escape($field['voicemail_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
@@ -530,7 +527,7 @@
 			echo "</td>\n";
 
 			echo "					<td>\n";
-			echo "						<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'onclick'=>'submit_form();']);
 			echo "					</td>\n";
 			echo "				</tr>\n";
 		}
@@ -553,7 +550,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('sms_edit')) {
+	if (permission_exists('voicemail_sms_edit')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_sms_to']."\n";
@@ -588,7 +585,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
-	echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
+	//disable as doesn't work without post-login redirect
+	//echo "    <option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
 	echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
 	echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
 	echo "    </select>\n";
@@ -603,7 +601,7 @@
 		echo "	".$text['label-voicemail_local_after_email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
+		echo "	<select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 1; }\">\n";
 		echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
@@ -693,7 +691,7 @@
 		}
 		unset($sql, $parameters, $result, $field);
 		echo "			</select>";
-		echo "			<input type='button' class='btn' value=\"".$text['button-add']."\" onclick='submit_form();'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'never','onclick'=>'submit_form();']);
 		echo "			<br>\n";
 		echo "			".$text['description-forward_destinations']."\n";
 		echo "			<br />\n";
@@ -735,26 +733,18 @@
 	echo $text['description-voicemail_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
-	}
-	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
-	echo "				<input type='hidden' name='referer_path' value='".escape($http_referer['path'])."'>\n";
-	echo "				<input type='hidden' name='referer_query' value='".escape($http_referer['query'])."'>\n";
-	echo "				<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "				<br>";
-	if ($password_complexity == "true") {
-		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_password_strength(document.getElementById('password').value)) { submit_form(); }\">";
-	}
-	else {
-		echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	}
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='voicemail_uuid' value='".escape($voicemail_uuid)."'>\n";
+	}
+	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
+	echo "<input type='hidden' name='referer_path' value='".escape($http_referer['path'])."'>\n";
+	echo "<input type='hidden' name='referer_query' value='".escape($http_referer['query'])."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	echo "<script>\n";

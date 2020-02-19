@@ -156,6 +156,7 @@
 
 		//check for all required data
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-call_routing'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -412,6 +413,7 @@
 	}
 
 //show the header
+	$document['title'] = $text['title-call_routing'];
 	require_once "resources/header.php";
 
 //pre-populate the form
@@ -466,6 +468,8 @@
 	}
 
 //prepare the autocomplete
+	if($_SESSION['follow_me']['follow_me_autocomplete']['boolean'] == 'true') {
+
 	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
 	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
 	echo "<script type=\"text/javascript\">\n";
@@ -488,35 +492,33 @@
 
 	echo "});\n";
 	echo "</script>\n";
-
+	}
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call_routing']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'calls.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description']." <strong>".escape($extension)."</strong>\n";
+	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>\n";
-	echo "	<b>".$text['title']."</b>\n";
-	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='calls.php'\" value='".$text['button-back']."'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo "	".$text['description']." <strong>".escape($extension)."</strong><br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	<strong>".$text['label-call-forward']."</strong>\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('follow_me_disabled').checked=true; ";
 	$on_click .= "$('#tr_follow_me_settings').slideUp('fast'); ";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
@@ -778,18 +780,14 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

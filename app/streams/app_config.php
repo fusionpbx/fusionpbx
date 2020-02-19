@@ -53,10 +53,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_location';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the location.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_enabled';
@@ -65,6 +67,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'stream_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 

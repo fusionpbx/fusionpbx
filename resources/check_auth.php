@@ -71,13 +71,14 @@
 			}
 			$auth->debug = false;
 			$result = $auth->validate();
-			if ($result["authorized"] == "true") {
+			if ($result["authorized"] === "true") {
 				//set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
+					$_SESSION["user"]["domain_name"] = $result["domain_name"];
 					$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
 					$_SESSION["user"]["username"] = $result["username"];
 					$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"];

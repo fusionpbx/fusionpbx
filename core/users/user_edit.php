@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -642,22 +642,26 @@
 	echo "</script>\n";
 
 	echo "<form name='frm' id='frm' method='post'>\n";
-	echo "<input type='hidden' name='action' id='action' value=''>\n";
 
-	echo "<div style='float:right; white-space: nowrap;'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-user_edit']."</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if ($unsaved) {
 		echo "<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo "	<input type='button' class='btn' style='margin-right: 10px;' onclick=\"window.location='users.php'\" value='".$text['button-back']."'>";
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'users.php']);
 	}
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
-		echo "	<input type='button' class='btn' style='margin-right: 3px;' onclick=\"window.location='/app/tickets/tickets.php?user_uuid=".urlencode($user_uuid)."'\" value='".$text['button-tickets']."'>";
+		echo button::create(['type'=>'button','label'=>$text['button-tickets'],'icon'=>'tags','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/tickets/tickets.php?user_uuid='.urlencode($user_uuid)]);
 	}
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-	echo "<b>".$text['header-user_edit']."</b><br />\n";
-	echo $text['description-user_edit']."<br /><br />\n";
+
+	echo $text['description-user_edit']."\n";
+	echo "<br /><br />\n";
 
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 
@@ -951,7 +955,8 @@
 			}
 			echo "</select>";
 			if ($action == 'edit') {
-				echo "<input type='submit' class='btn' value=\"".$text['button-add']."\" >\n";
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+// 				echo "<input type='submit' class='btn' value=\"".$text['button-add']."\" >\n";
 			}
 		}
 		unset($sql, $parameters, $groups, $field);
@@ -984,8 +989,8 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".escape($api_key)."\" >";
-		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
+		echo "			<input type='text' class='formfld' style='width: 250px;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
+		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('api_key').value = uuid();"]);
 		if (strlen($text['description-api_key']) > 0) {
 			echo "			<br />".$text['description-api_key']."<br />\n";
 		}
@@ -997,8 +1002,8 @@
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type='text' class='formfld' name='message_key' id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
-		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('message_key').value='".uuid()."';\">";
+		echo "			<input type='text' class='formfld' style='width: 250px;' name='message_key' id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
+		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('message_key').value = uuid();"]);
 		if (strlen($text['description-message_key']) > 0) {
 			echo "			<br />".$text['description-message_key']."<br />\n";
 		}
@@ -1020,29 +1025,44 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>";
-	echo "		<td colspan='2' align='right' style='white-space: nowrap;'>";
+	if ($unsaved) {
+		echo "<tr>";
+		echo "<td colspan='2' align='right' style='white-space: nowrap;'>";
+		echo "	<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
+		echo "</td>";
+		echo "</tr>";
+	}
+
+	echo "</table>";
+	echo "<br /><br />";
+
 	if ($action == 'edit') {
-		echo "		<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
+		echo "<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
 		if (permission_exists("user_edit")) {
-			echo "		<input type='hidden' name='username_old' value=\"".escape($username)."\">";
+			echo "<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	if ($unsaved) {
-		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
-	}
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "<br><br>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
 		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/user_settings/user_settings.php";
+		echo "<br><br>";
 	}
+
+//uuid generation script
+	echo "<script>\n";
+	echo "function uuid() {\n";
+	echo "	var d = new Date().getTime();\n";
+	echo "	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n";
+	echo "		var r = (d + Math.random()*16)%16 | 0;\n";
+	echo "		d = Math.floor(d/16);\n";
+	echo "		return (c=='x' ? r : (r&0x3|0x8)).toString(16);\n";
+	echo "	});\n";
+	echo "	return uuid;\n";
+	echo "};\n";
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

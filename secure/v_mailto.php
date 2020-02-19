@@ -35,22 +35,24 @@
 	}
 
 //includes
-	if (!defined('STDIN')) { include "root.php"; }
+	if (!defined('STDIN')) { include_once "root.php"; }
 	require_once "resources/require.php";
 
 //define a function to remove html tags
-	function remove_tags($string) {
-		//remove HTML tags
-		$string = preg_replace ('/<[^>]*>/', ' ', $string);
+	if (!function_exists('remove_tags')) {
+		function remove_tags($string) {
+			//remove HTML tags
+			$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-		//remove control characters
-		$string = str_replace("\r", '', $string);    // --- replace with empty space
-		$string = str_replace("\n", ' ', $string);   // --- replace with space
-		$string = str_replace("\t", ' ', $string);   // --- replace with space
+			//remove control characters
+			$string = str_replace("\r", '', $string);    // --- replace with empty space
+			$string = str_replace("\n", ' ', $string);   // --- replace with space
+			$string = str_replace("\t", ' ', $string);   // --- replace with space
 
-		//remove multiple spaces
-		$string = trim(preg_replace('/ {2,}/', ' ', $string));
-		return $string;
+			//remove multiple spaces
+			$string = trim(preg_replace('/ {2,}/', ' ', $string));
+			return $string;
+		}
 	}
 
 //set init settings
@@ -71,12 +73,15 @@
 	ob_end_clean();
 	ob_start();
 
+//message divider for log file
+	echo "\n\n======================================================================================================================================================================================\n\n";
+
 //testing show the raw email
 	//echo "Message: \n".$msg."\n";
 
 //includes
-	require('resources/pop3/mime_parser.php');
-	require('resources/pop3/rfc822_addresses.php');
+	require_once('resources/pop3/mime_parser.php');
+	require_once('resources/pop3/rfc822_addresses.php');
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
 		require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
 	}
@@ -97,6 +102,7 @@
 		//   'SkipBody' => 1,
 	);
 	$success = $mime->Decode($parameters, $decoded);
+	unset($parameters);
 
 	if (!$success) {
 		echo "MIME message decoding error: ".HtmlSpecialChars($mime->error)."\n";
@@ -140,7 +146,7 @@
 	}
 	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['text'])?$_SESSION['email']['smtp_host']['text']:'127.0.0.1');
 	if (isset($_SESSION['email']['smtp_port'])) {
-		$smtp['port'] = (int)$_SESSION['email']['smtp_port']['numeric'];
+		$smtp['port'] = (int) $_SESSION['email']['smtp_port']['numeric'];
 	}
 	else {
 		$smtp['port'] = 0;
@@ -160,12 +166,11 @@
 	}
 
 	// overwrite with domain-specific smtp server settings, if any
-	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
+	if (is_uuid($headers["X-FusionPBX-Domain-UUID"])) {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
-		$sql .= "and domain_setting_name = 'text' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
 		$parameters['domain_uuid'] = $headers["X-FusionPBX-Domain-UUID"];
 		$database = new database;
@@ -186,11 +191,11 @@
 	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
 
 //send the email
-	include "resources/phpmailer/class.phpmailer.php";
-	include "resources/phpmailer/class.smtp.php";
+	include_once "resources/phpmailer/class.phpmailer.php";
+	include_once "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
 	if (isset($_SESSION['email']['method'])) {
-		switch($_SESSION['email']['method']['text']) {
+		switch ($_SESSION['email']['method']['text']) {
 			case 'sendmail': $mail->IsSendmail(); break;
 			case 'qmail': $mail->IsQmail(); break;
 			case 'mail': $mail->IsMail(); break;
@@ -271,7 +276,7 @@
 
 //get the attachments and add to the email
 	if ($success) {
-		foreach ($decoded[0][Parts] as &$parts_array) {
+		foreach ($decoded[0]["Parts"] as &$parts_array) {
 			$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];
 				//image/tiff;name="testfax.tif"
 				//text/plain; charset=ISO-8859-1; format=flowed
@@ -292,7 +297,7 @@
 					$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
 					$encoding = "base64"; //base64_decode
 
-					switch($file_ext){
+					switch ($file_ext){
 						case "wav":
 							$mime_type = "audio/x-wav";
 							break;
@@ -315,11 +320,12 @@
 
 				//add an attachment
 					$mail->AddStringAttachment($parts_array["Body"],$file,$encoding,$mime_type);
-					if (function_exists(get_transcription)) {
+					if (function_exists('get_transcription')) {
 						$attachments_array = $mail->GetAttachments();
 						$transcription = get_transcription($attachments_array[0]);
 						echo "Transcription: " . $transcription;
-					} else {
+					}
+					else {
 						$transcription = '';
 					}
 			}

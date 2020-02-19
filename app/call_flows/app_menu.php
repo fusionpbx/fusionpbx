@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "cinématiques d'Appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Deviatori di Chiamata";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep besturing";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Przepływ rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Fluxo de chamadas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";

@@ -12,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Contacts";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "אנשי קשר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Contatti";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kontacten";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Kontakty";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Contatos";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Contactos";

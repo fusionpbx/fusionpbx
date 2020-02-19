@@ -12,6 +12,7 @@
 		$apps[$x]['description']['de-at'] = "Verwalte Benachrichtigunggseinstellungen.";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-de'] = "Verwalte Benachrichtigunggseinstellungen.";
+		$apps[$x]['description']['el-gr'] = "Ρυθμίστε τις επιλογές γνωστοποιήσεων.";
 		$apps[$x]['description']['es-cl'] = "Configure las preferencias de notificaciones.";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['fr-ca'] = "Configurez les notifications.";

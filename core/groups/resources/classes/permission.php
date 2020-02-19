@@ -17,8 +17,8 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013
-	All Rights Reserved.
+	Portions created by the Initial Developer are Copyright (C) 2013-2020
+	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -72,7 +72,7 @@
 					$this->delete();
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
 					$x = 0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
@@ -82,36 +82,47 @@
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
-						foreach ($row['permissions'] as $permission) {
-							//set the variables
-							if ($permission['groups']) {
-								foreach ($permission['groups'] as $group) {
-									//check group protection
-									$sql = "select count(*) from v_groups ";
-									$sql .= "where group_name = :group_name ";
-									$sql .= "and group_protected = 'true'";
-									$parameters['group_name'] = $group;
-									$database = new database;
-									$num_rows = $database->select($sql, $parameters, 'column');
-									unset($sql, $parameters);
-
-									if ($num_rows == 0) {
-										//if the item uuid is not currently in the db then add it
-										$sql = "select count(*) from v_group_permissions ";
-										$sql .= "where permission_name = :permission_name ";
-										$sql .= "and group_name = :group_name ";
-										$parameters['permission_name'] = $permission['name'];
-										$parameters['group_name'] = $group;
+						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+							foreach ($row['permissions'] as $permission) {
+								//set the variables
+								if ($permission['groups']) {
+									foreach ($permission['groups'] as $group_name) {
+										//check group protection
+										$sql = "select group_uuid, group_protected from v_groups ";
+										$sql .= "where group_name = :group_name ";
+										$parameters['group_name'] = $group_name;
 										$database = new database;
-										$num_rows = $database->select($sql, $parameters, 'column');
+										$result = $database->select($sql, $parameters, 'row');
+										if (is_array($result) && @sizeof($result) != 0) {
+											$group_uuid = $result['group_uuid'];
+											$group_protected = $result['group_protected'] == 'true' ? true : false;
+										}
+										else {
+											$group_protected = false;
+										}
 										unset($sql, $parameters);
 
-										if ($num_rows == 0) {
-											//build default permissions insert array
-												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
-												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
-												$array['group_permissions'][$x]['group_name'] = $group;
-											$x++;
+										if (!$group_protected) {
+											//if the item uuid is not currently in the db then add it
+											$sql = "select count(*) from v_group_permissions ";
+											$sql .= "where permission_name = :permission_name ";
+											$sql .= "and group_name = :group_name ";
+											$parameters['permission_name'] = $permission['name'];
+											$parameters['group_name'] = $group_name;
+											$database = new database;
+											$num_rows = $database->select($sql, $parameters, 'column');
+											unset($sql, $parameters);
+
+											if ($num_rows == 0) {
+												//build default permissions insert array
+													$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+													$array['group_permissions'][$x]['permission_name'] = $permission['name'];
+													$array['group_permissions'][$x]['group_name'] = $group_name;
+													if (is_uuid($group_uuid)) {
+														$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
+													}
+												$x++;
+											}
 										}
 									}
 								}

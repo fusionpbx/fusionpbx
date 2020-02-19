@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2016
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -198,47 +198,49 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	require_once "resources/header.php";
+//include the header
 	if ($action == "update") {
 		$document['title'] = $text['title-default_setting-edit'];
 	}
 	elseif ($action == "add") {
 		$document['title'] = $text['title-default_setting-add'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-default_setting-add']."</b></td>\n";
+		echo "<b>".$text['header-default_setting-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-default_setting-edit']."</b></td>\n";
+		echo "<b>".$text['header-default_setting-edit']."</b>";
 	}
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='default_settings.php".(($search != '') ? "?search=".$search : null)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'default_settings.php'.($search != '' ? "?search=".$search : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>'submit_form();']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	if ($action == "add") {
-		echo $text['description-default_setting-add'];
+		echo $text['description-default_setting-add']."\n";
 	}
 	if ($action == "update") {
-		echo $text['description-default_setting-edit'];
+		echo $text['description-default_setting-edit']."\n";
 	}
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_category' maxlength='255' value=\"$default_setting_category\">\n";
 	echo "<br />\n";
 	echo $text['description-category']."\n";
@@ -591,6 +593,12 @@
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "recordings" && $subcategory == "storage_type" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='file'>".$text['label-file']."</option>\n";
+		echo "    	<option value='base64' ".(($default_setting_value == "base64") ? "selected='selected'" : null).">".$text['label-base64']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif (is_json($default_setting_value)) {
 		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
@@ -670,19 +678,15 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='default_setting_uuid' value='".$default_setting_uuid."'>\n";
-		echo "		<input type='hidden' name='search' value='".$search."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='default_setting_uuid' value='".escape($default_setting_uuid)."'>\n";
+		echo "<input type='hidden' name='search' value='".escape($search)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	if ($_REQUEST["id"] == '' && $_REQUEST["default_setting_category"] != '') {

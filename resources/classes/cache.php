@@ -41,8 +41,6 @@ class cache {
 						return false;
 					}
 
-				//send a custom event
-
 				//run the memcache
 					$command = "memcache set ".$key." ".$value;
 					$result = event_socket_request($fp, 'api '.$command);
@@ -67,7 +65,7 @@ class cache {
 	 * @var string $key		cache id
 	 */
 	public function get($key) {
-		
+
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
@@ -84,7 +82,6 @@ class cache {
 
 				//close event socket
 					fclose($fp);
-		
 			}
 
 		//get the file cache
@@ -126,7 +123,6 @@ class cache {
 
 				//close event socket
 					fclose($fp);
-
 			}
 
 		//cache method file
@@ -134,7 +130,7 @@ class cache {
 				//change the delimiter
 					$key = str_replace(":", ".", $key);
 
-				// connect to event socket
+				//connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
 						return false;
@@ -201,6 +197,9 @@ class cache {
 
 				//remove the cache
 					recursive_delete($_SESSION['cache']['location']['text']);
+
+				//set message
+					$result = '+OK cache flushed';
 			}
 
 		//return result

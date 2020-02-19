@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('fax_file_view')) {
@@ -43,8 +44,33 @@
 	$text = $language->get();
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = $_REQUEST["order_by"];
+	$order = $_REQUEST["order"];
+
+//get the http post data
+	if (is_array($_POST['fax_files'])) {
+		$action = $_POST['action'];
+		$fax_uuid = $_POST['fax_uuid'];
+		$box = $_POST['box'];
+		$fax_files = $_POST['fax_files'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($fax_files) && @sizeof($fax_files) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('fax_file_delete')) {
+					$obj = new fax;
+					$obj->fax_uuid = $fax_uuid;
+					$obj->box = $box;
+					$obj->delete_files($fax_files);
+				}
+				break;
+		}
+
+		header('Location: fax_files.php?orderby='.$order_by.'&order='.$order.'&id='.$fax_uuid.'&box='.$box);
+		exit;
+	}
 
 //get fax extension
 	if (is_uuid($_GET["id"])) {
@@ -162,12 +188,8 @@
 			}
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //prepare to page the results
-	$sql = "select count(*) from v_fax_files ";
+	$sql = "select count(fax_file_uuid) from v_fax_files ";
 	$sql .= "where fax_uuid = :fax_uuid ";
 	$sql .= "and domain_uuid = :domain_uuid ";
 	if ($_REQUEST['box'] == 'inbox') {
@@ -183,58 +205,80 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&id=".$_GET['id']."&box=".$_GET['box']."&order_by=".$_GET['order_by']."&order=".$_GET['order'];
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$param = "&id=".$fax_uuid."&box=".$_GET['box']."&order_by=".$_GET['order_by']."&order=".$_GET['order'];
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = str_replace('count(fax_file_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$fax_files = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters, $num_rows);
+	unset($sql, $parameters);
 
-//show the header
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' valign='top'>\n";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
 	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "			<b>".$text['header-inbox'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
+		$document['title'] = escape($fax_name)." [".escape($fax_extension)."]: ".$text['title-inbox'];
 	}
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "			<b>".$text['header-sent'].": ".escape($fax_name)." (".escape($fax_extension).")</b>\n";
+		$document['title'] = escape($fax_name)." [".escape($fax_extension)."]: ".$text['title-sent_faxes'];
 	}
-	echo "		</td>\n";
-	echo "		<td width='70%' align='right' valign='top'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
+	require_once "resources/header.php";
 
-//show the table and content
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
+		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-inbox']." (".$num_rows.")</b>";
+	}
+	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
+		echo "<b>".escape($fax_name)." [".escape($fax_extension)."]: ".$text['header-sent_faxes']." (".$num_rows.")</b>";
+	}
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'fax.php']);
+	if (permission_exists('fax_file_delete') && $fax_files) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-//show the fax files
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
-	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
+	echo "<input type='hidden' name='box' value='".escape($_REQUEST['box'])."'>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('fax_file_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($fax_files ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
+	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
 	if ($_REQUEST['box'] == 'sent') {
-		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
+		echo th_order_by('fax_destination', $text['label-fax_destination'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
 	}
-	echo "<th width=''>".$text['table-file']."</th>\n";
+	echo "<th>".$text['table-file']."</th>\n";
 	echo "<th width='10%'>".$text['table-view']."</th>\n";
-	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$_GET['id']."&box=".$_GET['box']."&page=".$_GET['page']);
-	echo "<td style='width: 25px;' class='list_control_icons'>&nbsp;</td>\n";
+	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order, "&id=".$fax_uuid."&box=".$_GET['box']."&page=".$_GET['page']);
 	echo "</tr>\n";
+
 	if (is_array($fax_files) && @sizeof($fax_files) != 0) {
-		foreach($fax_files as $row) {
+		$x = 0;
+		foreach ($fax_files as $row) {
 			$file = basename($row['fax_file_path']);
 			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
 				$file_name = substr($file, 0, (strlen($file) -4));
@@ -315,24 +359,27 @@
 					exec($cmd_tif2pdf);
 					@unlink($dir_fax_temp.'/'.$file_name."_temp.tif");
 			}
-			echo "</td></tr>";
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['fax_caller_id_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['fax_caller_id_number']))."&nbsp;</td>\n";
-			if ($_REQUEST['box'] == 'sent') {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
-			}
-			echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
+
 			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file))."\">\n";
+				$list_row_url = "fax_files.php?id=".urlencode($fax_uuid)."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file);
 			}
 			if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-				echo "	  <a href=\"fax_files.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file))."\">\n";
+				$list_row_url = "fax_files.php?id=".urlencode($fax_uuid)."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file);
 			}
-			echo "    	$file_name";
-			echo "	  </a>";
-			echo "  </td>\n";
-			echo "  <td class='".$row_style[$c]."' ondblclick=''>\n";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('fax_file_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='fax_files[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='fax_files[$x][uuid]' value='".escape($row['fax_file_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>".escape($row['fax_caller_id_name'])."&nbsp;</td>\n";
+			echo "	<td>".escape(format_phone($row['fax_caller_id_number']))."&nbsp;</td>\n";
+			if ($_REQUEST['box'] == 'sent') {
+				echo "	<td>".escape(format_phone($row['fax_destination']))."&nbsp;</td>\n";
+			}
+			echo "  <td><a href='".$list_row_url."'>".$file_name."</a></td>\n";
+			echo "  <td class='no-link'>\n";
 			if ($_REQUEST['box'] == 'inbox') {
 				$dir_fax = $dir_fax_inbox;
 			}
@@ -341,36 +388,27 @@
 			}
 			if (file_exists($dir_fax.'/'.$file_name.".pdf")) {
 				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-					echo "	  <a href=\"fax_files.php?id=".escape($fax_uuid)."&a=download&type=fax_inbox&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file_name)).".pdf\">PDF</a>\n";
+					echo "	  <a href=\"fax_files.php?id=".urlencode($fax_uuid)."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">PDF</a>\n";
 				}
 				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-					echo "	  <a href=\"fax_files.php?id=".escape($fax_uuid)."&a=download&type=fax_sent&t=bin&ext=".escape(urlencode($fax_extension))."&filename=".escape(urlencode($file_name)).".pdf\">PDF</a>\n";
+					echo "	  <a href=\"fax_files.php?id=".urlencode($fax_uuid)."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">PDF</a>\n";
 				}
 			}
-			else {
-				echo "&nbsp;\n";
-			}
-			$fax_date = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("F d Y H:i", $row['fax_epoch']) : date("F d Y H:i", $row['fax_epoch']);
-			
 			echo "  </td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$fax_date."&nbsp;</td>\n";
-			echo "	<td style='width: 25px;' class='list_control_icons'>";
-			if (permission_exists('fax_file_delete')) {
-				echo "<a href='fax_file_delete.php?id=".escape($row['fax_file_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
-			echo "	</td>\n";
+			$fax_date = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("F d Y H:i", $row['fax_epoch']) : date("F d Y H:i", $row['fax_epoch']);
+			echo "	<td>".$fax_date."&nbsp;</td>\n";
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
+			$x++;
 		}
 	}
-	unset($fax_files, $row);
+	unset($fax_files);
 
-//show the paging controls
-	echo "</table>";
-	echo "<br /><br />";
-
+	echo "</table>\n";
+	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
-	echo "<br /><br />";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
+
 
 //include the footer
 	require_once "resources/footer.php";

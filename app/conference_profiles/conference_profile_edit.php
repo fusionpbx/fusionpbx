@@ -3,9 +3,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit')) {
 		//access granted
 	}
@@ -55,6 +55,7 @@
 			if (strlen($profile_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-profile_enabled']."<br>\n"; }
 			//if (strlen($profile_description) == 0) { $msg .= $text['message-required']." ".$text['label-profile_description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-conference_profile'];
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
@@ -121,24 +122,28 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-conference_profile'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference_profile']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_profiles.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_profile']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'conference_profiles.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-profile_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='profile_name' maxlength='255' value=\"".escape($profile_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-profile_name']."\n";
@@ -151,19 +156,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='profile_enabled'>\n";
-	echo "	<option value=''></option>\n";
-	if ($profile_enabled == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($profile_enabled == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
+	echo "		<option value='true'>".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-profile_enabled']."\n";
@@ -179,19 +173,16 @@
 	echo "<br />\n";
 	echo $text['description-profile_description']."\n";
 	echo "</td>\n";
-	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "			<input type='hidden' name='conference_profile_uuid' value='".escape($conference_profile_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='conference_profile_uuid' value='".escape($conference_profile_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 	if ($action == "update") {
 		require "conference_profile_params.php";

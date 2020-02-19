@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Configurações Padrão aplicáveis à todos os domínios";
 		$apps[$x]['description']['pt-pt'] = "Configurações padrão que se aplicam a todos os domínios.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Настройки по умолчанию для всех доменов";
@@ -463,18 +463,22 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_category";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_subcategory";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the subcategory.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_value";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the value.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_order";
@@ -487,6 +491,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "default_setting_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;

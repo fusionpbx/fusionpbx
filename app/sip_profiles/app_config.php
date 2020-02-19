@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Beheer instellingen voor de SIP profielen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
@@ -95,12 +95,14 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the SIP Profile name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_hostname";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(255)";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -108,6 +110,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;

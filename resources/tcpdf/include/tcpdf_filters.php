@@ -148,7 +148,7 @@ class TCPDF_FILTERS {
 	 * @public static
 	 */
 	public static function decodeFilterASCIIHexDecode($data) {
-		// intialize string to return
+		// initialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
 		$data = preg_replace('/[\s]/', '', $data);
@@ -188,7 +188,7 @@ class TCPDF_FILTERS {
 	 * @public static
 	 */
 	public static function decodeFilterASCII85Decode($data) {
-		// intialize string to return
+		// initialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
 		$data = preg_replace('/[\s]/', '', $data);
@@ -272,14 +272,14 @@ class TCPDF_FILTERS {
 	 * @public static
 	 */
 	public static function decodeFilterLZWDecode($data) {
-		// intialize string to return
+		// initialize string to return
 		$decoded = '';
 		// data length
 		$data_length = strlen($data);
 		// convert string to binary string
 		$bitstring = '';
 		for ($i = 0; $i < $data_length; ++$i) {
-			$bitstring .= sprintf('%08b', ord($data{$i}));
+			$bitstring .= sprintf('%08b', ord($data[$i]));
 		}
 		// get the number of bits
 		$data_length = strlen($bitstring);
@@ -353,7 +353,7 @@ class TCPDF_FILTERS {
 	 * @public static
 	 */
 	public static function decodeFilterFlateDecode($data) {
-		// intialize string to return
+		// initialize string to return
 		$decoded = @gzuncompress($data);
 		if ($decoded === false) {
 			self::Error('decodeFilterFlateDecode: invalid code');
@@ -369,14 +369,14 @@ class TCPDF_FILTERS {
 	 * @public static
 	 */
 	public static function decodeFilterRunLengthDecode($data) {
-		// intialize string to return
+		// initialize string to return
 		$decoded = '';
 		// data length
 		$data_length = strlen($data);
 		$i = 0;
 		while($i < $data_length) {
 			// get current byte value
-			$byte = ord($data{$i});
+			$byte = ord($data[$i]);
 			if ($byte == 128) {
 				// a length value of 128 denote EOD
 				break;
@@ -389,7 +389,7 @@ class TCPDF_FILTERS {
 			} else {
 				// if length is in the range 129 to 255,
 				// the following single byte shall be copied 257 - length (2 to 128) times during decompression
-				$decoded .= str_repeat($data{($i + 1)}, (257 - $byte));
+				$decoded .= str_repeat($data[($i + 1)], (257 - $byte));
 				// move to next block
 				$i += 2;
 			}

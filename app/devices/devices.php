@@ -17,7 +17,8 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2015 All Rights Reserved.
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
+	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -27,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('device_view')) {
@@ -37,16 +39,41 @@
 		exit;
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get the http values and set them as variables
-	$search = $_GET["search"];
+//get posted data
+	if (is_array($_POST['devices'])) {
+		$action = $_POST['action'];
+		$devices = $_POST['devices'];
+	}
+
+//get the search
+	$search = strtolower($_REQUEST["search"]);
+
+//process the http post data by action
+	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
+		switch ($action) {
+			case 'toggle':
+				if (permission_exists('device_edit')) {
+					$obj = new device;
+					$obj->toggle($devices);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('device_delete')) {
+					$obj = new device;
+					$obj->delete($devices);
+				}
+				break;
+		}
+
+		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by and sanatize the values
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
@@ -110,12 +137,14 @@
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$param = "&search=".$search."&show=all";
-	} else {
+	}
+	else {
 		$param = "&search=".$search;
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -167,61 +196,88 @@
 
 //alternate_found
 	$device_alternate = false;
-	foreach($devices as $row) {
-		if (is_uuid($row['device_uuid_alternate'])) {
-			$device_alternate = true;
-			break;
+	if (is_array($devices)) {
+		foreach($devices as $row) {
+			if (is_uuid($row['device_uuid_alternate'])) {
+				$device_alternate = true;
+				break;
+			}
 		}
 	}
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-devices'];
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='100%' align='left' valign='top'>\n";
-	echo "			<b>".$text['header-devices']." (".$total_devices.")</b>\n";
-	echo "		</td>\n";
-	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
-	echo "			<form method='get' action=''>\n";
-	if (permission_exists('device_all')) {
-		if (isset($_GET['show']) && $_GET['show'] == 'all') {
-			echo "			<input type='hidden' name='show' value='all'>\n";
-		}
-		else {
-			echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?show=all';\">\n";
-		}
-	}
-	if (permission_exists('device_vendor_view')) {
-		echo "			<input type='button' class='btn' value='".$text['button-vendors']."' onclick=\"document.location.href='device_vendors.php';\">\n";
-	}
-	if (permission_exists('device_profile_view')) {
-		echo "			<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">\n";
-	}
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-devices']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('device_import')) {
-		echo "			<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='device_imports.php'\" value='".$text['button-import']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'device_imports.php']);
 	}
 	if (permission_exists('device_export')) {
-		echo "			<input type='button' class='btn' value='".$text['button-export']."' onclick=\"window.location.href='device_download.php'\">\n";
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'device_download.php']);
 	}
-	echo "			<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' value='".escape($search)."'>\n";
-	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</form>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2'>\n";
-	echo "			".$text['description-devices'];
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
+	if (permission_exists('device_vendor_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-vendors'],'icon'=>'fax','link'=>'device_vendors.php']);
+	}
+	if (permission_exists('device_profile_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','link'=>'device_profiles.php']);
+	}
+	$margin_left = permission_exists('device_import') || permission_exists('device_export') || permission_exists('device_vendor_view') || permission_exists('device_profile_view') ? "margin-left: 15px;" : null;
+	if (permission_exists('device_add') && (!is_numeric($_SESSION['limit']['devices']['numeric']) || ($total_devices < $_SESSION['limit']['devices']['numeric']))) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'style'=>$margin_left,'link'=>'device_edit.php']);
+		unset($margin_left);
+	}
+	if (permission_exists('device_edit') && $devices) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'style'=>$margin_left,'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		unset($margin_left);
+	}
+	if (permission_exists('device_delete') && $devices) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>$margin_left,'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		unset($margin_left);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	if (permission_exists('device_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
+		}
+	}
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
+	echo $text['description-devices']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('device_edit') || permission_exists('device_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($devices ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	if ($_GET['show'] == "all" && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
@@ -232,22 +288,16 @@
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
 	echo "<th>". $text['label-device_profiles']."</th>\n";
-	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order);
+	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
-	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
-	echo "<td class='list_control_icons'>\n";
-	if (permission_exists('device_add')) {
-		if ($_SESSION['limit']['devices']['numeric'] == '' || ($_SESSION['limit']['devices']['numeric'] != '' && $total_devices < $_SESSION['limit']['devices']['numeric'])) {
-			echo "	<a href='device_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>\n";
-		}
+	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'");
+	if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
-	else {
-		echo "	&nbsp;\n";
-	}
-	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if (is_array($devices) && @sizeof($devices) != 0) {
+		$x = 0;
 		foreach($devices as $row) {
 
 			$device_profile_name = '';
@@ -257,48 +307,65 @@
 				}
 			}
 
-			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".escape($row['device_uuid'])."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			if (permission_exists('device_edit')) {
+				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']);
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".escape($row['device_uuid'])."'>".format_mac(escape($row['device_mac_address']))."</a>" : format_mac(escape($row['device_mac_address']));
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_label'])."&nbsp;</td>\n";
-			if ($device_alternate) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-				if (strlen($row['device_uuid_alternate']) > 0) {
-					echo "		<a href='device_edit.php?id=".escape($row['device_uuid_alternate'])."' alt=''>".escape($row['alternate_label'])."</a>\n";
-				}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('device_edit') || permission_exists('device_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='devices[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='devices[$x][uuid]' value='".escape($row['device_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_vendor'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_template'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($device_profile_name)."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['device_enabled'])]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['device_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>\n";
-			if (permission_exists('device_edit')) {
-				echo "<a href='device_edit.php?id=".$row['device_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			if ($_GET['show'] == "all" && permission_exists('device_all')) {
+				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			if (permission_exists('device_delete')) {
-				echo "<a href='device_delete.php?id=".$row['device_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "	<td class='no-wrap'>";
+			echo permission_exists('device_edit') ? "<a href='".$list_row_url."'>".escape(format_mac($row['device_mac_address']))."</a>" : escape(format_mac($row['device_mac_address']));
+			echo "	</td>\n";
+			echo "	<td>".escape($row['device_label'])."&nbsp;</td>\n";
+			if ($device_alternate) {
+				if (strlen($row['device_uuid_alternate']) > 0) {
+					echo "	<td class='no-link'>\n";
+					echo "		<a href='device_edit.php?id=".urlencode($row['device_uuid_alternate'])."'>".escape($row['alternate_label'])."</a>\n";
+					echo "	</td>\n";
+				}
+				else {
+					echo "	<td>&nbsp;</td>\n";
+				}
+			}
+			echo "	<td>".escape($row['device_vendor'])."&nbsp;</td>\n";
+			echo "	<td>".escape($row['device_template'])."&nbsp;</td>\n";
+			echo "	<td>".escape($device_profile_name)."&nbsp;</td>\n";
+			if (permission_exists('device_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['device_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['device_enabled']];
 			}
 			echo "	</td>\n";
+			echo "	<td class='no-link'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
+			if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			$x++;
 		}
 	}
-	unset($devices, $row);
+	unset($devices);
 
-	echo "<tr>\n";
 	echo "</table>\n";
 	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
-	echo $paging_controls."\n";
-	echo "<br /><br />\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

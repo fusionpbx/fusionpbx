@@ -81,10 +81,12 @@
 	//prepare to page the results
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+		if (isset($_GET['page'])) {
+			$page = $_GET['page'];
+			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+			list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+			$offset = $rows_per_page * $page;
+		}
 
 	//get the list
 		$sql = str_replace('count(*)', '*', $sql);
@@ -154,7 +156,7 @@
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('device_setting_add')) {
-		echo "			<a href='device_setting_edit.php?device_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "			<a href='device_setting_edit.php?device_uuid=".urlencode($device_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";

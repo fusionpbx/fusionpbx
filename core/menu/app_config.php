@@ -20,7 +20,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Os menus podem ser personalizados com esta ferramenta.";
 		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado utilizando esta ferramenta.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Меню можно настроить с помощью этого инструмента";
@@ -102,15 +102,18 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name of the menu.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_language";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the language.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;
@@ -158,6 +161,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_title";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_item_link";
@@ -171,6 +175,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_category";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_protected";
@@ -184,6 +189,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "menu_item_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "menu_item_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_add_user";
@@ -288,10 +294,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_language";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "menu_item_title";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 
 ?>

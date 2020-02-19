@@ -45,7 +45,7 @@
 	require_once "resources/check_auth.php";
 
 //disable login message
-	if ($_GET['msg'] == 'dismiss') {
+	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);
 
 		$sql = "update v_default_settings ";
@@ -64,6 +64,7 @@
 	$text = $language->get();
 
 //load the header
+	$document['title'] = $text['title-user_dashboard'];
 	require_once "resources/header.php";
 
 //start the content
@@ -87,7 +88,7 @@
 	echo "<br />";
 
 //display login message
-	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
+	if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
@@ -377,7 +378,7 @@
 					}
 				}
 
-				$hud[$n]['html'] .= "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
+				$hud[$n]['html'] = "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
 
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$messages['new']."</span>";
 				$hud[$n]['html'] .= "<span class='hud_stat_title' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$text['label-new_messages']."</span>\n";
@@ -397,9 +398,9 @@
 
 					foreach ($messages as $voicemail_uuid => $row) {
 						if (is_uuid($voicemail_uuid)) {
-							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'";
+							$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'";
 							$hud[$n]['html'] .= "<tr ".$tr_link." style='cursor: pointer;'>";
-							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?voicemail_uuid=".$voicemail_uuid."'>".$row['ext']."</a></td>";
+							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text'><a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php?id=".(permission_exists('voicemail_view') ? $voicemail_uuid : $row['ext'])."'>".$row['ext']."</a></td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['new']."</td>";
 							$hud[$n]['html'] .= "	<td class='".$row_style[$c]." hud_text' style='text-align: center;'>".$row['total']."</td>";
 							$hud[$n]['html'] .= "</tr>";
@@ -807,7 +808,7 @@
 				$show_stat = false;
 			}
 
-			$hud[$n]['html'] .= "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
+			$hud[$n]['html'] = "<span class='hud_title' ".$onclick.">".$text['label-system_counts']."</span>";
 
 			if ($show_stat) {
 				$hud[$n]['html'] .= "<span class='hud_stat' onclick=\"$('#hud_'+".$n."+'_details').slideToggle('fast');\">".$hud_stat."</span>";
@@ -960,7 +961,7 @@
 			$row_style["0"] = "row_style0";
 			$row_style["1"] = "row_style1";
 
-			$hud[$n]['html'] .= "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
+			$hud[$n]['html'] = "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
 
 			//disk usage
 			if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
@@ -988,7 +989,7 @@
 			//pbx version
 				$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
 				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
-				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software_version()."</td>\n";
+				$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
 
@@ -1030,7 +1031,7 @@
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
 					$cut = shell_exec("/usr/bin/which cut");
-					$uptime = shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime"));
+					$uptime = trim(shell_exec(escapeshellcmd($cut." -d. -f1 /proc/uptime")));
 					$tmp['y'] = floor($uptime/60/60/24/365);
 					$tmp['d'] = $uptime/60/60/24%365;
 					$tmp['h'] = $uptime/60/60%24;
@@ -1232,12 +1233,12 @@
 		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
 			//caller id management
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
-						if (permission_exists('extension_caller_id')) {
-							$is_included = true;
-							echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
-							require_once "app/extensions/extension_dashboard.php";
-							echo "</div>";
-						}
+					if (permission_exists('extension_caller_id')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/extensions/extension_dashboard.php";
+						echo "</div>";
+					}
 				}
 		}
 
@@ -1290,13 +1291,6 @@
 		}
 		echo "</div>\n";
 	}
-
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//set the title
-	$document['title'] = $text['title-user_dashboard'];
 
 //show the footer
 	require_once "resources/footer.php";
