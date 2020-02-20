@@ -281,9 +281,11 @@ if (!class_exists('gateways')) {
 									}
 
 								//send the api command to stop the gateway
-									$cmd = 'api sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
-									$response = event_socket_request($fp, $cmd);
-									unset($cmd);
+									if ($fp) {
+										$cmd = 'api sofia profile '.$gateway['profile'].' killgw '.$gateway_uuid;
+										$response = event_socket_request($fp, $cmd);
+										unset($cmd);
+									}
 
 								//build delete array
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $gateway_uuid;
@@ -305,17 +307,19 @@ if (!class_exists('gateways')) {
 									save_gateway_xml();
 
 								//clear the cache
-									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-									$hostname = trim(event_socket_request($fp, 'api switchname'));
-									$cache = new cache;
-									$cache->delete("configuration:sofia.conf:".$hostname);
-
-								//create the event socket connection
 									if (!$fp) {
 										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 									}
+									if ($fp) {
+										$hostname = trim(event_socket_request($fp, 'api switchname'));
+										$cache = new cache;
+										$cache->delete("configuration:sofia.conf:".$hostname);
+									}
 
 								//rescan the sip profile to look for new or stopped gateways
+									if (!$fp) {
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									}
 									if ($fp) {
 										//get distinct profiles from gateways
 											foreach ($gateways as $gateway) {

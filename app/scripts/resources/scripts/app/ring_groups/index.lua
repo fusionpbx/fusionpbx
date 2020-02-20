@@ -368,7 +368,7 @@
 			---check to see if the new destination is forwarded - third forward
 				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
 				if (api:executeString(cmd) == "true") then
-					--get the toll_allow var	
+					--get the toll_allow var
 						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var toll_allow";
 						toll_allow = api:executeString(cmd);
 						--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
@@ -378,7 +378,7 @@
 						destination_number = api:executeString(cmd);
 						--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 						count = count + 1;
-						if (count < 5) then
+						if (count < 3) then
 							count, destination_number = get_forward_all(count, destination_number, domain_name);
 						end
 				end
@@ -547,7 +547,7 @@
 								else
 									new_key = #destinations + 1;
 								end
-								
+
 								--Calculate the destination_timeout for follow-me destinations.
 								--The call should honor ring group timeouts with rg delays, follow-me timeouts and follow-me delays factored in.
 								--Destinations with a timeout of 0 or negative numbers should be ignored. 
@@ -890,9 +890,9 @@
 								app_data = app_data .. dial_string;
 								freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 								session:execute("bridge", app_data);
-				
+
 								if (session:getVariable("originate_disposition") == "NO_ANSWER" ) then
-							    	    timeout = timeout + destination_timeout;
+									timeout = timeout + destination_timeout;
 								end
 
 							--increment the value of x

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -35,7 +35,7 @@
 		$display_type = 'text'; //html, text
 	}
 	else {
-		include "root.php";
+		require_once "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('upgrade_schema') || permission_exists('upgrade_source') || if_group("superadmin")) {

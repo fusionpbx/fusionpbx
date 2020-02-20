@@ -17,16 +17,16 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the messages class
-if (!class_exists('messages')) {
-	class messages {
+//define the databases class
+if (!class_exists('databases')) {
+	class databases {
 
 		/**
 		 * declare private variables
@@ -44,12 +44,12 @@ if (!class_exists('messages')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'messages';
-				$this->app_uuid = '4a20815d-042c-47c8-85df-085333e79b87';
-				$this->permission_prefix = 'message_';
-				$this->list_page = 'messages_log.php';
-				$this->table = 'messages';
-				$this->uuid_prefix = 'message_';
+				$this->app_name = 'databases';
+				$this->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+				$this->permission_prefix = 'database_';
+				$this->list_page = 'databases.php';
+				$this->table = 'databases';
+				$this->uuid_prefix = 'database_';
 
 		}
 
@@ -88,18 +88,11 @@ if (!class_exists('messages')) {
 							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-									$array['message_media'][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array['message_media'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
 							}
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = new permissions;
-									$p->add('message_media_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -108,18 +101,84 @@ if (!class_exists('messages')) {
 									$database->delete($array);
 									unset($array);
 
-								//revoke temporary permissions
-									$p->delete('message_media_delete', 'temp');
-
 								//set message
 									message::add($text['message-delete']);
 							}
 							unset($records);
 					}
 			}
-		} //method
+		}
 
-	} //class
+		/**
+		 * copy records
+		 */
+		public function copy($records) {
+			if (permission_exists($this->permission_prefix.'add')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//copy the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//get checked records
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+
+						//create insert array from existing data
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select * from v_".$this->table." ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $x => $row) {
+
+										//copy data
+											$array[$this->table][$x] = $row;
+
+										//overwrite
+											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
+											$array[$this->table][$x]['database_description'] = trim($row['database_description'].' ('.$text['label-copy'].')');
+
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//save the changes and set the message
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-copy']);
+
+							}
+							unset($records);
+					}
+
+			}
+		}
+
+	}
 }
 
 ?>

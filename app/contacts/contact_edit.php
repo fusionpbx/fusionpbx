@@ -475,11 +475,22 @@
 				]);
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
 			if (permission_exists('contact_delete')) {
+				echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
 				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit();"])]);
 			}
-			else {
+			else if (
+				permission_exists('contact_phone_delete') ||
+				permission_exists('contact_address_delete') ||
+				permission_exists('contact_email_delete') ||
+				permission_exists('contact_url_delete') ||
+				permission_exists('contact_relation_delete') ||
+				permission_exists('contact_note_delete') ||
+				permission_exists('contact_time_delete') ||
+				permission_exists('contact_setting_delete') ||
+				permission_exists('contact_attachment_delete')
+				) {
+				echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
 				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])]);
 			}
 		}

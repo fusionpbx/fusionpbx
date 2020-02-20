@@ -101,6 +101,11 @@ class authentication {
 				}
 			}
 
+		//add user logs
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/user_logs/app_config.php")) {
+				user_logs::add($result);
+			}
+
 		//return the result
 			return $result;
 	}

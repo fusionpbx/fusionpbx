@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -58,12 +58,10 @@
 	ini_set('max_execution_time',7200);
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$from_row = check_str($_POST["from_row"]);
-	$order_by = check_str($_POST["order_by"]);
-	$order = check_str($_POST["order"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
+	$action = $_POST["action"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -75,7 +73,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_imports')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -157,7 +155,7 @@
 			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
 			echo "<div class='action_bar' id='action_bar'>\n";
-			echo "	<div class='heading'><b>".$text['header-import']."</b></div>\n";
+			echo "	<div class='heading'><b>".$text['header-device_import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'device_imports.php']);
 			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import']]);
@@ -180,8 +178,8 @@
 				echo $line_field;
 				echo "	</td>\n";
 				echo "	<td width='70%' class='vtable' align='left'>\n";
-				echo "    	<select class='formfld' style='' name='fields[$x]'>\n";
-				echo "    		<option value=''></option>\n";
+				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
+				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
@@ -204,6 +202,7 @@
 			}
 
 			echo "</table>\n";
+			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
 			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
@@ -390,7 +389,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";

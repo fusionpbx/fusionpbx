@@ -37,6 +37,7 @@
 		public $voicemail_message_uuid;
 		public $order_by;
 		public $order;
+		public $type;
 
 		/**
 		 * declare private variables
@@ -676,7 +677,7 @@
 				}
 				if ($file_path != '') {
 					$fd = fopen($file_path, "rb");
-					if ($_GET['t'] == "bin") {
+					if ($this->type == 'bin') {
 						header("Content-Type: application/force-download");
 						header("Content-Type: application/octet-stream");
 						header("Content-Type: application/download");

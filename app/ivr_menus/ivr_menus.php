@@ -190,9 +190,6 @@
 			if (permission_exists('ivr_menu_edit')) {
 				$list_row_url = "ivr_menu_edit.php?id=".urlencode($row['ivr_menu_uuid']);
 			}
-			if (permission_exists('ivr_menu_edit')) {
-				$tr_link = "href='ivr_menu_edit.php?id=".escape($row['ivr_menu_uuid'])."'";
-			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit') || permission_exists('ivr_menu_delete')) {
 				echo "	<td class='checkbox'>\n";
