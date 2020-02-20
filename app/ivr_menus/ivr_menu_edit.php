@@ -126,6 +126,7 @@
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
 			$ivr_menu_enabled = $_POST["ivr_menu_enabled"];
 			$ivr_menu_description = $_POST["ivr_menu_description"];
+			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"];
 			$dialplan_uuid = $_POST["dialplan_uuid"];
 
 		//set the context for users that do not have the permission
@@ -374,6 +375,18 @@
 					$p->delete("dialplan_add", "temp");
 					$p->delete("dialplan_edit", "temp");
 
+				//remove checked options
+					if (
+						$action == 'update'
+						&& permission_exists('ivr_menu_option_delete')
+						&& is_array($ivr_menu_options_delete)
+						&& @sizeof($ivr_menu_options_delete) != 0
+						) {
+						$obj = new ivr_menu;
+						$obj->ivr_menu_uuid = $ivr_menu_uuid;
+						$obj->delete_options($ivr_menu_options_delete);
+					}
+
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
@@ -460,10 +473,12 @@
 	if (count($ivr_menu_options) == 0) {
 		$rows = $_SESSION['ivr_menu']['option_add_rows']['numeric'];
 		$id = 0;
+		$show_option_delete = false;
 	}
 	if (count($ivr_menu_options) > 0) {
 		$rows = $_SESSION['ivr_menu']['option_edit_rows']['numeric'];
 		$id = count($ivr_menu_options)+1;
+		$show_option_delete = true;
 	}
 	for ($x = 0; $x < $rows; $x++) {
 		$ivr_menu_options[$id]['ivr_menu_option_digits'] = '';
@@ -919,23 +934,25 @@
 	echo "		<td class='vtable' align='left'>";
 	echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
-	echo "					<td class='vtable'>".$text['label-option']."</td>\n";
+	echo "					<td class='vtable' style='text-align: center;'>".$text['label-option']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-order']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-description']."</td>\n";
-	echo "					<td></td>\n";
+	if ($show_option_delete) {
+		echo "					<td class='vtable'>".$text['label-delete']."</td>\n";
+	}
 	echo "				</tr>\n";
 	if (is_array($ivr_menu_options)) {
-		$c = 0;
+		$x = 0;
 		foreach($ivr_menu_options as $field) {
 
 			//add the primary key uuid
 			if (strlen($field['ivr_menu_option_uuid']) > 0) {
-				echo "	<input name='ivr_menu_options[".$c."][ivr_menu_option_uuid]' type='hidden' value=\"".escape($field['ivr_menu_option_uuid'])."\">\n";
+				echo "	<input name='ivr_menu_options[".$x."][ivr_menu_option_uuid]' type='hidden' value=\"".escape($field['ivr_menu_option_uuid'])."\">\n";
 			}
 
-			echo "<td class='formfld' align='left'>\n";
-			echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='".escape($field['ivr_menu_option_digits'])."'>\n";
+			echo "<td class='formfld' align='center'>\n";
+			echo "  <input class='formfld' style='width: 50px; text-align: center;' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_digits]' maxlength='255' value='".escape($field['ivr_menu_option_digits'])."'>\n";
 			echo "</td>\n";
 
 			echo "<td class='formfld' align='left' nowrap='nowrap'>\n";
@@ -943,17 +960,17 @@
 			if (strlen($field['ivr_menu_option_action'].$field['ivr_menu_option_param']) > 0) {
 				$destination_action = $field['ivr_menu_option_action'].':'.$field['ivr_menu_option_param'];
 			} else { $destination_action = ''; }
-			echo $destination->select('ivr', 'ivr_menu_options['.$c.'][ivr_menu_option_param]', $destination_action);
+			echo $destination->select('ivr', 'ivr_menu_options['.$x.'][ivr_menu_option_param]', $destination_action);
 			unset($destination_action);
 			echo "</td>\n";
 
 			echo "<td class='formfld' align='left'>\n";
-			echo "	<select name='ivr_menu_options[".$c."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
+			echo "	<select name='ivr_menu_options[".$x."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
 			//echo "	<option></option>\n";
 			if (strlen(htmlspecialchars($field['ivr_menu_option_order']))> 0) {
 				if (strlen($field['ivr_menu_option_order']) == 1) { $field['ivr_menu_option_order'] = "00".$field['ivr_menu_option_order']; }
 				if (strlen($field['ivr_menu_option_order']) == 2) { $field['ivr_menu_option_order'] = "0".$field['ivr_menu_option_order']; }
-				echo "	<option selected='yes' value='".escape($field['ivr_menu_option_order'])."'>".escape($field['ivr_menu_option_order'])."</option>\n";
+				echo "	<option value='".escape($field['ivr_menu_option_order'])."'>".escape($field['ivr_menu_option_order'])."</option>\n";
 			}
 			$i=0;
 			while($i<=999) {
@@ -966,21 +983,22 @@
 			echo "</td>\n";
 
 			echo "<td class='formfld' align='left'>\n";
-			echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_description]' maxlength='255' value=\"".$field['ivr_menu_option_description']."\">\n";
+			echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_description]' maxlength='255' value=\"".$field['ivr_menu_option_description']."\">\n";
 			echo "</td>\n";
 
-			echo "					<td class='list_control_icons'>";
-			if (strlen($field['ivr_menu_option_uuid']) > 0) {
-				//echo "						<a href='ivr_menu_option_edit.php?id=".$field['ivr_menu_option_uuid']."&ivr_menu_uuid=".$field['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>";
-				echo "						<a href='ivr_menu_option_delete.php?id=".escape($field['ivr_menu_option_uuid'])."&ivr_menu_uuid=".escape($field['ivr_menu_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo "<td style='text-align: center;'>";
+			if (is_uuid($field['ivr_menu_option_uuid'])) {
+				echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true'>\n";
+				echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
 			}
 			else {
-				echo "						&nbsp;\n";
+				echo "&nbsp;\n";
 			}
-			echo "					</td>\n";
-			echo "				</tr>\n";
+			echo "</td>\n";
 
-			$c++;
+			echo "</tr>\n";
+
+			$x++;
 		}
 	}
 	unset($sql, $result);
