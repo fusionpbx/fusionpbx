@@ -2784,7 +2784,7 @@ $text['label-device_key_label']['ru-ru'] = "Метка";
 $text['label-device_key_label']['sv-se'] = "Etikett";
 $text['label-device_key_label']['uk-ua'] = "";
 
-$text['label-device_key_icon']['en-us'] = "ICON";
+$text['label-device_key_icon']['en-us'] = "Icon";
 $text['label-device_key_icon']['ar-eg'] = "";
 $text['label-device_key_icon']['de-at'] = "";
 $text['label-device_key_icon']['de-ch'] = "";

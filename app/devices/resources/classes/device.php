@@ -31,6 +31,7 @@ include "root.php";
 		public $domain_uuid;
 		public $template_dir;
 		public $device_vendor_uuid;
+		public $device_profile_uuid;
 
 		/**
 		 * declare private variables
@@ -45,11 +46,11 @@ include "root.php";
 		private $toggle_values;
 
 		public function __construct() {
-			//require_once "resources/classes/database.php";
 
 			//assign private variables
 				$this->app_name = 'devices';
 				$this->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+
 		}
 
 		public function __destruct() {
@@ -535,6 +536,98 @@ include "root.php";
 
 							}
 							unset($records);
+					}
+			}
+		}
+
+		public function delete_profile_keys($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'device_profile_key_';
+				$this->list_page = 'device_profile_edit.php?id='.$this->device_profile_uuid;
+				$this->table = 'device_profile_keys';
+				$this->uuid_prefix = 'device_profile_key_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+								}
+							}
+
+						//execute delete
+							if (is_array($array) && @sizeof($array) != 0) {
+								$database = new database;
+								$database->app_name = $this->app_name;
+								$database->app_uuid = $this->app_uuid;
+								$database->delete($array);
+								unset($array);
+							}
+							unset($records);
+
+					}
+			}
+		}
+
+		public function delete_profile_settings($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'device_profile_setting_';
+				$this->list_page = 'device_profile_edit.php?id='.$this->device_profile_uuid;
+				$this->table = 'device_profile_settings';
+				$this->uuid_prefix = 'device_profile_setting_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+								}
+							}
+
+						//execute delete
+							if (is_array($array) && @sizeof($array) != 0) {
+								$database = new database;
+								$database->app_name = $this->app_name;
+								$database->app_uuid = $this->app_uuid;
+								$database->delete($array);
+								unset($array);
+							}
+							unset($records);
+
 					}
 			}
 		}
