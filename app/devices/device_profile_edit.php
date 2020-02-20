@@ -61,6 +61,8 @@
 			$device_profile_settings = $_POST["device_profile_settings"];
 			$device_profile_enabled = $_POST["device_profile_enabled"];
 			$device_profile_description = $_POST["device_profile_description"];
+			$device_profile_keys_delete = $_POST["device_profile_keys_delete"];
+			$device_profile_settings_delete = $_POST["device_profile_settings_delete"];
 
 		//set the domain_uuid for users that do not have the permission
 			if (permission_exists('device_profile_domain')) {
@@ -159,6 +161,30 @@
 			$database->app_uuid = 'bb2531c3-97e6-428f-9a19-cbac1b96f5b7';
 			$database->save($array);
 
+		//remove checked keys
+			if (
+				$action == 'update'
+				&& permission_exists('device_profile_key_delete')
+				&& is_array($device_profile_keys_delete)
+				&& @sizeof($device_profile_keys_delete) != 0
+				) {
+				$obj = new device;
+				$obj->device_profile_uuid = $device_profile_uuid;
+				$obj->delete_profile_keys($device_profile_keys_delete);
+			}
+
+		//remove checked settings
+			if (
+				$action == 'update'
+				&& permission_exists('device_profile_setting_delete')
+				&& is_array($device_profile_settings_delete)
+				&& @sizeof($device_profile_settings_delete) != 0
+				) {
+				$obj = new device;
+				$obj->device_profile_uuid = $device_profile_uuid;
+				$obj->delete_profile_settings($device_profile_settings_delete);
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -170,7 +196,7 @@
 				header('Location: device_profile_edit.php?id='.$device_profile_uuid);
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -259,7 +285,7 @@
 	$x = is_array($device_profile_keys) ? count($device_profile_keys) : 0;
 	$device_profile_keys[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_keys[$x]['device_profile_uuid'] = $device_profile_uuid;
-	$device_profile_keys[$x]['device_profile_key_uuid'] = uuid();
+	$device_profile_keys[$x]['device_profile_key_uuid'] = '';
 	$device_profile_keys[$x]['profile_key_category'] = '';
 	$device_profile_keys[$x]['profile_key_id'] = '';
 	$device_profile_keys[$x]['profile_key_vendor'] = '';
@@ -293,7 +319,7 @@
 	$x = is_array($device_profile_settings) ? count($device_profile_settings) : 0;
 	$device_profile_settings[$x]['domain_uuid'] = $domain_uuid;
 	$device_profile_settings[$x]['device_profile_uuid'] = $device_profile_uuid;
-	$device_profile_settings[$x]['device_profile_setting_uuid'] = uuid();
+	$device_profile_settings[$x]['device_profile_setting_uuid'] = '';
 	$device_profile_settings[$x]['profile_setting_name'] = '';
 	$device_profile_settings[$x]['profile_setting_value'] = '';
 	$device_profile_settings[$x]['profile_setting_enabled'] = '';
@@ -363,7 +389,9 @@
 		}
 		echo "			<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-		echo "			<td></td>\n";
+		if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+			echo "			<td class='vtable'>".$text['label-delete']."</td>\n";
+		}
 		echo "		</tr>\n";
 	}
 
@@ -397,7 +425,9 @@
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-			echo "				<td>&nbsp;</td>\n";
+			if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+				echo "				<td class='vtable'>".$text['label-delete']."</td>\n";
+			}
 			echo "			</tr>\n";
 		}
 
@@ -405,106 +435,31 @@
 		echo "		<tr>\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
-		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_key_uuid]' value=\"".escape($row["device_profile_key_uuid"])."\">\n";
+		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_key_uuid]' value=\"".(is_uuid($row["device_profile_key_uuid"]) ? $row["device_profile_key_uuid"] : uuid())."\">\n";
 		echo "			<td>\n";
 		echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_category]'>\n";
-		if ($row['profile_key_category'] == "line") {
-			echo "					<option value='line' selected='selected'>".$text['label-line']."</option>\n";
-		}
-		else {
-			echo "					<option value='line'>".$text['label-line']."</option>\n";
-		}
+		echo "					<option value='line' ".($row['profile_key_category'] == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
 		if ($row['device_key_vendor'] !== "polycom") { 
-			if ($row['profile_key_category'] == "memory") {
-				echo "					<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-			}
-			else {
-				echo "					<option value='memory'>".$text['label-memory']."</option>\n";
-			}
+			echo "					<option value='memory' ".($row['profile_key_category'] == "memory" ? "selected='selected'" : null).">".$text['label-memory']."</option>\n";
 		}
-		if ($row['profile_key_category'] == "programmable") {
-			echo "					<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
-		}
-		else {
-			echo "					<option value='programmable'>".$text['label-programmable']."</option>\n";
-		}
+		echo "					<option value='programmable' ".($row['profile_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
 		if ($row['device_key_vendor'] !== "polycom") { 
 			if (strlen($row['device_key_vendor']) == 0) {
-				if ($row['profile_key_category'] == "expansion") {
-					echo "					<option value='expansion' selected='selected'>".$text['label-expansion']." 1</option>\n";
-				}
-				else {
-					echo "					<option value='expansion'>".$text['label-expansion']." 1</option>\n";
-				}
-				if ($row['profile_key_category'] == "expansion-2") {
-					echo "					<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
-				}
-				else {
-					echo "					<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
-				}
-				if ($row['profile_key_category'] == "expansion-3") {
-					echo "					<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
-				}
-				else {
-					echo "					<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
-				}
-				if ($row['profile_key_category'] == "expansion-4") {
-					echo "					<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
-				}
-				else {
-					echo "					<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
-				}
-				if ($row['profile_key_category'] == "expansion-5") {
-					echo "					<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
-				}
-				else {
-					echo "					<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
-				}
-				if ($row['profile_key_category'] == "expansion-6") {
-					echo "					<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
-				}
-				else {
-					echo "					<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
-				}
+				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+				echo "					<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
+				echo "					<option value='expansion-3' ".($row['profile_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
+				echo "					<option value='expansion-4' ".($row['profile_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
+				echo "					<option value='expansion-5' ".($row['profile_key_category'] == "expansion-5" ? "selected='selected'" : null).">".$text['label-expansion']." 5</option>\n";
+				echo "					<option value='expansion-6' ".($row['profile_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 			}
 			else {
-				if (strtolower($row['device_key_vendor']) == "cisco" or strtolower($row['device_key_vendor']) == "yealink") {
-					if ($row['profile_key_category'] == "expansion-1" || $row['profile_key_category'] == "expansion") {
-						echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
-					}
-					if ($row['profile_key_category'] == "expansion-2") {
-						echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
-					}
-					if ($row['profile_key_category'] == "expansion-3") {
-						echo "	<option value='expansion-3' selected='selected'>".$text['label-expansion']." 3</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-3'>".$text['label-expansion']." 3</option>\n";
-					}
-					if ($row['profile_key_category'] == "expansion-4") {
-						echo "	<option value='expansion-4' selected='selected'>".$text['label-expansion']." 4</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-4'>".$text['label-expansion']." 4</option>\n";
-					}
-					if ($row['profile_key_category'] == "expansion-5") {
-						echo "	<option value='expansion-5' selected='selected'>".$text['label-expansion']." 5</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-5'>".$text['label-expansion']." 5</option>\n";
-					}
-					if ($row['profile_key_category'] == "expansion-6") {
-						echo "	<option value='expansion-6' selected='selected'>".$text['label-expansion']." 6</option>\n";
-					}
-					else {
-						echo "	<option value='expansion-6'>".$text['label-expansion']." 6</option>\n";
-					}
+				if (strtolower($row['device_key_vendor']) == "cisco" || strtolower($row['device_key_vendor']) == "yealink") {
+					echo "	<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" || $row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+					echo "	<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
+					echo "	<option value='expansion-3' ".($row['profile_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
+					echo "	<option value='expansion-4' ".($row['profile_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
+					echo "	<option value='expansion-5' ".($row['profile_key_category'] == "expansion-5" ? "selected='selected'" : null).">".$text['label-expansion']." 5</option>\n";
+					echo "	<option value='expansion-6' ".($row['profile_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 				}
 			}
 		}
@@ -584,18 +539,8 @@
 			echo "			<td>\n";
 			echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_protected]'>\n";
 			echo "					<option value=''></option>\n";
-			if ($row['profile_key_protected'] == "true") {
-				echo "					<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-			}
-			else {
-				echo "					<option value='true'>".$text['label-true']."</option>\n";
-			}
-			if ($row['profile_key_protected'] == "false") {
-				echo "					<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-			}
-			else {
-				echo "					<option value='false'>".$text['label-false']."</option>\n";
-			}
+			echo "					<option value='true' ".($row['profile_key_protected'] == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "					<option value='false' ".($row['profile_key_protected'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
@@ -605,9 +550,14 @@
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_icon]' maxlength='255' value=\"".escape($row["profile_key_icon"])."\">\n";
 		echo "			</td>\n";
-		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "				<a href=\"device_profile_delete.php?device_profile_key_uuid=".escape($row['device_profile_key_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
-		echo "			</td>\n";
+		if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+			echo "			<td style='text-align: center;'>\n";
+			if (is_uuid($row["device_profile_key_uuid"])) {
+				echo "				<input type='checkbox' name='device_profile_keys_delete[".$x."][checked]' value='true'>\n";
+				echo "				<input type='hidden' name='device_profile_keys_delete[".$x."][uuid]' value='".escape($row['device_profile_key_uuid'])."' />\n";
+			}
+			echo "			</td>\n";
+		}
 		echo "		</tr>\n";
 
 		//set the previous vendor
@@ -633,14 +583,16 @@
 	echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
 	echo "			<th class='vtablereq'>".$text['label-enabled']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-	echo "			<td></td>\n";
+	if ($action == 'update' && permission_exists('device_profile_setting_delete')) {
+		echo "			<td class='vtable'>".$text['label-delete']."</td>\n";
+	}
 	echo "		</tr>\n";
 	$x = 0;
 	foreach($device_profile_settings as $row) {
 		echo "		<tr>\n";
 		echo "			<input type='hidden' name='device_profile_settings[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
-		echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_setting_uuid]' value=\"".escape($row["device_profile_setting_uuid"])."\">\n";
+		echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_setting_uuid]' value=\"".(is_uuid($row["device_profile_setting_uuid"]) ? $row["device_profile_setting_uuid"] : uuid())."\">\n";
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_name]' maxlength='255' value=\"".escape($row["profile_setting_name"])."\">\n";
 		echo "			</td>\n";
@@ -650,26 +602,21 @@
 		echo "			<td>\n";
 		echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
 		echo "					<option value=''></option>\n";
-		if ($row['profile_setting_enabled'] == "true") {
-			echo "					<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-		}
-		else {
-			echo "					<option value='true'>".$text['label-true']."</option>\n";
-		}
-		if ($row['profile_setting_enabled'] == "false") {
-			echo "					<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "					<option value='false'>".$text['label-false']."</option>\n";
-		}
+		echo "					<option value='true' ".($row['profile_setting_enabled'] == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
 		echo "			</td>\n";
-		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		echo "				<a href=\"device_profile_delete.php?device_profile_setting_uuid=".escape($row['device_profile_setting_uuid'])."&amp;a=delete\" alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">".$v_link_label_delete."</a>\n";
-		echo "			</td>\n";
+		if ($action == 'update' && permission_exists('device_profile_setting_delete')) {
+			echo "			<td style='text-align: center;'>\n";
+			if (is_uuid($row["device_profile_setting_uuid"])) {
+				echo "				<input type='checkbox' name='device_profile_settings_delete[".$x."][checked]' value='true'>\n";
+				echo "				<input type='hidden' name='device_profile_settings_delete[".$x."][uuid]' value='".escape($row['device_profile_setting_uuid'])."' />\n";
+			}
+			echo "			</td>\n";
+		}
 		echo "		</tr>\n";
 		$x++;
 	}
@@ -686,19 +633,9 @@
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select class='formfld' name='domain_uuid'>\n";
-		if (strlen($domain_uuid) == 0) {
-			echo "		<option value='' selected='selected'>".$text['select-global']."</option>\n";
-		}
-		else {
-			echo "		<option value=''>".$text['label-global']."</option>\n";
-		}
+		echo "		<option value='' ".(!is_uuid($domain_uuid) ? "selected='selected'" : null).">".$text['select-global']."</option>\n";
 		foreach ($_SESSION['domains'] as $row) {
-			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
-			}
-			else {
-				echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
-			}
+			echo "		<option value='".$row['domain_uuid']."' ".($row['domain_uuid'] == $domain_uuid ? "selected='selected'" : null).">".escape($row['domain_name'])."</option>\n";
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
@@ -732,15 +669,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	echo "<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
