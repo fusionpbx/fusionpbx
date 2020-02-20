@@ -990,15 +990,12 @@
 		echo "	".$text['label-detail_action']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "			<table width='52%' border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
 		$order = 10;
 		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
 			foreach($dialplan_details as $row) {
 				if ($row["dialplan_detail_tag"] != "condition") {
 					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
-					echo "				<tr>\n";
-					echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 					if (strlen($row['dialplan_detail_uuid']) > 0) {
 						echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
 					}
@@ -1008,21 +1005,13 @@
 					$label = explode("XML", $data);
 					$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 					$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-					echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
-					echo "					</td>\n";
-					echo "					<td class='list_control_icons' style='width: 25px;'>";
-					if (strlen($row['destination_uuid']) > 0) {
-						echo "				<a href='destination_delete.php?id=".escape($row['destination_uuid'])."&destination_uuid=".escape($row['destination_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
-					}
-					echo "					</td>\n";
-					echo "				</tr>\n";
+					echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action)."<br />\n";
 				}
 				$order = $order + 10;
 				$x++;
 			}
 		}
 		unset($dialplan_details, $row);
-		echo "			</table>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
