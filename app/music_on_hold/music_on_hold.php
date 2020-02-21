@@ -76,8 +76,7 @@
 			$stream_path = str_replace('..', '', $stream_path);
 
 		//get the file and sanitize it
-			$stream_file = base64_decode($_GET['file']);
-			$stream_file = basename($_GET['file']);
+			$stream_file = basename(base64_decode($_GET['file']));
 			$search = array('..', '/', ':');
 			$stream_file = str_replace($search, '', $stream_file);
 
