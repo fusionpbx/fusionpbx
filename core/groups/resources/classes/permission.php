@@ -39,14 +39,19 @@
 						$x++;
 					}
 
+				//initialize array
+					$group_name_array = array();
+
 				//restore default permissions
 					$x = 0;
 					foreach ($apps as $row) {
 						if (is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
 							foreach ($row['permissions'] as $permission) {
-								foreach ($permission['groups'] as $group_name) {
-									if (!in_array($group_name, $group_name_array)) {
-										$group_name_array[] = $group_name;
+								if (is_array($permission['groups'])) {
+									foreach ($permission['groups'] as $group_name) {
+										if (is_array($group_name_array) || !in_array($group_name, $group_name_array)) {
+											$group_name_array[] = $group_name;
+										}
 									}
 								}
 							}
