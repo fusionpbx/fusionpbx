@@ -305,7 +305,7 @@
 	if (is_array($contacts) && @sizeof($contacts) != 0) {
 		$x = 0;
 		foreach($contacts as $row) {
-			if (permission_exists('contact_edit')) {
+			if (permission_exists('contact_edit') || permission_exists('contact_view')) {
 				$list_row_url = "contact_edit.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
