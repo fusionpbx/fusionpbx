@@ -119,7 +119,7 @@ protocols.flow = function(event)
 	if expires and expires > 0 then
 		local call_flow_uuid, call_flow_status = find_call_flow(to)
 		if call_flow_uuid then
-			log.noticef("Find call flow: %s staus: %s", to, tostring(call_flow_status))
+			log.noticef("Find call flow: %s status: %s", to, tostring(call_flow_status))
 			presence_in.turn_lamp(call_flow_status == "false", to, call_flow_uuid)
 		else
 			log.warningf("Can not find call flow: %s", to)
@@ -137,7 +137,7 @@ protocols.dnd = function(event)
 		user = user or proto
 		local dnd_status = find_dnd(user)
 		if dnd_status then
-			log.noticef("Find DND: %s staus: %s", to, tostring(dnd_status))
+			log.noticef("Find DND: %s status: %s", to, tostring(dnd_status))
 			presence_in.turn_lamp(dnd_status == "true", to)
 		else
 			log.warningf("Can not find DND: %s", to)
