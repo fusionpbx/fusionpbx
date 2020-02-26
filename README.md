@@ -25,7 +25,7 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 Software Requirements
 --------------------------------------
 
-- FusionPBX will run on Debian 9, Ubuntu 18.04 LTS, FreeBSD 10 & 11, CentOS, and more.
+- FusionPBX will run on Debian 9 & 10, Ubuntu 18.04 LTS, FreeBSD 10 & 11, CentOS, and more.
 - [FusionPBX Installer](https://www.fusionpbx.com/download.php)
 
 How to Install FusionPBX
@@ -58,7 +58,7 @@ wget -O - https://raw.githubusercontent.com/fusionpbx/fusionpbx-install.sh/maste
 cd /usr/src/fusionpbx-install.sh/centos && ./install.sh
 ```
 
-This install script is designed to be an fast, simple, and in a modular way to install FusionPBX. Start with a minimal install of Debian 9 with SSH enabled. Run the following commands under root. The script installs FusionPBX, FreeSWITCH release package and its dependencies, IPTables, Fail2ban, NGINX, PHP FPM and PostgreSQL.
+This install script is designed to be an fast, simple, and in a modular way to install FusionPBX. Start with a minimal install of Debian 10 with SSH enabled. Run the following commands under root. The script installs FusionPBX, FreeSWITCH release package and its dependencies, IPTables, Fail2ban, NGINX, PHP FPM and PostgreSQL.
 
 Some installations require special considerations. Visit https://github.com/fusionpbx/fusionpbx-install.sh readme section for more details.
 
@@ -67,7 +67,7 @@ If you find a bug sign up for an account on [www.fusionpbx.com](https://www.fusi
 
 ---
 
-<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
+<a href="url"><img src="https://www.fusionpbx.com/app/account/resources/images/member_emblem_xl_silver.png" align="center" height="350" width="240" ></a>
 
 
 FusionPBX Members
@@ -141,6 +141,27 @@ The **Green** level Membership allows one individual access to all the following
 ---
 ---
 
+Blue Level
+------------
+
+<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
+
+The Blue level Membership allows one individual access to the Green level benefits, plus includes OVER AN HOUR of Official Support each month. FusionPBX is critical component of your business, so access to support when you need it is crucial.
+
+* News & Updates
+* Official Training Videos
+* Member Documentation
+* Feature Videos
+* Advanced Bug Reporting
+* Monthly Continuing Education
+* Rebranding (White Label)
+* Rebranding Training
+
+* Up to 1.5 HOURS of Official Support Each Month
+* Additional Member Applications (Coming Soon)
+
+**Price $300.00 USD Monthly**
+
 Purple Level
 -------------
 
@@ -201,10 +222,10 @@ The **Gold** level Membership includes all the benefits of the Green and Purple 
 ---
 ---
 
-**Becoming a FusionPBX Member requires a ONE (1) YEAR COMMITMENT (to be understood as 12 consecutive months) from the date you join. Failure to maintain a valid payment method during this period may result in your membership being permanently terminated, and all support options forfeited. Following the commitment term, your membership will continue automatically on a monthly basis, but you may cancel at any time. Note: If you have paid for, and participated in, an Official FusionPBX Training course, the standard 1-year commitment does not apply. **
+**Becoming a FusionPBX Member requires a ONE (1) YEAR COMMITMENT (to be understood as 12 consecutive months) from the date you join. Failure to maintain a valid payment method during this period may result in your membership being permanently terminated, and all support options forfeited. Following the commitment term, your membership will continue automatically on a monthly basis, but you may cancel at any time. Note: If you have paid for, and participated in, an Official FusionPBX Training course, the standard 1-year commitment does not apply.**
 
-
-
+---
+---
 
 
 Free Support
