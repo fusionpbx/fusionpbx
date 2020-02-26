@@ -785,16 +785,26 @@
 
 					case 'hour': //hours of day
 						for (h = 0; h <= 23; h++) {
-							sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
-							sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+							<?php if ($_SESSION['domain']['time_format']['text'] == '24h') { ?>
+								sel_start.options[sel_start.options.length] = new Option(pad(h, 2), h);
+								sel_stop.options[sel_stop.options.length] = new Option(pad(h, 2), h);
+							<?php } else { ?>
+								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+							<?php } ?>
 						}
 						break;
 
 					case 'time-of-day': //time of day
 						for (h = 0; h <= 23; h++) {
 							for (m = 0; m <= 59; m += 1) {
-								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
-								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+								<?php if ($_SESSION['domain']['time_format']['text'] == '24h') { ?>
+									sel_start.options[sel_start.options.length] = new Option(pad(h, 2) + ':' + pad(m, 2), pad(h, 2) + ':' + pad(m, 2));
+									sel_stop.options[sel_stop.options.length] = new Option(pad(h, 2) + ':' + pad(m, 2), pad(h, 2) + ':' + pad(m, 2));
+								<?php } else { ?>
+									sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
+									sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+								<?php } ?>
 							}
 						}
 						//h = 23;
