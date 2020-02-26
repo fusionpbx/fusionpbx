@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -409,19 +409,21 @@
 	if ($transaction_type == "delete") {
 		echo "<br /><br />\n";
 		echo "<table width='100%'>\n";
-		foreach ($before as $table_name => $rows) {
-			echo "	<tr>\n";
-			echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
-			echo "	</tr>\n";
-			foreach ($rows as $row) {
-				foreach ($row as $key => $value) {
-					echo "	<tr class='list-row'>\n";
-					echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
+		if (is_array($before)) {
+			foreach ($before as $table_name => $rows) {
+				echo "	<tr>\n";
+				echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
+				echo "	</tr>\n";
+				foreach ($rows as $row) {
+					foreach ($row as $key => $value) {
+						echo "	<tr class='list-row'>\n";
+						echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
+						echo "	</tr>\n";
+					}
+					echo "	<tr>\n";
+					echo "		<td colspan='3'><br /><br /></td>\n";
 					echo "	</tr>\n";
 				}
-				echo "	<tr>\n";
-				echo "		<td colspan='3'><br /><br /></td>\n";
-				echo "	</tr>\n";
 			}
 		}
 	}
