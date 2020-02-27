@@ -54,6 +54,24 @@
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($_POST['device_profile_uuid'])) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $_POST['device_profile_uuid'];
+
+				switch ($_POST['action']) {
+					case 'delete':
+						if (permission_exists('device_profile_delete')) {
+							$obj = new device;
+							$obj->delete_profiles($array);
+						}
+						break;
+				}
+
+				header('Location: device_profiles.php');
+				exit;
+			}
+
 		//get http post variables and set them to php variables
 			$device_profile_uuid = $_POST["device_profile_uuid"];
 			$device_profile_name = $_POST["device_profile_name"];
@@ -344,8 +362,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-device_profile']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'device_profiles.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'link'=>'device_profile_copy.php?id='.urlencode($device_profile_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'device_profiles.php']);
+	$button_margin = 'margin-left: 15px;';
+	if (permission_exists('device_profile_add') && $action == 'update') {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>$button_margin,'link'=>'device_profile_copy.php?id='.urlencode($device_profile_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
+	if (permission_exists('device_profile_delete') && $action == 'update') {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -389,7 +415,7 @@
 		}
 		echo "			<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "			<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-		if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+		if (is_array($device_profile_keys) && @sizeof($device_profile_keys) > 1 && permission_exists('device_profile_key_delete')) {
 			echo "			<td class='vtable'>".$text['label-delete']."</td>\n";
 		}
 		echo "		</tr>\n";
@@ -425,7 +451,7 @@
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
-			if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+			if (is_array($device_profile_keys) && @sizeof($device_profile_keys) > 1 && is_uuid($row["device_profile_key_uuid"]) && permission_exists('device_profile_key_delete')) {
 				echo "				<td class='vtable'>".$text['label-delete']."</td>\n";
 			}
 			echo "			</tr>\n";
@@ -550,10 +576,10 @@
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_icon]' maxlength='255' value=\"".escape($row["profile_key_icon"])."\">\n";
 		echo "			</td>\n";
-		if ($action == 'update' && permission_exists('device_profile_key_delete')) {
+		if (is_array($device_profile_keys) && @sizeof($device_profile_keys) > 1 && permission_exists('device_profile_key_delete')) {
 			echo "			<td style='text-align: center;'>\n";
 			if (is_uuid($row["device_profile_key_uuid"])) {
-				echo "				<input type='checkbox' name='device_profile_keys_delete[".$x."][checked]' value='true'>\n";
+				echo "				<input type='checkbox' name='device_profile_keys_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
 				echo "				<input type='hidden' name='device_profile_keys_delete[".$x."][uuid]' value='".escape($row['device_profile_key_uuid'])."' />\n";
 			}
 			echo "			</td>\n";
@@ -581,9 +607,9 @@
 	echo "		<tr>\n";
 	echo "			<th class='vtablereq'>".$text['label-device_setting_name']."</th>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
-	echo "			<th class='vtablereq'>".$text['label-enabled']."</th>\n";
+	echo "			<td class='vtable'>".$text['label-enabled']."</td>\n";
 	echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-	if ($action == 'update' && permission_exists('device_profile_setting_delete')) {
+	if (is_array($device_profile_settings) && @sizeof($device_profile_settings) > 1 && permission_exists('device_profile_setting_delete')) {
 		echo "			<td class='vtable'>".$text['label-delete']."</td>\n";
 	}
 	echo "		</tr>\n";
@@ -601,18 +627,17 @@
 		echo "			</td>\n";
 		echo "			<td>\n";
 		echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='true' ".($row['profile_setting_enabled'] == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "					<option value='true'>".$text['label-true']."</option>\n";
 		echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "				</select>\n";
 		echo "			</td>\n";
 		echo "			<td>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
 		echo "			</td>\n";
-		if ($action == 'update' && permission_exists('device_profile_setting_delete')) {
+		if (is_array($device_profile_settings) && @sizeof($device_profile_settings) > 1 && permission_exists('device_profile_setting_delete')) {
 			echo "			<td style='text-align: center;'>\n";
 			if (is_uuid($row["device_profile_setting_uuid"])) {
-				echo "				<input type='checkbox' name='device_profile_settings_delete[".$x."][checked]' value='true'>\n";
+				echo "				<input type='checkbox' name='device_profile_settings_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
 				echo "				<input type='hidden' name='device_profile_settings_delete[".$x."][uuid]' value='".escape($row['device_profile_setting_uuid'])."' />\n";
 			}
 			echo "			</td>\n";
