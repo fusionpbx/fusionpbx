@@ -486,6 +486,17 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			document.getElementById('btn_search').style.display = '';
 		}
 
+		function edit_delete_action() {
+			var checkboxes = document.getElementsByClassName('chk_delete');
+			if (document.getElementById('btn_delete') && checkboxes.length > 0) {
+				var checkbox_checked = false;
+				for (var i = 0; i < checkboxes.length; ++i) {
+					if (checkboxes[i].checked) { checkbox_checked = true; }
+				}
+				document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+			}
+		}
+
 		function modal_close() {
 			document.location.href='#';
 		}
