@@ -14,6 +14,8 @@
 					ringback = trim(api:execute("global_getvar", "ringback"));
 				--convert to tone_stream
 					ringback = "tone_stream://" .. ringback .. ";loops=-1";
+			elseif (ringback == "silence") then
+				ringback = "silence"
 			elseif (ringback:match("%${.*}")) then
 				--strip the ${ and }
 					ringback = ringback:gsub("%${", "");
