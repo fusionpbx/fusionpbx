@@ -211,7 +211,7 @@
 			//remove presets not checked, restructure variable array
 			if (is_array($_REQUEST['variable']['preset'])) {
 				foreach ($_REQUEST['variable']['preset'] as $group_id => $conditions) {
-					if (!in_array($group_id, $_REQUEST['preset'])) {
+					if (!is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) {
 						unset($_REQUEST['variable']['preset'][$group_id]);
 						unset($_REQUEST['value'][$group_id]);
 						unset($_REQUEST['dialplan_action'][$group_id]);
@@ -268,8 +268,8 @@
 			if (is_array($_REQUEST['variable'])) {
 				foreach ($_REQUEST['variable'] as $group_id => $meh) {
 					if (
-						(in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
-						(!in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '')
+						(is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
+						((!is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) && $_REQUEST['dialplan_action'][$group_id] == '')
 						) {
 						unset($_REQUEST['variable'][$group_id]);
 						unset($_REQUEST['value'][$group_id]);
@@ -291,7 +291,7 @@
 					$group_conditions_exist[$group_id] = false;
 
 					//determine if preset
-					$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
+					$is_preset = (is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 					//set group and order number
 					$dialplan_detail_group_user = $_POST["group_$group_id"];
