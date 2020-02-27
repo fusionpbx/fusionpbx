@@ -67,7 +67,7 @@ If you find a bug sign up for an account on [www.fusionpbx.com](https://www.fusi
 
 ---
 
-<a href="url"><img src="https://www.fusionpbx.com/app/account/resources/images/member_emblem_xl_silver.png" align="center" height="350" width="240" ></a>
+<a href="url"><img src="https://www.fusionpbx.com/app/account/resources/images/member_emblem_xl_blue.png" align="center" height="350" width="240" ></a>
 
 
 FusionPBX Members
