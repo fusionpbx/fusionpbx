@@ -79,9 +79,9 @@
 	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && is_uuid($ivr_menu_uuid)) {
+			if ($_POST['action'] != '' && is_uuid($_POST['ivr_menu_uuid'])) {
 				$array[0]['checked'] = 'true';
-				$array[0]['uuid'] = $ivr_menu_uuid;
+				$array[0]['uuid'] = $_POST['ivr_menu_uuid'];
 
 				switch ($_POST['action']) {
 					case 'copy':
@@ -554,18 +554,10 @@
 
 //show the content
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
-	echo "\n";
-	echo "function enable_change(enable_over) {\n";
-	echo "	var endis;\n";
-	echo "	endis = !(document.iform.enable.checked || enable_over);\n";
-	echo "	document.iform.range_from.disabled = endis;\n";
-	echo "	document.iform.range_to.disabled = endis;\n";
-	echo "}\n";
-	echo "\n";
-	echo "function show_advanced_config() {\n";
-	echo "	$('#show_advanced_box').slideToggle();\n";
-	echo "	$('#show_advanced').slideToggle();\n";
-	echo "}\n";
+	echo "	function show_advanced_config() {\n";
+	echo "		$('#show_advanced_box').slideToggle();\n";
+	echo "		$('#show_advanced').slideToggle();\n";
+	echo "	}\n";
 	echo "</script>";
 
 	echo "<form method='post' name='frm'>\n";
@@ -580,7 +572,7 @@
 		unset($button_margin);
 	}
 	if (permission_exists('ivr_menu_delete') && $action == "update") {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
 		unset($button_margin);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px']);
@@ -938,8 +930,8 @@
 	echo "					<td class='vtable'>".$text['label-destination']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-order']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-description']."</td>\n";
-	if ($show_option_delete) {
-		echo "					<td class='vtable'>".$text['label-delete']."</td>\n";
+	if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
+		echo "					<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
 	}
 	echo "				</tr>\n";
 	if (is_array($ivr_menu_options)) {
@@ -986,15 +978,14 @@
 			echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_description]' maxlength='255' value=\"".$field['ivr_menu_option_description']."\">\n";
 			echo "</td>\n";
 
-			echo "<td style='text-align: center;'>";
-			if (is_uuid($field['ivr_menu_option_uuid'])) {
-				echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true'>\n";
-				echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
+			if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
+				echo "<td style='text-align: center;'>";
+				if (is_uuid($field['ivr_menu_option_uuid'])) {
+					echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+					echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
+				}
+				echo "</td>\n";
 			}
-			else {
-				echo "&nbsp;\n";
-			}
-			echo "</td>\n";
 
 			echo "</tr>\n";
 
