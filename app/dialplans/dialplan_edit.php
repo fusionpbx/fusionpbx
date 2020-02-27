@@ -108,16 +108,40 @@
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['dialplan_uuid'];
 
+				$list_page = 'dialplans.php'.(is_uuid($app_uuid) ? '?app_uuid='.urlencode($app_uuid) : null);
+
 				switch ($_POST['action']) {
-					case 'delete':
-						if (permission_exists('dialplan_delete')) {
+					case 'copy':
+						if (
+							permission_exists('dialplan_add') ||
+							permission_exists('inbound_route_add') ||
+							permission_exists('outbound_route_add') ||
+							permission_exists('fifo_add') ||
+							permission_exists('time_condition_add')
+							) {
 							$obj = new dialplan;
+							$obj->app_uuid = $app_uuid;
+							$obj->list_page = $list_page;
+							$obj->copy($array);
+						}
+						break;
+					case 'delete':
+						if (
+							permission_exists('dialplan_delete') ||
+							permission_exists('inbound_route_delete') ||
+							permission_exists('outbound_route_delete') ||
+							permission_exists('fifo_delete') ||
+							permission_exists('time_condition_delete')
+							) {
+							$obj = new dialplan;
+							$obj->app_uuid = $app_uuid;
+							$obj->list_page = $list_page;
 							$obj->delete($array);
 						}
 						break;
 				}
 
-				header('Location: dialplans.php');
+				header('Location: '.$list_page);
 				exit;
 			}
 
@@ -444,7 +468,7 @@
 			permission_exists('fifo_add') ||
 			permission_exists('time_condition_add')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'style'=>$button_margin,'link'=>'dialplan_copy.php?id='.urlencode($dialplan_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+			echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
 			unset($button_margin);
 		}
 		if (
