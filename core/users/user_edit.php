@@ -125,7 +125,7 @@
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
-			if (permission_exists('contact_add') && $action == 'edit') {
+			if (permission_exists('contact_edit') && $action == 'edit') {
 				$contact_uuid = $_POST["contact_uuid"];
 			}
 			else if (permission_exists('contact_add') && $action == 'add') {
