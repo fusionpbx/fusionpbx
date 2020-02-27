@@ -1145,7 +1145,7 @@ include "root.php";
 						$this->permission_prefix = 'time_condition_';
 					}
 					else {
-						//use default in constructor
+						$this->permission_prefix = 'dialplan_detail_';
 					}
 
 				if (permission_exists($this->permission_prefix.'delete')) {
