@@ -912,7 +912,10 @@
 		}
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
-			echo "				<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
+			echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_lines', 'delete_toggle_lines');\" onmouseout=\"swap_display('delete_label_lines', 'delete_toggle_lines');\">\n";
+			echo "					<span id='delete_label_lines'>".$text['label-delete']."</span>\n";
+			echo "					<span id='delete_toggle_lines'><input type='checkbox' id='checkbox_all_lines' name='checkbox_all' onclick=\"edit_all_toggle('lines');\"></span>\n";
+			echo "				</td>\n";
 		}
 		echo "			</tr>\n";
 
@@ -1056,7 +1059,7 @@
 				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
 					echo "			<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_line_uuid'])) {
-						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
 						echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
 					}
 					echo "			</td>\n";
@@ -1127,7 +1130,10 @@
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 			if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-				echo "				<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
+				echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
+				echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
+				echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+				echo "				</td>\n";
 			}
 			echo "			</tr>\n";
 		}
@@ -1152,7 +1158,10 @@
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
 					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-						echo "				<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
+						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
+						echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
+						echo "					<span id='delete_toggle_keys'><input type='checkbox' id='checkbox_all_keys' name='checkbox_all' onclick=\"edit_all_toggle('keys');\"></span>\n";
+						echo "				</td>\n";
 					}
 					echo "			</tr>\n";
 				}
@@ -1363,7 +1372,7 @@
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 					echo "				<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_key_uuid'])) {
-						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys' onclick=\"edit_delete_action('keys');\">\n";
 						echo "					<input type='hidden' name='device_keys_delete[".$x."][uuid]' value='".escape($row['device_key_uuid'])."' />\n";
 					}
 				}
@@ -1394,7 +1403,10 @@
 		echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
 		if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
-			echo "				<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
+			echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_settings', 'delete_toggle_settings');\" onmouseout=\"swap_display('delete_label_settings', 'delete_toggle_settings');\">\n";
+			echo "					<span id='delete_label_settings'>".$text['label-delete']."</span>\n";
+			echo "					<span id='delete_toggle_settings'><input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"edit_all_toggle('settings');\"></span>\n";
+			echo "				</td>\n";
 		}
 		echo "			</tr>\n";
 
@@ -1427,19 +1439,8 @@
 
 				echo "<td align='left'>\n";
 				echo "  <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
-				echo "  <option value=''></option>\n";
-				if ($row['device_setting_enabled'] == "true") {
-					echo "  <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-				}
-				else {
-					echo "  <option value='true'>".$text['label-true']."</option>\n";
-				}
-				if ($row['device_setting_enabled'] == "false") {
-					echo "  <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-				}
-				else {
-					echo "  <option value='false'>".$text['label-false']."</option>\n";
-				}
+				echo "  	<option value='true'>".$text['label-true']."</option>\n";
+				echo "  	<option value='false' ".($row['device_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 				echo "  </select>\n";
 				echo "</td>\n";
 
@@ -1450,7 +1451,7 @@
 				if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
 					echo "<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_setting_uuid'])) {
-						echo "	<input type='checkbox' name='device_settings_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+						echo "	<input type='checkbox' name='device_settings_delete[".$x."][checked]' value='true' class='chk_delete checkbox_settings' onclick=\"edit_delete_action('settings');\">\n";
 						echo "	<input type='hidden' name='device_settings_delete[".$x."][uuid]' value='".escape($row['device_setting_uuid'])."' />\n";
 					}
 					echo "</td>\n";
