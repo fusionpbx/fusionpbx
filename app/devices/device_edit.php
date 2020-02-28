@@ -755,37 +755,47 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'devices.php']);
-	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
-		echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
-	}
-	echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".urlencode($sip_profile_name)."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
-	if (permission_exists("device_files")) {
-		//get the template directory
-			$prov = new provision;
-			$prov->domain_uuid = $domain_uuid;
-			$template_dir = $prov->template_dir;
-			$files = glob($template_dir.'/'.$device_template.'/*');
-		//add file buttons and the file list
-			echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
-			echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
-			echo "			<option value=''>".$text['label-download']."</option>\n";
-			foreach ($files as $file) {
-				//format the mac address and
-					$format = new provision();
-					$mac = $format->format_mac($device_mac_address, $device_vendor);
-				//render the file name
-					$file_name = str_replace("{\$mac}", $mac, basename($file));
-				//add the select option
-					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
-			}
-			echo "		</select>";
-	}
-	if (permission_exists('device_add') && $action == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }"]);
-	}
-	if (permission_exists('device_delete') && $action == 'update') {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'devices.php']);
+	if ($action == 'update') {
+		$button_margin = 'margin-left: 15px;';
+		if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
+			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>$button_margin,'onclick'=>"$('#qr_code_container').fadeIn(400);"]);
+			unset($button_margin);
+		}
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".urlencode($sip_profile_name)."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
+		unset($button_margin);
+		if (permission_exists("device_files")) {
+			//get the template directory
+				$prov = new provision;
+				$prov->domain_uuid = $domain_uuid;
+				$template_dir = $prov->template_dir;
+				$files = glob($template_dir.'/'.$device_template.'/*');
+			//add file buttons and the file list
+				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
+				echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
+				echo "			<option value=''>".$text['label-download']."</option>\n";
+				foreach ($files as $file) {
+					//format the mac address and
+						$format = new provision();
+						$mac = $format->format_mac($device_mac_address, $device_vendor);
+					//render the file name
+						$file_name = str_replace("{\$mac}", $mac, basename($file));
+					//add the select option
+						echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
+				}
+				echo "		</select>";
+		}
+		if (permission_exists('device_add')) {
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }"]);
+		}
+		if (
+			permission_exists('device_delete') ||
+			permission_exists('device_line_delete') ||
+			permission_exists('device_key_delete') ||
+			permission_exists('device_setting_delete')
+			) {
+			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
