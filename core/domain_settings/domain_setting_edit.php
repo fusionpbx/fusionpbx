@@ -167,8 +167,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
 							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_setting_value;
 							$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
-							$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
 							$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
+							$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
 							$p->add('dialplan_detail_add', 'temp');
 						}
 						if (is_array($array) && sizeof($array) != 0) {
