@@ -2485,6 +2485,22 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		white-space: nowrap;
 		}
 
+/* EDIT ********************************************************************************/
+
+	td.edit_delete_checkbox_all {
+		text-align: center;
+		width: 50px;
+		}
+
+	td.edit_delete_checkbox_all input[type=checkbox] {
+		vertical-align: middle;
+		margin-top: -2px;
+		}
+
+	td.edit_delete_checkbox_all > span:nth-child(2) {
+		display: none;
+		}
+
 /* CURSORS ***********************************************************************/
 
 	.cursor-default { cursor: default; }
