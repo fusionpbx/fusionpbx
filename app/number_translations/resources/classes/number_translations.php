@@ -41,6 +41,11 @@ if (!class_exists('number_translations')) {
 		private $toggle_values;
 
 		/**
+		 * declare public variables
+		 */
+		public $number_translation_uuid;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
@@ -181,7 +186,7 @@ if (!class_exists('number_translations')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('number_translation_details_delete', 'temp');
+									$p->add('number_translation_detail_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -191,10 +196,58 @@ if (!class_exists('number_translations')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('number_translation_details_delete', 'temp');
+									$p->delete('number_translation_detail_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		public function delete_details($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'number_translation_detail_';
+				$this->table = 'number_translation_details';
+				$this->uuid_prefix = 'number_translation_detail_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['number_translation_uuid'] = $this->number_translation_uuid;
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
 							}
 							unset($records);
 					}
