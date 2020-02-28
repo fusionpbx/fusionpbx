@@ -702,7 +702,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0' style='margin: -2px; border-spacing: 2px;'>\n";
 
 				$x = 0;
-				foreach($details as $group) {
+				foreach($details as $g => $group) {
 
 					if ($x != 0) {
 						echo "<tr><td colspan='7'><br><br></td></tr>";
@@ -717,7 +717,10 @@
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-group']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-order']."</td>\n";
 					if (permission_exists('dialplan_detail_delete')) {
-						echo "<td class='vncellcol' style='text-align: center;'>".$text['label-delete']."</td>\n";
+						echo "<td class='vncellcol edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\" onmouseout=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\">\n";
+						echo "	<span id='delete_label_group_".$g."'>".$text['label-delete']."</span>\n";
+						echo "	<span id='delete_toggle_group_".$g."'><input type='checkbox' id='checkbox_all_group_".$g."' name='checkbox_all' onclick=\"edit_all_toggle('group_".$g."');\"></span>\n";
+						echo "</td>\n";
 					}
 					echo "</tr>\n";
 
@@ -936,7 +939,7 @@
 								if (permission_exists('dialplan_detail_delete')) {
 									echo "<td style='text-align: center;'>";
 									if (is_uuid($dialplan_detail_uuid)) {
-										echo "	<input type='checkbox' name='dialplan_details_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+										echo "	<input type='checkbox' name='dialplan_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_group_".$g."' onclick=\"edit_delete_action('group_".$g."');\">\n";
 										echo "	<input type='hidden' name='dialplan_details_delete[".$x."][uuid]' value='".escape($dialplan_detail_uuid)."' />\n";
 									}
 									echo "	</td>\n";
