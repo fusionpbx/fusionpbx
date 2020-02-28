@@ -169,7 +169,6 @@
 								session:setVariable("last_busy_dialed_extension", dialed_extension);
 								if (forward_busy_destination == nil) then
 									freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding on busy to hangup\n");
-									session:hangup("USER_BUSY");
 								else
 									freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding on busy to: " .. forward_busy_destination .. "\n");
 									session:transfer(forward_busy_destination, "XML", context);
@@ -180,10 +179,10 @@
 
 								--handle USER_BUSY - hangup
 								freeswitch.consoleLog("NOTICE", "[failure_handler] forward on busy with empty destination: hangup(USER_BUSY)\n");
-								session:hangup("USER_BUSY");
 							end
 						end
 					end
+					session:hangup("USER_BUSY");
 
 			elseif (originate_disposition == "NO_ANSWER") or (sip_code == "sip:480") then
 
