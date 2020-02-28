@@ -475,12 +475,14 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 		function edit_all_toggle(modifier) {
 			var checkboxes = document.getElementsByClassName('checkbox_'+modifier);
 			var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
-			if (document.getElementById('btn_delete') && checkboxes.length > 0) {
+			if (checkboxes.length > 0) {
 				for (var i = 0; i < checkboxes.length; ++i) {
 					checkboxes[i].checked = checkbox_checked;
 				}
+				if (document.getElementById('btn_delete')) {
+					document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+				}
 			}
-			document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
 		}
 
 		function edit_delete_action(modifier) {
