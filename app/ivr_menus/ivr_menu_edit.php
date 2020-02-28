@@ -931,7 +931,13 @@
 	echo "					<td class='vtable'>".$text['label-order']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-description']."</td>\n";
 	if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
-		echo "					<td class='vtable' style='text-align: center;'>".$text['label-delete']."</td>\n";
+		echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_options', 'delete_toggle_options');\" onmouseout=\"swap_display('delete_label_options', 'delete_toggle_options');\">\n";
+		echo "						<span id='delete_label_options'>".$text['label-delete']."</span>\n";
+		echo "						<span id='delete_toggle_options'><input type='checkbox' id='checkbox_all_options' name='checkbox_all' onclick=\"edit_all_toggle('options');\"></span>\n";
+// 		echo "					<td class='vtable' style='text-align: center;'>\n";
+// 		echo "						<label for='checkbox_all_options' style='margin: 0; cursor: pointer;' title=\"".$text['button-toggle']."\">".$text['label-delete']."</label>";
+// 		echo "						<input type='checkbox' id='checkbox_all_options' name='checkbox_all' style='display: none;' onchange=\"edit_all_toggle('options');\">";
+		echo "					</td>\n";
 	}
 	echo "				</tr>\n";
 	if (is_array($ivr_menu_options)) {
@@ -981,7 +987,7 @@
 			if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
 				echo "<td style='text-align: center;'>";
 				if (is_uuid($field['ivr_menu_option_uuid'])) {
-					echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true' class='chk_delete' onclick='edit_delete_action();'>\n";
+					echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true' class='chk_delete checkbox_options' onclick=\"edit_delete_action('options');\">\n";
 					echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
 				}
 				echo "</td>\n";
