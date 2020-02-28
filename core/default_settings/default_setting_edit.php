@@ -111,35 +111,64 @@
 
 				//update switch timezone variables
 				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
-					//get the action
-						$sql = "select count(*) from v_vars ";
-						$sql .= "where var_name = 'timezone' ";
+					//get the dialplan_uuid
+						$sql = "select dialplan_uuid from v_dialplans ";
+						$sql .= "where app_uuid = 'd49ee3bd-5085-4619-a2f9-2b62c8c461c5' ";
 						$database = new database;
-						$num_rows = $database->select($sql, null, 'column');
+						$dialplan_uuid = $database->select($sql, null, 'column');
 						unset($sql);
-					//update
-						if ($num_rows != 0) {
-							$sql = "update v_vars ";
-							$sql .= "set var_value = :default_setting_value ";
-							$sql .= "where var_name = 'timezone' ";
-							$parameters['default_setting_value'] = $default_setting_value;
-						}
-					//insert
-						else {
-							$sql = "insert into v_vars ";
-							$sql .= "(var_uuid, var_name, var_value, var_category, var_command, var_enabled) ";
-							$sql .= "values ('".uuid()."', 'timezone', :default_setting_value, 'Defaults', 'set', 'true'); ";
-							$parameters['default_setting_value'] = $default_setting_value;
-						}
-					//execute
+
+					//get the action
+						$sql = "select dialplan_detail_uuid from v_dialplan_details ";
+						$sql .= "where dialplan_uuid = :dialplan_uuid ";
+						$sql .= "and dialplan_detail_tag = 'action' ";
+						$sql .= "and dialplan_detail_type = 'set' ";
+						$sql .= "and dialplan_detail_data like 'timezone=%' ";
+						$parameters['dialplan_uuid'] = $dialplan_uuid;
 						$database = new database;
-						$database->app_name = 'default_settings';
-						$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-						$database->execute($sql, $parameters);
+						$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
+						$detail_action = is_uuid($dialplan_detail_uuid) ? 'update' : 'add';
 						unset($sql, $parameters);
 
-					//synchronize the configuration
-						save_var_xml();
+					//update the timezone
+						$p = new permissions;
+						if ($detail_action == "update") {
+							$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
+							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$default_setting_value;
+							$p->add('dialplan_detail_edit', 'temp');
+						}
+						else {
+							$array['dialplan_details'][0]['dialplan_detail_uuid'] = uuid();
+							$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
+							$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
+							$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
+							$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$default_setting_value;
+							$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
+							$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
+							$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
+							$p->add('dialplan_detail_add', 'temp');
+						}
+						if (is_array($array) && sizeof($array) != 0) {
+							$database = new database;
+							$database->app_name = 'domain_settings';
+							$database->app_uuid = 'd49ee3bd-5085-4619-a2f9-2b62c8c461c5';
+							$database->save($array);
+							unset($array);
+
+							$p->delete('dialplan_detail_edit', 'temp');
+							$p->delete('dialplan_detail_add', 'temp');
+						}
+
+					//update the dialplan xml
+						$dialplans = new dialplan;
+						$dialplans->source = "details";
+						$dialplans->destination = "database";
+						$dialplans->uuid = $dialplan_uuid;
+						$dialplans->xml();
+
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("dialplan:".$domain_name);
 				}
 
 				//build the array of data
