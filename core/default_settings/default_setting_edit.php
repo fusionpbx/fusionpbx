@@ -150,8 +150,8 @@
 						}
 						if (is_array($array) && sizeof($array) != 0) {
 							$database = new database;
-							$database->app_name = 'domain_settings';
-							$database->app_uuid = 'd49ee3bd-5085-4619-a2f9-2b62c8c461c5';
+							$database->app_name = 'default_settings';
+							$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 							$database->save($array);
 							unset($array);
 
