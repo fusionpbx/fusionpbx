@@ -88,7 +88,7 @@
                 $y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f65a2b0c-dbae-4ca0-aadc-93d9646b568f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_doNotDisturb";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_do_not_disturb";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
