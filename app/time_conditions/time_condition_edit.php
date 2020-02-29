@@ -135,7 +135,7 @@
 						$dialplan_context = $row["dialplan_context"];
 					}
 					unset($sql, $parameters, $row);
-					
+
 				}
 			}
 
@@ -211,7 +211,7 @@
 			//remove presets not checked, restructure variable array
 			if (is_array($_REQUEST['variable']['preset'])) {
 				foreach ($_REQUEST['variable']['preset'] as $group_id => $conditions) {
-					if (!in_array($group_id, $_REQUEST['preset'])) {
+					if (!is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) {
 						unset($_REQUEST['variable']['preset'][$group_id]);
 						unset($_REQUEST['value'][$group_id]);
 						unset($_REQUEST['dialplan_action'][$group_id]);
@@ -268,8 +268,8 @@
 			if (is_array($_REQUEST['variable'])) {
 				foreach ($_REQUEST['variable'] as $group_id => $meh) {
 					if (
-						(in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
-						(!in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '')
+						(is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '' && $_REQUEST['dialplan_anti_action'] == '') ||
+						((!is_array($_REQUEST['preset']) || !in_array($group_id, $_REQUEST['preset'])) && $_REQUEST['dialplan_action'][$group_id] == '')
 						) {
 						unset($_REQUEST['variable'][$group_id]);
 						unset($_REQUEST['value'][$group_id]);
@@ -291,7 +291,7 @@
 					$group_conditions_exist[$group_id] = false;
 
 					//determine if preset
-					$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
+					$is_preset = (is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
 					//set group and order number
 					$dialplan_detail_group_user = $_POST["group_$group_id"];
@@ -515,10 +515,8 @@
 			}
 
 		//redirect the browser
-			if (is_uuid($dialplan_uuid)) {
-				header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
-				exit;
-			}
+			header("Location: time_condition_edit.php?id=".$dialplan_uuid.($app_uuid != '' ? "&app_uuid=".$app_uuid : null));
+			exit;
 
 	}
 
@@ -559,7 +557,7 @@
 			$sql .= "	) ";
 			$sql .= "	or ( ";
 			$sql .= "		dialplan_detail_tag = 'action' ";
-			//$sql .= "		and dialplan_detail_data not like 'preset=%' ";
+			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
 			$sql .= "	) ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
@@ -586,25 +584,25 @@
 				}
 			}
 
-		//find the selected presets
-			if (is_array($available_presets)) {
-				foreach ($available_presets as $preset_number => &$preset) {
-					if (is_array($preset)) {
-						foreach ($preset as $preset_name => $preset_variables) {
-							$preset_checked[$preset_name] = 'false';
-							if (is_array($dialplan_details)) {
-								foreach ($dialplan_details as $row) {
-									if ($row['dialplan_detail_tag'] == 'action') {
-										if ($row['dialplan_detail_data'] == 'preset='.$preset_name) {
-											$preset_checked[$preset_name] = 'true';
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+// 		//find the selected presets
+// 			if (is_array($available_presets)) {
+// 				foreach ($available_presets as $preset_number => &$preset) {
+// 					if (is_array($preset)) {
+// 						foreach ($preset as $preset_name => $preset_variables) {
+// 							$preset_checked[$preset_name] = 'false';
+// 							if (is_array($dialplan_details)) {
+// 								foreach ($dialplan_details as $row) {
+// 									if ($row['dialplan_detail_tag'] == 'action') {
+// 										if ($row['dialplan_detail_data'] == 'preset='.$preset_name) {
+// 											$preset_checked[$preset_name] = 'true';
+// 										}
+// 									}
+// 								}
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
 
 		//loop through available presets (if any)
 			if (is_array($available_presets)) {
@@ -623,7 +621,7 @@
 									}
 									//if all preset variables found, then condition is a preset
 									if ($matches == sizeof($preset_variables)) {
-										
+
 										$current_presets[$preset_number] = $group_id;
 									}
 								}
@@ -906,7 +904,7 @@ echo "<div class='action_bar' id='action_bar'>\n";
 echo "	<div class='heading'><b>".$text['title-time_condition']."</b></div>\n";
 echo "	<div class='actions'>\n";
 echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
-if (if_group("superadmin") && $action == 'update') {
+if ($action == 'update' && permission_exists('dialplan_edit')) {
 	echo button::create(['type'=>'button','label'=>$text['button-dialplan'],'icon'=>'list','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/dialplans/dialplan_edit.php?id='.urlencode($dialplan_uuid).'&app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
 }
 echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
@@ -1054,7 +1052,8 @@ if ($action == 'update') {
 			foreach ($available_presets as $preset_number => $preset) {
 				if (is_array($preset)) {
 					foreach ($preset as $preset_name => $preset_variables) {
-						$checked = (is_array($current_presets) && $preset_checked[$preset_name] == 'true') ? "checked='checked'" : null;
+						$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
+// 						$checked = (is_array($current_presets) && $preset_checked[$preset_name] == 'true') ? "checked='checked'" : null;
 
 						$preset_group_id = ($checked) ? $current_presets[$preset_number] : $preset_group_id = $preset_number * 5 + 100;
 						if (strlen($text['label-preset_'.$preset_name]) > 0) {
@@ -1083,7 +1082,7 @@ if ($action == 'update') {
 						echo "	</table>";
 						echo "	<br />";
 						echo "</div>";
-/*****/
+
 						if ($action == 'update' && is_array($current_presets) && $current_presets[$preset_number] != '') {
 							//add (potentially customized) preset conditions and populate
 							if (is_array($current_conditions[$preset_group_id])) {
@@ -1141,7 +1140,7 @@ if ($action == 'update') {
 								}
 							}
 						}
-/**/
+
 					}
 				}
 			}
