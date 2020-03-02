@@ -237,6 +237,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Domain select option displayed on the login box.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c1f6349b-e9f9-4550-a21e-a3cac285e8a5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "reset_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "pbx1.yourlogin.com";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom url to use for reset links.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e20ff5fb-cc63-474b-90f8-f472d2247317";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "admin";
