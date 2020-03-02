@@ -485,7 +485,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 6. Also use grandstream_distinctive_ringtone_6";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa2fa675-ccc0-4343-92fb-76c37d67a409";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cfed0d3f-7ae9-4061-a09f-d10770953e03";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
