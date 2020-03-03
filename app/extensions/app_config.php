@@ -271,6 +271,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Whether to regenerate the session ID.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b831ac5a-20f6-4e77-af43-a3c697bfe550";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "user_record_default";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default value to set whether to record inbound, outbound, or all calls.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${user_context}";
