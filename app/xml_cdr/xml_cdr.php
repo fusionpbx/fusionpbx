@@ -150,7 +150,7 @@
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	if (permission_exists('xml_cdr_archive')) {
 		$query_string = "show=all";
-		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr_archive.php?".escape($query_string)."';\">\n";
+		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr.php?".escape($query_string)."';\">\n";
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
