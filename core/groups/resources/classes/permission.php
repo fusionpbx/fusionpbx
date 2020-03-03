@@ -138,6 +138,8 @@
 								if ($permission['groups']) {
 									foreach ($permission['groups'] as $group_name) {
 										//check group protection
+										$group_uuid = null;
+										$group_protected = null;
 										if (is_array($groups)) {
 											foreach ($groups as $group) {
 												if ($group['group_name'] == $group_name) {
