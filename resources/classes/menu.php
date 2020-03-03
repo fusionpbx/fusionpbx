@@ -658,7 +658,6 @@ if (!class_exists('menu')) {
 		 */
 		private function build_child_html($menu_item_level, $submenu_array) {
 
-			$db = $this->db;
 			$menu_item_level = $menu_item_level+1;
 
 			if (count($_SESSION['groups']) == 0) {
