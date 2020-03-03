@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,7 +57,7 @@
 	require_once "resources/require.php";
 
 // if logged in, redirect to login destination
-	if (isset($_SESSION["username"]) and (strlen($_SESSION["username"]) > 0)) {
+	if (isset($_SESSION["username"]) && (strlen($_SESSION["username"]) > 0)) {
 		if (strlen($_SESSION['login']['destination']['url']) > 0) {
 			header("Location: ".$_SESSION['login']['destination']['url']);
 		} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_settings/user_dashboard.php")) {
