@@ -53,9 +53,10 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_group <> '' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
-		$apps[$x]['destinations'][$y]['field']['destination']['name'] = "destination";
-		$apps[$x]['destinations'][$y]['field']['destination']['type'] = "csv";
-		$apps[$x]['destinations'][$y]['field']['destination']['delimiter'] = ",";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "destination";
+		//$apps[$x]['destinations'][$y]['field']['destination']['name'] = "destination";
+		//$apps[$x]['destinations'][$y]['field']['destination']['type'] = "csv";
+		//$apps[$x]['destinations'][$y]['field']['destination']['delimiter'] = ",";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination}";
