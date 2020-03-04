@@ -63,65 +63,60 @@
 	$contact_relations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//show the content
-	echo "<div class='action_bar sub shrink'>\n";
-	echo "	<div class='heading'><b>".$text['header-contact_relations']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	/*
-	if (permission_exists('contact_relation_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_relation_edit.php?contact_uuid='.urlencode($contact_uuid)]);
-	}
-	if (permission_exists('contact_relation_delete') && $contact_relations) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	}
-	*/
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('contact_relation_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all_relations' name='checkbox_all' onclick=\"list_all_toggle('relations');\" ".($contact_relations ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
-	echo "<th>".$text['label-contact_relation_label']."</th>\n";
-	echo "<th>".$text['label-contact_relation_organization']."</th>\n";
-	echo "<th>".$text['label-contact_relation_name']."</th>\n";
-	if (permission_exists('contact_relation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
-	echo "</tr>\n";
-
+//show if exists
 	if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
-		$x = 0;
-		foreach ($contact_relations as $row) {
-			if (permission_exists('contact_relation_edit')) {
-				$list_row_url = "contact_relation_edit.php?contact_uuid=".urlencode($contact_uuid)."&id=".urlencode($row['contact_relation_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['header-contact_relations']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_relation_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='contact_relations[$x][checked]' id='checkbox_".$x."' class='checkbox_relations' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_relations').checked = false; }\">\n";
-				echo "		<input type='hidden' name='contact_relations[$x][uuid]' value='".escape($row['contact_relation_uuid'])."' />\n";
-				echo "	</td>\n";
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all_relations' name='checkbox_all' onclick=\"edit_all_toggle('relations');\" ".($contact_relations ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
 			}
-			echo "	<td>".escape($row['relation_label'])."&nbsp;</td>\n";
-			echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
-			echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given']).(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
+			echo "<th>".$text['label-contact_relation_label']."</th>\n";
+			echo "<th>".$text['label-contact_relation_organization']."</th>\n";
+			echo "<th>".$text['label-contact_relation_name']."</th>\n";
 			if (permission_exists('contact_relation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
+				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
-			$x++;
-		}
-		unset($contact_relations);
-	}
 
-	echo "</table>";
-	echo "<br />\n";
+			if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
+				$x = 0;
+				foreach ($contact_relations as $row) {
+					if (permission_exists('contact_relation_edit')) {
+						$list_row_url = "contact_relation_edit.php?contact_uuid=".urlencode($contact_uuid)."&id=".urlencode($row['contact_relation_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					if (permission_exists('contact_relation_delete')) {
+						echo "	<td class='checkbox'>\n";
+						echo "		<input type='checkbox' name='contact_relations[$x][checked]' id='checkbox_".$x."' class='checkbox_relations' value='true' onclick=\"edit_delete_action('relations');\">\n";
+						echo "		<input type='hidden' name='contact_relations[$x][uuid]' value='".escape($row['contact_relation_uuid'])."' />\n";
+						echo "	</td>\n";
+					}
+					echo "	<td>".escape($row['relation_label'])."&nbsp;</td>\n";
+					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
+					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given']).(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
+					if (permission_exists('contact_relation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+				unset($contact_relations);
+			}
+
+			echo "</table>";
+			echo "<br />\n";
+
+	}
 
 ?>
