@@ -58,6 +58,9 @@
 		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 		<!-- ************************************************* -->
 
+		<!-- suppress CNG on this profile or per call with the 'suppress_cng' variable -->
+		<param name="suppress-cng" value="true" enabled="true"/>
+
 		<!--<param name="aggressive-nat-detection" value="true"/>-->
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<param name="nonce-ttl" value="60"/>

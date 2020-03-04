@@ -279,7 +279,6 @@ if (!class_exists('switch_music_on_hold')) {
 								}
 							}
 							unset($array);
-// 							view_array($moh);
 
 						//loop checked records
 							$files_deleted = 0;
@@ -359,6 +358,10 @@ if (!class_exists('switch_music_on_hold')) {
 
 						//post delete
 							if ($moh_deleted || $files_deleted) {
+								//clear the cache
+									$cache = new cache;
+									$cache->delete("configuration:local_stream.conf");
+
 								//reload moh
 									$this->reload();
 

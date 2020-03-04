@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -131,10 +131,10 @@ if (!class_exists('users')) {
 										//delete the user
 											$array['users'][$x]['user_uuid'] = $user_uuid;
 											$array['users'][$x]['domain_uuid'] = $domain_uuid;
-									}
 
-								//increment the id
-									$x++;
+										//increment the id
+											$x++;
+									}
 							}
 
 						//delete the checked rows

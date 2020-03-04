@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -153,49 +153,34 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
+	$document['title'] = $text['title-menu'];
 	require_once "resources/header.php";
-	if ($action == "update") {
-		$document['title'] = $text['title-menu-edit'];
-	}
-	if ($action == "add") {
-		$document['title'] = $text['title-menu-add'];
-	}
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-menu-add']."</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-menu-edit']."</b></td>\n";
-	}
-	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu.php'\" value='".$text['button-back']."'>\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-menu']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','link'=>'menu.php']);
 	if (permission_exists('menu_restore') && $action == "update") {
-		echo "	<input type='button' class='btn' value='".$text['button-restore_default']."' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
+		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_restore_default.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language)]);
 	}
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	if ($action == "update") {
-		echo $text['description-menu-edit'];
-	}
-	if ($action == "add") {
-		echo $text['description-menu-add'];
-	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-menu']."\n";
 	echo "<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"".escape($menu_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
@@ -223,18 +208,15 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //show the menu items

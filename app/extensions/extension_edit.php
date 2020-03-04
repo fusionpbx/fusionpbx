@@ -103,7 +103,6 @@
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$user_context = $_POST["user_context"];
 			$range = $_POST["range"];
-			$autogen_users = $_POST["autogen_users"];
 			$missed_call_app = $_POST["missed_call_app"];
 			$missed_call_data = $_POST["missed_call_data"];
 			$toll_allow = $_POST["toll_allow"];
@@ -269,23 +268,6 @@
 							break;
 					}
 
-				//add the user to the database
-					$user_email = '';
-					if ($_SESSION["users"]["unique"]["text"] != "global") {
-						if ($autogen_users == "true") {
-							$auto_user = $extension;
-							for ($i=1; $i<=$range; $i++) {
-								$user_last_name = $auto_user;
-								$user_password = generate_password();
-								user_add($auto_user, $user_password, $user_email);
-								$generated_users[$i]['username'] = $auto_user;
-								$generated_users[$i]['password'] = $user_password;
-								$auto_user++;
-							}
-							unset($auto_user);
-						}
-					}
-
 				//build the data array
 					if (!isset($range)) { $range = 1; }
 					for ($i=0; $i<$range; $i++) {
@@ -315,11 +297,6 @@
 												}
 											}
 										}
-
-								//enabled
-									if (!permission_exists('extension_enabled')) {
-										$enabled = "true";
-									}
 
 								//generate a password
 									if ($action == "add" && strlen($password) == 0) {
@@ -407,7 +384,9 @@
 									if (permission_exists('extension_dial_string')) {
 										$array["extensions"][$i]["dial_string"] = $dial_string;
 									}
-									$array["extensions"][$i]["enabled"] = $enabled;
+									if (permission_exists('extension_enabled')) {
+										$array["extensions"][$i]["enabled"] = $enabled;
+									}
 									$array["extensions"][$i]["description"] = $description;
 
 							}
@@ -613,50 +592,20 @@
 							}
 					}
 
-				//show the action and redirect the user
+				//set the message and redirect
 					if ($action == "add") {
-							message::add($text['message-add']);
-						//prepare for alternating the row style
-							$c = 0;
-							$row_style["0"] = "row_style0";
-							$row_style["1"] = "row_style1";
-
-						//show the action and redirect the user
-							if (count($generated_users) == 0) {
-								//action add
-									header("Location: extension_edit.php?id=".$extension_uuid);
-							}
-							else {
-								//auto-generate user with extension as login name
-									require_once "resources/header.php";
-									echo "<br />\n";
-									echo "<div align='center'>\n";
-									echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
-									echo "		<tr>\n";
-									echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
-									echo "		</tr>\n";
-									echo "		<tr>\n";
-									echo "			<th>Username</th>\n";
-									echo "			<th>Password</th>\n";
-									echo "		</tr>\n";
-									foreach ($generated_users as $tmp_user) {
-										echo "		<tr>\n";
-										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['username']."</td>\n";
-										echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['password']."</td>\n";
-										echo "		</tr>\n";
-									}
-									$c = $c ? 0 : 1;
-									echo "	</table>";
-									echo "</div>\n";
-									require_once "resources/footer.php";
-							}
-							exit;
+						message::add($text['message-add']);
 					}
 					if ($action == "update") {
 						message::add($text['message-update']);
-						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
-						return;
 					}
+					if ($range > 1) {
+						header("Location: extensions.php");
+					}
+					else {
+						header("Location: extension_edit.php?id=".$extension_uuid.(is_numeric($page) ? '&page='.$page : null));
+					}
+					exit;
 			}
 	}
 
@@ -825,6 +774,8 @@
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
+	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
 
 //create token
 	$object = new token;
@@ -973,10 +924,7 @@
 		echo "    <option value='5000'>5000</option>\n";
 		echo "    </select>\n";
 		echo "<br />\n";
-		echo $text['description-range']."<br />\n";
-		if ($_SESSION["user"]["unique"]["text"] != "global") {
-			echo "<input type=\"checkbox\" name=\"autogen_users\" value=\"true\"> ".$text['checkbox-range']."<br>\n";
-		}
+		echo $text['description-range']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1060,12 +1008,7 @@
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-device_template']."&nbsp;\n";
 			echo "				</td>\n";
-
-			echo "				<td>\n";
-			//if (permission_exists('device_delete')) {
-			//	echo "					<a href='device_line_delete.php?device_uuid=".escape($row['device_uuid'])."&id=".escape($row['device_line_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			//}
-			echo "				</td>\n";
+			echo "				<td>&nbsp;</td>\n";
 			echo "			</tr>\n";
 			foreach($device_lines as $row) {
 				$device_mac_address = $row['device_mac_address'];

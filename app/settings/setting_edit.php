@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -178,29 +178,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<input type='hidden' name='setting_uuid' value='".$setting_uuid."'>\n";
+	echo "<form method='post' name='frm''>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($action == "add") {
+		echo "<b>".$text['title-settings_add']."</b>";
+	}
+	else if ($action == "update") {
+		echo "<b>".$text['title-settings_update']."</b>";
+	}
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'never']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_add']."</b><br><br></td>\n";
-	}
-	else if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_update']."</b><br><br></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
-	if (permission_exists('setting_edit')) {
-		echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	}
-	echo "<br><br></td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-event_socket_ip']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_ip_address' maxlength='255' value=\"".escape($event_socket_ip_address)."\">\n";
 	echo "<br />\n";
 	echo $text['description-event_socket_ip']."\n";
@@ -337,16 +338,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-mod_shout_volume']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (permission_exists('setting_edit')) {
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<br>";
-		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
-	}
+
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='setting_uuid' value='".$setting_uuid."'>\n";
 	echo "</form>";
 
 //show the footer

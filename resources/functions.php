@@ -2091,4 +2091,18 @@ function number_pad($number,$n) {
 		}
 	}
 
+//convert bytes to readable human format
+	if (!function_exists('byte_convert')) {
+		function byte_convert($bytes, $precision = 2) {
+			static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+			$step = 1024;
+			$i = 0;
+			while (($bytes / $step) > 0.9) {
+				$bytes = $bytes / $step;
+				$i++;
+			}
+			return round($bytes, $precision).' '.$units[$i];
+		}
+	}
+
 ?>

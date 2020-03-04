@@ -1315,15 +1315,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_1_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_1_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -1432,15 +1432,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_2_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_2_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -1549,15 +1549,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_3_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_3_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -1666,15 +1666,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_4_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_4_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -1783,15 +1783,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_5_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_5_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -1900,15 +1900,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_6_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_6_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -2017,15 +2017,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_7_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_7_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -2134,15 +2134,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_8_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_8_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -2251,15 +2251,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_9_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_9_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -2368,15 +2368,15 @@
     </P>
     <P>
       <N>DigitMap</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_10_digitmap}</V>
     </P>
     <P>
       <N>OutboundCallRoute</N>
-      <V X_UD="Y" X_DV=""/>
+      <V X_UD="Y" X_DV="">{$poly_handset_10_outbound_call_route}</V>
     </P>
     <P>
       <N>OutboundServices</N>
-      <V X_UD="Y" X_DV="sp1,pp"/>
+      <V X_UD="Y" X_DV="sp1"/>
     </P>
     <P>
       <N>CallReturnDigitMaps</N>
@@ -3510,7 +3510,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_1_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -3764,7 +3764,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_2_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -4014,7 +4014,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_3_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -4264,7 +4264,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_4_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -4514,7 +4514,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_5_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -4764,7 +4764,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_6_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -5014,7 +5014,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_7_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>
@@ -5264,7 +5264,7 @@
     </P>
     <P>
       <N>X_InboundCallRoute</N>
-      <V X_UD="Y" X_DV="dt1"/>
+      <V X_UD="Y" X_DV="dt1">{$poly_sp_8_inbound_call_route}</V>
     </P>
     <P>
       <N>X_RegisterEnable</N>

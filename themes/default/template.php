@@ -422,24 +422,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 
 	//list functions
 		function list_all_toggle(modifier) {
-			var inputs = document.getElementsByTagName('input');
-			if (modifier !== undefined) {
-				var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
-			}
-			else {
-				var checkbox_checked = document.getElementById('checkbox_all').checked;
-			}
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (modifier !== undefined) {
-					if (inputs[i].type === 'checkbox' && inputs[i].className === 'checkbox_'+modifier) {
-						inputs[i].checked = checkbox_checked;
-					}
-				}
-				else {
-					if (inputs[i].type === 'checkbox') {
-						inputs[i].checked = checkbox_checked;
-					}
-				}
+			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']");
+			var checkbox_checked = document.getElementById('checkbox_all' + (modifier !== undefined ? '_'+modifier : '')).checked;
+			for (var i = 0, max = checkboxes.length; i < max; i++) {
+				checkboxes[i].checked = checkbox_checked;
 			}
 			if (document.getElementById('btn_check_all') && document.getElementById('btn_check_none')) {
 				if (checkbox_checked) {
@@ -486,9 +472,67 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			document.getElementById('btn_search').style.display = '';
 		}
 
+		function edit_all_toggle(modifier) {
+			var checkboxes = document.getElementsByClassName('checkbox_'+modifier);
+			var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
+			if (checkboxes.length > 0) {
+				for (var i = 0; i < checkboxes.length; ++i) {
+					checkboxes[i].checked = checkbox_checked;
+				}
+				if (document.getElementById('btn_delete')) {
+					document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+				}
+			}
+		}
+
+		function edit_delete_action(modifier) {
+			var checkboxes = document.getElementsByClassName('chk_delete');
+			if (document.getElementById('btn_delete') && checkboxes.length > 0) {
+				var checkbox_checked = false;
+				for (var i = 0; i < checkboxes.length; ++i) {
+					if (checkboxes[i].checked) {
+						checkbox_checked = true;
+					}
+					else {
+						if (document.getElementById('checkbox_all'+(modifier !== undefined ? '_'+modifier : ''))) {
+							document.getElementById('checkbox_all'+(modifier !== undefined ? '_'+modifier : '')).checked = false;
+						}
+					}
+				}
+				document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+			}
+		}
+
+		function swap_display(a_id, b_id, display_value) {
+			display_value = display_value !== undefined ? display_value : 'inline-block';
+			a = document.getElementById(a_id);
+			b = document.getElementById(b_id);
+			if (window.getComputedStyle(a).display === 'none') {
+				a.style.display = display_value;
+				b.style.display = 'none';
+			}
+			else {
+				a.style.display = 'none';
+				b.style.display = display_value;
+			}
+		}
+
 		function modal_close() {
 			document.location.href='#';
 		}
+
+		function hide_password_fields() {
+			var password_fields = document.querySelectorAll("input[type='password']");
+			for (var p = 0, max = password_fields.length; p < max; p++) {
+				password_fields[p].style.visibility = 'hidden';
+				password_fields[p].type = 'text';
+			}
+		}
+
+		window.addEventListener('beforeunload', function(e){
+			hide_password_fields();
+			e.returnValue = ''; //required by chrome
+		});
 
 </script>
 
@@ -918,21 +962,21 @@ else {
 	}
 
 	//set the login logo width and height
-	if (isset($_SESSION['theme']['login_logo_weight']['text'])) {
-		$login_logo_weight = $_SESSION['theme']['login_logo_weight']['text'];
+	if (isset($_SESSION['theme']['login_logo_width']['text'])) {
+		$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
 	}
 	else {
-		$login_logo_weight = '300px';
+		$login_logo_width = 'auto; max-width: 300px';
 	}
 	if (isset($_SESSION['theme']['login_logo_height']['text'])) {
 		$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
 	}
 	else {
-		$login_logo_height = '';
+		$login_logo_height = 'auto; max-height: 300px';
 	}
 
 	echo "<div id='default_login'>\n";
-	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' width='$login_logo_weight' height='$login_logo_height' src='".escape($logo)."'></a><br />\n";
+	echo "	<a href='".PROJECT_PATH."/'><img id='login_logo' style='width: ".$login_logo_width."; height: ".$login_logo_height.";' src='".escape($logo)."'></a><br />\n";
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -64,6 +64,30 @@
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($group_uuid)) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $group_uuid;
+
+				switch ($_POST['action']) {
+					case 'copy':
+						if (permission_exists('group_add')) {
+							$obj = new groups;
+							$obj->copy($array);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('group_delete')) {
+							$obj = new groups;
+							$obj->delete($array);
+						}
+						break;
+				}
+
+				header('Location: groups.php');
+				exit;
+			}
 
 		//validate the token
 			$token = new token;
@@ -156,28 +180,36 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-group']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'groups.php']);
+	$button_margin = 'margin-left: 15px;';
+	if ($action == 'update' && permission_exists('group_add')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (confirm('".$text['confirm-copy']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
+	if ($action == 'update' && permission_exists('group_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+		unset($button_margin);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-groups']."\n";
+	echo "<br /><br />\n";
+
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-group']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='group_copy.php'\" value='".$text['button-copy']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	".$text['description-groups']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-group_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='group_name' maxlength='255' value='".escape($group_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-group_name']."\n";
@@ -217,59 +249,9 @@
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 		echo "	<select class='formfld' name='group_level'>\n";
 		echo "		<option value=''></option>\n";
-		if ($group_level == "10") {
-			echo "		<option value='10' selected='selected'>10</option>\n";
-		}
-		else {
-			echo "		<option value='10'>10</option>\n";
-		}
-		if ($group_level == "20") {
-			echo "		<option value='20' selected='selected'>20</option>\n";
-		}
-		else {
-			echo "		<option value='20'>20</option>\n";
-		}
-		if ($group_level == "30") {
-			echo "		<option value='30' selected='selected'>".$text['label-30']."</option>\n";
-		}
-		else {
-			echo "		<option value='30'>30</option>\n";
-		}
-		if ($group_level == "40") {
-			echo "		<option value='40' selected='selected'>40</option>\n";
-		}
-		else {
-			echo "		<option value='40'>40</option>\n";
-		}
-		if ($group_level == "50") {
-			echo "		<option value='50' selected='selected'>50</option>\n";
-		}
-		else {
-			echo "		<option value='50'>50</option>\n";
-		}
-		if ($group_level == "60") {
-			echo "		<option value='60' selected='selected'>60</option>\n";
-		}
-		else {
-			echo "		<option value='60'>60</option>\n";
-		}
-		if ($group_level == "70") {
-			echo "		<option value='70' selected='selected'>70</option>\n";
-		}
-		else {
-			echo "		<option value='70'>70</option>\n";
-		}
-		if ($group_level == "80") {
-			echo "		<option value='80' selected='selected'>80</option>\n";
-		}
-		else {
-			echo "		<option value='80'>80</option>\n";
-		}
-		if ($group_level == "90") {
-			echo "		<option value='90' selected='selected'>90</option>\n";
-		}
-		else {
-			echo "		<option value='90'>90</option>\n";
+		for ($l = 10; $l <=90; $l += 10) {
+			$selected = $group_level == $l ? "selected='selected'" : null;
+			echo "		<option value='".$l."' ".$selected.">".$l."</option>\n";
 		}
 		echo "	</select>\n";
 	echo "<br />\n";
@@ -302,17 +284,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

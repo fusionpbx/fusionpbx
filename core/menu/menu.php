@@ -52,18 +52,6 @@
 //process the http post data by action
 	if ($action != '' && is_array($menus) && @sizeof($menus) != 0) {
 		switch ($action) {
-			case 'copy':
-				//if (permission_exists('menu_add')) {
-				//	$obj = new menu;
-				//	$obj->copy($menus);
-				//}
-				break;
-			case 'toggle':
-				//if (permission_exists('menu_edit')) {
-				//	$obj = new menu;
-				//	$obj->toggle($menus);
-				//}
-				break;
 			case 'delete':
 				if (permission_exists('menu_delete')) {
 					$obj = new menu;

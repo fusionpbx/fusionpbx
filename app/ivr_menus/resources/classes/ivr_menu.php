@@ -54,12 +54,7 @@ if (!class_exists('ivr_menu')) {
 			//assign private variables
 				$this->app_name = 'ivr_menus';
 				$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-				$this->permission_prefix = 'ivr_menu_';
 				$this->list_page = 'ivr_menus.php';
-				$this->table = 'ivr_menus';
-				$this->uuid_prefix = 'ivr_menu_';
-				$this->toggle_field = 'ivr_menu_enabled';
-				$this->toggle_values = ['true','false'];
 
 		}
 
@@ -92,6 +87,11 @@ if (!class_exists('ivr_menu')) {
 		 * delete records
 		 */
 		public function delete($records) {
+			//assign private variables
+				$this->permission_prefix = 'ivr_menu_';
+				$this->table = 'ivr_menus';
+				$this->uuid_prefix = 'ivr_menu_';
+
 			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
@@ -147,7 +147,7 @@ if (!class_exists('ivr_menu')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('ivr_menu_options_delete', 'temp');
+									$p->add('ivr_menu_option_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
 
 								//execute delete
@@ -158,7 +158,7 @@ if (!class_exists('ivr_menu')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('ivr_menu_options_delete', 'temp');
+									$p->delete('ivr_menu_option_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 
 								//synchronize the xml config
@@ -181,10 +181,76 @@ if (!class_exists('ivr_menu')) {
 			}
 		}
 
+		public function delete_options($records) {
+			//assign private variables
+				$this->permission_prefix = 'ivr_menu_option_';
+				$this->table = 'ivr_menu_options';
+				$this->uuid_prefix = 'ivr_menu_option_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked ivr menu options, build delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+									$x++;
+								}
+							}
+
+						//get ivr menu context
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ivr_menu_context from v_ivr_menus ";
+								$sql .= "where (domain_uuid = :domain_uuid) ";
+								$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['ivr_menu_uuid'] = $this->ivr_menu_uuid;
+								$database = new database;
+								$ivr_menu_context = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters);
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+							}
+							unset($records);
+					}
+			}
+		}
+
 		/**
 		 * toggle records
 		 */
 		public function toggle($records) {
+			//assign private variables
+				$this->permission_prefix = 'ivr_menu_';
+				$this->table = 'ivr_menus';
+				$this->uuid_prefix = 'ivr_menu_';
+				$this->toggle_field = 'ivr_menu_enabled';
+				$this->toggle_values = ['true','false'];
+
 			if (permission_exists($this->permission_prefix.'edit')) {
 
 				//add multi-lingual support
@@ -274,6 +340,11 @@ if (!class_exists('ivr_menu')) {
 		 * copy records
 		 */
 		public function copy($records) {
+			//assign private variables
+				$this->permission_prefix = 'ivr_menu_';
+				$this->table = 'ivr_menus';
+				$this->uuid_prefix = 'ivr_menu_';
+
 			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support

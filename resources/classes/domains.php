@@ -92,7 +92,7 @@ if (!class_exists('domains')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//build the delete array
-							$x = 0;
+							$d = 0;
 							foreach ($records as $record) {
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -189,19 +189,19 @@ if (!class_exists('domains')) {
 												}
 
 												//delete the dialplan
-												unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['dialplan']['dir'].'/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/'.$domain_name);
 												}
 
 												//delete the dialplan public
-												unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);
 												}
 
 												//delete the extension
-												unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
+												@unlink($_SESSION['switch']['extensions']['dir'].'/'.$domain_name.'.xml');
 												if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['extensions']['dir'].'/'.$domain_name);
 												}
@@ -221,7 +221,7 @@ if (!class_exists('domains')) {
 															} else {
 																//check if file extension is xml
 																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
+																	@unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
 																}
 															}
 														}
@@ -238,7 +238,7 @@ if (!class_exists('domains')) {
 																//this is a directory
 															} else {
 																if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-																	unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
+																	@unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
 																}
 															}
 														}
@@ -247,7 +247,7 @@ if (!class_exists('domains')) {
 												}
 
 												//delete the recordings
-												if (strlen($_SESSION['switch'][recordings]['dir']) > 0) {
+												if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
 													system('rm -rf '.$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$domain_name);
 												}
 
@@ -268,11 +268,11 @@ if (!class_exists('domains')) {
 											unset($_SESSION['switch']);
 
 										//remove the domain and save to transactions
-											$domain_array['domains'][$x]['domain_uuid'] = $record['uuid'];
-									}
+											$domain_array['domains'][$d]['domain_uuid'] = $id;
 
-								//increment the id
-									$x++;
+										//increment the id
+											$d++;
+									}
 							}
 
 						//delete the checked rows

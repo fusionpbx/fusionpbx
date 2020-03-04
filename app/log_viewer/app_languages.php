@@ -241,4 +241,24 @@ $text['description-filter']['ru-ru'] = "Фильтрация журнала с �
 $text['description-filter']['sv-se'] = "Filtrerar loggen med texten:";
 $text['description-filter']['uk-ua'] = "Фільтрування логів по тексту";
 
+$text['label-display']['en-us'] = "Display";
+$text['label-display']['ar-eg'] = "Display";
+$text['label-display']['de-at'] = "Display";
+$text['label-display']['de-ch'] = "Display";
+$text['label-display']['de-de'] = "Display";
+$text['label-display']['es-cl'] = "Display";
+$text['label-display']['es-mx'] = "Display";
+$text['label-display']['fr-ca'] = "Display";
+$text['label-display']['fr-fr'] = "Display";
+$text['label-display']['he-il'] = "Display";
+$text['label-display']['it-it'] = "Display";
+$text['label-display']['nl-nl'] = "Display";
+$text['label-display']['pl-pl'] = "Display";
+$text['label-display']['pt-br'] = "Display";
+$text['label-display']['pt-pt'] = "Display";
+$text['label-display']['ro-ro'] = "Display";
+$text['label-display']['ru-ru'] = "Display";
+$text['label-display']['sv-se'] = "Display";
+$text['label-display']['uk-ua'] = "Display";
+
 ?>

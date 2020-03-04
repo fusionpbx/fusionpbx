@@ -495,7 +495,9 @@
 			}
 		}
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>($action != 'update' ?: 'margin-left: 15px;'),'collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('frm').submit();"]);
+	if (permission_exists('contact_edit') || permission_exists('contact_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>($action != 'update' ?: 'margin-left: 15px;'),'collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('frm').submit();"]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

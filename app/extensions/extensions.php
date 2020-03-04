@@ -59,9 +59,13 @@
 					$obj->toggle($extensions);
 				}
 				break;
-			case 'delete':
+			case 'delete_extension':
+			case 'delete_extension_voicemail':
 				if (permission_exists('extension_delete')) {
 					$obj = new extension;
+					if ($action == 'delete_extension_voicemail' && permission_exists('voicemail_delete')) {
+						$obj->delete_voicemail = true;
+					}
 					$obj->delete($extensions);
 				}
 				break;
@@ -180,7 +184,22 @@
 		unset($margin_left);
 	}
 	if (permission_exists('extension_delete') && $extensions) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>$margin_left,'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		if (permission_exists('voicemail_delete')) {
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>$margin_left,'link'=>'#modal-delete-options']);
+			echo modal::create([
+				'id'=>'modal-delete-options',
+				'title'=>$text['modal_title-confirmation'],
+				'message'=>$text['message-delete_selection'],
+				'actions'=>
+					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','collapse'=>'hide-xs','onclick'=>'modal_close();']).
+					button::create(['type'=>'button','label'=>$text['label-extension_and_voicemail'],'icon'=>'voicemail','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_extension_voicemail'); list_form_submit('form_list');"]).
+					button::create(['type'=>'button','label'=>$text['label-extension_only'],'icon'=>'phone-alt','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_extension'); list_form_submit('form_list');"])
+				]);
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'style'=>$margin_left,'link'=>"#modal-delete"]);
+			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_extension'); list_form_submit('form_list');"])]);
+		}
 		unset($margin_left);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";

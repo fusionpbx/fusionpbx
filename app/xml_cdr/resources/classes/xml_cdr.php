@@ -1048,7 +1048,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " hangup_cause, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
-				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
 				else {
@@ -1059,12 +1059,12 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-				if ($_GET['show'] !== 'all' && permission_exists('xml_cdr_all')) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
 				$database = new database;
@@ -1183,7 +1183,6 @@ if (!class_exists('xml_cdr')) {
 
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
 
 									//increment counter
@@ -1214,14 +1213,9 @@ if (!class_exists('xml_cdr')) {
 							unset($records);
 					}
 			}
-		}
+		} //method
 
-	} //end the class
+	} //class
 }
-/*
-//example use
-	$cdr = new xml_cdr;
-	$cdr->read_files();
-*/
 
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -55,10 +55,10 @@
 	}
 
 //get the http get values and set them as php variables
-	$action = check_str($_POST["action"]);
-	$from_row = check_str($_POST["from_row"]);
-	$delimiter = check_str($_POST["data_delimiter"]);
-	$enclosure = check_str($_POST["data_enclosure"]);
+	$action = $_POST["action"];
+	$from_row = $_POST["from_row"];
+	$delimiter = $_POST["data_delimiter"];
+	$enclosure = $_POST["data_enclosure"];
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -70,7 +70,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if (is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('user_imports')) {
-		if (check_str($_POST['type']) == 'csv') {
+		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
@@ -167,13 +167,13 @@
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
-				echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
-				echo "</td>\n";
-				echo "<td width='70%' class='vtable' align='left'>\n";
-				echo "    			<select class='formfld' style='' name='fields[$x]'>\n";
-				echo "    			<option value=''></option>\n";
+				echo "	</td>\n";
+				echo "	<td width='70%' class='vtable' align='left'>\n";
+				echo "		<select class='formfld' style='' name='fields[$x]'>\n";
+				echo "			<option value=''></option>\n";
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
@@ -182,31 +182,27 @@
 							$selected = "selected='selected'";
 						}
 						if ($field !== 'domain_uuid') {
-							echo "    			<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
+							echo "				<option value='".$row['table'].".".$field."' ".$selected.">".$field."</option>\n";
 						}
 					}
 					echo "			</optgroup>\n";
 				}
-				echo "    			</select>\n";
+				echo "		</select>\n";
 				//echo "<br />\n";
 				//echo $text['description-zzz']."\n";
-				echo "			</td>\n";
-				echo "		</tr>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				$x++;
 			}
 
-			echo "		<tr>\n";
-			echo "			<td colspan='2' valign='top' align='right' nowrap='nowrap'>\n";
-			echo "				<input name='action' type='hidden' value='import'>\n";
-			echo "				<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "				<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "				<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
-			echo "			</td>\n";
-			echo "		</tr>\n";
+			echo "</table>\n";
+			echo "<br /><br />\n";
 
-			echo "	</table>\n";
-
-			echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+			echo "<input name='action' type='hidden' value='import'>\n";
+			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
 
@@ -429,7 +425,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";

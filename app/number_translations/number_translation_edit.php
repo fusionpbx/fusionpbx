@@ -56,11 +56,35 @@
 		$number_translation_details = $_POST["number_translation_details"];
 		$number_translation_enabled = $_POST["number_translation_enabled"];
 		$number_translation_description = $_POST["number_translation_description"];
+		$number_translation_details_delete = $_POST["number_translation_details_delete"];
 	}
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($number_translation_uuid)) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $number_translation_uuid;
+
+				switch ($_POST['action']) {
+					case 'copy':
+						if (permission_exists('number_translation_add')) {
+							$obj = new number_translations;
+							$obj->copy($array);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('number_translation_delete')) {
+							$obj = new number_translations;
+							$obj->delete($array);
+						}
+						break;
+				}
+
+				header('Location: number_translations.php');
+				exit;
+			}
 
 		//validate the token
 			$token = new token;
@@ -116,6 +140,18 @@
 			$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 			$database->save($array);
 
+		//remove checked details
+			if (
+				$action == 'update'
+				&& permission_exists('number_translation_detail_delete')
+				&& is_array($number_translation_details_delete)
+				&& @sizeof($number_translation_details_delete) != 0
+				) {
+				$obj = new number_translations;
+				$obj->number_translation_uuid = $number_translation_uuid;
+				$obj->delete_details($number_translation_details_delete);
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -150,8 +186,8 @@
 	if (is_uuid($number_translation_uuid)) {
 		$sql = "select * from v_number_translation_details ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
+		$sql .= "order by cast(number_translation_detail_order as integer) asc";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
-		$sql .= "order by number_translation_detail_order";
 		$database = new database;
 		$number_translation_details = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
@@ -165,7 +201,7 @@
 //add an empty row
 	$x = is_array($number_translation_details) ? count($number_translation_details) : 0;
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
-	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
+	$number_translation_details[$x]['number_translation_detail_uuid'] = '';
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
 	$number_translation_details[$x]['number_translation_detail_replace'] = '';
 	$number_translation_details[$x]['number_translation_detail_order'] = '';
@@ -179,23 +215,32 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-number_translation']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'number_translations.php']);
+	if ($action == "update") {
+		if (permission_exists('number_translation_add')) {
+			echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'action','value'=>'copy','onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+		}
+		if (permission_exists('number_translation_delete') || permission_exists('number_translation_detail_delete')) {
+			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'margin-right: 15px;','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		}
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-number_translation']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='number_translations.php'\" value='".$text['button-back']."'>";
-	//echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"window.location='number_translation_copy.php'\" value='".$text['button-copy']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-number_translation_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='number_translation_name' maxlength='255' value='".escape($number_translation_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-number_translation_name']."\n";
@@ -212,19 +257,20 @@
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_regex']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_replace']."</th>\n";
 	echo "			<th class='vtablereq'>".$text['label-number_translation_detail_order']."</th>\n";
-	echo "			<td></td>\n";
+	if (is_array($number_translation_details) && @sizeof($number_translation_details) > 1 && permission_exists('number_translation_detail_delete')) {
+		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
+		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
+		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
+		echo "			</td>\n";
+	}
 	echo "		</tr>\n";
 	$x = 0;
 	foreach($number_translation_details as $row) {
 		echo "		<tr>\n";
 		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".escape($row["number_translation_uuid"])."\">\n";
-		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".escape($row["number_translation_detail_uuid"])."\">\n";
-		echo "			<td>\n";
-		echo "				<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".escape($row["number_translation_detail_regex"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td>\n";
-		echo "				<input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".escape($row["number_translation_detail_replace"])."\">\n";
-		echo "			</td>\n";
+		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".(is_uuid($row["number_translation_detail_uuid"]) ? $row["number_translation_detail_uuid"] : uuid())."\">\n";
+		echo "			<td><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".escape($row["number_translation_detail_regex"])."\"></td>\n";
+		echo "			<td><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".escape($row["number_translation_detail_replace"])."\"></td>\n";
 		echo "			<td>\n";
 		echo "				<select name='number_translation_details[$x][number_translation_detail_order]' class='formfld'>\n";
 		$i=0;
@@ -243,11 +289,14 @@
 		}
 		echo "				</select>\n";
 		echo "			</td>\n";
-		echo "			<td class='list_control_icons' style='width: 25px;'>\n";
-		if ($x < sizeof($number_translation_details) - 1) {
-			echo "				<a href='number_translation_delete.php?number_translation_detail_uuid=".escape($row['number_translation_detail_uuid'])."&a=delete' alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">".$v_link_label_delete."</a>\n";
+		if (is_array($number_translation_details) && @sizeof($number_translation_details) > 1 && permission_exists('number_translation_detail_delete')) {
+			echo "		<td style='text-align: center;'>";
+			if (is_uuid($row['number_translation_detail_uuid'])) {
+				echo "				<input type='checkbox' name='number_translation_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
+				echo "				<input type='hidden' name='number_translation_details_delete[".$x."][uuid]' value='".escape($row['number_translation_detail_uuid'])."' />\n";
+			}
+			echo "		</td>\n";
 		}
-		echo "			</td>\n";
 		echo "		</tr>\n";
 		$x++;
 	}
@@ -292,17 +341,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br />\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	echo "<input type='hidden' name='number_translation_uuid' value='".escape($number_translation_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

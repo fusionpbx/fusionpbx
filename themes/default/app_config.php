@@ -38,6 +38,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a background color.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b860230f-8e39-41e9-9168-15fb0e471df0";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_radial_gradient";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "40";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a value 0-100 for a radial gradient.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d79fb881-8a1c-4082-9ef9-5ff359186e30";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_color";
