@@ -984,10 +984,13 @@
 			echo "</td>\n";
 
 			if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
-				echo "<td style='text-align: center;'>";
 				if (is_uuid($field['ivr_menu_option_uuid'])) {
+					echo "<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
 					echo "	<input type='checkbox' name='ivr_menu_options_delete[".$x."][checked]' value='true' class='chk_delete checkbox_options' onclick=\"edit_delete_action('options');\">\n";
 					echo "	<input type='hidden' name='ivr_menu_options_delete[".$x."][uuid]' value='".escape($field['ivr_menu_option_uuid'])."' />\n";
+				}
+				else {
+					echo "<td>";
 				}
 				echo "</td>\n";
 			}
