@@ -73,7 +73,6 @@
 				exit;
 			}
 
-
 		if (permission_exists('phrase_domain')) {
 			$domain_uuid = $_POST["domain_uuid"];
 		}

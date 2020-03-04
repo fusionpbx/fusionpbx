@@ -41,6 +41,11 @@ if (!class_exists('sip_profiles')) {
 		private $toggle_values;
 
 		/**
+		 * declare public variables
+		 */
+		public $sip_profile_uuid;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
@@ -178,6 +183,162 @@ if (!class_exists('sip_profiles')) {
 									message::add($text['message-delete']);
 							}
 							unset($records, $sip_profiles);
+					}
+			}
+		}
+
+		public function delete_domains($records) {
+			//assign private variables
+				$this->permission_prefix = 'sip_profile_domain_';
+				$this->list_page = 'sip_profile_edit.php?id='.$this->sip_profile_uuid;
+				$this->table = 'sip_profile_domains';
+				$this->uuid_prefix = 'sip_profile_domain_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked sip profiles, build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
+								}
+							}
+
+						//get necessary sip profile details
+							if (is_uuid($this->sip_profile_uuid)) {
+								$sql = "select sip_profile_hostname from v_sip_profiles ";
+								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
+								$database = new database;
+								$sip_profile_hostname = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters);
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//save the sip profile xml
+									save_sip_profile_xml();
+
+								//apply settings reminder
+									$_SESSION["reload_xml"] = true;
+
+								//get system hostname if necessary
+									if ($sip_profile_hostname == '') {
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										if ($fp) {
+											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+										}
+									}
+
+								//clear the cache
+									if ($sip_profile_hostname != '') {
+										$cache = new cache;
+										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+									}
+
+							}
+							unset($records);
+					}
+			}
+		}
+
+		public function delete_settings($records) {
+			//assign private variables
+				$this->permission_prefix = 'sip_profile_setting_';
+				$this->list_page = 'sip_profile_edit.php?id='.$this->sip_profile_uuid;
+				$this->table = 'sip_profile_settings';
+				$this->uuid_prefix = 'sip_profile_setting_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked sip profiles, build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
+								}
+							}
+
+						//get necessary sip profile details
+							if (is_uuid($this->sip_profile_uuid)) {
+								$sql = "select sip_profile_hostname from v_sip_profiles ";
+								$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+								$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
+								$database = new database;
+								$sip_profile_hostname = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters);
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//save the sip profile xml
+									save_sip_profile_xml();
+
+								//apply settings reminder
+									$_SESSION["reload_xml"] = true;
+
+								//get system hostname if necessary
+									if ($sip_profile_hostname == '') {
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+										if ($fp) {
+											$sip_profile_hostname[] = event_socket_request($fp, 'api switchname');
+										}
+									}
+
+								//clear the cache
+									if ($sip_profile_hostname != '') {
+										$cache = new cache;
+										$cache->delete("configuration:sofia.conf:".$sip_profile_hostname);
+									}
+
+							}
+							unset($records);
 					}
 			}
 		}
