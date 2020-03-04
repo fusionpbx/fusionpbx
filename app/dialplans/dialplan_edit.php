@@ -893,7 +893,7 @@
 								if ($element['hidden']) {
 									echo "	<label id=\"label_dialplan_detail_group_".$x."\">".escape($dialplan_detail_group)."</label>\n";
 								}
-								echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_group)."\" onclick='this.select();'>\n";
+								echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 45px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_group)."\" onclick='this.select();'>\n";
 								/*
 								echo "	<select id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 								echo "	<option value=''></option>\n";
@@ -913,7 +913,7 @@
 								if ($element['hidden']) {
 									echo "	<label id=\"label_dialplan_detail_order_".$x."\">".escape($dialplan_detail_order)."</label>\n";
 								}
-								echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='number' min='0' step='1' style='width: 32px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_order)."\" onclick='this.select();'>\n";
+								echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='number' min='0' step='1' style='width: 45px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".escape($dialplan_detail_order)."\" onclick='this.select();'>\n";
 								/*
 								echo "	<select id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 								if (strlen($dialplan_detail_order)> 0) {
