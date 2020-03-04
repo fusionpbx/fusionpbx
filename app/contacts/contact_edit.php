@@ -743,7 +743,6 @@
 						}
 						echo "			</td>\n";
 					}
-// 					echo "					<a href='contact_user_delete.php?id=".urlencode($field['contact_user_uuid'])."&contact_uuid=".urlencode($contact_uuid)."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>\n";
 					echo "			</tr>\n";
 				}
 			}
@@ -800,7 +799,6 @@
 							}
 							echo "				</td>\n";
 						}
-// 						echo "	<a href='contact_group_delete.php?id=".urlencode($field['contact_group_uuid'])."&contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>\n";
 						echo "			</tr>\n";
 					}
 				}
