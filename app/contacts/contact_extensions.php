@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -52,58 +52,56 @@
 	$contact_extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//show the content
-	echo "<div class='action_bar sub shrink'>\n";
-	echo "	<div class='heading'><b>".$text['label-contact_extensions']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	/*
-	if (permission_exists('contact_url_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>PROJECT_PATH.'/app/extensions/extension_edit.php']);
-	}
-	*/
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	echo "<th>".$text['label-extension']."</th>\n";
-	echo "<th class='center'>".$text['label-enabled']."</th>\n";
-	echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
-	if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
-	echo "</tr>\n";
-
+//show if exists
 	if (is_array($contact_extensions) && @sizeof($contact_extensions) != 0) {
-		$x = 0;
-		foreach ($contact_extensions as $row) {
-			if (permission_exists('extension_edit')) {
-				$list_row_url = PROJECT_PATH.'/app/extensions/extension_edit.php?id='.urlencode($row['extension_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."' ".($row['url_primary'] ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td>";
-			if (permission_exists('extension_edit')) {
-				echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".urlencode($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
-			}
-			else {
-				echo $row['extension'];
-			}
-			echo "	</td>\n";
-			echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
-			echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
+
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['label-contact_extensions']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
+			echo "<th>".$text['label-extension']."</th>\n";
+			echo "<th class='center'>".$text['label-enabled']."</th>\n";
+			echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
 			if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
+				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
-			$x++;
-		}
-	}
-	unset($contact_extensions);
 
-	echo "</table>";
-	echo "<br />\n";
+			if (is_array($contact_extensions) && @sizeof($contact_extensions) != 0) {
+				$x = 0;
+				foreach ($contact_extensions as $row) {
+					if (permission_exists('extension_edit')) {
+						$list_row_url = PROJECT_PATH.'/app/extensions/extension_edit.php?id='.urlencode($row['extension_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."' ".($row['url_primary'] ? "style='font-weight: bold;'" : null).">\n";
+					echo "	<td>";
+					if (permission_exists('extension_edit')) {
+						echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".urlencode($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
+					}
+					else {
+						echo $row['extension'];
+					}
+					echo "	</td>\n";
+					echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
+					if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+			}
+			unset($contact_extensions);
+
+			echo "</table>";
+			echo "<br />\n";
+
+	}
 
 ?>
