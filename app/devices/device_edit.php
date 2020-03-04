@@ -1067,10 +1067,13 @@
 				echo "			</td>\n";
 
 				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
-					echo "			<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_line_uuid'])) {
+						echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
 						echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
+					}
+					else {
+						echo "			<td>\n";
 					}
 					echo "			</td>\n";
 				}
@@ -1380,10 +1383,13 @@
 				echo "</td>\n";
 
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-					echo "				<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_key_uuid'])) {
+						echo "				<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys' onclick=\"edit_delete_action('keys');\">\n";
 						echo "					<input type='hidden' name='device_keys_delete[".$x."][uuid]' value='".escape($row['device_key_uuid'])."' />\n";
+					}
+					else {
+						echo "				<td>\n";
 					}
 				}
 				echo "				</td>\n";
@@ -1459,10 +1465,13 @@
 				echo "</td>\n";
 
 				if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
-					echo "<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_setting_uuid'])) {
+						echo "<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "	<input type='checkbox' name='device_settings_delete[".$x."][checked]' value='true' class='chk_delete checkbox_settings' onclick=\"edit_delete_action('settings');\">\n";
 						echo "	<input type='hidden' name='device_settings_delete[".$x."][uuid]' value='".escape($row['device_setting_uuid'])."' />\n";
+					}
+					else {
+						echo "<td>\n";
 					}
 					echo "</td>\n";
 				}

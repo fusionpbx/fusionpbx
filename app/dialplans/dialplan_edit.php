@@ -937,10 +937,13 @@
 								echo "</td>\n";
 							//tools
 								if (permission_exists('dialplan_detail_delete')) {
-									echo "<td style='text-align: center;'>";
 									if (is_uuid($dialplan_detail_uuid)) {
+										echo "<td class='vtable' style='text-align: center;'>";
 										echo "	<input type='checkbox' name='dialplan_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_group_".$g."' onclick=\"edit_delete_action('group_".$g."');\">\n";
 										echo "	<input type='hidden' name='dialplan_details_delete[".$x."][uuid]' value='".escape($dialplan_detail_uuid)."' />\n";
+									}
+									else {
+										echo "<td>\n";
 									}
 									echo "	</td>\n";
 								}

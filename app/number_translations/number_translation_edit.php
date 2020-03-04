@@ -269,9 +269,9 @@
 		echo "		<tr>\n";
 		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_uuid]' value=\"".escape($row["number_translation_uuid"])."\">\n";
 		echo "			<input type='hidden' name='number_translation_details[$x][number_translation_detail_uuid]' value=\"".(is_uuid($row["number_translation_detail_uuid"]) ? $row["number_translation_detail_uuid"] : uuid())."\">\n";
-		echo "			<td><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".escape($row["number_translation_detail_regex"])."\"></td>\n";
-		echo "			<td><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".escape($row["number_translation_detail_replace"])."\"></td>\n";
-		echo "			<td>\n";
+		echo "			<td class='formfld'><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_regex]' maxlength='255' value=\"".escape($row["number_translation_detail_regex"])."\"></td>\n";
+		echo "			<td class='formfld'><input class='formfld' type='text' name='number_translation_details[$x][number_translation_detail_replace]' maxlength='255' value=\"".escape($row["number_translation_detail_replace"])."\"></td>\n";
+		echo "			<td class='formfld'>\n";
 		echo "				<select name='number_translation_details[$x][number_translation_detail_order]' class='formfld'>\n";
 		$i=0;
 		while ($i<=999) {
@@ -290,10 +290,13 @@
 		echo "				</select>\n";
 		echo "			</td>\n";
 		if (is_array($number_translation_details) && @sizeof($number_translation_details) > 1 && permission_exists('number_translation_detail_delete')) {
-			echo "		<td style='text-align: center;'>";
 			if (is_uuid($row['number_translation_detail_uuid'])) {
-				echo "				<input type='checkbox' name='number_translation_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
-				echo "				<input type='hidden' name='number_translation_details_delete[".$x."][uuid]' value='".escape($row['number_translation_detail_uuid'])."' />\n";
+				echo "		<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+				echo "			<input type='checkbox' name='number_translation_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
+				echo "			<input type='hidden' name='number_translation_details_delete[".$x."][uuid]' value='".escape($row['number_translation_detail_uuid'])."' />\n";
+			}
+			else {
+				echo "		<td>\n";
 			}
 			echo "		</td>\n";
 		}
