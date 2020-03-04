@@ -521,6 +521,19 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			document.location.href='#';
 		}
 
+		function hide_password_fields() {
+			var password_fields = document.querySelectorAll("input[type='password']");
+			for (var p = 0, max = password_fields.length; p < max; p++) {
+				password_fields[p].style.visibility = 'hidden';
+				password_fields[p].type = 'text';
+			}
+		}
+
+		window.addEventListener('beforeunload', function(e){
+			hide_password_fields();
+			e.returnValue = ''; //required by chrome
+		});
+
 </script>
 
 <?php
