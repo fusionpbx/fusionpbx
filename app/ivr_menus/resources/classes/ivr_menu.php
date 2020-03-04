@@ -215,7 +215,7 @@ if (!class_exists('ivr_menu')) {
 							}
 
 						//get ivr menu context
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
+							if (is_array($array) && @sizeof($array) != 0 && is_uuid($this->ivr_menu_uuid)) {
 								$sql = "select ivr_menu_context from v_ivr_menus ";
 								$sql .= "where (domain_uuid = :domain_uuid) ";
 								$sql .= "and ivr_menu_uuid = :ivr_menu_uuid ";
@@ -228,12 +228,20 @@ if (!class_exists('ivr_menu')) {
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//clear the cache
+									if ($ivr_menu_context != '') {
+										$cache = new cache;
+										$cache->delete("dialplan:".$ivr_menu_context);
+									}
+
 							}
 							unset($records);
 					}
