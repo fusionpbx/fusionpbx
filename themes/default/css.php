@@ -1721,6 +1721,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-size: <?php echo ($_SESSION['theme']['form_table_row_text_size']['text'] != '') ? $_SESSION['theme']['form_table_row_text_size']['text'] : '9pt'; ?>;
 		}
 
+	.vtablerow > label {
+		margin-left: 0.6em;
+		margin-right: 0.6em;
+		margin-bottom: 2px;
+		}
+
 	.row_style0 {
 		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
 		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
