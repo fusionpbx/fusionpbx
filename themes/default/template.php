@@ -531,7 +531,6 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 
 		window.addEventListener('beforeunload', function(e){
 			hide_password_fields();
-			e.returnValue = ''; //required by chrome
 		});
 
 </script>
