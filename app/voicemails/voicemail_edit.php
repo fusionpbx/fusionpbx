@@ -561,13 +561,13 @@
 
 		for ($c = 0; $c < 1; $c++) {
 			echo "<tr>\n";
-			echo "	<td class='vtable' align='left'>\n";
+			echo "	<td class='vtable' style='border-bottom: none;' align='left'>\n";
 			echo "		<input class='formfld' style='width: 50px; text-align: center;' type='text' name='voicemail_options[".$c."][voicemail_option_digits]' maxlength='255' value='".$voicemail_option_digits."'>\n";
 			echo "	</td>\n";
-			echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
+			echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 			echo 		$destination->select('ivr', 'voicemail_options['.$c.'][voicemail_option_param]', '');
 			echo "	</td>\n";
-			echo "	<td class='vtable' align='left'>\n";
+			echo "	<td class='vtable' style='border-bottom: none;' align='left'>\n";
 			echo "		<select name='voicemail_options[".$c."][voicemail_option_order]' class='formfld' style='width:55px'>\n";
 			if (strlen(htmlspecialchars($voicemail_option_order))> 0) {
 				echo "		<option selected='yes' value='".htmlspecialchars($voicemail_option_order)."'>".htmlspecialchars($voicemail_option_order)."</option>\n";
@@ -587,7 +587,7 @@
 			}
 			echo "		</select>\n";
 			echo "	</td>\n";
-			echo "	<td class='vtable' align='left'>\n";
+			echo "	<td class='vtable' style='border-bottom: none;' align='left'>\n";
 			echo "		<input class='formfld' style='width:100px' type='text' name='voicemail_options[".$c."][voicemail_option_description]' maxlength='255' value=\"".$voicemail_option_description."\">\n";
 			echo "	</td>\n";
 
@@ -703,7 +703,7 @@
 
 		if (is_array($voicemail_destinations_available) && @sizeof($voicemail_destinations_available) != 0) {
 			echo "	<tr>\n";
-			echo "		<td class='vtable' colspan='2'>\n";
+			echo "		<td class='vtable' style='border-bottom: none;' colspan='2'>\n";
 			echo "			<select name='voicemail_destination' class='formfld'>\n";
 			echo "				<option value=''></option>\n";
 			foreach ($voicemail_destinations_available as $field) {
