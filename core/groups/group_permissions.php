@@ -142,6 +142,13 @@
 					$database->delete($array['delete']);
 				}
 			}
+
+		//set the message
+			message::add($text['message-update']);
+
+		//redirect
+			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid));
+			exit;
 	}
 
 //get order and order by
