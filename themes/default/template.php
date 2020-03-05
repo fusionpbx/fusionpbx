@@ -1003,7 +1003,7 @@ else {
 	echo "			first_submit = document.createElement('input');\n";
 	echo "			first_submit.type = 'submit';\n";
 	echo "			first_submit.id = 'default_submit';\n";
-	echo "			first_submit.style.display = 'none';\n";
+	echo "			first_submit.setAttribute('style',\"position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;\");\n"; //note: safari doesn't honor first submit element using "display: none;"
 	echo "			first_form.prepend(first_submit);\n";
 	echo "			window.addEventListener('keydown',function(e){\n";
 	echo "				if (e.which == 13 && (e.target.tagName == 'INPUT' || e.target.tagName == 'SELECT')) {\n";
