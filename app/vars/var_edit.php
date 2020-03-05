@@ -184,7 +184,7 @@
 	require_once "resources/header.php";
 
 //show contents
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-variable']."</b></div>\n";

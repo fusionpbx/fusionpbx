@@ -297,7 +297,7 @@
 	echo $text['description-call_center_agent_status']."\n";
 	echo "<br /><br />\n";
 
-	echo "<form id='form_list' method='post' action=''>\n";
+	echo "<form id='form_list' method='post'>\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";

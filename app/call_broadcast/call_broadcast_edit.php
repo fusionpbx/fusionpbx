@@ -284,7 +284,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //begin content
-	echo "<form name='frm' method='post' enctype='multipart/form-data'>\n";
+	echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_broadcast']."</b></div>\n";

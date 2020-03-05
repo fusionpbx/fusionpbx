@@ -120,7 +120,7 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' method='get'>\n";
+	echo "<form name='frm' id='frm' method='get'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-gswave']."</b></div>\n";

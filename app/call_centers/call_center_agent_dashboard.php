@@ -170,7 +170,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<form id='form_list_call_center_agent_dashboard' method='post' action=''>\n";
+	echo "<form id='form_list_call_center_agent_dashboard' method='post'>\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
