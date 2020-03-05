@@ -403,7 +403,7 @@
 		echo 	"</form>";
 	}
 	if (permission_exists('music_on_hold_delete') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -484,7 +484,8 @@
 					echo "	<tr class='list-header'>\n";
 					if (permission_exists('music_on_hold_delete')) {
 						echo "	<th class='checkbox'>\n";
-						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='moh[".$row['music_on_hold_uuid']."][checked]' value='true' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."');\">\n";
+						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : 'false';\">\n";
+						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]' value='true' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."');\">\n";
 						echo "	</th>\n";
 					}
 					echo "		<th class='pct-50'>".$stream_details."</th>\n";

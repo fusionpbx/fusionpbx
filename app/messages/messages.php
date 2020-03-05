@@ -213,7 +213,7 @@
 	echo "	<div class='heading'><b>".$text['title-messages']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('message_add')) {
-		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
+		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['label-log'],'icon'=>'list','link'=>'messages_log.php']);
 	echo "	</div>\n";

@@ -911,9 +911,9 @@ if (!$included) {
 		echo "<div class='action_bar' id='action_bar'>\n";
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
 		echo "	<div class='actions'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'fax.php']);
-		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'name'=>'submit','value'=>'preview','icon'=>'eye']);
-		echo button::create(['type'=>'submit','label'=>$text['button-send'],'name'=>'submit','value'=>'send','icon'=>'paper-plane','style'=>'margin-left: 15px;']);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
+		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
+		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
