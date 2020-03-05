@@ -1074,11 +1074,11 @@ else {
 	echo "		}\n";
 
 //list,edit: [ctrl]+[a] to check all
-	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19)) {\n";
-	echo "			e.preventDefault();\n";
+	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19) && e.target.id != 'search') {\n";
 	echo "			var list_checkbox_all;\n";
 	echo "			list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');\n";
 	echo "			if (list_checkbox_all !== null && list_checkbox_all.length > 0) {\n";
+	echo "				e.preventDefault();\n";
 	echo "				for (var x = 0, max = list_checkbox_all.length; x < max; x++) {\n";
 	echo "					list_checkbox_all[x].click();\n";
 	echo "				}\n";
@@ -1086,6 +1086,7 @@ else {
 	echo "			var edit_checkbox_all;\n";
 	echo "			edit_checkbox_all = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');\n";
 	echo "			if (edit_checkbox_all !== null && edit_checkbox_all.length > 0) {\n";
+	echo "				e.preventDefault();\n";
 	echo "				for (var x = 0, max = edit_checkbox_all.length; x < max; x++) {\n";
 	echo "					edit_checkbox_all[x].click();\n";
 	echo "				}\n";
