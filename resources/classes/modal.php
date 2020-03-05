@@ -68,3 +68,5 @@ if (!class_exists('modal')) {
 
 	}
 }
+
+?>
