@@ -194,7 +194,7 @@
 		echo "					</table>\n";
 		echo "					<center style='margin-top: 15px;'>\n";
 		echo button::create(['type'=>'reset','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'float: left;','onclick'=>"$('#message_new').reset();"]);
-		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>'times','onclick'=>"$('#message_new_layer').fadeOut(200);"]);
+		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'onclick'=>"$('#message_new_layer').fadeOut(200);"]);
 		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','style'=>'float: right;']);
 		echo "					</center>\n";
 		echo "				</span>\n";
