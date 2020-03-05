@@ -1035,17 +1035,6 @@ else {
 	echo "			if (list_add_button !== null) { list_add_button.click(); }\n";
 	echo "		}\n";
 
-//list: [space] to toggle checked
-	echo "		if (e.which == 32 && !e.target.id != '#search' && list_checkboxes.length !== 0) {\n";
-	echo "			e.preventDefault();\n";
-	echo "			var list_toggle_button;\n";
-	echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
-	echo "			if (list_toggle_button === null || list_toggle_button === 'undefined') {\n";
-	echo "				list_toggle_button = document.getElementById('btn_toggle');\n";
-	echo "			}\n";
-	echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
-	echo "		}\n";
-
 //list: [del] to delete checked, edit: [del] to delete
 	echo "		if (e.which == 46 && !e.target.id != '#search') {\n";
 	echo "			e.preventDefault();\n";
@@ -1072,6 +1061,17 @@ else {
 
 //keydown
 	echo "	window.addEventListener('keydown', function(e) {\n";
+
+//list: [space] to toggle checked
+	echo "		if (e.which == 32 && !e.target.id != '#search' && list_checkboxes.length !== 0) {\n";
+	echo "			e.preventDefault();\n";
+	echo "			var list_toggle_button;\n";
+	echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
+	echo "			if (list_toggle_button === null || list_toggle_button === 'undefined') {\n";
+	echo "				list_toggle_button = document.getElementById('btn_toggle');\n";
+	echo "			}\n";
+	echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
+	echo "		}\n";
 
 //list,edit: [ctrl]+[a] to check all
 	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19)) {\n";
