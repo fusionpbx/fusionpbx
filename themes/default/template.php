@@ -985,6 +985,129 @@ else {
 	unset($_SESSION['background_image']);
 }
 
+
+//add multilingual support
+	$language = new text;
+	$text = $language->get();
+
+//global helper scripts
+	echo "<script>\n";
+
+//retain default behavior of enter to submit form (when present, intended for edit pages)
+	echo "	var action_bar_actions, first_form, first_submit, cursor_focus;\n";
+	echo "	action_bar_actions = document.querySelector('div#action_bar.action_bar > div.actions');\n";
+	echo "	first_form = document.querySelector('form#frm');\n";
+
+	echo "	if (action_bar_actions !== null) {\n";
+	echo "		if (first_form !== null) {\n";
+	echo "			first_submit = document.createElement('input');\n";
+	echo "			first_submit.type = 'submit';\n";
+	echo "			first_submit.id = 'default_submit';\n";
+	echo "			first_submit.style.display = 'none';\n";
+	echo "			first_form.prepend(first_submit);\n";
+	echo "			window.addEventListener('keydown',function(e){\n";
+	echo "				if (e.which == 13 && (e.target.tagName == 'INPUT' || e.target.tagName == 'SELECT')) {\n";
+	echo "					if (typeof window.submit_form === 'function') { submit_form(); }\n";
+	echo "					else { document.getElementById('frm').submit(); }\n";
+	echo "				}\n";
+	echo "			});\n";
+	echo "		}\n";
+	echo "	}\n";
+
+
+//keyboard shortcuts...
+
+//list: common (used by delete and toggle)
+	echo "	var list_checkboxes;\n";
+	echo "	list_checkboxes = document.querySelectorAll('table.list tr.list-row td.checkbox input[type=checkbox]');\n";
+
+//keyup
+	echo "	window.addEventListener('keyup', function(e) {\n";
+
+//list: [insert] to add
+	echo "		if (e.which == 45 && !e.target.id != '#search') {\n";
+	echo "			e.preventDefault();\n";
+	echo "			var list_add_button;\n";
+	echo "			list_add_button = document.getElementById('btn_add');\n";
+	echo "			if (list_add_button === null || list_add_button === 'undefined') {\n";
+	echo "				list_add_button = document.querySelector('button[name=btn_add]');\n";
+	echo "			}\n";
+	echo "			if (list_add_button !== null) { list_add_button.click(); }\n";
+	echo "		}\n";
+
+//list: [space] to toggle checked
+	echo "		if (e.which == 32 && !e.target.id != '#search' && list_checkboxes.length !== 0) {\n";
+	echo "			e.preventDefault();\n";
+	echo "			var list_toggle_button;\n";
+	echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
+	echo "			if (list_toggle_button === null || list_toggle_button === 'undefined') {\n";
+	echo "				list_toggle_button = document.getElementById('btn_toggle');\n";
+	echo "			}\n";
+	echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
+	echo "		}\n";
+
+//list: [del] to delete checked, edit: [del] to delete
+	echo "		if (e.which == 46 && !e.target.id != '#search') {\n";
+	echo "			e.preventDefault();\n";
+	echo "			if (list_checkboxes.length !== 0) {\n";
+	echo "				var list_delete_button;\n";
+	echo "				list_delete_button = document.querySelector('button[name=btn_delete]');\n";
+	echo "				if (list_delete_button === null || list_delete_button === 'undefined') {\n";
+	echo "					list_delete_button = document.getElementById('btn_delete');\n";
+	echo "				}\n";
+	echo "				if (list_delete_button !== null) { list_delete_button.click(); }\n";
+	echo "			}\n";
+	echo "			else {\n";
+	echo "				var edit_delete_button;\n";
+	echo "				edit_delete_button = document.querySelector('button[name=btn_delete]');\n";
+	echo "				if (edit_delete_button === null || edit_delete_button === 'undefined') {\n";
+	echo "					edit_delete_button = document.getElementById('btn_delete');\n";
+	echo "				}\n";
+	echo "				if (edit_delete_button !== null) { edit_delete_button.click(); }\n";
+	echo "			}\n";
+	echo "		}\n";
+
+//keyup end
+	echo "	});\n";
+
+//keydown
+	echo "	window.addEventListener('keydown', function(e) {\n";
+
+//list,edit: [ctrl]+[a] to check all
+	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19)) {\n";
+	echo "			e.preventDefault();\n";
+	echo "			var list_checkbox_all;\n";
+	echo "			list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');\n";
+	echo "			if (list_checkbox_all !== null && list_checkbox_all.length > 0) {\n";
+	echo "				for (var x = 0, max = list_checkbox_all.length; x < max; x++) {\n";
+	echo "					list_checkbox_all[x].click();\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "			var edit_checkbox_all;\n";
+	echo "			edit_checkbox_all = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');\n";
+	echo "			if (edit_checkbox_all !== null && edit_checkbox_all.length > 0) {\n";
+	echo "				for (var x = 0, max = edit_checkbox_all.length; x < max; x++) {\n";
+	echo "					edit_checkbox_all[x].click();\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+
+//edit: [ctrl]+[s] to save
+	echo "		if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19)) {\n";
+	echo "			e.preventDefault();\n";
+	echo "			var edit_save_button;\n";
+	echo "			edit_save_button = document.getElementById('btn_save');\n";
+	echo "			if (edit_save_button === null || edit_save_button === 'undefined') {\n";
+	echo "				edit_save_button = document.querySelector('button[name=btn_save]');\n";
+	echo "			}\n";
+	echo "			if (edit_save_button !== null) { edit_save_button.click(); }\n";
+	echo "		}\n";
+
+//keydown end
+	echo "	});\n";
+
+echo "</script>\n";
+
 echo "</body>\n";
 echo "</html>\n";
 
