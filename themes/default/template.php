@@ -994,7 +994,7 @@ else {
 	echo "<script>\n";
 
 //retain default behavior of enter to submit form (when present, intended for edit pages)
-	echo "	var action_bar_actions, first_form, first_submit, cursor_focus;\n";
+	echo "	var action_bar_actions, first_form, first_submit;\n";
 	echo "	action_bar_actions = document.querySelector('div#action_bar.action_bar > div.actions');\n";
 	echo "	first_form = document.querySelector('form#frm');\n";
 
