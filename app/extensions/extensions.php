@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -339,17 +339,6 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>\n";
-
-//define keyboard shortcuts
-	if ($extensions) {
-		// check all
-		key_press('ctrl+a', 'down', 'document', null, null, "list_all_check();", true);
-
-		// delete checked
-		if (permission_exists('extension_delete')) {
-			key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], "list_action_set('delete'); list_form_submit('form_list');", true);
-		}
-	}
 
 	unset($extensions);
 
