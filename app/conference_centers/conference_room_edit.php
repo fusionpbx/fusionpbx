@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -438,7 +438,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 			//assign the user to the meeting
-				if (is_uuid($user_uuid) && $_SESSION["user_uuid"] != $user_uuid) {
+				if (is_uuid($user_uuid)) {
 					$meeting_user_uuid = uuid();
 					$array['meeting_users'][0]['meeting_user_uuid'] = $meeting_user_uuid;
 					$array['meeting_users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -501,17 +501,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql, $parameters, $row);
 	}
 
-//get the users array
-	$sql = "select * from v_users ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by username asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$users = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
 //get the users assigned to this meeting
-	$sql = "select * from v_users as u, v_meeting_users as m ";
+	$sql = "select u.username, u.user_uuid, m.meeting_user_uuid ";
+	$sql .= "from v_users as u, v_meeting_users as m ";
 	$sql .= "where u.user_uuid = m.user_uuid  ";
 	$sql .= "and m.domain_uuid = :domain_uuid ";
 	$sql .= "and m.meeting_uuid = :meeting_uuid ";
@@ -519,7 +511,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['meeting_uuid'] = $meeting_uuid;
 	$database = new database;
-	$meeting_users = $database->select($sql, $parameters, 'all');
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $row) {
+			$meeting_users[$row['user_uuid']]['username'] = $row['username'];
+			$meeting_users[$row['user_uuid']]['meeting_user_uuid'] = $row['meeting_user_uuid'];
+		}
+	}
+	unset($sql, $parameters);
+
+//get the users array
+	$sql = "select user_uuid, username from v_users ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	if (is_array($meeting_users) && @sizeof($meeting_users) != 0) {
+		$sql .= "and user_uuid not in ('".implode("','", array_keys($meeting_users))."') ";
+	}
+	$sql .= "order by username asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //set default profile
@@ -564,12 +574,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_room']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'conference_rooms.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_rooms.php']);
 	if (is_uuid($meeting_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-left: 15px;','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($meeting_uuid)]);
 		echo button::create(['type'=>'button','label'=>$text['button-sessions'],'icon'=>'list','link'=>'conference_sessions.php?id='.urlencode($meeting_uuid)]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -625,30 +635,30 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		if ($action == "update") {
+		if ($action == "update" && is_array($meeting_users) && @sizeof($meeting_users) != 0) {
 			echo "			<table border='0' style='width : 235px;'>\n";
-			foreach($meeting_users as $field) {
+			foreach ($meeting_users as $user_uuid => $meeting_user) {
 				echo "			<tr>\n";
-				echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
+				echo "				<td class='vtable'>".escape($meeting_user['username'])."</td>\n";
 				echo "				<td style='width: 25px;' align='right'>\n";
 				if (permission_exists('conference_room_delete')) {
-					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".escape($field['meeting_user_uuid'])."&conference_room_uuid=".escape($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					echo "					<a href='conference_room_edit.php?meeting_user_uuid=".escape($meeting_user['meeting_user_uuid'])."&conference_room_uuid=".escape($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
 			echo "			</table>\n";
+			echo "			<br />\n";
 		}
-		echo "			<br />\n";
-		if (permission_exists('conference_room_add')) {
-			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-			echo "			<option value=\"\"></option>\n";
-			foreach($users as $field) {
-				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+		if (permission_exists('conference_room_add') && is_array($users) && @sizeof($users) != 0) {
+			echo "			<select name='user_uuid' class='formfld' style='width: auto;'>\n";
+			echo "				<option value=''></option>\n";
+			foreach ($users as $user) {
+				echo "			<option value='".escape($user['user_uuid'])."'>".escape($user['username'])."</option>\n";
 			}
 			echo "			</select>";
 			if ($action == "update") {
-				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 			}
 			unset($users);
 			echo "			<br>\n";

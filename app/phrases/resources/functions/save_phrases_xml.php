@@ -39,6 +39,9 @@ function save_phrases_xml() {
 					}
 
 					//create/open new xml file for writing
+					if (!file_exists($_SESSION['switch']['phrases']['dir']."/".$row['phrase_language']."/phrases/")) {
+						mkdir($_SESSION['switch']['phrases']['dir']."/".$row['phrase_language']."/phrases/", 0755);
+					}
 					$xml_path = $_SESSION['switch']['phrases']['dir']."/".$row['phrase_language']."/phrases/".$domain_uuid.".xml";
 					$fout = fopen($xml_path, "w");
 					$xml = "<include>\n";
@@ -68,18 +71,22 @@ function save_phrases_xml() {
 				$prev_language = $row['phrase_language'];
 
 			}
+
+			if ($fout && $xml) {
+				//output xml & close previous file
+				$xml .= "</include>\n";
+
+				fwrite($fout, $xml);
+				unset($xml);
+				fclose($fout);
+			}
+
 		}
 		unset($result, $row);
-
-		//output xml & close previous file
-		$xml .= "</include>\n";
-
-		fwrite($fout, $xml);
-		unset($xml);
-		fclose($fout);
 
 	//apply settings
 		$_SESSION["reload_xml"] = true;
 
 }
+
 ?>

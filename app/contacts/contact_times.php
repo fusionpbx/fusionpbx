@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -56,77 +56,72 @@
 	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//show the content
-	echo "<div class='action_bar sub shrink'>\n";
-	echo "	<div class='heading'><b>".$text['header_contact_times']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	/*
-	if (permission_exists('contact_time_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_time_edit.php?contact_uuid='.urlencode($contact_uuid)]);
-	}
-	if (permission_exists('contact_time_delete') && $contact_times) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	}
-	*/
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('contact_time_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all_times' name='checkbox_all' onclick=\"list_all_toggle('times');\" ".($contact_times ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
-	echo "<th class='pct-20'>".$text['label-time_user']."</th>\n";
-	echo "<th class='pct-20'>".$text['label-time_start']."</th>\n";
-	echo "<th class='pct-20'>".$text['label-time_duration']."</th>\n";
-	echo "<th class='pct-40 hide-md-dn'>".$text['label-time_description']."</th>\n";
-	if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
-	echo "</tr>\n";
-
+//show if exists
 	if (is_array($contact_times) && @sizeof($contact_times) != 0) {
-		$x = 0;
-		foreach ($contact_times as $row) {
-			if ($row["time_start"] != '' && $row['time_stop'] != '') {
-				$time_start = strtotime($row["time_start"]);
-				$time_stop = strtotime($row['time_stop']);
-				$time = gmdate("H:i:s", ($time_stop - $time_start));
-			}
-			else {
-				unset($time);
-			}
-			$tmp = explode(' ', $row['time_start']);
-			$time_start = $tmp[0];
-			if (permission_exists('contact_time_edit')) {
-				$list_row_url = "contact_time_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_time_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['header_contact_times']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_time_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='contact_times[$x][checked]' id='checkbox_".$x."' class='checkbox_times' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_times').checked = false; }\">\n";
-				echo "		<input type='hidden' name='contact_times[$x][uuid]' value='".escape($row['contact_time_uuid'])."' />\n";
-				echo "	</td>\n";
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all_times' name='checkbox_all' onclick=\"edit_all_toggle('times');\" ".($contact_times ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
 			}
-			echo "	<td><span ".($row['user_domain_uuid'] != $domain_uuid ? "title='".$_SESSION['domains'][escape($row['user_domain_uuid'])]['domain_name']."' style='cursor: help;'" : null).">".escape($row["username"])."</span>&nbsp;</td>\n";
-			echo "	<td>".$time_start."&nbsp;</td>\n";
-			echo "	<td>".$time."&nbsp;</td>\n";
-			echo "	<td class='description overflow hide-md-dn'>".escape($row['time_description'])."&nbsp;</td>\n";
+			echo "<th class='pct-20'>".$text['label-time_user']."</th>\n";
+			echo "<th class='pct-20'>".$text['label-time_start']."</th>\n";
+			echo "<th class='pct-20'>".$text['label-time_duration']."</th>\n";
+			echo "<th class='pct-40 hide-md-dn'>".$text['label-time_description']."</th>\n";
 			if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
+				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
-			$x++;
-		}
-		unset($contact_times);
-	}
 
-	echo "</table>\n";
-	echo "<br />\n";
+			if (is_array($contact_times) && @sizeof($contact_times) != 0) {
+				$x = 0;
+				foreach ($contact_times as $row) {
+					if ($row["time_start"] != '' && $row['time_stop'] != '') {
+						$time_start = strtotime($row["time_start"]);
+						$time_stop = strtotime($row['time_stop']);
+						$time = gmdate("H:i:s", ($time_stop - $time_start));
+					}
+					else {
+						unset($time);
+					}
+					$tmp = explode(' ', $row['time_start']);
+					$time_start = $tmp[0];
+					if (permission_exists('contact_time_edit')) {
+						$list_row_url = "contact_time_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_time_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					if (permission_exists('contact_time_delete')) {
+						echo "	<td class='checkbox'>\n";
+						echo "		<input type='checkbox' name='contact_times[$x][checked]' id='checkbox_".$x."' class='checkbox_times' value='true' onclick=\"edit_delete_action('times');\">\n";
+						echo "		<input type='hidden' name='contact_times[$x][uuid]' value='".escape($row['contact_time_uuid'])."' />\n";
+						echo "	</td>\n";
+					}
+					echo "	<td><span ".($row['user_domain_uuid'] != $domain_uuid ? "title='".$_SESSION['domains'][escape($row['user_domain_uuid'])]['domain_name']."' style='cursor: help;'" : null).">".escape($row["username"])."</span>&nbsp;</td>\n";
+					echo "	<td>".$time_start."&nbsp;</td>\n";
+					echo "	<td>".$time."&nbsp;</td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".escape($row['time_description'])."&nbsp;</td>\n";
+					if (permission_exists('contact_time_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+				unset($contact_times);
+			}
+
+			echo "</table>\n";
+			echo "<br />\n";
+
+	}
 
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -720,15 +720,17 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		$phone_number = trim($phone_number, ' +');
-		if (is_numeric($phone_number)) {
-			if (isset($_SESSION["format"]["phone"])) foreach ($_SESSION["format"]["phone"] as &$format) {
-				$format_count = substr_count($format, 'x');
-				$format_count = $format_count + substr_count($format, 'R');
-				$format_count = $format_count + substr_count($format, 'r');
-				if ($format_count == strlen($phone_number)) {
-					//format the number
-					$phone_number = format_string($format, $phone_number);
+		if (is_numeric(trim($phone_number, ' +'))) {
+			if (isset($_SESSION["format"]["phone"])) {
+				$phone_number = trim($phone_number, ' +');
+				foreach ($_SESSION["format"]["phone"] as &$format) {
+					$format_count = substr_count($format, 'x');
+					$format_count = $format_count + substr_count($format, 'R');
+					$format_count = $format_count + substr_count($format, 'r');
+					if ($format_count == strlen($phone_number)) {
+						//format the number
+						$phone_number = format_string($format, $phone_number);
+					}
 				}
 			}
 		}
@@ -1585,6 +1587,9 @@ function number_pad($number,$n) {
 					case 'backspace':
 						$key_code = '(e.which == 8)';
 						break;
+					case 'space':
+						$key_code = '(e.which == 32)';
+						break;
 					case 'ctrl+s':
 						$key_code = '(((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
 						break;
@@ -1921,7 +1926,15 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		if (is_array($string)) {
+			return false;
+		}
+		elseif (isset($string) && strlen($string)) {
+			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+		else {
+			return false;
+		}
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
@@ -2078,6 +2091,20 @@ function number_pad($number,$n) {
 			else {
 				return false;
 			}
+		}
+	}
+
+//convert bytes to readable human format
+	if (!function_exists('byte_convert')) {
+		function byte_convert($bytes, $precision = 2) {
+			static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+			$step = 1024;
+			$i = 0;
+			while (($bytes / $step) > 0.9) {
+				$bytes = $bytes / $step;
+				$i++;
+			}
+			return round($bytes, $precision).' '.$units[$i];
 		}
 	}
 

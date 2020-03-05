@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="domain-variables" number="" continue="true" app_uuid="9f356fe7-8cf8-4c14-8fe2-6daf89304458" order="20">
+		<condition>
+			<action application="export" data="origination_callee_id_name=${destination_number}"/>
+		</condition>
+	</extension>
+</context>

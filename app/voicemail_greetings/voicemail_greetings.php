@@ -418,7 +418,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	if (permission_exists('voicemail_greeting_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='a' type='hidden' value='upload'>\n";
@@ -435,7 +435,7 @@
 		echo 	"</form>";
 	}
 	if (permission_exists('voicemail_greeting_delete') && $greetings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -554,10 +554,6 @@
 			}
 			echo "</tr>\n";
 			$x++;
-
-			/*
-			echo "<a href='voicemail_greeting_delete.php?id=".escape($row['voicemail_greeting_uuid'])."&voicemail_id=".escape($voicemail_id)."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>";
-			*/
 		}
 		unset($greetings);
 	}

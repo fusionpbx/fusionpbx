@@ -55,11 +55,6 @@ if (!class_exists('menu')) {
 			//assign the variables
 				$this->app_name = 'menus';
 				$this->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
-				$this->name = 'menu';
-				$this->table = 'menus';
-				$this->toggle_field = '';
-				$this->toggle_values = ['true','false'];
-				$this->description_field = 'menu_description';
 				$this->location = 'menus.php';
 		}
 
@@ -77,6 +72,10 @@ if (!class_exists('menu')) {
 		 * delete rows from the database
 		 */
 		public function delete($records) {
+			//assign the variables
+				$this->name = 'menu';
+				$this->table = 'menus';
+
 			if (permission_exists($this->name.'_delete')) {
 
 				//add multi-lingual support
@@ -96,33 +95,128 @@ if (!class_exists('menu')) {
 						//build the delete array
 							$x = 0;
 							foreach ($records as $record) {
-								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										//remove menu languages
-											$array['menu_languages'][$x][$this->name.'_uuid'] = $record['uuid'];
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//remove menu languages
+										$array['menu_languages'][$x][$this->name.'_uuid'] = $record['uuid'];
 
-										//remove menu item groups
-											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+									//remove menu item groups
+										$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
 
-										//remove menu items
-											$array['menu_items'][$x][$this->name.'_uuid'] = $record['uuid'];
+									//remove menu items
+										$array['menu_items'][$x][$this->name.'_uuid'] = $record['uuid'];
 
-										//build array to remove the menu
-											$array['menus'][$x][$this->name.'_uuid'] = $record['uuid'];
-									}
+									//build array to remove the menu
+										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 
-								//increment the id
-									$x++;
+									//increment
+										$x++;
+								}
 							}
 
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('menu_item_delete', 'temp');
+									$p->add('menu_item_group_delete', 'temp');
+									$p->add('menu_language_delete', 'temp');
+
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('menu_item_delete', 'temp');
+									$p->delete('menu_item_group_delete', 'temp');
+									$p->delete('menu_language_delete', 'temp');
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		public function delete_items($records) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+
+			if (permission_exists($this->name.'_delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build array
+										$uuids[] = "'".$record['uuid']."'";
+									//remove menu languages
+										$array['menu_languages'][$x][$this->name.'_uuid'] = $record['uuid'];
+									//remove menu item groups
+										$array['menu_item_groups'][$x][$this->name.'_uuid'] = $record['uuid'];
+									//remove menu items
+										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+									//increment
+										$x++;
+								}
+							}
+
+						//include child menu items
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select menu_item_uuid as uuid from v_".$this->table." ";
+								$sql .= "where menu_item_parent_uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										//remove menu languages
+											$array['menu_languages'][$x][$this->name.'_uuid'] = $row['uuid'];
+										//remove menu item groups
+											$array['menu_item_groups'][$x][$this->name.'_uuid'] = $row['uuid'];
+										//remove menu items
+											$array[$this->table][$x][$this->name.'_uuid'] = $row['uuid'];
+										//increment
+											$x++;
+									}
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('menu_language_delete', 'temp');
+									$p->add('menu_item_group_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('menu_language_delete', 'temp');
+									$p->delete('menu_item_group_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
@@ -135,7 +229,13 @@ if (!class_exists('menu')) {
 		/**
 		 * toggle a field between two values
 		 */
-		public function toggle($records) {
+		public function toggle_items($records) {
+			//assign the variables
+				$this->name = 'menu_item';
+				$this->table = 'menu_items';
+				$this->toggle_field = 'menu_item_protected';
+				$this->toggle_values = ['true','false'];
+
 			if (permission_exists($this->name.'_edit')) {
 
 				//add multi-lingual support
@@ -144,7 +244,7 @@ if (!class_exists('menu')) {
 
 				//validate the token
 					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
+					if (!$token->validate('/core/menu/menu_item_list.php')) {
 						message::add($text['message-invalid_token'],'negative');
 						header('Location: '.$this->location);
 						exit;
@@ -153,7 +253,7 @@ if (!class_exists('menu')) {
 				//toggle the checked records
 					if (is_array($records) && @sizeof($records) != 0) {
 						//get current toggle state
-							foreach($records as $record) {
+							foreach ($records as $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
@@ -165,7 +265,7 @@ if (!class_exists('menu')) {
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
+										$states[$row['uuid']] = $row['toggle'] == '' ? $this->toggle_values[1] : $row['toggle'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -173,12 +273,12 @@ if (!class_exists('menu')) {
 
 						//build update array
 							$x = 0;
-							foreach($states as $uuid => $state) {
+							foreach ($states as $uuid => $state) {
 								//create the array
 									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
 									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-								//increment the id
+								//increment
 									$x++;
 							}
 
@@ -195,74 +295,6 @@ if (!class_exists('menu')) {
 									message::add($text['message-toggle']);
 							}
 							unset($records, $states);
-					}
-			}
-		}
-
-		/**
-		 * copy rows from the database
-		 */
-		public function copy($records) {
-			if (permission_exists($this->name.'_add')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//create the array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = 0;
-									foreach ($rows as $row) {
-										//copy data
-											$array[$this->table][$x] = $row;
-
-										//add copy to the description
-											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
-
-										//increment the id
-											$x++;
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
-								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-copy']);
-							}
-							unset($records);
 					}
 			}
 		}
@@ -327,7 +359,7 @@ if (!class_exists('menu')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$x = 0;
 				if (is_array($config_list)) {
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						$app_path = dirname($config_path);
 						$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 						$y = 0;
@@ -626,7 +658,6 @@ if (!class_exists('menu')) {
 		 */
 		private function build_child_html($menu_item_level, $submenu_array) {
 
-			$db = $this->db;
 			$menu_item_level = $menu_item_level+1;
 
 			if (count($_SESSION['groups']) == 0) {

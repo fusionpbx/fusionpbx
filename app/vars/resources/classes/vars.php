@@ -234,7 +234,7 @@ if (!class_exists('vars')) {
 
 										//overwrite
 											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = uuid();
-											$array[$this->table][$x]['var_description'] = trim($row['var_description'].' ('.$text['label-copy'].')');
+											$array[$this->table][$x]['var_description'] = base64_encode(trim(base64_decode($row['var_description'])).' ('.$text['label-copy'].')');
 
 									}
 								}

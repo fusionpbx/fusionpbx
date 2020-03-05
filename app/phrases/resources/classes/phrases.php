@@ -41,6 +41,11 @@ if (!class_exists('phrases')) {
 		private $toggle_values;
 
 		/**
+		 * declare public variables
+		 */
+		public $phrase_uuid;
+
+		/**
 		 * called when the object is created
 		 */
 		public function __construct() {
@@ -128,7 +133,7 @@ if (!class_exists('phrases')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('phrase_details_delete', 'temp');
+									$p->add('phrase_detail_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -138,7 +143,7 @@ if (!class_exists('phrases')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('phrase_details_delete', 'temp');
+									$p->delete('phrase_detail_delete', 'temp');
 
 								//save the xml
 									save_phrases_xml();
@@ -154,6 +159,83 @@ if (!class_exists('phrases')) {
 									message::add($text['message-delete']);
 							}
 							unset($records, $phrase_languages);
+					}
+			}
+		}
+
+		public function delete_details($records) {
+			//assign private variables
+				$this->permission_prefix = 'phrase_';
+				$this->list_page = 'phrase_edit.php?id='.$this->phrase_uuid;
+				$this->table = 'phrase_details';
+				$this->uuid_prefix = 'phrase_detail_';
+
+			if (permission_exists($this->permission_prefix.'edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked phrases, build the delete array
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+									$array[$this->table][$x]['phrase_uuid'] = $this->phrase_uuid;
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
+							}
+
+						//get phrase languages
+							if (is_array($array) && @sizeof($array) != 0) {
+								$sql = "select phrase_language as lang from v_phrases ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and phrase_uuid = :phrase_uuid ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['phrase_uuid'] = $this->phrase_uuid;
+								$database = new database;
+								$phrase_language = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('phrase_detail_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('phrase_detail_delete', 'temp');
+
+								//save the xml
+									save_phrases_xml();
+
+								//clear the cache
+									if ($phrase_language != '') {
+										$cache = new cache;
+										$cache->delete("languages:".$phrase_language);
+									}
+
+							}
+							unset($records, $phrase_language);
 					}
 			}
 		}

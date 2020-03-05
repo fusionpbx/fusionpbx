@@ -26,10 +26,7 @@ if (!class_exists('access_controls')) {
 			//assign private variables
 				$this->app_name = 'access_controls';
 				$this->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-				$this->permission_prefix = 'access_control_';
 				$this->list_page = 'access_controls.php';
-				$this->table = 'access_controls';
-				$this->uuid_prefix = 'access_control_';
 
 		}
 
@@ -47,6 +44,12 @@ if (!class_exists('access_controls')) {
 		 * delete records
 		 */
 		public function delete($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'access_control_';
+				$this->table = 'access_controls';
+				$this->uuid_prefix = 'access_control_';
+
 			if (permission_exists($this->permission_prefix.'delete')) {
 
 				//add multi-lingual support
@@ -107,10 +110,75 @@ if (!class_exists('access_controls')) {
 			}
 		}
 
+		public function delete_nodes($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'access_control_node_';
+				$this->table = 'access_control_nodes';
+				$this->uuid_prefix = 'access_control_node_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/app/access_controls/access_control_nodes.php')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//build the delete array
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//clear the cache
+									$cache = new cache;
+									$cache->delete("configuration:acl.conf");
+
+								//create the event socket connection
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									if ($fp) {
+										event_socket_request($fp, "api reloadacl");
+									}
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
 		/**
 		 * copy records
 		 */
 		public function copy($records) {
+
+			//assign private variables
+				$this->permission_prefix = 'access_control_';
+				$this->table = 'access_controls';
+				$this->uuid_prefix = 'access_control_';
+
 			if (permission_exists($this->permission_prefix.'add')) {
 
 				//add multi-lingual support

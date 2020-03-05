@@ -420,7 +420,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 }
 
 
-if (sizeof($user_extensions) > 0) {
+if (is_array($user_extensions) && @sizeof($user_extensions) > 0) {
 	echo "<table width='100%'><tr><td>";
 	if (is_array($user_extensions)) foreach ($user_extensions as $ext_block) {
 		echo $ext_block;
@@ -429,11 +429,11 @@ if (sizeof($user_extensions) > 0) {
 }
 
 if ($_REQUEST['group'] != '') {
-	if (sizeof($user_extensions) > 0) { echo "<br>"; }
+	if (is_array($user_extensions) && @sizeof($user_extensions) > 0) { echo "<br>"; }
 	echo "<strong style='color: black;'>".ucwords(escape($_REQUEST['group']))."</strong>";
 	echo "<br><br>";
 }
-else if (sizeof($user_extensions) > 0) {
+else if (is_array($user_extensions) && @sizeof($user_extensions) > 0) {
 	echo "<br>";
 	echo "<strong style='color: black;'>".$text['label-other_extensions']."</strong>";
 	echo "<br><br>";

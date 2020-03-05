@@ -55,18 +55,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "sip_profile_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "sip_profile_setting_view";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "sip_profile_setting_add";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "sip_profile_setting_edit";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "sip_profile_setting_delete";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "sip_profile_domain_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;

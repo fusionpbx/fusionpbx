@@ -503,17 +503,17 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-fax_server_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'fax.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'fax.php']);
 	$button_margin = 'margin-left: 15px;';
 	if (permission_exists('fax_extension_copy') && $action == "update") {
-		echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
 		unset($button_margin);
 	}
 	if (permission_exists('fax_extension_delete') && $action == "update") {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
 		unset($button_margin);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -671,7 +671,7 @@
 				echo "		<td class='vtable'>";
 
 				if (is_array($fax_users) && @sizeof($fax_users) != 0) {
-					echo "		<table width='52%'>\n";
+					echo "		<table style='width: 50%; min-width: 200px; max-width: 450px;'>\n";
 					foreach($fax_users as $field) {
 						echo "		<tr>\n";
 						echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
@@ -684,20 +684,19 @@
 					echo "		<br />\n";
 				}
 				unset($fax_users);
-
-				echo "			<select name='user_uuid' class='formfld' style='width: auto;'>\n";
-				echo "				<option value=''></option>\n";
 				if (is_array($available_users) && @sizeof($available_users) != 0) {
+					echo "		<select name='user_uuid' class='formfld' style='width: auto;'>\n";
+					echo "			<option value=''></option>\n";
 					foreach($available_users as $field) {
-						echo "		<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+						echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 					}
+					echo "		</select>";
+					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+					echo "		<br>\n";
+					echo "		".$text['description-user-add']."\n";
+					echo "		<br />\n";
+					unset($available_users);
 				}
-				unset($available_users);
-				echo "			</select>";
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-				echo "			<br>\n";
-				echo "			".$text['description-user-add']."\n";
-				echo "			<br />\n";
 				echo "		</td>";
 				echo "	</tr>";
 			}

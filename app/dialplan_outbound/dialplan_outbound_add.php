@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -625,7 +625,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
-						
+
 						if (strlen($prefix_number) > 0) {
 							if ($_SESSION['cdr']['remove_prefix']['boolean'] == 'true') {
 								$y++;
@@ -639,16 +639,6 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							}
 						}
-
-						$y++;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'sleep';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = '${sleep}';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
 						if ($gateway_type == "transfer") { $dialplan_detail_type = 'transfer'; } else { $dialplan_detail_type = 'bridge'; }
 						$y++;
@@ -684,7 +674,6 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
-
 
 						unset($bridge_data);
 						unset($bridge_2_data);
@@ -801,13 +790,13 @@ function type_onchange(dialplan_detail_type) {
 <?php
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-outbound-routes']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

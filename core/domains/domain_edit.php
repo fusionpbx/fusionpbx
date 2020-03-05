@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -669,22 +669,19 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
-	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
 
 	if ($action == "update" && permission_exists('domain_setting_view')) {
-		echo "<br />\n";
-		require "core/domain_settings/domain_settings.php";
+		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/domain_settings/domain_settings.php";
+		echo "<br /><br />\n";
 	}
 
 //include the footer

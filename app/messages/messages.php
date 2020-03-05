@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2019
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -192,10 +192,10 @@
 		echo "							</td>\n";
 		echo "						</tr>\n";
 		echo "					</table>\n";
-		echo "					<center>\n";
-		echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_new').reset();\">\n";
-		echo "						<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#message_new_layer').fadeOut(200);\">\n";
-		echo "						<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."'>\n";
+		echo "					<center style='margin-top: 15px;'>\n";
+		echo button::create(['type'=>'reset','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'float: left;','onclick'=>"$('#message_new').reset();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>'times','onclick'=>"$('#message_new_layer').fadeOut(200);"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','style'=>'float: right;']);
 		echo "					</center>\n";
 		echo "				</span>\n";
 		echo "				</form>\n";
@@ -209,19 +209,16 @@
 	echo "<div id='message_media_layer' style='display: none;'></div>\n";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b><br><br></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-messages']."</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('message_add')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['label-new_message']."' onclick=\"$('#message_new_layer').fadeIn(200); unload_thread();\" value='".$text['label-new_message']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
 	}
-	echo "				<a href='messages_log.php'><input type='button' class='btn' alt=\"".$text['label-log']."\" value=\"".$text['label-log']."\"></a>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo button::create(['type'=>'button','label'=>$text['label-log'],'icon'=>'list','link'=>'messages_log.php']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";

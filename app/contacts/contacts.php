@@ -256,11 +256,11 @@
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contact_import.php']);
 	}
 	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
 	}
 	if (permission_exists('contact_delete') && $contacts) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-sm-dn','onclick'=>"document.location.href='#modal-delete'; document.getElementById('btn_delete').focus();"]);
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
@@ -305,7 +305,7 @@
 	if (is_array($contacts) && @sizeof($contacts) != 0) {
 		$x = 0;
 		foreach($contacts as $row) {
-			if (permission_exists('contact_edit')) {
+			if (permission_exists('contact_edit') || permission_exists('contact_view')) {
 				$list_row_url = "contact_edit.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";

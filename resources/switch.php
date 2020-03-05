@@ -88,17 +88,6 @@ function event_socket_request_cmd($cmd) {
 	return $response;
 }
 
-function byte_convert($bytes, $precision = 2) {
-	static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
-	$step = 1024;
-	$i = 0;
-	while (($bytes / $step) > 0.9) {
-		$bytes = $bytes / $step;
-		$i++;
-	}
-	return round($bytes, $precision).' '.$units[$i];
-}
-
 function remove_config_from_cache($name) {
 	$cache = new cache;
 	$cache->delete($name);

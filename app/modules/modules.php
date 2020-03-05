@@ -128,13 +128,13 @@
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'margin-right: 15px;','link'=>'modules.php']);
 	if (permission_exists('module_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'module_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'module_edit.php']);
 	}
 	if (permission_exists('module_edit') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('module_delete') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -158,11 +158,11 @@
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('module_edit') || permission_exists('module_delete')) {
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all_".$modifier."' onclick=\"list_all_toggle('".$modifier."');\" ".($modules ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."');\" ".($modules ?: "style='visibility: hidden;'").">\n";
 			echo "	</th>\n";
 		}
 		echo "<th>".$text['label-label']."</th>\n";
-		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
+		echo "<th class='hide-xs'>".$text['label-status']."</th>\n";
 		if ($fp) {
 			echo "<th class='center'>".$text['label-action']."</th>\n";
 		}
@@ -209,7 +209,7 @@
 			echo "	</td>\n";
 			if ($fp) {
 				if ($module->active($row["module_name"])) {
-					echo "	<td class='hide-sm-dn'>".$text['label-running']."</td>\n";
+					echo "	<td class='hide-xs'>".$text['label-running']."</td>\n";
 					if (permission_exists('module_edit')) {
 						echo "	<td class='no-link center'>";
 						echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
@@ -217,7 +217,7 @@
 					}
 				}
 				else {
-					echo "	<td class='hide-sm-dn'>\n";
+					echo "	<td class='hide-xs'>\n";
 					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice);
 					echo "	</td>\n";
 					if (permission_exists('module_edit')) {
@@ -228,7 +228,7 @@
 				}
 			}
 			else{
-				echo "   <td class='hide-sm-dn'>".$text['label-unknown']."</td>\n";
+				echo "   <td class='hide-xs'>".$text['label-unknown']."</td>\n";
 			}
 			if (permission_exists('module_edit')) {
 				echo "	<td class='no-link center'>";
