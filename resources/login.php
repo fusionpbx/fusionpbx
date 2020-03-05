@@ -367,8 +367,7 @@
 		echo "	$('#username').trigger('focus');\n";
 		// convert password fields to text
 		echo "	function submit_form() {\n";
-		echo "		$('input:password').css('visibility','hidden');\n";
-		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		hide_password_fields();\n";
 		echo "		$('form#frm').submit();\n";
 		echo "	}\n";
 		echo "</script>\n";
