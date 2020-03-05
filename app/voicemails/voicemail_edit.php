@@ -446,9 +446,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-voicemail']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>$back_button_location]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$back_button_location]);
 	if ($action == "update" && (permission_exists('voicemail_delete') || permission_exists('voicemail_option_delete'))) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','value'=>'delete','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_action').value = this.value; submit_form(); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','id'=>'btn_delete','value'=>'delete','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_action').value = this.value; submit_form(); } else { this.blur(); return false; }"]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>($password_complexity == "true" ? "if (check_password_strength(document.getElementById('password').value)) { submit_form(); } else { this.blur(); return false; }" : 'submit_form();')]);
 	echo "	</div>\n";
@@ -543,7 +543,7 @@
 		}
 		echo "				</tr>\n";
 		if ($action == 'update' && is_array($voicemail_options) && @sizeof($voicemail_options) != 0) {
-			foreach ($voicemail_options as $field) {
+			foreach ($voicemail_options as $x => $field) {
 				echo "				<tr>\n";
 				echo "					<td class='vtable' style='text-align: center;'>".escape($field['voicemail_option_digits'])."</td>\n";
 				echo "					<td class='vtable'>".escape($field['voicemail_option_param'])."</td>\n";
