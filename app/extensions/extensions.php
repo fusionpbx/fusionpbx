@@ -191,7 +191,7 @@
 				'title'=>$text['modal_title-confirmation'],
 				'message'=>$text['message-delete_selection'],
 				'actions'=>
-					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','collapse'=>'hide-xs','onclick'=>'modal_close();']).
+					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'collapse'=>'hide-xs','onclick'=>'modal_close();']).
 					button::create(['type'=>'button','label'=>$text['label-extension_and_voicemail'],'icon'=>'voicemail','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_extension_voicemail'); list_form_submit('form_list');"]).
 					button::create(['type'=>'button','label'=>$text['label-extension_only'],'icon'=>'phone-alt','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_extension'); list_form_submit('form_list');"])
 				]);
