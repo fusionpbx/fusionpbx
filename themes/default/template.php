@@ -1025,7 +1025,7 @@ else {
 	echo "	window.addEventListener('keyup', function(e) {\n";
 
 //list: [insert] to add
-	echo "		if (e.which == 45 && !e.target.id != '#search') {\n";
+	echo "		if (e.which == 45 && e.target.id != 'search') {\n";
 	echo "			e.preventDefault();\n";
 	echo "			var list_add_button;\n";
 	echo "			list_add_button = document.getElementById('btn_add');\n";
@@ -1036,7 +1036,7 @@ else {
 	echo "		}\n";
 
 //list: [del] to delete checked, edit: [del] to delete
-	echo "		if (e.which == 46 && !e.target.id != '#search') {\n";
+	echo "		if (e.which == 46 && e.target.id != 'search') {\n";
 	echo "			e.preventDefault();\n";
 	echo "			if (list_checkboxes.length !== 0) {\n";
 	echo "				var list_delete_button;\n";
@@ -1063,8 +1063,7 @@ else {
 	echo "	window.addEventListener('keydown', function(e) {\n";
 
 //list: [space] to toggle checked
-	/*
-	echo "		if (e.which == 32 && !e.target.id != '#search' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
+	echo "		if (e.which == 32 && e.target.id != 'search' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
 	echo "			e.preventDefault();\n";
 	echo "			var list_toggle_button;\n";
 	echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
@@ -1073,7 +1072,6 @@ else {
 	echo "			}\n";
 	echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
 	echo "		}\n";
-	*/
 
 //list,edit: [ctrl]+[a] to check all
 	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19)) {\n";
