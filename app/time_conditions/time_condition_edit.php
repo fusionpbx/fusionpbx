@@ -898,7 +898,7 @@
 </script>
 
 <?php
-echo "<form method='post' name='frm' onsubmit=\"return check_submit();\">\n";
+echo "<form method='post' name='frm' id='frm' onsubmit=\"return check_submit();\">\n";
 
 echo "<div class='action_bar' id='action_bar'>\n";
 echo "	<div class='heading'><b>".$text['title-time_condition']."</b></div>\n";

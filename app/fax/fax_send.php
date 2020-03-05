@@ -906,7 +906,7 @@ if (!$included) {
 		echo "</script>";
 
 	//show the content
-		echo "<form method='post' name='frm' enctype='multipart/form-data'>\n";
+		echo "<form method='post' name='frm' id='frm' enctype='multipart/form-data'>\n";
 
 		echo "<div class='action_bar' id='action_bar'>\n";
 		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";

@@ -145,7 +145,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<table border='0' cellpadding='0' cellspacing='0' align='right'>\n";
 	echo "<tr>\n";

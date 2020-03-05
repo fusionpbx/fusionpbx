@@ -211,7 +211,7 @@
 
 //basic search of call detail records
 	if (permission_exists('xml_cdr_search')) {
-		echo "<form method='get' action=''>\n";
+		echo "<form name='frm' id='frm' method='get'>\n";
 
 		echo "<div class='form_grid'>\n";
 

@@ -267,7 +267,7 @@
 		echo "</div>";
 
 		echo "<div id='request_form' style='display: none;'>\n";
-		echo "<form name='request' method='post' action=''>\n";
+		echo "<form name='request' method='post'>\n";
 		echo "<input type='hidden' name='action' value='request'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
 		echo "<input type='submit' id='btn_reset' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
@@ -353,7 +353,7 @@
 		echo "</script>\n";
 
 		echo "<span id='reset_form'>\n";
-		echo "<form name='reset' id='frm' method='post' action=''>\n";
+		echo "<form name='reset' id='frm' method='post'>\n";
 		echo "<input type='hidden' name='action' value='reset'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
 		echo "<input type='password' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 4px;' name='password_new' id='password' autocomplete='off' placeholder=\"".$text['label-new_password']."\" onkeypress='show_strenth_meter();' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'><br />\n";

@@ -864,7 +864,7 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
