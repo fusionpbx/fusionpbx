@@ -779,7 +779,7 @@ function format_string ($format, $data) {
 			}
 
 		//get the name of the useragent
-			if (preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent)) {
+			if (preg_match('/MSIE/i',$user_agent) || preg_match('/Trident/i',$user_agent)) {
 				$browser_name = 'Internet Explorer';
 				$browser_shortname = 'MSIE';
 			}
@@ -802,6 +802,10 @@ function format_string ($format, $data) {
 			elseif (preg_match('/Netscape/i',$user_agent)) {
 				$browser_name = 'Netscape';
 				$browser_shortname = 'Netscape';
+			}
+			else {
+				$browser_name = 'Unknown';
+				$browser_shortname = 'Unknown';
 			}
 
 		//finally get the correct version number
