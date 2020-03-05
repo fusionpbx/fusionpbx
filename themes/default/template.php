@@ -1063,6 +1063,7 @@ else {
 	echo "	window.addEventListener('keydown', function(e) {\n";
 
 //list: [space] to toggle checked
+	/*
 	echo "		if (e.which == 32 && !e.target.id != '#search' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
 	echo "			e.preventDefault();\n";
 	echo "			var list_toggle_button;\n";
@@ -1072,6 +1073,7 @@ else {
 	echo "			}\n";
 	echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
 	echo "		}\n";
+	*/
 
 //list,edit: [ctrl]+[a] to check all
 	echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19)) {\n";
