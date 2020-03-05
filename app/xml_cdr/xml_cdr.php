@@ -138,9 +138,9 @@
 	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
 	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
 	echo "		<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
-	echo "		<input type='hidden' name='caller_extension_uuid' value='".escape($caller_extension_uuid)."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
+	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
 	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
 	echo "		<input type='hidden' name='context' value='".escape($context)."'>\n";
 	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
