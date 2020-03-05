@@ -105,7 +105,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','collapse'=>'hide-xs','link'=>'access_control_node_edit.php?access_control_uuid='.urlencode($_GET['id'])]);
 	}
 	if (permission_exists('access_control_node_delete') && $access_control_nodes) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
