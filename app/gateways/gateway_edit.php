@@ -839,16 +839,10 @@
 
 	echo "</form>";
 
-//capture enter key to submit form
+//hide password fields before submit
 	echo "<script>\n";
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-
-// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		hide_password_fields();\n";
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "</script>\n";
