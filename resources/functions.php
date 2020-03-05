@@ -1587,6 +1587,9 @@ function number_pad($number,$n) {
 					case 'backspace':
 						$key_code = '(e.which == 8)';
 						break;
+					case 'space':
+						$key_code = '(e.which == 32)';
+						break;
 					case 'ctrl+s':
 						$key_code = '(((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
 						break;
