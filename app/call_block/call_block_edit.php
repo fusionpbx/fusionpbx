@@ -509,7 +509,7 @@
 		echo "	<div class='heading'><b id='heading_sub'>".$text['heading-recent_calls']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
-		if ($result || true) {
+		if ($result) {
 			$select_margin = 'margin-left: 15px;';
 			if (permission_exists('call_block_all')) {
 				echo 	"<select class='formfld' style='".$select_margin."' name='extension_uuid'>\n";
