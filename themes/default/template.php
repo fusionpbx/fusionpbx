@@ -261,7 +261,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [insert], list: to add
-			echo "		if (e.which == 45 && e.target.id != 'search') {\n";
+			echo "		if (e.which == 45 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			echo "			e.preventDefault();\n";
 			echo "			var list_add_button;\n";
 			echo "			list_add_button = document.getElementById('btn_add');\n";
@@ -272,7 +272,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [delete], list: to delete checked, edit: to delete
-			echo "		if (e.which == 46 && e.target.id != 'search') {\n";
+			echo "		if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			echo "			e.preventDefault();\n";
 			echo "			if (list_checkboxes.length !== 0) {\n";
 			echo "				var list_delete_button;\n";
@@ -299,7 +299,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "	window.addEventListener('keydown', function(e) {\n";
 
 		//key: [space], list: to toggle checked
-			echo "		if (e.which == 32 && e.target.id != 'search' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
+			echo "		if (e.which == 32 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior (ie. toggle focused checkbox) include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
 			echo "			e.preventDefault();\n";
 			echo "			var list_toggle_button;\n";
 			echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
@@ -661,6 +661,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 
 		function modal_close() {
 			document.location.href='#';
+			document.activeElement.blur();
 		}
 
 		function hide_password_fields() {
