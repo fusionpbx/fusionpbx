@@ -311,7 +311,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [ctrl]+[a], list,edit: to check all
-			echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			echo "			var list_checkbox_all;\n";
 			echo "			list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');\n";
 			echo "			if (list_checkbox_all !== null && list_checkbox_all.length > 0) {\n";
@@ -331,7 +331,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [ctrl]+[s], edit: to save
-			echo "		if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19)) {\n";
+			echo "		if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) {\n";
 			echo "			e.preventDefault();\n";
 			echo "			var edit_save_button;\n";
 			echo "			edit_save_button = document.getElementById('btn_save');\n";
@@ -342,11 +342,11 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [ctrl]+[c], list,edit: to copy
-			if (http_user_agent('name_short') == 'Safari') { //emulate with detecting [c] only, as [command] and [control] keys are ignored if captured
+			if (http_user_agent('name_short') == 'Safari') { //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 				echo "	if ((e.which == 99 || e.which == 67) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			}
 			else {
-				echo "	if ((((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey)) || (e.which == 19)) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+				echo "	if ((((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			}
 			echo "			var current_selection, copy_button;\n";
 			echo "			current_selection = window.getSelection();\n";
