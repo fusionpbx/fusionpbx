@@ -467,7 +467,7 @@
 				//set the rate label
 					$stream_rate = $auto_rate ? $text['option-default'] : ($music_on_hold_rate/1000).' kHz';
 					if (permission_exists('music_on_hold_edit')) {
-						$stream_details = "<a href='music_on_hold_edit.php?id=".urlencode($row['music_on_hold_uuid'])."'>".$stream_rate.'</a> '.$icons;
+						$stream_details = "<a href='music_on_hold_edit.php?id=".urlencode($row['music_on_hold_uuid'])."' class='default-color'>".$stream_rate.'</a> '.$icons;
 					}
 					else {
 						$stream_details = $stream_rate.' '.$icons;
