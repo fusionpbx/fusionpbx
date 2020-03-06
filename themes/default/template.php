@@ -341,6 +341,25 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "			if (edit_save_button !== null) { edit_save_button.click(); }\n";
 			echo "		}\n";
 
+		//key: [ctrl]+[c], list,edit: to copy
+			if (http_user_agent('name_short') == 'Safari') { //emulate with detecting [c] only, as [command] and [control] keys are ignored if captured
+				echo "	if ((e.which == 99 || e.which == 67) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			}
+			else {
+				echo "	if ((((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey)) || (e.which == 19)) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			}
+			echo "			var current_selection, copy_button;\n";
+			echo "			current_selection = window.getSelection();\n";
+			echo "			if (current_selection === null || current_selection == 'undefined' || current_selection.toString() == '') {\n";
+			echo "				e.preventDefault();\n";
+			echo "				copy_button = document.getElementById('btn_copy');\n";
+			echo "				if (copy_button === null || copy_button === 'undefined') {\n";
+			echo "					copy_button = document.querySelector('button[name=btn_copy]');\n";
+			echo "				}\n";
+			echo "				if (copy_button !== null) { copy_button.click(); }\n";
+			echo "			}\n";
+			echo "		}\n";
+
 		//end keydown
 			echo "	});\n";
 
