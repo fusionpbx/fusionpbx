@@ -781,35 +781,35 @@ function format_string ($format, $data) {
 		//get the name of the useragent
 			if (preg_match('/MSIE/i',$user_agent) || preg_match('/Trident/i',$user_agent)) {
 				$browser_name = 'Internet Explorer';
-				$browser_shortname = 'MSIE';
+				$browser_name_short = 'MSIE';
 			}
 			elseif (preg_match('/Firefox/i',$user_agent)) {
 				$browser_name = 'Mozilla Firefox';
-				$browser_shortname = 'Firefox';
+				$browser_name_short = 'Firefox';
 			}
 			elseif (preg_match('/Chrome/i',$user_agent)) {
 				$browser_name = 'Google Chrome';
-				$browser_shortname = 'Chrome';
+				$browser_name_short = 'Chrome';
 			}
 			elseif (preg_match('/Safari/i',$user_agent)) {
 				$browser_name = 'Apple Safari';
-				$browser_shortname = 'Safari';
+				$browser_name_short = 'Safari';
 			}
 			elseif (preg_match('/Opera/i',$user_agent)) {
 				$browser_name = 'Opera';
-				$browser_shortname = 'Opera';
+				$browser_name_short = 'Opera';
 			}
 			elseif (preg_match('/Netscape/i',$user_agent)) {
 				$browser_name = 'Netscape';
-				$browser_shortname = 'Netscape';
+				$browser_name_short = 'Netscape';
 			}
 			else {
 				$browser_name = 'Unknown';
-				$browser_shortname = 'Unknown';
+				$browser_name_short = 'Unknown';
 			}
 
 		//finally get the correct version number
-			$known = array('Version', $browser_shortname, 'other');
+			$known = array('Version', $browser_name_short, 'other');
 			$pattern = '#(?<browser>' . join('|', $known) . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 			if (!preg_match_all($pattern, $user_agent, $matches)) {
 				//we have no matching number just continue
@@ -820,7 +820,7 @@ function format_string ($format, $data) {
 			if ($i != 1) {
 				//we will have two since we are not using 'other' argument yet
 				//see if version is before or after the name
-				if (strripos($user_agent,"Version") < strripos($user_agent,$browser_shortname)) {
+				if (strripos($user_agent,"Version") < strripos($user_agent,$browser_name_short)) {
 					$version= $matches['version'][0];
 				}
 				else {
@@ -838,6 +838,7 @@ function format_string ($format, $data) {
 			switch ($info) {
 				case "agent": return $user_agent; break;
 				case "name": return $browser_name; break;
+				case "name_short": return $browser_name_short; break;
 				case "version": return $version; break;
 				case "platform": return $platform; break;
 				case "mobile": return $mobile; break;
@@ -846,6 +847,7 @@ function format_string ($format, $data) {
 					return array(
 						'user_agent' => $user_agent,
 						'name' => $browser_name,
+						'name_short' => $browser_name_short,
 						'version' => $version,
 						'platform' => $platform,
 						'mobile' => $mobile,
@@ -1602,6 +1604,9 @@ function number_pad($number,$n) {
 						break;
 					case 'ctrl+a':
 						$key_code = '(((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+c':
+						$key_code = '(((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
 						break;
 					case 'ctrl+enter':
 						$key_code = '(((e.which == 13 || e.which == 10) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
