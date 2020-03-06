@@ -245,7 +245,7 @@
 
 					echo "<b>".escape($label_application_name)."</b><br />\n";
 
-					echo "<table class='list' style='margin: 10px 0 25px 0;'>\n";
+					echo "<table class='list' style='margin-bottom: 25px;'>\n";
 					echo "<tr class='list-header'>\n";
 					if (permission_exists('group_permission_edit')) {
 						echo "	<th class='checkbox'>\n";
