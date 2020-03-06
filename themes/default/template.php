@@ -1127,10 +1127,6 @@ else {
 	unset($_SESSION['background_image']);
 }
 
-
-//keyboard shortcut scripts
-
-
 echo "</body>\n";
 echo "</html>\n";
 
