@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,12 +25,12 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_members_view') || if_group("superadmin")) {
+	if (permission_exists('group_member_view') || if_group("superadmin")) {
 		//access allowed
 	}
 	else {
@@ -143,11 +143,11 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-group_members']." <i>".$group_name."</i> (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-group_members']." (".$group_name.": ".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
-	if (permission_exists('group_member_delete') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	if (permission_exists('group_permission_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>'margin-right: 15px;','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid)]);
 	}
 	if (permission_exists('group_member_add')) {
 		echo 	"<form class='inline' method='post' action='groupmemberadd.php'>\n";
@@ -165,7 +165,10 @@
 		echo 	"<input type='hidden' name='group_name' value='".escape($group_name)."'>";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>";
 		echo button::create(['type'=>'submit','label'=>$text['button-add_member'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-xs']);
-		echo "	</form>\n";
+		echo "	</form>";
+	}
+	if (permission_exists('group_member_delete') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

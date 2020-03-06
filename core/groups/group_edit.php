@@ -187,6 +187,15 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'groups.php']);
 	$button_margin = 'margin-left: 15px;';
+	if (permission_exists('group_permission_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid)]);
+		unset($button_margin);
+	}
+	if (permission_exists('group_member_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
+		unset($button_margin);
+	}
+	$button_margin = 'margin-left: 15px;';
 	if ($action == 'update' && permission_exists('group_add')) {
 		echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (confirm('".$text['confirm-copy']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
 		unset($button_margin);
