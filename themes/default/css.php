@@ -2406,6 +2406,14 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		width: 1%;
 		}
 
+	.list-header > th > a.default-color {
+		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
+		}
+
+	.list-header > th > a.default-color:hover {
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		}
+
 	.list-row:nth-child(odd) > :not(.action-button) {
 		background: <?php echo ($_SESSION['theme']['table_row_background_color_light']['text'] != '') ? $_SESSION['theme']['table_row_background_color_light']['text'] : '#ffffff'; ?>;
 		}
