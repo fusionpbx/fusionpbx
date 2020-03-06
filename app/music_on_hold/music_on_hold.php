@@ -343,7 +343,7 @@
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); });"]);
 		echo 	"<span id='form_upload' style='display: none;'>";
-		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_upload_reset','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
+		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
 			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
