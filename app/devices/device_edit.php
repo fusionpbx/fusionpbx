@@ -755,7 +755,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'devices.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'devices.php']);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
@@ -786,7 +786,7 @@
 				echo "		</select>";
 		}
 		if (permission_exists('device_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".escape($device_uuid)."&mac=' + new_mac; }"]);
 		}
 		if (
 			permission_exists('device_delete') ||
@@ -797,7 +797,7 @@
 			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -1067,10 +1067,13 @@
 				echo "			</td>\n";
 
 				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
-					echo "			<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_line_uuid'])) {
+						echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
 						echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
+					}
+					else {
+						echo "			<td>\n";
 					}
 					echo "			</td>\n";
 				}
@@ -1380,10 +1383,13 @@
 				echo "</td>\n";
 
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
-					echo "				<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_key_uuid'])) {
+						echo "				<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "					<input type='checkbox' name='device_keys_delete[".$x."][checked]' value='true' class='chk_delete checkbox_keys' onclick=\"edit_delete_action('keys');\">\n";
 						echo "					<input type='hidden' name='device_keys_delete[".$x."][uuid]' value='".escape($row['device_key_uuid'])."' />\n";
+					}
+					else {
+						echo "				<td>\n";
 					}
 				}
 				echo "				</td>\n";
@@ -1459,10 +1465,13 @@
 				echo "</td>\n";
 
 				if (is_array($device_settings) && @sizeof($device_settings) > 1 && permission_exists('device_setting_delete')) {
-					echo "<td style='text-align: center;'>\n";
 					if (is_uuid($row['device_setting_uuid'])) {
+						echo "<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 						echo "	<input type='checkbox' name='device_settings_delete[".$x."][checked]' value='true' class='chk_delete checkbox_settings' onclick=\"edit_delete_action('settings');\">\n";
 						echo "	<input type='hidden' name='device_settings_delete[".$x."][uuid]' value='".escape($row['device_setting_uuid'])."' />\n";
+					}
+					else {
+						echo "<td>\n";
 					}
 					echo "</td>\n";
 				}
@@ -1660,25 +1669,17 @@
 	echo "</form>";
 
 	echo "<script>\n";
+	// trigger initial onchage to set button state
 	echo "	$(window).on('load', function(event){\n";
-	// triger initial onchage to set button state
-	echo "   $('#device_profile_uuid').trigger('change')";
+	echo "		$('#device_profile_uuid').trigger('change')";
 	echo "	});\n";
-	//capture enter key to submit form
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-	// capture device selection events
-	echo " $('#device_profile_uuid').on('change',function(event){ \n";
-	echo "   if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
+	//capture device selection events
+	echo "	$('#device_profile_uuid').on('change',function(event){ \n";
+	echo "		if (this.value == '') {\$('#device_profile_edit').hide()} else {\$('#device_profile_edit').show()} \n";
 	echo "	}); \n";
-	// convert password fields to
+	//hide password fields before submit
 	echo "	function submit_form() {\n";
-	echo "		$('form#frm').submit();\n";
-	echo "	}\n";
-	echo "	function submit_form_2() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		hide_password_fields();\n";
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "</script>\n";

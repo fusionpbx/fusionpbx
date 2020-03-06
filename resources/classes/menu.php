@@ -359,7 +359,7 @@ if (!class_exists('menu')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_menu.php");
 				$x = 0;
 				if (is_array($config_list)) {
-					foreach ($config_list as &$config_path) {
+					foreach ($config_list as $config_path) {
 						$app_path = dirname($config_path);
 						$app_path = preg_replace('/\A.*(\/.*\/.*)\z/', '$1', $app_path);
 						$y = 0;
@@ -658,7 +658,6 @@ if (!class_exists('menu')) {
 		 */
 		private function build_child_html($menu_item_level, $submenu_array) {
 
-			$db = $this->db;
 			$menu_item_level = $menu_item_level+1;
 
 			if (count($_SESSION['groups']) == 0) {

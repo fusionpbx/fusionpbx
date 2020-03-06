@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,6 +54,25 @@
 
 //get the form value and set to php variables
 	if (count($_POST) > 0) {
+
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($_POST['phrase_uuid'])) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $_POST['phrase_uuid'];
+
+				switch ($_POST['action']) {
+					case 'delete':
+						if (permission_exists('phrase_delete')) {
+							$obj = new phrases;
+							$obj->delete($array);
+						}
+						break;
+				}
+
+				header('Location: phrases.php');
+				exit;
+			}
+
 		if (permission_exists('phrase_domain')) {
 			$domain_uuid = $_POST["domain_uuid"];
 		}
@@ -61,6 +80,7 @@
 		$phrase_language = $_POST["phrase_language"];
 		$phrase_enabled = $_POST["phrase_enabled"];
 		$phrase_description = $_POST["phrase_description"];
+		$phrase_details_delete = $_POST["phrase_details_delete"];
 
 		//clean the name
 		$phrase_name = str_replace(" ", "_", $phrase_name);
@@ -198,6 +218,16 @@
 						unset($array);
 
 						$p->delete('phrase_detail_add', 'temp');
+
+					//remove checked phrase details
+						if (
+							is_array($phrase_details_delete)
+							&& @sizeof($phrase_details_delete) != 0
+							) {
+							$obj = new phrases;
+							$obj->phrase_uuid = $phrase_uuid;
+							$obj->delete_details($phrase_details_delete);
+						}
 
 					//save the xml to the file system if the phrase directory is set
 						save_phrases_xml();
@@ -391,7 +421,7 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
@@ -403,8 +433,11 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'phrases.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'phrases.php']);
+	if ($action == "update") {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'margin-left: 15px;','onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -436,15 +469,20 @@
 	echo "<tr>";
 	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
 	echo "<td class='vtable' align='left'>";
-	echo "	<table cellpadding='0' cellspacing='0'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td class='vtable'><strong>".$text['label-function']."</strong></td>\n";
 	echo "			<td class='vtable'><strong>".$text['label-action']."</strong></td>\n";
 	echo "			<td class='vtable' style='text-align: center;'><strong>".$text['label-order']."</strong></td>\n";
-	echo "			<td></td>\n";
+	if ($phrase_details) {
+		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
+		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
+		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details');\"></span>\n";
+		echo "			</td>\n";
+	}
 	echo "		</tr>\n";
 	if (is_array($phrase_details) && @sizeof($phrase_details) != 0) {
-		foreach($phrase_details as $field) {
+		foreach($phrase_details as $x => $field) {
 			//clean up output for display
 			if ($field['phrase_detail_function'] == 'play-file' && substr($field['phrase_detail_data'], 0, 21) == '${lua streamfile.lua ') {
 				$phrase_detail_function = $text['label-play'];
@@ -469,15 +507,18 @@
 			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
 			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons' style='text-align: left;'>";
-			echo 		"<a href='phrase_detail_delete.php?pdid=".escape($field['phrase_detail_uuid'])."&pid=".escape($phrase_uuid)."&a=delete&lang=".escape($phrase_language)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+			echo "	<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+			if (is_uuid($field['phrase_detail_uuid'])) {
+				echo "		<input type='checkbox' name='phrase_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
+				echo "		<input type='hidden' name='phrase_details_delete[".$x."][uuid]' value='".escape($field['phrase_detail_uuid'])."' />\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
 	}
 	unset($phrase_details, $field);
 	echo "<tr>\n";
-	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
+	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
@@ -486,14 +527,14 @@
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
+	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
 	if (if_group("superadmin")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
 	echo "		<script>load_action_options(0);</script>\n";
 	echo "	</td>\n";
-	echo "	<td class='vtable'>\n";
+	echo "	<td class='vtable' style='border-bottom: none;'>\n";
 	echo "		<select name='phrase_detail_order' class='formfld'>\n";
 	for ($i = 0; $i <= 999; $i++) {
 		$i_padded = str_pad($i, 3, '0', STR_PAD_LEFT);

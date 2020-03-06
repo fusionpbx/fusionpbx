@@ -282,7 +282,7 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
@@ -295,11 +295,11 @@
 
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
 	if ($action == 'update' && permission_exists('call_block_delete')) {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -365,8 +365,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	function call_block_action_select($label = false) {
-		global $text, $call_block_app, $call_block_data, $extensions, $voicemails;
-		echo "<select class='formfld' name='call_block_action'>\n";
+		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $voicemails;
+		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
 		if ($label) {
 			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
 		}
@@ -508,21 +508,25 @@
 		echo "<div class='action_bar' id='action_bar_sub'>\n";
 		echo "	<div class='heading'><b id='heading_sub'>".$text['heading-recent_calls']."</b></div>\n";
 		echo "	<div class='actions'>\n";
-		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'call_block.php']);
-		if (permission_exists('call_block_all')) {
-			echo 	"<select class='formfld' name='extension_uuid'>\n";
-			echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
-			echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
-			if (is_array($extensions) && sizeof($extensions) != 0) {
-				foreach ($extensions as $row) {
-					$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
-					echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
+		if ($result) {
+			$select_margin = 'margin-left: 15px;';
+			if (permission_exists('call_block_all')) {
+				echo 	"<select class='formfld' style='".$select_margin."' name='extension_uuid'>\n";
+				echo "		<option value='' disabled='disabled'>".$text['label-extension']."</option>\n";
+				echo "		<option value='' selected='selected'>".$text['label-all']."</option>\n";
+				if (is_array($extensions) && sizeof($extensions) != 0) {
+					foreach ($extensions as $row) {
+						$selected = $extension_uuid == $row['extension_uuid'] ? "selected='selected'" : null;
+						echo "	<option value='".urlencode($row["extension_uuid"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+					}
 				}
+				echo "	</select>";
+				unset($select_margin);
 			}
-			echo "	</select>";
+			call_block_action_select(true);
+			echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		}
-		call_block_action_select(true);
-		echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		echo 	"</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";

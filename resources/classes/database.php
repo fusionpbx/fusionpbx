@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2019
+	Copyright (C) 2010 - 2020
 	All Rights Reserved.
 
 	Contributor(s):
@@ -723,9 +723,9 @@ include "root.php";
 									$i++;
 								}
 								if (strlen($field_value) > 0) {
-									$results = $this->execute($sql, $parameters, 'row');
+									$results = $this->execute($sql, $parameters, 'all');
 									if (is_array($results)) {
-										$array[$table_name][] = $results;
+										$array[$table_name] = $results;
 									}
 								}
 								unset($parameters);

@@ -335,7 +335,7 @@
 		$array['email_templates'][$x]['template_enabled'] = 'false';
 		$array['email_templates'][$x]['template_description'] = '';
 		$x++;
-		$array['email_templates'][$x]['email_template_uuid'] = 'aa2fa675-ccc0-4343-92fb-76c37d67a409';
+		$array['email_templates'][$x]['email_template_uuid'] = 'ca96d814-cf5e-4dca-91ab-0150c2c6c36a';
 		$array['email_templates'][$x]['template_language'] = 'fr-ca';
 		$array['email_templates'][$x]['template_category'] = 'missed';
 		$array['email_templates'][$x]['template_subcategory'] = 'default';

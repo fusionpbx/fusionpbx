@@ -138,9 +138,9 @@
 	echo "		<input type='hidden' name='start_stamp_end' value='".escape($start_stamp_end)."'>\n";
 	echo "		<input type='hidden' name='hangup_cause' value='".escape($hangup_cause)."'>\n";
 	echo "		<input type='hidden' name='call_result' value='".escape($call_result)."'>\n";
-	echo "		<input type='hidden' name='caller_extension_uuid' value='".escape($caller_extension_uuid)."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number)."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination)."'>\n";
+	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid)."'>\n";
 	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number)."'>\n";
 	echo "		<input type='hidden' name='context' value='".escape($context)."'>\n";
 	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin)."'>\n";
@@ -211,7 +211,7 @@
 
 //basic search of call detail records
 	if (permission_exists('xml_cdr_search')) {
-		echo "<form method='get' action=''>\n";
+		echo "<form name='frm' id='frm' method='get'>\n";
 
 		echo "<div class='form_grid'>\n";
 
@@ -489,7 +489,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-advanced_search'],'icon'=>'tools','link'=>"xml_cdr_search.php".($_REQUEST['show'] == 'all' ? '?show=all' : null),'style'=>'margin-right: 15px;']);
 		}
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
-		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','name'=>'submit']);
+		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_save','name'=>'submit']);
 		echo "</div>\n";
 		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
 

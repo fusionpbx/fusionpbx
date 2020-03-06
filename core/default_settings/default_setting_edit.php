@@ -249,8 +249,8 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'default_settings.php'.($search != '' ? "?search=".$search : null)]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'onclick'=>'submit_form();']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php'.($search != '' ? "?search=".$search : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -723,16 +723,9 @@
 	}
 
 	echo "<script>\n";
-	//capture enter key to submit form
-		if (!($category == "theme" && $subcategory == "custom_css_code" && $name == "text" )) {
-			echo "	$(window).on('keypress',function(event){\n";
-			echo "		if (event.which == 13) { submit_form(); }\n";
-			echo "	});\n";
-		}
-	//hide/convert password fields then submit form
+	//hide password fields before submit
 		echo "	function submit_form() {\n";
-		echo "		$('input:password').css('visibility','hidden');\n";
-		echo "		$('input:password').attr({type:'text'});\n";
+		echo "		hide_password_fields();\n";
 		echo "		$('form#frm').submit();\n";
 		echo "	}\n";
 	//define lowercase class

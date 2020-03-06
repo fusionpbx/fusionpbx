@@ -39,7 +39,7 @@ class plugin_database {
 				$sql .= "where lower(username) = lower(:username) ";
 				$parameters['username'] = $this->username;
 			}
-			if ($_SESSION["users"]["unique"]["text"] == "global") {
+			if ($_SESSION["users"]["unique"]["text"] === "global") {
 				//unique username - global (example: email address)
 			}
 			else {
@@ -50,10 +50,10 @@ class plugin_database {
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
+			if (is_array($row) && @sizeof($row) !== 0) {
 
 				//get the domain uuid when users are unique globally
-					if ($_SESSION["users"]["unique"]["text"] == "global" && $row["domain_uuid"] != $this->domain_uuid) {
+					if ($_SESSION["users"]["unique"]["text"] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
 						//set the domain_uuid
 							$this->domain_uuid = $row["domain_uuid"];
 							$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
@@ -72,24 +72,64 @@ class plugin_database {
 					$this->user_uuid = $row['user_uuid'];
 					$this->contact_uuid = $row['contact_uuid'];
 
-				//if salt is not defined then use the default salt for backwards compatibility
-					if (strlen($row["salt"]) == 0) {
-						$row["salt"] = 'e3.7d.12';
+				//validate the password
+					$valid_password = false;
+					if (isset($this->key) && strlen($this->key) > 30 && $this->key === $row["api_key"]) {
+						$valid_password = true;
 					}
-
-				//compare the password provided by the user with the one in the database
-					if (md5($row["salt"].$this->password) == $row["password"]) {
-						$user_authorized = true;
-					}
-					else if (strlen($this->key) > 30 && $this->key == $row["api_key"]) {
-						$user_authorized = true;
+					else if (substr($row["password"], 0, 1) === '$') {
+						if (isset($this->password) && strlen($this->password) > 0) {
+							if (password_verify($this->password, $row["password"])) {
+								$valid_password = true; 
+							}
+						}
 					}
 					else {
-						$user_authorized = false;
+						//deprecated - compare the password provided by the user with the one in the database
+						if (md5($row["salt"].$this->password) === $row["password"]) {
+							$row["password"] = crypt($this->password, '$1$'.$password_salt.'$');
+							$valid_password = true;
+						}
+					}
+
+				//check to to see if the the password hash needs to be updated
+					if ($valid_password) {
+						//set the password hash cost
+						$options = array('cost' => 10);
+
+						//check if a newer hashing algorithm is available or the cost has changed
+						if (password_needs_rehash($row["password"], PASSWORD_DEFAULT, $options)) {
+
+							//build user insert array
+								$array['users'][0]['user_uuid'] = $this->user_uuid;
+								$array['users'][0]['domain_uuid'] = $this->domain_uuid;
+								$array['users'][0]['password'] = password_hash($this->password, PASSWORD_DEFAULT, $options);
+								$array['users'][0]['salt'] = null;
+
+							//build user group insert array
+								$array['user_groups'][0]['user_group_uuid'] = uuid();
+								$array['user_groups'][0]['domain_uuid'] = $this->domain_uuid;
+								$array['user_groups'][0]['group_name'] = 'user';
+								$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
+
+							//grant temporary permissions
+								$p = new permissions;
+								$p->add('user_edit', 'temp');
+
+							//execute insert
+								$database = new database;
+								$database->app_name = 'authentication';
+								$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
+								$database->save($array);
+								unset($array);
+
+							//revoke temporary permissions
+								$p->delete('user_edit', 'temp');
+
+						}
 					}
 
 			}
-			unset($result);
 
 		//result array
 			$result["plugin"] = "database";
@@ -102,7 +142,7 @@ class plugin_database {
 			$result["domain_uuid"] = $this->domain_uuid;
 			$result["contact_uuid"] = $this->contact_uuid;
 			$result["sql"] = $sql;
-			if ($user_authorized) {
+			if ($valid_password) {
 				$result["authorized"] = "true";
 			}
 			else {
