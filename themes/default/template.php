@@ -194,6 +194,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 							$("#domains_container").css('right','0'); //domain container right position
 							$("#domains_container").hide();
 							$("body").css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
+							document.activeElement.blur();
 						});
 					});
 				}
@@ -310,7 +311,7 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			echo "		}\n";
 
 		//key: [ctrl]+[a], list,edit: to check all
-			echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19) && e.target.id != 'search') {\n";
+			echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
 			echo "			var list_checkbox_all;\n";
 			echo "			list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');\n";
 			echo "			if (list_checkbox_all !== null && list_checkbox_all.length > 0) {\n";
