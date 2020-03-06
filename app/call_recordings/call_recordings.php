@@ -53,29 +53,10 @@
 //process the http post data by action
 	if ($action != '' && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		switch ($action) {
-			case 'copy':
-				if (permission_exists('call_recording_add')) {
-					$obj = new call_recordings;
-					$obj->copy($call_recordings);
-				}
-				break;
-			case 'toggle':
-				if (permission_exists('call_recording_edit')) {
-					$obj = new call_recordings;
-					$obj->toggle($call_recordings);
-				}
-				break;
 			case 'delete':
 				if (permission_exists('call_recording_delete')) {
 					$obj = new call_recordings;
 					$obj->delete($call_recordings);
-				}
-				break;
-			case 'download':
-				if (permission_exists('call_recording_download_add')) {
-					$obj = new call_recording_downloads;
-					$obj->save($call_recordings);
-					header("Location: ".PROJECT_PATH."/app/call_recording_downloads/call_recording_downloads.php");
 				}
 				break;
 		}
