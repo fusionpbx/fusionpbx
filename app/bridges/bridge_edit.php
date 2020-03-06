@@ -239,7 +239,9 @@
 	echo "</table>";
 	echo "<br /><br />";
 
-	echo "<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
