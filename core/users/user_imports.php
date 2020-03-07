@@ -330,16 +330,12 @@
 									}
 								}
 
-							//get the password, salt and hash the user password
+							//set the password hash cost
+								$options = array('cost' => 10);
+
+							//set the hash the user password
 								$password = $array['users'][$row_id]['password'];
-								if (isset($array['users'][$row_id]['salt'])) {
-									$salt = $array['users'][$row_id]['salt'];
-								}
-								else {
-									$salt = uuid();
-									$array['users'][$row_id]['salt'] = $salt;
-								}
-								$array['users'][$row_id]['password'] = md5($salt.$password);
+								$array['users'][$row_id]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 
 							//set the user_uuid
 								$array['users'][$row_id]['user_uuid'] = $user_uuid;
