@@ -469,6 +469,9 @@
 				}
 			}
 
+		//set the password hash cost
+			$options = array('cost' => 10);
+
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 			$array['users'][$x]['domain_uuid'] = $domain_uuid;
@@ -476,9 +479,8 @@
 				$array['users'][$x]['username'] = $username;
 			}
 			if ($password != '' && $password == $password_confirm) {
-				$salt = uuid();
-				$array['users'][$x]['password'] = md5($salt.$password);
-				$array['users'][$x]['salt'] = $salt;
+				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
+				$array['users'][$x]['salt'] = null;
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
