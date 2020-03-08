@@ -136,6 +136,22 @@
 	$voicemails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get vm count for each mailbox
+	if (permission_exists('voicemail_message_view')) {
+		$sql = "select voicemail_uuid, count(*) as voicemail_count ";
+		$sql .= "from v_voicemail_messages where domain_uuid = :domain_uuid";
+		$sql .= " group by voicemail_uuid";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$voicemails_count_tmp = $database->select($sql, $parameters, 'all');
+
+		$voicemails_count = array();
+		foreach ($voicemails_count_tmp as &$row) {
+			$voicemails_count[$row['voicemail_uuid']] = $row['voicemail_count'];
+		}
+		unset($sql, $parameters, $voicemails_count_tmp);
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -193,7 +209,12 @@
 	if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
 		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
 	}
-	echo "<th>".$text['label-tools']."</th>\n";
+	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
+		echo "<th>".$text['label-tools']."</th>\n";
+	}
+	if (permission_exists('voicemail_message_view') && permission_exists('voicemail_greeting_view')) {
+		echo "<th></th>\n";
+	}
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('voicemail_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -229,14 +250,17 @@
 			if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
 				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
-			echo "	<td class='no-wrap'>\n";
 			if (permission_exists('voicemail_message_view')) {
-				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
+				echo "	<td class='no-wrap' width = '10%'>\n";
+				$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
+				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
+				echo "	</td>\n";
 			}
 			if (permission_exists('voicemail_greeting_view')) {
+				echo "	<td class='no-wrap' width = '10%'>\n";
 				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
 			if (permission_exists('voicemail_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['voicemail_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
