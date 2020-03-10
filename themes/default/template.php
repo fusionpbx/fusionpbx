@@ -1142,7 +1142,7 @@ else {
 	echo "	<!--{body}-->\n";
 	echo "</div>\n";
 	echo "<div id='footer_login'>\n";
-	echo "	<span class='footer'>".($_SESSION['theme']['footer']['text'] != '' ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'])."</span>\n";
+	echo "	<span class='footer'>".($_SESSION['theme']['footer']['text'] != '' ? $_SESSION['theme']['footer']['text'] : "&copy; ".$text['theme-label-copyright']." 2013 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'])."</span>\n";
 	echo "</div>\n";
 
 	unset($_SESSION['background_image']);
