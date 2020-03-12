@@ -169,7 +169,7 @@
 
 					//clear the cache
 						$cache = new cache;
-						$cache->delete("languages:".$phrase_language);
+						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-add']);
@@ -234,7 +234,7 @@
 
 					//clear the cache
 						$cache = new cache;
-						$cache->delete("languages:".$phrase_language);
+						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-update']);
