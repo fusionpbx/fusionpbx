@@ -6438,7 +6438,7 @@
     <!-- # gxp - Downloaded Language -->
     <!-- # String -->
     <!-- # Mandatory -->
-    <P1362>auto</P1362>
+    <P1362>{$grandstream_display_language}</P1362>
 
     <!-- # Default Input Selection. Default is Multi-Tap. -->
     <!-- # 0 - Multi-Tap, 1 - Shiftable -->
@@ -8098,7 +8098,7 @@
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
     <!-- # Number: 0-4 -->
     <!-- # Mandatory -->
-    <P2916>0</P2916>
+    <P2916>{$grandstream_wallpaper_source}</P2916>
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
