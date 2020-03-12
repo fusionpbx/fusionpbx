@@ -66,7 +66,8 @@ class file {
 	 * Get the sounds list of search as a relative path without the rate
 	 */
 	public function sounds() {
-		$dir = $_SESSION['switch']['sounds']['dir'].'/en/us/callie';
+		$vars = new variables;
+		$dir = $vars->get_variable('sound_prefix');
 		$rate = '8000';
 		$files = $this->glob($dir.'/*/'.$rate, true);
 		foreach($files as $file) {
