@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,7 @@
 	require_once "resources/require.php";
 
 //if reloadxml then run the command
-	if (isset($_SESSION["reload_xml"])) {
+	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
 		if (strlen($_SESSION["reload_xml"]) > 0) {
 			if ($_SESSION['apply_settings'] == "true") {
 				//show the apply settings prompt

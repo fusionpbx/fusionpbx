@@ -194,7 +194,7 @@
 		echo "	<div class='heading'><b>".$text['header-call_routing']." (".$num_rows.")</b></div>\n";
 		echo "	<div class='actions'>\n";
 		if ($extensions) {
-			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"toggle_select(); this.blur();"]);
+			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
 		}
 		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_control_feature' onchange=\"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle_' + this.options[this.selectedIndex].value); list_form_submit('form_list'); } else { this.blur(); this.style.display = 'none'; return false; }\">";
 		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";

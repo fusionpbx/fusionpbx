@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -720,15 +720,17 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		$phone_number = trim($phone_number, ' +');
-		if (is_numeric($phone_number)) {
-			if (isset($_SESSION["format"]["phone"])) foreach ($_SESSION["format"]["phone"] as &$format) {
-				$format_count = substr_count($format, 'x');
-				$format_count = $format_count + substr_count($format, 'R');
-				$format_count = $format_count + substr_count($format, 'r');
-				if ($format_count == strlen($phone_number)) {
-					//format the number
-					$phone_number = format_string($format, $phone_number);
+		if (is_numeric(trim($phone_number, ' +'))) {
+			if (isset($_SESSION["format"]["phone"])) {
+				$phone_number = trim($phone_number, ' +');
+				foreach ($_SESSION["format"]["phone"] as &$format) {
+					$format_count = substr_count($format, 'x');
+					$format_count = $format_count + substr_count($format, 'R');
+					$format_count = $format_count + substr_count($format, 'r');
+					if ($format_count == strlen($phone_number)) {
+						//format the number
+						$phone_number = format_string($format, $phone_number);
+					}
 				}
 			}
 		}
@@ -777,33 +779,37 @@ function format_string ($format, $data) {
 			}
 
 		//get the name of the useragent
-			if (preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent)) {
+			if (preg_match('/MSIE/i',$user_agent) || preg_match('/Trident/i',$user_agent)) {
 				$browser_name = 'Internet Explorer';
-				$browser_shortname = 'MSIE';
+				$browser_name_short = 'MSIE';
 			}
 			elseif (preg_match('/Firefox/i',$user_agent)) {
 				$browser_name = 'Mozilla Firefox';
-				$browser_shortname = 'Firefox';
+				$browser_name_short = 'Firefox';
 			}
 			elseif (preg_match('/Chrome/i',$user_agent)) {
 				$browser_name = 'Google Chrome';
-				$browser_shortname = 'Chrome';
+				$browser_name_short = 'Chrome';
 			}
 			elseif (preg_match('/Safari/i',$user_agent)) {
 				$browser_name = 'Apple Safari';
-				$browser_shortname = 'Safari';
+				$browser_name_short = 'Safari';
 			}
 			elseif (preg_match('/Opera/i',$user_agent)) {
 				$browser_name = 'Opera';
-				$browser_shortname = 'Opera';
+				$browser_name_short = 'Opera';
 			}
 			elseif (preg_match('/Netscape/i',$user_agent)) {
 				$browser_name = 'Netscape';
-				$browser_shortname = 'Netscape';
+				$browser_name_short = 'Netscape';
+			}
+			else {
+				$browser_name = 'Unknown';
+				$browser_name_short = 'Unknown';
 			}
 
 		//finally get the correct version number
-			$known = array('Version', $browser_shortname, 'other');
+			$known = array('Version', $browser_name_short, 'other');
 			$pattern = '#(?<browser>' . join('|', $known) . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 			if (!preg_match_all($pattern, $user_agent, $matches)) {
 				//we have no matching number just continue
@@ -814,7 +820,7 @@ function format_string ($format, $data) {
 			if ($i != 1) {
 				//we will have two since we are not using 'other' argument yet
 				//see if version is before or after the name
-				if (strripos($user_agent,"Version") < strripos($user_agent,$browser_shortname)) {
+				if (strripos($user_agent,"Version") < strripos($user_agent,$browser_name_short)) {
 					$version= $matches['version'][0];
 				}
 				else {
@@ -832,6 +838,7 @@ function format_string ($format, $data) {
 			switch ($info) {
 				case "agent": return $user_agent; break;
 				case "name": return $browser_name; break;
+				case "name_short": return $browser_name_short; break;
 				case "version": return $version; break;
 				case "platform": return $platform; break;
 				case "mobile": return $mobile; break;
@@ -840,6 +847,7 @@ function format_string ($format, $data) {
 					return array(
 						'user_agent' => $user_agent,
 						'name' => $browser_name,
+						'name_short' => $browser_name_short,
 						'version' => $version,
 						'platform' => $platform,
 						'mobile' => $mobile,
@@ -1585,6 +1593,9 @@ function number_pad($number,$n) {
 					case 'backspace':
 						$key_code = '(e.which == 8)';
 						break;
+					case 'space':
+						$key_code = '(e.which == 32)';
+						break;
 					case 'ctrl+s':
 						$key_code = '(((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
 						break;
@@ -1593,6 +1604,9 @@ function number_pad($number,$n) {
 						break;
 					case 'ctrl+a':
 						$key_code = '(((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
+						break;
+					case 'ctrl+c':
+						$key_code = '(((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
 						break;
 					case 'ctrl+enter':
 						$key_code = '(((e.which == 13 || e.which == 10) && (e.ctrlKey || e.metaKey)) || (e.which == 19))';
@@ -1921,7 +1935,15 @@ function number_pad($number,$n) {
 
 //escape user data
 	function escape($string) {
-		return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		if (is_array($string)) {
+			return false;
+		}
+		elseif (isset($string) && strlen($string)) {
+			return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		}
+		else {
+			return false;
+		}
 		//return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 	}
 
@@ -2078,6 +2100,20 @@ function number_pad($number,$n) {
 			else {
 				return false;
 			}
+		}
+	}
+
+//convert bytes to readable human format
+	if (!function_exists('byte_convert')) {
+		function byte_convert($bytes, $precision = 2) {
+			static $units = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+			$step = 1024;
+			$i = 0;
+			while (($bytes / $step) > 0.9) {
+				$bytes = $bytes / $step;
+				$i++;
+			}
+			return round($bytes, $precision).' '.$units[$i];
 		}
 	}
 

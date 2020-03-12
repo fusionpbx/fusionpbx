@@ -162,6 +162,8 @@
 			digit = "8";
 		elseif (letter == "w" or letter == "x" or letter == "y" or letter == "z") then
 			digit = "9";
+		else
+			digit = "0";
 		end
 		return digit;
 	end

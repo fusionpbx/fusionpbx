@@ -53,9 +53,10 @@
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_group <> '' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
-		$apps[$x]['destinations'][$y]['field']['destination']['name'] = "destination";
-		$apps[$x]['destinations'][$y]['field']['destination']['type'] = "csv";
-		$apps[$x]['destinations'][$y]['field']['destination']['delimiter'] = ",";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "destination";
+		//$apps[$x]['destinations'][$y]['field']['destination']['name'] = "destination";
+		//$apps[$x]['destinations'][$y]['field']['destination']['type'] = "csv";
+		//$apps[$x]['destinations'][$y]['field']['destination']['delimiter'] = ",";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge group/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination}";
@@ -271,6 +272,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Whether to regenerate the session ID.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b831ac5a-20f6-4e77-af43-a3c697bfe550";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "user_record_default";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default value to set whether to record inbound, outbound, or all calls.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "directory.\${extension}@\${user_context}";

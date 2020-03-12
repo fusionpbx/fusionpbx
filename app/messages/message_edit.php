@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,9 +27,9 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('message_add') || permission_exists('message_edit')) {
 		//access granted
 	}
@@ -54,7 +54,7 @@
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
 		$message_uuid = $_POST["message_uuid"];
-		//$user_uuid = $_POST["user_uuid"];
+		$user_uuid = $_POST["user_uuid"];
 		$message_type = $_POST["message_type"];
 		$message_direction = $_POST["message_direction"];
 		$message_date = $_POST["message_date"];
@@ -75,9 +75,34 @@
 				$message_uuid = $_POST["message_uuid"];
 			}
 
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($message_uuid)) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $message_uuid;
+
+				switch ($_POST['action']) {
+					case 'delete':
+						if (permission_exists('message_delete')) {
+							$obj = new messages;
+							$obj->delete($array);
+						}
+						break;
+				}
+
+				header('Location: messages_log.php');
+				exit;
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: messages_log.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
-			//if (strlen($user_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-user_uuid']."<br>\n"; }
 			if (strlen($message_type) == 0) { $msg .= $text['message-required']." ".$text['label-message_type']."<br>\n"; }
 			if (strlen($message_direction) == 0) { $msg .= $text['message-required']." ".$text['label-message_direction']."<br>\n"; }
 			if (strlen($message_date) == 0) { $msg .= $text['message-required']." ".$text['label-message_date']."<br>\n"; }
@@ -161,9 +186,6 @@
 		unset($sql, $parameters);
 	}
 
-//show the header
-	require_once "resources/header.php";
-
 //get the users
 	$sql = "select user_uuid, username from v_users ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -174,24 +196,38 @@
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-message'];
+	require_once "resources/header.php";
+
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-message']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'messages_log.php']);
+	if ($action == 'update' && permission_exists('message_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-message']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='messages_log.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-username']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='user_uuid'>\n";
+	echo "		<option value=''></option>\n";
 	foreach($users as $row) {
 		echo "		<option value='".escape($row['user_uuid'])."' ".($row['user_uuid'] == $user_uuid ? "selected='selected'" : null).">".escape($row['username'])."</option>\n";
 	}
@@ -268,7 +304,7 @@
 	echo "	".$text['label-message_text']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='message_text' maxlength='255' value=\"".escape($message_text)."\">\n";
+	echo "	<textarea class='formfld' style='min-width: 40%; height: 100px;' name='message_text'>".escape($message_text)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-message_text']."\n";
 	echo "</td>\n";
@@ -333,15 +369,13 @@
 		echo "</tr>\n";
 	}
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='message_uuid' value='".escape($message_uuid)."'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
+	echo "</table>\n";
+	echo "<br /><br />\n";
+
+	echo "<input type='hidden' name='message_uuid' value='".escape($message_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

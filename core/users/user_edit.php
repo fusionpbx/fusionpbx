@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -125,10 +125,10 @@
 			$user_status = $_POST["user_status"];
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
-			if (permission_exists('user_edit') && $action == 'edit') {
+			if (permission_exists('contact_edit') && $action == 'edit') {
 				$contact_uuid = $_POST["contact_uuid"];
 			}
-			else if (permission_exists('user_add') && $action == 'add') {
+			else if (permission_exists('contact_add') && $action == 'add') {
 				$contact_organization = $_POST["contact_organization"];
 				$contact_name_given = $_POST["contact_name_given"];
 				$contact_name_family = $_POST["contact_name_family"];
@@ -469,6 +469,9 @@
 				}
 			}
 
+		//set the password hash cost
+			$options = array('cost' => 10);
+
 		//add user setting to array for update
 			$array['users'][$x]['user_uuid'] = $user_uuid;
 			$array['users'][$x]['domain_uuid'] = $domain_uuid;
@@ -476,16 +479,17 @@
 				$array['users'][$x]['username'] = $username;
 			}
 			if ($password != '' && $password == $password_confirm) {
-				$salt = uuid();
-				$array['users'][$x]['password'] = md5($salt.$password);
-				$array['users'][$x]['salt'] = $salt;
+				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
+				$array['users'][$x]['salt'] = null;
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
 			if (permission_exists('user_add') || permission_exists('user_edit')) {
 				$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
 				$array['users'][$x]['user_enabled'] = $user_enabled;
-				$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
+				if (permission_exists('contact_add')) {
+					$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
+				}
 				if ($action == 'add') {
 					$array['users'][$x]['add_user'] = $_SESSION["user"]["username"];
 					$array['users'][$x]['add_date'] = date("Y-m-d H:i:s.uO");
@@ -567,7 +571,9 @@
 			$user_email = $row["user_email"];
 			$api_key = $row["api_key"];
 			$user_enabled = $row["user_enabled"];
-			$contact_uuid = $row["contact_uuid"];
+			if (permission_exists('contact_view')) {
+				$contact_uuid = $row["contact_uuid"];
+			}
 			$user_status = $row["user_status"];
 		}
 		else {
@@ -650,12 +656,12 @@
 		echo "<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'users.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'users.php']);
 	}
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-tickets'],'icon'=>'tags','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/tickets/tickets.php?user_uuid='.urlencode($user_uuid)]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -813,7 +819,7 @@
 		echo "	</tr>\n";
 	}
 
-	if ($action == 'edit' && permission_exists("user_edit")) {
+	if ($action == 'edit' && permission_exists("user_edit") && permission_exists('contact_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-contact']."</td>";
 		echo "		<td class='vtable'>\n";
@@ -869,7 +875,7 @@
 		echo "		</td>";
 		echo "	</tr>";
 	}
-	else if ($action == 'add' && permission_exists("user_add")) {
+	elseif ($action == 'add' && permission_exists("user_add") && permission_exists('contact_add')) {
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-first_name']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='".escape($contact_name_given)."'></td>";
@@ -955,8 +961,7 @@
 			}
 			echo "</select>";
 			if ($action == 'edit') {
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-// 				echo "<input type='submit' class='btn' value=\"".$text['button-add']."\" >\n";
+				echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'onclick'=>'submit_form();']);
 			}
 		}
 		unset($sql, $parameters, $groups, $field);
@@ -1025,31 +1030,34 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>";
-	echo "		<td colspan='2' align='right' style='white-space: nowrap;'>";
+	if ($unsaved) {
+		echo "<tr>";
+		echo "<td colspan='2' align='right' style='white-space: nowrap;'>";
+		echo "	<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
+		echo "</td>";
+		echo "</tr>";
+	}
+
+	echo "</table>";
+	echo "<br /><br />";
+
 	if ($action == 'edit') {
-		echo "		<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
+		echo "<input type='hidden' name='id' value=\"".escape($user_uuid)."\">";
 		if (permission_exists("user_edit")) {
-			echo "		<input type='hidden' name='username_old' value=\"".escape($username)."\">";
+			echo "<input type='hidden' name='username_old' value=\"".escape($username)."\">";
 		}
 	}
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "			<br>";
-	if ($unsaved) {
-		echo "		<span style='color: #b00;'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle' style='margin-right: 15px;'></i></span>";
-	}
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 	if (permission_exists("user_edit") && permission_exists('user_setting_view') && $action == 'edit') {
-		echo "<br><br>";
 		require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/user_settings/user_settings.php";
+		echo "<br><br>";
 	}
 
-//uuid generation script
 	echo "<script>\n";
+//uuid generation script
 	echo "function uuid() {\n";
 	echo "	var d = new Date().getTime();\n";
 	echo "	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n";
@@ -1059,6 +1067,11 @@
 	echo "	});\n";
 	echo "	return uuid;\n";
 	echo "};\n";
+//hide password fields before submit
+	echo "	function submit_form() {\n";
+	echo "		hide_password_fields();\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
 	echo "</script>\n";
 
 //include the footer

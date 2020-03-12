@@ -256,6 +256,49 @@ if (!class_exists('fax')) {
 								unset($sql, $parameters, $rows, $row);
 							}
 
+						//get necessary fax file details
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										if ($row['fax_mode'] == 'rx') { $fax_files[$row['uuid']]['folder'] = 'inbox'; }
+										if ($row['fax_mode'] == 'tx') { $fax_files[$row['uuid']]['folder'] = 'sent'; }
+										$fax_files[$row['uuid']]['path'] = $row['fax_file_path'];
+										$fax_files[$row['uuid']]['type'] = $row['fax_file_type'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//delete fax file(s)
+							if (is_array($fax_files) && @sizeof($fax_files) != 0) {
+								foreach ($fax_files as $fax_file_uuid => $fax_file) {
+									if (substr_count($fax_file['path'], '/temp/') > 0) {
+										$fax_file['path'] = str_replace('/temp/', '/'.$fax_file['type'].'/', $fax_file['path']);
+									}
+									if (file_exists($fax_file['path'])) {
+										@unlink($fax_file['path']);
+									}
+									if ($fax_file['type'] == 'tif') {
+										$fax_file['path'] = str_replace('.tif', '.pdf', $fax_file['path']);
+										if (file_exists($fax_file['path'])) {
+											@unlink($fax_file['path']);
+										}
+									}
+									else if ($fax_file['type'] == 'pdf') {
+										$fax_file['path'] = str_replace('.pdf', '.tif', $fax_file['path']);
+										if (file_exists($fax_file['path'])) {
+											@unlink($fax_file['path']);
+										}
+									}
+								}
+							}
+
 						//build the delete array
 							$x = 0;
 							foreach ($faxes as $fax_uuid => $fax) {
@@ -263,6 +306,10 @@ if (!class_exists('fax')) {
 								$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								$array['fax_users'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
 								$array['fax_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['fax_files'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
+								$array['fax_files'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								$array['fax_logs'][$x][$this->uuid_prefix.'uuid'] = $fax_uuid;
+								$array['fax_logs'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								$array['dialplans'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
 								$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								$array['dialplan_details'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
@@ -276,6 +323,9 @@ if (!class_exists('fax')) {
 								//grant temporary permissions
 									$p = new permissions;
 									$p->add('fax_delete', 'temp');
+									$p->add('fax_user_delete', 'temp');
+									$p->add('fax_file_delete', 'temp');
+									$p->add('fax_log_delete', 'temp');
 									$p->add('dialplan_delete', 'temp');
 									$p->add('dialplan_detail_delete', 'temp');
 
@@ -288,6 +338,9 @@ if (!class_exists('fax')) {
 
 								//revoke temporary permissions
 									$p->delete('fax_delete', 'temp');
+									$p->delete('fax_user_delete', 'temp');
+									$p->delete('fax_file_delete', 'temp');
+									$p->delete('fax_log_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 									$p->delete('dialplan_detail_delete', 'temp');
 

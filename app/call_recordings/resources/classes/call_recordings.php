@@ -68,9 +68,6 @@ if (!class_exists('call_recordings')) {
 							foreach ($records as $record) {
 								//add to the array
 									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										//add the uuid
-											$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
-
 										//get the information to delete
 											$sql = "select call_recording_name, call_recording_path ";
 											$sql .= "from v_call_recordings ";
@@ -84,13 +81,12 @@ if (!class_exists('call_recordings')) {
 														unlink($field['call_recording_path'].'/'.$field['call_recording_name']);
 													}
 												//build call recording delete array
-													$array['call_recordings'][]['call_recording_uuid'] = $row['call_recording_uuid'];
+													$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
+												//increment the id
+													$x++;
 											}
 											unset($sql, $parameters, $field);
 									}
-
-								//increment the id
-									$x++;
 							}
 
 						//delete the checked rows
@@ -177,13 +173,8 @@ if (!class_exists('call_recordings')) {
 					}
 			}
 
-		} //end download method
-	}  //end the class
+		} //method
+	} //class
 }
-
-/*
-$obj = new call_recordings;
-$obj->download('all');
-*/
 
 ?>

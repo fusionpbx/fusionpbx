@@ -122,17 +122,22 @@
 	$token = $object->create('/app/devices/device_vendor_functions.php');
 
 //show the content
-	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['title-device_vendor_functions']." (".$num_rows.")</b></div>\n";
+	echo "<form id='form_list' method='post' action='device_vendor_functions.php'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
+
+	echo "<div class='action_bar' id='action_bar_sub'>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['title-device_vendor_functions']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'device_vendors.php']);
 	if (permission_exists('device_vendor_function_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'device_vendor_function_edit.php?device_vendor_uuid='.urlencode($_GET['id'])]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'device_vendor_function_edit.php?device_vendor_uuid='.urlencode($_GET['id'])]);
 	}
 	if (permission_exists('device_vendor_function_edit') && $vendor_functions) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('device_vendor_function_delete') && $vendor_functions) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -140,10 +145,6 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
-
-	echo "<form id='form_list' method='post' action='device_vendor_functions.php'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
@@ -234,7 +235,25 @@
 	echo "</table>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
+
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+
+//make sub action bar sticky
+	echo "<script>\n";
+
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 260, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 ?>

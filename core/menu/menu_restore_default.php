@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,7 +51,6 @@
 //menu restore default
 	require_once "resources/classes/menu.php";
 	$menu = new menu;
-	$menu->db = $db;
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
 	$menu->delete_unprotected();

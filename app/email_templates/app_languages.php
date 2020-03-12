@@ -281,15 +281,15 @@
 		$text['label-template_type']['sv-se'] = '';
 		$text['label-template_type']['uk-ua'] = '';
 
-		$text['description-template_type']['en-us'] = 'Set the type as html or text.';
+		$text['description-template_type']['en-us'] = 'Set the content type.';
 		$text['description-template_type']['ar-eg'] = '';
 		$text['description-template_type']['de-at'] = '';
 		$text['description-template_type']['de-ch'] = '';
 		$text['description-template_type']['de-de'] = '';
 		$text['description-template_type']['es-cl'] = '';
 		$text['description-template_type']['es-mx'] = '';
-		$text['description-template_type']['fr-ca'] = 'Définir le type en HTML ou texte';
-		$text['description-template_type']['fr-fr'] = 'Définir le type en HTML ou texte';
+		$text['description-template_type']['fr-ca'] = 'Définir le type';
+		$text['description-template_type']['fr-fr'] = 'Définir le type';
 		$text['description-template_type']['he-il'] = '';
 		$text['description-template_type']['it-it'] = '';
 		$text['description-template_type']['nl-nl'] = '';
@@ -300,6 +300,26 @@
 		$text['description-template_type']['ru-ru'] = '';
 		$text['description-template_type']['sv-se'] = '';
 		$text['description-template_type']['uk-ua'] = '';
+
+		$text['label-template_text']['en-us'] = "Text";
+		$text['label-template_text']['ar-eg'] = "";
+		$text['label-template_text']['de-at'] = "Text"; //copied from de-de
+		$text['label-template_text']['de-ch'] = "Text"; //copied from de-de
+		$text['label-template_text']['de-de'] = "Text";
+		$text['label-template_text']['es-cl'] = "Texto";
+		$text['label-template_text']['es-mx'] = "Texto"; //copied from es-cl
+		$text['label-template_text']['fr-ca'] = "Texte"; //copied from fr-fr
+		$text['label-template_text']['fr-fr'] = "Texte";
+		$text['label-template_text']['he-il'] = "טקסט";
+		$text['label-template_text']['it-it'] = "Testo";
+		$text['label-template_text']['nl-nl'] = "Text";
+		$text['label-template_text']['pl-pl'] = "Tekst";
+		$text['label-template_text']['pt-br'] = "Texto"; //copied from pt-pt
+		$text['label-template_text']['pt-pt'] = "Texto";
+		$text['label-template_text']['ro-ro'] = "";
+		$text['label-template_text']['ru-ru'] = "Текст";
+		$text['label-template_text']['sv-se'] = "Text";
+		$text['label-template_text']['uk-ua'] = "Текст";
 
 		$text['label-template_enabled']['en-us'] = 'Enabled';
 		$text['label-template_enabled']['ar-eg'] = '';

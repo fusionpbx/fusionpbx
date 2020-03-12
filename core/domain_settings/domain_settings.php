@@ -115,18 +115,18 @@
 		echo "<script language='javascript' type='text/javascript'>\n";
 		echo "	var fade_speed = 400;\n";
 		echo "	function show_domains() {\n";
-		echo "		$('#button_copy').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_reset').fadeIn(fade_speed);\n";
+		echo "		$('#btn_copy').fadeOut(fade_speed, function() {\n";
+		echo "			$('#btn_copy_cancel').fadeIn(fade_speed);\n";
 		echo "			$('#target_domain').fadeIn(fade_speed);\n";
-		echo "			$('#button_paste').fadeIn(fade_speed);\n";
+		echo "			$('#btn_paste').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
 		echo "		});";
 		echo "	}";
 		echo "	function hide_domains() {\n";
-		echo "		$('#button_reset').fadeOut(fade_speed);\n";
+		echo "		$('#btn_copy_cancel').fadeOut(fade_speed);\n";
 		echo "		$('#target_domain').fadeOut(fade_speed);\n";
-		echo "		$('#button_paste').fadeOut(fade_speed, function() {\n";
-		echo "			$('#button_copy').fadeIn(fade_speed);\n";
+		echo "		$('#btn_paste').fadeOut(fade_speed, function() {\n";
+		echo "			$('#btn_copy').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('target_domain').selectedIndex = 0;\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
 		echo "		});\n";
@@ -135,15 +135,19 @@
 	}
 
 //show the content
-	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['header-domain_settings']." (".$num_rows.")</b></div>\n";
+	echo "<div class='action_bar' id='action_bar_sub'>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['header-domain_settings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'action_bar_sub_button_back','style'=>'margin-right: 15px; display: none;','link'=>'domains.php']);
+	if (permission_exists('default_setting_view') && $num_rows) {
+		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
+	}
 	if (permission_exists('domain_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)]);
 	}
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'button_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>'show_domains();']);
-		echo button::create(['type'=>'button','label'=>$text['button-reset'],'id'=>'button_reset','icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'display: none;','onclick'=>'hide_domains();']);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>'show_domains();']);
+		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$_SESSION['theme']['button_icon_cancel'],'style'=>'display: none;','onclick'=>'hide_domains();']);
 		echo 	"<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\">\n";
 		echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 		foreach ($_SESSION['domains'] as $domain) {
@@ -155,16 +159,13 @@
 			echo "	<option value='default'>".$text['label-default_settings']."</option>\n";
 		}
 		echo "	</select>";
-		echo button::create(['type'=>'button','label'=>$text['button-paste'],'id'=>'button_paste','icon'=>$_SESSION['theme']['button_icon_paste'],'style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-paste'],'icon'=>$_SESSION['theme']['button_icon_paste'],'id'=>'btn_paste','style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('domain_setting_edit') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('domain_setting_delete') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	}
-	if (permission_exists('default_setting_view') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-left: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -324,5 +325,22 @@
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
+
+//make sub action bar sticky
+	echo "<script>\n";
+
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 300, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 ?>

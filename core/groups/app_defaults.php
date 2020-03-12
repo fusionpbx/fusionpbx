@@ -97,6 +97,17 @@ if ($domains_processed == 1) {
 			unset($array);
 		}
 
+	//update the group_uuid
+		$sql = "UPDATE v_group_permissions as p ";
+		$sql .= "SET group_uuid = ( ";
+		$sql .= "	SELECT group_uuid FROM v_groups as g  ";
+		$sql .= "	WHERE g.group_name = p.group_name  ";
+		$sql .= ");";
+		$parameters = null;
+		$database = new database;
+		$database->execute($sql, $parameters);
+		unset($sql, $parameters);
+
 	//drop the view_groups
 		$database = new database;
 		$database->execute("DROP VIEW view_groups;", null);

@@ -35,7 +35,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0=enabled 1=disable";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting 0-default, 1-enabled, 2-disable.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a8841f3-e1c0-4eb1-abd3-068a3e3701a5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -485,7 +485,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Matching Incoming Caller ID. Matching Rule 6. Also use grandstream_distinctive_ringtone_6";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa2fa675-ccc0-4343-92fb-76c37d67a409";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cfed0d3f-7ae9-4061-a09f-d10770953e03";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_name_7";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -533,7 +533,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_2 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0391daad-029b-413a-891f-4014d3f7cd0";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ff646a6f-bde7-4804-831e-392dfab22c4c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_3";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -589,7 +589,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_9 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "655447f1-e969-4885-b3da-28889b531568";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8a0f19ed-7648-4e16-b92b-49d2844b3968";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";

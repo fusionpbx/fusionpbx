@@ -37,6 +37,7 @@
 		public $voicemail_message_uuid;
 		public $order_by;
 		public $order;
+		public $type;
 
 		/**
 		 * declare private variables
@@ -325,14 +326,14 @@
 										$array[$this->table][$x]['voicemail_uuid'] = $voicemail_uuid;
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['voicemail_options'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_options'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];;
+										$array['voicemail_options'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['voicemail_messages'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_messages'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];;
+										$array['voicemail_messages'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['voicemail_destinations'][$x]['voicemail_uuid'] = $voicemail_uuid;
-										$array['voicemail_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];;
+										$array['voicemail_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										if (is_numeric($voicemail_id)) {
 											$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
-											$array['voicemail_greetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];;
+											$array['voicemail_greetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										}
 										$x++;
 								}
@@ -367,6 +368,108 @@
 									message::add($text['message-delete']);
 							}
 							unset($records, $voicemail_ids);
+					}
+			}
+		}
+
+		public function voicemail_options_delete($records) {
+			//assign private variables
+				$this->permission_prefix = 'voicemail_option_';
+				$this->list_page = 'voicemail_edit.php?id='.$this->voicemail_uuid;
+				$this->table = 'voicemail_options';
+				$this->uuid_prefix = 'voicemail_option_';
+
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked sip profiles
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build the delete array
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
+										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		public function voicemail_destinations_delete($records) {
+			//assign private variables
+				$this->list_page = 'voicemail_edit.php?id='.$this->voicemail_uuid;
+				$this->table = 'voicemail_destinations';
+				$this->uuid_prefix = 'voicemail_destination_';
+
+			if (permission_exists('voicemail_forward')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked sip profiles
+							foreach ($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									//build the delete array
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
+										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('voicemail_destination_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('voicemail_destination_delete', 'temp');
+							}
+							unset($records);
 					}
 			}
 		}
@@ -676,7 +779,7 @@
 				}
 				if ($file_path != '') {
 					$fd = fopen($file_path, "rb");
-					if ($_GET['t'] == "bin") {
+					if ($this->type == 'bin') {
 						header("Content-Type: application/force-download");
 						header("Content-Type: application/octet-stream");
 						header("Content-Type: application/download");

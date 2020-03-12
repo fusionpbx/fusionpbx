@@ -145,18 +145,18 @@
 		echo "<script language='javascript' type='text/javascript'>\n";
 		echo "	function show_domains() {\n";
 		echo "		document.getElementById('action').value = 'copy';\n";
-		echo "		document.getElementById('button_copy').style.display = 'none'; \n";
-		echo "		document.getElementById('button_back').style.display = 'inline'; \n";
+		echo "		document.getElementById('btn_copy').style.display = 'none'; \n";
+		echo "		document.getElementById('btn_copy_cancel').style.display = 'inline'; \n";
 		echo "		document.getElementById('target_domain_uuid').style.display = 'inline'; \n";
-		echo "		document.getElementById('button_paste').style.display = 'inline'; \n";
+		echo "		document.getElementById('btn_paste').style.display = 'inline'; \n";
 		echo "	}";
 		echo "	function hide_domains() {\n";
 		echo "		document.getElementById('action').value = '';\n";
-		echo "		document.getElementById('button_back').style.display = 'none'; \n";
+		echo "		document.getElementById('btn_copy_cancel').style.display = 'none'; \n";
 		echo "		document.getElementById('target_domain_uuid').style.display = 'none'; \n";
 		echo "		document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
-		echo "		document.getElementById('button_paste').style.display = 'none'; \n";
-		echo "		document.getElementById('button_copy').style.display = 'inline'; \n";
+		echo "		document.getElementById('btn_paste').style.display = 'none'; \n";
+		echo "		document.getElementById('btn_copy').style.display = 'inline'; \n";
 		echo "	}\n";
 		echo "</script>";
 	}
@@ -167,26 +167,26 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($search != '' ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
 	if (permission_exists('default_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'default_setting_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'default_setting_edit.php']);
 	}
 	if (permission_exists('default_setting_add') && $default_settings) {
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'button_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'onclick'=>'show_domains();']);
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'id'=>'button_back','icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'display: none;','onclick'=>'hide_domains();']);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>'show_domains();']);
+			echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$_SESSION['theme']['button_icon_cancel'],'style'=>'display: none;','onclick'=>'hide_domains();']);
 			echo 		"<select name='domain_uuid' class='formfld' style='display: none; width: auto;' id='target_domain_uuid' onchange=\"document.getElementById('domain_uuid').value = this.options[this.selectedIndex].value;\">\n";
 			echo "			<option value=''>".$text['label-domain']."...</option>\n";
 			foreach ($_SESSION['domains'] as $domain) {
 				echo "		<option value='".escape($domain["domain_uuid"])."'>".escape($domain["domain_name"])."</option>\n";
 			}
 			echo "		</select>";
-			echo button::create(['type'=>'button','label'=>$text['button-paste'],'id'=>'button_paste','icon'=>'paste','style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-paste'],'icon'=>$_SESSION['theme']['button_icon_paste'],'id'=>'btn_paste','style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 		}
 	}
 	if (permission_exists('default_setting_edit') && $default_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('default_setting_delete') && $default_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (is_array($categories) && @sizeof($categories) != 0) {
@@ -278,7 +278,14 @@
 			if ($_GET['show'] == 'all' && permission_exists('default_setting_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td class='overflow no-wrap'>".escape($row['default_setting_subcategory'])."</td>\n";
+			echo "	<td class='overflow no-wrap'>";
+			if (permission_exists('default_setting_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['default_setting_subcategory'])."</a>";
+			}
+			else {
+				echo escape($row['default_setting_subcategory']);
+			}
+			echo "	</td>\n";
 			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
 			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['default_setting_category'];

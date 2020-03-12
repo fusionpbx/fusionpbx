@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2019
+	Portions created by the Initial Developer are Copyright (C) 2018-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -57,8 +57,6 @@
 //get the http get values and set them as php variables
 	$action = $_POST["action"];
 	$from_row = $_POST["from_row"];
-	$order_by = $_POST["order_by"];
-	$order = $_POST["order"];
 	$delimiter = $_POST["data_delimiter"];
 	$enclosure = $_POST["data_enclosure"];
 
@@ -153,10 +151,10 @@
 			echo "<form name='frmUpload' method='post' enctype='multipart/form-data'>\n";
 
 			echo "<div class='action_bar' id='action_bar'>\n";
-			echo "	<div class='heading'><b>".$text['header-import']."</b></div>\n";
+			echo "	<div class='heading'><b>".$text['header-extension_import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extension_imports.php']);
-			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import']]);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'extension_imports.php']);
+			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'id'=>'btn_save']);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
@@ -200,6 +198,7 @@
 			}
 
 			echo "</table>\n";
+			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
 			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
@@ -331,7 +330,7 @@
 										$row_id = 0;
 								}
 
-						} //if ($from_row <= $row_id)
+						} //if ($from_row <= $row_number)
 						$row_number++;
 						$row_id++;
 					} //end while
@@ -366,8 +365,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extension_import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'extensions.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'extensions.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -382,7 +381,7 @@
 	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' class='formfld' style='width: 100%; min-height: 150px;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";

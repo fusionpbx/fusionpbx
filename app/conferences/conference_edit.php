@@ -186,11 +186,14 @@
 					$array['conferences'][0]['conference_description'] = $conference_description;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
 
+				//conference pin number
+					$pin_number = (strlen($conference_pin_number) > 0) ? '+'.$conference_pin_number : '';
+
 				//build the xml
 					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default".$pin_number."+flags{'".$conference_flags."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -314,7 +317,7 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
@@ -326,11 +329,11 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'conferences.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
 	if ($action == 'update' && permission_exists('conference_active_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-right: 15px;','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

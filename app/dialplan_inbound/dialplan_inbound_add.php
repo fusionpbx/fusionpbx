@@ -50,6 +50,9 @@
 	$order = $_GET["order"];
 	$action = $_GET["action"];
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
 		$dialplan_name = $_POST["dialplan_name"];
@@ -366,8 +369,10 @@
 			$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_1;
-			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_1;
+			if ($destination->valid($action_application_1.':'.$action_data_1)) {
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_1;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_1;
+			}
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -378,8 +383,10 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_2;
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_2;
+				if ($destination->valid($action_application_2.':'.$action_data_2)) {
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_2;
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_2;
+				}
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
@@ -428,9 +435,6 @@
 			exit;
 	}
 
-//initialize the destinations object
-	$destination = new destinations;
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -472,12 +476,12 @@
 <?php
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dialplan-inbound-add']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>PROJECT_PATH.'/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4']);
 	if (permission_exists("inbound_route_advanced")) {
 		if (permission_exists("inbound_route_edit") && $action == "advanced") {
 			echo button::create(['type'=>'button','label'=>$text['button-basic'],'icon'=>'hammer','style'=>'margin-left: 15px;','link'=>'dialplan_inbound_add.php?action=basic']);
@@ -486,7 +490,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>'margin-left: 15px;','link'=>'dialplan_inbound_add.php?action=advanced']);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

@@ -163,6 +163,8 @@ if (!class_exists('ringbacks')) {
 					foreach ($this->ringtones_list as $ringtone_value => $ringtone_name) {
 						$select .= "		<option value='\${".$ringtone_value."}'".(($selected_ringtone == $ringtone_value) ? ' selected="selected"' : null).">".$ringtone_name."</option>\n";
 					}
+					//add silence option
+					$select .= "		<option value='silence'>Silence</option>\n";
 					$select .= "	</optgroup>\n";
 					unset($selected_ringtone);
 				}
