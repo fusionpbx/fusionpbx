@@ -605,7 +605,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'domains.php']);
 	}
 	if (permission_exists('domain_delete') && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1 && $domain_uuid != $_SESSION['domain_uuid']) {
-		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists("domain_select") && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1) {
 		echo "<select id='domains' class='formfld' style='width: auto;' onchange=\"window.location.href='?id=' + document.getElementById('domains').options[document.getElementById('domains').selectedIndex].value;\">\n";
