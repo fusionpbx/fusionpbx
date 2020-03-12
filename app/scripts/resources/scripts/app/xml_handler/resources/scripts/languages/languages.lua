@@ -102,7 +102,7 @@
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sounds_dir..[[/]]..language..[[/us/callie" tts-engine="cepstral" tts-voice="callie">]]);
+							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sound_prefix" tts-engine="flite" tts-voice="rms">]]);
 							table.insert(xml, [[			<phrases>]]);
 							table.insert(xml, [[				<macros>]]);
 
