@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Add, Delete, or Play Music on hold files.";
+		$apps[$x]['description']['en-gb'] = "Add, Delete, or Play Music on hold files.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Dateien für die Wartemusik hinzufügen, löschen oder abspielen.";
 		$apps[$x]['description']['de-ch'] = "";

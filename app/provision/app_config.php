@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Writes the provisioning files from templates.";
+		$apps[$x]['description']['en-gb'] = "Writes the provisioning files from templates.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Schreibt die Dateien für die Bereitstellung aus den Vorlagen.";
 		$apps[$x]['description']['de-ch'] = "";

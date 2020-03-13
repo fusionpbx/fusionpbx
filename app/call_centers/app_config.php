@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Queues for managing inbound calls and routing those calls to available agents.";
+		$apps[$x]['description']['en-gb'] = "Queues for managing inbound calls and routing those calls to available agents.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Warteschlangen um eingehende Anrufe zu verwalten und diese an verfügbare Agenten weiterzuleiten.";
 		$apps[$x]['description']['de-ch'] = "";

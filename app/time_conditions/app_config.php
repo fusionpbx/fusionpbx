@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Direct calls based on the time of day.";
+		$apps[$x]['description']['en-gb'] = "Direct calls based on the time of day.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Anrufe anhand der Tageszeit weiterleiten.";
 		$apps[$x]['description']['de-de'] = "Anrufe anhand der Tageszeit weiterleiten.";
