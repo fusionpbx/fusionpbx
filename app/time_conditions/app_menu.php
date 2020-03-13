@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Time Conditions";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Time Conditions";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Zeitschaltung";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Zeitschaltung";

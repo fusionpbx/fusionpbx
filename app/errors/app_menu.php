@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Server Errors";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Server Errors";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "";

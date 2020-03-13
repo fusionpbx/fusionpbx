@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Variables";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Variables";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Variablen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Variablen";
