@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-status']['en-us'] = "Status";
+$text['title-status']['en-gb'] = "Status";
 $text['title-status']['ar-eg'] = "";
 $text['title-status']['de-at'] = "Status"; //copied from de-de
 $text['title-status']['de-ch'] = "Status"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-status']['sv-se'] = "Status";
 $text['title-status']['uk-ua'] = "Стан";
 
 $text['title-sofia-status-profile']['en-us'] = "sofia status profile";
+$text['title-sofia-status-profile']['en-gb'] = "sofia status profile";
 $text['title-sofia-status-profile']['ar-eg'] = "";
 $text['title-sofia-status-profile']['de-at'] = "sofia status profile"; //copied from de-de
 $text['title-sofia-status-profile']['de-ch'] = "sofia status profile"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-sofia-status-profile']['sv-se'] = "sofia status profil";
 $text['title-sofia-status-profile']['uk-ua'] = "sofia status profile ";
 
 $text['title-sofia-status']['en-us'] = "sofia status";
+$text['title-sofia-status']['en-gb'] = "sofia status";
 $text['title-sofia-status']['ar-eg'] = "";
 $text['title-sofia-status']['de-at'] = "sofia status"; //copied from de-de
 $text['title-sofia-status']['de-ch'] = "sofia status"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-sofia-status']['sv-se'] = "sofia status";
 $text['title-sofia-status']['uk-ua'] = "sofia status ";
 
 $text['title-sip_status']['en-us'] = "SIP Status";
+$text['title-sip_status']['en-gb'] = "SIP Status";
 $text['title-sip_status']['ar-eg'] = "";
 $text['title-sip_status']['de-at'] = "SIP Status"; //copied from de-de
 $text['title-sip_status']['de-ch'] = "SIP Status"; //copied from de-de
@@ -82,6 +86,7 @@ $text['title-sip_status']['sv-se'] = "SIP Status";
 $text['title-sip_status']['uk-ua'] = "Стан SIP";
 
 $text['label-action']['en-us'] = "Action";
+$text['label-action']['en-gb'] = "Action";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-action']['de-ch'] = "Aktion"; //copied from de-de
@@ -102,6 +107,7 @@ $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
 
 $text['label-state']['en-us'] = "State";
+$text['label-state']['en-gb'] = "State";
 $text['label-state']['ar-eg'] = "";
 $text['label-state']['de-at'] = "Status"; //copied from de-de
 $text['label-state']['de-ch'] = "Status"; //copied from de-de
@@ -122,6 +128,7 @@ $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk-ua'] = "Стан";
 
 $text['label-message']['en-us'] = "Message";
+$text['label-message']['en-gb'] = "Message";
 $text['label-message']['ar-eg'] = "";
 $text['label-message']['de-at'] = "Nachricht"; //copied from de-de
 $text['label-message']['de-ch'] = "Nachricht"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk-ua'] = "Повідомлення";
 
 $text['label-data']['en-us'] = "Data";
+$text['label-data']['en-gb'] = "Data";
 $text['label-data']['ar-eg'] = "";
 $text['label-data']['de-at'] = "Daten"; //copied from de-de
 $text['label-data']['de-ch'] = "Daten"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-data']['sv-se'] = "Data";
 $text['label-data']['uk-ua'] = "Дані";
 
 $text['label-profile']['en-us'] = "Profile";
+$text['label-profile']['en-gb'] = "Profile";
 $text['label-profile']['ar-eg'] = "";
 $text['label-profile']['de-at'] = "Profile"; //copied from de-de
 $text['label-profile']['de-ch'] = "Profile"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-profile']['sv-se'] = "Profiler";
 $text['label-profile']['uk-ua'] = "Профілі";
 
 $text['label-gateway']['en-us'] = "Gateway";
+$text['label-gateway']['en-gb'] = "Gateway";
 $text['label-gateway']['ar-eg'] = "";
 $text['label-gateway']['de-at'] = "Gateway"; //copied from de-de
 $text['label-gateway']['de-ch'] = "Gateway"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-gateway']['sv-se'] = "Gateway";
 $text['label-gateway']['uk-ua'] = "Шлюз";
 
 $text['description-sip_status']['en-us'] = "View and manage the status of system profiles and gateways.";
+$text['description-sip_status']['en-gb'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['ar-eg'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['de-at'] = "View and manage the status of system profiles and gateways.";
 $text['description-sip_status']['de-ch'] = "View and manage the status of system profiles and gateways.";
@@ -222,6 +233,7 @@ $text['description-sip_status']['sv-se'] = "View and manage the status of system
 $text['description-sip_status']['uk-ua'] = "View and manage the status of system profiles and gateways.";
 
 $text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
+$text['error-event-socket']['en-gb'] = "Connection to Event Socket failed.";
 $text['error-event-socket']['ar-eg'] = "";
 $text['error-event-socket']['de-at'] = "Verbindung zum Event Socket fehlgeschlagen."; //copied from de-de
 $text['error-event-socket']['de-ch'] = "Verbindung zum Event Socket fehlgeschlagen."; //copied from de-de
@@ -242,6 +254,7 @@ $text['error-event-socket']['sv-se'] = "Kontakten till 'Event Socket' misslyckad
 $text['error-event-socket']['uk-ua'] = "Помилка підключення до сокета подій";
 
 $text['button-rescan']['en-us'] = "Rescan";
+$text['button-rescan']['en-gb'] = "Rescan";
 $text['button-rescan']['ar-eg'] = "";
 $text['button-rescan']['de-at'] = "Neu scannen"; //copied from de-de
 $text['button-rescan']['de-ch'] = "Neu scannen"; //copied from de-de
@@ -262,6 +275,7 @@ $text['button-rescan']['sv-se'] = "Sök Igen";
 $text['button-rescan']['uk-ua'] = "Пересканувати";
 
 $text['button-reload_xml']['en-us'] = "Reload XML";
+$text['button-reload_xml']['en-gb'] = "Reload XML";
 $text['button-reload_xml']['ar-eg'] = "";
 $text['button-reload_xml']['de-at'] = "XML neu laden"; //copied from de-de
 $text['button-reload_xml']['de-ch'] = "XML neu laden"; //copied from de-de
@@ -282,6 +296,7 @@ $text['button-reload_xml']['sv-se'] = "Ladda Om XML";
 $text['button-reload_xml']['uk-ua'] = "Перезагрузити XML";
 
 $text['button-reload_acl']['en-us'] = "Reload ACL";
+$text['button-reload_acl']['en-gb'] = "Reload ACL";
 $text['button-reload_acl']['ar-eg'] = "";
 $text['button-reload_acl']['de-at'] = "ACL neu laden"; //copied from de-de
 $text['button-reload_acl']['de-ch'] = "ACL neu laden"; //copied from de-de
@@ -302,6 +317,7 @@ $text['button-reload_acl']['sv-se'] = "Ladda Om ACL";
 $text['button-reload_acl']['uk-ua'] = "Перезагрузити ACL ";
 
 $text['button-registrations']['en-us'] = "Registrations";
+$text['button-registrations']['en-gb'] = "Registrations";
 $text['button-registrations']['ar-eg'] = "";
 $text['button-registrations']['de-at'] = "Registrierungen"; //copied from de-de
 $text['button-registrations']['de-ch'] = "Registrierungen"; //copied from de-de
@@ -322,6 +338,7 @@ $text['button-registrations']['sv-se'] = "Registreringar";
 $text['button-registrations']['uk-ua'] = "Реєстрації";
 
 $text['button-flush_registrations']['en-us'] = "Flush Registrations";
+$text['button-flush_registrations']['en-gb'] = "Flush Registrations";
 $text['button-flush_registrations']['ar-eg'] = "";
 $text['button-flush_registrations']['de-at'] = "Registrierungen verwerfen"; //copied from de-de
 $text['button-flush_registrations']['de-ch'] = "Registrierungen verwerfen"; //copied from de-de
@@ -342,6 +359,7 @@ $text['button-flush_registrations']['sv-se'] = "'Flush' Registreringar";
 $text['button-flush_registrations']['uk-ua'] = "Скинути реєстрації";
 
 $text['button-flush_cache']['en-us'] = "Flush Cache";
+$text['button-flush_cache']['en-gb'] = "Flush Cache";
 $text['button-flush_cache']['ar-eg'] = "";
 $text['button-flush_cache']['de-at'] = "Cache leeren"; //copied from de-de
 $text['button-flush_cache']['de-ch'] = "Cache leeren"; //copied from de-de

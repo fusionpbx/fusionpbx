@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-option_edit']['en-us'] = "IVR Menu Option Edit";
+$text['title-option_edit']['en-gb'] = "IVR Menu Option Edit";
 $text['title-option_edit']['ar-eg'] = "";
 $text['title-option_edit']['de-at'] = "Optionen der Automatischen Vermittlung bearbeiten"; //copied from de-de
 $text['title-option_edit']['de-ch'] = "Optionen der Automatischen Vermittlung bearbeiten"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-option_edit']['sv-se'] = "Ändra IVR Meny Val";
 $text['title-option_edit']['uk-ua'] = "";
 
 $text['title-option_add']['en-us'] = "IVR Menu Option Add";
+$text['title-option_add']['en-gb'] = "IVR Menu Option Add";
 $text['title-option_add']['ar-eg'] = "";
 $text['title-option_add']['de-at'] = "Optionen der Automatischen Vermittlung hinzufügen"; //copied from de-de
 $text['title-option_add']['de-ch'] = "Optionen der Automatischen Vermittlung hinzufügen"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
 $text['title-option_add']['uk-ua'] = "";
 
 $text['title-ivr_menus']['en-us'] = "IVR Menus";
+$text['title-ivr_menus']['en-gb'] = "IVR Menus";
 $text['title-ivr_menus']['ar-eg'] = "";
 $text['title-ivr_menus']['de-at'] = "Automatische Vermittlungen"; //copied from de-de
 $text['title-ivr_menus']['de-ch'] = "Automatische Vermittlungen"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-ivr_menus']['sv-se'] = "IVR Menyer";
 $text['title-ivr_menus']['uk-ua'] = "";
 
 $text['title-ivr_menu']['en-us'] = "IVR Menu";
+$text['title-ivr_menu']['en-gb'] = "IVR Menu";
 $text['title-ivr_menu']['ar-eg'] = "";
 $text['title-ivr_menu']['de-at'] = "Automatische Vermittlung"; //copied from de-de
 $text['title-ivr_menu']['de-ch'] = "Automatische Vermittlung"; //copied from de-de
@@ -82,6 +86,7 @@ $text['title-ivr_menu']['sv-se'] = "IVR Meny";
 $text['title-ivr_menu']['uk-ua'] = "";
 
 $text['title-ivr_menus_sub']['en-us'] = "IVR Menus - Sub";
+$text['title-ivr_menus_sub']['en-gb'] = "IVR Menus - Sub";
 $text['title-ivr_menus_sub']['ar-eg'] = "";
 $text['title-ivr_menus_sub']['de-at'] = "Automatische Vermittlungen - Sub"; //copied from de-de
 $text['title-ivr_menus_sub']['de-ch'] = "Automatische Vermittlungen - Sub"; //copied from de-de
@@ -102,6 +107,7 @@ $text['title-ivr_menus_sub']['sv-se'] = "IVR Menyer - Sub";
 $text['title-ivr_menus_sub']['uk-ua'] = "";
 
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
+$text['message-maximum_ivr_menus']['en-gb'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['ar-eg'] = "";
 $text['message-maximum_ivr_menus']['de-at'] = "Maximale Anzahl an Automatischen Vermittlungen:"; //copied from de-de
 $text['message-maximum_ivr_menus']['de-ch'] = "Maximale Anzahl an Automatischen Vermittlungen:"; //copied from de-de
@@ -122,6 +128,7 @@ $text['message-maximum_ivr_menus']['sv-se'] = "Max Antal IVR Menyer: ";
 $text['message-maximum_ivr_menus']['uk-ua'] = "";
 
 $text['label-language']['en-us'] = "Language";
+$text['label-language']['en-gb'] = "Language";
 $text['label-language']['ar-eg'] = "";
 $text['label-language']['de-at'] = "Sprache"; //copied from de-de
 $text['label-language']['de-ch'] = "Sprache"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "";
 
 $text['label-tts_voice']['en-us'] = "TTS Voice";
+$text['label-tts_voice']['en-gb'] = "TTS Voice";
 $text['label-tts_voice']['ar-eg'] = "";
 $text['label-tts_voice']['de-at'] = "TTS Sprache"; //copied from de-de
 $text['label-tts_voice']['de-ch'] = "TTS Sprache"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-tts_voice']['sv-se'] = "TTS Voice";
 $text['label-tts_voice']['uk-ua'] = "";
 
 $text['label-tts_engine']['en-us'] = "TTS Engine";
+$text['label-tts_engine']['en-gb'] = "TTS Engine";
 $text['label-tts_engine']['ar-eg'] = "";
 $text['label-tts_engine']['de-at'] = "TTS Generator"; //copied from de-de
 $text['label-tts_engine']['de-ch'] = "TTS Generator"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-tts_engine']['sv-se'] = "TTS Engine";
 $text['label-tts_engine']['uk-ua'] = "";
 
 $text['label-timeout']['en-us'] = "Timeout";
+$text['label-timeout']['en-gb'] = "Timeout";
 $text['label-timeout']['ar-eg'] = "";
 $text['label-timeout']['de-at'] = "Zeitbeschränkung"; //copied from de-de
 $text['label-timeout']['de-ch'] = "Zeitbeschränkung"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-timeout']['sv-se'] = "Tidsgräns";
 $text['label-timeout']['uk-ua'] = "";
 
 $text['label-ring_back']['en-us'] = "Ring Back";
+$text['label-ring_back']['en-gb'] = "Ring Back";
 $text['label-ring_back']['ar-eg'] = "";
 $text['label-ring_back']['de-at'] = "Wählton"; //copied from de-de
 $text['label-ring_back']['de-ch'] = "Wählton"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-ring_back']['sv-se'] = "Ring Tillbaka";
 $text['label-ring_back']['uk-ua'] = "";
 
 $text['label-options']['en-us'] = "Options";
+$text['label-options']['en-gb'] = "Options";
 $text['label-options']['ar-eg'] = "";
 $text['label-options']['de-at'] = "Optionen"; //copied from de-de
 $text['label-options']['de-ch'] = "Optionen"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-options']['sv-se'] = "Val";
 $text['label-options']['uk-ua'] = "";
 
 $text['label-option']['en-us'] = "Option";
+$text['label-option']['en-gb'] = "Option";
 $text['label-option']['ar-eg'] = "";
 $text['label-option']['de-at'] = "Option"; //copied from de-de
 $text['label-option']['de-ch'] = "Option"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-option']['sv-se'] = "Val";
 $text['label-option']['uk-ua'] = "";
 
 $text['label-max_timeouts']['en-us'] = "Max Timeouts";
+$text['label-max_timeouts']['en-gb'] = "Max Timeouts";
 $text['label-max_timeouts']['ar-eg'] = "";
 $text['label-max_timeouts']['de-at'] = "Max Zeitbeschränkung"; //copied from de-de
 $text['label-max_timeouts']['de-ch'] = "Max Zeitbeschränkung"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-max_timeouts']['sv-se'] = "Max Tidsgräns";
 $text['label-max_timeouts']['uk-ua'] = "";
 
 $text['label-max_failures']['en-us'] = "Max Failures";
+$text['label-max_failures']['en-gb'] = "Max Failures";
 $text['label-max_failures']['ar-eg'] = "";
 $text['label-max_failures']['de-at'] = "Max Fehlversuche"; //copied from de-de
 $text['label-max_failures']['de-ch'] = "Max Fehlversuche"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-max_failures']['sv-se'] = "Max Fel";
 $text['label-max_failures']['uk-ua'] = "";
 
 $text['label-invalid_sound']['en-us'] = "Invalid Sound";
+$text['label-invalid_sound']['en-gb'] = "Invalid Sound";
 $text['label-invalid_sound']['ar-eg'] = "";
 $text['label-invalid_sound']['de-at'] = "Ungültiger Ton"; //copied from de-de
 $text['label-invalid_sound']['de-ch'] = "Ungültiger Ton"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-invalid_sound']['sv-se'] = "Fel Ljud";
 $text['label-invalid_sound']['uk-ua'] = "";
 
 $text['label-inter-digit_timeout']['en-us'] = "Inter-Digit Timeout";
+$text['label-inter-digit_timeout']['en-gb'] = "Inter-Digit Timeout";
 $text['label-inter-digit_timeout']['ar-eg'] = "";
 $text['label-inter-digit_timeout']['de-at'] = "Time-Out zwischen Tastendrucke"; //copied from de-de
 $text['label-inter-digit_timeout']['de-ch'] = "Time-Out zwischen Tastendrucke"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-inter-digit_timeout']['sv-se'] = "Inter-Digit Tidsgräns";
 $text['label-inter-digit_timeout']['uk-ua'] = "";
 
 $text['label-greet_short']['en-us'] = "Greet Short";
+$text['label-greet_short']['en-gb'] = "Greet Short";
 $text['label-greet_short']['ar-eg'] = "";
 $text['label-greet_short']['de-at'] = "Begrüßung kurz"; //copied from de-de
 $text['label-greet_short']['de-ch'] = "Begrüßung kurz"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-greet_short']['sv-se'] = "Kort Hälsning";
 $text['label-greet_short']['uk-ua'] = "";
 
 $text['label-greet_long']['en-us'] = "Greet Long";
+$text['label-greet_long']['en-gb'] = "Greet Long";
 $text['label-greet_long']['ar-eg'] = "";
 $text['label-greet_long']['de-at'] = "Begrüßung lang"; //copied from de-de
 $text['label-greet_long']['de-ch'] = "Begrüßung lang"; //copied from de-de
@@ -382,6 +401,7 @@ $text['label-greet_long']['sv-se'] = "Lång Hälsning";
 $text['label-greet_long']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
 $text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
@@ -402,6 +422,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "";
 
 $text['label-exit_sound']['en-us'] = "Exit Sound";
+$text['label-exit_sound']['en-gb'] = "Exit Sound";
 $text['label-exit_sound']['ar-eg'] = "";
 $text['label-exit_sound']['de-at'] = "Ton bei Verlassen"; //copied from de-de
 $text['label-exit_sound']['de-ch'] = "Ton bei Verlassen"; //copied from de-de
@@ -422,6 +443,7 @@ $text['label-exit_sound']['sv-se'] = "Avslutningsljud";
 $text['label-exit_sound']['uk-ua'] = "";
 
 $text['label-exit_action']['en-us'] = "Exit Action";
+$text['label-exit_action']['en-gb'] = "Exit Action";
 $text['label-exit_action']['ar-eg'] = "";
 $text['label-exit_action']['de-at'] = "Aktion bei Verlassen"; //copied from de-de
 $text['label-exit_action']['de-ch'] = "Aktion bei Verlassen"; //copied from de-de
@@ -442,6 +464,7 @@ $text['label-exit_action']['sv-se'] = "Avslutningsaktion";
 $text['label-exit_action']['uk-ua'] = "";
 
 $text['label-direct_dial']['en-us'] = "Direct Dial";
+$text['label-direct_dial']['en-gb'] = "Direct Dial";
 $text['label-direct_dial']['ar-eg'] = "";
 $text['label-direct_dial']['de-at'] = "Direkte Wahl"; //copied from de-de
 $text['label-direct_dial']['de-ch'] = "Direkte Wahl"; //copied from de-de
@@ -462,6 +485,7 @@ $text['label-direct_dial']['sv-se'] = "Direkt Ringning";
 $text['label-direct_dial']['uk-ua'] = "";
 
 $text['label-digit_length']['en-us'] = "Digit Length";
+$text['label-digit_length']['en-gb'] = "Digit Length";
 $text['label-digit_length']['ar-eg'] = "";
 $text['label-digit_length']['de-at'] = "Ziffernlänge"; //copied from de-de
 $text['label-digit_length']['de-ch'] = "Ziffernlänge"; //copied from de-de
@@ -482,6 +506,7 @@ $text['label-digit_length']['sv-se'] = "Nummerlängd";
 $text['label-digit_length']['uk-ua'] = "";
 
 $text['label-destination']['en-us'] = "Destination";
+$text['label-destination']['en-gb'] = "Destination";
 $text['label-destination']['ar-eg'] = "";
 $text['label-destination']['de-at'] = "Ziel"; //copied from de-de
 $text['label-destination']['de-ch'] = "Ziel"; //copied from de-de
@@ -502,6 +527,7 @@ $text['label-destination']['sv-se'] = "Destination";
 $text['label-destination']['uk-ua'] = "";
 
 $text['label-comfirm_macro']['en-us'] = "Confirm Macro";
+$text['label-comfirm_macro']['en-gb'] = "Confirm Macro";
 $text['label-comfirm_macro']['ar-eg'] = "";
 $text['label-comfirm_macro']['de-at'] = "Bestätigungs Makro"; //copied from de-de
 $text['label-comfirm_macro']['de-ch'] = "Bestätigungs Makro"; //copied from de-de
@@ -522,6 +548,7 @@ $text['label-comfirm_macro']['sv-se'] = "Konfirmera Macro";
 $text['label-comfirm_macro']['uk-ua'] = "";
 
 $text['label-comfirm_key']['en-us'] = "Confirm Key";
+$text['label-comfirm_key']['en-gb'] = "Confirm Key";
 $text['label-comfirm_key']['ar-eg'] = "";
 $text['label-comfirm_key']['de-at'] = "Bestätigungs Schlüssel"; //copied from de-de
 $text['label-comfirm_key']['de-ch'] = "Bestätigungs Schlüssel"; //copied from de-de
@@ -542,6 +569,7 @@ $text['label-comfirm_key']['sv-se'] = "Konfirmera Knapp";
 $text['label-comfirm_key']['uk-ua'] = "";
 
 $text['label-comfirm_attempts']['en-us'] = "Confirm Attempts";
+$text['label-comfirm_attempts']['en-gb'] = "Confirm Attempts";
 $text['label-comfirm_attempts']['ar-eg'] = "";
 $text['label-comfirm_attempts']['de-at'] = "Bestätigungs Versuche"; //copied from de-de
 $text['label-comfirm_attempts']['de-ch'] = "Bestätigungs Versuche"; //copied from de-de
@@ -562,6 +590,7 @@ $text['label-comfirm_attempts']['sv-se'] = "Konfirmera Försök";
 $text['label-comfirm_attempts']['uk-ua'] = "";
 
 $text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
+$text['label-caller_id_name_prefix']['en-gb'] = "Caller ID Name Prefix";
 $text['label-caller_id_name_prefix']['ar-eg'] = "";
 $text['label-caller_id_name_prefix']['de-at'] = "Anruferkennung (Name) Prefix"; //copied from de-de
 $text['label-caller_id_name_prefix']['de-ch'] = "Anruferkennung (Name) Prefix"; //copied from de-de
@@ -582,6 +611,7 @@ $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
 $text['label-caller_id_name_prefix']['uk-ua'] = "";
 
 $text['label-copy']['en-us'] = "Copy";
+$text['label-copy']['en-gb'] = "Copy";
 $text['label-copy']['ar-eg'] = "Copy";
 $text['label-copy']['de-at'] = "Copy";
 $text['label-copy']['de-ch'] = "Copy";
@@ -602,6 +632,7 @@ $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
 
 $text['header-option_list']['en-us'] = "Option List";
+$text['header-option_list']['en-gb'] = "Option List";
 $text['header-option_list']['ar-eg'] = "";
 $text['header-option_list']['de-at'] = "Optionsliste"; //copied from de-de
 $text['header-option_list']['de-ch'] = "Optionsliste"; //copied from de-de
@@ -622,6 +653,7 @@ $text['header-option_list']['sv-se'] = "Val Lista";
 $text['header-option_list']['uk-ua'] = "";
 
 $text['header-option_edit']['en-us'] = "IVR Menu Option Edit";
+$text['header-option_edit']['en-gb'] = "IVR Menu Option Edit";
 $text['header-option_edit']['ar-eg'] = "";
 $text['header-option_edit']['de-at'] = "Optionen der Automatischen Vermittlung bearbeiten"; //copied from de-de
 $text['header-option_edit']['de-ch'] = "Optionen der Automatischen Vermittlung bearbeiten"; //copied from de-de
@@ -642,6 +674,7 @@ $text['header-option_edit']['sv-se'] = "Ändra IVR Meny Val";
 $text['header-option_edit']['uk-ua'] = "";
 
 $text['header-option_add']['en-us'] = "IVR Menu Option Add";
+$text['header-option_add']['en-gb'] = "IVR Menu Option Add";
 $text['header-option_add']['ar-eg'] = "";
 $text['header-option_add']['de-at'] = "Optionen der Automatischen Vermittlung hinzufügen"; //copied from de-de
 $text['header-option_add']['de-ch'] = "Optionen der Automatischen Vermittlung hinzufügen"; //copied from de-de
@@ -662,6 +695,7 @@ $text['header-option_add']['sv-se'] = "Lägg Till IVR Meny Val";
 $text['header-option_add']['uk-ua'] = "";
 
 $text['header-ivr_menus']['en-us'] = "IVR Menus";
+$text['header-ivr_menus']['en-gb'] = "IVR Menus";
 $text['header-ivr_menus']['ar-eg'] = "";
 $text['header-ivr_menus']['de-at'] = "Automatische Vermittlungen"; //copied from de-de
 $text['header-ivr_menus']['de-ch'] = "Automatische Vermittlungen"; //copied from de-de
@@ -682,6 +716,7 @@ $text['header-ivr_menus']['sv-se'] = "IVR Menyer";
 $text['header-ivr_menus']['uk-ua'] = "";
 
 $text['header-ivr_menu']['en-us'] = "IVR Menu";
+$text['header-ivr_menu']['en-gb'] = "IVR Menu";
 $text['header-ivr_menu']['ar-eg'] = "";
 $text['header-ivr_menu']['de-at'] = "Automatische Vermittlung"; //copied from de-de
 $text['header-ivr_menu']['de-ch'] = "Automatische Vermittlung"; //copied from de-de
@@ -702,6 +737,7 @@ $text['header-ivr_menu']['sv-se'] = "IVR Meny";
 $text['header-ivr_menu']['uk-ua'] = "";
 
 $text['description-tts_voice']['en-us'] = "Text to speech voice.";
+$text['description-tts_voice']['en-gb'] = "Text to speech voice.";
 $text['description-tts_voice']['ar-eg'] = "";
 $text['description-tts_voice']['de-at'] = "'Text To Speech' Stimme."; //copied from de-de
 $text['description-tts_voice']['de-ch'] = "'Text To Speech' Stimme."; //copied from de-de
@@ -722,6 +758,7 @@ $text['description-tts_voice']['sv-se'] = "Text till tal röst.";
 $text['description-tts_voice']['uk-ua'] = "";
 
 $text['description-tts_engine']['en-us'] = "Text to speech engine.";
+$text['description-tts_engine']['en-gb'] = "Text to speech engine.";
 $text['description-tts_engine']['ar-eg'] = "";
 $text['description-tts_engine']['de-at'] = "'Text To Speech' Generator."; //copied from de-de
 $text['description-tts_engine']['de-ch'] = "'Text To Speech' Generator."; //copied from de-de
@@ -742,6 +779,7 @@ $text['description-tts_engine']['sv-se'] = "Text till tal 'engine'.";
 $text['description-tts_engine']['uk-ua'] = "";
 
 $text['description-timeout']['en-us'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
+$text['description-timeout']['en-gb'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
 $text['description-timeout']['ar-eg'] = "";
 $text['description-timeout']['de-at'] = "Wartezeit in Millisekunden nach abspielen der Begrüßung oder des Bestätigungs-Makros"; //copied from de-de
 $text['description-timeout']['de-ch'] = "Wartezeit in Millisekunden nach abspielen der Begrüßung oder des Bestätigungs-Makros"; //copied from de-de
@@ -762,6 +800,7 @@ $text['description-timeout']['sv-se'] = "Antal millisekunder att vänta efter h�
 $text['description-timeout']['uk-ua'] = "";
 
 $text['description-ring_back']['en-us'] = "Defines what the caller will hear while the destination is being called.";
+$text['description-ring_back']['en-gb'] = "Defines what the caller will hear while the destination is being called.";
 $text['description-ring_back']['ar-eg'] = "";
 $text['description-ring_back']['de-at'] = "Definiert was der Anrufer hört wenn das Ziel angerufen wird."; //copied from de-de
 $text['description-ring_back']['de-ch'] = "Definiert was der Anrufer hört wenn das Ziel angerufen wird."; //copied from de-de
@@ -782,6 +821,7 @@ $text['description-ring_back']['sv-se'] = "Definierar vad inringande kommer att 
 $text['description-ring_back']['uk-ua'] = "";
 
 $text['description-order']['en-us'] = "Select the order.";
+$text['description-order']['en-gb'] = "Select the order.";
 $text['description-order']['ar-eg'] = "";
 $text['description-order']['de-at'] = "Wählen Sie die Reihenfolge."; //copied from de-de
 $text['description-order']['de-ch'] = "Wählen Sie die Reihenfolge."; //copied from de-de
@@ -802,6 +842,7 @@ $text['description-order']['sv-se'] = "Välj ordning.";
 $text['description-order']['uk-ua'] = "";
 
 $text['description-options']['en-us'] = "Define caller options for the IVR menu.";
+$text['description-options']['en-gb'] = "Define caller options for the IVR menu.";
 $text['description-options']['ar-eg'] = "";
 $text['description-options']['de-at'] = "Geben Sie Anrufer Optionen für die Automatische Vermittlung an."; //copied from de-de
 $text['description-options']['de-ch'] = "Geben Sie Anrufer Optionen für die Automatische Vermittlung an."; //copied from de-de
@@ -822,6 +863,7 @@ $text['description-options']['sv-se'] = "Definiera inringandes val i IVR Meny.";
 $text['description-options']['uk-ua'] = "";
 
 $text['description-option_list']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
+$text['description-option_list']['en-gb'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
 $text['description-option_list']['ar-eg'] = "";
 $text['description-option_list']['de-at'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen."; //copied from de-de
 $text['description-option_list']['de-ch'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen."; //copied from de-de
@@ -842,6 +884,7 @@ $text['description-option_list']['sv-se'] = "Inspelningen presenterar val för i
 $text['description-option_list']['uk-ua'] = "";
 
 $text['description-option_add_edit']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
+$text['description-option_add_edit']['en-gb'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
 $text['description-option_add_edit']['ar-eg'] = "";
 $text['description-option_add_edit']['de-at'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen."; //copied from de-de
 $text['description-option_add_edit']['de-ch'] = "Die Aufnahme bietet dem Anrufer optionen an. Diese Optionen müssen den Tastendrücken entsprechen die den Anrufer an das entsprechende Ziel führen."; //copied from de-de
@@ -862,6 +905,7 @@ $text['description-option_add_edit']['sv-se'] = "Inspelningen presenterar val f�
 $text['description-option_add_edit']['uk-ua'] = "";
 
 $text['description-option']['en-us'] = "Any number between 1-5 digits or regular expressions.";
+$text['description-option']['en-gb'] = "Any number between 1-5 digits or regular expressions.";
 $text['description-option']['ar-eg'] = "";
 $text['description-option']['de-at'] = "Eine beliebige Nummer von 1 und 5 Ziffern Länge oder ein Regulärer Ausdruck."; //copied from de-de
 $text['description-option']['de-ch'] = "Eine beliebige Nummer von 1 und 5 Ziffern Länge oder ein Regulärer Ausdruck."; //copied from de-de
@@ -882,6 +926,7 @@ $text['description-option']['sv-se'] = "Ett nummer mellan 1-5 siffror eller ett 
 $text['description-option']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "Enter a name for the IVR menu.";
+$text['description-name']['en-gb'] = "Enter a name for the IVR menu.";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Geben Sie den Namen der Automatischen Vermittlung an"; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen der Automatischen Vermittlung an"; //copied from de-de
@@ -902,6 +947,7 @@ $text['description-name']['sv-se'] = "Skriv in namnet på IVR Menyn.";
 $text['description-name']['uk-ua'] = "";
 
 $text['description-max_timeouts']['en-us'] = "Maximum number of timeouts before exit.";
+$text['description-max_timeouts']['en-gb'] = "Maximum number of timeouts before exit.";
 $text['description-max_timeouts']['ar-eg'] = "";
 $text['description-max_timeouts']['de-at'] = "Maximale Anzahl an Abwürfen bevor beendet werden soll."; //copied from de-de
 $text['description-max_timeouts']['de-ch'] = "Maximale Anzahl an Abwürfen bevor beendet werden soll."; //copied from de-de
@@ -922,6 +968,7 @@ $text['description-max_timeouts']['sv-se'] = "Max antal timeout innan slut.";
 $text['description-max_timeouts']['uk-ua'] = "";
 
 $text['description-max_failures']['en-us'] = "Maximum number of retries before exit.";
+$text['description-max_failures']['en-gb'] = "Maximum number of retries before exit.";
 $text['description-max_failures']['ar-eg'] = "";
 $text['description-max_failures']['de-at'] = "Maximale Anzahl an Widerholungen bevor beendet werden soll."; //copied from de-de
 $text['description-max_failures']['de-ch'] = "Maximale Anzahl an Widerholungen bevor beendet werden soll."; //copied from de-de
@@ -942,6 +989,7 @@ $text['description-max_failures']['sv-se'] = "Max antal försök innan slut.";
 $text['description-max_failures']['uk-ua'] = "";
 
 $text['description-ivr_menus']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
+$text['description-ivr_menus']['en-gb'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 $text['description-ivr_menus']['ar-eg'] = "";
 $text['description-ivr_menus']['de-at'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein."; //copied from de-de
 $text['description-ivr_menus']['de-ch'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein."; //copied from de-de
@@ -962,6 +1010,7 @@ $text['description-ivr_menus']['sv-se'] = "IVR Menyn spelar upp en inspelning el
 $text['description-ivr_menus']['uk-ua'] = "";
 
 $text['description-ivr_menu']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
+$text['description-ivr_menu']['en-gb'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 $text['description-ivr_menu']['ar-eg'] = "";
 $text['description-ivr_menu']['de-at'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein."; //copied from de-de
 $text['description-ivr_menu']['de-ch'] = "Die Automatische Vermittlung spielt eine Aufnahme oder eine vordefinierte Phrase ab von welcher der Anrufe seine Optionen wählt. Jede Option hat ein entsprechendes Ziel. Das Ziel kann eine Nebenstelle, eine Mailbox eine andere Automatische Vermittlung, Rufgruppen, Fax Server und weitere Funktionen sein."; //copied from de-de
@@ -982,6 +1031,7 @@ $text['description-ivr_menu']['sv-se'] = "IVR Menyn spelar upp en inspelning ell
 $text['description-ivr_menu']['uk-ua'] = "";
 
 $text['description-invalid_sound']['en-us'] = "Played when and invalid option is chosen.";
+$text['description-invalid_sound']['en-gb'] = "Played when and invalid option is chosen.";
 $text['description-invalid_sound']['ar-eg'] = "";
 $text['description-invalid_sound']['de-at'] = "Wird abgespielt, falls eine ungültige Option gewählt wird."; //copied from de-de
 $text['description-invalid_sound']['de-ch'] = "Wird abgespielt, falls eine ungültige Option gewählt wird."; //copied from de-de
@@ -1002,6 +1052,7 @@ $text['description-invalid_sound']['sv-se'] = "Spelas upp när ett ogiltigt val 
 $text['description-invalid_sound']['uk-ua'] = "";
 
 $text['description-inter-digit_timeout']['en-us'] = "The number of milliseconds to wait between digits.";
+$text['description-inter-digit_timeout']['en-gb'] = "The number of milliseconds to wait between digits.";
 $text['description-inter-digit_timeout']['ar-eg'] = "";
 $text['description-inter-digit_timeout']['de-at'] = "Anzahl an Millisekunden wie lange zwischen zwei Tastendrücken gewartet werden soll."; //copied from de-de
 $text['description-inter-digit_timeout']['de-ch'] = "Anzahl an Millisekunden wie lange zwischen zwei Tastendrücken gewartet werden soll."; //copied from de-de
@@ -1022,6 +1073,7 @@ $text['description-inter-digit_timeout']['sv-se'] = "Antal millisekunder att vä
 $text['description-inter-digit_timeout']['uk-ua'] = "";
 
 $text['description-greet_short']['en-us'] = "The short greeting is played when returning to the menu.";
+$text['description-greet_short']['en-gb'] = "The short greeting is played when returning to the menu.";
 $text['description-greet_short']['ar-eg'] = "";
 $text['description-greet_short']['de-at'] = "Die kurze Begrüßung wird abgespielt, wenn der Anrufer zurück zur Automatischen Vermittlung kommt."; //copied from de-de
 $text['description-greet_short']['de-ch'] = "Die kurze Begrüßung wird abgespielt, wenn der Anrufer zurück zur Automatischen Vermittlung kommt."; //copied from de-de
@@ -1042,6 +1094,7 @@ $text['description-greet_short']['sv-se'] = "Den korta hälsningen spelas upp n�
 $text['description-greet_short']['uk-ua'] = "";
 
 $text['description-greet_long']['en-us'] = "The long greeting is played when entering the menu.";
+$text['description-greet_long']['en-gb'] = "The long greeting is played when entering the menu.";
 $text['description-greet_long']['ar-eg'] = "";
 $text['description-greet_long']['de-at'] = "Die lange Begrüßung wird abgespielt, wenn der Anrufer zum ersten mal zur Automatischen Vermittlung kommt."; //copied from de-de
 $text['description-greet_long']['de-ch'] = "Die lange Begrüßung wird abgespielt, wenn der Anrufer zum ersten mal zur Automatischen Vermittlung kommt."; //copied from de-de
@@ -1062,6 +1115,7 @@ $text['description-greet_long']['sv-se'] = "Den långa hälsningen spelas upp n�
 $text['description-greet_long']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
+$text['description-extension']['en-gb'] = "Enter the extension number.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Geben Sie die Nebenstelle ein."; //copied from de-de
 $text['description-extension']['de-ch'] = "Geben Sie die Nebenstelle ein."; //copied from de-de
@@ -1082,6 +1136,7 @@ $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-exit_sound']['en-us'] = "Played when leaving the menu.";
+$text['description-exit_sound']['en-gb'] = "Played when leaving the menu.";
 $text['description-exit_sound']['ar-eg'] = "";
 $text['description-exit_sound']['de-at'] = "Wird abgespielt, wenn die Automatische Vermittlung verlassen wird."; //copied from de-de
 $text['description-exit_sound']['de-ch'] = "Wird abgespielt, wenn die Automatische Vermittlung verlassen wird."; //copied from de-de
@@ -1102,6 +1157,7 @@ $text['description-exit_sound']['sv-se'] = "Spelas när man lämnar IVR Menyn.";
 $text['description-exit_sound']['uk-ua'] = "";
 
 $text['description-exit_action']['en-us'] = "Select the exit action to be performed if the IVR exits.";
+$text['description-exit_action']['en-gb'] = "Select the exit action to be performed if the IVR exits.";
 $text['description-exit_action']['ar-eg'] = "";
 $text['description-exit_action']['de-at'] = "Wählen Sie eine Aktion bei Verlassen der Automatischen Vermittlung."; //copied from de-de
 $text['description-exit_action']['de-ch'] = "Wählen Sie eine Aktion bei Verlassen der Automatischen Vermittlung."; //copied from de-de
@@ -1122,6 +1178,7 @@ $text['description-exit_action']['sv-se'] = "Välj en aktion som skall utföras 
 $text['description-exit_action']['uk-ua'] = "";
 
 $text['description-enabled']['en-us'] = "Set the status of this IVR Menu.";
+$text['description-enabled']['en-gb'] = "Set the status of this IVR Menu.";
 $text['description-enabled']['ar-eg'] = "";
 $text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Automatischen Vermittlung."; //copied from de-de
 $text['description-enabled']['de-ch'] = "Setzen Sie den Status dieser Automatischen Vermittlung."; //copied from de-de
@@ -1142,6 +1199,7 @@ $text['description-enabled']['sv-se'] = "Välj status på denna IVR Meny.";
 $text['description-enabled']['uk-ua'] = "";
 
 $text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to registered extensions.";
+$text['description-direct_dial']['en-gb'] = "Define whether callers can dial directly to registered extensions.";
 $text['description-direct_dial']['ar-eg'] = "";
 $text['description-direct_dial']['de-at'] = "Definieren Sie ob Anrufer direkt zu Nebenstellen durchwählen können."; //copied from de-de
 $text['description-direct_dial']['de-ch'] = "Definieren Sie ob Anrufer direkt zu Nebenstellen durchwählen können."; //copied from de-de
@@ -1162,6 +1220,7 @@ $text['description-direct_dial']['sv-se'] = "Välj om inringande skall kunna rin
 $text['description-direct_dial']['uk-ua'] = "";
 
 $text['description-digit_length']['en-us'] = "Maximum number of digits allowed.";
+$text['description-digit_length']['en-gb'] = "Maximum number of digits allowed.";
 $text['description-digit_length']['ar-eg'] = "";
 $text['description-digit_length']['de-at'] = "Maximal erlaubte Länge."; //copied from de-de
 $text['description-digit_length']['de-ch'] = "Maximal erlaubte Länge."; //copied from de-de
@@ -1182,6 +1241,7 @@ $text['description-digit_length']['sv-se'] = "Max antal siffror som tillåts.";
 $text['description-digit_length']['uk-ua'] = "";
 
 $text['description-destination']['en-us'] = "Select the destination.";
+$text['description-destination']['en-gb'] = "Select the destination.";
 $text['description-destination']['ar-eg'] = "";
 $text['description-destination']['de-at'] = "Wählen Sie das Ziel."; //copied from de-de
 $text['description-destination']['de-ch'] = "Wählen Sie das Ziel."; //copied from de-de
@@ -1202,6 +1262,7 @@ $text['description-destination']['sv-se'] = "Välj destination.";
 $text['description-destination']['uk-ua'] = "";
 
 $text['description-comfirm_macro']['en-us'] = "Enter the confirm macro.";
+$text['description-comfirm_macro']['en-gb'] = "Enter the confirm macro.";
 $text['description-comfirm_macro']['ar-eg'] = "";
 $text['description-comfirm_macro']['de-at'] = "Geben Sie das Bestätigungs Makro an."; //copied from de-de
 $text['description-comfirm_macro']['de-ch'] = "Geben Sie das Bestätigungs Makro an."; //copied from de-de
@@ -1222,6 +1283,7 @@ $text['description-comfirm_macro']['sv-se'] = "Ange bekräftelse makro.";
 $text['description-comfirm_macro']['uk-ua'] = "";
 
 $text['description-comfirm_key']['en-us'] = "Enter the confirm key.";
+$text['description-comfirm_key']['en-gb'] = "Enter the confirm key.";
 $text['description-comfirm_key']['ar-eg'] = "";
 $text['description-comfirm_key']['de-at'] = "Geben Sie den Bestätigungs Schlüssel an."; //copied from de-de
 $text['description-comfirm_key']['de-ch'] = "Geben Sie den Bestätigungs Schlüssel an."; //copied from de-de
@@ -1242,6 +1304,7 @@ $text['description-comfirm_key']['sv-se'] = "Ange bekräftelse knappen.";
 $text['description-comfirm_key']['uk-ua'] = "";
 
 $text['description-comfirm_attempts']['en-us'] = "The maximum number of confirm attempts allowed.";
+$text['description-comfirm_attempts']['en-gb'] = "The maximum number of confirm attempts allowed.";
 $text['description-comfirm_attempts']['ar-eg'] = "";
 $text['description-comfirm_attempts']['de-at'] = "Die Maximal erlaubte Anzahl an Bestätigungsversuchen"; //copied from de-de
 $text['description-comfirm_attempts']['de-ch'] = "Die Maximal erlaubte Anzahl an Bestätigungsversuchen"; //copied from de-de
@@ -1262,6 +1325,7 @@ $text['description-comfirm_attempts']['sv-se'] = "Max antal bekräftelse försö
 $text['description-comfirm_attempts']['uk-ua'] = "";
 
 $text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
+$text['description-caller_id_name_prefix']['en-gb'] = "Set a prefix on the caller ID name.";
 $text['description-caller_id_name_prefix']['ar-eg'] = "";
 $text['description-caller_id_name_prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)."; //copied from de-de
 $text['description-caller_id_name_prefix']['de-ch'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)."; //copied from de-de

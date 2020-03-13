@@ -2,6 +2,7 @@
 #This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-fax']['en-us'] = "Fax Servers";
+$text['title-fax']['en-gb'] = "Fax Servers";
 $text['title-fax']['ar-eg'] = "";
 $text['title-fax']['de-at'] = "Fax Server"; //copied from de-de
 $text['title-fax']['de-ch'] = "Fax Server"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-fax']['sv-se'] = "Fax Server";
 $text['title-fax']['uk-ua'] = "";
 
 $text['title-fax_server_settings']['en-us'] = "Fax Server Settings";
+$text['title-fax_server_settings']['en-gb'] = "Fax Server Settings";
 $text['title-fax_server_settings']['ar-eg'] = "";
 $text['title-fax_server_settings']['de-at'] = "Fax Server Einstellungen"; //copied from de-de
 $text['title-fax_server_settings']['de-ch'] = "Fax Server Einstellungen"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-fax_server_settings']['sv-se'] = "Fax Server Inställningar";
 $text['title-fax_server_settings']['uk-ua'] = "";
 
 $text['title-new_fax']['en-us'] = "New Fax";
+$text['title-new_fax']['en-gb'] = "New Fax";
 $text['title-new_fax']['ar-eg'] = "";
 $text['title-new_fax']['de-at'] = "Neues Fax"; //copied from de-de
 $text['title-new_fax']['de-ch'] = "Neues Fax"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-new_fax']['sv-se'] = "Nytt Fax";
 $text['title-new_fax']['uk-ua'] = "";
 
 $text['title-inbox']['en-us'] = "Inbox";
+$text['title-inbox']['en-gb'] = "Inbox";
 $text['title-inbox']['ar-eg'] = "";
 $text['title-inbox']['de-at'] = "Eingang"; //copied from de-de
 $text['title-inbox']['de-ch'] = "Eingang"; //copied from de-de
@@ -82,6 +86,7 @@ $text['title-inbox']['sv-se'] = "Inbox";
 $text['title-inbox']['uk-ua'] = "";
 
 $text['title-sent_faxes']['en-us'] = "Sent";
+$text['title-sent_faxes']['en-gb'] = "Sent";
 $text['title-sent_faxes']['ar-eg'] = "";
 $text['title-sent_faxes']['de-at'] = "Gesendete Faxe"; //copied from de-de
 $text['title-sent_faxes']['de-ch'] = "Gesendete Faxe"; //copied from de-de
@@ -102,6 +107,7 @@ $text['title-sent_faxes']['sv-se'] = "Skickade Fax";
 $text['title-sent_faxes']['uk-ua'] = "";
 
 $text['title-fax_logs']['en-us'] = "Fax Logs";
+$text['title-fax_logs']['en-gb'] = "Fax Logs";
 $text['title-fax_logs']['ar-eg'] = "";
 $text['title-fax_logs']['de-at'] = "Fax Logs"; //copied from de-de
 $text['title-fax_logs']['de-ch'] = "Fax Logs"; //copied from de-de
@@ -122,6 +128,7 @@ $text['title-fax_logs']['sv-se'] = "Fax Loggar";
 $text['title-fax_logs']['uk-ua'] = "";
 
 $text['title-fax_log']['en-us'] = "Fax Log";
+$text['title-fax_log']['en-gb'] = "Fax Log";
 $text['title-fax_log']['ar-eg'] = "";
 $text['title-fax_log']['de-at'] = "Fax Log"; //copied from de-de
 $text['title-fax_log']['de-ch'] = "Fax Log"; //copied from de-de
@@ -142,6 +149,7 @@ $text['title-fax_log']['sv-se'] = "Fax Log";
 $text['title-fax_log']['uk-ua'] = "";
 
 $text['title-fax_files']['en-us'] = "Fax Files";
+$text['title-fax_files']['en-gb'] = "Fax Files";
 $text['title-fax_files']['ar-eg'] = "";
 $text['title-fax_files']['de-at'] = "Fax Dateien"; //copied from de-de
 $text['title-fax_files']['de-ch'] = "Fax Dateien"; //copied from de-de
@@ -162,6 +170,7 @@ $text['title-fax_files']['sv-se'] = "Faxfiler";
 $text['title-fax_files']['uk-ua'] = "";
 
 $text['title-fax_file']['en-us'] = "Fax File";
+$text['title-fax_file']['en-gb'] = "Fax File";
 $text['title-fax_file']['ar-eg'] = "";
 $text['title-fax_file']['de-at'] = "Fax Datei"; //copied from de-de
 $text['title-fax_file']['de-ch'] = "Fax Datei"; //copied from de-de
@@ -182,6 +191,7 @@ $text['title-fax_file']['sv-se'] = "Faxfilen";
 $text['title-fax_file']['uk-ua'] = "";
 
 $text['table-view']['en-us'] = "View";
+$text['table-view']['en-gb'] = "View";
 $text['table-view']['ar-eg'] = "";
 $text['table-view']['de-at'] = "Ansicht"; //copied from de-de
 $text['table-view']['de-ch'] = "Ansicht"; //copied from de-de
@@ -202,6 +212,7 @@ $text['table-view']['sv-se'] = "Granska";
 $text['table-view']['uk-ua'] = "";
 
 $text['table-size']['en-us'] = "Size";
+$text['table-size']['en-gb'] = "Size";
 $text['table-size']['ar-eg'] = "";
 $text['table-size']['de-at'] = "Größe"; //copied from de-de
 $text['table-size']['de-ch'] = "Größe"; //copied from de-de
@@ -222,6 +233,7 @@ $text['table-size']['sv-se'] = "Storlek";
 $text['table-size']['uk-ua'] = "";
 
 $text['table-modified']['en-us'] = "Last Modified";
+$text['table-modified']['en-gb'] = "Last Modified";
 $text['table-modified']['ar-eg'] = "";
 $text['table-modified']['de-at'] = "Zuletzt geändert"; //copied from de-de
 $text['table-modified']['de-ch'] = "Zuletzt geändert"; //copied from de-de
@@ -242,6 +254,7 @@ $text['table-modified']['sv-se'] = "Senast Modifierad";
 $text['table-modified']['uk-ua'] = "";
 
 $text['table-file']['en-us'] = "File Name (Download)";
+$text['table-file']['en-gb'] = "File Name (Download)";
 $text['table-file']['ar-eg'] = "";
 $text['table-file']['de-at'] = "Dateiname (Download)"; //copied from de-de
 $text['table-file']['de-ch'] = "Dateiname (Download)"; //copied from de-de
@@ -262,6 +275,7 @@ $text['table-file']['sv-se'] = "Fil Namn (Nedladdning)";
 $text['table-file']['uk-ua'] = "";
 
 $text['option-true']['en-us'] = "True";
+$text['option-true']['en-gb'] = "True";
 $text['option-true']['ar-eg'] = "";
 $text['option-true']['de-at'] = "Ein"; //copied from de-de
 $text['option-true']['de-ch'] = "Ein"; //copied from de-de
@@ -282,6 +296,7 @@ $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "";
 
 $text['option-fax-resolution-superfine']['en-us'] = "Superfine";
+$text['option-fax-resolution-superfine']['en-gb'] = "Superfine";
 $text['option-fax-resolution-superfine']['ar-eg'] = "";
 $text['option-fax-resolution-superfine']['de-at'] = "Superfein"; //copied from de-de
 $text['option-fax-resolution-superfine']['de-ch'] = "Superfein"; //copied from de-de
@@ -302,6 +317,7 @@ $text['option-fax-resolution-superfine']['sv-se'] = "Superfin";
 $text['option-fax-resolution-superfine']['uk-ua'] = "";
 
 $text['option-fax-resolution-normal']['en-us'] = "Normal";
+$text['option-fax-resolution-normal']['en-gb'] = "Normal";
 $text['option-fax-resolution-normal']['ar-eg'] = "";
 $text['option-fax-resolution-normal']['de-at'] = "Normal"; //copied from de-de
 $text['option-fax-resolution-normal']['de-ch'] = "Normal"; //copied from de-de
@@ -322,6 +338,7 @@ $text['option-fax-resolution-normal']['sv-se'] = "Normal";
 $text['option-fax-resolution-normal']['uk-ua'] = "";
 
 $text['option-fax-resolution-fine']['en-us'] = "Fine";
+$text['option-fax-resolution-fine']['en-gb'] = "Fine";
 $text['option-fax-resolution-fine']['ar-eg'] = "";
 $text['option-fax-resolution-fine']['de-at'] = "Fein"; //copied from de-de
 $text['option-fax-resolution-fine']['de-ch'] = "Fein"; //copied from de-de
@@ -342,6 +359,7 @@ $text['option-fax-resolution-fine']['sv-se'] = "Fin";
 $text['option-fax-resolution-fine']['uk-ua'] = "";
 
 $text['option-false']['en-us'] = "False";
+$text['option-false']['en-gb'] = "False";
 $text['option-false']['ar-eg'] = "";
 $text['option-false']['de-at'] = "Aus"; //copied from de-de
 $text['option-false']['de-ch'] = "Aus"; //copied from de-de
@@ -362,6 +380,7 @@ $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "";
 
 $text['message-no_faxes_found']['en-us'] = "No Faxes Found";
+$text['message-no_faxes_found']['en-gb'] = "No Faxes Found";
 $text['message-no_faxes_found']['ar-eg'] = "";
 $text['message-no_faxes_found']['de-at'] = "Keine Faxe gefunden"; //copied from de-de
 $text['message-no_faxes_found']['de-ch'] = "Keine Faxe gefunden"; //copied from de-de
@@ -382,6 +401,7 @@ $text['message-no_faxes_found']['sv-se'] = "Inga Fax Funna";
 $text['message-no_faxes_found']['uk-ua'] = "";
 
 $text['message-invalid-fax']['en-us'] = "Invalid Fax - Please enter a message or select a file to send.";
+$text['message-invalid-fax']['en-gb'] = "Invalid Fax - Please enter a message or select a file to send.";
 $text['message-invalid-fax']['ar-eg'] = "";
 $text['message-invalid-fax']['de-at'] = "Ungültiges Fax - Bitte geben Sie eine Nachricht ein oder wählen Sie eine Datei zum Senden."; //copied from de-de
 $text['message-invalid-fax']['de-ch'] = "Ungültiges Fax - Bitte geben Sie eine Nachricht ein oder wählen Sie eine Datei zum Senden."; //copied from de-de
@@ -402,6 +422,7 @@ $text['message-invalid-fax']['sv-se'] = "Ogiltigt Fax - Fyll i ett meddelande el
 $text['message-invalid-fax']['uk-ua'] = "";
 
 $text['message-cannot_connect']['en-us'] = "Connection Failed";
+$text['message-cannot_connect']['en-gb'] = "Connection Failed";
 $text['message-cannot_connect']['ar-eg'] = "";
 $text['message-cannot_connect']['de-at'] = "Verbindung fehlgeschlagen"; //copied from de-de
 $text['message-cannot_connect']['de-ch'] = "Verbindung fehlgeschlagen"; //copied from de-de
@@ -422,6 +443,7 @@ $text['message-cannot_connect']['sv-se'] = "Connection Misslyckades";
 $text['message-cannot_connect']['uk-ua'] = "";
 
 $text['label-user-list']['en-us'] = "User List";
+$text['label-user-list']['en-gb'] = "User List";
 $text['label-user-list']['ar-eg'] = "";
 $text['label-user-list']['de-at'] = "Benutzer Liste"; //copied from de-de
 $text['label-user-list']['de-ch'] = "Benutzer Liste"; //copied from de-de
@@ -442,6 +464,7 @@ $text['label-user-list']['sv-se'] = "Användarlista";
 $text['label-user-list']['uk-ua'] = "";
 
 $text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['en-gb'] = "Tools";
 $text['label-tools']['ar-eg'] = "";
 $text['label-tools']['de-at'] = "Werkzeuge"; //copied from de-de
 $text['label-tools']['de-ch'] = "Werkzeuge"; //copied from de-de
@@ -462,6 +485,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "";
 
 $text['label-sent']['en-us'] = "Sent";
+$text['label-sent']['en-gb'] = "Sent";
 $text['label-sent']['ar-eg'] = "";
 $text['label-sent']['de-at'] = "Gesendet"; //copied from de-de
 $text['label-sent']['de-ch'] = "Gesendet"; //copied from de-de
@@ -482,6 +506,7 @@ $text['label-sent']['sv-se'] = "Skickat";
 $text['label-sent']['uk-ua'] = "";
 
 $text['label-selected']['en-us'] = "Selected";
+$text['label-selected']['en-gb'] = "Selected";
 $text['label-selected']['ar-eg'] = "";
 $text['label-selected']['de-at'] = "Ausgewählt"; //copied from de-de
 $text['label-selected']['de-ch'] = "Ausgewählt"; //copied from de-de
@@ -502,6 +527,7 @@ $text['label-selected']['sv-se'] = "Valt";
 $text['label-selected']['uk-ua'] = "";
 
 $text['label-pin']['en-us'] = "PIN Number";
+$text['label-pin']['en-gb'] = "PIN Number";
 $text['label-pin']['ar-eg'] = "";
 $text['label-pin']['de-at'] = "PIN Nummer"; //copied from de-de
 $text['label-pin']['de-ch'] = "PIN Nummer"; //copied from de-de
@@ -522,6 +548,7 @@ $text['label-pin']['sv-se'] = "PIN Kod";
 $text['label-pin']['uk-ua'] = "";
 
 $text['label-new']['en-us'] = "New";
+$text['label-new']['en-gb'] = "New";
 $text['label-new']['ar-eg'] = "";
 $text['label-new']['de-at'] = "Neu"; //copied from de-de
 $text['label-new']['de-ch'] = "Neu"; //copied from de-de
@@ -542,6 +569,7 @@ $text['label-new']['sv-se'] = "Nytt";
 $text['label-new']['uk-ua'] = "";
 
 $text['label-log']['en-us'] = "Log";
+$text['label-log']['en-gb'] = "Log";
 $text['label-log']['ar-eg'] = "";
 $text['label-log']['de-at'] = "Log"; //copied from de-de
 $text['label-log']['de-ch'] = "Log"; //copied from de-de
@@ -562,6 +590,7 @@ $text['label-log']['sv-se'] = "Log";
 $text['label-log']['uk-ua'] = "";
 
 $text['label-active']['en-us'] = "Active";
+$text['label-active']['en-gb'] = "Active";
 $text['label-active']['ar-eg'] = "";
 $text['label-active']['de-at'] = "Aktiv"; //copied from de-de
 $text['label-active']['de-ch'] = "Aktiv"; //copied from de-de
@@ -582,6 +611,7 @@ $text['label-active']['sv-se'] = "Aktiv";
 $text['label-active']['uk-ua'] = "";
 
 $text['label-location']['en-us'] = "Location";
+$text['label-location']['en-gb'] = "Location";
 $text['label-location']['ar-eg'] = "";
 $text['label-location']['de-at'] = "Standort"; //copied from de-de
 $text['label-location']['de-ch'] = "Standort"; //copied from de-de
@@ -602,6 +632,7 @@ $text['label-location']['sv-se'] = "Plats";
 $text['label-location']['uk-ua'] = "";
 
 $text['label-inbox']['en-us'] = "Inbox";
+$text['label-inbox']['en-gb'] = "Inbox";
 $text['label-inbox']['ar-eg'] = "";
 $text['label-inbox']['de-at'] = "Postfach"; //copied from de-de
 $text['label-inbox']['de-ch'] = "Postfach"; //copied from de-de
@@ -622,6 +653,7 @@ $text['label-inbox']['sv-se'] = "Inbox";
 $text['label-inbox']['uk-ua'] = "";
 
 $text['label-forward']['en-us'] = "Forward Number";
+$text['label-forward']['en-gb'] = "Forward Number";
 $text['label-forward']['ar-eg'] = "";
 $text['label-forward']['de-at'] = "Weiterleiten"; //copied from de-de
 $text['label-forward']['de-ch'] = "Weiterleiten"; //copied from de-de
@@ -642,6 +674,7 @@ $text['label-forward']['sv-se'] = "Vidarekoppla";
 $text['label-forward']['uk-ua'] = "";
 
 $text['label-file']['en-us'] = "File not found.";
+$text['label-file']['en-gb'] = "File not found.";
 $text['label-file']['ar-eg'] = "";
 $text['label-file']['de-at'] = "Datei nicht gefunden"; //copied from de-de
 $text['label-file']['de-ch'] = "Datei nicht gefunden"; //copied from de-de
@@ -662,6 +695,7 @@ $text['label-file']['sv-se'] = "Fil Ej Funnen";
 $text['label-file']['uk-ua'] = "";
 
 $text['label-fax_uuid']['en-us'] = "FAX UUID";
+$text['label-fax_uuid']['en-gb'] = "FAX UUID";
 $text['label-fax_uuid']['ar-eg'] = "";
 $text['label-fax_uuid']['de-at'] = "Fax Erkennung"; //copied from de-de
 $text['label-fax_uuid']['de-ch'] = "Fax Erkennung"; //copied from de-de
@@ -682,6 +716,7 @@ $text['label-fax_uuid']['sv-se'] = "Fax Detektering";
 $text['label-fax_uuid']['uk-ua'] = "";
 
 $text['label-fax_uri']['en-us'] = "URI";
+$text['label-fax_uri']['en-gb'] = "URI";
 $text['label-fax_uri']['ar-eg'] = "";
 $text['label-fax_uri']['de-at'] = "URI"; //copied from de-de
 $text['label-fax_uri']['de-ch'] = "URI"; //copied from de-de
@@ -702,6 +737,7 @@ $text['label-fax_uri']['sv-se'] = "URI";
 $text['label-fax_uri']['uk-ua'] = "";
 
 $text['label-fax_transfer_rate']['en-us'] = "Transfer Rate";
+$text['label-fax_transfer_rate']['en-gb'] = "Transfer Rate";
 $text['label-fax_transfer_rate']['ar-eg'] = "";
 $text['label-fax_transfer_rate']['de-at'] = "Transferrate"; //copied from de-de
 $text['label-fax_transfer_rate']['de-ch'] = "Transferrate"; //copied from de-de
@@ -722,6 +758,7 @@ $text['label-fax_transfer_rate']['sv-se'] = "Transfer Rate";
 $text['label-fax_transfer_rate']['uk-ua'] = "";
 
 $text['label-fax_success']['en-us'] = "Success";
+$text['label-fax_success']['en-gb'] = "Success";
 $text['label-fax_success']['ar-eg'] = "";
 $text['label-fax_success']['de-at'] = "Erfolgreich"; //copied from de-de
 $text['label-fax_success']['de-ch'] = "Erfolgreich"; //copied from de-de
@@ -742,6 +779,7 @@ $text['label-fax_success']['sv-se'] = "Lyckades";
 $text['label-fax_success']['uk-ua'] = "";
 
 $text['label-fax_retry_sleep']['en-us'] = "Retry Sleep";
+$text['label-fax_retry_sleep']['en-gb'] = "Retry Sleep";
 $text['label-fax_retry_sleep']['ar-eg'] = "";
 $text['label-fax_retry_sleep']['de-at'] = "Widerholung Pause"; //copied from de-de
 $text['label-fax_retry_sleep']['de-ch'] = "Widerholung Pause"; //copied from de-de
@@ -762,6 +800,7 @@ $text['label-fax_retry_sleep']['sv-se'] = "Retry Sleep";
 $text['label-fax_retry_sleep']['uk-ua'] = "";
 
 $text['label-fax_retry_limit']['en-us'] = "Retry Limit";
+$text['label-fax_retry_limit']['en-gb'] = "Retry Limit";
 $text['label-fax_retry_limit']['ar-eg'] = "";
 $text['label-fax_retry_limit']['de-at'] = "Max. Anzahl von Wiederholungen"; //copied from de-de
 $text['label-fax_retry_limit']['de-ch'] = "Max. Anzahl von Wiederholungen"; //copied from de-de
@@ -782,6 +821,7 @@ $text['label-fax_retry_limit']['sv-se'] = "Retry Limit";
 $text['label-fax_retry_limit']['uk-ua'] = "";
 
 $text['label-fax_retry_attempts']['en-us'] = "Retry";
+$text['label-fax_retry_attempts']['en-gb'] = "Retry";
 $text['label-fax_retry_attempts']['ar-eg'] = "";
 $text['label-fax_retry_attempts']['de-at'] = "Wiederholung"; //copied from de-de
 $text['label-fax_retry_attempts']['de-ch'] = "Wiederholung"; //copied from de-de
@@ -802,6 +842,7 @@ $text['label-fax_retry_attempts']['sv-se'] = "Retry";
 $text['label-fax_retry_attempts']['uk-ua'] = "";
 
 $text['label-fax_result_text']['en-us'] = "Result";
+$text['label-fax_result_text']['en-gb'] = "Result";
 $text['label-fax_result_text']['ar-eg'] = "";
 $text['label-fax_result_text']['de-at'] = "Ergebnis"; //copied from de-de
 $text['label-fax_result_text']['de-ch'] = "Ergebnis"; //copied from de-de
@@ -822,6 +863,7 @@ $text['label-fax_result_text']['sv-se'] = "Resultat";
 $text['label-fax_result_text']['uk-ua'] = "";
 
 $text['label-fax_result_code']['en-us'] = "Code";
+$text['label-fax_result_code']['en-gb'] = "Code";
 $text['label-fax_result_code']['ar-eg'] = "";
 $text['label-fax_result_code']['de-at'] = "Code"; //copied from de-de
 $text['label-fax_result_code']['de-ch'] = "Code"; //copied from de-de
@@ -842,6 +884,7 @@ $text['label-fax_result_code']['sv-se'] = "Code";
 $text['label-fax_result_code']['uk-ua'] = "";
 
 $text['label-fax_prefix']['en-us'] = "Prefix";
+$text['label-fax_prefix']['en-gb'] = "Prefix";
 $text['label-fax_prefix']['ar-eg'] = "";
 $text['label-fax_prefix']['de-at'] = "Präfix"; //copied from de-de
 $text['label-fax_prefix']['de-ch'] = "Präfix"; //copied from de-de
@@ -862,6 +905,7 @@ $text['label-fax_prefix']['sv-se'] = "Prefix";
 $text['label-fax_prefix']['uk-ua'] = "";
 
 $text['label-fax_number']['en-us'] = "Fax Number";
+$text['label-fax_number']['en-gb'] = "Fax Number";
 $text['label-fax_number']['ar-eg'] = "";
 $text['label-fax_number']['de-at'] = "Fax Nummer"; //copied from de-de
 $text['label-fax_number']['de-ch'] = "Fax Nummer"; //copied from de-de
@@ -882,6 +926,7 @@ $text['label-fax_number']['sv-se'] = "Faxnummer";
 $text['label-fax_number']['uk-ua'] = "";
 
 $text['label-fax_mode']['en-us'] = "Mode";
+$text['label-fax_mode']['en-gb'] = "Mode";
 $text['label-fax_mode']['ar-eg'] = "";
 $text['label-fax_mode']['de-at'] = "Modus"; //copied from de-de
 $text['label-fax_mode']['de-ch'] = "Modus"; //copied from de-de
@@ -902,6 +947,7 @@ $text['label-fax_mode']['sv-se'] = "Läge";
 $text['label-fax_mode']['uk-ua'] = "";
 
 $text['label-fax_local_station_id']['en-us'] = "Local Station ID";
+$text['label-fax_local_station_id']['en-gb'] = "Local Station ID";
 $text['label-fax_local_station_id']['ar-eg'] = "";
 $text['label-fax_local_station_id']['de-at'] = "Lokale Stations-Kennung"; //copied from de-de
 $text['label-fax_local_station_id']['de-ch'] = "Lokale Stations-Kennung"; //copied from de-de
@@ -922,6 +968,7 @@ $text['label-fax_local_station_id']['sv-se'] = "Local Station ID ";
 $text['label-fax_local_station_id']['uk-ua'] = "";
 
 $text['label-fax_image_size']['en-us'] = "Image Size";
+$text['label-fax_image_size']['en-gb'] = "Image Size";
 $text['label-fax_image_size']['ar-eg'] = "";
 $text['label-fax_image_size']['de-at'] = "Bild Größe"; //copied from de-de
 $text['label-fax_image_size']['de-ch'] = "Bild Größe"; //copied from de-de
@@ -942,6 +989,7 @@ $text['label-fax_image_size']['sv-se'] = "Bild Storlek";
 $text['label-fax_image_size']['uk-ua'] = "";
 
 $text['label-fax_image_resolution']['en-us'] = "Image Resolution";
+$text['label-fax_image_resolution']['en-gb'] = "Image Resolution";
 $text['label-fax_image_resolution']['ar-eg'] = "";
 $text['label-fax_image_resolution']['de-at'] = "Bild Aulösung"; //copied from de-de
 $text['label-fax_image_resolution']['de-ch'] = "Bild Aulösung"; //copied from de-de
@@ -962,6 +1010,7 @@ $text['label-fax_image_resolution']['sv-se'] = "Upplösning På Bild";
 $text['label-fax_image_resolution']['uk-ua'] = "";
 
 $text['label-fax_files']['en-us'] = "Fax File(s)";
+$text['label-fax_files']['en-gb'] = "Fax File(s)";
 $text['label-fax_files']['ar-eg'] = "";
 $text['label-fax_files']['de-at'] = "Fax Dateien"; //copied from de-de
 $text['label-fax_files']['de-ch'] = "Fax Dateien"; //copied from de-de
@@ -982,6 +1031,7 @@ $text['label-fax_files']['sv-se'] = "Fax fil(er)";
 $text['label-fax_files']['uk-ua'] = "";
 
 $text['label-fax_file_type']['en-us'] = "File Type";
+$text['label-fax_file_type']['en-gb'] = "File Type";
 $text['label-fax_file_type']['ar-eg'] = "";
 $text['label-fax_file_type']['de-at'] = "Datei Typ"; //copied from de-de
 $text['label-fax_file_type']['de-ch'] = "Datei Typ"; //copied from de-de
@@ -1002,6 +1052,7 @@ $text['label-fax_file_type']['sv-se'] = "Filtyp";
 $text['label-fax_file_type']['uk-ua'] = "";
 
 $text['label-fax_file_path']['en-us'] = "File Path";
+$text['label-fax_file_path']['en-gb'] = "File Path";
 $text['label-fax_file_path']['ar-eg'] = "";
 $text['label-fax_file_path']['de-at'] = "Datei Pfad"; //copied from de-de
 $text['label-fax_file_path']['de-ch'] = "Datei Pfad"; //copied from de-de
@@ -1022,6 +1073,7 @@ $text['label-fax_file_path']['sv-se'] = "Fil";
 $text['label-fax_file_path']['uk-ua'] = "";
 
 $text['label-fax_file']['en-us'] = "File";
+$text['label-fax_file']['en-gb'] = "File";
 $text['label-fax_file']['ar-eg'] = "";
 $text['label-fax_file']['de-at'] = "Datei"; //copied from de-de
 $text['label-fax_file']['de-ch'] = "Datei"; //copied from de-de
@@ -1042,6 +1094,7 @@ $text['label-fax_file']['sv-se'] = "Fil Bana";
 $text['label-fax_file']['uk-ua'] = "";
 
 $text['label-fax_epoch']['en-us'] = "Epoch";
+$text['label-fax_epoch']['en-gb'] = "Epoch";
 $text['label-fax_epoch']['ar-eg'] = "";
 $text['label-fax_epoch']['de-at'] = "Zeitraum"; //copied from de-de
 $text['label-fax_epoch']['de-ch'] = "Zeitraum"; //copied from de-de
@@ -1062,6 +1115,7 @@ $text['label-fax_epoch']['sv-se'] = "Epoch";
 $text['label-fax_epoch']['uk-ua'] = "";
 
 $text['label-fax_ecm_used']['en-us'] = "ECM";
+$text['label-fax_ecm_used']['en-gb'] = "ECM";
 $text['label-fax_ecm_used']['ar-eg'] = "";
 $text['label-fax_ecm_used']['de-at'] = "ECM"; //copied from de-de
 $text['label-fax_ecm_used']['de-ch'] = "ECM"; //copied from de-de
@@ -1082,6 +1136,7 @@ $text['label-fax_ecm_used']['sv-se'] = "ECM";
 $text['label-fax_ecm_used']['uk-ua'] = "";
 
 $text['label-fax_document_transferred_pages']['en-us'] = "Document Transferred Pages";
+$text['label-fax_document_transferred_pages']['en-gb'] = "Document Transferred Pages";
 $text['label-fax_document_transferred_pages']['ar-eg'] = "";
 $text['label-fax_document_transferred_pages']['de-at'] = "Gesendete Seiten"; //copied from de-de
 $text['label-fax_document_transferred_pages']['de-ch'] = "Gesendete Seiten"; //copied from de-de
@@ -1102,6 +1157,7 @@ $text['label-fax_document_transferred_pages']['sv-se'] = "Dokument Skickade Sido
 $text['label-fax_document_transferred_pages']['uk-ua'] = "";
 
 $text['label-fax_document_total_pages']['en-us'] = "Document Total Pages";
+$text['label-fax_document_total_pages']['en-gb'] = "Document Total Pages";
 $text['label-fax_document_total_pages']['ar-eg'] = "";
 $text['label-fax_document_total_pages']['de-at'] = "Gesamtanzahl Seiten"; //copied from de-de
 $text['label-fax_document_total_pages']['de-ch'] = "Gesamtanzahl Seiten"; //copied from de-de
@@ -1122,6 +1178,7 @@ $text['label-fax_document_total_pages']['sv-se'] = "Dokument Totalt Sidor";
 $text['label-fax_document_total_pages']['uk-ua'] = "";
 
 $text['label-fax_destination']['en-us'] = "Destination";
+$text['label-fax_destination']['en-gb'] = "Destination";
 $text['label-fax_destination']['ar-eg'] = "";
 $text['label-fax_destination']['de-at'] = "Ziel"; //copied from de-de
 $text['label-fax_destination']['de-ch'] = "Ziel"; //copied from de-de
@@ -1142,6 +1199,7 @@ $text['label-fax_destination']['sv-se'] = "Destination";
 $text['label-fax_destination']['uk-ua'] = "";
 
 $text['label-fax_date']['en-us'] = "Date";
+$text['label-fax_date']['en-gb'] = "Date";
 $text['label-fax_date']['ar-eg'] = "";
 $text['label-fax_date']['de-at'] = "Datum"; //copied from de-de
 $text['label-fax_date']['de-ch'] = "Datum"; //copied from de-de
@@ -1162,6 +1220,7 @@ $text['label-fax_date']['sv-se'] = "Datum";
 $text['label-fax_date']['uk-ua'] = "";
 
 $text['label-fax_caller_id_number']['en-us'] = "Caller ID Number";
+$text['label-fax_caller_id_number']['en-gb'] = "Caller ID Number";
 $text['label-fax_caller_id_number']['ar-eg'] = "";
 $text['label-fax_caller_id_number']['de-at'] = "Anruferkennung (Nummer)"; //copied from de-de
 $text['label-fax_caller_id_number']['de-ch'] = "Anruferkennung (Nummer)"; //copied from de-de
@@ -1182,6 +1241,7 @@ $text['label-fax_caller_id_number']['sv-se'] = "Nummerpresentation";
 $text['label-fax_caller_id_number']['uk-ua'] = "";
 
 $text['label-fax_caller_id_name']['en-us'] = "Caller ID Name";
+$text['label-fax_caller_id_name']['en-gb'] = "Caller ID Name";
 $text['label-fax_caller_id_name']['ar-eg'] = "";
 $text['label-fax_caller_id_name']['de-at'] = "Anruferkennung (Name)"; //copied from de-de
 $text['label-fax_caller_id_name']['de-ch'] = "Anruferkennung (Name)"; //copied from de-de
@@ -1202,6 +1262,7 @@ $text['label-fax_caller_id_name']['sv-se'] = "Namnpresentation";
 $text['label-fax_caller_id_name']['uk-ua'] = "";
 
 $text['label-toll_allow']['en-us'] = "Toll Allow";
+$text['label-toll_allow']['en-gb'] = "Toll Allow";
 $text['label-toll_allow']['ar-eg'] = "";
 $text['label-toll_allow']['de-at'] = "Berechtigung"; //copied from de-de
 $text['label-toll_allow']['de-ch'] = "Berechtigung"; //copied from de-de
@@ -1222,6 +1283,7 @@ $text['label-toll_allow']['sv-se'] = "Toll Allow";
 $text['label-toll_allow']['uk-ua'] = "";
 
 $text['label-fax_base64']['en-us'] = "Base64";
+$text['label-fax_base64']['en-gb'] = "Base64";
 $text['label-fax_base64']['ar-eg'] = "";
 $text['label-fax_base64']['de-at'] = "Base64"; //copied from de-de
 $text['label-fax_base64']['de-ch'] = "Base64"; //copied from de-de
@@ -1242,6 +1304,7 @@ $text['label-fax_base64']['sv-se'] = "Base64";
 $text['label-fax_base64']['uk-ua'] = "";
 
 $text['label-fax_bad_rows']['en-us'] = "Bad Rows";
+$text['label-fax_bad_rows']['en-gb'] = "Bad Rows";
 $text['label-fax_bad_rows']['ar-eg'] = "";
 $text['label-fax_bad_rows']['de-at'] = "Korrupte Zeilen"; //copied from de-de
 $text['label-fax_bad_rows']['de-ch'] = "Korrupte Zeilen"; //copied from de-de
@@ -1262,6 +1325,7 @@ $text['label-fax_bad_rows']['sv-se'] = "Dåliga Rader";
 $text['label-fax_bad_rows']['uk-ua'] = "";
 
 $text['label-fax-subject']['en-us'] = "Subject";
+$text['label-fax-subject']['en-gb'] = "Subject";
 $text['label-fax-subject']['ar-eg'] = "";
 $text['label-fax-subject']['de-at'] = "Betreff"; //copied from de-de
 $text['label-fax-subject']['de-ch'] = "Betreff"; //copied from de-de
@@ -1282,6 +1346,7 @@ $text['label-fax-subject']['sv-se'] = "Ämne";
 $text['label-fax-subject']['uk-ua'] = "";
 
 $text['label-fax-sender']['en-us'] = "From";
+$text['label-fax-sender']['en-gb'] = "From";
 $text['label-fax-sender']['ar-eg'] = "";
 $text['label-fax-sender']['de-at'] = "Von"; //copied from de-de
 $text['label-fax-sender']['de-ch'] = "Von"; //copied from de-de
@@ -1302,6 +1367,7 @@ $text['label-fax-sender']['sv-se'] = "Från";
 $text['label-fax-sender']['uk-ua'] = "";
 
 $text['label-fax-resolution']['en-us'] = "Resolution";
+$text['label-fax-resolution']['en-gb'] = "Resolution";
 $text['label-fax-resolution']['ar-eg'] = "";
 $text['label-fax-resolution']['de-at'] = "Auflösung"; //copied from de-de
 $text['label-fax-resolution']['de-ch'] = "Auflösung"; //copied from de-de
@@ -1322,6 +1388,7 @@ $text['label-fax-resolution']['sv-se'] = "Upplösning";
 $text['label-fax-resolution']['uk-ua'] = "";
 
 $text['label-fax-recipient']['en-us'] = "To";
+$text['label-fax-recipient']['en-gb'] = "To";
 $text['label-fax-recipient']['ar-eg'] = "";
 $text['label-fax-recipient']['de-at'] = "An"; //copied from de-de
 $text['label-fax-recipient']['de-ch'] = "An"; //copied from de-de
@@ -1342,6 +1409,7 @@ $text['label-fax-recipient']['sv-se'] = "Till";
 $text['label-fax-recipient']['uk-ua'] = "";
 
 $text['label-fax-pages']['en-us'] = "Pages";
+$text['label-fax-pages']['en-gb'] = "Pages";
 $text['label-fax-pages']['ar-eg'] = "";
 $text['label-fax-pages']['de-at'] = "Seiten"; //copied from de-de
 $text['label-fax-pages']['de-ch'] = "Seiten"; //copied from de-de
@@ -1362,6 +1430,7 @@ $text['label-fax-pages']['sv-se'] = "Sidor";
 $text['label-fax-pages']['uk-ua'] = "";
 
 $text['label-fax-page-size']['en-us'] = "Page Size";
+$text['label-fax-page-size']['en-gb'] = "Page Size";
 $text['label-fax-page-size']['ar-eg'] = "";
 $text['label-fax-page-size']['de-at'] = "Seiten Format"; //copied from de-de
 $text['label-fax-page-size']['de-ch'] = "Seiten Format"; //copied from de-de
@@ -1382,6 +1451,7 @@ $text['label-fax-page-size']['sv-se'] = "Storlek På Sida";
 $text['label-fax-page-size']['uk-ua'] = "";
 
 $text['label-fax-page']['en-us'] = "Page";
+$text['label-fax-page']['en-gb'] = "Page";
 $text['label-fax-page']['ar-eg'] = "";
 $text['label-fax-page']['de-at'] = "Seite"; //copied from de-de
 $text['label-fax-page']['de-ch'] = "Seite"; //copied from de-de
@@ -1402,6 +1472,7 @@ $text['label-fax-page']['sv-se'] = "Sida";
 $text['label-fax-page']['uk-ua'] = "";
 
 $text['label-fax-number']['en-us'] = "Fax Number";
+$text['label-fax-number']['en-gb'] = "Fax Number";
 $text['label-fax-number']['ar-eg'] = "";
 $text['label-fax-number']['de-at'] = "Fax Nummer"; //copied from de-de
 $text['label-fax-number']['de-ch'] = "Fax Nummer"; //copied from de-de
@@ -1422,6 +1493,7 @@ $text['label-fax-number']['sv-se'] = "Fax Nummer";
 $text['label-fax-number']['uk-ua'] = "";
 
 $text['label-fax-message']['en-us'] = "Message";
+$text['label-fax-message']['en-gb'] = "Message";
 $text['label-fax-message']['ar-eg'] = "";
 $text['label-fax-message']['de-at'] = "Nachricht"; //copied from de-de
 $text['label-fax-message']['de-ch'] = "Nachricht"; //copied from de-de
@@ -1442,6 +1514,7 @@ $text['label-fax-message']['sv-se'] = "Meddelande";
 $text['label-fax-message']['uk-ua'] = "";
 
 $text['label-fax-header']['en-us'] = "Header";
+$text['label-fax-header']['en-gb'] = "Header";
 $text['label-fax-header']['ar-eg'] = "";
 $text['label-fax-header']['de-at'] = "Kopfzeile"; //copied from de-de
 $text['label-fax-header']['de-ch'] = "Kopfzeile"; //copied from de-de
@@ -1462,6 +1535,7 @@ $text['label-fax-header']['sv-se'] = "Huvud";
 $text['label-fax-header']['uk-ua'] = "";
 
 $text['label-fax-footer']['en-us'] = "Footer";
+$text['label-fax-footer']['en-gb'] = "Footer";
 $text['label-fax-footer']['ar-eg'] = "";
 $text['label-fax-footer']['de-at'] = "Fußzeile"; //copied from de-de
 $text['label-fax-footer']['de-ch'] = "Fußzeile"; //copied from de-de
@@ -1482,6 +1556,7 @@ $text['label-fax-footer']['sv-se'] = "Fot";
 $text['label-fax-footer']['uk-ua'] = "";
 
 $text['label-fax-fax']['en-us'] = "Fax";
+$text['label-fax-fax']['en-gb'] = "Fax";
 $text['label-fax-fax']['ar-eg'] = "";
 $text['label-fax-fax']['de-at'] = "Fax"; //copied from de-de
 $text['label-fax-fax']['de-ch'] = "Fax"; //copied from de-de
@@ -1502,6 +1577,7 @@ $text['label-fax-fax']['sv-se'] = "FAX";
 $text['label-fax-fax']['uk-ua'] = "";
 
 $text['label-fax-cover-sheet']['en-us'] = "COVER SHEET";
+$text['label-fax-cover-sheet']['en-gb'] = "COVER SHEET";
 $text['label-fax-cover-sheet']['ar-eg'] = "";
 $text['label-fax-cover-sheet']['de-at'] = "DECKBLATT"; //copied from de-de
 $text['label-fax-cover-sheet']['de-ch'] = "DECKBLATT"; //copied from de-de
@@ -1522,6 +1598,7 @@ $text['label-fax-cover-sheet']['sv-se'] = "Försättsblad";
 $text['label-fax-cover-sheet']['uk-ua'] = "";
 
 $text['label-fax-attached']['en-us'] = "Attached";
+$text['label-fax-attached']['en-gb'] = "Attached";
 $text['label-fax-attached']['ar-eg'] = "";
 $text['label-fax-attached']['de-at'] = "im Anhang"; //copied from de-de
 $text['label-fax-attached']['de-ch'] = "im Anhang"; //copied from de-de
@@ -1542,6 +1619,7 @@ $text['label-fax-attached']['sv-se'] = "Bifogat";
 $text['label-fax-attached']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
 $text['label-extension']['de-at'] = "Durchwahl"; //copied from de-de
 $text['label-extension']['de-ch'] = "Durchwahl"; //copied from de-de
@@ -1562,6 +1640,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "";
 
 $text['label-email_size']['en-us'] = "Size";
+$text['label-email_size']['en-gb'] = "Size";
 $text['label-email_size']['ar-eg'] = "";
 $text['label-email_size']['de-at'] = "Größe"; //copied from de-de
 $text['label-email_size']['de-ch'] = "Größe"; //copied from de-de
@@ -1582,6 +1661,7 @@ $text['label-email_size']['sv-se'] = "Strolek";
 $text['label-email_size']['uk-ua'] = "";
 
 $text['label-email_remote_inbox']['en-us'] = "Remote Inbox";
+$text['label-email_remote_inbox']['en-gb'] = "Remote Inbox";
 $text['label-email_remote_inbox']['ar-eg'] = "";
 $text['label-email_remote_inbox']['de-at'] = "Entferntes Postfach"; //copied from de-de
 $text['label-email_remote_inbox']['de-ch'] = "Entferntes Postfach"; //copied from de-de
@@ -1602,6 +1682,7 @@ $text['label-email_remote_inbox']['sv-se'] = "Mottagar Inbox";
 $text['label-email_remote_inbox']['uk-ua'] = "";
 
 $text['label-email_received']['en-us'] = "Received";
+$text['label-email_received']['en-gb'] = "Received";
 $text['label-email_received']['ar-eg'] = "";
 $text['label-email_received']['de-at'] = "Empfangen"; //copied from de-de
 $text['label-email_received']['de-ch'] = "Empfangen"; //copied from de-de
@@ -1622,6 +1703,7 @@ $text['label-email_received']['sv-se'] = "Mottagen";
 $text['label-email_received']['uk-ua'] = "";
 
 $text['label-email_outbound_subject_tag']['en-us'] = "Subject Tag";
+$text['label-email_outbound_subject_tag']['en-gb'] = "Subject Tag";
 $text['label-email_outbound_subject_tag']['ar-eg'] = "";
 $text['label-email_outbound_subject_tag']['de-at'] = "Betreff Kennzeichnung"; //copied from de-de
 $text['label-email_outbound_subject_tag']['de-ch'] = "Betreff Kennzeichnung"; //copied from de-de
@@ -1642,6 +1724,7 @@ $text['label-email_outbound_subject_tag']['sv-se'] = "Ämnes 'Tag'";
 $text['label-email_outbound_subject_tag']['uk-ua'] = "";
 
 $text['label-email_outbound_authorized_senders']['en-us'] = "Authorized Senders";
+$text['label-email_outbound_authorized_senders']['en-gb'] = "Authorized Senders";
 $text['label-email_outbound_authorized_senders']['ar-eg'] = "";
 $text['label-email_outbound_authorized_senders']['de-at'] = "Authorisierte Sender"; //copied from de-de
 $text['label-email_outbound_authorized_senders']['de-ch'] = "Authorisierte Sender"; //copied from de-de
@@ -1662,6 +1745,7 @@ $text['label-email_outbound_authorized_senders']['sv-se'] = "Godkända Sändare"
 $text['label-email_outbound_authorized_senders']['uk-ua'] = "";
 
 $text['label-email_inbound_subject_tag']['en-us'] = "Subject Tag";
+$text['label-email_inbound_subject_tag']['en-gb'] = "Subject Tag";
 $text['label-email_inbound_subject_tag']['ar-eg'] = "";
 $text['label-email_inbound_subject_tag']['de-at'] = "Betreff Kennzeichnung"; //copied from de-de
 $text['label-email_inbound_subject_tag']['de-ch'] = "Betreff Kennzeichnung"; //copied from de-de
@@ -1682,6 +1766,7 @@ $text['label-email_inbound_subject_tag']['sv-se'] = "Ämnes 'Tag'";
 $text['label-email_inbound_subject_tag']['uk-ua'] = "";
 
 $text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
+$text['label-email_email-to-fax']['en-gb'] = "Email-to-Fax";
 $text['label-email_email-to-fax']['ar-eg'] = "";
 $text['label-email_email-to-fax']['de-at'] = "Email-to-Fax"; //copied from de-de
 $text['label-email_email-to-fax']['de-ch'] = "Email-to-Fax"; //copied from de-de
@@ -1702,6 +1787,7 @@ $text['label-email_email-to-fax']['sv-se'] = "E-post-Till-Fax";
 $text['label-email_email-to-fax']['uk-ua'] = "";
 
 $text['label-email_connection_validate']['en-us'] = "Validate Certificate";
+$text['label-email_connection_validate']['en-gb'] = "Validate Certificate";
 $text['label-email_connection_validate']['ar-eg'] = "";
 $text['label-email_connection_validate']['de-at'] = "Zertifikat validieren"; //copied from de-de
 $text['label-email_connection_validate']['de-ch'] = "Zertifikat validieren"; //copied from de-de
@@ -1722,6 +1808,7 @@ $text['label-email_connection_validate']['sv-se'] = "Validera Certifikat";
 $text['label-email_connection_validate']['uk-ua'] = "";
 
 $text['label-email_connection_username']['en-us'] = "Username";
+$text['label-email_connection_username']['en-gb'] = "Username";
 $text['label-email_connection_username']['ar-eg'] = "";
 $text['label-email_connection_username']['de-at'] = "Benutzername"; //copied from de-de
 $text['label-email_connection_username']['de-ch'] = "Benutzername"; //copied from de-de
@@ -1742,6 +1829,7 @@ $text['label-email_connection_username']['sv-se'] = "Användarnamn";
 $text['label-email_connection_username']['uk-ua'] = "";
 
 $text['label-email_connection_type']['en-us'] = "Type";
+$text['label-email_connection_type']['en-gb'] = "Type";
 $text['label-email_connection_type']['ar-eg'] = "";
 $text['label-email_connection_type']['de-at'] = "Typ"; //copied from de-de
 $text['label-email_connection_type']['de-ch'] = "Typ"; //copied from de-de
@@ -1762,6 +1850,7 @@ $text['label-email_connection_type']['sv-se'] = "Typ";
 $text['label-email_connection_type']['uk-ua'] = "";
 
 $text['label-email_connection_server']['en-us'] = "Server";
+$text['label-email_connection_server']['en-gb'] = "Server";
 $text['label-email_connection_server']['ar-eg'] = "";
 $text['label-email_connection_server']['de-at'] = "Server"; //copied from de-de
 $text['label-email_connection_server']['de-ch'] = "Server"; //copied from de-de
@@ -1782,6 +1871,7 @@ $text['label-email_connection_server']['sv-se'] = "Server";
 $text['label-email_connection_server']['uk-ua'] = "";
 
 $text['label-email_connection_security']['en-us'] = "Security";
+$text['label-email_connection_security']['en-gb'] = "Security";
 $text['label-email_connection_security']['ar-eg'] = "";
 $text['label-email_connection_security']['de-at'] = "Sicherheit"; //copied from de-de
 $text['label-email_connection_security']['de-ch'] = "Sicherheit"; //copied from de-de
@@ -1802,6 +1892,7 @@ $text['label-email_connection_security']['sv-se'] = "Säkerhet";
 $text['label-email_connection_security']['uk-ua'] = "";
 
 $text['label-email_connection_password']['en-us'] = "Password";
+$text['label-email_connection_password']['en-gb'] = "Password";
 $text['label-email_connection_password']['ar-eg'] = "";
 $text['label-email_connection_password']['de-at'] = "Passwort"; //copied from de-de
 $text['label-email_connection_password']['de-ch'] = "Passwort"; //copied from de-de
@@ -1822,6 +1913,7 @@ $text['label-email_connection_password']['sv-se'] = "Lösenord";
 $text['label-email_connection_password']['uk-ua'] = "";
 
 $text['label-email_connection_mailbox']['en-us'] = "Mailbox Folder";
+$text['label-email_connection_mailbox']['en-gb'] = "Mailbox Folder";
 $text['label-email_connection_mailbox']['ar-eg'] = "";
 $text['label-email_connection_mailbox']['de-at'] = "Mailbox Ordner"; //copied from de-de
 $text['label-email_connection_mailbox']['de-ch'] = "Mailbox Ordner"; //copied from de-de
@@ -1842,6 +1934,7 @@ $text['label-email_connection_mailbox']['sv-se'] = "Brevlåde Mapp";
 $text['label-email_connection_mailbox']['uk-ua'] = "";
 
 $text['label-email_account_connection']['en-us'] = "Account Connection";
+$text['label-email_account_connection']['en-gb'] = "Account Connection";
 $text['label-email_account_connection']['ar-eg'] = "";
 $text['label-email_account_connection']['de-at'] = "Konto Verbindung"; //copied from de-de
 $text['label-email_account_connection']['de-ch'] = "Konto Verbindung"; //copied from de-de
@@ -1862,6 +1955,7 @@ $text['label-email_account_connection']['sv-se'] = "Account Connection ";
 $text['label-email_account_connection']['uk-ua'] = "";
 
 $text['label-email-fax']['en-us'] = "Fax";
+$text['label-email-fax']['en-gb'] = "Fax";
 $text['label-email-fax']['ar-eg'] = "";
 $text['label-email-fax']['de-at'] = "Fax"; //copied from de-de
 $text['label-email-fax']['de-ch'] = "Fax"; //copied from de-de
@@ -1882,6 +1976,7 @@ $text['label-email-fax']['sv-se'] = "Fax";
 $text['label-email-fax']['uk-ua'] = "";
 
 $text['label-email']['en-us'] = "Email";
+$text['label-email']['en-gb'] = "Email";
 $text['label-email']['ar-eg'] = "";
 $text['label-email']['de-at'] = "Email"; //copied from de-de
 $text['label-email']['de-ch'] = "Email"; //copied from de-de
@@ -1902,6 +1997,7 @@ $text['label-email']['sv-se'] = "E-post";
 $text['label-email']['uk-ua'] = "";
 
 $text['label-destination-number']['en-us'] = "Destination Number";
+$text['label-destination-number']['en-gb'] = "Destination Number";
 $text['label-destination-number']['ar-eg'] = "";
 $text['label-destination-number']['de-at'] = "Ziel Nummer"; //copied from de-de
 $text['label-destination-number']['de-ch'] = "Ziel Nummer"; //copied from de-de
@@ -1922,6 +2018,7 @@ $text['label-destination-number']['sv-se'] = "Destination Nummer";
 $text['label-destination-number']['uk-ua'] = "";
 
 $text['label-caller-id-number']['en-us'] = "Caller ID Number";
+$text['label-caller-id-number']['en-gb'] = "Caller ID Number";
 $text['label-caller-id-number']['ar-eg'] = "";
 $text['label-caller-id-number']['de-at'] = "Anruferkennung (Nummer)"; //copied from de-de
 $text['label-caller-id-number']['de-ch'] = "Anruferkennung (Nummer)"; //copied from de-de
@@ -1942,6 +2039,7 @@ $text['label-caller-id-number']['sv-se'] = "Nummerpresentation";
 $text['label-caller-id-number']['uk-ua'] = "";
 
 $text['label-caller-id-name']['en-us'] = "Caller ID Name";
+$text['label-caller-id-name']['en-gb'] = "Caller ID Name";
 $text['label-caller-id-name']['ar-eg'] = "";
 $text['label-caller-id-name']['de-at'] = "Anruferkennung (Name)"; //copied from de-de
 $text['label-caller-id-name']['de-ch'] = "Anruferkennung (Name)"; //copied from de-de
@@ -1962,6 +2060,7 @@ $text['label-caller-id-name']['sv-se'] = "Namnpresentation";
 $text['label-caller-id-name']['uk-ua'] = "";
 
 $text['label-advanced_settings']['en-us'] = "Advanced Settings";
+$text['label-advanced_settings']['en-gb'] = "Advanced Settings";
 $text['label-advanced_settings']['ar-eg'] = "";
 $text['label-advanced_settings']['de-at'] = "Erweiterte Einstellungen"; //copied from de-de
 $text['label-advanced_settings']['de-ch'] = "Erweiterte Einstellungen"; //copied from de-de
@@ -1982,6 +2081,7 @@ $text['label-advanced_settings']['sv-se'] = "Avancerade Inställningar";
 $text['label-advanced_settings']['uk-ua'] = "";
 
 $text['label-accountcode']['en-us'] = "Account Code";
+$text['label-accountcode']['en-gb'] = "Account Code";
 $text['label-accountcode']['ar-eg'] = "";
 $text['label-accountcode']['de-at'] = "Account Code"; //copied from de-de
 $text['label-accountcode']['de-ch'] = "Account Code"; //copied from de-de
@@ -2002,6 +2102,7 @@ $text['label-accountcode']['sv-se'] = "Kontokod";
 $text['label-accountcode']['uk-ua'] = "";
 
 $text['label-fax_send_greeting']['en-us'] = "Greeting";
+$text['label-fax_send_greeting']['en-gb'] = "Greeting";
 $text['label-fax_send_greeting']['ar-eg'] = "";
 $text['label-fax_send_greeting']['de-at'] = "Begrüßung"; //copied from de-de
 $text['label-fax_send_greeting']['de-ch'] = "Begrüßung"; //copied from de-de
@@ -2022,6 +2123,7 @@ $text['label-fax_send_greeting']['sv-se'] = "Hälsning";
 $text['label-fax_send_greeting']['uk-ua'] = "";
 
 $text['label-fax_send_channels']['en-us'] = "Number of channels";
+$text['label-fax_send_channels']['en-gb'] = "Number of channels";
 $text['label-fax_send_channels']['ar-eg'] = "";
 $text['label-fax_send_channels']['de-at'] = "Anzahl der Kanäle"; //copied from de-de
 $text['label-fax_send_channels']['de-ch'] = "Anzahl der Kanäle"; //copied from de-de
@@ -2042,6 +2144,7 @@ $text['label-fax_send_channels']['sv-se'] = "";
 $text['label-fax_send_channels']['uk-ua'] = "";
 
 $text['label-copy']['en-us'] = "Copy";
+$text['label-copy']['en-gb'] = "Copy";
 $text['label-copy']['ar-eg'] = "Copy";
 $text['label-copy']['de-at'] = "Copy";
 $text['label-copy']['de-ch'] = "Copy";
@@ -2062,6 +2165,7 @@ $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
 
 $text['header-sent_faxes']['en-us'] = "Sent";
+$text['header-sent_faxes']['en-gb'] = "Sent";
 $text['header-sent_faxes']['ar-eg'] = "";
 $text['header-sent_faxes']['de-at'] = "Gesendete Faxe"; //copied from de-de
 $text['header-sent_faxes']['de-ch'] = "Gesendete Faxe"; //copied from de-de
@@ -2082,6 +2186,7 @@ $text['header-sent_faxes']['sv-se'] = "Skickade Fax";
 $text['header-sent_faxes']['uk-ua'] = "";
 
 $text['header-new_fax']['en-us'] = "New Fax";
+$text['header-new_fax']['en-gb'] = "New Fax";
 $text['header-new_fax']['ar-eg'] = "";
 $text['header-new_fax']['de-at'] = "Neues Fax"; //copied from de-de
 $text['header-new_fax']['de-ch'] = "Neues Fax"; //copied from de-de
@@ -2102,6 +2207,7 @@ $text['header-new_fax']['sv-se'] = "Nytt Fax";
 $text['header-new_fax']['uk-ua'] = "";
 
 $text['header-inbox']['en-us'] = "Inbox";
+$text['header-inbox']['en-gb'] = "Inbox";
 $text['header-inbox']['ar-eg'] = "";
 $text['header-inbox']['de-at'] = "Eingang"; //copied from de-de
 $text['header-inbox']['de-ch'] = "Eingang"; //copied from de-de
@@ -2122,6 +2228,7 @@ $text['header-inbox']['sv-se'] = "Inbox";
 $text['header-inbox']['uk-ua'] = "";
 
 $text['header-fax_server_settings']['en-us'] = "Fax Server Settings";
+$text['header-fax_server_settings']['en-gb'] = "Fax Server Settings";
 $text['header-fax_server_settings']['ar-eg'] = "";
 $text['header-fax_server_settings']['de-at'] = "Fax Server Einstellungen"; //copied from de-de
 $text['header-fax_server_settings']['de-ch'] = "Fax Server Einstellungen"; //copied from de-de
@@ -2142,6 +2249,7 @@ $text['header-fax_server_settings']['sv-se'] = "Fax Server Inställningar";
 $text['header-fax_server_settings']['uk-ua'] = "";
 
 $text['description-user-add']['en-us'] = "Assign the users that can manage this fax extension.";
+$text['description-user-add']['en-gb'] = "Assign the users that can manage this fax extension.";
 $text['description-user-add']['ar-eg'] = "";
 $text['description-user-add']['de-at'] = "Wählen Sie die Benutzer aus, die diese Fax Nebenstelle verwalten können."; //copied from de-de
 $text['description-user-add']['de-ch'] = "Wählen Sie die Benutzer aus, die diese Fax Nebenstelle verwalten können."; //copied from de-de
@@ -2162,6 +2270,7 @@ $text['description-user-add']['sv-se'] = "Tilldela de användare som kan manager
 $text['description-user-add']['uk-ua'] = "";
 
 $text['description-pin']['en-us'] = "Enter the PIN number here.";
+$text['description-pin']['en-gb'] = "Enter the PIN number here.";
 $text['description-pin']['ar-eg'] = "";
 $text['description-pin']['de-at'] = "Geben Sie hier die PIN Nummer an."; //copied from de-de
 $text['description-pin']['de-ch'] = "Geben Sie hier die PIN Nummer an."; //copied from de-de
@@ -2182,6 +2291,7 @@ $text['description-pin']['sv-se'] = "Ange PIN kod här.";
 $text['description-pin']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "Enter the name here.";
+$text['description-name']['en-gb'] = "Enter the name here.";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Geben Sie den Namen an"; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen an"; //copied from de-de
@@ -2202,6 +2312,7 @@ $text['description-name']['sv-se'] = "Ange Namn här.";
 $text['description-name']['uk-ua'] = "";
 
 $text['description-info']['en-us'] = "Enter the description here.";
+$text['description-info']['en-gb'] = "Enter the description here.";
 $text['description-info']['ar-eg'] = "";
 $text['description-info']['de-at'] = "Geben Sie eine Beschreibung an."; //copied from de-de
 $text['description-info']['de-ch'] = "Geben Sie eine Beschreibung an."; //copied from de-de
@@ -2222,6 +2333,7 @@ $text['description-info']['sv-se'] = "Ange beskrivning här.";
 $text['description-info']['uk-ua'] = "";
 
 $text['description-forward-number']['en-us'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
+$text['description-forward-number']['en-gb'] = "Enter the forward number here. Used to forward the fax to a registered extension or external number.";
 $text['description-forward-number']['ar-eg'] = "";
 $text['description-forward-number']['de-at'] = "Geben Sie eine Nebenstelle oder externe Nummer ein, auf die eingehende Faxe weitergeleitet werden sollen."; //copied from de-de
 $text['description-forward-number']['de-ch'] = "Geben Sie eine Nebenstelle oder externe Nummer ein, auf die eingehende Faxe weitergeleitet werden sollen."; //copied from de-de
@@ -2242,6 +2354,7 @@ $text['description-forward-number']['sv-se'] = "Ange vidarekopplingsnumret här.
 $text['description-forward-number']['uk-ua'] = "";
 
 $text['description-fax_uuid']['en-us'] = "Fax server primary key";
+$text['description-fax_uuid']['en-gb'] = "Fax server primary key";
 $text['description-fax_uuid']['ar-eg'] = "";
 $text['description-fax_uuid']['de-at'] = "Primärschlüssel des Fax Servers"; //copied from de-de
 $text['description-fax_uuid']['de-ch'] = "Primärschlüssel des Fax Servers"; //copied from de-de
@@ -2262,6 +2375,7 @@ $text['description-fax_uuid']['sv-se'] = "Ange fax destination för att aktivera
 $text['description-fax_uuid']['uk-ua'] = "";
 
 $text['description-fax_uri']['en-us'] = "Fax URI.";
+$text['description-fax_uri']['en-gb'] = "Fax URI.";
 $text['description-fax_uri']['ar-eg'] = "";
 $text['description-fax_uri']['de-at'] = "Fax URI."; //copied from de-de
 $text['description-fax_uri']['de-ch'] = "Fax URI."; //copied from de-de
@@ -2282,6 +2396,7 @@ $text['description-fax_uri']['sv-se'] = "";
 $text['description-fax_uri']['uk-ua'] = "";
 
 $text['description-fax_transfer_rate']['en-us'] = "Transfer rate for communication.";
+$text['description-fax_transfer_rate']['en-gb'] = "Transfer rate for communication.";
 $text['description-fax_transfer_rate']['ar-eg'] = "";
 $text['description-fax_transfer_rate']['de-at'] = "Übertragungsrate für die Kommunikation.";
 $text['description-fax_transfer_rate']['de-ch'] = "Übertragungsrate für die Kommunikation"; //copied from de-de
@@ -2302,6 +2417,7 @@ $text['description-fax_transfer_rate']['sv-se'] = "";
 $text['description-fax_transfer_rate']['uk-ua'] = "";
 
 $text['description-fax_success']['en-us'] = "Fax sent/received successfully.";
+$text['description-fax_success']['en-gb'] = "Fax sent/received successfully.";
 $text['description-fax_success']['ar-eg'] = "";
 $text['description-fax_success']['de-at'] = "Fax erfolgreich gesendet/empfangen."; //copied from de-de
 $text['description-fax_success']['de-ch'] = "Fax erfolgreich gesendet/empfangen."; //copied from de-de
@@ -2322,6 +2438,7 @@ $text['description-fax_success']['sv-se'] = "";
 $text['description-fax_success']['uk-ua'] = "";
 
 $text['description-fax_retry_sleep']['en-us'] = "Pause between retries.";
+$text['description-fax_retry_sleep']['en-gb'] = "Pause between retries.";
 $text['description-fax_retry_sleep']['ar-eg'] = "";
 $text['description-fax_retry_sleep']['de-at'] = "Pause zwischen Wahlwiederholungen."; //copied from de-de
 $text['description-fax_retry_sleep']['de-ch'] = "Pause zwischen Wahlwiederholungen."; //copied from de-de
@@ -2342,6 +2459,7 @@ $text['description-fax_retry_sleep']['sv-se'] = "";
 $text['description-fax_retry_sleep']['uk-ua'] = "";
 
 $text['description-fax_retry_limit']['en-us'] = "Limit for the number of retries.";
+$text['description-fax_retry_limit']['en-gb'] = "Limit for the number of retries.";
 $text['description-fax_retry_limit']['ar-eg'] = "";
 $text['description-fax_retry_limit']['de-at'] = "Maximale Anzahl von Wahlwiederholungen."; //copied from de-de
 $text['description-fax_retry_limit']['de-ch'] = "Maximale Anzahl von Wahlwiederholungen."; //copied from de-de
@@ -2362,6 +2480,7 @@ $text['description-fax_retry_limit']['sv-se'] = "";
 $text['description-fax_retry_limit']['uk-ua'] = "";
 
 $text['description-fax_retry_attempts']['en-us'] = "Retry attempts";
+$text['description-fax_retry_attempts']['en-gb'] = "Retry attempts";
 $text['description-fax_retry_attempts']['ar-eg'] = "";
 $text['description-fax_retry_attempts']['de-at'] = "Wahlwiederholungen.";
 $text['description-fax_retry_attempts']['de-ch'] = "Wahlwiederhulungen."; //copied from de-de
@@ -2382,6 +2501,7 @@ $text['description-fax_retry_attempts']['sv-se'] = "";
 $text['description-fax_retry_attempts']['uk-ua'] = "";
 
 $text['description-fax_result_text']['en-us'] = "Fax result text.";
+$text['description-fax_result_text']['en-gb'] = "Fax result text.";
 $text['description-fax_result_text']['ar-eg'] = "";
 $text['description-fax_result_text']['de-at'] = "Fax Ergebniss als Text."; //copied from de-de
 $text['description-fax_result_text']['de-ch'] = "Fax Ergebniss als Text."; //copied from de-de
@@ -2402,6 +2522,7 @@ $text['description-fax_result_text']['sv-se'] = "";
 $text['description-fax_result_text']['uk-ua'] = "";
 
 $text['description-fax_result_code']['en-us'] = "Fax result code.";
+$text['description-fax_result_code']['en-gb'] = "Fax result code.";
 $text['description-fax_result_code']['ar-eg'] = "";
 $text['description-fax_result_code']['de-at'] = "Fax Ergebniss als Code."; //copied from de-de
 $text['description-fax_result_code']['de-ch'] = "Fax Ergebniss als Code."; //copied from de-de
@@ -2422,6 +2543,7 @@ $text['description-fax_result_code']['sv-se'] = "";
 $text['description-fax_result_code']['uk-ua'] = "";
 
 $text['description-fax_prefix']['en-us'] = "Enter a prefix to be used when sending a fax.";
+$text['description-fax_prefix']['en-gb'] = "Enter a prefix to be used when sending a fax.";
 $text['description-fax_prefix']['ar-eg'] = "";
 $text['description-fax_prefix']['de-at'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll."; //copied from de-de
 $text['description-fax_prefix']['de-ch'] = "Geben Sie ein Präfix an, das bei ausgehenden Faxen gewählt werden soll."; //copied from de-de
@@ -2442,6 +2564,7 @@ $text['description-fax_prefix']['sv-se'] = "Ange ett prefix som ska användas n�
 $text['description-fax_prefix']['uk-ua'] = "";
 
 $text['description-fax_number']['en-us'] = "Fax destination number";
+$text['description-fax_number']['en-gb'] = "Fax destination number";
 $text['description-fax_number']['ar-eg'] = "";
 $text['description-fax_number']['de-at'] = "Fax Zielnummer"; //copied from de-de
 $text['description-fax_number']['de-ch'] = "Fax Zielnummer"; //copied from de-de
@@ -2462,6 +2585,7 @@ $text['description-fax_number']['sv-se'] = "Fax destinationsnummer";
 $text['description-fax_number']['uk-ua'] = "";
 
 $text['description-fax_mode']['en-us'] = "RX means receive and TX means transmit.";
+$text['description-fax_mode']['en-gb'] = "RX means receive and TX means transmit.";
 $text['description-fax_mode']['ar-eg'] = "";
 $text['description-fax_mode']['de-at'] = "RX bedeutet empfangen und TX bedeutet senden."; //copied from de-de
 $text['description-fax_mode']['de-ch'] = "RX bedeutet empfangen und TX bedeutet senden."; //copied from de-de
@@ -2482,6 +2606,7 @@ $text['description-fax_mode']['sv-se'] = "RX betyder mottagning och TX betyder s
 $text['description-fax_mode']['uk-ua'] = "";
 
 $text['description-fax_log']['en-us'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
+$text['description-fax_log']['en-gb'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
 $text['description-fax_log']['ar-eg'] = "";
 $text['description-fax_log']['de-at'] = "Die angeführten Details für gesendete und empfangende Faxe sind entweder Fax erfolgreich gesendet, ECM (Error Correction Mode), Anzahl der Versuche, Zielnummer, Datum, etc..."; //copied from de-de
 $text['description-fax_log']['de-ch'] = "Die angeführten Details für gesendete und empfangende Faxe sind entweder Fax erfolgreich gesendet, ECM (Error Correction Mode), Anzahl der Versuche, Zielnummer, Datum, etc..."; //copied from de-de
@@ -2502,6 +2627,7 @@ $text['description-fax_log']['sv-se'] = "Detaljerna för att skicka och ta emot 
 $text['description-fax_log']['uk-ua'] = "";
 
 $text['description-fax_local_station_id']['en-us'] = "Local station ID.";
+$text['description-fax_local_station_id']['en-gb'] = "Local station ID.";
 $text['description-fax_local_station_id']['ar-eg'] = "";
 $text['description-fax_local_station_id']['de-at'] = "Lokale Stationskennung."; //copied from de-de
 $text['description-fax_local_station_id']['de-ch'] = "Lokale Stationskennung."; //copied from de-de
@@ -2522,6 +2648,7 @@ $text['description-fax_local_station_id']['sv-se'] = "";
 $text['description-fax_local_station_id']['uk-ua'] = "";
 
 $text['description-fax_image_size']['en-us'] = "Fax page size.";
+$text['description-fax_image_size']['en-gb'] = "Fax page size.";
 $text['description-fax_image_size']['ar-eg'] = "";
 $text['description-fax_image_size']['de-at'] = "Fax Seitengröße."; //copied from de-de
 $text['description-fax_image_size']['de-ch'] = "Fax Seitengröße."; //copied from de-de
@@ -2542,6 +2669,7 @@ $text['description-fax_image_size']['sv-se'] = "";
 $text['description-fax_image_size']['uk-ua'] = "";
 
 $text['description-fax_image_resolution']['en-us'] = "Fax image resolution.";
+$text['description-fax_image_resolution']['en-gb'] = "Fax image resolution.";
 $text['description-fax_image_resolution']['ar-eg'] = "";
 $text['description-fax_image_resolution']['de-at'] = "Fax Auflösung."; //copied from de-de
 $text['description-fax_image_resolution']['de-ch'] = "Fax Auflösung."; //copied from de-de
@@ -2562,6 +2690,7 @@ $text['description-fax_image_resolution']['sv-se'] = "";
 $text['description-fax_image_resolution']['uk-ua'] = "";
 
 $text['description-fax_files']['en-us'] = "Select the file(s) to upload and send.";
+$text['description-fax_files']['en-gb'] = "Select the file(s) to upload and send.";
 $text['description-fax_files']['ar-eg'] = "";
 $text['description-fax_files']['de-at'] = "Wählen Sie die Datei(en) zum senden."; //copied from de-de
 $text['description-fax_files']['de-ch'] = "Wählen Sie die Datei(en) zum senden."; //copied from de-de
@@ -2582,6 +2711,7 @@ $text['description-fax_files']['sv-se'] = "Välj filerna som skall laddas upp oc
 $text['description-fax_files']['uk-ua'] = "";
 
 $text['description-fax_file_type']['en-us'] = "TIF / PDF";
+$text['description-fax_file_type']['en-gb'] = "TIF / PDF";
 $text['description-fax_file_type']['ar-eg'] = "";
 $text['description-fax_file_type']['de-at'] = "TIF / PDF"; //copied from de-de
 $text['description-fax_file_type']['de-ch'] = "TIF / PDF"; //copied from de-de
@@ -2602,6 +2732,7 @@ $text['description-fax_file_type']['sv-se'] = "TIF / PDF";
 $text['description-fax_file_type']['uk-ua'] = "";
 
 $text['description-fax_file_path']['en-us'] = "File path for fax directory.";
+$text['description-fax_file_path']['en-gb'] = "File path for fax directory.";
 $text['description-fax_file_path']['ar-eg'] = "";
 $text['description-fax_file_path']['de-at'] = "Dateipfad für Faxverzeichnis."; //copied from de-de
 $text['description-fax_file_path']['de-ch'] = "Dateipfad für Faxverzeichnis."; //copied from de-de
@@ -2622,6 +2753,7 @@ $text['description-fax_file_path']['sv-se'] = "";
 $text['description-fax_file_path']['uk-ua'] = "";
 
 $text['description-fax_file']['en-us'] = "Fax Files";
+$text['description-fax_file']['en-gb'] = "Fax Files";
 $text['description-fax_file']['ar-eg'] = "";
 $text['description-fax_file']['de-at'] = "Fax Dateien"; //copied from de-de
 $text['description-fax_file']['de-ch'] = "Fax Dateien"; //copied from de-de
@@ -2642,6 +2774,7 @@ $text['description-fax_file']['sv-se'] = "Faxfiler";
 $text['description-fax_file']['uk-ua'] = "";
 
 $text['description-fax_epoch']['en-us'] = "Epoch.";
+$text['description-fax_epoch']['en-gb'] = "Epoch.";
 $text['description-fax_epoch']['ar-eg'] = "";
 $text['description-fax_epoch']['de-at'] = "Epoche."; //copied from de-de
 $text['description-fax_epoch']['de-ch'] = "Epoche."; //copied from de-de
@@ -2662,6 +2795,7 @@ $text['description-fax_epoch']['sv-se'] = "";
 $text['description-fax_epoch']['uk-ua'] = "";
 
 $text['description-fax_ecm_used']['en-us'] = "Error correction mode (ECM) used.";
+$text['description-fax_ecm_used']['en-gb'] = "Error correction mode (ECM) used.";
 $text['description-fax_ecm_used']['ar-eg'] = "";
 $text['description-fax_ecm_used']['de-at'] = "Verwendete Fehlerkorrektur (ECM)."; //copied from de-de
 $text['description-fax_ecm_used']['de-ch'] = "Verwendete Fehlerkorrektur (ECM)."; //copied from de-de
@@ -2682,6 +2816,7 @@ $text['description-fax_ecm_used']['sv-se'] = "";
 $text['description-fax_ecm_used']['uk-ua'] = "";
 
 $text['description-fax_document_transferred_pages']['en-us'] = "Number of pages transferred.";
+$text['description-fax_document_transferred_pages']['en-gb'] = "Number of pages transferred.";
 $text['description-fax_document_transferred_pages']['ar-eg'] = "";
 $text['description-fax_document_transferred_pages']['de-at'] = "Anzahl der übertragenen Seiten."; //copied from de-de
 $text['description-fax_document_transferred_pages']['de-ch'] = "Anzahl der übertragenen Seiten."; //copied from de-de
@@ -2702,6 +2837,7 @@ $text['description-fax_document_transferred_pages']['sv-se'] = "";
 $text['description-fax_document_transferred_pages']['uk-ua'] = "";
 
 $text['description-fax_document_total_pages']['en-us'] = "Total number of pages.";
+$text['description-fax_document_total_pages']['en-gb'] = "Total number of pages.";
 $text['description-fax_document_total_pages']['ar-eg'] = "";
 $text['description-fax_document_total_pages']['de-at'] = "Gesamtzahl der Seiten."; //copied from de-de
 $text['description-fax_document_total_pages']['de-ch'] = "Gesamtzahl der Seiten."; //copied from de-de
@@ -2722,6 +2858,7 @@ $text['description-fax_document_total_pages']['sv-se'] = "";
 $text['description-fax_document_total_pages']['uk-ua'] = "";
 
 $text['description-fax_date']['en-us'] = "Fax date.";
+$text['description-fax_date']['en-gb'] = "Fax date.";
 $text['description-fax_date']['ar-eg'] = "";
 $text['description-fax_date']['de-at'] = "Fax Datum."; //copied from de-de
 $text['description-fax_date']['de-ch'] = "Fax Datum."; //copied from de-de
@@ -2742,6 +2879,7 @@ $text['description-fax_date']['sv-se'] = "";
 $text['description-fax_date']['uk-ua'] = "";
 
 $text['description-fax_caller_id_number']['en-us'] = "Caller ID number.";
+$text['description-fax_caller_id_number']['en-gb'] = "Caller ID number.";
 $text['description-fax_caller_id_number']['ar-eg'] = "";
 $text['description-fax_caller_id_number']['de-at'] = "Anruferkennung (Nummer)."; //copied from de-de
 $text['description-fax_caller_id_number']['de-ch'] = "Anruferkennung (Nummer)."; //copied from de-de
@@ -2762,6 +2900,7 @@ $text['description-fax_caller_id_number']['sv-se'] = "";
 $text['description-fax_caller_id_number']['uk-ua'] = "";
 
 $text['description-fax_caller_id_name']['en-us'] = "Caller ID name.";
+$text['description-fax_caller_id_name']['en-gb'] = "Caller ID name.";
 $text['description-fax_caller_id_name']['ar-eg'] = "";
 $text['description-fax_caller_id_name']['de-at'] = "Anruferkennung (Name)."; //copied from de-de
 $text['description-fax_caller_id_name']['de-ch'] = "Anruferkennung (Name)."; //copied from de-de
@@ -2782,6 +2921,7 @@ $text['description-fax_caller_id_name']['sv-se'] = "";
 $text['description-fax_caller_id_name']['uk-ua'] = "";
 
 $text['description-toll_allow']['en-us'] = "Enter the toll allow value here.";
+$text['description-toll_allow']['en-gb'] = "Enter the toll allow value here.";
 $text['description-toll_allow']['ar-eg'] = "";
 $text['description-toll_allow']['de-at'] = "";
 $text['description-toll_allow']['de-ch'] = "";
@@ -2802,6 +2942,7 @@ $text['description-toll_allow']['sv-se'] = "";
 $text['description-toll_allow']['uk-ua'] = "";
 
 $text['description-fax_base64']['en-us'] = "Base64 encoding.";
+$text['description-fax_base64']['en-gb'] = "Base64 encoding.";
 $text['description-fax_base64']['ar-eg'] = "";
 $text['description-fax_base64']['de-at'] = "Base64 Kodierung."; //copied from de-de
 $text['description-fax_base64']['de-ch'] = "Base64 Kodierung."; //copied from de-de
@@ -2822,6 +2963,7 @@ $text['description-fax_base64']['sv-se'] = "";
 $text['description-fax_base64']['uk-ua'] = "";
 
 $text['description-fax_bad_rows']['en-us'] = "Number of bad rows.";
+$text['description-fax_bad_rows']['en-gb'] = "Number of bad rows.";
 $text['description-fax_bad_rows']['ar-eg'] = "";
 $text['description-fax_bad_rows']['de-at'] = "Anzahl korrupter Zeilen."; //copied from de-de
 $text['description-fax_bad_rows']['de-ch'] = "Anzahl korrupter Zeilen."; //copied from de-de
@@ -2842,6 +2984,7 @@ $text['description-fax_bad_rows']['sv-se'] = "";
 $text['description-fax_bad_rows']['uk-ua'] = "";
 
 $text['description-fax-subject']['en-us'] = "Enter a subject for the cover sheet (optional).";
+$text['description-fax-subject']['en-gb'] = "Enter a subject for the cover sheet (optional).";
 $text['description-fax-subject']['ar-eg'] = "";
 $text['description-fax-subject']['de-at'] = "Geben Sie einen Betreff für das Deckblatt an (optional)."; //copied from de-de
 $text['description-fax-subject']['de-ch'] = "Geben Sie einen Betreff für das Deckblatt an (optional)."; //copied from de-de
@@ -2862,6 +3005,7 @@ $text['description-fax-subject']['sv-se'] = "Ange ett ämne för försättsblade
 $text['description-fax-subject']['uk-ua'] = "";
 
 $text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover sheet (optional).";
+$text['description-fax-sender']['en-gb'] = "Enter the sender's name for the cover sheet (optional).";
 $text['description-fax-sender']['ar-eg'] = "";
 $text['description-fax-sender']['de-at'] = "Geben Sie den Namen des Senders für das Deckblatt an (optional)."; //copied from de-de
 $text['description-fax-sender']['de-ch'] = "Geben Sie den Namen des Senders für das Deckblatt an (optional)."; //copied from de-de
@@ -2882,6 +3026,7 @@ $text['description-fax-sender']['sv-se'] = "Ange sändarens namn för försätts
 $text['description-fax-sender']['uk-ua'] = "";
 
 $text['description-fax-resolution']['en-us'] = "Select the transmission quality.";
+$text['description-fax-resolution']['en-gb'] = "Select the transmission quality.";
 $text['description-fax-resolution']['ar-eg'] = "";
 $text['description-fax-resolution']['de-at'] = "Wählen Sie die Übertragungsqualität."; //copied from de-de
 $text['description-fax-resolution']['de-ch'] = "Wählen Sie die Übertragungsqualität."; //copied from de-de
@@ -2902,6 +3047,7 @@ $text['description-fax-resolution']['sv-se'] = "Välj transmission quality.";
 $text['description-fax-resolution']['uk-ua'] = "";
 
 $text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover sheet (optional).";
+$text['description-fax-recipient']['en-gb'] = "Enter the recipient's name for the cover sheet (optional).";
 $text['description-fax-recipient']['ar-eg'] = "";
 $text['description-fax-recipient']['de-at'] = "Geben Sie den Namen des Empfängers für das Deckblatt an (optional)."; //copied from de-de
 $text['description-fax-recipient']['de-ch'] = "Geben Sie den Namen des Empfängers für das Deckblatt an (optional)."; //copied from de-de
@@ -2922,6 +3068,7 @@ $text['description-fax-recipient']['sv-se'] = "Ange mottagarens namn för förs�
 $text['description-fax-recipient']['uk-ua'] = "";
 
 $text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
+$text['description-fax-page-size']['en-gb'] = "Select the page size to transmit.";
 $text['description-fax-page-size']['ar-eg'] = "";
 $text['description-fax-page-size']['de-at'] = "Wählen Sie die Seitengröße aus."; //copied from de-de
 $text['description-fax-page-size']['de-ch'] = "Wählen Sie die Seitengröße aus."; //copied from de-de
@@ -2942,6 +3089,7 @@ $text['description-fax-page-size']['sv-se'] = "Välj sidornas storlek att skicka
 $text['description-fax-page-size']['uk-ua'] = "";
 
 $text['description-fax-number']['en-us'] = "Enter the recipient fax number(s).";
+$text['description-fax-number']['en-gb'] = "Enter the recipient fax number(s).";
 $text['description-fax-number']['ar-eg'] = "";
 $text['description-fax-number']['de-at'] = "Geben Sie die Zielnummern für das Fax ein."; //copied from de-de
 $text['description-fax-number']['de-ch'] = "Geben Sie die Zielnummern für das Fax ein."; //copied from de-de
@@ -2962,6 +3110,7 @@ $text['description-fax-number']['sv-se'] = "Ange mottagarens fax nummer.";
 $text['description-fax-number']['uk-ua'] = "";
 
 $text['description-fax-message']['en-us'] = "Enter a message for the cover sheet (optional).";
+$text['description-fax-message']['en-gb'] = "Enter a message for the cover sheet (optional).";
 $text['description-fax-message']['ar-eg'] = "";
 $text['description-fax-message']['de-at'] = "Geben Sie eine Nachricht für das Deckblatt an (optional)."; //copied from de-de
 $text['description-fax-message']['de-ch'] = "Geben Sie eine Nachricht für das Deckblatt an (optional)."; //copied from de-de
@@ -2982,6 +3131,7 @@ $text['description-fax-message']['sv-se'] = "Ange ett meddelande för för förs
 $text['description-fax-message']['uk-ua'] = "";
 
 $text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
+$text['description-fax-header']['en-gb'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
 $text['description-fax-header']['ar-eg'] = "";
 $text['description-fax-header']['de-at'] = "Wird unter dem Logo am Deckblatt angezeigt (optional)."; //copied from de-de
 $text['description-fax-header']['de-ch'] = "Wird unter dem Logo am Deckblatt angezeigt (optional)."; //copied from de-de
@@ -3002,6 +3152,7 @@ $text['description-fax-header']['sv-se'] = "Visas under loggan i Huvudet på fö
 $text['description-fax-header']['uk-ua'] = "";
 
 $text['description-fax-footer']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
+$text['description-fax-footer']['en-gb'] = "Displayed in the footer of the cover sheet (optional).";
 $text['description-fax-footer']['ar-eg'] = "";
 $text['description-fax-footer']['de-at'] = "Wird in der Fußzeile auf dem Deckblatt angezeigt (optional)."; //copied from de-de
 $text['description-fax-footer']['de-ch'] = "Wird in der Fußzeile auf dem Deckblatt angezeigt (optional)."; //copied from de-de
@@ -3022,6 +3173,7 @@ $text['description-fax-footer']['sv-se'] = "Visas i foten av försättsbladet (f
 $text['description-fax-footer']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Enter the fax extension here.";
+$text['description-extension']['en-gb'] = "Enter the fax extension here.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Geben Sie die Fax Nebenstelle hier an."; //copied from de-de
 $text['description-extension']['de-ch'] = "Geben Sie die Fax Nebenstelle hier an."; //copied from de-de
@@ -3042,6 +3194,7 @@ $text['description-extension']['sv-se'] = "Ange fax-anknytningen här.";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-email_outbound_subject_tag']['en-us'] = "Set the email subject tag for outbound faxes.";
+$text['description-email_outbound_subject_tag']['en-gb'] = "Set the email subject tag for outbound faxes.";
 $text['description-email_outbound_subject_tag']['ar-eg'] = "";
 $text['description-email_outbound_subject_tag']['de-at'] = "Geben Sie den Email Betreff für ausgehende Faxe an."; //copied from de-de
 $text['description-email_outbound_subject_tag']['de-ch'] = "Geben Sie den Email Betreff für ausgehende Faxe an."; //copied from de-de
@@ -3062,6 +3215,7 @@ $text['description-email_outbound_subject_tag']['sv-se'] = "Ange E-post ämne f�
 $text['description-email_outbound_subject_tag']['uk-ua'] = "";
 
 $text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
+$text['description-email_outbound_authorized_senders']['en-gb'] = "Define the email address(es) allowed to send faxes through this server.";
 $text['description-email_outbound_authorized_senders']['ar-eg'] = "";
 $text['description-email_outbound_authorized_senders']['de-at'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen."; //copied from de-de
 $text['description-email_outbound_authorized_senders']['de-ch'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen."; //copied from de-de
@@ -3082,6 +3236,7 @@ $text['description-email_outbound_authorized_senders']['sv-se'] = "Definiera E-p
 $text['description-email_outbound_authorized_senders']['uk-ua'] = "";
 
 $text['description-email_inbound_subject_tag']['en-us'] = "Set the email subject tag for inbound faxes.";
+$text['description-email_inbound_subject_tag']['en-gb'] = "Set the email subject tag for inbound faxes.";
 $text['description-email_inbound_subject_tag']['ar-eg'] = "";
 $text['description-email_inbound_subject_tag']['de-at'] = "Setzen Sie den Email Betreff für eingehende Faxe."; //copied from de-de
 $text['description-email_inbound_subject_tag']['de-ch'] = "Setzen Sie den Email Betreff für eingehende Faxe."; //copied from de-de
@@ -3102,6 +3257,7 @@ $text['description-email_inbound_subject_tag']['sv-se'] = "Välj E-post ämne f�
 $text['description-email_inbound_subject_tag']['uk-ua'] = "";
 
 $text['description-email_connection_validate']['en-us'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
+$text['description-email_connection_validate']['en-gb'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
 $text['description-email_connection_validate']['ar-eg'] = "";
 $text['description-email_connection_validate']['de-at'] = "Server Zertifikat Validierung einschalten. (Wählen Sie 'Aus' für selbst signierte Zertifikate)"; //copied from de-de
 $text['description-email_connection_validate']['de-ch'] = "Server Zertifikat Validierung einschalten. (Wählen Sie 'Aus' für selbst signierte Zertifikate)"; //copied from de-de
@@ -3122,6 +3278,7 @@ $text['description-email_connection_validate']['sv-se'] = "Aktivera server certi
 $text['description-email_connection_validate']['uk-ua'] = "";
 
 $text['description-email_connection_username']['en-us'] = "Enter the authentication username.";
+$text['description-email_connection_username']['en-gb'] = "Enter the authentication username.";
 $text['description-email_connection_username']['ar-eg'] = "";
 $text['description-email_connection_username']['de-at'] = "Geben Sie den Benutzernamen ein."; //copied from de-de
 $text['description-email_connection_username']['de-ch'] = "Geben Sie den Benutzernamen ein."; //copied from de-de
@@ -3142,6 +3299,7 @@ $text['description-email_connection_username']['sv-se'] = "Ange autentiserings a
 $text['description-email_connection_username']['uk-ua'] = "";
 
 $text['description-email_connection_type']['en-us'] = "Select the type of connection.";
+$text['description-email_connection_type']['en-gb'] = "Select the type of connection.";
 $text['description-email_connection_type']['ar-eg'] = "";
 $text['description-email_connection_type']['de-at'] = "Wählen Sie den Verbindungstyp."; //copied from de-de
 $text['description-email_connection_type']['de-ch'] = "Wählen Sie den Verbindungstyp."; //copied from de-de
@@ -3162,6 +3320,7 @@ $text['description-email_connection_type']['sv-se'] = "Välj typen av förbindel
 $text['description-email_connection_type']['uk-ua'] = "";
 
 $text['description-email_connection_server']['en-us'] = "Enter the host address and port.";
+$text['description-email_connection_server']['en-gb'] = "Enter the host address and port.";
 $text['description-email_connection_server']['ar-eg'] = "";
 $text['description-email_connection_server']['de-at'] = "Geben Sie Server Addresse und Port an."; //copied from de-de
 $text['description-email_connection_server']['de-ch'] = "Geben Sie Server Addresse und Port an."; //copied from de-de
@@ -3182,6 +3341,7 @@ $text['description-email_connection_server']['sv-se'] = "Ange host adress och po
 $text['description-email_connection_server']['uk-ua'] = "";
 
 $text['description-email_connection_security']['en-us'] = "Select the required security.";
+$text['description-email_connection_security']['en-gb'] = "Select the required security.";
 $text['description-email_connection_security']['ar-eg'] = "";
 $text['description-email_connection_security']['de-at'] = "Wählen Sie die nötige Verschlüsselung."; //copied from de-de
 $text['description-email_connection_security']['de-ch'] = "Wählen Sie die nötige Verschlüsselung."; //copied from de-de
@@ -3202,6 +3362,7 @@ $text['description-email_connection_security']['sv-se'] = "Välj önskad säkerh
 $text['description-email_connection_security']['uk-ua'] = "";
 
 $text['description-email_connection_password']['en-us'] = "Enter the authentication password.";
+$text['description-email_connection_password']['en-gb'] = "Enter the authentication password.";
 $text['description-email_connection_password']['ar-eg'] = "";
 $text['description-email_connection_password']['de-at'] = "Geben Sie das Passwort ein."; //copied from de-de
 $text['description-email_connection_password']['de-ch'] = "Geben Sie das Passwort ein."; //copied from de-de
@@ -3222,6 +3383,7 @@ $text['description-email_connection_password']['sv-se'] = "Ange autentiserings-l
 $text['description-email_connection_password']['uk-ua'] = "";
 
 $text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to monitor.";
+$text['description-email_connection_mailbox']['en-gb'] = "Enter the remote folder name to monitor.";
 $text['description-email_connection_mailbox']['ar-eg'] = "";
 $text['description-email_connection_mailbox']['de-at'] = "Geben Sie den Email Ordner an, der überwacht werden soll (optional)."; //copied from de-de
 $text['description-email_connection_mailbox']['de-ch'] = "Geben Sie den Email Ordner an, der überwacht werden soll (optional)."; //copied from de-de
@@ -3242,6 +3404,7 @@ $text['description-email_connection_mailbox']['sv-se'] = "Ange fjärrmapp-namnet
 $text['description-email_connection_mailbox']['uk-ua'] = "";
 
 $text['description-email']['en-us'] = "Enter a delivery address for inbound faxes.";
+$text['description-email']['en-gb'] = "Enter a delivery address for inbound faxes.";
 $text['description-email']['ar-eg'] = "";
 $text['description-email']['de-at'] = "Geben Sie eine Zustelladdresse für eingehende Faxe ein."; //copied from de-de
 $text['description-email']['de-ch'] = "Geben Sie eine Zustelladdresse für eingehende Faxe ein."; //copied from de-de
@@ -3262,6 +3425,7 @@ $text['description-email']['sv-se'] = "Ange en adress för inkommande fax.";
 $text['description-email']['uk-ua'] = "";
 
 $text['description-destination-number']['en-us'] = "Enter the fax destination number.";
+$text['description-destination-number']['en-gb'] = "Enter the fax destination number.";
 $text['description-destination-number']['ar-eg'] = "";
 $text['description-destination-number']['de-at'] = "Geben Sie die Fax Zielnummer ein."; //copied from de-de
 $text['description-destination-number']['de-ch'] = "Geben Sie die Fax Zielnummer ein."; //copied from de-de
@@ -3282,6 +3446,7 @@ $text['description-destination-number']['sv-se'] = "Ange fax destinations-nummer
 $text['description-destination-number']['uk-ua'] = "";
 
 $text['description-caller-id-number']['en-us'] = "Enter the Caller ID number here.";
+$text['description-caller-id-number']['en-gb'] = "Enter the Caller ID number here.";
 $text['description-caller-id-number']['ar-eg'] = "";
 $text['description-caller-id-number']['de-at'] = "Geben Sie die Anruferkennung (Nummer) hier ein."; //copied from de-de
 $text['description-caller-id-number']['de-ch'] = "Geben Sie die Anruferkennung (Nummer) hier ein."; //copied from de-de
@@ -3302,6 +3467,7 @@ $text['description-caller-id-number']['sv-se'] = "Ange nummerpresentationen här
 $text['description-caller-id-number']['uk-ua'] = "";
 
 $text['description-caller-id-name']['en-us'] = "Enter the Caller ID name here.";
+$text['description-caller-id-name']['en-gb'] = "Enter the Caller ID name here.";
 $text['description-caller-id-name']['ar-eg'] = "";
 $text['description-caller-id-name']['de-at'] = "Geben Sie die Anruferkennung (Name) hier ein."; //copied from de-de
 $text['description-caller-id-name']['de-ch'] = "Geben Sie die Anruferkennung (Name) hier ein."; //copied from de-de
@@ -3322,6 +3488,7 @@ $text['description-caller-id-name']['sv-se'] = "Ange namnpresentationen här.";
 $text['description-caller-id-name']['uk-ua'] = "";
 
 $text['description-advanced_settings']['en-us'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
+$text['description-advanced_settings']['en-gb'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
 $text['description-advanced_settings']['ar-eg'] = "";
 $text['description-advanced_settings']['de-at'] = "Konfigurieren Sie die Einstellungen unten um ein Externes Email Postfach und/oder die Email-to-Fax Funktion zu aktivieren."; //copied from de-de
 $text['description-advanced_settings']['de-ch'] = "Konfigurieren Sie die Einstellungen unten um ein Externes Email Postfach und/oder die Email-to-Fax Funktion zu aktivieren."; //copied from de-de
@@ -3342,6 +3509,7 @@ $text['description-advanced_settings']['sv-se'] = "Konfigurera inställningarna 
 $text['description-advanced_settings']['uk-ua'] = "";
 
 $text['description-3']['en-us'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
+$text['description-3']['en-gb'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
 $text['description-3']['ar-eg'] = "";
 $text['description-3']['de-at'] = "LibreOffice muss installiert sein um weitere Dateiformate zu unterstützen (doc, docx, xls, xlsx, odt, ott, rtf, etc...). Den Status der Fax Übertragung können Sie auf der Seite Aktive Gespräche, in den Logs oder in der Switch Konsole beobachten."; //copied from de-de
 $text['description-3']['de-ch'] = "LibreOffice muss installiert sein um weitere Dateiformate zu unterstützen (doc, docx, xls, xlsx, odt, ott, rtf, etc...). Den Status der Fax Übertragung können Sie auf der Seite Aktive Gespräche, in den Logs oder in der Switch Konsole beobachten."; //copied from de-de
@@ -3362,6 +3530,7 @@ $text['description-3']['sv-se'] = "Installera Libreoffice för ytterligare suppo
 $text['description-3']['uk-ua'] = "";
 
 $text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
+$text['description-2']['en-gb'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
 $text['description-2']['ar-eg'] = "";
 $text['description-2']['de-at'] = "Um ein Fax zu senden, laden Sie eine PDF oder eine TIF Datei hoch. Um ein Deckblatt zu generieren, geben Sie einen Betreff und/oder eine Nachricht unten an."; //copied from de-de
 $text['description-2']['de-ch'] = "Um ein Fax zu senden, laden Sie eine PDF oder eine TIF Datei hoch. Um ein Deckblatt zu generieren, geben Sie einen Betreff und/oder eine Nachricht unten an."; //copied from de-de
@@ -3382,6 +3551,7 @@ $text['description-2']['sv-se'] = "Om du vill skicka ett fax, ladda upp en PDF e
 $text['description-2']['uk-ua'] = "";
 
 $text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
+$text['description']['en-gb'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
 $text['description']['ar-eg'] = "";
 $text['description']['de-at'] = "Um ein Fax zu empfangen konfigurieren Sie eine Fax Nebenstelle und leiten eingehende Gespräche auf diese Nebenstelle um."; //copied from de-de
 $text['description']['de-ch'] = "Um ein Fax zu empfangen konfigurieren Sie eine Fax Nebenstelle und leiten eingehende Gespräche auf diese Nebenstelle um."; //copied from de-de
@@ -3402,6 +3572,7 @@ $text['description']['sv-se'] = "För att ta emot fax, gör en fax anknytning oc
 $text['description']['uk-ua'] = "";
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
+$text['description-accountcode']['en-gb'] = "Enter the accountcode.";
 $text['description-accountcode']['ar-eg'] = "";
 $text['description-accountcode']['de-at'] = "Geben Sie den Kontoschlüssel ein."; //copied from de-de
 $text['description-accountcode']['de-ch'] = "Geben Sie den Kontoschlüssel ein."; //copied from de-de
@@ -3422,6 +3593,7 @@ $text['description-accountcode']['sv-se'] = "Ange Accountcode";
 $text['description-accountcode']['uk-ua'] = "";
 
 $text['description-fax_send_channels']['en-us'] = "Enter the maximum number of channels to use.";
+$text['description-fax_send_channels']['en-gb'] = "Enter the maximum number of channels to use.";
 $text['description-fax_send_channels']['ar-eg'] = "";
 $text['description-fax_send_channels']['de-at'] = "";
 $text['description-fax_send_channels']['de-ch'] = "";
@@ -3442,6 +3614,7 @@ $text['description-fax_send_channels']['sv-se'] = "";
 $text['description-fax_send_channels']['uk-ua'] = "";
 
 $text['confirm-update']['en-us'] = "Update Complete";
+$text['confirm-update']['en-gb'] = "Update Complete";
 $text['confirm-update']['ar-eg'] = "";
 $text['confirm-update']['de-at'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['confirm-update']['de-ch'] = "Aktualisierung durchgeführt"; //copied from de-de
@@ -3462,6 +3635,7 @@ $text['confirm-update']['sv-se'] = "Uppdatering Klar";
 $text['confirm-update']['uk-ua'] = "";
 
 $text['confirm-fax']['en-us'] = "Please provide: A file to Fax";
+$text['confirm-fax']['en-gb'] = "Please provide: A file to Fax";
 $text['confirm-fax']['ar-eg'] = "";
 $text['confirm-fax']['de-at'] = "Bitte laden Sie ein Fax hoch."; //copied from de-de
 $text['confirm-fax']['de-ch'] = "Bitte laden Sie ein Fax hoch."; //copied from de-de
@@ -3482,6 +3656,7 @@ $text['confirm-fax']['sv-se'] = "Ange: En fil att fax:a";
 $text['confirm-fax']['uk-ua'] = "";
 
 $text['confirm-ext']['en-us'] = "Por favor indique: Extensión";
+$text['confirm-ext']['en-gb'] = "Por favor indique: Extensión";
 $text['confirm-ext']['ar-eg'] = "";
 $text['confirm-ext']['de-at'] = "Bitte geben Sie eine Nebenstelle an."; //copied from de-de
 $text['confirm-ext']['de-ch'] = "Bitte geben Sie eine Nebenstelle an."; //copied from de-de
@@ -3502,6 +3677,7 @@ $text['confirm-ext']['sv-se'] = "Por favor indique: Extensión ";
 $text['confirm-ext']['uk-ua'] = "";
 
 $text['confirm-add']['en-us'] = "Add complete";
+$text['confirm-add']['en-gb'] = "Add complete";
 $text['confirm-add']['ar-eg'] = "";
 $text['confirm-add']['de-at'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['confirm-add']['de-ch'] = "Erfolgreich hinzugefügt"; //copied from de-de
@@ -3522,6 +3698,7 @@ $text['confirm-add']['sv-se'] = "Tillagd";
 $text['confirm-add']['uk-ua'] = "";
 
 $text['button-settings']['en-us'] = "Settings";
+$text['button-settings']['en-gb'] = "Settings";
 $text['button-settings']['ar-eg'] = "";
 $text['button-settings']['de-at'] = "Einstellungen"; //copied from de-de
 $text['button-settings']['de-ch'] = "Einstellungen"; //copied from de-de
@@ -3542,6 +3719,7 @@ $text['button-settings']['sv-se'] = "Inställningar";
 $text['button-settings']['uk-ua'] = "";
 
 $text['button-send']['en-us'] = "Send";
+$text['button-send']['en-gb'] = "Send";
 $text['button-send']['ar-eg'] = "";
 $text['button-send']['de-at'] = "Senden"; //copied from de-de
 $text['button-send']['de-ch'] = "Senden"; //copied from de-de
@@ -3562,6 +3740,7 @@ $text['button-send']['sv-se'] = "Skicka Samtalsdistribution";
 $text['button-send']['uk-ua'] = "";
 
 $text['button-preview']['en-us'] = "Preview";
+$text['button-preview']['en-gb'] = "Preview";
 $text['button-preview']['ar-eg'] = "";
 $text['button-preview']['de-at'] = "Vorschau"; //copied from de-de
 $text['button-preview']['de-ch'] = "Vorschau"; //copied from de-de
@@ -3582,6 +3761,7 @@ $text['button-preview']['sv-se'] = "Förhandsgranska";
 $text['button-preview']['uk-ua'] = "";
 
 $text['button-show_all']['en-us'] = "Show all";
+$text['button-show_all']['en-gb'] = "Show all";
 $text['button-show_all']['ar-eg'] = "";
 $text['button-show_all']['de-at'] = "Alle anzeigen"; //copied from de-de
 $text['button-show_all']['de-ch'] = "Alle anzeigen"; //copied from de-de
@@ -3602,6 +3782,7 @@ $text['button-show_all']['sv-se'] = "";
 $text['button-show_all']['uk-ua'] = "Показати всі";
 
 $text['fax-active_title']['en-us'] = "Fax queue";
+$text['fax-active_title']['en-gb'] = "Fax queue";
 $text['fax-active_title']['ar-eg'] = "";
 $text['fax-active_title']['de-at'] = "Fax Warteschlange"; //copied from de-de
 $text['fax-active_title']['de-ch'] = "Fax Warteschlange"; //copied from de-de
@@ -3622,6 +3803,7 @@ $text['fax-active_title']['sv-se'] = "Fax kö";
 $text['fax-active_title']['uk-ua'] = "";
 
 $text['fax-active_description']['en-us'] = "Current status of fax queue";
+$text['fax-active_description']['en-gb'] = "Current status of fax queue";
 $text['fax-active_description']['ar-eg'] = "";
 $text['fax-active_description']['de-at'] = "Aktueller Status der Fax Warteschlange"; //copied from de-de
 $text['fax-active_description']['de-ch'] = "Aktueller Status der Fax Warteschlange"; //copied from de-de
@@ -3642,6 +3824,7 @@ $text['fax-active_description']['sv-se'] = "Nuvarande status för fax kö:n";
 $text['fax-active_description']['uk-ua'] = "";
 
 $text['fax-active_title_fax_server']['en-us'] = "Fax";
+$text['fax-active_title_fax_server']['en-gb'] = "Fax";
 $text['fax-active_title_fax_server']['ar-eg'] = "";
 $text['fax-active_title_fax_server']['de-at'] = "Fax"; //copied from de-de
 $text['fax-active_title_fax_server']['de-ch'] = "Fax"; //copied from de-de
@@ -3662,6 +3845,7 @@ $text['fax-active_title_fax_server']['sv-se'] = "Fax";
 $text['fax-active_title_fax_server']['uk-ua'] = "";
 
 $text['fax-active_title_enabled']['en-us'] = "Enabled";
+$text['fax-active_title_enabled']['en-gb'] = "Enabled";
 $text['fax-active_title_enabled']['ar-eg'] = "";
 $text['fax-active_title_enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['fax-active_title_enabled']['de-ch'] = "Aktiviert"; //copied from de-de
@@ -3682,6 +3866,7 @@ $text['fax-active_title_enabled']['sv-se'] = "Aktiverad";
 $text['fax-active_title_enabled']['uk-ua'] = "";
 
 $text['fax-active_title_status']['en-us'] = "Status";
+$text['fax-active_title_status']['en-gb'] = "Status";
 $text['fax-active_title_status']['ar-eg'] = "";
 $text['fax-active_title_status']['de-at'] = "Status"; //copied from de-de
 $text['fax-active_title_status']['de-ch'] = "Status"; //copied from de-de
@@ -3702,6 +3887,7 @@ $text['fax-active_title_status']['sv-se'] = "";
 $text['fax-active_title_status']['uk-ua'] = "";
 
 $text['fax-active_title_next_time']['en-us'] = "Next time";
+$text['fax-active_title_next_time']['en-gb'] = "Next time";
 $text['fax-active_title_next_time']['ar-eg'] = "";
 $text['fax-active_title_next_time']['de-at'] = "Nächstes mal"; //copied from de-de
 $text['fax-active_title_next_time']['de-ch'] = "Nächstes mal"; //copied from de-de
@@ -3722,6 +3908,7 @@ $text['fax-active_title_next_time']['sv-se'] = "Nästa gång";
 $text['fax-active_title_next_time']['uk-ua'] = "";
 
 $text['fax-active_title_files']['en-us'] = "Files";
+$text['fax-active_title_files']['en-gb'] = "Files";
 $text['fax-active_title_files']['ar-eg'] = "";
 $text['fax-active_title_files']['de-at'] = "Dateien"; //copied from de-de
 $text['fax-active_title_files']['de-ch'] = "Dateien"; //copied from de-de
@@ -3742,6 +3929,7 @@ $text['fax-active_title_files']['sv-se'] = "Filer";
 $text['fax-active_title_files']['uk-ua'] = "";
 
 $text['fax-active_title_uri']['en-us'] = "URI";
+$text['fax-active_title_uri']['en-gb'] = "URI";
 $text['fax-active_title_uri']['ar-eg'] = "";
 $text['fax-active_title_uri']['de-at'] = "URI"; //copied from de-de
 $text['fax-active_title_uri']['de-ch'] = "URI"; //copied from de-de
@@ -3762,6 +3950,7 @@ $text['fax-active_title_uri']['sv-se'] = "URI";
 $text['fax-active_title_uri']['uk-ua'] = "";
 
 $text['fax-active_status_wait']['en-us'] = "Wait";
+$text['fax-active_status_wait']['en-gb'] = "Wait";
 $text['fax-active_status_wait']['ar-eg'] = "";
 $text['fax-active_status_wait']['de-at'] = "Warte"; //copied from de-de
 $text['fax-active_status_wait']['de-ch'] = "Warte"; //copied from de-de
@@ -3782,6 +3971,7 @@ $text['fax-active_status_wait']['sv-se'] = "Vänta";
 $text['fax-active_status_wait']['uk-ua'] = "";
 
 $text['fax-active_status_execute']['en-us'] = "Execute";
+$text['fax-active_status_execute']['en-gb'] = "Execute";
 $text['fax-active_status_execute']['ar-eg'] = "";
 $text['fax-active_status_execute']['de-at'] = "Ausführen"; //copied from de-de
 $text['fax-active_status_execute']['de-ch'] = "Ausführen"; //copied from de-de
@@ -3802,6 +3992,7 @@ $text['fax-active_status_execute']['sv-se'] = "Utför";
 $text['fax-active_status_execute']['uk-ua'] = "";
 
 $text['fax-active_status_success']['en-us'] = "Success";
+$text['fax-active_status_success']['en-gb'] = "Success";
 $text['fax-active_status_success']['ar-eg'] = "";
 $text['fax-active_status_success']['de-at'] = "Erfolgreich"; //copied from de-de
 $text['fax-active_status_success']['de-ch'] = "Erfolgreich"; //copied from de-de
@@ -3822,6 +4013,7 @@ $text['fax-active_status_success']['sv-se'] = "Lyckat";
 $text['fax-active_status_success']['uk-ua'] = "";
 
 $text['fax-active_status_fail']['en-us'] = "Fail";
+$text['fax-active_status_fail']['en-gb'] = "Fail";
 $text['fax-active_status_fail']['ar-eg'] = "";
 $text['fax-active_status_fail']['de-at'] = "Fehlgeschlagen"; //copied from de-de
 $text['fax-active_status_fail']['de-ch'] = "Fehlgeschlagen"; //copied from de-de

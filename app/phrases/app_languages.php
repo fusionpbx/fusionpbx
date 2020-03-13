@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-phrases']['en-us'] = "Phrases";
+$text['title-phrases']['en-gb'] = "Phrases";
 $text['title-phrases']['ar-eg'] = "";
 $text['title-phrases']['de-at'] = "Phrasen"; //copied from de-de
 $text['title-phrases']['de-ch'] = "Phrasen"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-phrases']['sv-se'] = "Fraser";
 $text['title-phrases']['uk-ua'] = "Фрази";
 
 $text['title-edit_phrase']['en-us'] = "Edit Phrase";
+$text['title-edit_phrase']['en-gb'] = "Edit Phrase";
 $text['title-edit_phrase']['ar-eg'] = "";
 $text['title-edit_phrase']['de-at'] = "Phrasen bearbeiten"; //copied from de-de
 $text['title-edit_phrase']['de-ch'] = "Phrasen bearbeiten"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['title-edit_phrase']['uk-ua'] = "Редагувати фразу";
 
 $text['title-add_phrase']['en-us'] = "Add Phrase";
+$text['title-add_phrase']['en-gb'] = "Add Phrase";
 $text['title-add_phrase']['ar-eg'] = "";
 $text['title-add_phrase']['de-at'] = "Phrasen hinzufügen"; //copied from de-de
 $text['title-add_phrase']['de-ch'] = "Phrasen hinzufügen"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['title-add_phrase']['uk-ua'] = "Додати фразу";
 
 $text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['en-gb'] = "Tools";
 $text['label-tools']['ar-eg'] = "";
 $text['label-tools']['de-at'] = "Funktionen"; //copied from de-de
 $text['label-tools']['de-ch'] = "Funktionen"; //copied from de-de
@@ -82,6 +86,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
 
 $text['label-structure']['en-us'] = "Structure";
+$text['label-structure']['en-gb'] = "Structure";
 $text['label-structure']['ar-eg'] = "";
 $text['label-structure']['de-at'] = "Struktur"; //copied from de-de
 $text['label-structure']['de-ch'] = "Struktur"; //copied from de-de
@@ -102,6 +107,7 @@ $text['label-structure']['sv-se'] = "Struktur";
 $text['label-structure']['uk-ua'] = "Структура";
 
 $text['label-sounds']['en-us'] = "Sounds";
+$text['label-sounds']['en-gb'] = "Sounds";
 $text['label-sounds']['ar-eg'] = "";
 $text['label-sounds']['de-at'] = "Töne"; //copied from de-de
 $text['label-sounds']['de-ch'] = "Töne"; //copied from de-de
@@ -122,6 +128,7 @@ $text['label-sounds']['sv-se'] = "Ljud";
 $text['label-sounds']['uk-ua'] = "звуки";
 
 $text['label-say']['en-us'] = "Say";
+$text['label-say']['en-gb'] = "Say";
 $text['label-say']['ar-eg'] = "";
 $text['label-say']['de-at'] = "Sagen"; //copied from de-de
 $text['label-say']['de-ch'] = "Sagen"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-say']['sv-se'] = "Säg";
 $text['label-say']['uk-ua'] = "Вимовити";
 
 $text['label-recordings']['en-us'] = "Recordings";
+$text['label-recordings']['en-gb'] = "Recordings";
 $text['label-recordings']['ar-eg'] = "";
 $text['label-recordings']['de-at'] = "Aufnahmen"; //copied from de-de
 $text['label-recordings']['de-ch'] = "Aufnahmen"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-recordings']['sv-se'] = "Inspelningar";
 $text['label-recordings']['uk-ua'] = "записи";
 
 $text['label-play']['en-us'] = "Play";
+$text['label-play']['en-gb'] = "Play";
 $text['label-play']['ar-eg'] = "";
 $text['label-play']['de-at'] = "Abspielen"; //copied from de-de
 $text['label-play']['de-ch'] = "Abspielen"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk-ua'] = "Відтворити";
 
 $text['label-pause']['en-us'] = "Pause";
+$text['label-pause']['en-gb'] = "Pause";
 $text['label-pause']['ar-eg'] = "";
 $text['label-pause']['de-at'] = "Pause"; //copied from de-de
 $text['label-pause']['de-ch'] = "Pause"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-pause']['sv-se'] = "Paus";
 $text['label-pause']['uk-ua'] = "Призупинити";
 
 $text['label-language']['en-us'] = "Language";
+$text['label-language']['en-gb'] = "Language";
 $text['label-language']['ar-eg'] = "";
 $text['label-language']['de-at'] = "Sprache"; //copied from de-de
 $text['label-language']['de-ch'] = "Sprache"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Мова";
 
 $text['label-function']['en-us'] = "Function";
+$text['label-function']['en-gb'] = "Function";
 $text['label-function']['ar-eg'] = "";
 $text['label-function']['de-at'] = "Funktion"; //copied from de-de
 $text['label-function']['de-ch'] = "Funktion"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-function']['sv-se'] = "Funktion";
 $text['label-function']['uk-ua'] = "Функція";
 
 $text['label-execute']['en-us'] = "Execute";
+$text['label-execute']['en-gb'] = "Execute";
 $text['label-execute']['ar-eg'] = "";
 $text['label-execute']['de-at'] = "Ausführen"; //copied from de-de
 $text['label-execute']['de-ch'] = "Ausführen"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-execute']['sv-se'] = "Utför";
 $text['label-execute']['uk-ua'] = "Виконати";
 
 $text['label-action']['en-us'] = "Action";
+$text['label-action']['en-gb'] = "Action";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-action']['de-ch'] = "Aktion"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
 
 $text['header_phrases']['en-us'] = "Phrases";
+$text['header_phrases']['en-gb'] = "Phrases";
 $text['header_phrases']['ar-eg'] = "";
 $text['header_phrases']['de-at'] = "Phrasen"; //copied from de-de
 $text['header_phrases']['de-ch'] = "Phrasen"; //copied from de-de
@@ -302,6 +317,7 @@ $text['header_phrases']['sv-se'] = "Fraser";
 $text['header_phrases']['uk-ua'] = "Фрази";
 
 $text['header-edit_phrase']['en-us'] = "Edit Phrase";
+$text['header-edit_phrase']['en-gb'] = "Edit Phrase";
 $text['header-edit_phrase']['ar-eg'] = "";
 $text['header-edit_phrase']['de-at'] = "Phrasen bearbeiten"; //copied from de-de
 $text['header-edit_phrase']['de-ch'] = "Phrasen bearbeiten"; //copied from de-de
@@ -322,6 +338,7 @@ $text['header-edit_phrase']['sv-se'] = "Ändra Fras";
 $text['header-edit_phrase']['uk-ua'] = "Редагувати фразу";
 
 $text['header-add_phrase']['en-us'] = "Add Phrase";
+$text['header-add_phrase']['en-gb'] = "Add Phrase";
 $text['header-add_phrase']['ar-eg'] = "";
 $text['header-add_phrase']['de-at'] = "Phrasen hinzufügen"; //copied from de-de
 $text['header-add_phrase']['de-ch'] = "Phrasen hinzufügen"; //copied from de-de
@@ -342,6 +359,7 @@ $text['header-add_phrase']['sv-se'] = "Lägg Till Fras";
 $text['header-add_phrase']['uk-ua'] = "Додати фразу";
 
 $text['description-structure']['en-us'] = "Define the various components that make up the phrase.";
+$text['description-structure']['en-gb'] = "Define the various components that make up the phrase.";
 $text['description-structure']['ar-eg'] = "";
 $text['description-structure']['de-at'] = "Definieren Sie die einzelnen Komponenten und fügen Sie diese zu einer Phrase zusammen"; //copied from de-de
 $text['description-structure']['de-ch'] = "Definieren Sie die einzelnen Komponenten und fügen Sie diese zu einer Phrase zusammen"; //copied from de-de
@@ -362,6 +380,7 @@ $text['description-structure']['sv-se'] = "Definera de olika komponenterna som u
 $text['description-structure']['uk-ua'] = "Вкажіть компоненти з яких складається фраза";
 
 $text['description-phrases']['en-us'] = "Create phrases of audio files to be played in sequence.";
+$text['description-phrases']['en-gb'] = "Create phrases of audio files to be played in sequence.";
 $text['description-phrases']['ar-eg'] = "";
 $text['description-phrases']['de-at'] = "Stellen Sie Phrasen aus Audiodateien zusammen, welche sequenziell abgespielt werden."; //copied from de-de
 $text['description-phrases']['de-ch'] = "Stellen Sie Phrasen aus Audiodateien zusammen, welche sequenziell abgespielt werden."; //copied from de-de
@@ -382,6 +401,7 @@ $text['description-phrases']['sv-se'] = "Skapa fraser med ljudfiler som skall sp
 $text['description-phrases']['uk-ua'] = "Створення фраз з аудіофайлів, які будуть відтворені у послідовності.";
 
 $text['description-name']['en-us'] = "Name for the phrase (Example: 'xyz_audio')";
+$text['description-name']['en-gb'] = "Name for the phrase (Example: 'xyz_audio')";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Geben Sie den Namen der Phrase an (Bsp: 'xyz_audio')"; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen der Phrase an (Bsp: 'xyz_audio')"; //copied from de-de
@@ -402,6 +422,7 @@ $text['description-name']['sv-se'] = "Namn på frasen (Exempel: 'xyz_audio')";
 $text['description-name']['uk-ua'] = "Назва фрази";
 
 $text['description-language']['en-us'] = "Language used in the phrase.";
+$text['description-language']['en-gb'] = "Language used in the phrase.";
 $text['description-language']['ar-eg'] = "";
 $text['description-language']['de-at'] = "Geben Sie die Sprache an."; //copied from de-de
 $text['description-language']['de-ch'] = "Geben Sie die Sprache an."; //copied from de-de
@@ -422,6 +443,7 @@ $text['description-language']['sv-se'] = "Språk som används i frasen.";
 $text['description-language']['uk-ua'] = "Мова фрази";
 
 $text['description-enabled']['en-us'] = "Set the status of the phrase.";
+$text['description-enabled']['en-gb'] = "Set the status of the phrase.";
 $text['description-enabled']['ar-eg'] = "";
 $text['description-enabled']['de-at'] = "Setzen Sie den Status dieser Phrase."; //copied from de-de
 $text['description-enabled']['de-ch'] = "Setzen Sie den Status dieser Phrase."; //copied from de-de

@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title']['en-us'] = "Voicemail Greetings";
+$text['title']['en-gb'] = "Voicemail Greetings";
 $text['title']['ar-eg'] = "";
 $text['title']['de-at'] = "Begrüßungen für Sprachnachrichten"; //copied from de-de
 $text['title']['de-ch'] = "Begrüßungen für Sprachnachrichten"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title']['sv-se'] = "Röstbrevlåda Hälsningar";
 $text['title']['uk-ua'] = "Привітання";
 
 $text['label-size']['en-us'] = "Size";
+$text['label-size']['en-gb'] = "Size";
 $text['label-size']['ar-eg'] = "";
 $text['label-size']['de-at'] = "Größe"; //copied from de-de
 $text['label-size']['de-ch'] = "Größe"; //copied from de-de
@@ -42,6 +44,7 @@ $text['label-size']['sv-se'] = "Storlek";
 $text['label-size']['uk-ua'] = "Розмір";
 
 $text['label-number']['en-us'] = "#";
+$text['label-number']['en-gb'] = "#";
 $text['label-number']['ar-eg'] = "#";
 $text['label-number']['de-at'] = "#"; //copied from de-de
 $text['label-number']['de-ch'] = "#"; //copied from de-de
@@ -62,6 +65,7 @@ $text['label-number']['sv-se'] = "#";
 $text['label-number']['uk-ua'] = "кількість";
 
 $text['label-name']['en-us'] = "Name";
+$text['label-name']['en-gb'] = "Name";
 $text['label-name']['ar-eg'] = "";
 $text['label-name']['de-at'] = "Name"; //copied from de-de
 $text['label-name']['de-ch'] = "Name"; //copied from de-de
@@ -82,6 +86,7 @@ $text['label-name']['sv-se'] = "Namn";
 $text['label-name']['uk-ua'] = "Назва";
 
 $text['label-description']['en-us'] = "Description";
+$text['label-description']['en-gb'] = "Description";
 $text['label-description']['ar-eg'] = "";
 $text['label-description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -102,6 +107,7 @@ $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk-ua'] = "Опис";
 
 $text['message-uploaded']['en-us'] = "Upload Complete";
+$text['message-uploaded']['en-gb'] = "Upload Complete";
 $text['message-uploaded']['ar-eg'] = "";
 $text['message-uploaded']['de-at'] = "Hochladen abgeschlossen"; //copied from de-de
 $text['message-uploaded']['de-ch'] = "Hochladen abgeschlossen"; //copied from de-de
@@ -122,6 +128,7 @@ $text['message-uploaded']['sv-se'] = "Uppladdning Klar";
 $text['message-uploaded']['uk-ua'] = "Завантажено";
 
 $text['message-greeting_selected']['en-us'] = "Greeting Selected";
+$text['message-greeting_selected']['en-gb'] = "Greeting Selected";
 $text['message-greeting_selected']['ar-eg'] = "";
 $text['message-greeting_selected']['de-at'] = "Begrüßung ausgewählt"; //copied from de-de
 $text['message-greeting_selected']['de-ch'] = "Begrüßung ausgewählt"; //copied from de-de
@@ -142,6 +149,7 @@ $text['message-greeting_selected']['sv-se'] = "Hälsning Vald";
 $text['message-greeting_selected']['uk-ua'] = "привітання Вибрані";
 
 $text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['en-gb'] = "Tools";
 $text['label-tools']['ar-eg'] = "";
 $text['label-tools']['de-at'] = "Werkzeuge"; //copied from de-de
 $text['label-tools']['de-ch'] = "Werkzeuge"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
 
 $text['label-select_a_file']['en-us'] = "Select a file...";
+$text['label-select_a_file']['en-gb'] = "Select a file...";
 $text['label-select_a_file']['ar-eg'] = "";
 $text['label-select_a_file']['de-at'] = "Wähle eine Datei aus..."; //copied from de-de
 $text['label-select_a_file']['de-ch'] = "Wähle eine Datei aus..."; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-select_a_file']['sv-se'] = "Välj en fil ...";
 $text['label-select_a_file']['uk-ua'] = "Виберіть файл ...";
 
 $text['label-play']['en-us'] = "Play";
+$text['label-play']['en-gb'] = "Play";
 $text['label-play']['ar-eg'] = "";
 $text['label-play']['de-at'] = "Abspielen"; //copied from de-de
 $text['label-play']['de-ch'] = "Abspielen"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-play']['sv-se'] = "Spela Upp";
 $text['label-play']['uk-ua'] = "Відтворити";
 
 $text['label-pause']['en-us'] = "Pause";
+$text['label-pause']['en-gb'] = "Pause";
 $text['label-pause']['ar-eg'] = "";
 $text['label-pause']['de-at'] = "Pause"; //copied from de-de
 $text['label-pause']['de-ch'] = "Pause"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-pause']['sv-se'] = "Pausa";
 $text['label-pause']['uk-ua'] = "Призупинити";
 
 $text['label-greeting']['en-us'] = "Greeting";
+$text['label-greeting']['en-gb'] = "Greeting";
 $text['label-greeting']['ar-eg'] = "";
 $text['label-greeting']['de-at'] = "Begrüßung"; //copied from de-de
 $text['label-greeting']['de-ch'] = "Begrüßung"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-greeting']['sv-se'] = "Hälsning";
 $text['label-greeting']['uk-ua'] = "привітання";
 
 $text['label-filename']['en-us'] = "File Name";
+$text['label-filename']['en-gb'] = "File Name";
 $text['label-filename']['ar-eg'] = "";
 $text['label-filename']['de-at'] = "Dateiname"; //copied from de-de
 $text['label-filename']['de-ch'] = "Dateiname"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-filename']['sv-se'] = "Filnamn";
 $text['label-filename']['uk-ua'] = "ім'я Файлу";
 
 $text['label-edit']['en-us'] = "Edit Greeting";
+$text['label-edit']['en-gb'] = "Edit Greeting";
 $text['label-edit']['ar-eg'] = "";
 $text['label-edit']['de-at'] = "Begrüßung bearbeiten"; //copied from de-de
 $text['label-edit']['de-ch'] = "Begrüßung bearbeiten"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-edit']['sv-se'] = "Ändra Hälsning";
 $text['label-edit']['uk-ua'] = "Редагувати";
 
 $text['label-download']['en-us'] = "Download";
+$text['label-download']['en-gb'] = "Download";
 $text['label-download']['ar-eg'] = "";
 $text['label-download']['de-at'] = "Herunterladen"; //copied from de-de
 $text['label-download']['de-ch'] = "Herunterladen"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-download']['sv-se'] = "Ladda Ned";
 $text['label-download']['uk-ua'] = "Завантажини";
 
 $text['label-add']['en-us'] = "Add Greeting";
+$text['label-add']['en-gb'] = "Add Greeting";
 $text['label-add']['ar-eg'] = "";
 $text['label-add']['de-at'] = "Begrüßung hinzufügen"; //copied from de-de
 $text['label-add']['de-ch'] = "Begrüßung hinzufügen"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-add']['sv-se'] = "Lägg Till Hälsning";
 $text['label-add']['uk-ua'] = "Додати привітання";
 
 $text['label-selected']['en-us'] = "Selected";
+$text['label-selected']['en-gb'] = "Selected";
 $text['label-selected']['ar-eg'] = "";
 $text['label-selected']['de-at'] = "Ausgewählt"; //copied from de-de
 $text['label-selected']['de-ch'] = "Ausgewählt"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-selected']['sv-se'] = "Valt";
 $text['label-selected']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "A name for the greeting (not parsed).";
+$text['description-name']['en-gb'] = "A name for the greeting (not parsed).";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Ein Namen für die Begrüßung."; //copied from de-de
 $text['description-name']['de-ch'] = "Ein Namen für die Begrüßung."; //copied from de-de
@@ -362,6 +380,7 @@ $text['description-name']['sv-se'] = "Ett namn för hälsningen.";
 $text['description-name']['uk-ua'] = "Введіть назву привітання";
 
 $text['description-info']['en-us'] = "You may enter a description here for your reference (not parsed).";
+$text['description-info']['en-gb'] = "You may enter a description here for your reference (not parsed).";
 $text['description-info']['ar-eg'] = "";
 $text['description-info']['de-at'] = "Sie können hier eine Beschreibung als Referenz eintragen."; //copied from de-de
 $text['description-info']['de-ch'] = "Sie können hier eine Beschreibung als Referenz eintragen."; //copied from de-de
@@ -382,6 +401,7 @@ $text['description-info']['sv-se'] = "Du kan ange en beskrivning här som din eg
 $text['description-info']['uk-ua'] = "Введіть опис";
 
 $text['description']['en-us'] = "Select the active greeting message to play for extension:";
+$text['description']['en-gb'] = "Select the active greeting message to play for extension:";
 $text['description']['ar-eg'] = "";
 $text['description']['de-at'] = "Wählen Sie die aktive Begrüßung aus, welche für diese Nebenstelle abgespielt werden soll:"; //copied from de-de
 $text['description']['de-ch'] = "Wählen Sie die aktive Begrüßung aus, welche für diese Nebenstelle abgespielt werden soll:"; //copied from de-de
@@ -402,6 +422,7 @@ $text['description']['sv-se'] = "Välj hälsning att som skall användas för an
 $text['description']['uk-ua'] = "Виберіть активне привітання для розширення";
 
 $text['confirm-name']['en-us'] = "Please provide: Greeting Name";
+$text['confirm-name']['en-gb'] = "Please provide: Greeting Name";
 $text['confirm-name']['ar-eg'] = "";
 $text['confirm-name']['de-at'] = "Bitte bereitstellen: Namen der Begrüßung"; //copied from de-de
 $text['confirm-name']['de-ch'] = "Bitte bereitstellen: Namen der Begrüßung"; //copied from de-de
@@ -422,6 +443,7 @@ $text['confirm-name']['sv-se'] = "Var god ange: Hälsningsnamn";
 $text['confirm-name']['uk-ua'] = "Введіть назву привітання";
 
 $text['confirm-filename']['en-us'] = "Please provide: Greeting Filename";
+$text['confirm-filename']['en-gb'] = "Please provide: Greeting Filename";
 $text['confirm-filename']['ar-eg'] = "";
 $text['confirm-filename']['de-at'] = "Bitte bereitstellen: Dateinamen der Begrüßung"; //copied from de-de
 $text['confirm-filename']['de-ch'] = "Bitte bereitstellen: Dateinamen der Begrüßung"; //copied from de-de
