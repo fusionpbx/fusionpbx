@@ -1,6 +1,7 @@
 <?php
 
 $apps[$x]['menu'][0]['title']['en-us'] = 'Messages';
+$apps[$x]['menu'][0]['title']['en-gb'] = 'Messages';
 $apps[$x]['menu'][0]['title']['es-cl'] = '';
 $apps[$x]['menu'][0]['title']['fr-fr'] = '';
 $apps[$x]['menu'][0]['title']['fr-ca'] = '';

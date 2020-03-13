@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "System Status";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "System Status";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "System Status";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "System Status";

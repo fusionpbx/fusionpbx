@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Log Viewer";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Log Viewer";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Log Betrachter";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Log Betrachter";
