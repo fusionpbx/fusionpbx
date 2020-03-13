@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "AJAX tool to view and manage all active callers in a conference room.";
+		$apps[$x]['description']['en-gb'] = "AJAX tool to view and manage all active callers in a conference room.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "AJAX Wekzeug um alle aktive Anrufer in einem Konferenzraum anzuzeigen und zu verwalten.";
 		$apps[$x]['description']['de-ch'] = "";

@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
+		$apps[$x]['description']['en-gb'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen welche mit den Atributen des Anrufes abgeglichen werden. Wenn die Bedingungen erfüllt sind, wird der Anruf über das Gateway geleitet.";
 		$apps[$x]['description']['de-ch'] = "";
