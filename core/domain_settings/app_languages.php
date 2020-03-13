@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-domains']['en-us'] = "Domains";
+$text['title-domains']['en-gb'] = "Domains";
 $text['title-domains']['ar-eg'] = "";
 $text['title-domains']['de-at'] = "Domains"; //copied from de-de
 $text['title-domains']['de-ch'] = "Domains"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-domains']['sv-se'] = "Domäner";
 $text['title-domains']['uk-ua'] = "Домени";
 
 $text['title-domain_setting-edit']['en-us'] = "Domain Setting";
+$text['title-domain_setting-edit']['en-gb'] = "Domain Setting";
 $text['title-domain_setting-edit']['ar-eg'] = "";
 $text['title-domain_setting-edit']['de-at'] = "Domain Einstellungen"; //copied from de-de
 $text['title-domain_setting-edit']['de-ch'] = "Domain Einstellungen"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['title-domain_setting-edit']['uk-ua'] = "Налаштування доменів";
 
 $text['title-domain_setting-add']['en-us'] = "Domain Setting Add";
+$text['title-domain_setting-add']['en-gb'] = "Domain Setting Add";
 $text['title-domain_setting-add']['ar-eg'] = "";
 $text['title-domain_setting-add']['de-at'] = "Domain Einstellungen hinzufügen"; //copied from de-de
 $text['title-domain_setting-add']['de-ch'] = "Domain Einstellungen hinzufügen"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['title-domain_setting-add']['uk-ua'] = "Додавання домену";
 
 $text['title-domain-edit']['en-us'] = "Domain";
+$text['title-domain-edit']['en-gb'] = "Domain";
 $text['title-domain-edit']['ar-eg'] = "";
 $text['title-domain-edit']['de-at'] = "Domain"; //copied from de-de
 $text['title-domain-edit']['de-ch'] = "Domain"; //copied from de-de
@@ -82,6 +86,7 @@ $text['title-domain-edit']['sv-se'] = "Domän";
 $text['title-domain-edit']['uk-ua'] = "Домен";
 
 $text['title-domain-add']['en-us'] = "Domain Add";
+$text['title-domain-add']['en-gb'] = "Domain Add";
 $text['title-domain-add']['ar-eg'] = "";
 $text['title-domain-add']['de-at'] = "Domain hinzufügen"; //copied from de-de
 $text['title-domain-add']['de-ch'] = "Domain hinzufügen"; //copied from de-de
@@ -102,6 +107,7 @@ $text['title-domain-add']['sv-se'] = "Lägg Till Domän";
 $text['title-domain-add']['uk-ua'] = "Новий домен";
 
 $text['message-delete_failed']['en-us'] = "No Settings Checked";
+$text['message-delete_failed']['en-gb'] = "No Settings Checked";
 $text['message-delete_failed']['ar-eg'] = "";
 $text['message-delete_failed']['de-at'] = "Keine Einstellungen ausgewählt"; //copied from de-de
 $text['message-delete_failed']['de-ch'] = "Keine Einstellungen ausgewählt"; //copied from de-de
@@ -122,6 +128,7 @@ $text['message-delete_failed']['sv-se'] = "Ingen Inställning Markerad";
 $text['message-delete_failed']['uk-ua'] = "Налаштування не вказано";
 
 $text['label-web_fonts']['en-us'] = "Web Fonts";
+$text['label-web_fonts']['en-gb'] = "Web Fonts";
 $text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
 $text['label-web_fonts']['de-at'] = "Web Fonts"; //copied from de-de
 $text['label-web_fonts']['de-ch'] = "Web Fonts"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-web_fonts']['sv-se'] = "web teckensnitt";
 $text['label-web_fonts']['uk-ua'] = "веб-шрифти";
 
 $text['label-top']['en-us'] = "Top";
+$text['label-top']['en-gb'] = "Top";
 $text['label-top']['ar-eg'] = "أعلى";
 $text['label-top']['de-at'] = "Oben"; //copied from de-de
 $text['label-top']['de-ch'] = "Oben"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-top']['sv-se'] = "Topp";
 $text['label-top']['uk-ua'] = "топ";
 
 $text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['en-gb'] = "Tools";
 $text['label-tools']['ar-eg'] = "";
 $text['label-tools']['de-at'] = "Werkzeuge"; //copied from de-de
 $text['label-tools']['de-ch'] = "Werkzeuge"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
 
 $text['label-text']['en-us'] = "Text";
+$text['label-text']['en-gb'] = "Text";
 $text['label-text']['ar-eg'] = "نص";
 $text['label-text']['de-at'] = "Text"; //copied from de-de
 $text['label-text']['de-ch'] = "Text"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-text']['sv-se'] = "Text";
 $text['label-text']['uk-ua'] = "текст";
 
 $text['label-static']['en-us'] = "Static";
+$text['label-static']['en-gb'] = "Static";
 $text['label-static']['ar-eg'] = "ساكن";
 $text['label-static']['de-at'] = "Statisch"; //copied from de-de
 $text['label-static']['de-ch'] = "Statisch"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-static']['sv-se'] = "Statisk";
 $text['label-static']['uk-ua'] = "статичний";
 
 $text['label-right']['en-us'] = "Right";
+$text['label-right']['en-gb'] = "Right";
 $text['label-right']['ar-eg'] = "حق";
 $text['label-right']['de-at'] = "Rechts"; //copied from de-de
 $text['label-right']['de-ch'] = "Rechts"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-right']['sv-se'] = "Höger";
 $text['label-right']['uk-ua'] = "правий";
 
 $text['label-reference']['en-us'] = "See";
+$text['label-reference']['en-gb'] = "See";
 $text['label-reference']['ar-eg'] = "مرجع";
 $text['label-reference']['de-at'] = "Referenz"; //copied from de-de
 $text['label-reference']['de-ch'] = "Referenz"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-reference']['sv-se'] = "Referens";
 $text['label-reference']['uk-ua'] = "посилання";
 
 $text['label-parent_domain']['en-us'] = "Parent Domain";
+$text['label-parent_domain']['en-gb'] = "Parent Domain";
 $text['label-parent_domain']['ar-eg'] = "";
 $text['label-parent_domain']['de-at'] = "Übergeordnete Domain"; //copied from de-de
 $text['label-parent_domain']['de-ch'] = "Übergeordnete Domain"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-parent_domain']['sv-se'] = "Överordnad Domän";
 $text['label-parent_domain']['uk-ua'] = "Батьківський домен";
 
 $text['label-other']['en-us'] = "Other";
+$text['label-other']['en-gb'] = "Other";
 $text['label-other']['ar-eg'] = "";
 $text['label-other']['de-at'] = "Andere"; //copied from de-de
 $text['label-other']['de-ch'] = "Andere"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-other']['sv-se'] = "Annat";
 $text['label-other']['uk-ua'] = "";
 
 $text['label-none']['en-us'] = "None";
+$text['label-none']['en-gb'] = "None";
 $text['label-none']['ar-eg'] = "لا شيء";
 $text['label-none']['de-at'] = "Keiner"; //copied from de-de
 $text['label-none']['de-ch'] = "Keiner"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-none']['sv-se'] = "Ingen";
 $text['label-none']['uk-ua'] = "жоден";
 
 $text['label-manage']['en-us'] = "Manage";
+$text['label-manage']['en-gb'] = "Manage";
 $text['label-manage']['ar-eg'] = "";
 $text['label-manage']['de-at'] = "Verwalten"; //copied from de-de
 $text['label-manage']['de-ch'] = "Verwalten"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-manage']['sv-se'] = "Hantera";
 $text['label-manage']['uk-ua'] = "Керувати";
 
 $text['label-left']['en-us'] = "Left";
+$text['label-left']['en-gb'] = "Left";
 $text['label-left']['ar-eg'] = "اليسار";
 $text['label-left']['de-at'] = "Links"; //copied from de-de
 $text['label-left']['de-ch'] = "Links"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-left']['sv-se'] = "Vänster";
 $text['label-left']['uk-ua'] = "лівий";
 
 $text['label-inline']['en-us'] = "Inline";
+$text['label-inline']['en-gb'] = "Inline";
 $text['label-inline']['ar-eg'] = "في النسق";
 $text['label-inline']['de-at'] = "Inline"; //copied from de-de
 $text['label-inline']['de-ch'] = "Inline"; //copied from de-de
@@ -382,6 +401,7 @@ $text['label-inline']['sv-se'] = "I kö";
 $text['label-inline']['uk-ua'] = "В лінію";
 
 $text['label-image']['en-us'] = "Image";
+$text['label-image']['en-gb'] = "Image";
 $text['label-image']['ar-eg'] = "صورة";
 $text['label-image']['de-at'] = "Bild"; //copied from de-de
 $text['label-image']['de-ch'] = "Bild"; //copied from de-de
@@ -402,6 +422,7 @@ $text['label-image']['sv-se'] = "Bild";
 $text['label-image']['uk-ua'] = "зображення";
 
 $text['label-fixed']['en-us'] = "Fixed";
+$text['label-fixed']['en-gb'] = "Fixed";
 $text['label-fixed']['ar-eg'] = "ثابت";
 $text['label-fixed']['de-at'] = "Fest"; //copied from de-de
 $text['label-fixed']['de-ch'] = "Fest"; //copied from de-de
@@ -422,6 +443,7 @@ $text['label-fixed']['sv-se'] = "Fast";
 $text['label-fixed']['uk-ua'] = "фіксований";
 
 $text['label-side']['en-us'] = "Side";
+$text['label-side']['en-gb'] = "Side";
 $text['label-side']['ar-eg'] = "Side";
 $text['label-side']['de-at'] = "Side";
 $text['label-side']['de-ch'] = "Side";
@@ -442,6 +464,7 @@ $text['label-side']['sv-se'] = "Side";
 $text['label-side']['uk-ua'] = "Side";
 
 $text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['en-gb'] = "Domain";
 $text['label-domain']['ar-eg'] = "";
 $text['label-domain']['de-at'] = "Domain"; //copied from de-de
 $text['label-domain']['de-ch'] = "Domain"; //copied from de-de
@@ -462,6 +485,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 
 $text['label-center']['en-us'] = "Center";
+$text['label-center']['en-gb'] = "Center";
 $text['label-center']['ar-eg'] = "مركز";
 $text['label-center']['de-at'] = "Mitte"; //copied from de-de
 $text['label-center']['de-ch'] = "Mitte"; //copied from de-de
@@ -482,6 +506,7 @@ $text['label-center']['sv-se'] = "Centrum";
 $text['label-center']['uk-ua'] = "центр";
 
 $text['label-bottom']['en-us'] = "Bottom";
+$text['label-bottom']['en-gb'] = "Bottom";
 $text['label-bottom']['ar-eg'] = "أسفل";
 $text['label-bottom']['de-at'] = "Unten"; //copied from de-de
 $text['label-bottom']['de-ch'] = "Unten"; //copied from de-de
@@ -502,6 +527,7 @@ $text['label-bottom']['sv-se'] = "Botten";
 $text['label-bottom']['uk-ua'] = "дно";
 
 $text['label-24-hour']['en-us'] = "24-Hour";
+$text['label-24-hour']['en-gb'] = "24-Hour";
 $text['label-24-hour']['ar-eg'] = "24 ساعة";
 $text['label-24-hour']['de-at'] = "24 Stunden"; //copied from de-de
 $text['label-24-hour']['de-ch'] = "24 Stunden"; //copied from de-de
@@ -522,6 +548,7 @@ $text['label-24-hour']['sv-se'] = "24-timmars";
 $text['label-24-hour']['uk-ua'] = "24-годинний";
 
 $text['label-12-hour']['en-us'] = "12-Hour";
+$text['label-12-hour']['en-gb'] = "12-Hour";
 $text['label-12-hour']['ar-eg'] = "12 ساعة";
 $text['label-12-hour']['de-at'] = "12 Stunden"; //copied from de-de
 $text['label-12-hour']['de-ch'] = "12 Stunden"; //copied from de-de
@@ -542,6 +569,7 @@ $text['label-12-hour']['sv-se'] = "12-timmars";
 $text['label-12-hour']['uk-ua'] = "12-годинний";
 
 $text['header-settings']['en-us'] = "Settings";
+$text['header-settings']['en-gb'] = "Settings";
 $text['header-settings']['ar-eg'] = "";
 $text['header-settings']['de-at'] = "Einstellungen"; //copied from de-de
 $text['header-settings']['de-ch'] = "Einstellungen"; //copied from de-de
@@ -562,6 +590,7 @@ $text['header-settings']['sv-se'] = "Inställning";
 $text['header-settings']['uk-ua'] = "Налаштування";
 
 $text['header-domains']['en-us'] = "Domains";
+$text['header-domains']['en-gb'] = "Domains";
 $text['header-domains']['ar-eg'] = "";
 $text['header-domains']['de-at'] = "Domains"; //copied from de-de
 $text['header-domains']['de-ch'] = "Domains"; //copied from de-de
@@ -582,6 +611,7 @@ $text['header-domains']['sv-se'] = "Domäner";
 $text['header-domains']['uk-ua'] = "Домени";
 
 $text['header-domain_setting-edit']['en-us'] = "Domain Setting";
+$text['header-domain_setting-edit']['en-gb'] = "Domain Setting";
 $text['header-domain_setting-edit']['ar-eg'] = "";
 $text['header-domain_setting-edit']['de-at'] = "Domain Einstellungen"; //copied from de-de
 $text['header-domain_setting-edit']['de-ch'] = "Domain Einstellungen"; //copied from de-de
@@ -602,6 +632,7 @@ $text['header-domain_setting-edit']['sv-se'] = "Domän Inställning";
 $text['header-domain_setting-edit']['uk-ua'] = "Налаштування домену";
 
 $text['header-domain_setting-add']['en-us'] = "Domain Setting Add";
+$text['header-domain_setting-add']['en-gb'] = "Domain Setting Add";
 $text['header-domain_setting-add']['ar-eg'] = "";
 $text['header-domain_setting-add']['de-at'] = "Domain Einstellungen hinzufügen"; //copied from de-de
 $text['header-domain_setting-add']['de-ch'] = "Domain Einstellungen hinzufügen"; //copied from de-de
@@ -622,6 +653,7 @@ $text['header-domain_setting-add']['sv-se'] = "Lägg Till Domän Inställning";
 $text['header-domain_setting-add']['uk-ua'] = "Параметри домену";
 
 $text['description-setting_enabled']['en-us'] = "Set the status of this default setting.";
+$text['description-setting_enabled']['en-gb'] = "Set the status of this default setting.";
 $text['description-setting_enabled']['ar-eg'] = "";
 $text['description-setting_enabled']['de-at'] = "Setzen Sie den Status dieser Standardeinstellung."; //copied from de-de
 $text['description-setting_enabled']['de-ch'] = "Setzen Sie den Status dieser Standardeinstellung."; //copied from de-de
@@ -642,6 +674,7 @@ $text['description-setting_enabled']['sv-se'] = "Ange status på denna standard 
 $text['description-setting_enabled']['uk-ua'] = "Встановіть стан цього параметра за замовчуванням.";
 
 $text['description-parent_domain']['en-us'] = "Set the parent domain.";
+$text['description-parent_domain']['en-gb'] = "Set the parent domain.";
 $text['description-parent_domain']['ar-eg'] = "";
 $text['description-parent_domain']['de-at'] = "Setzen Sie die übergeordnete Domain."; //copied from de-de
 $text['description-parent_domain']['de-ch'] = "Setzen Sie die übergeordnete Domain."; //copied from de-de
@@ -662,6 +695,7 @@ $text['description-parent_domain']['sv-se'] = "Ange Överordan Domän.";
 $text['description-parent_domain']['uk-ua'] = "Вкажіть батьківський домен";
 
 $text['description-order']['en-us'] = "Set the order for this array element.";
+$text['description-order']['en-gb'] = "Set the order for this array element.";
 $text['description-order']['ar-eg'] = "";
 $text['description-order']['de-at'] = "Wählen Sie die Reihenfolge des Array Elements."; //copied from de-de
 $text['description-order']['de-ch'] = "Wählen Sie die Reihenfolge des Array Elements."; //copied from de-de
@@ -682,6 +716,7 @@ $text['description-order']['sv-se'] = "Ställ in ordningen för detta element.";
 $text['description-order']['uk-ua'] = "Вкажіть порядок для масиву елементів";
 
 $text['description-name']['en-us'] = "Enter the name of the domain.";
+$text['description-name']['en-gb'] = "Enter the name of the domain.";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Geben Sie den Namen dieser Domain an"; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen dieser Domain an"; //copied from de-de
@@ -702,6 +737,7 @@ $text['description-name']['sv-se'] = "Ange namn på Domänen.";
 $text['description-name']['uk-ua'] = "Вкажіть назву домену";
 
 $text['description-domains']['en-us'] = "Control the list of domains to manage.";
+$text['description-domains']['en-gb'] = "Control the list of domains to manage.";
 $text['description-domains']['ar-eg'] = "";
 $text['description-domains']['de-at'] = "Eine Liste aller Domains."; //copied from de-de
 $text['description-domains']['de-ch'] = "Eine Liste aller Domains."; //copied from de-de
@@ -722,6 +758,7 @@ $text['description-domains']['sv-se'] = "Kontrollera lista med Domäner att hant
 $text['description-domains']['uk-ua'] = "Список доменів для керування";
 
 $text['description-domain_setting-edit']['en-us'] = "Edit a setting for this domain.";
+$text['description-domain_setting-edit']['en-gb'] = "Edit a setting for this domain.";
 $text['description-domain_setting-edit']['ar-eg'] = "";
 $text['description-domain_setting-edit']['de-at'] = "Eine Einstellung für diese Domain ändern."; //copied from de-de
 $text['description-domain_setting-edit']['de-ch'] = "Eine Einstellung für diese Domain ändern."; //copied from de-de
@@ -742,6 +779,7 @@ $text['description-domain_setting-edit']['sv-se'] = "Ändra en inställning för
 $text['description-domain_setting-edit']['uk-ua'] = "Редагування параметрів для домену";
 
 $text['description-domain_setting-add']['en-us'] = "Add a setting for this domain.";
+$text['description-domain_setting-add']['en-gb'] = "Add a setting for this domain.";
 $text['description-domain_setting-add']['ar-eg'] = "";
 $text['description-domain_setting-add']['de-at'] = "Eine Einstellung für diese Domain hinzufügen."; //copied from de-de
 $text['description-domain_setting-add']['de-ch'] = "Eine Einstellung für diese Domain hinzufügen."; //copied from de-de
@@ -762,6 +800,7 @@ $text['description-domain_setting-add']['sv-se'] = "Lägg Till en inställning f
 $text['description-domain_setting-add']['uk-ua'] = "Додавання параметра для домену";
 
 $text['description-domain_enabled']['en-us'] = "Set the status of the domain.";
+$text['description-domain_enabled']['en-gb'] = "Set the status of the domain.";
 $text['description-domain_enabled']['ar-eg'] = "";
 $text['description-domain_enabled']['de-at'] = "Den Status der Domain setzen."; //copied from de-de
 $text['description-domain_enabled']['de-ch'] = "Den Status der Domain setzen."; //copied from de-de
@@ -782,6 +821,7 @@ $text['description-domain_enabled']['sv-se'] = "Ange status för Domänen.";
 $text['description-domain_enabled']['uk-ua'] = "Вкажіть стан домену";
 
 $text['description-domain-edit']['en-us'] = "Edit the details of this domain.";
+$text['description-domain-edit']['en-gb'] = "Edit the details of this domain.";
 $text['description-domain-edit']['ar-eg'] = "";
 $text['description-domain-edit']['de-at'] = "Die Details dieser Domain ändern."; //copied from de-de
 $text['description-domain-edit']['de-ch'] = "Die Details dieser Domain ändern."; //copied from de-de
@@ -802,6 +842,7 @@ $text['description-domain-edit']['sv-se'] = "Ändra detaljer för denna Domän."
 $text['description-domain-edit']['uk-ua'] = "Редагування деталей домену";
 
 $text['description-domain-add']['en-us'] = "Enter the domain details below.";
+$text['description-domain-add']['en-gb'] = "Enter the domain details below.";
 $text['description-domain-add']['ar-eg'] = "";
 $text['description-domain-add']['de-at'] = "Geben Sie die Domain Details unten an."; //copied from de-de
 $text['description-domain-add']['de-ch'] = "Geben Sie die Domain Details unten an."; //copied from de-de

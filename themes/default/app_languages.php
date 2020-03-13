@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['theme-label-logout']['en-us'] = "Logout";
+$text['theme-label-logout']['en-gb'] = "Logout";
 $text['theme-label-logout']['ar-eg'] = "";
 $text['theme-label-logout']['de-at'] = "Abmelden"; //copied from de-de
 $text['theme-label-logout']['de-ch'] = "Abmelden"; //copied from de-de
@@ -24,6 +25,7 @@ $text['theme-label-logout']['uk-ua'] = "вийти";
 $text['theme-label-logout']['tr-tr'] = "Oturumu Kapat";
 
 $text['theme-confirm-logout']['en-us'] = "Do you really want to logout?";
+$text['theme-confirm-logout']['en-gb'] = "Do you really want to logout?";
 $text['theme-confirm-logout']['ar-eg'] = "";
 $text['theme-confirm-logout']['de-at'] = "Möchten Sie sich wirklich abmelden?"; //copied from de-de
 $text['theme-confirm-logout']['de-ch'] = "Möchten Sie sich wirklich abmelden?"; //copied from de-de
@@ -46,6 +48,7 @@ $text['theme-confirm-logout']['uk-ua'] = "Ви дійсно хочете вий�
 $text['theme-confirm-logout']['tr-tr'] = "Çıkmak istediğinize emin misiniz?";
 
 $text['theme-label-open_selector']['en-us'] = "Domain Selector [ESC]";
+$text['theme-label-open_selector']['en-gb'] = "Domain Selector [ESC]";
 $text['theme-label-open_selector']['ar-eg'] = "";
 $text['theme-label-open_selector']['de-at'] = "Dömänen Auswählen [ESC]"; //copied from de-de
 $text['theme-label-open_selector']['de-ch'] = "Dömänen Auswählen [ESC]"; //copied from de-de
@@ -68,6 +71,7 @@ $text['theme-label-open_selector']['uk-ua'] = "Виберіть домен";
 $text['theme-label-open_selector']['tr-tr'] = "Domain Seçici [ESC]";
 
 $text['theme-title-domains']['en-us'] = "Domains";
+$text['theme-title-domains']['en-gb'] = "Domains";
 $text['theme-title-domains']['ar-eg'] = "";
 $text['theme-title-domains']['de-at'] = "Domänen"; //copied from de-de
 $text['theme-title-domains']['de-ch'] = "Domänen"; //copied from de-de
@@ -90,6 +94,7 @@ $text['theme-title-domains']['uk-ua'] = "Домени";
 $text['theme-title-domains']['tr-tr'] = "Alan Adları";
 
 $text['theme-button-close']['en-us'] = "Close";
+$text['theme-button-close']['en-gb'] = "Close";
 $text['theme-button-close']['ar-eg'] = "";
 $text['theme-button-close']['de-at'] = "Schließen"; //copied from de-de
 $text['theme-button-close']['de-ch'] = "Schließen"; //copied from de-de
@@ -112,6 +117,7 @@ $text['theme-button-close']['uk-ua'] = "Близько";
 $text['theme-button-close']['tr-tr'] = "Kapat";
 
 $text['theme-label-search']['en-us'] = "Search...";
+$text['theme-label-search']['en-gb'] = "Search...";
 $text['theme-label-search']['ar-eg'] = "";
 $text['theme-label-search']['de-at'] = "Suchen..."; //copied from de-de
 $text['theme-label-search']['de-ch'] = "Suchen..."; //copied from de-de
@@ -134,6 +140,7 @@ $text['theme-label-search']['uk-ua'] = "Пошук...";
 $text['theme-label-search']['tr-tr'] = "Arama...";
 
 $text['theme-label-copyright']['en-us'] = "Copyright";
+$text['theme-label-copyright']['en-gb'] = "Copyright";
 $text['theme-label-copyright']['ar-eg'] = "";
 $text['theme-label-copyright']['de-at'] = "Urheberrecht"; //copied from de-de
 $text['theme-label-copyright']['de-ch'] = "Urheberrecht"; //copied from de-de
@@ -156,6 +163,7 @@ $text['theme-label-copyright']['uk-ua'] = "";
 $text['theme-label-copyright']['tr-tr'] = "Copyright";
 
 $text['theme-label-all_rights_reserved']['en-us'] = "All rights reserved.";
+$text['theme-label-all_rights_reserved']['en-gb'] = "All rights reserved.";
 $text['theme-label-all_rights_reserved']['ar-eg'] = "";
 $text['theme-label-all_rights_reserved']['de-at'] = "Alle Rechte vorbehalten"; //copied from de-de
 $text['theme-label-all_rights_reserved']['de-ch'] = "Alle Rechte vorbehalten"; //copied from de-de
@@ -178,6 +186,7 @@ $text['theme-label-all_rights_reserved']['uk-ua'] = "";
 $text['theme-label-all_rights_reserved']['tr-tr'] = "Tüm hakları saklıdır.";
 
 $text['theme-label-user']['en-us'] = "User";
+$text['theme-label-user']['en-gb'] = "User";
 $text['theme-label-user']['ar-eg'] = "";
 $text['theme-label-user']['de-at'] = "Benutzer"; //copied from de-de
 $text['theme-label-user']['de-ch'] = "Benutzer"; //copied from de-de
@@ -200,6 +209,7 @@ $text['theme-label-user']['uk-ua'] = "Користувачі";
 $text['theme-label-user']['tr-tr'] = "Користувачі";
 
 $text['theme-label-domain']['en-us'] = "Domain";
+$text['theme-label-domain']['en-gb'] = "Domain";
 $text['theme-label-domain']['ar-eg'] = "النطاق";
 $text['theme-label-domain']['de-at'] = "Domäne"; //copied from de-de
 $text['theme-label-domain']['de-ch'] = "Domäne"; //copied from de-de

@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-call-block']['en-us'] = "Call Block";
+$text['title-call-block']['en-gb'] = "Call Block";
 $text['title-call-block']['ar-eg'] = "حظر المكالمات";
 $text['title-call-block']['de-at'] = "Sperrlisten"; //copied from de-de
 $text['title-call-block']['de-ch'] = "Sperrlisten"; //copied from de-de
@@ -23,6 +24,7 @@ $text['title-call-block']['sv-se'] = "Blockera Samtal";
 $text['title-call-block']['uk-ua'] = "Блокування дзвінків";
 
 $text['heading-recent_calls']['en-us'] = "Recent Calls";
+$text['heading-recent_calls']['en-gb'] = "Recent Calls";
 $text['heading-recent_calls']['ar-eg'] = "";
 $text['heading-recent_calls']['de-at'] = "Kürzliche Anrufe"; //copied from de-de
 $text['heading-recent_calls']['de-ch'] = "Kürzliche Anrufe"; //copied from de-de
@@ -44,6 +46,7 @@ $text['heading-recent_calls']['sv-se'] = "Senaste Samtal";
 $text['heading-recent_calls']['uk-ua'] = "Останні дзвінки";
 
 $text['heading-block_recent_calls']['en-us'] = "Block Recent Calls";
+$text['heading-block_recent_calls']['en-gb'] = "Block Recent Calls";
 $text['heading-block_recent_calls']['ar-eg'] = "";
 $text['heading-block_recent_calls']['de-at'] = "Kürzliche Anrufe Blockieren"; //copied from de-de
 $text['heading-block_recent_calls']['de-ch'] = "Kürzliche Anrufe Blockieren"; //copied from de-de
@@ -65,6 +68,7 @@ $text['heading-block_recent_calls']['sv-se'] = "Blockera Senaste Samtal";
 $text['heading-block_recent_calls']['uk-ua'] = "Блокувати недавній дзвінок";
 
 $text['label-update-complete']['en-us'] = "Update Complete";
+$text['label-update-complete']['en-gb'] = "Update Complete";
 $text['label-update-complete']['ar-eg'] = "اكتمال التحديث";
 $text['label-update-complete']['de-at'] = "Aktualisierung abgeschlossen"; //copied from de-de
 $text['label-update-complete']['de-ch'] = "Aktualisierung abgeschlossen"; //copied from de-de
@@ -86,6 +90,7 @@ $text['label-update-complete']['sv-se'] = "Uppdatering Klar";
 $text['label-update-complete']['uk-ua'] = "Оновлено";
 
 $text['label-reject']['en-us'] = "Reject";
+$text['label-reject']['en-gb'] = "Reject";
 $text['label-reject']['ar-eg'] = "رفض";
 $text['label-reject']['de-at'] = "Zurückweisen"; //copied from de-de
 $text['label-reject']['de-ch'] = "Zurückweisen"; //copied from de-de
@@ -107,6 +112,7 @@ $text['label-reject']['sv-se'] = "Neka";
 $text['label-reject']['uk-ua'] = "Відхилити";
 
 $text['label-provide-number']['en-us'] = "Please provide: Number";
+$text['label-provide-number']['en-gb'] = "Please provide: Number";
 $text['label-provide-number']['ar-eg'] = "من فضلك أدخل: الرقم";
 $text['label-provide-number']['de-at'] = "Bitte geben Sie die Nummer an"; //copied from de-de
 $text['label-provide-number']['de-ch'] = "Bitte geben Sie die Nummer an"; //copied from de-de
@@ -128,6 +134,7 @@ $text['label-provide-number']['sv-se'] = "Ange: Nummer";
 $text['label-provide-number']['uk-ua'] = "Введіть номер";
 
 $text['label-provide-name']['en-us'] = "Please provide: Name";
+$text['label-provide-name']['en-gb'] = "Please provide: Name";
 $text['label-provide-name']['ar-eg'] = "من فضلك أدخل: الأسم";
 $text['label-provide-name']['de-at'] = "Bitte geben Sie den Namen an"; //copied from de-de
 $text['label-provide-name']['de-ch'] = "Bitte geben Sie den Namen an"; //copied from de-de
@@ -149,6 +156,7 @@ $text['label-provide-name']['sv-se'] = "Ange: Namn";
 $text['label-provide-name']['uk-ua'] = "Введіть назву";
 
 $text['label-provide-enabled']['en-us'] = "Please provide: Enabled";
+$text['label-provide-enabled']['en-gb'] = "Please provide: Enabled";
 $text['label-provide-enabled']['ar-eg'] = "";
 $text['label-provide-enabled']['de-at'] = "Bitte geben Sie folgendes an: Aktiv"; //copied from de-de
 $text['label-provide-enabled']['de-ch'] = "Bitte geben Sie folgendes an: Aktiv"; //copied from de-de
@@ -170,6 +178,7 @@ $text['label-provide-enabled']['sv-se'] = "Ange: Aktiverad";
 $text['label-provide-enabled']['uk-ua'] = "Включити/відключити";
 
 $text['label-number']['en-us'] = "Number";
+$text['label-number']['en-gb'] = "Number";
 $text['label-number']['ar-eg'] = "رقم";
 $text['label-number']['de-at'] = "Nummer"; //copied from de-de
 $text['label-number']['de-ch'] = "Nummer"; //copied from de-de
@@ -191,6 +200,7 @@ $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['uk-ua'] = "Номер";
 
 $text['label-message']['en-us'] = "Message";
+$text['label-message']['en-gb'] = "Message";
 $text['label-message']['ar-eg'] = "رسالة";
 $text['label-message']['de-at'] = "Nachricht"; //copied from de-de
 $text['label-message']['de-ch'] = "Nachricht"; //copied from de-de
@@ -212,6 +222,7 @@ $text['label-message']['sv-se'] = "Meddelande";
 $text['label-message']['uk-ua'] = "Повідомлення";
 
 $text['label-local']['en-us'] = "Local";
+$text['label-local']['en-gb'] = "Local";
 $text['label-local']['ar-eg'] = "محلي";
 $text['label-local']['de-at'] = "Lokal"; //copied from de-de
 $text['label-local']['de-ch'] = "Lokal"; //copied from de-de
@@ -233,6 +244,7 @@ $text['label-local']['sv-se'] = "Lokal";
 $text['label-local']['uk-ua'] = "Місцевий";
 
 $text['label-inbound']['en-us'] = "Inbound";
+$text['label-inbound']['en-gb'] = "Inbound";
 $text['label-inbound']['ar-eg'] = "";
 $text['label-inbound']['de-at'] = "Eingehend"; //copied from de-de
 $text['label-inbound']['de-ch'] = "Eingehend"; //copied from de-de
@@ -254,6 +266,7 @@ $text['label-inbound']['sv-se'] = "Inkommande";
 $text['label-inbound']['uk-ua'] = "Вихідний";
 
 $text['label-edit-note']['en-us'] = "Block calls from a number. Edit the name and enable/disable below.";
+$text['label-edit-note']['en-gb'] = "Block calls from a number. Edit the name and enable/disable below.";
 $text['label-edit-note']['ar-eg'] = "";
 $text['label-edit-note']['de-at'] = "Anrufe von einer Rufnummer sperren. Bearbeiten Sie den Namen und aktivieren/deaktivieren Sie diesen unten."; //copied from de-de
 $text['label-edit-note']['de-ch'] = "Anrufe von einer Rufnummer sperren. Bearbeiten Sie den Namen und aktivieren/deaktivieren Sie diesen unten."; //copied from de-de
@@ -275,6 +288,7 @@ $text['label-edit-note']['sv-se'] = "Blockera samtal från nummer. Editera namn 
 $text['label-edit-note']['uk-ua'] = "Блокувати дзвінки з номера. Змініть ім'я і включіть/відключіть нижче.";
 
 $text['label-edit-edit']['en-us'] = "Call Block";
+$text['label-edit-edit']['en-gb'] = "Call Block";
 $text['label-edit-edit']['ar-eg'] = "";
 $text['label-edit-edit']['de-at'] = "Sperrlisten"; //copied from de-de
 $text['label-edit-edit']['de-ch'] = "Sperrlisten"; //copied from de-de
@@ -296,6 +310,7 @@ $text['label-edit-edit']['sv-se'] = "Blockera Samtal";
 $text['label-edit-edit']['uk-ua'] = "Блокування дзвінків";
 
 $text['label-edit-add']['en-us'] = "Call Block";
+$text['label-edit-add']['en-gb'] = "Call Block";
 $text['label-edit-add']['ar-eg'] = "حظر المكالمات";
 $text['label-edit-add']['de-at'] = "Sperrlisten"; //copied from de-de
 $text['label-edit-add']['de-ch'] = "Sperrlisten"; //copied from de-de
@@ -317,6 +332,7 @@ $text['label-edit-add']['sv-se'] = "Blockera Samtal";
 $text['label-edit-add']['uk-ua'] = "Блокування дзвінків";
 
 $text['label-duration']['en-us'] = "Duration";
+$text['label-duration']['en-gb'] = "Duration";
 $text['label-duration']['ar-eg'] = "المدة";
 $text['label-duration']['de-at'] = "Dauer"; //copied from de-de
 $text['label-duration']['de-ch'] = "Dauer"; //copied from de-de
@@ -338,6 +354,7 @@ $text['label-duration']['sv-se'] = "Samtalstid";
 $text['label-duration']['uk-ua'] = "Тривалість";
 
 $text['label-delete-complete']['en-us'] = "Delete Complete";
+$text['label-delete-complete']['en-gb'] = "Delete Complete";
 $text['label-delete-complete']['ar-eg'] = "اكتمال المسح";
 $text['label-delete-complete']['de-at'] = "Erfolgreich gelöscht"; //copied from de-de
 $text['label-delete-complete']['de-ch'] = "Erfolgreich gelöscht"; //copied from de-de
@@ -359,6 +376,7 @@ $text['label-delete-complete']['sv-se'] = "Borttagning Klar";
 $text['label-delete-complete']['uk-ua'] = "Видалено";
 
 $text['label-date-added']['en-us'] = "Date Added";
+$text['label-date-added']['en-gb'] = "Date Added";
 $text['label-date-added']['ar-eg'] = "تم اضافة التاريخ";
 $text['label-date-added']['de-at'] = "Datum hinzugefügt"; //copied from de-de
 $text['label-date-added']['de-ch'] = "Datum hinzugefügt"; //copied from de-de
@@ -380,6 +398,7 @@ $text['label-date-added']['sv-se'] = "Datum Tillagt";
 $text['label-date-added']['uk-ua'] = "Додано";
 
 $text['label-count']['en-us'] = "Count";
+$text['label-count']['en-gb'] = "Count";
 $text['label-count']['ar-eg'] = "";
 $text['label-count']['de-at'] = "Zähler"; //copied from de-de
 $text['label-count']['de-ch'] = "Zähler"; //copied from de-de
@@ -401,6 +420,7 @@ $text['label-count']['sv-se'] = "Räkna";
 $text['label-count']['uk-ua'] = "Кількість";
 
 $text['label-called-on']['en-us'] = "Called on";
+$text['label-called-on']['en-gb'] = "Called on";
 $text['label-called-on']['ar-eg'] = "تم الأتصال علي";
 $text['label-called-on']['de-at'] = "Anruf am"; //copied from de-de
 $text['label-called-on']['de-ch'] = "Anruf am"; //copied from de-de
@@ -422,6 +442,7 @@ $text['label-called-on']['sv-se'] = "Ringdes på";
 $text['label-called-on']['uk-ua'] = "Дзвінок здійснено";
 
 $text['label-busy']['en-us'] = "Busy";
+$text['label-busy']['en-gb'] = "Busy";
 $text['label-busy']['ar-eg'] = "مشغول";
 $text['label-busy']['de-at'] = "Besetzt"; //copied from de-de
 $text['label-busy']['de-ch'] = "Besetzt"; //copied from de-de
@@ -443,6 +464,7 @@ $text['label-busy']['sv-se'] = "Upptagen";
 $text['label-busy']['uk-ua'] = "Зайнято";
 
 $text['label-hold']['en-us'] = "Hold";
+$text['label-hold']['en-gb'] = "Hold";
 $text['label-hold']['ar-eg'] = "";
 $text['label-hold']['de-at'] = "Halten"; //copied from de-de
 $text['label-hold']['de-ch'] = "Halten"; //copied from de-de
@@ -464,6 +486,7 @@ $text['label-hold']['sv-se'] = "Vänt";
 $text['label-hold']['uk-ua'] = "";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
+$text['label-voicemail']['en-gb'] = "Voicemail";
 $text['label-voicemail']['ar-eg'] = "";
 $text['label-voicemail']['de-at'] = "Mailbox"; //copied from de-de
 $text['label-voicemail']['de-ch'] = "Mailbox"; //copied from de-de
@@ -485,6 +508,7 @@ $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-voicemail']['uk-ua'] = "Голосова пошта";
 
 $text['label-add-note']['en-us'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
+$text['label-add-note']['en-gb'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
 $text['label-add-note']['ar-eg'] = "";
 $text['label-add-note']['de-at'] = "Anrufe einer Rufnummer sperren. Wählen Sie eine Nummer von der Liste oder geben Sie eine Nummer und einen Name ein. Aktivieren Sie die Sperrliste unten."; //copied from de-de
 $text['label-add-note']['de-ch'] = "Anrufe einer Rufnummer sperren. Wählen Sie eine Nummer von der Liste oder geben Sie eine Nummer und einen Name ein. Aktivieren Sie die Sperrliste unten."; //copied from de-de
@@ -506,6 +530,7 @@ $text['label-add-note']['sv-se'] = "Blockera samtal från ett nummer. Välj anti
 $text['label-add-note']['uk-ua'] = "Блокувати дзвінки з номера. Або вибрати номер зі списку вище або введіть номер, ім'я і включити нижче.";
 
 $text['label-add-complete']['en-us'] = "Add Complete";
+$text['label-add-complete']['en-gb'] = "Add Complete";
 $text['label-add-complete']['ar-eg'] = "تمت الأضافة";
 $text['label-add-complete']['de-at'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['label-add-complete']['de-ch'] = "Erfolgreich hinzugefügt"; //copied from de-de
@@ -527,6 +552,7 @@ $text['label-add-complete']['sv-se'] = "Tillagd";
 $text['label-add-complete']['uk-ua'] = "Додано";
 
 $text['label-action']['en-us'] = "Action";
+$text['label-action']['en-gb'] = "Action";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-action']['de-ch'] = "Aktion"; //copied from de-de
@@ -548,6 +574,7 @@ $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
 
 $text['description-call_block_name']['en-us'] = "Enter the Caller ID Name to block.";
+$text['description-call_block_name']['en-gb'] = "Enter the Caller ID Name to block.";
 $text['description-call_block_name']['ar-eg'] = "";
 $text['description-call_block_name']['de-at'] = "";
 $text['description-call_block_name']['de-ch'] = "";
@@ -569,6 +596,7 @@ $text['description-call_block_name']['sv-se'] = "";
 $text['description-call_block_name']['uk-ua'] = "";
 
 $text['description-call_block_number']['en-us'] = "Enter the Caller ID Number to block.";
+$text['description-call_block_number']['en-gb'] = "Enter the Caller ID Number to block.";
 $text['description-call_block_number']['ar-eg'] = "";
 $text['description-call_block_number']['de-at'] = "";
 $text['description-call_block_number']['de-ch'] = "";
@@ -590,6 +618,7 @@ $text['description-call_block_number']['sv-se'] = "";
 $text['description-call_block_number']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Select the extension to block.";
+$text['description-extension']['en-gb'] = "Select the extension to block.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "";
 $text['description-extension']['de-ch'] = "";
@@ -611,6 +640,7 @@ $text['description-extension']['sv-se'] = "";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-enable']['en-us'] = "Set to true to enable call blocking for this number.";
+$text['description-enable']['en-gb'] = "Set to true to enable call blocking for this number.";
 $text['description-enable']['ar-eg'] = "";
 $text['description-enable']['de-at'] = "Setzen Sie auf An, um die Sperrung für diese Nummer zu aktivieren."; //copied from de-de
 $text['description-enable']['de-ch'] = "Setzen Sie auf An, um die Sperrung für diese Nummer zu aktivieren."; //copied from de-de
@@ -632,6 +662,7 @@ $text['description-enable']['sv-se'] = "Välj Sann för att blockera detta numme
 $text['description-enable']['uk-ua'] = "Виберіть 'Так', щоб блокувати дзвінки з даного номера.";
 
 $text['description-call-block']['en-us'] = "A list of numbers from which to block calls.";
+$text['description-call-block']['en-gb'] = "A list of numbers from which to block calls.";
 $text['description-call-block']['ar-eg'] = "";
 $text['description-call-block']['de-at'] = "Eine Liste von Nummern die gesperrt werden sollen."; //copied from de-de
 $text['description-call-block']['de-ch'] = "Eine Liste von Nummern die gesperrt werden sollen."; //copied from de-de
@@ -653,6 +684,7 @@ $text['description-call-block']['sv-se'] = "En lista med nummer för blockering 
 $text['description-call-block']['uk-ua'] = "Список номерів, з яких блокуються дзвінки.";
 
 $text['description-action']['en-us'] = "Set an action for calls from this number.";
+$text['description-action']['en-gb'] = "Set an action for calls from this number.";
 $text['description-action']['ar-eg'] = "";
 $text['description-action']['de-at'] = "Wählen Sie eine Aktion für Anrufe von dieser Nummer."; //copied from de-de
 $text['description-action']['de-ch'] = "Wählen Sie eine Aktion für Anrufe von dieser Nummer."; //copied from de-de
@@ -674,6 +706,7 @@ $text['description-action']['sv-se'] = "Välj en aktion för samtal från detta 
 $text['description-action']['uk-ua'] = "Встановіть дію для дзвінків з цього номера.";
 
 $text['confirm-block']['en-us'] = "Do you really want to block this?";
+$text['confirm-block']['en-gb'] = "Do you really want to block this?";
 $text['confirm-block']['ar-eg'] = "Do you really want to block this?";
 $text['confirm-block']['de-at'] = "Do you really want to block this?";
 $text['confirm-block']['de-ch'] = "Do you really want to block this?";
@@ -696,6 +729,7 @@ $text['confirm-block']['uk-ua'] = "Do you really want to block this?";
 $text['confirm-block']['tr-tr'] = "Do you really want to block this?";
 
 $text['button-block']['en-us'] = "Block";
+$text['button-block']['en-gb'] = "Block";
 $text['button-block']['ar-eg'] = "Block";
 $text['button-block']['de-at'] = "Block";
 $text['button-block']['de-ch'] = "Block";

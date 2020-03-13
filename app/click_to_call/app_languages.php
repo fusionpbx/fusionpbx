@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['label-click2call']['en-us'] = "Click to Call";
+$text['label-click2call']['en-gb'] = "Click to Call";
 $text['label-click2call']['ar-eg'] = "";
 $text['label-click2call']['de-at'] = "Click to Call"; //copied from de-de
 $text['label-click2call']['de-ch'] = "Click to Call"; //copied from de-de
@@ -22,6 +23,7 @@ $text['label-click2call']['sv-se'] = "Klicka för att ringa";
 $text['label-click2call']['uk-ua'] = "";
 
 $text['desc-click2call']['en-us'] = "Provide the following information to make a call from the source number to the destination number.";
+$text['desc-click2call']['en-gb'] = "Provide the following information to make a call from the source number to the destination number.";
 $text['desc-click2call']['ar-eg'] = "";
 $text['desc-click2call']['de-at'] = "Geben Sie folgende Informationen an um einen Anruf von der Quellrufnummer zur Zielrufniummer her zu stellen"; //copied from de-de
 $text['desc-click2call']['de-ch'] = "Geben Sie folgende Informationen an um einen Anruf von der Quellrufnummer zur Zielrufniummer her zu stellen"; //copied from de-de
@@ -42,6 +44,7 @@ $text['desc-click2call']['sv-se'] = "Ange följande information för att ringa f
 $text['desc-click2call']['uk-ua'] = "";
 
 $text['label-src-caller-id-nam']['en-us'] = "Source Caller ID Name";
+$text['label-src-caller-id-nam']['en-gb'] = "Source Caller ID Name";
 $text['label-src-caller-id-nam']['ar-eg'] = "";
 $text['label-src-caller-id-nam']['de-at'] = "Quell Anruferkennung (Namen)"; //copied from de-de
 $text['label-src-caller-id-nam']['de-ch'] = "Quell Anruferkennung (Namen)"; //copied from de-de
@@ -62,6 +65,7 @@ $text['label-src-caller-id-nam']['sv-se'] = "Caller ID Namn på källa";
 $text['label-src-caller-id-nam']['uk-ua'] = "";
 
 $text['desc-src-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to your phone.";
+$text['desc-src-caller-id-nam']['en-gb'] = "Enter the Caller ID name to send to your phone.";
 $text['desc-src-caller-id-nam']['ar-eg'] = "";
 $text['desc-src-caller-id-nam']['de-at'] = "Geben Sie die Anruferkennung (Namen) ein, die an Ihr Telefon übermittelt werden soll."; //copied from de-de
 $text['desc-src-caller-id-nam']['de-ch'] = "Geben Sie die Anruferkennung (Namen) ein, die an Ihr Telefon übermittelt werden soll."; //copied from de-de
@@ -82,6 +86,7 @@ $text['desc-src-caller-id-nam']['sv-se'] = "Ange Caller ID Namn som skall skicka
 $text['desc-src-caller-id-nam']['uk-ua'] = "";
 
 $text['label-src-caller-id-num']['en-us'] = "Source Caller ID Number";
+$text['label-src-caller-id-num']['en-gb'] = "Source Caller ID Number";
 $text['label-src-caller-id-num']['ar-eg'] = "";
 $text['label-src-caller-id-num']['de-at'] = "Quell Anruferkennung (Nummer)"; //copied from de-de
 $text['label-src-caller-id-num']['de-ch'] = "Quell Anruferkennung (Nummer)"; //copied from de-de
@@ -102,6 +107,7 @@ $text['label-src-caller-id-num']['sv-se'] = "Källa Caller ID Nummer";
 $text['label-src-caller-id-num']['uk-ua'] = "";
 
 $text['desc-src-caller-id-num']['en-us'] = "Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).";
+$text['desc-src-caller-id-num']['en-gb'] = "Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).";
 $text['desc-src-caller-id-num']['ar-eg'] = "";
 $text['desc-src-caller-id-num']['de-at'] = " Geben Sie die Anruferkennung (Nummer) ein, die an Ihr Telefon übermittelt werden soll.(In der Regel ist diese identisch mit der Zielrufnummer)."; //copied from de-de
 $text['desc-src-caller-id-num']['de-ch'] = " Geben Sie die Anruferkennung (Nummer) ein, die an Ihr Telefon übermittelt werden soll.(In der Regel ist diese identisch mit der Zielrufnummer)."; //copied from de-de
@@ -122,6 +128,7 @@ $text['desc-src-caller-id-num']['sv-se'] = "Ange nummeret för nummerpresentatio
 $text['desc-src-caller-id-num']['uk-ua'] = "";
 
 $text['label-dest-caller-id-nam']['en-us'] = "Destination Caller ID Name";
+$text['label-dest-caller-id-nam']['en-gb'] = "Destination Caller ID Name";
 $text['label-dest-caller-id-nam']['ar-eg'] = "";
 $text['label-dest-caller-id-nam']['de-at'] = "Ziel Anruferkennung (Name)"; //copied from de-de
 $text['label-dest-caller-id-nam']['de-ch'] = "Ziel Anruferkennung (Name)"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-dest-caller-id-nam']['sv-se'] = "Destination Caller ID Nummer";
 $text['label-dest-caller-id-nam']['uk-ua'] = "";
 
 $text['desc-dest-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to the destination number.";
+$text['desc-dest-caller-id-nam']['en-gb'] = "Enter the Caller ID name to send to the destination number.";
 $text['desc-dest-caller-id-nam']['ar-eg'] = "";
 $text['desc-dest-caller-id-nam']['de-at'] = "Geben Sie die Anruferkennung (Name) ein, die an das Ziel übermittelt werden soll."; //copied from de-de
 $text['desc-dest-caller-id-nam']['de-ch'] = "Geben Sie die Anruferkennung (Name) ein, die an das Ziel übermittelt werden soll."; //copied from de-de
@@ -162,6 +170,7 @@ $text['desc-dest-caller-id-nam']['sv-se'] = "Ange Caller ID Namn som skall skick
 $text['desc-dest-caller-id-nam']['uk-ua'] = "";
 
 $text['label-dest-caller-id-num']['en-us'] = "Destination Caller ID Number";
+$text['label-dest-caller-id-num']['en-gb'] = "Destination Caller ID Number";
 $text['label-dest-caller-id-num']['ar-eg'] = "";
 $text['label-dest-caller-id-num']['de-at'] = "Ziel Anruferkennung (Nummer)"; //copied from de-de
 $text['label-dest-caller-id-num']['de-ch'] = "Ziel Anruferkennung (Nummer)"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-dest-caller-id-num']['sv-se'] = "Destination Caller ID Nummer";
 $text['label-dest-caller-id-num']['uk-ua'] = "";
 
 $text['desc-dest-caller-id-num']['en-us'] = "Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).";
+$text['desc-dest-caller-id-num']['en-gb'] = "Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).";
 $text['desc-dest-caller-id-num']['ar-eg'] = "";
 $text['desc-dest-caller-id-num']['de-at'] = "Geben Sie die Anruferkennung (Nummer) ein, die an das Ziel übermittelt werden soll (Normalerweise Ihre Rufnummer)."; //copied from de-de
 $text['desc-dest-caller-id-num']['de-ch'] = "Geben Sie die Anruferkennung (Nummer) ein, die an das Ziel übermittelt werden soll (Normalerweise Ihre Rufnummer)."; //copied from de-de
@@ -202,6 +212,7 @@ $text['desc-dest-caller-id-num']['sv-se'] = "Ange Caller ID nummret för att ski
 $text['desc-dest-caller-id-num']['uk-ua'] = "";
 
 $text['label-src-num']['en-us'] = "Source Number";
+$text['label-src-num']['en-gb'] = "Source Number";
 $text['label-src-num']['ar-eg'] = "";
 $text['label-src-num']['de-at'] = "Quell Rufnummer"; //copied from de-de
 $text['label-src-num']['de-ch'] = "Quell Rufnummer"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-src-num']['sv-se'] = "Nummer på källa";
 $text['label-src-num']['uk-ua'] = "";
 
 $text['desc-src-num']['en-us'] = "Enter your phone number. This can be an extension on the system, or another number (eg: mobile phone).";
+$text['desc-src-num']['en-gb'] = "Enter your phone number. This can be an extension on the system, or another number (eg: mobile phone).";
 $text['desc-src-num']['ar-eg'] = "";
 $text['desc-src-num']['de-at'] = "Geben Sie Ihre Rufnummer ein.Diese kann eine Nebenstelle auf dem System sein, oder eine andere Rufnummer (z.B. Ihre Mobilfunknummer)."; //copied from de-de
 $text['desc-src-num']['de-ch'] = "Geben Sie Ihre Rufnummer ein.Diese kann eine Nebenstelle auf dem System sein, oder eine andere Rufnummer (z.B. Ihre Mobilfunknummer)."; //copied from de-de
@@ -242,6 +254,7 @@ $text['desc-src-num']['sv-se'] = "Skriv in ditt telefonnummer. Detta kan vara en
 $text['desc-src-num']['uk-ua'] = "";
 
 $text['label-dest-num']['en-us'] = "Destination Number";
+$text['label-dest-num']['en-gb'] = "Destination Number";
 $text['label-dest-num']['ar-eg'] = "";
 $text['label-dest-num']['de-at'] = "Ziel Rufnummer"; //copied from de-de
 $text['label-dest-num']['de-ch'] = "Ziel Rufnummer"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-dest-num']['sv-se'] = "Destination Nummer";
 $text['label-dest-num']['uk-ua'] = "";
 
 $text['desc-dest-num']['en-us'] = "Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).";
+$text['desc-dest-num']['en-gb'] = "Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).";
 $text['desc-dest-num']['ar-eg'] = "";
 $text['desc-dest-num']['de-at'] = "Geben Sie die Zielnummer ein. Diese kann eine Nebenstelle auf dem System sein, eine andere Rufnummer, oder eine SIP URI. Sip URI's sind wie folgt einzugeben: 5551234567@voip.example.com:5080 (5080 für freeswitch, oder 5060 für andere Systeme)."; //copied from de-de
 $text['desc-dest-num']['de-ch'] = "Geben Sie die Zielnummer ein. Diese kann eine Nebenstelle auf dem System sein, eine andere Rufnummer, oder eine SIP URI. Sip URI's sind wie folgt einzugeben: 5551234567@voip.example.com:5080 (5080 für freeswitch, oder 5060 für andere Systeme)."; //copied from de-de
@@ -282,6 +296,7 @@ $text['desc-dest-num']['sv-se'] = "Ange numret som ska ringas. Detta kan vara en
 $text['desc-dest-num']['uk-ua'] = "";
 
 $text['label-auto-answer']['en-us'] = "Auto Answer";
+$text['label-auto-answer']['en-gb'] = "Auto Answer";
 $text['label-auto-answer']['ar-eg'] = "";
 $text['label-auto-answer']['de-at'] = "Automatische Rufannahme"; //copied from de-de
 $text['label-auto-answer']['de-ch'] = "Automatische Rufannahme"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-auto-answer']['sv-se'] = "Auto Svar";
 $text['label-auto-answer']['uk-ua'] = "";
 
 $text['desc-auto-answer']['en-us'] = "Select whether to enable auto answer.";
+$text['desc-auto-answer']['en-gb'] = "Select whether to enable auto answer.";
 $text['desc-auto-answer']['ar-eg'] = "";
 $text['desc-auto-answer']['de-at'] = "Wählen Sie, ob die automatische Rufannahme aktiviert werden soll."; //copied from de-de
 $text['desc-auto-answer']['de-ch'] = "Wählen Sie, ob die automatische Rufannahme aktiviert werden soll."; //copied from de-de
@@ -322,6 +338,7 @@ $text['desc-auto-answer']['sv-se'] = "Välj för att aktivera auto svara.";
 $text['desc-auto-answer']['uk-ua'] = "";
 
 $text['label-record']['en-us'] = "Record";
+$text['label-record']['en-gb'] = "Record";
 $text['label-record']['ar-eg'] = "";
 $text['label-record']['de-at'] = "Aufzeichnen"; //copied from de-de
 $text['label-record']['de-ch'] = "Aufzeichnen"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-record']['sv-se'] = "Spela In";
 $text['label-record']['uk-ua'] = "";
 
 $text['label-true']['en-us'] = "true";
+$text['label-true']['en-gb'] = "true";
 $text['label-true']['ar-eg'] = "";
 $text['label-true']['de-at'] = "ein"; //copied from de-de
 $text['label-true']['de-ch'] = "ein"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-true']['sv-se'] = "sann";
 $text['label-true']['uk-ua'] = "";
 
 $text['label-false']['en-us'] = "false";
+$text['label-false']['en-gb'] = "false";
 $text['label-false']['ar-eg'] = "";
 $text['label-false']['de-at'] = "aus"; //copied from de-de
 $text['label-false']['de-ch'] = "aus"; //copied from de-de
@@ -382,6 +401,7 @@ $text['label-false']['sv-se'] = "falsk";
 $text['label-false']['uk-ua'] = "";
 
 $text['desc-record']['en-us'] = "Select whether to record the call.";
+$text['desc-record']['en-gb'] = "Select whether to record the call.";
 $text['desc-record']['ar-eg'] = "";
 $text['desc-record']['de-at'] = "Wählen Sie, ob der Anruf aufgezeichnet werden soll."; //copied from de-de
 $text['desc-record']['de-ch'] = "Wählen Sie, ob der Anruf aufgezeichnet werden soll."; //copied from de-de
@@ -402,6 +422,7 @@ $text['desc-record']['sv-se'] = "Välj om samtalet skall spelas in.";
 $text['desc-record']['uk-ua'] = "";
 
 $text['label-ringback']['en-us'] = "Ring Back";
+$text['label-ringback']['en-gb'] = "Ring Back";
 $text['label-ringback']['ar-eg'] = "";
 $text['label-ringback']['de-at'] = "Rufton"; //copied from de-de
 $text['label-ringback']['de-ch'] = "Rufton"; //copied from de-de
@@ -422,6 +443,7 @@ $text['label-ringback']['sv-se'] = "Tillbakaringning";
 $text['label-ringback']['uk-ua'] = "";
 
 $text['desc-ringback']['en-us'] = "Defines what you will hear while destination is being called. The choices are music (music on hold) ring (ring tone).";
+$text['desc-ringback']['en-gb'] = "Defines what you will hear while destination is being called. The choices are music (music on hold) ring (ring tone).";
 $text['desc-ringback']['ar-eg'] = "";
 $text['desc-ringback']['de-at'] = "Geben Sie an, was Sie hören möchten, während die Verbindung aufgebaut wird. Zur Auswahl stehen musik (Wartemusik) oder Rufton"; //copied from de-de
 $text['desc-ringback']['de-ch'] = "Geben Sie an, was Sie hören möchten, während die Verbindung aufgebaut wird. Zur Auswahl stehen musik (Wartemusik) oder Rufton"; //copied from de-de
@@ -442,6 +464,7 @@ $text['desc-ringback']['sv-se'] = "Definierar vad du kommer att höra när desti
 $text['desc-ringback']['uk-ua'] = "";
 
 $text['opt-usring']['en-us'] = "us-ring";
+$text['opt-usring']['en-gb'] = "us-ring";
 $text['opt-usring']['ar-eg'] = "";
 $text['opt-usring']['de-at'] = "us-ring"; //copied from de-de
 $text['opt-usring']['de-ch'] = "us-ring"; //copied from de-de
@@ -462,6 +485,7 @@ $text['opt-usring']['sv-se'] = "us-ring";
 $text['opt-usring']['uk-ua'] = "";
 
 $text['opt-frring']['en-us'] = "fr-ring";
+$text['opt-frring']['en-gb'] = "fr-ring";
 $text['opt-frring']['ar-eg'] = "";
 $text['opt-frring']['de-at'] = "fr-ring"; //copied from de-de
 $text['opt-frring']['de-ch'] = "fr-ring"; //copied from de-de
@@ -482,6 +506,7 @@ $text['opt-frring']['sv-se'] = "fr-ring";
 $text['opt-frring']['uk-ua'] = "";
 
 $text['opt-ptring']['en-us'] = "pt-ring";
+$text['opt-ptring']['en-gb'] = "pt-ring";
 $text['opt-ptring']['ar-eg'] = "";
 $text['opt-ptring']['de-at'] = "pt-ring"; //copied from de-de
 $text['opt-ptring']['de-ch'] = "pt-ring"; //copied from de-de
@@ -502,6 +527,7 @@ $text['opt-ptring']['sv-se'] = "pt-ring";
 $text['opt-ptring']['uk-ua'] = "";
 
 $text['opt-ukring']['en-us'] = "uk-ring";
+$text['opt-ukring']['en-gb'] = "uk-ring";
 $text['opt-ukring']['ar-eg'] = "";
 $text['opt-ukring']['de-at'] = "uk-ring"; //copied from de-de
 $text['opt-ukring']['de-ch'] = "uk-ring"; //copied from de-de
@@ -522,6 +548,7 @@ $text['opt-ukring']['sv-se'] = "uk-ring";
 $text['opt-ukring']['uk-ua'] = "";
 
 $text['opt-rsring']['en-us'] = "rs-ring";
+$text['opt-rsring']['en-gb'] = "rs-ring";
 $text['opt-rsring']['ar-eg'] = "";
 $text['opt-rsring']['de-at'] = "rs-ring"; //copied from de-de
 $text['opt-rsring']['de-ch'] = "rs-ring"; //copied from de-de
@@ -542,6 +569,7 @@ $text['opt-rsring']['sv-se'] = "rs-ring";
 $text['opt-rsring']['uk-ua'] = "";
 
 $text['opt-ruring']['en-us'] = "ru-ring";
+$text['opt-ruring']['en-gb'] = "ru-ring";
 $text['opt-ruring']['ar-eg'] = "";
 $text['opt-ruring']['de-at'] = "ru-ring"; //copied from de-de
 $text['opt-ruring']['de-ch'] = "ru-ring"; //copied from de-de
@@ -562,6 +590,7 @@ $text['opt-ruring']['sv-se'] = "ru-ring";
 $text['opt-ruring']['uk-ua'] = "";
 
 $text['opt-itring']['en-us'] = "it-ring";
+$text['opt-itring']['en-gb'] = "it-ring";
 $text['opt-itring']['ar-eg'] = "";
 $text['opt-itring']['de-at'] = "it-ring"; //copied from de-de
 $text['opt-itring']['de-ch'] = "it-ring"; //copied from de-de
@@ -582,6 +611,7 @@ $text['opt-itring']['sv-se'] = "it-ring";
 $text['opt-itring']['uk-ua'] = "";
 
 $text['opt-dering']['en-us'] = "de-ring";
+$text['opt-dering']['en-gb'] = "de-ring";
 $text['opt-dering']['ar-eg'] = "";
 $text['opt-dering']['de-at'] = "de-ring"; //copied from de-de
 $text['opt-dering']['de-ch'] = "de-ring"; //copied from de-de
@@ -602,6 +632,7 @@ $text['opt-dering']['sv-se'] = "de-ring";
 $text['opt-dering']['uk-ua'] = "";
 
 $text['opt-moh']['en-us'] = "music";
+$text['opt-moh']['en-gb'] = "music";
 $text['opt-moh']['ar-eg'] = "";
 $text['opt-moh']['de-at'] = "Musik"; //copied from de-de
 $text['opt-moh']['de-ch'] = "Musik"; //copied from de-de
@@ -622,6 +653,7 @@ $text['opt-moh']['sv-se'] = "musik";
 $text['opt-moh']['uk-ua'] = "";
 
 $text['button-call']['en-us'] = "Call";
+$text['button-call']['en-gb'] = "Call";
 $text['button-call']['ar-eg'] = "";
 $text['button-call']['de-at'] = "Anrufen"; //copied from de-de
 $text['button-call']['de-ch'] = "Anrufen"; //copied from de-de
