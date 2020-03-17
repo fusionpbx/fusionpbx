@@ -670,6 +670,9 @@
 				--set the exit sound
 					if (sounds == "true") then
 						session:execute("set","conference_exit_sound="..exit_sound);
+					else
+						session:execute("set","conference_enter_sound=none");
+						session:execute("set","conference_exit_sound=none");
 					end
 
 				--set flags and moderator controls
