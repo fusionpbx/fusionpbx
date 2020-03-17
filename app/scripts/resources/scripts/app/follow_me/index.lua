@@ -50,7 +50,7 @@
 	end
 
 --set the strategy
-	follow_me_strategy = 'simultaneous'; --simultaneous, enterprise
+	follow_me_strategy = 'enterprise'; --simultaneous, enterprise
 
 --include json library
 	debug["sql"] = false;
