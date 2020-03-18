@@ -1,10 +1,9 @@
 <?php
-include "root.php";
+
+require_once "root.php";
 require_once "resources/require.php";
 
 header("Content-type: text/css; charset: UTF-8");
-
-$default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 //parse fonts (add surrounding single quotes to each font name)
 	if (is_array($_SESSION['theme']) && sizeof($_SESSION['theme']) > 0) {
@@ -34,7 +33,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 //determine which background image/color settings to use (login or standard)
 	$background_images_enabled = false;
-	if ($default_login) {
+	if (isset($_SESSION['username']) && $_SESSION['username'] != '') {
 		//try using login background images/colors
 		if (isset($_SESSION['theme']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 			$background_images_enabled = true;
@@ -1092,8 +1091,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		width: 100%;
 		<?php
 		if (
-			(strlen($_SESSION["username"]) > 0 || !$default_login)
-			&&
+			isset($_SESSION['username']) && $_SESSION['username'] != '' &&
 			(isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '')
 			) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
