@@ -149,6 +149,7 @@
 	//domain selector row background colors
 		$view->assign('domain_selector_background_color_1', $_SESSION['theme']['domain_inactive_background_color'][0] != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
 		$view->assign('domain_selector_background_color_2', $_SESSION['theme']['domain_inactive_background_color'][1] != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
+		$view->assign('domain_active_background_color', $_SESSION['theme']['domain_active_background_color']['text'] != '' ? $_SESSION['theme']['domain_active_background_color']['text'] : '#eeffee');
 	//domain list
 		$view->assign('domains', $_SESSION['domains']);
 	//domain uuid

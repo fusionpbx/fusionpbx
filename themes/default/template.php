@@ -803,8 +803,6 @@
 							{*//set active domain color *}
 								{if $domain_active_background_color != ''}
 									{if $row.domain_uuid == $domain_uuid}{$background_color=$domain_active_background_color}{/if}
-								{else}
-									{if $row.domain_uuid == $domain_uuid}{$background_color='#eeffee'}{/if}
 								{/if}
 							{*//active domain text hover color *}
 								{if $settings.theme.domain_active_text_color_hover != '' && $row.domain_uuid == $domain_uuid}
