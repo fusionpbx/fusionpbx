@@ -101,18 +101,39 @@
 		if (is_array($_SESSION['theme']) && @sizeof($_SESSION['theme']) != 0) {
 			//load into array
 				foreach ($_SESSION['theme'] as $subcategory => $setting) {
-					if (isset($setting['text']) && $setting['text'] != '') {
-						$settings['theme'][$subcategory] = escape($setting['text']);
-					}
-					else if (isset($setting['boolean'])) {
-						$settings['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
-					}
-					else {
-						$settings['theme'][$subcategory] = escape($setting);
+					switch($subcategory) {
+						//exceptions
+							case 'favicon':
+								if ($setting['text'] != '') {
+									$tmp_url = parse_url($setting['text']);
+									$tmp_path = pathinfo($setting['text']);
+									if (
+										is_array($tmp_url) && @sizeof($tmp_url) != 0 &&
+										is_array($tmp_path) && @sizeof($tmp_path) != 0 &&
+										(
+											($tmp_url['scheme'] != '' && $tmp_url['scheme'].'://'.$tmp_url['host'].$tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension']) //is url
+											|| $tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension'] //is path
+										)) {
+										$settings['theme'][$subcategory] = $setting['text'];
+									}
+									unset($tmp_url, $tmp_path);
+								}
+								break;
+						//otherwise
+							default:
+								if (isset($setting['text']) && $setting['text'] != '') {
+									$settings['theme'][$subcategory] = escape($setting['text']);
+								}
+								else if (isset($setting['boolean'])) {
+									$settings['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
+								}
+								else {
+									$settings['theme'][$subcategory] = escape($setting);
+								}
 					}
 				}
 			//pre-process some settings
-				$settings['theme']['favicon'] = $settings['theme']['favicon'] != '' ? urlencode($settings['theme']['favicon']) : PROJECT_PATH.'/themes/default/favicon.ico';
+				$settings['theme']['favicon'] = $settings['theme']['favicon'] != '' ? $settings['theme']['favicon'] : PROJECT_PATH.'/themes/default/favicon.ico';
 				$settings['theme']['font_loader_version'] = $settings['theme']['font_loader_version'] != '' ? urlencode($settings['theme']['font_loader_version']) : '1';
 				$settings['theme']['message_delay'] = is_numeric($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
 				$settings['theme']['menu_side_width_contracted'] = is_numeric($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
