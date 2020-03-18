@@ -490,13 +490,14 @@
 	}
 
 //set the defaults
+	$vars = new variables;
 	if (strlen($ivr_menu_timeout) == 0) { $ivr_menu_timeout = '3000'; }
 	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
 	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
-	if (strlen($ivr_menu_language_code) == 0) { $ivr_menu_language_code = 'en'; }
-	if (strlen($ivr_menu_dialect) == 0) { $ivr_menu_dialect = 'us'; }
-	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = 'callie'; }
+	if (strlen($ivr_menu_language_code) == 0) { $ivr_menu_language_code = $vars->get_variable('default_language'); }
+	if (strlen($ivr_menu_dialect) == 0) { $ivr_menu_dialect = $vars->get_variable('default_dialect'); }
+	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = $vars->get_variable('default_voice'); }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
 	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
