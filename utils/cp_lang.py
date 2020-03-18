@@ -1,6 +1,6 @@
 import sys, argparse
 
-parser = argparse.ArgumentParser(description="""Copies fusionpbx webapp languages. Run with 'find <fusionpbx_dir> -name app_config.php -exec python ./cp_lang.py {} en-gb en-us \;""")
+parser = argparse.ArgumentParser(description="""Copies fusionpbx webapp languages. Run with 'find <fusionpbx_dir> -name app_config.php -exec python ./cp_lang.py {} en-gb en-us \;'""")
 parser.add_argument("php", help="app_config.php, app_languages.php or app_menu.php file path", type=str)
 parser.add_argument("new", help="new language code", type=str)
 parser.add_argument("cur", help="current language code to copy", type=str)
