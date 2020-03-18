@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 
 //set variables if not set
@@ -68,49 +68,173 @@
 		}
 	}
 
-//get the template
-	ob_start();
-	include($_SESSION["template_full_path"]);
-	$template = ob_get_contents(); //get the output from the buffer
-	ob_end_clean(); //clean the buffer
 
-//prepare the template to display the output
-	$custom_head = '';
+/************************************************************************************************************************************************
+ * new template
+ */
 
-	if (isset($_SESSION["theme"]["title"]["text"])) {
-		if (strlen($_SESSION["theme"]["title"]["text"]) > 0) {
-			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["theme"]["title"]["text"];
-		}
-		else {
-			$document_title = (($document["title"] != '') ? $document["title"]." " : null);
-		}
-	}
-	else {
-		if (isset($_SESSION["software_name"])) {
-			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["software_name"];
-		}
-		else {
-			$document_title = (($document["title"] != '') ? $document["title"]." " : null);
-		}
-	}
-	$output = str_replace ("<!--{title}-->", $document_title, $template); //<!--{title}--> defined in each individual page
-	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
-	if (strlen($v_menu) > 0) {
-		$output = str_replace ("<!--{menu}-->", $v_menu, $output); //defined in /resources/menu.php
-	}
-	else {
-		$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /resources/menu.php
-	}
-	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /resources/menu.php
+//initialize a template object
+	$view = new template();
+	$view->engine = 'smarty';
+	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$_SESSION['domain']['template']['name'].'/';
+	$view->cache_dir = $_SESSION['server']['temp']['dir'];
+	$view->init();
 
-	$pos = strrpos($output, "<!--{body}-->");
-	if ($pos === false) {
-		$output = $body; //if tag not found just show the body
-	}
-	else {
-		//replace the body
-		$output = str_replace ("<!--{body}-->", $body, $output);
-	}
+//add multi-lingual support
+	$language = new text;
+	$text_default = $language->get();
+	$text_application = $language->get(null,'themes/default');
+	$text = array_merge($text_default, $text_application);
+
+//set template variables
+
+	//add translations
+		foreach($text as $key => $value) {
+			$array[str_replace('-', '_', $key)] = $value;
+		}
+		$view->assign('text', $array);
+	//project path
+		$view->assign('project_path', PROJECT_PATH);
+	//domain menu
+		$view->assign('domain_menu', escape($_SESSION['domain']['menu']['uuid']));
+	//theme settings
+		if (is_array($_SESSION['theme']) && @sizeof($_SESSION['theme']) != 0) {
+			//load into array
+				foreach ($_SESSION['theme'] as $subcategory => $setting) {
+					if (isset($setting['text']) && $setting['text'] != '') {
+						$settings['theme'][$subcategory] = escape($setting['text']);
+					}
+					else if (isset($setting['boolean'])) {
+						$settings['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
+					}
+					else {
+						$settings['theme'][$subcategory] = escape($setting);
+					}
+				}
+			//pre-process some settings
+				$settings['theme']['favicon'] = $settings['theme']['favicon'] != '' ? urlencode($settings['theme']['favicon']) : PROJECT_PATH.'/themes/default/favicon.ico';
+				$settings['theme']['font_loader_version'] = $settings['theme']['font_loader_version'] != '' ? urlencode($settings['theme']['font_loader_version']) : '1';
+				$settings['theme']['message_delay'] = is_numeric($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
+				$settings['theme']['menu_side_width_contracted'] = is_numeric($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
+				$settings['theme']['menu_side_width_expanded'] = is_numeric($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
+				$settings['theme']['menu_style'] = $settings['theme']['menu_style'] != '' ? $settings['theme']['menu_style'] : 'fixed';
+				$settings['theme']['menu_position'] = $settings['theme']['menu_position'] != '' ? $settings['theme']['menu_position'] : 'top';
+				$settings['theme']['footer'] = $settings['theme']['footer'] != '' ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
+			$view->assign('settings', $settings);
+		}
+	//document title
+		if (isset($_SESSION['theme']['title']['text']) && $_SESSION['theme']['title']['text'] != '') {
+			$document_title = $_SESSION['theme']['title']['text'];
+		}
+		else if (isset($_SESSION['software_name'])) {
+			$document_title = $_SESSION['software_name'];
+		}
+		$document_title = ($document['title'] != '' ? $document['title'].' - ' : null).$document_title;
+		$view->assign('document_title', $document_title);
+	//domain selector control
+		$domain_selector_enabled = permission_exists('domain_select') && count($_SESSION['domains']) > 1 ? true : false;
+		$view->assign('domain_selector_enabled', $domain_selector_enabled);
+	//browser name
+		$user_agent = http_user_agent();
+		$browser_version = $user_agent['version'];
+		$view->assign('browser_name', $user_agent['name']);
+		$view->assign('browser_name_short', $user_agent['name_short']);
+	//login state
+		$authenticated = isset($_SESSION['username']) && $_SESSION['username'] != '' ? true : false;
+		$view->assign('authenticated', $authenticated);
+	//domains application path
+		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
+	//domain count
+		$view->assign('domain_count', is_array($_SESSION['domains']) ? sizeof($_SESSION['domains']) : 0);
+	//domain selector row background colors
+		$view->assign('domain_selector_background_color_1', $_SESSION['theme']['domain_inactive_background_color'][0] != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
+		$view->assign('domain_selector_background_color_2', $_SESSION['theme']['domain_inactive_background_color'][1] != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
+	//domain list
+		$view->assign('domains', $_SESSION['domains']);
+	//domain uuid
+		$view->assign('domain_uuid', $_SESSION['domain_uuid']);
+	//menu container
+		//load menu array into the session
+			if (!isset($_SESSION['menu']['array'])) {
+				$menu = new menu;
+				$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
+				$_SESSION['menu']['array'] = $menu->menu_array();
+				unset($menu);
+			}
+		//build menu by style
+			switch ($_SESSION['theme']['menu_style']['text']) {
+				case 'side':
+					$container_open = "<div id='menu_side_container'>\n";
+					$menu = new menu;
+					$menu->text = $text;
+					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);
+					unset($menu);
+					break;
+				case 'inline':
+					$container_open = "<div class='container-fluid' style='padding: 0;' align='".($_SESSION['theme']['logo_align']['text'] != '' ? $_SESSION['theme']['logo_align']['text'] : 'left')."'>\n";
+					if ($_SERVER['PHP_SELF'] != PROJECT_PATH.'/core/install/install.php') {
+						$logo = "<a href='".PROJECT_PATH."/'><img src='".($_SESSION['theme']['logo']['text'] ?: PROJECT_PATH.'/themes/default/images/logo.png')."' style='padding: 15px 20px; ".($_SESSION['theme']['logo_style']['text'] ?: null)."'></a>";
+					}
+					$menu = new menu;
+					$menu->text = $text;
+					$menu_html = $menu->menu_horizontal($_SESSION['menu']['array']);
+					unset($menu);
+					break;
+				case 'static':
+					$container_open = "<div class='container-fluid' style='padding: 0;' align='center'>\n";
+					$menu = new menu;
+					$menu->text = $text;
+					$menu_html = $menu->menu_horizontal($_SESSION['menu']['array']);
+					unset($menu);
+					break;
+				case 'fixed':
+				default:
+					$menu = new menu;
+					$menu->text = $text;
+					$menu_html = $menu->menu_horizontal($_SESSION['menu']['array']);
+					unset($menu);
+					$container_open = "<div class='container-fluid' style='padding: 0;' align='center'>\n";
+					break;
+			}
+		$view->assign('logo', $logo);
+		$view->assign('menu', $menu_html);
+		$view->assign('container_open', $container_open);
+		$view->assign('container_close', '</div>');
+		$view->assign('document_body', $body);
+		$view->assign('current_year', date('Y'));
+	//login logo
+		//determine logo source
+			if (isset($_SESSION['theme']['logo_login']['text']) && $_SESSION['theme']['logo_login']['text'] != '') {
+				$login_logo_source = $_SESSION['theme']['logo_login']['text'];
+			}
+			else if (isset($_SESSION['theme']['logo']['text']) && $_SESSION['theme']['logo']['text'] != '') {
+				$login_logo_source = $_SESSION['theme']['logo']['text'];
+			}
+			else {
+				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
+			}
+		//determine logo dimensions
+			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
+				$login_logo_width = $_SESSION['theme']['login_logo_width']['text'];
+			}
+			else {
+				$login_logo_width = 'auto; max-width: 300px';
+			}
+			if (isset($_SESSION['theme']['login_logo_height']['text']) && $_SESSION['theme']['login_logo_height']['text'] != '') {
+				$login_logo_height = $_SESSION['theme']['login_logo_height']['text'];
+			}
+			else {
+				$login_logo_height = 'auto; max-height: 300px';
+			}
+		$view->assign('login_logo_source', $login_logo_source);
+		$view->assign('login_logo_width', $login_logo_width);
+		$view->assign('login_logo_height', $login_logo_height);
+
+	//render the view
+		$output = $view->render('template.php');
+
+	//unset background image
+		unset($_SESSION['background_image']);
 
 //send the output to the browser
 	echo $output;
