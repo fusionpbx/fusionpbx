@@ -205,10 +205,10 @@
 	echo "	<div class='heading'><b>".$text['title-voicemail_messages']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if ($num_rows > 0) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('voicemail_message_delete') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -256,7 +256,7 @@
 				$col_count = 0;
 				if (permission_exists('voicemail_message_delete')) {
 					echo "	<th class='checkbox'>\n";
-					echo "		<input type='checkbox' id='checkbox_all_".$field['voicemail_id']."' name='checkbox_all_".$field['voicemail_id']."' onclick=\"list_all_toggle('".$field['voicemail_id']."');\" ".(is_array($field['messages']) && @sizeof($field['messages']) > 0 ?: "style='visibility: hidden;'").">\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$field['voicemail_id']."' name='checkbox_all' onclick=\"list_all_toggle('".$field['voicemail_id']."');\" ".(is_array($field['messages']) && @sizeof($field['messages']) > 0 ?: "style='visibility: hidden;'").">\n";
 					echo "	</th>\n";
 					$col_count++;
 				}

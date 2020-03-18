@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -117,9 +117,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-database_transaction']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'database_transactions.php?'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'database_transactions.php?'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -409,19 +409,21 @@
 	if ($transaction_type == "delete") {
 		echo "<br /><br />\n";
 		echo "<table width='100%'>\n";
-		foreach ($before as $table_name => $rows) {
-			echo "	<tr>\n";
-			echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
-			echo "	</tr>\n";
-			foreach ($rows as $row) {
-				foreach ($row as $key => $value) {
-					echo "	<tr class='list-row'>\n";
-					echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
+		if (is_array($before)) {
+			foreach ($before as $table_name => $rows) {
+				echo "	<tr>\n";
+				echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
+				echo "	</tr>\n";
+				foreach ($rows as $row) {
+					foreach ($row as $key => $value) {
+						echo "	<tr class='list-row'>\n";
+						echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
+						echo "	</tr>\n";
+					}
+					echo "	<tr>\n";
+					echo "		<td colspan='3'><br /><br /></td>\n";
 					echo "	</tr>\n";
 				}
-				echo "	<tr>\n";
-				echo "		<td colspan='3'><br /><br /></td>\n";
-				echo "	</tr>\n";
 			}
 		}
 	}

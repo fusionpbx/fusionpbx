@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,65 +54,60 @@
 	$contact_urls = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//show the content
-	echo "<div class='action_bar sub shrink'>\n";
-	echo "	<div class='heading'><b>".$text['label-urls']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	/*
-	if (permission_exists('contact_url_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'collapse'=>'hide-sm-dn','link'=>'contact_url_edit.php?contact_uuid='.urlencode($_GET['id'])]);
-	}
-	if (permission_exists('contact_url_delete') && $contact_urls) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	}
-	*/
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('contact_url_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all_urls' name='checkbox_all' onclick=\"list_all_toggle('urls');\" ".($contact_urls ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
-	echo "<th class='pct-15'>".$text['label-url_label']."</th>\n";
-	echo "<th>".$text['label-url_address']."</th>\n";
-	echo "<th class='hide-md-dn'>".$text['label-url_description']."</th>\n";
-	if (permission_exists('contact_url_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
-	echo "</tr>\n";
-
+//show if exists
 	if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
-		$x = 0;
-		foreach ($contact_urls as $row) {
-			if (permission_exists('contact_url_edit')) {
-				$list_row_url = "contact_url_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_url_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['label-urls']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_url_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='contact_urls[$x][checked]' id='checkbox_".$x."' class='checkbox_urls' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_urls').checked = false; }\">\n";
-				echo "		<input type='hidden' name='contact_urls[$x][uuid]' value='".escape($row['contact_url_uuid'])."' />\n";
-				echo "	</td>\n";
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all_urls' name='checkbox_all' onclick=\"edit_all_toggle('urls');\" ".($contact_urls ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
 			}
-			echo "	<td>".escape($row['url_label'])." ".($row['url_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
-			echo "	<td class='no-link overflow no-wrap'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a></td>\n";
-			echo "	<td class='description overflow hide-md-dn'>".escape($row['url_description'])."&nbsp;</td>\n";
+			echo "<th class='pct-15'>".$text['label-url_label']."</th>\n";
+			echo "<th>".$text['label-url_address']."</th>\n";
+			echo "<th class='hide-md-dn'>".$text['label-url_description']."</th>\n";
 			if (permission_exists('contact_url_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
+				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
-			$x++;
-		}
-	}
-	unset($contact_urls);
 
-	echo "</table>\n";
-	echo "<br />\n";
+			if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+				$x = 0;
+				foreach ($contact_urls as $row) {
+					if (permission_exists('contact_url_edit')) {
+						$list_row_url = "contact_url_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_url_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					if (permission_exists('contact_url_delete')) {
+						echo "	<td class='checkbox'>\n";
+						echo "		<input type='checkbox' name='contact_urls[$x][checked]' id='checkbox_".$x."' class='checkbox_urls' value='true' onclick=\"edit_delete_action('urls');\">\n";
+						echo "		<input type='hidden' name='contact_urls[$x][uuid]' value='".escape($row['contact_url_uuid'])."' />\n";
+						echo "	</td>\n";
+					}
+					echo "	<td>".escape($row['url_label'])." ".($row['url_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
+					echo "	<td class='no-link overflow no-wrap'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a></td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".escape($row['url_description'])."&nbsp;</td>\n";
+					if (permission_exists('contact_url_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+			}
+			unset($contact_urls);
+
+			echo "</table>\n";
+			echo "<br />\n";
+
+	}
 
 ?>

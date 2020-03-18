@@ -194,7 +194,7 @@
 		echo "					</table>\n";
 		echo "					<center style='margin-top: 15px;'>\n";
 		echo button::create(['type'=>'reset','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'float: left;','onclick'=>"$('#message_new').reset();"]);
-		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>'times','onclick'=>"$('#message_new_layer').fadeOut(200);"]);
+		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'onclick'=>"$('#message_new_layer').fadeOut(200);"]);
 		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','style'=>'float: right;']);
 		echo "					</center>\n";
 		echo "				</span>\n";
@@ -213,7 +213,7 @@
 	echo "	<div class='heading'><b>".$text['title-messages']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('message_add')) {
-		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
+		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['label-log'],'icon'=>'list','link'=>'messages_log.php']);
 	echo "	</div>\n";

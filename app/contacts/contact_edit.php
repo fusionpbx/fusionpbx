@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,47 +43,6 @@
 	$text = $language->get();
 
 
-//get the http post data from the contact property lists (numbers, addresses, etc) and process by action
-	if (is_array($_POST) && is_uuid($_POST['contact_uuid'])) {
-		$contact_uuid = $_POST['contact_uuid'];
-
-		switch ($_POST['action']) {
-			case 'delete_properties':
-				$array = array();
-				if (permission_exists('contact_phone_delete')) { $contact_properties['contact_phones'] = $_POST['contact_phones']; }
-				if (permission_exists('contact_address_delete')) { $contact_properties['contact_addresses'] = $_POST['contact_addresses']; }
-				if (permission_exists('contact_email_delete')) { $contact_properties['contact_emails'] = $_POST['contact_emails']; }
-				if (permission_exists('contact_url_delete')) { $contact_properties['contact_urls'] = $_POST['contact_urls']; }
-				//if (permission_exists('contact_extension_delete')) { $contact_properties['contact_extensions'] = $_POST['contact_extensions']; }
-				if (permission_exists('contact_relation_delete')) { $contact_properties['contact_relations'] = $_POST['contact_relations']; }
-				if (permission_exists('contact_note_delete')) { $contact_properties['contact_notes'] = $_POST['contact_notes']; }
-				if (permission_exists('contact_time_delete')) { $contact_properties['contact_times'] = $_POST['contact_times']; }
-				if (permission_exists('contact_setting_delete')) { $contact_properties['contact_settings'] = $_POST['contact_settings']; }
-				if (permission_exists('contact_attachment_delete')) { $contact_properties['contact_attachments'] = $_POST['contact_attachments']; }
-
-				if (@sizeof($contact_properties) != 0) {
-					$obj = new contacts;
-					$obj->contact_uuid = $contact_uuid;
-					$obj->delete_properties($contact_properties);
-				}
-
-				header('Location: contact_edit.php?id='.urlencode($contact_uuid));
-				exit;
-			case 'delete_contact':
-				if (permission_exists('contact_delete')) {
-					$array[0]['checked'] = 'true';
-					$array[0]['uuid'] = $contact_uuid;
-
-					$obj = new contacts;
-					$obj->delete($array);
-				}
-
-				header('Location: contacts.php');
-				exit;
-		}
-	}
-
-
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -95,6 +54,24 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+
+		//process the http post data by submitted action
+			if ($_POST['action'] != '' && is_uuid($_POST['contact_uuid'])) {
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $_POST['contact_uuid'];
+
+				switch ($_POST['action']) {
+					case 'delete':
+						if (permission_exists('contact_delete')) {
+							$obj = new contacts;
+							$obj->delete($array);
+
+							header('Location: contacts.php');
+							exit;
+						}
+				}
+			}
+
 		$user_uuid = $_POST["user_uuid"];
 		$group_uuid = $_POST['group_uuid'];
 		$contact_type = $_POST["contact_type"];
@@ -110,6 +87,8 @@
 		$contact_role = $_POST["contact_role"];
 		$contact_time_zone = $_POST["contact_time_zone"];
 		$contact_note = $_POST["contact_note"];
+		$contact_users_delete = $_POST['contact_users_delete'];
+		$contact_groups_delete = $_POST['contact_groups_delete'];
 	}
 
 //process the form data
@@ -234,6 +213,49 @@
 						$p->delete('contact_group_add', 'temp');
 					}
 
+				//delete checked contact properties
+					$array = array();
+					if (permission_exists('contact_phone_delete')) { $contact_properties['contact_phones'] = $_POST['contact_phones']; }
+					if (permission_exists('contact_address_delete')) { $contact_properties['contact_addresses'] = $_POST['contact_addresses']; }
+					if (permission_exists('contact_email_delete')) { $contact_properties['contact_emails'] = $_POST['contact_emails']; }
+					if (permission_exists('contact_url_delete')) { $contact_properties['contact_urls'] = $_POST['contact_urls']; }
+					//if (permission_exists('contact_extension_delete')) { $contact_properties['contact_extensions'] = $_POST['contact_extensions']; }
+					if (permission_exists('contact_relation_delete')) { $contact_properties['contact_relations'] = $_POST['contact_relations']; }
+					if (permission_exists('contact_note_delete')) { $contact_properties['contact_notes'] = $_POST['contact_notes']; }
+					if (permission_exists('contact_time_delete')) { $contact_properties['contact_times'] = $_POST['contact_times']; }
+					if (permission_exists('contact_setting_delete')) { $contact_properties['contact_settings'] = $_POST['contact_settings']; }
+					if (permission_exists('contact_attachment_delete')) { $contact_properties['contact_attachments'] = $_POST['contact_attachments']; }
+
+					if (@sizeof($contact_properties) != 0) {
+						$obj = new contacts;
+						$obj->contact_uuid = $contact_uuid;
+						$obj->delete_properties($contact_properties);
+					}
+
+				//remove checked users
+					if (
+						$action == 'update'
+						&& permission_exists('contact_user_delete')
+						&& is_array($contact_users_delete)
+						&& @sizeof($contact_users_delete) != 0
+						) {
+						$obj = new contacts;
+						$obj->contact_uuid = $contact_uuid;
+						$obj->delete_users($contact_users_delete);
+					}
+
+				//remove checked groups
+					if (
+						$action == 'update'
+						&& permission_exists('contact_group_delete')
+						&& is_array($contact_groups_delete)
+						&& @sizeof($contact_groups_delete) != 0
+						) {
+						$obj = new contacts;
+						$obj->contact_uuid = $contact_uuid;
+						$obj->delete_groups($contact_groups_delete);
+					}
+
 				//redirect the browser
 					header("Location: contact_edit.php?id=".urlencode($contact_uuid));
 					exit;
@@ -298,8 +320,40 @@
 	$parameters['contact_uuid'] = $contact_uuid;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
-	$contact_users = $database->select($sql, $parameters, 'all');
+	$contact_users_assigned = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//get the assigned groups of this contact
+	$sql = "select g.*, cg.contact_group_uuid ";
+	$sql .= "from v_groups as g, v_contact_groups as cg ";
+	$sql .= "where cg.group_uuid = g.group_uuid ";
+	$sql .= "and cg.domain_uuid = :domain_uuid ";
+	$sql .= "and cg.contact_uuid = :contact_uuid ";
+	$sql .= "and cg.group_uuid <> :group_uuid ";
+	$sql .= "order by g.group_name asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['contact_uuid'] = $contact_uuid;
+	$parameters['group_uuid'] = $_SESSION["user_uuid"];
+	$database = new database;
+	$contact_groups_assigned = $database->select($sql, $parameters, 'all');
+	if (is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
+		foreach ($contact_groups_assigned as $field) {
+			$contact_groups[] = "'".$field['group_uuid']."'";
+		}
+	}
+	unset($sql, $parameters);
+
+//get the available groups to this contact
+	$sql = "select group_uuid, group_name from v_groups ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if (is_array($contact_groups) && @sizeof($contact_groups) != 0) {
+		$sql .= "and group_uuid not in (".implode(',', $contact_groups).") ";
+	}
+	$sql .= "order by group_name asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$contact_groups_available = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $contact_groups);
 
 //create token
 	$object = new token;
@@ -381,6 +435,8 @@
 	echo "</script>";
 
 //show the content
+	echo "<form name='frm' id='frm' method='post'>\n";
+
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
 	if ($action == "add") {
@@ -391,7 +447,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php']);
 	if ($action == "update") {
 		if (permission_exists('contact_time_add')) {
 			//detect timer state (and start time)
@@ -436,8 +492,7 @@
 		permission_exists('contact_setting_add') ||
 		permission_exists('contact_attachment_add')
 		)) {
- 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'style'=>'margin-left: 15px;','collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('select_add').style.display='inline'; this.style.display='none';"]);
-		echo 		"<select class='formfld' style='display: none; width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid)."';\">\n";
+		echo 		"<select class='formfld' style='width: auto; margin-left: 15px;' id='select_add' onchange=\"document.location.href='contact_' + (this.options[this.selectedIndex].value) + '_edit.php?contact_uuid=".urlencode($contact_uuid)."';\">\n";
 		echo "			<option value=''>".$text['button-add']."...</option>\n";
 		if (permission_exists('contact_phone_add')) { echo "<option value='phone'>".$text['label-phone_number']."</option>\n"; }
 		if (permission_exists('contact_address_add')) { echo "<option value='address'>".$text['label-address_address']."</option>\n"; }
@@ -452,7 +507,9 @@
 	}
 	if ($action == "update") {
 		if (
-			permission_exists('contact_delete') && (
+			permission_exists('contact_delete') ||
+			permission_exists('contact_user_delete') ||
+			permission_exists('contact_group_delete') ||
 			permission_exists('contact_phone_delete') ||
 			permission_exists('contact_address_delete') ||
 			permission_exists('contact_email_delete') ||
@@ -462,40 +519,19 @@
 			permission_exists('contact_time_delete') ||
 			permission_exists('contact_setting_delete') ||
 			permission_exists('contact_attachment_delete')
-			)) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
+			) {
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-sm-dn','onclick'=>"document.location.href='#modal-delete'; document.getElementById('btn_delete').focus();"]);
 			echo modal::create([
 				'id'=>'modal-delete',
-				'title'=>$text['modal_title-confirmation'],
-				'message'=>$text['message-delete_selection'],
+				'type'=>'delete',
 				'actions'=>
-					button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>'times','collapse'=>'hide-xs','onclick'=>'modal_close();']).
-					button::create(['type'=>'button','label'=>$text['label-contact'],'icon'=>$_SESSION['theme']['button_icon_user'],'style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); if (confirm('".$text['confirm-delete']."')) { document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit(); } else { this.blur(); return false; }"]).
-					button::create(['type'=>'button','label'=>$text['label-properties'],'icon'=>'check-square','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])
+					button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close();"])
 				]);
 		}
-		else {
-			if (permission_exists('contact_delete')) {
-				echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
-				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); document.getElementById('contact_action').value='delete_contact'; document.getElementById('frm').submit();"])]);
-			}
-			else if (
-				permission_exists('contact_phone_delete') ||
-				permission_exists('contact_address_delete') ||
-				permission_exists('contact_email_delete') ||
-				permission_exists('contact_url_delete') ||
-				permission_exists('contact_relation_delete') ||
-				permission_exists('contact_note_delete') ||
-				permission_exists('contact_time_delete') ||
-				permission_exists('contact_setting_delete') ||
-				permission_exists('contact_attachment_delete')
-				) {
-				echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-sm-dn','link'=>'#modal-delete']);
-				echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete_properties'); list_form_submit('form_list');"])]);
-			}
-		}
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>($action != 'update' ?: 'margin-left: 15px;'),'collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('frm').submit();"]);
+	if (permission_exists('contact_edit') || permission_exists('contact_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>($action != 'update' ?: 'margin-left: 15px;'),'collapse'=>'hide-sm-dn','onclick'=>"document.getElementById('frm').submit();"]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -511,8 +547,6 @@
 	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 	echo "<tr>\n";
 	echo "<td valign='top' align='left' nowrap='nowrap'>\n";
-
-		echo "<form id='frm' method='post'>\n";
 
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
@@ -684,118 +718,113 @@
 			echo "	<tr>";
 			echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 			echo "		<td class='vtable' align='left'>";
-			if ($action == "update" && is_array($contact_users) && @sizeof($contact_users) != 0) {
-				echo "			<table border='0' style='width: 100%;'>\n";
-				foreach ($contact_users as $field) {
+			echo "			<table border='0' cellpadding='0' cellspacing='0' style='width: 100%;'>\n";
+			if ($action == "update" && is_array($contact_users_assigned) && @sizeof($contact_users_assigned) != 0) {
+				echo "				<tr>\n";
+				echo "					<td class='vtable'>".$text['label-username']."</td>\n";
+				if ($contact_users_assigned && permission_exists('contact_user_delete')) {
+					echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_users', 'delete_toggle_users');\" onmouseout=\"swap_display('delete_label_users', 'delete_toggle_users');\">\n";
+					echo "						<span id='delete_label_users'>".$text['label-delete']."</span>\n";
+					echo "						<span id='delete_toggle_users'><input type='checkbox' id='checkbox_all_users' name='checkbox_all' onclick=\"edit_all_toggle('users');\"></span>\n";
+					echo "					</td>\n";
+				}
+				echo "				</tr>\n";
+				foreach ($contact_users_assigned as $x => $field) {
 					echo "			<tr>\n";
-					echo "				<td class='vtable' style='width: 100%;'>".escape($field['username'])."</td>\n";
-					echo "				<td>\n";
-					if (permission_exists('contact_user_delete')) {
-						echo "					<a href='contact_user_delete.php?id=".urlencode($field['contact_user_uuid'])."&contact_uuid=".urlencode($contact_uuid)."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>\n";
+					echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
+					if ($contact_users_assigned && permission_exists('contact_user_delete')) {
+						if (is_uuid($field['contact_user_uuid'])) {
+							echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+							echo "				<input type='checkbox' name='contact_users_delete[".$x."][checked]' value='true' class='chk_delete checkbox_users' onclick=\"edit_delete_action('users');\">\n";
+							echo "				<input type='hidden' name='contact_users_delete[".$x."][uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
+						}
+						else {
+							echo "			<td>";
+						}
+						echo "			</td>\n";
 					}
-					echo "				</td>\n";
 					echo "			</tr>\n";
 				}
-				echo "			</table>\n";
-				echo "			<br />\n";
 			}
 			if (permission_exists('contact_user_add')) {
-				echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-				echo "			<option value=\"\"></option>\n";
+				echo "			<tr>\n";
+				echo "				<td class='vtable' style='border-bottom: none;' colspan='2'>\n";
+				echo "					<select name='user_uuid' class='formfld' style='width: auto;'>\n";
+				echo "						<option value=''></option>\n";
 				foreach ($users as $field) {
-					if (in_array($field['user_uuid'], array_column($contact_users, 'user_uuid'))) { continue; } //skip users already assigned
-					echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+					if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
+					echo "						<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
-				echo "			</select>";
+				echo "					</select>";
 				if ($action == "update") {
 					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 				}
 				unset($users);
-				echo "			<br>\n";
-				echo "			".$text['description-users']."\n";
+				echo "				</td>\n";
+				echo "			<tr>\n";
 			}
+			echo "			</table>\n";
+			echo "			".$text['description-users']."\n";
 			echo "		</td>";
 			echo "	</tr>";
 		}
 
 		if (permission_exists('contact_group_view')) {
 			echo "<tr>";
-			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups']."</td>";
-			echo "	<td width='70%' class='vtable'>";
-			$sql = "select ";
-			$sql .= "g.*, ";
-			$sql .= "cg.contact_group_uuid ";
-			$sql .= "from ";
-			$sql .= "v_groups as g, ";
-			$sql .= "v_contact_groups as cg ";
-			$sql .= "where ";
-			$sql .= "cg.group_uuid = g.group_uuid ";
-			$sql .= "and cg.domain_uuid = :domain_uuid ";
-			$sql .= "and cg.contact_uuid = :contact_uuid ";
-			$sql .= "and cg.group_uuid <> :group_uuid ";
-			$sql .= "order by g.group_name asc ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['contact_uuid'] = $contact_uuid;
-			$parameters['group_uuid'] = $_SESSION["user_uuid"];
-			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
-			if (is_array($result) && @sizeof($result) != 0) {
-				echo "	<table style='width: 100%;'>\n";
-				foreach ($result as $field) {
+			echo "	<td class='vncell' valign='top'>".$text['label-groups']."</td>";
+			echo "	<td class='vtable'>";
+			echo "		<table border='0' cellpadding='0' cellspacing='0' style='width: 100%;'>\n";
+			if (is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
+				echo "			<tr>\n";
+				echo "				<td class='vtable'>".$text['label-group']."</td>\n";
+				if ($contact_groups_assigned && permission_exists('contact_group_delete')) {
+					echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_groups', 'delete_toggle_groups');\" onmouseout=\"swap_display('delete_label_groups', 'delete_toggle_groups');\">\n";
+					echo "					<span id='delete_label_groups'>".$text['label-delete']."</span>\n";
+					echo "					<span id='delete_toggle_groups'><input type='checkbox' id='checkbox_all_groups' name='checkbox_all' onclick=\"edit_all_toggle('groups');\"></span>\n";
+					echo "				</td>\n";
+				}
+				echo "			</tr>\n";
+				foreach ($contact_groups_assigned as $x => $field) {
 					if (strlen($field['group_name']) > 0) {
-						echo "<tr>\n";
-						echo "	<td class='vtable' style='width: 100%;'>".escape($field['group_name'])."</td>\n";
-						echo "	<td>\n";
-						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
-							echo "	<a href='contact_group_delete.php?id=".urlencode($field['contact_group_uuid'])."&contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>\n";
+						echo "			<tr>\n";
+						echo "				<td class='vtable'>".escape($field['group_name'])."</td>\n";
+						if (permission_exists('contact_group_delete')) {
+							if (is_uuid($field['contact_group_uuid'])) {
+								echo "				<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+								echo "					<input type='checkbox' name='contact_groups_delete[".$x."][checked]' value='true' class='chk_delete checkbox_groups' onclick=\"edit_delete_action('groups');\">\n";
+								echo "					<input type='hidden' name='contact_groups_delete[".$x."][uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
+							}
+							else {
+								echo "				<td>";
+							}
+							echo "				</td>\n";
 						}
-						echo "	</td>\n";
-						echo "</tr>\n";
-						$assigned_groups[] = $field['group_uuid'];
+						echo "			</tr>\n";
 					}
 				}
-				echo "	</table>\n";
-				echo "	<br />\n";
 			}
-			unset($sql, $parameters, $result, $field);
 
-			if (permission_exists('contact_group_add') || if_group("superadmin")) {
-				$sql = "select * from v_groups ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "or domain_uuid is null ";
-				if (is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
-					foreach ($assigned_groups as $index => $assigned_group) {
-						$sql_where_and[] = "group_uuid <> :group_uuid_".$index." ";
-						$parameters['group_uuid_'.$index] = $assigned_group;
-					}
-					if (is_array($sql_where_and) && @sizeof($sql_where_and) != 0) {
-						$sql .= "and ".implode(' and ', $sql_where_and)." ";
-					}
-				}
-				$sql .= "order by group_name asc ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
-				unset($sql, $sql_where_and, $index, $parameters, $assigned_groups, $assigned_group);
-
-				if (is_array($result) && @sizeof($result) != 0) {
-					echo "	<select name='group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
-					echo "		<option value=''></option>\n";
-					foreach ($result as $field) {
+			if (permission_exists('contact_group_add')) {
+				if (is_array($contact_groups_available) && @sizeof($contact_groups_available) != 0) {
+					echo "			<tr>\n";
+					echo "				<td class='vtable' style='border-bottom: none;' colspan='2'>\n";
+					echo "					<select name='group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+					echo "						<option value=''></option>\n";
+					foreach ($contact_groups_available as $field) {
 						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
 						if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin"))) { continue; }	//only show admin group to admins
-						echo "<option value='".escape($field['group_uuid'])."'>".escape($field['group_name'])."</option>\n";
+						echo "						<option value='".escape($field['group_uuid'])."'>".escape($field['group_name'])."</option>\n";
 					}
-					echo "	</select>";
-
+					echo "					</select>";
 					if ($action == "update") {
 						echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 					}
-					echo "<br>";
+					echo "				</td>\n";
+					echo "			</tr>\n";
 				}
-				unset($result, $field);
 			}
 
+			echo "		</table>\n";
 			echo "		".$text['description-groups']."\n";
 
 			echo "	</td>";
@@ -803,23 +832,15 @@
 		}
 
 		echo "<tr>\n";
-		echo "	<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "		".$text['label-contact_note']."\n";
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' align='left'>\n";
+		echo "	<td class='vtable' align='left'>\n";
 		echo "		<textarea class='formfld' style='width: 100%; height: 160px;' name='contact_note'>".$contact_note."</textarea>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 
 		echo "</table>";
-
-		if ($action == "update") {
-			echo "<input type='hidden' id='contact_action' name='action' value=''>\n";
-			echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
-		}
-		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
-		echo "</form>";
 
 	echo "</td>\n";
 
@@ -827,26 +848,16 @@
 		echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "<td width='100%' valign='top'>\n";
 
-			echo "<form id='form_list' method='post'>\n";
-			echo "<input type='hidden' id='action' name='action' value=''>\n";
-
-			if (permission_exists('contact_phone_view')) { require "contact_phones.php"; }
-			if (permission_exists('contact_address_view')) { require "contact_addresses.php"; }
-			if (permission_exists('contact_email_view')) { require "contact_emails.php"; }
-			if (permission_exists('contact_url_view')) { require "contact_urls.php"; }
-			if (permission_exists('contact_extension_view')) { require "contact_extensions.php"; }
-			if (permission_exists('contact_relation_view')) { require "contact_relations.php"; }
-			if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
-			if (permission_exists('contact_time_view')) { require "contact_times.php"; }
-			if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
-			if (permission_exists('contact_attachment_view')) { require "contact_attachments.php"; }
-
-			if ($action == "update") {
-				echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
-			}
-			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
-			echo "</form>";
+		if (permission_exists('contact_phone_view')) { require "contact_phones.php"; }
+		if (permission_exists('contact_address_view')) { require "contact_addresses.php"; }
+		if (permission_exists('contact_email_view')) { require "contact_emails.php"; }
+		if (permission_exists('contact_url_view')) { require "contact_urls.php"; }
+		if (permission_exists('contact_extension_view')) { require "contact_extensions.php"; }
+		if (permission_exists('contact_relation_view')) { require "contact_relations.php"; }
+		if (permission_exists('contact_note_view')) { require "contact_notes.php"; }
+		if (permission_exists('contact_time_view')) { require "contact_times.php"; }
+		if (permission_exists('contact_setting_view')) { require "contact_settings.php"; }
+		if (permission_exists('contact_attachment_view')) { require "contact_attachments.php"; }
 
 		echo "</td>\n";
 	}
@@ -854,6 +865,32 @@
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>";
+
+//hide the delete button when nothing to delete
+	if (
+		$action == 'update' &&
+		!permission_exists('contact_delete') && (
+		(!is_array($contact_users_assigned) || @sizeof($contact_users_assigned) == 0) &&
+		(!is_array($contact_groups_assigned) || @sizeof($contact_groups_assigned) == 0) &&
+		(!is_array($contact_phones) || @sizeof($contact_phones) == 0) &&
+		(!is_array($contact_addresses) || @sizeof($contact_addresses) == 0) &&
+		(!is_array($contact_emails) || @sizeof($contact_emails) == 0) &&
+		(!is_array($contact_urls) || @sizeof($contact_urls) == 0) &&
+		(!is_array($contact_extensions) || @sizeof($contact_extensions) == 0) &&
+		(!is_array($contact_relations) || @sizeof($contact_relations) == 0) &&
+		(!is_array($contact_notes) || @sizeof($contact_notes) == 0) &&
+		(!is_array($contact_times) || @sizeof($contact_times) == 0) &&
+		(!is_array($contact_settings) || @sizeof($contact_settings) == 0) &&
+		(!is_array($contact_attachments) || @sizeof($contact_attachments) == 0)
+		)) {
+		echo "<script>document.getElementsByName('btn_delete')[0].style.display='none';</script>\n";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

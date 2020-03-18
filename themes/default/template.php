@@ -194,13 +194,175 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 							$("#domains_container").css('right','0'); //domain container right position
 							$("#domains_container").hide();
 							$("body").css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
+							document.activeElement.blur();
 						});
 					});
 				}
 
 			<?php
-			key_press('escape', 'up', 'document', null, null, "if ($('#domains_visible').val() == 0) { show_domains(); } else { hide_domains(); }", false);
 		}
+
+		//keyboard shortcut scripts
+
+		//key: [enter] - retain default behavior to submit form, when present
+			echo "	var action_bar_actions, first_form, first_submit;\n";
+			echo "	action_bar_actions = document.querySelector('div#action_bar.action_bar > div.actions');\n";
+			echo "	first_form = document.querySelector('form#frm');\n";
+
+			echo "	if (action_bar_actions !== null) {\n";
+			echo "		if (first_form !== null) {\n";
+			echo "			first_submit = document.createElement('input');\n";
+			echo "			first_submit.type = 'submit';\n";
+			echo "			first_submit.id = 'default_submit';\n";
+			echo "			first_submit.setAttribute('style',\"position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;\");\n"; //note: safari doesn't honor first submit element using "display: none;"
+			echo "			first_form.prepend(first_submit);\n";
+			echo "			window.addEventListener('keydown',function(e){\n";
+			echo "				if (e.which == 13 && (e.target.tagName == 'INPUT' || e.target.tagName == 'SELECT')) {\n";
+			echo "					if (typeof window.submit_form === 'function') { submit_form(); }\n";
+			echo "					else { document.getElementById('frm').submit(); }\n";
+			echo "				}\n";
+			echo "			});\n";
+			echo "		}\n";
+			echo "	}\n";
+
+		//common (used by delete and toggle)
+			echo "	var list_checkboxes;\n";
+			echo "	list_checkboxes = document.querySelectorAll('table.list tr.list-row td.checkbox input[type=checkbox]');\n";
+
+		//keyup event listener
+			echo "	window.addEventListener('keyup', function(e) {\n";
+
+		//key: [escape] - close modal window, if open, or toggle domain selector
+			echo "		if (e.which == 27) {\n";
+			echo "			e.preventDefault();\n";
+			echo "			var modals, modal_visible, modal;\n";
+			echo "			modal_visible = false;\n";
+			echo "			modals = document.querySelectorAll('div.modal-window');\n";
+			echo "			if (modals.length !== 0) {\n";
+			echo "				for (var x = 0, max = modals.length; x < max; x++) {\n";
+			echo "					modal = document.getElementById(modals[x].id);\n";
+			echo "					if (window.getComputedStyle(modal).getPropertyValue('opacity') == 1) {\n";
+			echo "						modal_visible = true;\n";
+			echo "					}\n";
+			echo "				}\n";
+			echo "			}\n";
+			echo "			if (modal_visible) {\n";
+			echo "				modal_close();\n";
+			echo "			}\n";
+			if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+				echo "			else {\n";
+				echo "				if (document.getElementById('domains_visible').value == 0) {\n";
+				echo "					show_domains();\n";
+				echo "				}\n";
+				echo "				else { \n";
+				echo "					hide_domains();\n";
+				echo "				}\n";
+				echo "			}\n";
+			}
+			echo "		}\n";
+
+		//key: [insert], list: to add
+			echo "		if (e.which == 45 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			echo "			e.preventDefault();\n";
+			echo "			var list_add_button;\n";
+			echo "			list_add_button = document.getElementById('btn_add');\n";
+			echo "			if (list_add_button === null || list_add_button === 'undefined') {\n";
+			echo "				list_add_button = document.querySelector('button[name=btn_add]');\n";
+			echo "			}\n";
+			echo "			if (list_add_button !== null) { list_add_button.click(); }\n";
+			echo "		}\n";
+
+		//key: [delete], list: to delete checked, edit: to delete
+			echo "		if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			echo "			e.preventDefault();\n";
+			echo "			if (list_checkboxes.length !== 0) {\n";
+			echo "				var list_delete_button;\n";
+			echo "				list_delete_button = document.querySelector('button[name=btn_delete]');\n";
+			echo "				if (list_delete_button === null || list_delete_button === 'undefined') {\n";
+			echo "					list_delete_button = document.getElementById('btn_delete');\n";
+			echo "				}\n";
+			echo "				if (list_delete_button !== null) { list_delete_button.click(); }\n";
+			echo "			}\n";
+			echo "			else {\n";
+			echo "				var edit_delete_button;\n";
+			echo "				edit_delete_button = document.querySelector('button[name=btn_delete]');\n";
+			echo "				if (edit_delete_button === null || edit_delete_button === 'undefined') {\n";
+			echo "					edit_delete_button = document.getElementById('btn_delete');\n";
+			echo "				}\n";
+			echo "				if (edit_delete_button !== null) { edit_delete_button.click(); }\n";
+			echo "			}\n";
+			echo "		}\n";
+
+		//end keyup
+			echo "	});\n";
+
+		//keydown event listener
+			echo "	window.addEventListener('keydown', function(e) {\n";
+
+		//key: [space], list: to toggle checked
+			echo "		if (e.which == 32 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA' && list_checkboxes.length !== 0) {\n"; //note: for default [space] checkbox behavior (ie. toggle focused checkbox) include: " && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')"
+			echo "			e.preventDefault();\n";
+			echo "			var list_toggle_button;\n";
+			echo "			list_toggle_button = document.querySelector('button[name=btn_toggle]');\n";
+			echo "			if (list_toggle_button === null || list_toggle_button === 'undefined') {\n";
+			echo "				list_toggle_button = document.getElementById('btn_toggle');\n";
+			echo "			}\n";
+			echo "			if (list_toggle_button !== null) { list_toggle_button.click(); }\n";
+			echo "		}\n";
+
+		//key: [ctrl]+[a], list,edit: to check all
+			echo "		if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			echo "			var list_checkbox_all;\n";
+			echo "			list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');\n";
+			echo "			if (list_checkbox_all !== null && list_checkbox_all.length > 0) {\n";
+			echo "				e.preventDefault();\n";
+			echo "				for (var x = 0, max = list_checkbox_all.length; x < max; x++) {\n";
+			echo "					list_checkbox_all[x].click();\n";
+			echo "				}\n";
+			echo "			}\n";
+			echo "			var edit_checkbox_all;\n";
+			echo "			edit_checkbox_all = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');\n";
+			echo "			if (edit_checkbox_all !== null && edit_checkbox_all.length > 0) {\n";
+			echo "				e.preventDefault();\n";
+			echo "				for (var x = 0, max = edit_checkbox_all.length; x < max; x++) {\n";
+			echo "					edit_checkbox_all[x].click();\n";
+			echo "				}\n";
+			echo "			}\n";
+			echo "		}\n";
+
+		//key: [ctrl]+[s], edit: to save
+			echo "		if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) {\n";
+			echo "			e.preventDefault();\n";
+			echo "			var edit_save_button;\n";
+			echo "			edit_save_button = document.getElementById('btn_save');\n";
+			echo "			if (edit_save_button === null || edit_save_button === 'undefined') {\n";
+			echo "				edit_save_button = document.querySelector('button[name=btn_save]');\n";
+			echo "			}\n";
+			echo "			if (edit_save_button !== null) { edit_save_button.click(); }\n";
+			echo "		}\n";
+
+		//key: [ctrl]+[c], list,edit: to copy
+			if (http_user_agent('name_short') == 'Safari') { //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
+				echo "	if ((e.which == 99 || e.which == 67) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			}
+			else {
+				echo "	if ((((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {\n";
+			}
+			echo "			var current_selection, copy_button;\n";
+			echo "			current_selection = window.getSelection();\n";
+			echo "			if (current_selection === null || current_selection == 'undefined' || current_selection.toString() == '') {\n";
+			echo "				e.preventDefault();\n";
+			echo "				copy_button = document.getElementById('btn_copy');\n";
+			echo "				if (copy_button === null || copy_button === 'undefined') {\n";
+			echo "					copy_button = document.querySelector('button[name=btn_copy]');\n";
+			echo "				}\n";
+			echo "				if (copy_button !== null) { copy_button.click(); }\n";
+			echo "			}\n";
+			echo "		}\n";
+
+		//end keydown
+			echo "	});\n";
+
 		?>
 
 		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
@@ -422,24 +584,10 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 
 	//list functions
 		function list_all_toggle(modifier) {
-			var inputs = document.getElementsByTagName('input');
-			if (modifier !== undefined) {
-				var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
-			}
-			else {
-				var checkbox_checked = document.getElementById('checkbox_all').checked;
-			}
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (modifier !== undefined) {
-					if (inputs[i].type === 'checkbox' && inputs[i].className === 'checkbox_'+modifier) {
-						inputs[i].checked = checkbox_checked;
-					}
-				}
-				else {
-					if (inputs[i].type === 'checkbox') {
-						inputs[i].checked = checkbox_checked;
-					}
-				}
+			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']");
+			var checkbox_checked = document.getElementById('checkbox_all' + (modifier !== undefined ? '_'+modifier : '')).checked;
+			for (var i = 0, max = checkboxes.length; i < max; i++) {
+				checkboxes[i].checked = checkbox_checked;
 			}
 			if (document.getElementById('btn_check_all') && document.getElementById('btn_check_none')) {
 				if (checkbox_checked) {
@@ -486,9 +634,67 @@ echo "<script language='JavaScript' type='text/javascript' src='<!--{project_pat
 			document.getElementById('btn_search').style.display = '';
 		}
 
+		function edit_all_toggle(modifier) {
+			var checkboxes = document.getElementsByClassName('checkbox_'+modifier);
+			var checkbox_checked = document.getElementById('checkbox_all_'+modifier).checked;
+			if (checkboxes.length > 0) {
+				for (var i = 0; i < checkboxes.length; ++i) {
+					checkboxes[i].checked = checkbox_checked;
+				}
+				if (document.getElementById('btn_delete')) {
+					document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+				}
+			}
+		}
+
+		function edit_delete_action(modifier) {
+			var checkboxes = document.getElementsByClassName('chk_delete');
+			if (document.getElementById('btn_delete') && checkboxes.length > 0) {
+				var checkbox_checked = false;
+				for (var i = 0; i < checkboxes.length; ++i) {
+					if (checkboxes[i].checked) {
+						checkbox_checked = true;
+					}
+					else {
+						if (document.getElementById('checkbox_all'+(modifier !== undefined ? '_'+modifier : ''))) {
+							document.getElementById('checkbox_all'+(modifier !== undefined ? '_'+modifier : '')).checked = false;
+						}
+					}
+				}
+				document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
+			}
+		}
+
+		function swap_display(a_id, b_id, display_value) {
+			display_value = display_value !== undefined ? display_value : 'inline-block';
+			a = document.getElementById(a_id);
+			b = document.getElementById(b_id);
+			if (window.getComputedStyle(a).display === 'none') {
+				a.style.display = display_value;
+				b.style.display = 'none';
+			}
+			else {
+				a.style.display = 'none';
+				b.style.display = display_value;
+			}
+		}
+
 		function modal_close() {
 			document.location.href='#';
+			document.activeElement.blur();
 		}
+
+		function hide_password_fields() {
+			var password_fields = document.querySelectorAll("input[type='password']");
+			for (var p = 0, max = password_fields.length; p < max; p++) {
+				password_fields[p].style.visibility = 'hidden';
+				password_fields[p].type = 'text';
+			}
+		}
+
+		window.addEventListener('beforeunload', function(e){
+			hide_password_fields();
+		});
 
 </script>
 

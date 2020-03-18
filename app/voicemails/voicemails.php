@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2016
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -136,6 +136,22 @@
 	$voicemails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get vm count for each mailbox
+	if (permission_exists('voicemail_message_view')) {
+		$sql = "select voicemail_uuid, count(*) as voicemail_count ";
+		$sql .= "from v_voicemail_messages where domain_uuid = :domain_uuid";
+		$sql .= " group by voicemail_uuid";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$voicemails_count_tmp = $database->select($sql, $parameters, 'all');
+
+		$voicemails_count = array();
+		foreach ($voicemails_count_tmp as &$row) {
+			$voicemails_count[$row['voicemail_uuid']] = $row['voicemail_count'];
+		}
+		unset($sql, $parameters, $voicemails_count_tmp);
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -152,13 +168,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 15px;','link'=>'voicemail_imports.php']);
 	}
 	if (permission_exists('voicemail_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'link'=>'voicemail_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'voicemail_edit.php']);
 	}
 	if (permission_exists('voicemail_edit') && $voicemails) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	if (permission_exists('voicemail_delete') && $voicemails) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
@@ -193,7 +209,12 @@
 	if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
 		echo th_order_by('voicemail_transcription_enabled', $text['label-voicemail_transcribe_enabled'], $order_by, $order);
 	}
-	echo "<th>".$text['label-tools']."</th>\n";
+	if (permission_exists('voicemail_message_view') || permission_exists('voicemail_greeting_view')) {
+		echo "<th>".$text['label-tools']."</th>\n";
+	}
+	if (permission_exists('voicemail_message_view') && permission_exists('voicemail_greeting_view')) {
+		echo "<th></th>\n";
+	}
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('voicemail_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -229,14 +250,17 @@
 			if (is_array($_SESSION['voicemail']['transcribe_enabled']) && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == 'true') {
 				echo "	<td>".ucwords(escape($row['voicemail_transcription_enabled']))."&nbsp;</td>\n";
 			}
-			echo "	<td class='no-wrap'>\n";
 			if (permission_exists('voicemail_message_view')) {
-				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages']."</a>&nbsp;&nbsp;\n";
+				echo "	<td class='no-wrap' width = '10%'>\n";
+				$tmp_voicemail_string = (array_key_exists($row['voicemail_uuid'], $voicemails_count)) ? " (" . $voicemails_count[$row['voicemail_uuid']] . ")" : " (0)";
+				echo "		<a href='voicemail_messages.php?id=".escape($row['voicemail_uuid'])."'>".$text['label-messages'].$tmp_voicemail_string."</a>\n";
+				echo "	</td>\n";
 			}
 			if (permission_exists('voicemail_greeting_view')) {
+				echo "	<td class='no-wrap' width = '10%'>\n";
 				echo "		<a href='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."&back=".urlencode($_SERVER["REQUEST_URI"])."'>".$text['label-greetings']."</a>\n";
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
 			if (permission_exists('voicemail_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['voicemail_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -263,14 +287,6 @@
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-
-	if ($num_rows > 0) {
-		// check all checkboxes
-		key_press('ctrl+a', 'down', 'document', null, null, "list_all_check();", true);
-
-		// delete checked
-		key_press('delete', 'up', 'document', array('#search'), $text['confirm-delete'], "if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { return false; }", true);
-	}
 
 //include the footer
 	require_once "resources/footer.php";

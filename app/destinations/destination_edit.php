@@ -331,6 +331,7 @@
 							$sql .= "	dialplan_detail_data like '%tone_detect%' ";
 							$sql .= "	or dialplan_detail_type = 'tone_detect' ";
 							$sql .= "	or dialplan_detail_type = 'record_session' ";
+							$sql .= "	or (dialplan_detail_type = 'sleep' and  dialplan_detail_data = '3000') ";
 							$sql .= ")";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['dialplan_uuid'] = $dialplan_uuid;
@@ -774,6 +775,12 @@
 		if (substr($dialplan_detail_data,0,22) == "execute_on_tone_detect") {
 			unset($dialplan_details[$x]);
 		}
+ 		if ($row['dialplan_detail_type'] == "answer") {
+			unset($dialplan_details[$x]);
+		}
+ 		if ($row['dialplan_detail_type'] == "sleep") {
+			unset($dialplan_details[$x]);
+		}
  		if ($row['dialplan_detail_type'] == "record_session") {
 			unset($dialplan_details[$x]);
 		}
@@ -857,7 +864,7 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
@@ -869,8 +876,8 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save']]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -990,15 +997,12 @@
 		echo "	".$text['label-detail_action']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "			<table width='52%' border='0' cellpadding='2' cellspacing='0'>\n";
 		$x = 0;
 		$order = 10;
 		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
 			foreach($dialplan_details as $row) {
 				if ($row["dialplan_detail_tag"] != "condition") {
 					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
-					echo "				<tr>\n";
-					echo "					<td style='padding-top: 5px; padding-right: 3px; white-space: nowrap;'>\n";
 					if (strlen($row['dialplan_detail_uuid']) > 0) {
 						echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
 					}
@@ -1008,21 +1012,13 @@
 					$label = explode("XML", $data);
 					$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 					$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-					echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action);
-					echo "					</td>\n";
-					echo "					<td class='list_control_icons' style='width: 25px;'>";
-					if (strlen($row['destination_uuid']) > 0) {
-						echo "				<a href='destination_delete.php?id=".escape($row['destination_uuid'])."&destination_uuid=".escape($row['destination_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
-					}
-					echo "					</td>\n";
-					echo "				</tr>\n";
+					echo $destination->select('dialplan', 'dialplan_details['.$x.'][dialplan_detail_data]', $detail_action)."<br />\n";
 				}
 				$order = $order + 10;
 				$x++;
 			}
 		}
 		unset($dialplan_details, $row);
-		echo "			</table>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

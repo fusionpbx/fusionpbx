@@ -334,7 +334,7 @@ if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 	<br><br>
 	<div id='ajax_reponse' class='timer_<?php echo escape($timer_state);?>'>00:00:00</div>
 	<br>
-	<form name='frm' id='frm' method='post' action=''>
+	<form name='frm' id='frm' method='post'>
 	<input type='hidden' name='domain_uuid' value="<?php echo escape($domain_uuid); ?>">
 	<input type='hidden' name='contact_time_uuid' value="<?php echo escape($contact_time_uuid); ?>">
 	<input type='hidden' name='contact_uuid' value="<?php echo escape($contact_uuid); ?>">

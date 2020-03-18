@@ -1,35 +1,6 @@
 <?php
 
-	$y=0;
-	$apps[$x]['menu'][$y]['title']['en-us'] = "Applications";
-	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
-	$apps[$x]['menu'][$y]['title']['de-at'] = "Applikationen";
-	$apps[$x]['menu'][$y]['title']['de-de'] = "Applikationen";
-	$apps[$x]['menu'][$y]['title']['es-cl'] = "Aplicaciones";
-	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Apps";
-	$apps[$x]['menu'][$y]['title']['he-il'] = "";
-	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aplikacje";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Aplicações";
-	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Aplicações";
-	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
-	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Приложения";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Appar";
-	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Додатки";
-	$apps[$x]['menu'][$y]['uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-	$apps[$x]['menu'][$y]['parent_uuid'] = "";
-	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-paper-plane";
-	$apps[$x]['menu'][$y]['path'] = "";
-	$apps[$x]['menu'][$y]['order'] = "20";
-	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-	$apps[$x]['menu'][$y]['groups'][] = "admin";
-	$apps[$x]['menu'][$y]['groups'][] = "user";
-	$apps[$x]['menu'][$y]['groups'][] = "agent";
-	$y++;	
+	$y=0;	
 	$apps[$x]['menu'][$y]['title']['en-us'] = "App Manager";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Applikation Verwalten";

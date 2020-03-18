@@ -53,29 +53,10 @@
 //process the http post data by action
 	if ($action != '' && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		switch ($action) {
-			case 'copy':
-				if (permission_exists('call_recording_add')) {
-					$obj = new call_recordings;
-					$obj->copy($call_recordings);
-				}
-				break;
-			case 'toggle':
-				if (permission_exists('call_recording_edit')) {
-					$obj = new call_recordings;
-					$obj->toggle($call_recordings);
-				}
-				break;
 			case 'delete':
 				if (permission_exists('call_recording_delete')) {
 					$obj = new call_recordings;
 					$obj->delete($call_recordings);
-				}
-				break;
-			case 'download':
-				if (permission_exists('call_recording_download_add')) {
-					$obj = new call_recording_downloads;
-					$obj->save($call_recordings);
-					header("Location: ".PROJECT_PATH."/app/call_recording_downloads/call_recording_downloads.php");
 				}
 				break;
 		}
@@ -138,11 +119,11 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_recordings']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-	}
 	if (permission_exists('call_recording_download_add') && $call_recordings) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
+	}
+	if (permission_exists('call_recording_delete') && $call_recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','style'=>'margin-left: 15px;','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";

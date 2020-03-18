@@ -37,11 +37,12 @@ if (!class_exists('destinations')) {
 		* destinations array
 		*/
 		public $destinations;
-		public $db;
+		public $domain_uuid;
 
 		/**
 		* declare private variables
 		*/
+		private $domain_name;
 		private $app_name;
 		private $app_uuid;
 		private $permission_prefix;
@@ -53,12 +54,9 @@ if (!class_exists('destinations')) {
 		* Called when the object is created
 		*/
 		public function __construct() {
-			//connect to the database if not connected
-				if (!$this->db) {
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
+			//set the domain details
+				if (is_null($this->domain_uuid)) {
+					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 
 			//assign private variables
@@ -90,6 +88,13 @@ if (!class_exists('destinations')) {
 
 			//set the global variables
 			global $db_type;
+
+			//get the domain_name
+			$sql = "select domain_name from v_domains ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$database = new database;
+			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
 			if (!is_array($this->destinations)) {
@@ -148,7 +153,7 @@ if (!class_exists('destinations')) {
 								$sql .= trim($row['where'])." ";
 							}
 							$sql .= "order by ".trim($row['order_by']);
-							$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
+							$sql = str_replace("\${domain_uuid}", $this->domain_uuid, $sql);
 							$database = new database;
 							$result = $database->select($sql, null, 'all');
 
@@ -284,7 +289,6 @@ if (!class_exists('destinations')) {
 											}
 										}
 									}
-
 								}
 								else {
 									$select_value = str_replace("\${".$key."}", $data[$key], $select_value);
@@ -303,10 +307,10 @@ if (!class_exists('destinations')) {
 							}
 						}
 
-						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
-						$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
-						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
-						$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
+						$select_value = str_replace("\${domain_name}", $this->domain_name, $select_value);
+						$select_value = str_replace("\${context}", $this->domain_name, $select_value);
+						$select_label = str_replace("\${domain_name}", $this->domain_name, $select_label);
+						$select_label = str_replace("\${context}", $this->domain_name, $select_label);
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
@@ -322,8 +326,10 @@ if (!class_exists('destinations')) {
 				$destination_label = str_replace(":", " ", $destination_value);
 				$destination_label = str_replace("menu-exec-app", "", $destination_label);
 				$destination_label = str_replace("transfer", "", $destination_label);
-				$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
-				$response .= "			<option value='".escape($destination_value)."' selected='selected'>".trim($destination_label)."</option>\n";
+				$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
+				if ($destination_value != '' || $destination_label != '') {
+					$response .= "			<option value='".escape($destination_value)."' selected='selected'>".trim($destination_label)."</option>\n";
+				}
 			}
 			$response .= "	</select>\n";
 			if (if_group("superadmin")) {
@@ -342,6 +348,13 @@ if (!class_exists('destinations')) {
 
 			//set the global variables
 			global $db_type;
+
+			//get the domain_name
+			$sql = "select domain_name from v_domains ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$database = new database;
+			$this->domain_name = $database->select($sql, $parameters, 'column');
 
 			//get the destinations
 			if (!is_array($this->destinations)) {
@@ -399,7 +412,7 @@ if (!class_exists('destinations')) {
 							$sql .= trim($row['where'])." ";
 						}
 						$sql .= "order by ".trim($row['order_by']);
-						$sql = str_replace("\${domain_uuid}", $_SESSION['domain_uuid'], $sql);
+						$sql = str_replace("\${domain_uuid}", $this->domain_uuid, $sql);
 						$database = new database;
 						$result = $database->select($sql, null, 'all');
 
@@ -501,10 +514,10 @@ if (!class_exists('destinations')) {
 							}
 						}
 
-						$select_value = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_value);
-						$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
-						$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
-						$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
+						$select_value = str_replace("\${domain_name}", $this->domain_name, $select_value);
+						$select_value = str_replace("\${context}", $this->domain_name, $select_value);
+						$select_label = str_replace("\${domain_name}", $this->domain_name, $select_label);
+						$select_label = str_replace("\${context}", $this->domain_name, $select_label);
 						$select_label = str_replace("&#9993", 'email-icon', $select_label);
 						$select_label = escape(trim($select_label));
 						$select_label = str_replace('email-icon', '&#9993', $select_label);
@@ -519,7 +532,7 @@ if (!class_exists('destinations')) {
 				$destination_label = str_replace(":", " ", $destination_value);
 				$destination_label = str_replace("menu-exec-app", "", $destination_label);
 				$destination_label = str_replace("transfer", "", $destination_label);
-				$destination_label = str_replace("XML ".$_SESSION['domain_name'], "", $destination_label);
+				$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
 				$array[$label][$destination_label] = $destination_value;
 			}
 
