@@ -230,6 +230,8 @@
 		$view->assign('login_logo_source', $login_logo_source);
 		$view->assign('login_logo_width', $login_logo_width);
 		$view->assign('login_logo_height', $login_logo_height);
+	//messages
+		$view->assign('messages', message::html(true, '		'));
 
 	//render the view
 		$output = $view->render('template.php');
