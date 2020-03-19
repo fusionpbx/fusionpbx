@@ -85,9 +85,9 @@
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
     {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxw4004/{$firmware_version}</P192>
+    <P192>{$grandstream_firmware_path}/ht818/{$firmware_version}</P192>
     {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxw4004</P192>
+    <P192>{$grandstream_firmware_path}/ht818</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
@@ -541,7 +541,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {$tp=0}
-    {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+        {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 	{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 	{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
 	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
