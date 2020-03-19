@@ -597,7 +597,7 @@
     <!-- # Unregister On Reboot. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P81>0</P81>
+    <P81>1</P81>
 
     <!-- # Outgoing call without Registration. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -896,7 +896,7 @@
     <!-- # Disable Call-Waiting Tone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P186>0</P186>
+    <P186>{$grandstream_call_waiting_tone}</P186>
 
     <!-- # Disable Receiver Offhook Tone. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
@@ -1667,16 +1667,16 @@
     <!-- # Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- # Offhook Auto-dial(Set the destination for auto-dial after offhook) -->
     <!-- # String Max Length: 64   -->
-    <P4067>{$account.4.user_id}</P4067>
+    <P4067>{$account.8.user_id}</P4067>
 
     <!-- # String Max Length: 64   -->
-    <P4097>{$account.4.user_id}</P4097>
+    <P4097>{$account.8.user_id}</P4097>
 
     <!-- # String Max Length: 64   -->
-    <P4127>{$account.4.password}</P4127>
+    <P4127>{$account.8.password}</P4127>
 
     <!-- # String Max Length: 64   -->
-    <P4187>{$account.4.display_name}</P4187>
+    <P4187>{$account.8.display_name}</P4187>
 
     <!-- # Number: 0 to 1 -->
     <!-- # Mandatory -->
@@ -1755,7 +1755,7 @@
     <!-- # if the device is using private IP address, it will be enabled. -->
     <!-- # Number: 0,1,2  -->
     <!-- # Mandatory  -->
-    <P190>0</P190>
+    <P190>{$wan_side_webssh_access}</P190>
 
     <!-- # White List for WAN Side. Only the IP address in white list can access Web and SSH. -->
     <!-- # String ipaddress -->
@@ -1782,7 +1782,7 @@
 
     <!-- # DHCP Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
     <!-- # String -->
-    <P148>HT802</P148>
+    <P148>HT818</P148>
 
     <!-- ################################################################################# -->
     <!-- # PPPoE -->
@@ -2035,7 +2035,7 @@
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
     <!-- # Reboot required  -->
-    <P231>0</P231>
+    <P231>{$device_mode}</P231>
 
     <!-- # NAT maximum ports. range: 0 - 4096, default is 1024 -->
     <!-- # Number: 0 to 4096  -->
@@ -2097,7 +2097,7 @@
     <!-- # Reply to ICMP on WAN port. 0 - No, 1 - Yes. Unit will not respond to PING from WAN side if set to No. -->
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
-    <P189>0</P189>
+    <P189>{$reply_to_icmp_on_wan_port}</P189>
 
     <!-- # Enable LAN DHCP. 0 - No, 1 - Yes -->
     <!-- # Number: 0,1  -->
