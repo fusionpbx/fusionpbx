@@ -47,6 +47,7 @@
 	macro_name = params:getHeader("macro_name");
 
 --get the cache
+	local explode = require "resources.functions.explode"
 	local cache = require "resources.functions.cache"
 	local language_cache_key = "languages:" .. language..":" .. macro_name;
 	XML_STRING, err = cache.get(language_cache_key)
@@ -98,11 +99,17 @@
 						--define the xml table
 							local xml = {}
 
+						--get the language components
+							local locale = explode('-', language);
+							local dir_lang = locale[1];
+							local dir_dialect = locale[2];
+							local dir_voice = locale[3];
+
 						--get the xml
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sounds_dir..[[/]]..language..[[/us/callie" tts-engine="cepstral" tts-voice="callie">]]);
+							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang..[[/]]..dir_dialect..[[/]]..dir_voice" tts-engine="flite" tts-voice="rms">]]);
 							table.insert(xml, [[			<phrases>]]);
 							table.insert(xml, [[				<macros>]]);
 
