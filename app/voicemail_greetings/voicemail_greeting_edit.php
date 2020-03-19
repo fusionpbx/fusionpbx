@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -42,13 +42,15 @@
 	$language = new text;
 	$text = $language->get();
 
-//get greeting id
+//validate the uuids
 	if (is_uuid($_REQUEST["id"])) {
 		$voicemail_greeting_uuid = $_REQUEST["id"];
 	}
+	if (is_numeric($_REQUEST["voicemail_id"])) {
+		$voicemail_id = $_REQUEST["voicemail_id"];
+	}
 
 //get the form value and set to php variables
-	$voicemail_id = $_REQUEST["voicemail_id"];
 	if (count($_POST) > 0) {
 		$greeting_name = $_POST["greeting_name"];
 		$greeting_description = $_POST["greeting_description"];
@@ -58,8 +60,30 @@
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-	//get greeting uuid to edit
-		$voicemail_greeting_uuid = $_POST["voicemail_greeting_uuid"];
+
+	//delete the voicemail greeting
+		if (permission_exists('voicemail_greeting_delete')) {
+			if ($_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
+				//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $voicemail_greeting_uuid;
+				//delete
+					$obj = new voicemail_greetings;
+					$obj->voicemail_id = $voicemail_id;
+					$obj->delete($array);
+				//redirect
+					header("Location: voicemail_greetings.php?id=".$voicemail_id);
+					exit;
+			}
+		}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../voicemails/voicemails.php');
+			exit;
+		}
 
 	//check for all required data
 		$msg = '';
@@ -99,7 +123,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$voicemail_greeting_uuid = $_GET["id"];
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
@@ -114,23 +137,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['label-edit'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
 
-	echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>\n";
-	echo "<tr>\n";
-	echo "<td nowrap='nowrap'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<b>".$text['label-edit']."</b>\n";
-	echo "<br><br>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['label-edit']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-xs','link'=>'voicemail_greetings.php?id='.urlencode($voicemail_id)]);
+ 	if (permission_exists('voicemail_greeting_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -155,16 +183,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "".$text['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='voicemail_greeting_uuid' value='".$voicemail_greeting_uuid."'>\n";
-	echo "			<input type='hidden' name='voicemail_id' value='".$voicemail_id."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "<br><br>";
+	echo "<br /><br />";
+
+	echo "<input type='hidden' name='voicemail_greeting_uuid' value='".escape($voicemail_greeting_uuid)."'>\n";
+	echo "<input type='hidden' name='voicemail_id' value='".escape($voicemail_id)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
 

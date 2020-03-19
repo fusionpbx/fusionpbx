@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Voir les Logs";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Log Viewer";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Bekijk logs";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Podgląd logów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Visualizar Log";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Visualizar Log";

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <phone-settings e="2">
+    <!-- Basic Settings -->
+    <web_language perm="">{if isset($snom_language)}{$snom_language}{else}English{/if}</web_language>
+    <language perm="">{if isset($snom_language)}{$snom_language}{else}English{/if}</language>
+    <tone_scheme perm="">{if isset($snom_tone_scheme)}{$snom_tone_scheme}{else}USA{/if}</tone_scheme>
+    <ntp_server perm="">{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server>
+    <ntp_refresh_timer perm="">3600</ntp_refresh_timer>
+    <timezone perm="">{$snom_time_zone}</timezone>
+    <dhcp perm="R">on</dhcp>
+    <phone_name perm="R">snomD712-{substr($mac, -6)}</phone_name>
+    <dim_timer perm="">20</dim_timer>
+    <backlight perm="">15</backlight>
+    <backlight_idle perm="">5</backlight_idle>
+    <display_method perm="">display_name_number</display_method>
+    <global_missed_counter perm="">on</global_missed_counter>
+    <dialnumber_us_format perm="">on</dialnumber_us_format>
+    <show_ivr_digits perm="">off</show_ivr_digits>
+    <!-- Ringtones -->
+    <alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
+    <alert_internal_ring_sound perm="">{if isset($snom_alert_internal)}{$snom_alert_internal}{else}Ringer1{/if}</alert_internal_ring_sound>
+    <alert_external_ring_text perm="">alert-external</alert_external_ring_text>
+    <alert_external_ring_sound perm="">{if isset($snom_alert_external)}{$snom_alert_external}{else}Ringer1{/if}</alert_external_ring_sound>
+    <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
+    <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
+    <!-- SIP Settings -->
+    <mwi_notification perm="">silent</mwi_notification>
+    <mwi_dialtone perm="">stutter</mwi_dialtone>
+    <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
+    <privacy_in perm="">off</privacy_in>
+    <!-- Updates -->
+    <update_policy perm="">auto_update</update_policy>
+    <setting_server perm="RW">https://{if isset($http_auth_enabled) && $http_auth_enabled == true}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+    <!-- Admin Access -->
+    {if isset($admin_password) }
+    <http_user perm="R">{$admin_name}</http_user>
+    <http_pass perm="R">{$admin_password}</http_pass>
+    <web_logout_timer>5</web_logout_timer>
+    <admin_mode perm="R">on</admin_mode>
+    <admin_mode_password perm="R">{$admin_password}</admin_mode_password>
+    <admin_mode_password_confirm perm="R">{$admin_password}</admin_mode_password_confirm>
+    {else}
+    <admin_mode perm="R">on</admin_mode>
+    <admin_mode_password>0000</admin_mode_password>
+    <admin_mode_password_confirm>0000</admin_mode_password_confirm>
+    {/if}
+    <!-- SIP Accounts -->
+    {foreach $lines as $row}
+    <user_active idx="{$row.line_number}" perm="R">{if $row.enabled}on{else}off{/if}</user_active>
+    <user_realname idx="{$row.line_number}" perm="R">{$row.display_name}</user_realname>
+    <user_name idx="{$row.line_number}" perm="R">{$row.user_id}</user_name>
+    <user_pass idx="{$row.line_number}" perm="R">{$row.password}</user_pass>
+    <user_host idx="{$row.line_number}" perm="R">{$row.server_address}:{$row.sip_port}</user_host>
+    <user_outbound idx="{$row.line_number}" perm="R">{if $row.outbound_proxy == ""}{$row.server_address}{else}{$row.outbound_proxy}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}</user_outbound>
+    <user_expiry idx="{$row.line_number}" perm="R">{$row.register_expires}</user_expiry>
+    <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
+    <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
+    <user_mailbox idx="{$row.line_number}" perm="R">{if isset($voicemail_number)}{$voicemail_number}{else}*97{/if}</user_mailbox>
+    <user_symmetrical_rtp idx="{$row.line_number}" perm="">on</user_symmetrical_rtp>
+    <user_ice idx="{$row.line_number}" perm="">off</user_ice>
+    <stun_server idx="{$row.line_number}" perm="R">{$stun_server}{if isset($stun_port)}:{$stun_port}{/if}</stun_server>
+    <stun_binding_interval idx="{$row.line_number}" perm="R">{$snom_stun_interval}</stun_binding_interval>
+    <codec_priority_list idx="{$row.line_number}" perm="RW">{if isset($snom_codec)}{$snom_codec}{else}g722,pcmu,pcma,gsm,g723,g726-32,aal2-g726-32,g729,telephone-event{/if}</codec_priority_list>
+    <keepalive_interval idx="{$row.line_number}" perm="R">{if isset($snom_keepalive)}{$snom_keepalive}{else}5{/if}</keepalive_interval>
+    {if $row@index eq 3}{break}{/if}
+    {/foreach}
+  </phone-settings>
+
+  <firmware-settings>
+    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d712}</firmware>
+    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
+  </firmware-settings>
+
+  <!-- Function Keys. View Key Types here: https://service.snom.com/display/wiki/Function+Key+Types -->
+  <functionKeys e="2"> {assign var="maxKeys" value=5 - count($lines)}
+    {foreach $lines as $row}
+      <fkey idx="{$row.line_number-1}" context="{$row.line_number}" label="{$row.display_name}" perm="RW">line</fkey>
+      {if $row@index eq 3}{break}{/if}
+    {/foreach}
+    {foreach $keys["line"] as $row}
+      <fkey idx="{$row.device_key_id-1+count($lines)}" context="{if $row.device_key_line == ""}active{else}{$row.device_key_line}{/if}" label="{$row.device_key_label}" perm="RW">{$row.device_key_type} {$row.device_key_value}</fkey>
+      {if $row@index eq $maxKeys}{break}{/if}
+    {/foreach}
+  </functionKeys>
+
+  <tbook e="2" complete="true">
+    {foreach $contacts as $row}
+    <item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
+      <name>{$row.contact_name_given} {$row.contact_name_family}</name>
+      <number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
+    </item>
+    {/foreach}
+  </tbook>
+</settings>

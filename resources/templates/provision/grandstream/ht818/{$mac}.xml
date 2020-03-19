@@ -94,7 +94,17 @@
 
     <!-- # Config Server Path -->
     <!-- # Server address;  -->
+<<<<<<< HEAD
     <P237>{$domain_name}{$project_path}/app/provision</P237>
+=======
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {else}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+>>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
     <!-- # XML Config File Password -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -535,7 +545,11 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {$tp=0}
+<<<<<<< HEAD
 	{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+=======
+    {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+>>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 	{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 	{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
 	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
@@ -557,19 +571,32 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
     {if isset($grandstream_nat_traversal)}
+<<<<<<< HEAD
 <P52>{$grandstream_nat_traversal}</P52>
 {else}
 <P52>0</P52>
 {/if}
+=======
+    <P52>{$grandstream_nat_traversal}</P52>
+    {else}
+    <P52>0</P52>
+    {/if}
+>>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
 
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {if isset($grandstream_dns_mode)}
+<<<<<<< HEAD
 <P103>{$grandstream_dns_mode}</P103>
 {else}
 <P103>0</P103>
+=======
+    <P103>{$grandstream_dns_mode}</P103>
+    {else}
+    <P103>0</P103>
+>>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
     {/if}
 
 
@@ -885,7 +912,11 @@
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+<<<<<<< HEAD
     <P714>{$grandstream_call_waiting_caller_id}</P714>
+=======
+    <P714>0</P714>
+>>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
     <!-- # Disable Call-Waiting Tone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -1136,7 +1167,11 @@
     <!-- # FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_fax_mode)}
+    <P228>1</P228>
+    {else}
     <P228>0</P228>
+    {/if}
 
     <!-- # Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
     <!-- # Number: 0, 1 -->
@@ -1718,7 +1753,7 @@
     <!-- # Web Access Mode. 0 - HTTPS, 1 - HTTP. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1650>1</P1650>
+    <P1650>0</P1650>
 
     <!-- # HTTP Web Port. Default HTTP is 80. -->
     <!-- # Number: 1 to 65535 -->

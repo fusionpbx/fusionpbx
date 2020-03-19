@@ -60,6 +60,14 @@
 		$attachment_primary = $_POST['attachment_primary'];
 		$attachment_description = $_POST['attachment_description'];
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
+			}
+
 		if (!is_array($attachment) || sizeof($attachment) == 0) {
 			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
@@ -130,46 +138,45 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_attachment-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-contact_attachment-add'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' enctype='multipart/form-data' action=''>\n";
-	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	echo "<form method='post' name='frm' id='frm' enctype='multipart/form-data'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "update") {
-		echo "<input type='hidden' name='contact_attachment_uuid' value='".escape($contact_attachment_uuid)."'>\n";
-	}
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' nowrap='nowrap'><b>";
-	if ($action == "update") {
-		echo $text['header-contact_attachment-edit'];
+		echo "<b>".$text['header-contact_attachment-edit']."</b>";
 	}
 	else if ($action == "add") {
-		echo $text['header-contact_attachment-add'];
+		echo "<b>".$text['header-contact_attachment-add']."</b>";
 	}
-	echo "</b></td>\n";
-	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-attachment']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	$attachment_type = strtolower(pathinfo($attachment_filename, PATHINFO_EXTENSION));
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
@@ -220,14 +227,15 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_attachment_uuid' value='".escape($contact_attachment_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

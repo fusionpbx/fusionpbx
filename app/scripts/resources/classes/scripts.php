@@ -17,13 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
 
 /**
  * scripts class provides methods for creating the config.lua and copying switch scripts
@@ -53,8 +52,7 @@ if (!class_exists('scripts')) {
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			require_once "resources/classes/database.php";
+			//get database properties
 			$database = new database;
 			$database->connect();
 			$this->db = $database->db;
@@ -98,31 +96,32 @@ if (!class_exists('scripts')) {
 		 */
 		public function copy_files() {
 			if (is_array($_SESSION['switch']['scripts'])) {
-				$dst_dir = $_SESSION['switch']['scripts']['dir'];
-				if (file_exists($dst_dir)) {
+				$destination_directory = $_SESSION['switch']['scripts']['dir'];
+				if (file_exists($destination_directory)) {
 					//get the source directory
 					if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
-						$src_dir = '/usr/share/examples/fusionpbx/scripts';
+						$source_directory = '/usr/share/examples/fusionpbx/scripts';
 					}
 					else {
-						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+						$source_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/scripts';
 					}
-					if (is_readable($dst_dir)) {
-						recursive_copy($src_dir,$dst_dir);
-						unset($src_dir);
-						
-						// Copy the app/*/resource/install/scripts
-						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/install/scripts');
-						foreach ($app_scripts as $app_script){
-							recursive_copy($app_script, $dst_dir);
+					if (is_readable($source_directory)) {
+						//copy the main scripts
+						recursive_copy($source_directory, $destination_directory);
+						unset($source_directory);
+
+						//copy the app/*/resource/install/scripts
+						$app_scripts = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/*/resource/scripts');
+						foreach ($app_scripts as $app_script) {
+							recursive_copy($app_script, $destination_directory);
 						}
 						unset($app_scripts);
 					}
 					else {
-						throw new Exception("Cannot read from '$src_dir' to get the scripts");
+						throw new Exception("Cannot read from '$source_directory' to get the scripts");
 					}
-					chmod($dst_dir, 0775);
-                                        unset($dst_dir);
+					chmod($destination_directory, 0775);
+					unset($destination_directory);
 				}
 			}
 		}
@@ -137,35 +136,16 @@ if (!class_exists('scripts')) {
 					$this->db_path = str_replace("\\", "/", $this->db_path);
 
 				//get the odbc information
-					$sql = "select count(*) as num_rows from v_databases ";
+					$sql = "select * from v_databases ";
 					$sql .= "where database_driver = 'odbc' ";
-					$prep_statement = $this->db->prepare($sql);
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						unset($prep_statement);
-						if ($row['num_rows'] > 0) {
-							$odbc_num_rows = $row['num_rows'];
-
-							$sql = "select * from v_databases ";
-							$sql .= "where database_driver = 'odbc' ";
-							$prep_statement = $this->db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							if (is_array($result)) {
-								foreach ($result as &$row) {
-									$this->dsn_name = $row["database_name"];
-									$this->dsn_username = $row["database_username"];
-									$this->dsn_password = $row["database_password"];
-									break; //limit to 1 row
-								}
-								unset ($prep_statement);
-							}
-						}
-						else {
-							$odbc_num_rows = '0';
-						}
+					$database = new database;
+					$row = $database->select($sql, null, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$this->dsn_name = $row["database_name"];
+						$this->dsn_username = $row["database_username"];
+						$this->dsn_password = $row["database_password"];
 					}
+					unset($sql, $row);
 
 				//get the recordings directory
 					if (is_array($_SESSION['switch']['recordings'])) {
@@ -183,7 +163,8 @@ if (!class_exists('scripts')) {
 				//find the location to write the config.lua
 					if (is_dir("/etc/fusionpbx")){
 						$config = "/etc/fusionpbx/config.lua";
-					} elseif (is_dir("/usr/local/etc/fusionpbx")){
+					}
+					else if (is_dir("/usr/local/etc/fusionpbx")){
 						$config = "/usr/local/etc/fusionpbx/config.lua";
 					}
 					else {
@@ -346,9 +327,11 @@ if (!class_exists('scripts')) {
 					unset($tmp);
 					fclose($fout);
 			}
-		} //end config_lua
-	} //end scripts class
+		}
+
+	}
 }
+
 /*
 //example use
 
@@ -356,4 +339,5 @@ if (!class_exists('scripts')) {
 	$obj = new scripts;
 	$obj->write_config();
 */
+
 ?>

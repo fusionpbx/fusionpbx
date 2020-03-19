@@ -45,6 +45,7 @@
 		$user_uuid = $row['user_uuid'];
 		$authorized = true;
 	}
+	unset($sql, $parameters, $row);
 
 //authorization failed
 	if (!$authorized) {

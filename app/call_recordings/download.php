@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2017
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,10 +27,10 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permisions
-	require_once "resources/check_auth.php";
-	if (permission_exists('call_recording_view')) {
+	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		//access granted
 	}
 	else {
@@ -39,7 +39,11 @@
 	}
 
 //download
-	$obj = new call_recordings;
-	$obj->download();
+	if (is_uuid($_GET['id'])) {
+		$obj = new call_recordings;
+		$obj->recording_uuid = $_GET['id'];
+		$obj->binary = isset($_GET['binary']) ? true : false;
+		$obj->download();
+	}
 
 ?>

@@ -28,4 +28,10 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
+	//permission details
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "gswave_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+
 ?>

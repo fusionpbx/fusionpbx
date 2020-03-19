@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Ajouter, Supprimer ou Lire les fichiers de Musique de Garde.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Voeg toe, verwijder of speel wachtmuziek bestanden.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Adicionar, excluir ou reproduzir música em arquivos de espera.";

@@ -25,13 +25,13 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
 //check permissions
-	if (if_group("superadmin")) {
+	if (permission_exists('device_export')) {
 		//access granted
 	}
 	else {
@@ -44,8 +44,7 @@
 	$text = $language->get();
 
 //define the functions
-	function array2csv(array &$array)
-	{
+	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
 		}
@@ -78,22 +77,32 @@
 
 
 //define possible columns in the array
-	$allowed_columns[] = 'device_uuid';
-	$allowed_columns[] = 'domain_uuid';
-	$allowed_columns[] = 'device_mac_address';
-	$allowed_columns[] = 'device_label';
-	$allowed_columns[] = 'device_template';
-	$allowed_columns[] = 'device_description';
+	$available_columns[] = 'device_uuid';
+	$available_columns[] = 'domain_uuid';
+	$available_columns[] = 'device_mac_address';
+	$available_columns[] = 'device_label';
+	$available_columns[] = 'device_template';
+	$available_columns[] = 'device_description';
 
 //get the devices and send them as output
 	$column_group = $_REQUEST["column_group"];
 	if (is_array($column_group) && @sizeof($column_group) != 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: device_download.php');
+				exit;
+			}
+
 		//validate columns
 			foreach ($column_group as $index => $column_name) {
-				if (!in_array($column_name, $allowed_columns)) {
+				if (!in_array($column_name, $available_columns)) {
 					unset($column_group[$index]);
 				}
 			}
+
 		//iterate columns
 			if (is_array($column_group) && @sizeof($column_group) != 0) {
 				$column_names = implode(", ", $column_group);
@@ -106,73 +115,60 @@
 				//print_r($extensions);
 
 				if (is_array($devices) && @sizeof($devices) != 0) {
-					download_send_headers("data_export_".date("Y-m-d").".csv");
+					download_send_headers("device_export_".date("Y-m-d").".csv");
 					echo array2csv($devices);
-					exit();
+					exit;
 				}
 			}
 			unset($column_group);
 	}
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
-//begin the page content
+//include the header
+	$document['title'] = $text['title-device_export'];
 	require_once "resources/header.php";
 
-	echo "<form method='post' name='frm' action='device_download.php' autocomplete='off'>\n";
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<td valign='top' align='left' nowrap='nowrap'><b>".$text['header-export']."</b><br /></td>\n";
-	echo "	<td valign='top' align='right' colspan='2'>\n";
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
-	echo "	<th><input type=\"checkbox\" id=\"selectall\" onclick=\"checkbox_toggle();\"/></th>\n";
-	echo "	<th>Column Name</th>\n";
-	echo "	<th>Description</th>\n";
+//show the content
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-device_export']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'devices.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	echo "	<th class='checkbox'>\n";
+	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
+	echo "	</th>\n";
+	echo "	<th>".$text['label-column_name']."</th>\n";
 	echo "</tr>\n";
 
-	foreach ($allowed_columns as $column_name) {
-		echo "<tr>\n";
-		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
-		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"".$column_name."\"/>";
-		echo "	</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$column_name."</td>";
-		echo "	<td valign='top' class='".$row_style[$c]."'></td>";
-		echo "</tr>";
-		if ($c==0) { $c=1; } else { $c=0; }
+	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
+		$x = 0;
+		foreach ($available_columns as $column_name) {
+			$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "	<td class='checkbox'>\n";
+			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
+			echo "	</td>\n";
+			echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
+			echo "</tr>";
+			$x++;
+		}
 	}
 
-	echo "	<tr>\n";
-	echo "		<td colspan='3' align='right'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' class='btn' value='".$text['button-export']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-
-	echo "</table>";
-	echo "<br><br>";
-	echo "</form>";
-
-	//define the checkbox_toggle function
-	echo "<script type=\"text/javascript\">\n";
-	echo "	function checkbox_toggle(item) {\n";
-	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "			if (inputs[i].type === 'checkbox') {\n";
-	echo "				if (document.getElementById('selectall').checked == true) {\n";
-	echo "				inputs[i].checked = true;\n";
-	echo "			}\n";
-	echo "				else {\n";
-	echo "					inputs[i].checked = false;\n";
-	echo "				}\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "</script>\n";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

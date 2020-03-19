@@ -34,7 +34,6 @@ if (!class_exists('providers')) {
 	class providers {
 
 		//define variables
-		public $db;
 		public $debug;
 		public $domain_uuid;
 		public $array;
@@ -43,13 +42,7 @@ if (!class_exists('providers')) {
 		 * Called when the object is created
 		 */
 		public function __construct() {
-			//connect to the database if not connected
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
+
 		}
 
 		/**
@@ -332,48 +325,37 @@ if (!class_exists('providers')) {
 
 			//get the domains access control uuid
 				$sql = "select access_control_uuid from v_access_controls ";
-				$sql .= "where access_control_name = 'domains'; ";
+				$sql .= "where access_control_name = 'domains' ";
 				if ($this->debug) {
 					echo $sql."<br />\n";
 				}
-				$prep_statement = $this->db->prepare($sql);
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					$access_control_uuid = $result['access_control_uuid'];
-				}
-				unset($prep_statement);
+				$database = new database;
+				$access_control_uuid = $database->select($sql, null, 'column');
+				unset($sql);
 
 			//get the existing nodes
 				$sql = "select * from v_access_control_nodes ";
-				$sql .= "where access_control_uuid = '".$access_control_uuid."' ";
+				$sql .= "where access_control_uuid = :access_control_uuid ";
 				$sql .= "and node_cidr <> '' ";
 				if ($this->debug) {
 					echo $sql."<br />\n";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$access_control_nodes = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					//echo "<pre>\n";
-					//print_r($access_control_nodes);
-					//echo "</pre>\n";
-				}
+				$parameters['access_control_uuid'] = $access_control_uuid;
+				$database = new database;
+				$access_control_nodes = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
 
-			//get the existing nodes
-				$sql = "select * from v_sip_profiles ";
+			//get the sip profile name
+				$sql = "select sip_profile_name from v_sip_profiles ";
 				$sql .= "where sip_profile_enabled = 'true' ";
 				$sql .= "order by sip_profile_name asc ";
 				$sql .= "limit 1; ";
 				if ($this->debug) {
 					echo $sql."<br />\n";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					$sip_profile_name = $result['sip_profile_name'];
-				}
+				$database = new database;
+				$sip_profile_name = $database->select($sql, null, 'column');
+				unset($sql);
 
 			//add the nodes
 				$x = 0;
@@ -564,13 +546,7 @@ if (!class_exists('providers')) {
 				$database->app_name = 'outbound_routes';
 				$database->app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 				$database->save($array);
-				$message = $database->message;
-
-			//debug
-				//echo "<pre>\n";
-				//print_r($array);
-				//echo "<pre>\n";
-				//exit;
+				unset($array);
 
 			//update the dialplan xml
 				$dialplans = new dialplan;
@@ -612,63 +588,97 @@ if (!class_exists('providers')) {
 
 			//delete each node
 				$nodes = $this->nodes($provider);
-				foreach ($nodes as $row) {
-					$sql = "delete from v_access_control_nodes ";
-					$sql .= "where access_control_node_uuid = '".$row['uuid']."'; ";
-					$this->db->query($sql);
-					unset($sql);
+				if (is_array($nodes) && @sizeof($nodes) != 0) {
+					$x = 0;
+					foreach ($nodes as $row) {
+						//build delete array
+							$array['access_control_nodes'][$x]['access_control_node_uuid'] = $row['uuid'];
+						$x++;
+					}
+					if (is_array($array) && @sizeof($array) != 0) {
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('access_control_node_delete', 'temp');
+						//execute delete
+							$database = new database;
+							$database->app_name = 'providers';
+							$database->app_uuid = 'b12946a2-f5f7-4eb9-8b79-7d90b89f8aef';
+							$database->delete($array);
+							unset($array);
+						//revoke temporary permissions
+							$p->delete('access_control_node_delete', 'temp');
+					}
 				}
 
-			//get the existing nodes
-				$sql = "select * from v_sip_profiles ";
+			//get the sip profile name
+				$sql = "select sip_profile_name from v_sip_profiles ";
 				$sql .= "where sip_profile_enabled = 'true' ";
 				$sql .= "order by sip_profile_name asc ";
 				$sql .= "limit 1; ";
 				if ($this->debug) {
 					echo $sql."<br />\n";
 				}
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				if ($prep_statement) {
-					$prep_statement->execute();
-					$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					$sip_profile_name = $result['sip_profile_name'];
-				}
+				$database = new database;
+				$sip_profile_name = $database->select($sql, null, 'column');
+				unset($sql);
 
 			//create the event socket connection
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 			//get the hostname
-				if ($fp) {  $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
+				if ($fp) { $sip_profile_hostname = event_socket_request($fp, 'api switchname'); }
 
 
 			//delete outbound routes
 				$outbound_routes = $this->outbound_routes($provider);
+				$x = 0;
 				foreach ($outbound_routes as $row) {
-					//delete child data
-					$sql = "delete from v_dialplan_details ";
-					$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."'; ";
-					$this->db->query($sql);
-					unset($sql);
-
-					//delete parent data
-					$sql = "delete from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$row['dialplan_uuid']."'; ";
-					$this->db->query($sql);
-					unset($sql);
+					//build child data delete array
+						$array['dialplan_details'][$x]['dialplan_uuid'] = $row['dialplan_uuid'];
+					//build parent delete array
+						$array['dialplans'][$x]['dialplan_uuid'] = $row['dialplan_uuid'];
+					$x++;
+				}
+				if (is_array($array) && @sizeof($array) != 0) {
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('dialplan_detail_delete', 'temp');
+						$p->add('dialplan_delete', 'temp');
+					//execute delete
+						$database = new database;
+						$database->app_name = 'providers';
+						$database->app_uuid = 'b12946a2-f5f7-4eb9-8b79-7d90b89f8aef';
+						$database->delete($array);
+						unset($array);
+					//revoke temporary permissions
+						$p->delete('dialplan_detail_delete', 'temp');
+						$p->delete('dialplan_delete', 'temp');
 				}
 
 			//delete each gateway
 				$gateways = $this->gateways($provider);
+				$x = 0;
 				foreach ($gateways as $row) {
 					//stop the gateway
-					$cmd = "sofia profile ".$sip_profile_name." killgw ".$row['uuid'];
-					if ($fp) { event_socket_request($fp, "api ".$cmd); }
+						$cmd = "sofia profile ".$sip_profile_name." killgw ".$row['uuid'];
+						if ($fp) { event_socket_request($fp, "api ".$cmd); }
 
-					//delete the gateway
-					$sql = "delete from v_gateways ";
-					$sql .= "where gateway_uuid = '".$row['uuid']."'; ";
-					$this->db->query($sql);
-					unset($sql);
+					//build gateway delete array
+						$array['gateways'][$x]['gateway_uuid'] = $row['uuid'];
+					$x++;
+				}
+				if (is_array($array) && @sizeof($array) != 0) {
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('gateway_delete', 'temp');
+					//execute delete
+						$database = new database;
+						$database->app_name = 'providers';
+						$database->app_uuid = 'b12946a2-f5f7-4eb9-8b79-7d90b89f8aef';
+						$database->delete($array);
+						unset($array);
+					//revoke temporary permissions
+						$p->delete('gateway_delete', 'temp');
 				}
 
 			//clear the cache
@@ -681,7 +691,7 @@ if (!class_exists('providers')) {
 				if ($fp) { event_socket_request($fp, "api sofia profile ".$sip_profile_name." rescan"); }
 		}
 
-	} //end scripts class
+	}
 }
 
 /*

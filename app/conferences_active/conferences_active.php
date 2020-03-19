@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -44,6 +44,7 @@
 	$text = $language->get();
 
 //include the header
+	$document['title'] = $text['title-active_conferences'];
 	require_once "resources/header.php";
 
 ?>
@@ -81,6 +82,18 @@ loadXmlHttp.prototype.stateChanged=function () {
 if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
 	//this.el.innerHTML = this.xmlHttp.responseText;
 	document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
+
+	//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
+		$('.tr_hover tr,.list tr').each(function(i,e) {
+			$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
+				var href = $(this).closest('tr').attr('href');
+				var target = $(this).closest('tr').attr('target');
+				if (href) {
+					if (target) { window.open(href, target); }
+					else { window.location = href; }
+				}
+			});
+		});
 }
 
 var requestTime = function() {
@@ -101,19 +114,18 @@ else if (window.attachEvent) {
 <?php
 
 //page header
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "  <tr>\n";
-	echo "	<td align='left'>";
-	echo "		<b>".$text['label-active']."</b>";
-	echo "		<br><br>\n";
-	echo "		".$text['description-active']."\n";
-	echo "	</td>\n";
-	echo "  </tr>\n";
-	echo "</table>\n";
-	echo "<br>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-active_conferences']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-active']."\n";
+	echo "<br /><br />\n";
 
 //show the content
-	echo "<div id=\"ajax_response\"></div>";
+	echo "<div id='ajax_response'></div>";
 	echo "<br><br>";
 
 //include the footer

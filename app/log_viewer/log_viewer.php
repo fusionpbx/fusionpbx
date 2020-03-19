@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -42,11 +42,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//define variables
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
 
 //set a default line number value (off)
 	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') { $_POST['line_number'] = 0; }
@@ -78,30 +73,30 @@
 	}
 
 //include the header
+	$document['title'] = $text['title-log_viewer'];
 	require_once "resources/header.php";
 
 //show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-log_viewer']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
+	echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
+	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".($_POST['line_number'] == 1 ? 'checked' : null)."> ".$text['label-line_number']."</label>";
+	echo 		"<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".($_POST['sort'] == 'desc' ? 'checked' : null)."> ".$text['label-sort']."</label>";
+	echo 		$text['label-display']." <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size'];
+	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','name'=>'submit']);
+	if (permission_exists('log_download')) {
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&t=logs']);
+	}
+	echo 		"</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' valign='top' width='100%' style='padding-right: 15px;' nowrap>\n";
-	echo "			<b>".$text['label-log_viewer']."</b><br />\n";
-	echo "		</td>\n";
-	echo "		<td align='right' valign='middle' nowrap>\n";
-	echo "			<form action='log_viewer.php' method='POST'>\n";
-	echo "			".$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
-	echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='line_number' id='line_number' value='1' ".(($_POST['line_number'] == 1) ? 'checked' : null)."> ".$text['label-line_number']."</label>";
-	echo "			<label style='margin-right: 20px; margin-top: 4px;'><input type='checkbox' name='sort' id='sort' value='desc' ".(($_POST['sort'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
-	echo "			Display <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size']."";
-	echo "			<input type='submit' class='btn' style='margin-left: 20px;' name='submit' value=\"".$text['button-reload']."\">";
-	if (permission_exists('log_download')) {
-		echo "		<input type='button' class='btn' value='".$text['button-download']."' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
-	}
-	echo "			</form>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr><td colspan='2'>&nbsp;</td></tr>";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
+	echo "		<td style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
 
 	if (permission_exists('log_view')) {
 
@@ -163,8 +158,7 @@
 		}
 		*/
 
-		echo "		<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
-		echo "			<tr>";
+		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
 		if (isset($_POST['submit'])) {
 			if (!is_numeric($_POST['size'])) {
@@ -175,16 +169,12 @@
 				$user_file_size = $_POST['size'] * 1024;
 			}
 			if (strlen($_REQUEST['filter']) > 0) {
-				$uuid_filter = $_REQUEST['filter'];
-				echo "		<td style='text-align: left; color: #FFFFFF;'>".$text['description-filter']." ".escape($uuid_filter)."</td>";
+				$filter = $_REQUEST['filter'];
 			}
 		}
-
 		//echo "Log File Size: " . $file_size . " bytes. <br />";
-		echo "				<td style='text-align: right;color: #FFFFFF;'>".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].". </td>";
-		echo "			</tr>";
-		echo "		</table>";
-		echo "		<hr size='1' style='color: #fff;'>";
+		echo "	".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].".";
+		echo "</div>";
 
 		$file = fopen($log_file, "r") or exit($text['error-open_file']);
 
@@ -237,8 +227,8 @@
 			$noprint = false;
 
 			$skip_line = false;
-			if (!empty($uuid_filter) ) {
-				$uuid_match = strpos($log_line, $uuid_filter);
+			if (!empty($filter) ) {
+				$uuid_match = strpos($log_line, $filter);
 				if ($uuid_match === false) {
 					$skip_line = true;
 				}

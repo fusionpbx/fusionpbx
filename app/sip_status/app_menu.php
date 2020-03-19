@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statut SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato SIP";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "SIP Status";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status SIP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do SIP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Estado do SIP";

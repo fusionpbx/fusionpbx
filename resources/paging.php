@@ -32,7 +32,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	if (!is_numeric($result_count)) { $result_count = 0; }
 
 	// if $_get['page'] defined, use it as page number
-	if(isset($_GET['page']) && is_numeric($_GET['page'])) {
+	if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 		$page_number = $_GET['page'];
 	}
 	else {
@@ -52,7 +52,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 					//validate order by
 					$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 				}
-				elseif ($key == 'order' && strlen($value) > 0) {
+				else if ($key == 'order' && strlen($value) > 0) {
 					//validate order
 					switch ($value) {
 						case 'asc':
@@ -63,7 +63,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 							break;
 					}
 				}
-				elseif (strlen($value) > 0 && is_numeric($value)) {
+				else if (strlen($value) > 0 && is_numeric($value)) {
 					$sanitized_parameters .= "&".$key."=".$value;
 				}
 				else {
@@ -72,9 +72,6 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 			}
 		}
 	}
-
-	//get the offset
-	$offset = ($page_number - 1) * $rows_per_page;
 
 	//how many pages we have when using paging
 	if ($num_rows > 0) {
@@ -86,39 +83,39 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	$text = $language->get();
 
 	//print the link to access each page
-	$self =  escape($_SERVER['PHP_SELF']);
+	$self =  htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
 	$nav = '';
-	for($page = 1; $page <= $max_page; $page++){
+	for ($page = 1; $page <= $max_page; $page++){
 		if ($page == $page_number) {
 			$nav .= " $page ";   // no need to create a link to current page
 		}
 		else {
-			$nav .= " <a href=\"$self?page=$page\">$page</a> \n";
+			$nav .= " <a href='".$self."?page=".$page."'>".$page."</a> \n";
 		}
 	}
 
 	if ($page_number > 0) {
 		$page = $page_number - 1;
-		$prev = "<input class='btn' type='button' value='".$text['button-back']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=".$page.$sanitized_parameters."';\">\n"; //&#9664;
-		$first = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=1".$sanitized_parameters."';\">\n"; //&#9650;
+		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-left','link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$first = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-left','link'=>$self."?page=1".$sanitized_parameters]);
 	}
 	else {
-		$prev = "<input class='btn' type='button' disabled value='".$text['button-back']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9664;
+		$prev = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-left','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	if (($page_number + 1) < $max_page) {
 		$page = $page_number + 1;
-		$next = "<input class='btn' type='button' value='".$text['button-next']."' alt='".($page+1)."' title='".($page+1)."' onClick=\"window.location = '".$self."?page=".$page.$sanitized_parameters."';\">\n"; //&#9654;
-		$last = "<input class='btn' type='button' value='".$text['button-back']."' onClick=\"window.location = '".$self."?page=".$max_page.$sanitized_parameters."';\">\n"; //&#9660;
+		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','link'=>$self."?page=".$page.$sanitized_parameters,'title'=>$text['label-page'].' '.($page+1)]);
+		$last = button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>'chevron-right','link'=>$self."?page=".$max_page.$sanitized_parameters]);
 	}
 	else {
-		$last = "<input class='btn' type='button' value='".$text['button-next']."' onClick=\"window.location = '".$self."?page=".$max_page.$sanitized_parameters."';\">\n"; //&#9660;
-		$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+		$last = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','link'=>$self."?page=".$max_page.$sanitized_parameters]);
+		$next = button::create(['type'=>'button','label'=>$text['button-next'],'icon'=>'chevron-right','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	//if the result count is less than the rows per page then this is the last page of results
 	if ($result_count > 0 and $result_count < $rows_per_page) {
-			$next = "<input class='btn' type='button' disabled value='".$text['button-next']."' style='opacity: 0.4; -moz-opacity: 0.4; cursor: default;'>\n"; //&#9654;
+		$next = button::create(['type'=>'button','label'=>(!$mini ? $text['button-next'] : null),'icon'=>'chevron-right','onclick'=>"return false;",'title'=>'','style'=>'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
 	}
 
 	$array = array();
@@ -158,15 +155,16 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 							"if (page_num < 1) { page_num = 1; }\n".
 							"if (page_num > ".$max_page.") { page_num = ".$max_page."; }\n".
 							"document.location.href = '".$self."?page='+(--page_num)+'".$sanitized_parameters."';\n".
+							"return false;\n".
 						"}\n".
 					"}\n".
 				"</script>\n";
 		//determine size
 			if ($mini) {
-				$code = $prev.$next."\n".$script;
+				$code = "<span style='white-space: nowrap;'>".$prev.$next."</span>\n".$script;
 			}
 			else {
-				$code .= "<center nowrap=\"nowrap\">";
+				$code .= "<center style='white-space: nowrap;'>";
 				$code .= "	".$prev;
 				$code .= "	&nbsp;&nbsp;&nbsp;";
 				$code .= "	<input id='paging_page_num' class='formfld' style='max-width: 50px; min-width: 50px; text-align: center;' type='text' value='".($page_number+1)."' onfocus='this.select();' onkeypress='return go(event);'>";
@@ -185,7 +183,6 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 		$array[] = "";
 	}
 	$array[] = $rows_per_page;
-	$array[] = $offset;
 
 	return $array;
 

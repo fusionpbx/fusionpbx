@@ -625,11 +625,6 @@
 					//echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
 					//echo "			</td>\n";
 					//echo "				<td nowrap='nowrap'>\n";
-					//if (strlen($row['device_key_uuid']) > 0) {
-					//	if (permission_exists('device_key_delete')) {
-					//		echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-					//	}
-					//}
 					//echo "				</td>\n";
 
 					echo "			</tr>\n";

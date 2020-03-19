@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@
 	set_time_limit(15*60); //15 minutes
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -122,19 +122,25 @@
 		header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 		exit;
 
-	} // end if
+	}
 
 //include the header and set the title
-	require_once "resources/header.php";
 	$document['title'] = $text['title-upgrade'];
+	require_once "resources/header.php";
 
 //show the content
-	echo "<b>".$text['header-upgrade']."</b>";
-	echo "<br /><br />";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-upgrade']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-upgrade_execute'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'never']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo $text['description-upgrade'];
 	echo "<br /><br />";
-
-	echo "<form name='frm' method='post' action=''>\n";
 
 	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -198,7 +204,7 @@
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-		echo "		<label for='do_apps'><input type='checkbox' name='do[apps]' id='do_apps' value='1'> &nbsp;".$text['description-upgrade_apps']."</label>\n";
+		echo "		<input type='checkbox' name='do[apps]' id='do_apps' value='1'> &nbsp;".$text['description-upgrade_apps']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -242,12 +248,10 @@
 		echo "</table>\n";
 	}
 
-	echo "<br />";
-	echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
 	echo "</form>\n";
 
 	echo "<br /><br />";
-	if (is_array($_SESSION["response"])) {
+	if (!empty($_SESSION["response"]) && is_array($_SESSION["response"])) {
 		foreach($_SESSION["response"] as $part => $response){
 			echo "<b>". $text["label-results"]." - ".$text["label-${part}"]."</b>";
 			echo "<br /><br />";

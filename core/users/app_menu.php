@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Utenti";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menedżer użytkowników";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerencir utiliários";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciar Usuários";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestão de Utilizadores";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Пользователи";
@@ -47,7 +47,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "4d532f0b-c206-c39d-ff33-fc67d668fb69";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/core/users/user_edit.php";
+	$apps[$x]['menu'][$y]['path'] = "/core/users/user_edit.php?id=user";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";

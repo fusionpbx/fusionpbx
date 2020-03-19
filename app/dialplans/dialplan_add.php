@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('dialplan_add')) {
@@ -42,10 +43,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//additional includes
-	require_once "resources/header.php";
-	$document['title'] = $text['title-dialplan_add'];
-	require_once "resources/paging.php";
+//initialize the destinations object
+	$destination = new destinations;
 
 //set the variables
 	if (count($_POST) > 0) {
@@ -85,6 +84,15 @@
 
 //add or update data from http post
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
 		//check for all required data
 			if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
 			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -150,8 +158,10 @@
 			$array['dialplan_details'][2]['dialplan_uuid'] = $dialplan_uuid;
 			$array['dialplan_details'][2]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
 			$array['dialplan_details'][2]['dialplan_detail_tag'] = 'action';
-			$array['dialplan_details'][2]['dialplan_detail_type'] = $action_application_1;
-			$array['dialplan_details'][2]['dialplan_detail_data'] = $action_data_1;
+			if ($destination->valid($action_application_1.':'.$action_data_1)) {
+				$array['dialplan_details'][2]['dialplan_detail_type'] = $action_application_1;
+				$array['dialplan_details'][2]['dialplan_detail_data'] = $action_data_1;
+			}
 			$array['dialplan_details'][2]['dialplan_detail_order'] = '3';
 	
 		//add action 2
@@ -161,8 +171,10 @@
 				$array['dialplan_details'][3]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplan_details'][3]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
 				$array['dialplan_details'][3]['dialplan_detail_tag'] = 'action';
-				$array['dialplan_details'][3]['dialplan_detail_type'] = $action_application_2;
-				$array['dialplan_details'][3]['dialplan_detail_data'] = $action_data_2;
+				if ($destination->valid($action_application_2.':'.$action_data_2)) {
+					$array['dialplan_details'][3]['dialplan_detail_type'] = $action_application_2;
+					$array['dialplan_details'][3]['dialplan_detail_data'] = $action_data_2;
+				}
 				$array['dialplan_details'][3]['dialplan_detail_order'] = '4';
 			}
 	
@@ -185,9 +197,6 @@
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php");
 			exit;
 	}
-
-//initialize the destinations object
-	$destination = new destinations;
 
 //javascript type on change
 	?><script type="text/javascript">
@@ -219,37 +228,39 @@
 	}
 	-->
 	</script>
+	<?php
 
-<?php
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-dialplan_add'];
+	require_once "resources/header.php";
+
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['header-dialplan-add']."</span>\n";
-	echo "		</td>\n";
-	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"window.location='dialplan_edit.php'\" value='".$text['button-advanced']."'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			<br><span class=\"vexpl\">".$text['description-dialplan_manager-superadmin']."</span>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>";
-	echo "<br />\n";
-	
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-dialplan-add']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'dialplans.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>'margin-left: 15px;','link'=>'dialplan_edit.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-dialplan_manager-superadmin']."\n";
+	echo "<br /><br />\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name)."\">\n";
 	echo "<br />\n";
 	echo "\n";
@@ -541,19 +552,15 @@
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-	
-	echo "<tr>\n";
-	echo "	<td colspan='5' align='right'>\n";
-	if ($action == "update") {
-		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-	}
-	echo "		<br>";
-	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "	</td>\n";
-	echo "</tr>";
-	
+
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

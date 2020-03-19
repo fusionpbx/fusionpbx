@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,6 +71,7 @@
 	}
 
 //additional includes
+	$document['title'] = $text['title-messages'];
 	require_once "resources/header.php";
 
 //resize thread window on window resize
@@ -88,10 +89,10 @@
 	echo "	#message_new_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -115,10 +116,10 @@
 	echo "	#message_media_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
-	echo "		left: 0px;\n";
-	echo "		top: 0px;\n";
-	echo "		right: 0px;\n";
-	echo "		bottom: 0px;\n";
+	echo "		left: 0;\n";
+	echo "		top: 0;\n";
+	echo "		right: 0;\n";
+	echo "		bottom: 0;\n";
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "		}\n";
@@ -191,10 +192,10 @@
 		echo "							</td>\n";
 		echo "						</tr>\n";
 		echo "					</table>\n";
-		echo "					<center>\n";
-		echo "						<input type='reset' class='btn' style='float: left; margin-top: 15px;' value='".$text['button-clear']."' onclick=\"$('#message_new').reset();\">\n";
-		echo "						<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#message_new_layer').fadeOut(200);\">\n";
-		echo "						<input type='submit' class='btn' style='float: right; margin-top: 15px;' value='".$text['button-send']."'>\n";
+		echo "					<center style='margin-top: 15px;'>\n";
+		echo button::create(['type'=>'reset','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'style'=>'float: left;','onclick'=>"$('#message_new').reset();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-close'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'onclick'=>"$('#message_new_layer').fadeOut(200);"]);
+		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','style'=>'float: right;']);
 		echo "					</center>\n";
 		echo "				</span>\n";
 		echo "				</form>\n";
@@ -208,19 +209,16 @@
 	echo "<div id='message_media_layer' style='display: none;'></div>\n";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-messages']."</b><br><br></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-messages']."</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('message_add')) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['label-new_message']."' onclick=\"$('#message_new_layer').fadeIn(200); unload_thread();\" value='".$text['label-new_message']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['label-new_message'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$('#message_new_layer').fadeIn(200); unload_thread();"]);
 	}
-	echo "				<a href='messages_log.php'><input type='button' class='btn' alt=\"".$text['label-log']."\" value=\"".$text['label-log']."\"></a>\n";
-	echo "			</td>\n";
-	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo button::create(['type'=>'button','label'=>$text['label-log'],'icon'=>'list','link'=>'messages_log.php']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
@@ -255,7 +253,7 @@
 	echo "	function load_thread(number, contact_uuid) {\n";
 	echo "		clearTimeout(timer_thread);\n";
 	echo "		$('#thread').load('messages_thread.php?number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!
@@ -280,7 +278,7 @@
 
 	echo "	function refresh_thread(number, contact_uuid, onsent) {\n";
 	echo "		$('#thread_messages').load('messages_thread.php?refresh=true&number=' + encodeURIComponent(number) + '&contact_uuid=' + encodeURIComponent(contact_uuid), function(){\n";
-	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 450 }, 200, function() {\n";
+	echo "			$('div#thread_messages').animate({ 'max-height': $(window).height() - 470 }, 200, function() {\n";
 	echo "				$('#thread_messages').scrollTop(Number.MAX_SAFE_INTEGER);\n"; //chrome
 	echo "				$('span#thread_bottom')[0].scrollIntoView(true);\n"; //others
 						//note: the order of the above two lines matters!

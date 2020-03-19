@@ -63,55 +63,60 @@
 	$contact_relations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-
-//show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-contact_relations']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-//show the relations
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<th>".$text['label-contact_relation_label']."</th>\n";
-	echo "<th>".$text['label-contact_relation_organization']."</th>\n";
-	echo "<th>".$text['label-contact_relation_name']."</th>\n";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('contact_relation_add')) {
-		echo "<a href='contact_relation_edit.php?contact_uuid=".$contact_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
-
+//show if exists
 	if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
-		foreach($contact_relations as $row) {
-			if (permission_exists('contact_relation_edit')) {
-				$tr_link = "href='contact_relation_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_relation_uuid'])."' ";
-			}
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['relation_label'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."'>".escape($row['contact_name_given']).(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('contact_relation_edit')) {
-				echo "<a href='contact_relation_edit.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_relation_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('contact_relation_delete')) {
-				echo "<a href='contact_relation_delete.php?contact_uuid=".$contact_uuid."&id=".escape($row['contact_relation_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
-		} //end foreach
-		unset($contact_relations, $row);
-	} //end if results
 
-	echo "</table>";
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['header-contact_relations']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
+
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
+			if (permission_exists('contact_relation_delete')) {
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all_relations' name='checkbox_all' onclick=\"edit_all_toggle('relations');\" ".($contact_relations ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
+			}
+			echo "<th>".$text['label-contact_relation_label']."</th>\n";
+			echo "<th>".$text['label-contact_relation_organization']."</th>\n";
+			echo "<th>".$text['label-contact_relation_name']."</th>\n";
+			if (permission_exists('contact_relation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>&nbsp;</td>\n";
+			}
+			echo "</tr>\n";
+
+			if (is_array($contact_relations) && @sizeof($contact_relations) != 0) {
+				$x = 0;
+				foreach ($contact_relations as $row) {
+					if (permission_exists('contact_relation_edit')) {
+						$list_row_url = "contact_relation_edit.php?contact_uuid=".urlencode($contact_uuid)."&id=".urlencode($row['contact_relation_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					if (permission_exists('contact_relation_delete')) {
+						echo "	<td class='checkbox'>\n";
+						echo "		<input type='checkbox' name='contact_relations[$x][checked]' id='checkbox_".$x."' class='checkbox_relations' value='true' onclick=\"edit_delete_action('relations');\">\n";
+						echo "		<input type='hidden' name='contact_relations[$x][uuid]' value='".escape($row['contact_relation_uuid'])."' />\n";
+						echo "	</td>\n";
+					}
+					echo "	<td>".escape($row['relation_label'])."&nbsp;</td>\n";
+					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
+					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given']).(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
+					if (permission_exists('contact_relation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+				unset($contact_relations);
+			}
+
+			echo "</table>";
+			echo "<br />\n";
+
+	}
 
 ?>

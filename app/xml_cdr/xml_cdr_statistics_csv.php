@@ -23,16 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('xml_cdr_statistics')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //include the xml cdr statistics backend
 	require_once "xml_cdr_statistics_inc.php";
@@ -43,7 +47,7 @@ else {
 
 //show the column names on the first line
 	$z = 0;
-	foreach($stats[1] as $key => $val) {
+	foreach ($stats[1] as $key => $val) {
 		if ($z == 0) {
 			echo '"'.$key.'"';
 		}
@@ -56,9 +60,9 @@ else {
 
 //add the values to the csv
 	$x = 0;
-	foreach($stats as $row) {
+	foreach ($stats as $row) {
 		$z = 0;
-		foreach($row as $key => $val) {
+		foreach ($row as $key => $val) {
 			if ($z == 0) {
 				echo '"'.$stats[$x][$key].'"';
 			}
@@ -70,4 +74,5 @@ else {
 		echo "\n";
 		$x++;
 	}
+
 ?>

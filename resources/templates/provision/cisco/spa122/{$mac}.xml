@@ -11,7 +11,7 @@
 <Provision_Enable>Yes</Provision_Enable>
 <Resync_On_Reset>Yes</Resync_On_Reset>
 <Resync_Random_Delay>2</Resync_Random_Delay>
-<Resync_At__HHmm_></Resync_At__HHmm_>
+<Resync_At__HHmm_>{$spa_resync_time}</Resync_At__HHmm_>
 <Resync_At_Random_Delay>600</Resync_At_Random_Delay>
 <Resync_Periodic>0</Resync_Periodic>
 <Resync_Error_Retry_Delay>300</Resync_Error_Retry_Delay>
@@ -34,7 +34,7 @@
 <Log_Resync_Failure_Msg>$PN $MAC -- Resync failed: $ERR</Log_Resync_Failure_Msg>
 <Report_Rule></Report_Rule>
 <SP_Default></SP_Default>
-<Upgrade_Enable>Yes</Upgrade_Enable>
+<Upgrade_Enable>{$spa_upgrade_enable}</Upgrade_Enable>
 <Upgrade_Error_Retry_Delay>3600</Upgrade_Error_Retry_Delay>
 <Downgrade_Rev_Limit></Downgrade_Rev_Limit>
 <Upgrade_Rule></Upgrade_Rule>

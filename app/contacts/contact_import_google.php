@@ -17,25 +17,28 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/functions/google_get_groups.php";
-require_once "resources/functions/google_get_contacts.php";
 
-if (permission_exists('contact_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/functions/google_get_groups.php";
+	require_once "resources/functions/google_get_contacts.php";
+
+//check permissions
+	if (permission_exists('contact_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -99,11 +102,25 @@ if ($_POST['a'] == 'import') {
 			}
 			//replace contact (delete before inserts below)
 			else if ($duplicate_exists && $_POST['import_duplicates'] == 'replace') {
-				$contact_uuid = $duplicate_contact_uuid;
-				$included = true;
-				require_once "contact_delete.php";
-				unset($contact_uuid, $duplicate_contact_uuid);
-				$contacts_replaced++;
+				//build array
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $duplicate_contact_uuid;
+					unset($duplicate_contact_uuid);
+
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('contact_delete', 'temp');
+
+				//delete duplicate contact
+					$obj = new contacts;
+					$obj->delete($array);
+					unset($array)
+
+				//revoke temporary permissions
+					$p->delete('contact_delete', 'temp');
+
+				//increase counter
+					$contacts_replaced++;
 			}
 
 			//extract contact record from array using contact id
@@ -574,7 +591,7 @@ function curl_file_get_contents($url) {
 	$curl = curl_init();
 	$userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
 
-	curl_setopt($curl, CURLOPT_URL, $url);	//The URL to fetch. This can also be set when initializing a session with curl_init().
+	curl_setopt($curl, CURLOPT_URL, $url);	//The URL to retrieve. This can also be set when initializing a session with curl_init().
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);	//TRUE to return the transfer as a string of the return value of curl_exec() instead of outputting it out directly.
 	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);	//The number of seconds to wait while trying to connect.
 	curl_setopt($curl, CURLOPT_USERAGENT, $userAgent);	//The contents of the "User-Agent: " header to be used in a HTTP request.

@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Le menu SVI joue un enregistrement ou une phrase prédéfinie permettant à l'appelant de faire un choix. Ce choix l'amenant sur une destination spécifique. Cette destination peut être une extension, une messagerie vocale, un IVR, un groupement, un FAX ...";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Het IVR menu speelt een vooraf opgenomen tekst af die de beller opties om uit te kiezen ggeft. Elke optie krijgt een specifieke bestemming. De bestemming kan een toestel, antwoorapparaat, IVR menu, belgroep etc. zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "O menu IVR toca uma gravação ou uma frase pré-definidos, que são apresentados ao chamador na forma de opções para escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de fax, etc.";
@@ -99,6 +99,10 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;
@@ -174,10 +178,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_language";
@@ -271,6 +277,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "ivr_menu_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "ivr_menu_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;

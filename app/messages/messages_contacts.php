@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -82,8 +82,16 @@
 				$numbers[] = $number_to;
 			}
 			switch ($message['message_direction']) {
-				case 'inbound': $contact[$number_from]['contact_uuid'] = $message['contact_uuid']; break;
-				case 'outbound': $contact[$number_to]['contact_uuid'] = $message['contact_uuid']; break;
+				case 'inbound':
+					if (!is_uuid($contact[$number_from]['contact_uuid'])) {
+						$contact[$number_from]['contact_uuid'] = $message['contact_uuid'];
+					}
+					break;
+				case 'outbound':
+					if (!is_uuid($contact[$number_to]['contact_uuid'])) {
+						$contact[$number_to]['contact_uuid'] = $message['contact_uuid'];
+					}
+					break;
 			}
 			unset($number_from, $number_to);
 		}
@@ -131,7 +139,16 @@
 		}
 	}
 	unset($sql, $parameters, $rows, $row);
-	$numbers = array_diff($numbers, $destinations);
+
+	if (
+		is_array($numbers) &&
+		@sizeof($numbers) != 0 &&
+		is_array($destinations) &&
+		@sizeof($destinations) != 0 &&
+		!is_null(array_diff($numbers, $destinations))
+		) {
+		$numbers = array_diff($numbers, $destinations);
+	}
 
 //get contact (primary attachment) images and cache them
 	if (is_array($numbers) && @sizeof($numbers) != 0) {
@@ -206,9 +223,6 @@
 			echo "</td></tr>\n";
 		}
 		echo "</table>\n";
-		echo "<center>\n";
-		echo "	<span id='contacts_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_contacts_stop();\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span> ";
-		echo "</center>\n";
 
 		echo "<script>\n";
 		foreach ($numbers as $number) {
@@ -218,5 +232,12 @@
 		}
 		echo "</script>\n";
 	}
+	else {
+		echo "<div style='padding: 15px;'><center>&middot;&middot;&middot;</center>";
+	}
+
+	echo "<center>\n";
+	echo "	<span id='contacts_refresh_state'><img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick=\"refresh_contacts_stop();\" alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\"></span> ";
+	echo "</center>\n";
 
 ?>

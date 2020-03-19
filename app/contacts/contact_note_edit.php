@@ -17,12 +17,13 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
@@ -68,6 +69,14 @@
 		//get the primary id for the contact note
 			if ($action == "update") {
 				$contact_note_uuid = $_POST["contact_note_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
 			}
 
 		//check for all required data
@@ -160,55 +169,58 @@
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
-	require_once "resources/header.php";
 	if ($action == "update") {
 		$document['title'] = $text['title-contact_notes-edit'];
 	}
 	else if ($action == "add") {
 		$document['title'] = $text['title-contact_notes-add'];
 	}
+	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'>";
-	if ($action == "add") {
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($action == "update") {
+		echo "<b>".$text['header-contact_notes-edit']."</b>";
+	}
+	else if ($action == "add") {
 		echo "<b>".$text['header-contact_notes-add']."</b>";
 	}
-	if ($action == "update") {
-		echo "<b>".$text['header-contact_notes-edit']."</b>\n";
-	}
-	echo "</td>\n";
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr><td colspan='2'>&nbsp;</td></tr>\n";
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".$contact_note."</textarea>\n";
-	echo "<br />\n";
-	echo "\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "  <textarea class='formfld' name='contact_note' style='min-width: 100%; height: 400px;'>".$contact_note."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>";
-	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_note_uuid' value='".escape($contact_note_uuid)."'>\n";
-	}
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_note_uuid' value='".escape($contact_note_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

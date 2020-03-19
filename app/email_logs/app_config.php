@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "GÈrer les messages Èlectroniques ÈchouÈ.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Beheer mislukte mail berichten";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gerenciar mensagens de e-mail falhou.";
@@ -95,6 +95,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "type";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "status";
@@ -103,6 +104,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "email";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

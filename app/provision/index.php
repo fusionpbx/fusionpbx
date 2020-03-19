@@ -61,7 +61,7 @@
 	if (empty($mac) && !empty($ext)) {
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 		$domain_name = $domain_array[0];
-		$device = device_by_ext($db, $ext, $domain_name);
+		$device = device_by_ext($ext, $domain_name);
 		if ($device !== false && ($device['device_vendor'] == 'escene' || $device['device_vendor'] == 'grandstream')) {
 			$mac = $device['device_mac_address'];
 		}
@@ -149,9 +149,6 @@
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
-
-		//set the PDO error mode
-			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		//get the default settings
 			$sql = "select * from v_default_settings ";

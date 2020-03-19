@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('user_setting_view')) {
@@ -38,6 +39,38 @@
 		exit;
 	}
 
+//get the http post data
+	if ($_POST['action'] != '') {
+		$action = $_POST['action'];
+		$user_uuid = $_POST['user_uuid'];
+		$user_settings = $_POST['user_settings'];
+
+		//process the http post data by action
+			if (is_array($user_settings) && @sizeof($user_settings) != 0) {
+				switch ($action) {
+					case 'toggle':
+						if (permission_exists('user_setting_edit')) {
+							$obj = new user_settings;
+							$obj->user_uuid = $user_uuid;
+							$obj->toggle($user_settings);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('user_setting_delete')) {
+							$obj = new user_settings;
+							$obj->user_uuid = $user_uuid;
+							$obj->delete($user_settings);
+						}
+						break;
+				}
+			}
+
+		//redirect
+			header('Location: '.PROJECT_PATH.'/core/users/user_edit.php?id='.urlencode($user_uuid));
+			exit;
+	}
+
+/*
 //toggle setting enabled
 	if (
 		is_uuid($_REQUEST["user_id"]) &&
@@ -64,17 +97,11 @@
 			header("Location: /core/users/user_edit.php?id=".$_REQUEST["user_id"]);
 			exit;
 	}
-
-//include the paging
-	require_once "resources/paging.php";
+*/
 
 //get the variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
-//show the content
-	echo "<form name='frm_settings' id='frm_settings' method='get' action='/core/user_settings/user_setting_delete.php'>";
-	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>";
 
 //common sql where
 	$sql_where = "where user_uuid = :user_uuid ";
@@ -95,15 +122,16 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 100;
 	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
-
+	if (isset($_GET['page'])) {
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
+	}
 //get the list
 	$sql = "select * from v_user_settings ";
 	$sql .= $sql_where;
-	if ($order_by != '') {
+	if ($order_by == '') {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
 	}
 	else {
@@ -114,78 +142,98 @@
 	$user_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $sql_where, $parameters);
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create('/core/user_settings/user_settings.php');
 
 //show the content
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<div class='action_bar' id='action_bar_sub'>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$text['header-user_settings']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
+	if (permission_exists('user_setting_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
+	}
+	if (permission_exists('user_setting_edit') && $user_settings) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('user_setting_delete') && $user_settings) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	if (is_array($user_settings) && sizeof($user_settings) != 0) {
-		$previous_category = '';
-		foreach($user_settings as $row) {
-			if ($previous_category != $row['user_setting_category']) {
-				$c = 0;
-				echo "<tr>\n";
-				echo "	<td colspan='7' align='left'>\n";
-				if ($previous_category != '') {
-					echo "	<br /><br />\n";
+	echo $text['header_description-user_settings']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post' action='/core/user_settings/user_settings.php'>\n";
+	echo "<input type='hidden' name='action' id='action' value=''>\n";
+	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>\n";
+
+	echo "<table class='list'>\n";
+	if (is_array($user_settings) && @sizeof($user_settings) != 0) {
+		$x = 0;
+		foreach ($user_settings as $row) {
+			$user_setting_category = strtolower($row['user_setting_category']);
+
+			$label_user_setting_category = $row['user_setting_category'];
+			switch (strtolower($label_user_setting_category)) {
+				case "api" : $label_user_setting_category = "API"; break;
+				case "cdr" : $label_user_setting_category = "CDR"; break;
+				case "ldap" : $label_user_setting_category = "LDAP"; break;
+				case "ivr_menu" : $label_user_setting_category = "IVR Menu"; break;
+				default:
+					$label_user_setting_category = str_replace("_", " ", $label_user_setting_category);
+					$label_user_setting_category = str_replace("-", " ", $label_user_setting_category);
+					$label_user_setting_category = ucwords($label_user_setting_category);
+			}
+
+			if ($previous_user_setting_category != $row['user_setting_category']) {
+				if ($previous_user_setting_category != '') {
+					echo "</table>\n";
+
+					echo "<br>\n";
 				}
-				echo "		<b>\n";
-				if (strtolower($row['user_setting_category']) == "cdr") {
-					echo "		CDR";
+				echo "<b>".escape($label_user_setting_category)."</b><br>\n";
+
+				echo "<table class='list'>\n";
+				echo "<tr class='list-header'>\n";
+				if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
+					echo "	<th class='checkbox'>\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$user_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$user_setting_category."');\">\n";
+					echo "	</th>\n";
 				}
-				elseif (strtolower($row['user_setting_category']) == "ldap") {
-					echo "		LDAP";
+				echo "<th class='pct-35'>".$text['label-subcategory']."</th>";
+				echo "<th class='pct-10 hide-sm-dn'>".$text['label-type']."</th>";
+				echo "<th class='pct-30'>".$text['label-value']."</th>";
+				echo "<th class='center'>".$text['label-enabled']."</th>";
+				echo "<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>";
+				if (permission_exists('user_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
-				else {
-					echo "		".ucfirst($row['user_setting_category']);
-				}
-				echo "		</b>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				if ((permission_exists("domain_select")
-					&& permission_exists("user_setting_add")
-					&& count($_SESSION['domains']) > 1) ||
-					permission_exists('user_setting_delete')) {
-						echo "<th style='width: 30px; vertical-align: bottom; text-align: center; padding: 0px 3px 2px 8px;'><input type='checkbox' id='chk_all_".$row['user_setting_category']."' class='chk_all' onchange=\"(this.checked) ? check('all','".strtolower($row['user_setting_category'])."') : check('none','".strtolower($row['user_setting_category'])."');\"></th>";
-				}
-				echo "<th>".$text['label-subcategory']."</th>";
-				echo "<th>".$text['label-type']."</th>";
-				echo "<th>".$text['label-value']."</th>";
-				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
-				echo "<th>".$text['label-description']."</th>";
-				echo "<td class='list_control_icons'>";
-				if (permission_exists('user_setting_add')) {
-					echo "<a href='/core/user_settings/user_setting_edit.php?user_setting_category=".urlencode($row['user_setting_category'])."&user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
-				}
-				if (permission_exists('user_setting_delete')) {
-					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-				}
-				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('user_setting_edit')) ? " href='/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			if (
-				(permission_exists("domain_select") && permission_exists("user_setting_add") && count($_SESSION['domains']) > 1) ||
-				permission_exists("user_setting_delete")
-				) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 3px 0px 8px;'><input type='checkbox' name='id[]' id='checkbox_".$row['user_setting_uuid']."' value='".$row['user_setting_uuid']."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$row['user_setting_category']."').checked = false; }\"></td>\n";
-				$subcat_ids[strtolower($row['user_setting_category'])][] = 'checkbox_'.$row['user_setting_uuid'];
-			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('user_setting_edit')) {
-				echo 	"<a href='/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid']."'>".$row['user_setting_subcategory']."</a>";
+				$list_row_url = PROJECT_PATH."/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid'];
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='user_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$user_setting_category."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$user_setting_category."').checked = false; }\">\n";
+				echo "		<input type='hidden' name='user_settings[$x][uuid]' value='".escape($row['user_setting_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td class='overflow no-wrap'>";
+			if (permission_exists('user_setting_edit')) {
+				echo "	<a href='".$list_row_url."'>".escape($row['user_setting_subcategory'])."</a>";
 			}
 			else {
-				echo $row['user_setting_subcategory'];
+				echo escape($row['user_setting_subcategory']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_setting_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 30%; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>\n";
-
+			echo "	<td class='hide-sm-dn'>".$row['user_setting_name']."&nbsp;</td>\n";
+			echo "	<td class='overflow no-wrap'>\n";
 			$category = $row['user_setting_category'];
 			$subcategory = $row['user_setting_subcategory'];
 			$name = $row['user_setting_name'];
@@ -197,12 +245,12 @@
 				$sub_result = $database->select($sql, $parameters, 'all');
 				if (is_array($sub_result) && sizeof($sub_result) != 0) {
 					foreach ($sub_result as &$sub_row) {
-						echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+						echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 					}
 				}
 				unset($sql, $parameters, $sub_result, $sub_row);
 			}
-			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 				echo "		".ucwords($row['user_setting_value']);
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
@@ -219,77 +267,70 @@
 				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
 				) {
-				echo "		".$text['label-'.$row['user_setting_value']];
+				echo "		".$text['label-'.escape($row['user_setting_value'])];
 			}
 			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
-				echo "		".str_repeat('*', strlen($row['user_setting_value']));
+				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
+			}
+			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
+				echo "		".$text['option-button_icons_'.$row['domain_setting_value']]."\n";
+			}
+			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['user_setting_value'])."</span>\n";
+			}
+			else if ($category == 'recordings' && $subcategory == 'storage_type' && $name == 'text') {
+				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
 			}
 			else {
-				if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
-					echo "		".(img_spacer('15px', '15px', 'background: '.$row['user_setting_value'].'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
-					echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".htmlspecialchars($row['user_setting_value'])."</span>\n";
-				}
-				else {
-					echo "		".htmlspecialchars($row['user_setting_value'])."\n";
-				}
+				echo "		".escape($row['user_setting_value'])."\n";
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='../user_settings/user_settings.php?user_id=".$row['user_uuid']."&id[]=".$row['user_setting_uuid']."&enabled=".(($row['user_setting_enabled'] == 'true') ? 'false' : 'true')."'>".$text['label-'.$row['user_setting_enabled']]."</a>\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['user_setting_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
 			if (permission_exists('user_setting_edit')) {
-				echo "<a href='/core/user_settings/user_setting_edit.php?user_uuid=".escape($row['user_uuid'])."&id=".escape($row['user_setting_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['user_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
-			if (permission_exists('user_setting_delete')) {
-				echo "<a href='/core/user_settings/user_setting_delete.php?user_uuid=".escape($row['user_uuid'])."&id[]=".escape($row['user_setting_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['user_setting_enabled']];
 			}
 			echo "	</td>\n";
-			echo "</tr>\n";
-			$previous_category = $row['user_setting_category'];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $user_settings);
-	} //end if results
-
-	echo "<tr>\n";
-	echo "<td colspan='20' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('user_setting_add')) {
-		echo 		"<a href='/core/user_settings/user_setting_edit.php?user_uuid=".check_str($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	if (permission_exists('user_setting_delete') && is_array($user_settings)) {
-		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm_settings').submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "</form>";
-
-	echo "<br /><br />";
-
-	// check or uncheck all category checkboxes
-	if (sizeof($subcat_ids) > 0) {
-		echo "<script>\n";
-		echo "	function check(what, category) {\n";
-		foreach ($subcat_ids as $user_setting_category => $checkbox_ids) {
-			echo "if (category == '".$user_setting_category."') {\n";
-			foreach ($checkbox_ids as $index => $checkbox_id) {
-				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['user_setting_description'])."\">".escape($row['user_setting_description'])."&nbsp;</td>\n";
+			if (permission_exists('user_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
 			}
-			echo "}\n";
+			echo "</tr>\n";
+
+			//set the previous category
+			$previous_user_setting_category = $row['user_setting_category'];
+			$x++;
 		}
-		echo "	}\n";
-		echo "</script>\n";
 	}
+	unset($user_settings);
+
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
+
+//make sub action bar sticky
+	echo "<script>\n";
+
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 820, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 ?>

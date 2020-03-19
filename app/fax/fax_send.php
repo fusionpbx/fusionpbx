@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,7 +62,7 @@ if (!$included) {
 			if (if_group("superadmin") || if_group("admin")) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
-				$sql .= "accountcode, fax_send_greeting ";
+				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
 				$sql .= "from v_fax ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and fax_uuid = :fax_uuid ";
@@ -72,7 +72,7 @@ if (!$included) {
 			else {
 				//show only assigned fax extensions
 				$sql = "select f.fax_uuid, f.fax_extension, f.fax_caller_id_name, f.fax_caller_id_number, ";
-				$sql .= "f.accountcode, f.fax_send_greeting ";
+				$sql .= "f.fax_toll_allow, f.accountcode, f.fax_send_greeting ";
 				$sql .= "from v_fax as f, v_fax_users as u ";
 				$sql .= "where f.fax_uuid = u.fax_uuid ";
 				$sql .= "and f.domain_uuid = :domain_uuid ";
@@ -90,6 +90,7 @@ if (!$included) {
 					$fax_extension = $row["fax_extension"];
 					$fax_caller_id_name = $row["fax_caller_id_name"];
 					$fax_caller_id_number = $row["fax_caller_id_number"];
+					$fax_toll_allow = $row["fax_toll_allow"];
 					$fax_accountcode = $row["accountcode"];
 					$fax_send_greeting = $row["fax_send_greeting"];
 			}
@@ -204,7 +205,7 @@ if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
 		$fax_dtmf = '';
-		if(preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
 			$fax_number = $tmp[1];
 			$fax_dtmf = $tmp[2];
 		}
@@ -247,7 +248,6 @@ if (!function_exists('fax_split_dtmf')) {
 
 //send the fax
 	$continue = false;
-
 	if (!$included) {
 		if (($_POST['action'] == "send")) {
 			$fax_numbers = $_POST['fax_numbers'];
@@ -263,6 +263,14 @@ if (!function_exists('fax_split_dtmf')) {
 			$fax_page_size = $_POST['fax_page_size'];
 			$fax_footer = $_POST['fax_footer'];
 
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: fax_send.php');
+					exit;
+				}
+
 			$continue = true;
 		}
 	}
@@ -272,7 +280,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$continue = true;
 	}
 
-// cleanup numbers
+//cleanup numbers
 	if (isset($fax_numbers)) {
 		foreach ($fax_numbers as $index => $fax_number) {
 			fax_split_dtmf($fax_number, $fax_dtmf);
@@ -323,7 +331,7 @@ if (!function_exists('fax_split_dtmf')) {
 				break;
 		}
 
-		// process uploaded or emailed files (if any)
+		//process uploaded or emailed files (if any)
 		$fax_page_count = 0;
 		$_files = (!$included) ? $_FILES['fax_files'] : $emailed_files;
 		unset($tif_files);
@@ -681,14 +689,14 @@ if (!function_exists('fax_split_dtmf')) {
 		else {
 			if (!$included) {
 				//nothing to send, redirect the browser
-				message::add($text['message-invalid-fax'], 'negative');
+				message::add($text['message-invalid-fax'], 'negative', 4000);
 				header("Location: fax_send.php?id=".$fax_uuid);
 				exit;
 			}
 		}
 
 		//preview, if requested
-		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == $text['button-preview'])) {
+		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == 'preview')) {
 			unset($file_type);
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
 				$file_type = 'pdf';
@@ -731,14 +739,8 @@ if (!function_exists('fax_split_dtmf')) {
 		unset($sql, $parameters, $row);
 
 		if (!$included) {
-			$sql = "select contact_uuid from v_users where user_uuid = :user_uuid ";
+			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
-			$database = new database;
-			$contact_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-
-			$sql = "select email_address from v_contact_emails where contact_uuid = :contact_uuid order by email_primary desc;";
-			$parameters['contact_uuid'] = $contact_uuid;
 			$database = new database;
 			$mailto_address_user = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -766,15 +768,16 @@ if (!function_exists('fax_split_dtmf')) {
 		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
 		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
 		$dial_string .= "fax_file='"                     . $fax_file                . "',";
-
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
 			//prepare the fax command
-			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number);
-
+			if (strlen($fax_toll_allow) > 0) {
+				$channel_variables["toll_allow"] = $fax_toll_allow;
+			}
+			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_prefix . $fax_number, $channel_variables);
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
@@ -805,7 +808,6 @@ if (!function_exists('fax_split_dtmf')) {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$cmd = "api originate " . $dial_string;
-					// echo($cmd . "<br/>\n");
 					//send the command to event socket
 					$response = event_socket_request($fp, $cmd);
 					$response = str_replace("\n", "", $response);
@@ -831,7 +833,7 @@ if (!function_exists('fax_split_dtmf')) {
 			copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
 
-		if (!$included) {
+		if (!$included && is_uuid($fax_uuid)) {
 			//redirect the browser
 			message::add($response, 'default');
 			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
@@ -848,7 +850,12 @@ if (!function_exists('fax_split_dtmf')) {
 
 if (!$included) {
 
+	//create token
+		$object = new token;
+		$token = $object->create($_SERVER['PHP_SELF']);
+
 	//show the header
+		$document['title'] = $text['title-new_fax'];
 		require_once "resources/header.php";
 
 	//javascript to toggle input/select boxes, add fax numbers
@@ -898,29 +905,23 @@ if (!$included) {
 
 		echo "</script>";
 
-	//fax extension form
-		echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "	<td align='left' valign='top' width='30%'>\n";
-		echo "		<span class='title'>".$text['header-send']."</span>\n";
-		echo "	</td>\n";
-		echo "	<td width='70%' align='right' valign='top'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
-		echo "		<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
-		echo "		<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "<br>\n";
+	//show the content
+		echo "<form method='post' name='frm' id='frm' enctype='multipart/form-data'>\n";
+
+		echo "<div class='action_bar' id='action_bar'>\n";
+		echo "	<div class='heading'><b>".$text['header-new_fax']."</b></div>\n";
+		echo "	<div class='actions'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'fax.php']);
+		echo button::create(['type'=>'submit','label'=>$text['button-preview'],'icon'=>'eye','name'=>'submit','value'=>'preview']);
+		echo button::create(['type'=>'submit','label'=>$text['button-send'],'icon'=>'paper-plane','id'=>'btn_save','name'=>'submit','value'=>'send','style'=>'margin-left: 15px;']);
+		echo "	</div>\n";
+		echo "	<div style='clear: both;'></div>\n";
+		echo "</div>\n";
+
+		echo $text['description-2']." ".(if_group('superadmin') ? $text['description-3'] : null)."\n";
+		echo "<br /><br />\n";
 
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='left'>\n";
-		echo "			".$text['description-2']." ".((if_group('superadmin')) ? $text['description-3'] : null)." \n";
-		echo "			<br /><br />\n";
-		echo "		</td>\n";
-		echo "	</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -1061,7 +1062,9 @@ if (!$included) {
 		echo "<td class='vtable' align='left'>\n";
 		for ($f = 1; $f <= 3; $f++) {
 			echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';\"><br />";
+			echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'>";
+			echo button::create(['type'=>'button','label'=>$text['button-clear'],'icon'=>$_SESSION['theme']['button_icon_reset'],'onclick'=>"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';"]);
+			echo 	"<br />";
 			echo "	<span id='file_list_".$f."'></span>";
 			echo "	</span>\n";
 		}
@@ -1132,21 +1135,17 @@ if (!$included) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<br>\n";
-		echo "			<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
-		echo "			<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
-		echo "			<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
-		echo "			<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
-		echo "			<input type='hidden' name='action' value='send'>\n";
-		echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
-		echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
 		echo "</table>";
+		echo "<br /><br />\n";
+
+		echo "<input type='hidden' name='fax_caller_id_name' value='".escape($fax_caller_id_name)."'>\n";
+		echo "<input type='hidden' name='fax_caller_id_number' value='".escape($fax_caller_id_number)."'>\n";
+		echo "<input type='hidden' name='fax_extension' value='".escape($fax_extension)."'>\n";
+		echo "<input type='hidden' name='id' value='".escape($fax_uuid)."'>\n";
+		echo "<input type='hidden' name='action' value='send'>\n";
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 		echo "</form>\n";
-		echo "<br />\n";
 
 	//show the footer
 		require_once "resources/footer.php";
@@ -1175,4 +1174,5 @@ function showgrid($pdf) {
 	}
 }
 */
+
 ?>

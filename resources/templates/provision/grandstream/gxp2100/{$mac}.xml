@@ -2805,10 +2805,12 @@
 <!--# Config Server Path-->
 <!--# String-->
 <!--# P237 = fm.grandstream.com/gs-->
-{if isset($grandstream_config_server_path)}
-    <P237>{$grandstream_config_server_path}</P237>
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
 {else}
-    <P237>fm.grandstream.com/gs</P237>
+<P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
 <!--# Firmware File Prefix-->

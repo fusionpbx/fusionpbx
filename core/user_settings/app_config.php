@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "Configurações das contas podem ser alteradas pelo usuário.";
+		$apps[$x]['description']['pt-br'] = "Configurações da conta podem ser alteradas pelo usuário.";
 		$apps[$x]['description']['pt-pt'] = "Configurações de conta de utilizador pode ser alterado pelo utilizador.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Настройки учетной записи могут быть изменены пользователем";
@@ -91,14 +91,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_category";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_subcategory";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the subcategory.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_value";
@@ -115,6 +118,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

@@ -21,7 +21,7 @@
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Adicionar, editar, apagar e pesquisar usuários.";
 		$apps[$x]['description']['pt-pt'] = "Adicionar, editar, apagar e pesquisa pelos utilizadores.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "Добавление, редактирование, удаление и поиск пользователей";
@@ -80,6 +80,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "api_key";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "view_users";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y=0;
@@ -174,6 +177,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "username";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "password";
@@ -263,6 +267,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "group_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "groupid";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "group_uuid";
@@ -276,6 +281,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "username";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
@@ -318,14 +324,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_category";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_subcategory";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the subcategory.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_value";
@@ -342,6 +351,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

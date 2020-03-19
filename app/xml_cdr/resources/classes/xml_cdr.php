@@ -17,13 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
 
 /**
  * xml_cdr class provides methods for adding cdr records to the database
@@ -52,6 +51,16 @@ if (!class_exists('xml_cdr')) {
 		public $extensions;
 
 		/**
+		 * delete method
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+
+		/**
 		 * Called when the object is created
 		 */
 		public function __construct() {
@@ -62,6 +71,14 @@ if (!class_exists('xml_cdr')) {
 				$database->connect();
 				$this->db = $database->db;
 			}
+
+			//assign private variables (for delete method)
+				$this->app_name = 'xml_cdr';
+				$this->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+				$this->permission_prefix = 'xml_cdr_';
+				$this->list_page = 'xml_cdr.php';
+				$this->table = 'xml_cdr';
+				$this->uuid_prefix = 'xml_cdr_';
 		}
 
 		/**
@@ -167,49 +184,53 @@ if (!class_exists('xml_cdr')) {
 
 			$this->fields();
 			$field_count = sizeof($this->fields);
-
-			$sql = "insert into v_xml_cdr (";
-			$f = 1;
-			if (isset($this->fields)) foreach ($this->fields as $field) {
-				if ($field_count == $f) {
-					$sql .= "$field ";
-				}
-				else {
-					$sql .= "$field, ";
-				}
-				$f++;
-			}
-			$sql .= ")\n";
-			$sql .= "values \n";
 			$row_count = sizeof($this->array);
 			//$field_count = sizeof($this->fields);
 			$i = 0;
-			if (isset($this->array)) foreach ($this->array as $row) {
-				$sql .= "(";
-				$f = 1;
-				if (isset($this->fields)) foreach ($this->fields as $field) {
-					if (isset($row[$field]) && strlen($row[$field]) > 0) {
-						$sql .= "'".$row[$field]."'";
+			if (isset($this->array)) {
+				foreach ($this->array as $row) {
+					$sql = "insert into v_xml_cdr (";
+					$f = 1;
+					if (isset($this->fields)) {
+						foreach ($this->fields as $field) {
+							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
+							if ($field_count == $f) {
+								$sql .= "$field ";
+							}
+							else {
+								$sql .= "$field, ";
+							}
+							$f++;
+						}
 					}
-					else {
-						$sql .= "null";
+					$sql .= ")\n";
+					$sql .= "values \n";
+					$sql .= "(";
+					$f = 1;
+					if (isset($this->fields)) {
+						foreach ($this->fields as $field) {
+							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
+							if (isset($row[$field]) && strlen($row[$field]) > 0) {
+								$sql .= ":".$field." \n";
+								$parameters[$field] = $row[$field];
+							}
+							else {
+								$sql .= "null\n";
+							}
+							if ($field_count != $f) {
+								$sql .= ",";
+							}
+							$f++;
+						}
 					}
-					if ($field_count != $f) {
-						$sql .= ",";
-					}
-					$f++;
+					$sql .= ")";
+					$database = new database;
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
+					$i++;
 				}
-				$sql .= ")";
-				if ($row_count != $i) {
-					$sql .= ",\n";
-				}
-				$i++;
 			}
-			if (substr($sql,-2) == ",\n") {
-				$sql = substr($sql,0,-2);
-			}
-			$this->db->exec(check_sql($sql));
-			unset($sql);
+
 		}
 
 		/**
@@ -233,9 +254,11 @@ if (!class_exists('xml_cdr')) {
 
 			//parse the xml to get the call detail record info
 				try {
-					//$this->log($xml_string);
-					$xml = simplexml_load_string($xml_string);
-					//$this->log("\nxml load done\n");
+					//disable xml entities
+					libxml_disable_entity_loader(true);
+
+					//load the string into an xml object
+					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 				}
 				catch(Exception $e) {
 					echo $e->getMessage();
@@ -244,29 +267,23 @@ if (!class_exists('xml_cdr')) {
 
 			//check for duplicate call uuid's
 				$duplicate_uuid = false;
-				$uuid = check_str(urldecode($xml->variables->uuid));
-				if($uuid != null) {
-					//Check in the database
-						$database = new database;
-						$database->table = "v_xml_cdr";
-						$where[1]["name"] = "xml_cdr_uuid";
-						$where[1]["operator"] = "=";
-						$where[1]["value"] = $uuid;
-						$database->where = $where;
-						$result = $database->count();
-						if ($result > 0) {
-							$duplicate_uuid = true;
-						}
-						unset($where,$result,$database);
-					//Check in the array
-						if (isset($this->array)) foreach ($this->array as $row) {
-							if (in_array($uuid,$row,true))
-								$duplicate_uuid = true;
-						}
+				$uuid = urldecode($xml->variables->uuid);
+				if($uuid != null && is_uuid($uuid)) {
+					$sql = "select count(xml_cdr_uuid) ";
+					$sql .= "from v_xml_cdr ";
+					$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+					$parameters['xml_cdr_uuid'] = $uuid;
+					$database = new database;
+					$count = $database->select($sql, $parameters, 'column');
+					if ($count > 0) {
+						$duplicate_uuid = true;
+					}
+					unset($sql, $parameters);
 				}
 
 			//process data if the call detail record is not a duplicate
-				if ($duplicate_uuid == false && $uuid != null) {
+				if ($duplicate_uuid == false && is_uuid($uuid)) {
+
 					//get the destination number
 						if ($xml->variables->current_application == "bridge") {
 							$current_application_data = urldecode($xml->variables->current_application_data);
@@ -298,8 +315,14 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//get the caller details
-						$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
-						$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						$caller_id_name = urldecode($xml->variables->caller_id_name);
+						$caller_id_number = urldecode($xml->variables->caller_id_number);
+						if (isset($xml->variables->effective_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
+						}
+						if (isset($xml->variables->effective_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
 						$caller_id_destination = urldecode($xml->variables->caller_destination);
 						foreach ($xml->callflow as $row) {
 							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
@@ -311,60 +334,60 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//misc
-						$uuid = check_str(urldecode($xml->variables->uuid));
+						$uuid = urldecode($xml->variables->uuid);
 						$this->array[$key]['xml_cdr_uuid'] = $uuid;
-						$this->array[$key]['destination_number'] = check_str($destination_number);
-						$this->array[$key]['source_number'] = check_str(urldecode($xml->variables->effective_caller_id_number));
-						$this->array[$key]['user_context'] = check_str(urldecode($xml->variables->user_context));
-						$this->array[$key]['network_addr'] = check_str(urldecode($xml->variables->sip_network_ip));
-						$this->array[$key]['missed_call'] = check_str($missed_call);
-						$this->array[$key]['caller_id_name'] = check_str($caller_id_name);
-						$this->array[$key]['caller_id_number'] = check_str($caller_id_number);
-						$this->array[$key]['caller_destination'] = check_str(urldecode($xml->variables->caller_destination));
-						$this->array[$key]['accountcode'] = check_str(urldecode($xml->variables->accountcode));
-						$this->array[$key]['default_language'] = check_str(urldecode($xml->variables->default_language));
-						$this->array[$key]['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
-						//$this->array[$key]['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
-						$this->array[$key]['sip_hangup_disposition'] = check_str(urldecode($xml->variables->sip_hangup_disposition));
-						$this->array[$key]['pin_number'] = check_str(urldecode($xml->variables->pin_number));
+						$this->array[$key]['destination_number'] = $destination_number;
+						$this->array[$key]['source_number'] = urldecode($xml->variables->effective_caller_id_number);
+						$this->array[$key]['user_context'] = urldecode($xml->variables->user_context);
+						$this->array[$key]['network_addr'] = urldecode($xml->variables->sip_network_ip);
+						$this->array[$key]['missed_call'] = $missed_call;
+						$this->array[$key]['caller_id_name'] = $caller_id_name;
+						$this->array[$key]['caller_id_number'] = $caller_id_number;
+						$this->array[$key]['caller_destination'] = urldecode($xml->variables->caller_destination);
+						$this->array[$key]['accountcode'] = urldecode($xml->variables->accountcode);
+						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
+						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
+						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
+						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
+						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
 					//time
-						$this->array[$key]['start_epoch'] = check_str(urldecode($xml->variables->start_epoch));
-						$start_stamp = check_str(urldecode($xml->variables->start_stamp));
+						$this->array[$key]['start_epoch'] = urldecode($xml->variables->start_epoch);
+						$start_stamp = urldecode($xml->variables->start_stamp);
 						$this->array[$key]['start_stamp'] = $start_stamp;
-						$this->array[$key]['answer_stamp'] = check_str(urldecode($xml->variables->answer_stamp));
-						$this->array[$key]['answer_epoch'] = check_str(urldecode($xml->variables->answer_epoch));
-						$this->array[$key]['end_epoch'] = check_str(urldecode($xml->variables->end_epoch));
-						$this->array[$key]['end_stamp'] = check_str(urldecode($xml->variables->end_stamp));
-						$this->array[$key]['duration'] = check_str(urldecode($xml->variables->duration));
-						$this->array[$key]['mduration'] = check_str(urldecode($xml->variables->mduration));
-						$this->array[$key]['billsec'] = check_str(urldecode($xml->variables->billsec));
-						$this->array[$key]['billmsec'] = check_str(urldecode($xml->variables->billmsec));
+						$this->array[$key]['answer_stamp'] = urldecode($xml->variables->answer_stamp);
+						$this->array[$key]['answer_epoch'] = urldecode($xml->variables->answer_epoch);
+						$this->array[$key]['end_epoch'] = urldecode($xml->variables->end_epoch);
+						$this->array[$key]['end_stamp'] = urldecode($xml->variables->end_stamp);
+						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
+						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
+						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
+						$this->array[$key]['billmsec'] = urldecode($xml->variables->billmsec);
 					//codecs
-						$this->array[$key]['read_codec'] = check_str(urldecode($xml->variables->read_codec));
-						$this->array[$key]['read_rate'] = check_str(urldecode($xml->variables->read_rate));
-						$this->array[$key]['write_codec'] = check_str(urldecode($xml->variables->write_codec));
-						$this->array[$key]['write_rate'] = check_str(urldecode($xml->variables->write_rate));
-						$this->array[$key]['remote_media_ip'] = check_str(urldecode($xml->variables->remote_media_ip));
-						$this->array[$key]['hangup_cause'] = check_str(urldecode($xml->variables->hangup_cause));
-						$this->array[$key]['hangup_cause_q850'] = check_str(urldecode($xml->variables->hangup_cause_q850));
+						$this->array[$key]['read_codec'] = urldecode($xml->variables->read_codec);
+						$this->array[$key]['read_rate'] = urldecode($xml->variables->read_rate);
+						$this->array[$key]['write_codec'] = urldecode($xml->variables->write_codec);
+						$this->array[$key]['write_rate'] = urldecode($xml->variables->write_rate);
+						$this->array[$key]['remote_media_ip'] = urldecode($xml->variables->remote_media_ip);
+						$this->array[$key]['hangup_cause'] = urldecode($xml->variables->hangup_cause);
+						$this->array[$key]['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
 					//call center
-						$this->array[$key]['cc_side'] = check_str(urldecode($xml->variables->cc_side));
-						$this->array[$key]['cc_member_uuid'] = check_str(urldecode($xml->variables->cc_member_uuid));
-						$this->array[$key]['cc_queue_joined_epoch'] = check_str(urldecode($xml->variables->cc_queue_joined_epoch));
-						$this->array[$key]['cc_queue'] = check_str(urldecode($xml->variables->cc_queue));
-						$this->array[$key]['cc_member_session_uuid'] = check_str(urldecode($xml->variables->cc_member_session_uuid));
-						$this->array[$key]['cc_agent'] = check_str(urldecode($xml->variables->cc_agent));
-						$this->array[$key]['cc_agent_type'] = check_str(urldecode($xml->variables->cc_agent_type));
-						$this->array[$key]['waitsec'] = check_str(urldecode($xml->variables->waitsec));
+						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
+						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
+						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
+						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
+						$this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
 					//app info
-						$this->array[$key]['last_app'] = check_str(urldecode($xml->variables->last_app));
-						$this->array[$key]['last_arg'] = check_str(urldecode($xml->variables->last_arg));
+						$this->array[$key]['last_app'] = urldecode($xml->variables->last_app);
+						$this->array[$key]['last_arg'] = urldecode($xml->variables->last_arg);
 					//conference
-						$this->array[$key]['conference_name'] = check_str(urldecode($xml->variables->conference_name));
-						$this->array[$key]['conference_uuid'] = check_str(urldecode($xml->variables->conference_uuid));
-						$this->array[$key]['conference_member_id'] = check_str(urldecode($xml->variables->conference_member_id));
+						$this->array[$key]['conference_name'] = urldecode($xml->variables->conference_name);
+						$this->array[$key]['conference_uuid'] = urldecode($xml->variables->conference_uuid);
+						$this->array[$key]['conference_member_id'] = urldecode($xml->variables->conference_member_id);
 					//call quality
-						$rtp_audio_in_mos = check_str(urldecode($xml->variables->rtp_audio_in_mos));
+						$rtp_audio_in_mos = urldecode($xml->variables->rtp_audio_in_mos);
 						if (strlen($rtp_audio_in_mos) > 0) {
 							$this->array[$key]['rtp_audio_in_mos'] = $rtp_audio_in_mos;
 						}
@@ -373,10 +396,10 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['leg'] = $leg;
 
 					//store the call direction
-						$this->array[$key]['direction'] = check_str(urldecode($xml->variables->call_direction));
+						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
 
 					//store post dial delay, in milliseconds
-						$this->array[$key]['pdd_ms'] = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
+						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
 					//get break down the date to year, month and day
 						$tmp_time = strtotime($start_stamp);
@@ -385,15 +408,21 @@ if (!class_exists('xml_cdr')) {
 						$tmp_day = date("d", $tmp_time);
 
 					//get the domain values from the xml
-						$domain_name = check_str(urldecode($xml->variables->domain_name));
-						$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
+						$domain_name = urldecode($xml->variables->domain_name);
+						$domain_uuid = urldecode($xml->variables->domain_uuid);
 
 					//get the domain name
 						if (strlen($domain_name) == 0) {
-							$domain_name = check_str(urldecode($xml->variables->sip_req_host));
+							$domain_name = urldecode($xml->variables->dialed_domain);
 						}
 						if (strlen($domain_name) == 0) {
-							$presence_id = check_str(urldecode($xml->variables->presence_id));
+							$domain_name = urldecode($xml->variables->sip_invite_domain);
+						}
+						if (strlen($domain_name) == 0) {
+							$domain_name = urldecode($xml->variables->sip_req_host);
+						}
+						if (strlen($domain_name) == 0) {
+							$presence_id = urldecode($xml->variables->presence_id);
 							if (strlen($presence_id) > 0) {
 								$presence_array = explode($presence_id);
 								$domain_name = $presence_array[1];
@@ -425,13 +454,16 @@ if (!class_exists('xml_cdr')) {
 						if (strlen($domain_uuid) == 0) {
 							$sql = "select domain_uuid from v_domains ";
 							if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
-								$sql .= "where domain_name = '".$context."' ";
+								$sql .= "where domain_name = :context ";
+								$parameters['context'] = $context;
 							}
 							else {
-								$sql .= "where domain_name = '".$domain_name."' ";
+								$sql .= "where domain_name = :domain_name ";
+								$parameters['domain_name'] = $domain_name;
 							}
-							$row = $this->db->query($sql)->fetch();
-							$domain_uuid = $row['domain_uuid'];
+							$database = new database;
+							$domain_uuid = $database->select($sql, $parameters, 'column');
+							unset($parameters);
 						}
 
 					//set values in the database
@@ -446,7 +478,12 @@ if (!class_exists('xml_cdr')) {
 						if (strlen($xml->variables->record_session) > 0) {
 							$record_path = urldecode($xml->variables->record_path);
 							$record_name = urldecode($xml->variables->record_name);
-							$record_length = urldecode($xml->variables->record_seconds);
+							if (isset($xml->variables->record_seconds)) {
+								$record_length = urldecode($xml->variables->record_seconds);
+							}
+							else {
+								$record_length = urldecode($xml->variables->duration);
+							}
 						}
 						elseif (!isset($record_path) && urldecode($xml->variables->last_app) == "record_session") {
 							$record_path = dirname(urldecode($xml->variables->last_arg));
@@ -520,10 +557,10 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-							
+
 					// Last check
 						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
-							$bridge_uuid = check_str(urldecode($xml->variables->bridge_uuid));
+							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 							if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 								$record_path = $path;
@@ -543,7 +580,7 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
-					
+
 					//add the call recording
 						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
 							//add to the xml cdr table
@@ -584,31 +621,92 @@ if (!class_exists('xml_cdr')) {
 
 					//save to the database in xml format
 						if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
-							$this->array[$key]['xml'] = check_str($xml_string);
+							$this->array[$key]['xml'] = $xml_string;
 						}
 
 					//save to the database in json format
 						if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
-							$this->array[$key]['json'] = check_str(json_encode($xml));
+							$this->array[$key]['json'] = json_encode($xml);
 						}
 
-					//insert the check_str($extension_uuid)
+					//get the extension_uuid and then add it to the database fields array
 						if (strlen($xml->variables->extension_uuid) > 0) {
-							$this->array[$key]['extension_uuid'] = check_str(urldecode($xml->variables->extension_uuid));
+							$this->array[$key]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
+						}
+						else {
+							if (strlen($xml->variables->dialed_user) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['dialed_user'] = $xml->variables->dialed_user;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (strlen($xml->variables->referred_by_user) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['referred_by_user'] = $xml->variables->referred_by_user;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
+							if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+								$sql = "select extension_uuid from v_extensions ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and (extension = :callee_id_number or number_alias = :last_sent_callee_id_number) ";
+								$parameters['domain_uuid'] = $domain_uuid;
+								$parameters['callee_id_number'] = $xml->variables->callee_id_number;
+								$database = new database;
+								$extension_uuid = $database->select($sql, $parameters, 'column');
+								$this->array[$key]['extension_uuid'] = $extension_uuid;
+								unset($parameters);
+							}
 						}
 
 					//insert the values
-						if (strlen($uuid) > 0) {
+						if ($this->debug) {
+							//$time5_insert = microtime(true);
+							//echo $sql."<br />\n";
+						}
+						try {
+							$error = "false";
+							//$this->db->exec($sql);
+						}
+						catch(PDOException $e) {
+							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
+							if(!file_exists($tmp_dir)) {
+								event_socket_mkdir($tmp_dir);
+							}
+							if ($_SESSION['cdr']['format']['text'] == "xml") {
+								$tmp_file = $uuid.'.xml';
+								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+								fwrite($fh, $xml_string);
+							}
+							else {
+								$tmp_file = $uuid.'.json';
+								$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+								fwrite($fh, json_encode($xml));
+							}
+							fclose($fh);
 							if ($this->debug) {
-								//$time5_insert = microtime(true);
-								//echo $sql."<br />\n";
+								echo $e->getMessage();
 							}
-							try {
-								$error = "false";
-								//$this->db->exec(check_sql($sql));
-							}
-							catch(PDOException $e) {
-								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
+							$error = "true";
+						}
+
+						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
+							if (strlen($uuid) > 0) {
+								$tmp_time = strtotime($start_stamp);
+								$tmp_year = date("Y", $tmp_time);
+								$tmp_month = date("M", $tmp_time);
+								$tmp_day = date("d", $tmp_time);
+								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 								if(!file_exists($tmp_dir)) {
 									event_socket_mkdir($tmp_dir);
 								}
@@ -623,44 +721,16 @@ if (!class_exists('xml_cdr')) {
 									fwrite($fh, json_encode($xml));
 								}
 								fclose($fh);
-								if ($this->debug) {
-									echo $e->getMessage();
-								}
-								$error = "true";
 							}
-
-							if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
-								if (strlen($uuid) > 0) {
-									$tmp_time = strtotime($start_stamp);
-									$tmp_year = date("Y", $tmp_time);
-									$tmp_month = date("M", $tmp_time);
-									$tmp_day = date("d", $tmp_time);
-									$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-									if(!file_exists($tmp_dir)) {
-										event_socket_mkdir($tmp_dir);
-									}
-									if ($_SESSION['cdr']['format']['text'] == "xml") {
-										$tmp_file = $uuid.'.xml';
-										$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-										fwrite($fh, $xml_string);
-									}
-									else {
-										$tmp_file = $uuid.'.json';
-										$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-										fwrite($fh, json_encode($xml));
-									}
-									fclose($fh);
-								}
-							}
-							unset($error);
-
-							//if ($this->debug) {
-								//GLOBAL $insert_time,$insert_count;
-								//$insert_time+=microtime(true)-$time5_insert; //add this current query.
-								//$insert_count++;
-							//}
 						}
-						unset($sql);
+						unset($error);
+
+						//if ($this->debug) {
+							//GLOBAL $insert_time,$insert_count;
+							//$insert_time+=microtime(true)-$time5_insert; //add this current query.
+							//$insert_count++;
+						//}
+
 				} //if ($duplicate_uuid == false)
 		} //function xml_array
 
@@ -753,7 +823,11 @@ if (!class_exists('xml_cdr')) {
 
 							//parse the xml to get the call detail record info
 								try {
-									$conf_xml = simplexml_load_string($conf_xml_string);
+									//disable xml entities
+									libxml_disable_entity_loader(true);
+
+									//load the string into an xml object
+									$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
 								}
 								catch(Exception $e) {
 									echo $e->getMessage();
@@ -829,239 +903,178 @@ if (!class_exists('xml_cdr')) {
 				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
-						$sql_date_range .= " and start_stamp between '".$this->start_stamp_begin.":00.000' and '".$this->start_stamp_end.":59.999' \n";
+						$sql_date_range .= " and start_stamp between :start_stamp_begin and :start_stamp_end \n";
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
+						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { $sql_date_range .= "AND start_stamp >= '".$this->start_stamp_begin.":00.000' \n"; }
-						if (strlen($this->start_stamp_end) > 0) { $sql_date_range .= "AND start_stamp <= '".$this->start_stamp_end.":59.999' \n"; }
+						if (strlen($this->start_stamp_begin) > 0) { $sql_date_range .= "and start_stamp >= :start_stamp_begin \n"; }
+						if (strlen($this->start_stamp_end) > 0) { $sql_date_range .= "and start_stamp <= :start_stamp_end \n"; }
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
+						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
 					}
 				}
 				else {
 					switch ($this->quick_select) {
-						case 1: $sql_date_range .= "AND start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' \n"; break; //last 7 days
-						case 2: $sql_date_range .= "AND start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' \n"; break; //last hour
-						case 3: $sql_date_range .= "AND start_stamp >= '".date('Y-m-d')." "."00:00:00.000' \n"; break; //today
-						case 4: $sql_date_range .= "AND start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' \n"; break; //yesterday
-						case 5: $sql_date_range .= "AND start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' \n"; break; //this week
-						case 6: $sql_date_range .= "AND start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' \n"; break; //this month
-						case 7: $sql_date_range .= "AND start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' \n"; break; //this year
+						case 1: $sql_date_range .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' \n"; break; //last 7 days
+						case 2: $sql_date_range .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' \n"; break; //last hour
+						case 3: $sql_date_range .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' \n"; break; //today
+						case 4: $sql_date_range .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' \n"; break; //yesterday
+						case 5: $sql_date_range .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' \n"; break; //this week
+						case 6: $sql_date_range .= "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' \n"; break; //this month
+						case 7: $sql_date_range .= "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' \n"; break; //this year
 					}
 				}
 
 			//calculate the summary data
-				$sql = "SELECT \n";
+				$sql = "select \n";
 				$sql .= "e.domain_uuid, \n";
 				$sql .= "d.domain_name, \n";
 				$sql .= "e.extension, \n";
 				$sql .= "e.number_alias, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE c.domain_uuid = e.domain_uuid \n";
-				$sql .= " AND ((\n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL and ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND (\n";
-				$sql .= "  c.answer_stamp IS NOT NULL \n";
-				$sql .= "  and \n";
-				$sql .= "  c.bridge_uuid IS NOT NULL) \n";
-
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and missed_call = false \n";
 				if ($this->include_internal) {
-					$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-					$sql .= "AND direction = 'inbound') \n";
+					$sql .= "and direction = 'inbound' \n";
 				}
-				$sql .= "AS answered, \n";
+				$sql .= ") \n";
+				$sql .= "as answered, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR (\n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND ( \n";
-				$sql .= "  c.answer_stamp IS NULL \n";
-				$sql .= "  AND \n";
-				$sql .= "  c.bridge_uuid IS NULL) \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and missed_call = true \n";
 				if ($this->include_internal) {
-							$sql .= " AND (direction = 'inbound' OR direction = 'outbound'))";
+							$sql .= " and (direction = 'inbound' or direction = 'local') ";
 				} else {
-							$sql .= " AND direction = 'inbound')";
+							$sql .= " and direction = 'inbound' ";
 				}
-				$sql .= "AS missed, \n";
+				$sql .= ") \n";
+				$sql .= "as missed, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND c.hangup_cause = 'NO_ANSWER' \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and c.hangup_cause = 'NO_ANSWER' \n";
  				if ($this->include_internal) {
-					$sql .= " AND (direction = 'inbound' OR direction = 'local') \n";
+					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else { 
-					$sql .= "AND direction = 'inbound' \n";
+					$sql .= "and direction = 'inbound' \n";
 				}
-				$sql .= ") AS no_answer, \n";
+				$sql .= ") \n";
+				$sql .= "as no_answer, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				$sql .= " AND \n";
-				$sql .= " c.hangup_cause = 'USER_BUSY' \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and c.hangup_cause = 'USER_BUSY' \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " and direction = 'inbound' \n";
 				}
-				$sql .= "AS busy, \n";
+				$sql .= ") \n";
+				$sql .= "as busy, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
+				$sql .= "sum(c.billsec) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				if (!$this->include_internal) {
+						$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 				}
 				$sql .= " ) / \n";
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
-				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'outbound') \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				if (!$this->include_internal) {
+						$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 				}
-				$sql .= " ) AS aloc, \n";
+				$sql .= ") \n";
+				$sql .= "as aloc, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " and direction = 'inbound' \n";
 				}
-				$sql .= "AS inbound_calls, \n";
+				$sql .= ") \n";
+				$sql .= "as inbound_calls, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE (( \n";
-				$sql .= "   c.caller_id_number = e.extension \n";
-				$sql .= "   OR \n";
-				$sql .= "   c.destination_number = e.extension) \n";
-				$sql .= "  OR ( \n";
-				$sql .= "   e.number_alias IS NOT NULL \n";
-				$sql .= "   AND ( \n";
-				$sql .= "    c.caller_id_number = e.number_alias \n";
-				$sql .= "    OR \n";
-				$sql .= "    c.destination_number = e.number_alias))) \n";
+				$sql .= "sum(c.billsec) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				if ($this->include_internal) {
-						$sql .= " AND (direction = 'inbound' OR direction = 'local')) \n";
+						$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
 				}
 				else {
-						$sql .= " AND direction = 'inbound') \n";
+						$sql .= " and direction = 'inbound') \n";
 				}
-				$sql .= "AS inbound_duration, \n";
+				$sql .= "as inbound_duration, \n";
 
-				$sql .= "COUNT(*) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
-				$sql .= " AND c.direction = 'outbound' \n";
+				$sql .= "count(*) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and c.direction = 'outbound' \n";
 				$sql .= ") \n";
-				$sql .= "AS outbound_calls, \n";
+				$sql .= "as outbound_calls, \n";
 
-				$sql .= "SUM(c.billsec) \n";
-				$sql .= "FILTER ( \n";
-				$sql .= " WHERE c.extension_uuid = e.extension_uuid \n";
-				$sql .= " AND c.direction = 'outbound' \n";
+				$sql .= "sum(c.billsec) \n";
+				$sql .= "filter ( \n";
+				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and c.direction = 'outbound' \n";
 				$sql .= ") \n";
-				$sql .= "AS outbound_duration, \n";
+				$sql .= "as outbound_duration, \n";
 
 				$sql .= "e.description \n";
 
-				$sql .= "FROM v_extensions AS e, v_domains AS d, \n";
-				$sql .= "( SELECT \n";
+				$sql .= "from v_extensions as e, v_domains as d, \n";
+				$sql .= "( select \n";
 				$sql .= " domain_uuid, \n";
 				$sql .= " extension_uuid, \n";
 				$sql .= " caller_id_number, \n";
 				$sql .= " destination_number, \n";
+				$sql .= " missed_call, \n";
 				$sql .= " answer_stamp, \n";
 				$sql .= " bridge_uuid, \n";
 				$sql .= " direction, \n";
 				$sql .= " start_stamp, \n";
 				$sql .= " hangup_cause, \n";
 				$sql .= " billsec \n";
-				$sql .= " FROM v_xml_cdr \n";
-				$sql .= " WHERE domain_uuid = '".$this->domain_uuid."' \n";
-				$sql .= $sql_date_range;
-				$sql .= ") AS c \n";
-
-				$sql .= "WHERE \n";
-				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['showall'] && permission_exists('xml_cdr_all'))) {
-						$sql .= "AND e.domain_uuid = '".$this->domain_uuid."' \n";
+				$sql .= " from v_xml_cdr \n";
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
-				$sql .= "GROUP BY e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
-				$sql .= "ORDER BY extension ASC \n";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$summary = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				else {
+					$sql .= " where true \n";
+				}
+				$sql .= $sql_date_range;
+				$sql .= ") as c \n";
+
+				$sql .= "where \n";
+				$sql .= "d.domain_uuid = e.domain_uuid \n";
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+					$sql .= "and e.domain_uuid = :domain_uuid \n";
+				}
+				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
+				$sql .= "order by extension asc \n";
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+					$parameters['domain_uuid'] = $this->domain_uuid;
+				}
+				$database = new database;
+				$summary = $database->select($sql, $parameters, 'all');
+				unset($parameters);
 
 			//return the array
 				return $summary;
@@ -1070,29 +1083,26 @@ if (!class_exists('xml_cdr')) {
 		/**
 		 * download the recordings
 		 */
-		public function download() {
+		public function download($uuid) {
 			if (permission_exists('xml_cdr_view')) {
 
 				//cache limiter
 					session_cache_limiter('public');
 
 				//get call recording from database
-					$uuid = check_str($_GET['id']);
-					if ($uuid != '') {
+					if (is_uuid($uuid)) {
 						$sql = "select record_name, record_path from v_xml_cdr ";
-						$sql .= "where xml_cdr_uuid = '".$uuid."' ";
+						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
 						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-						$xml_cdr = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						if (is_array($xml_cdr)) {
-							foreach($xml_cdr as &$row) {
-								$record_name = $row['record_name'];
-								$record_path = $row['record_path'];
-								break;
-							}
+						$parameters['xml_cdr_uuid'] = $uuid;
+						//$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$row = $database->select($sql, $parameters, 'row');
+						if (is_array($row)) {
+							$record_name = $row['record_name'];
+							$record_path = $row['record_path'];
 						}
-						unset ($sql, $prep_statement, $xml_cdr);
+						unset ($sql, $parameters, $row);
 					}
 
 				//build full path
@@ -1124,21 +1134,93 @@ if (!class_exists('xml_cdr')) {
 								header("Content-Type: audio/ogg");
 							}
 						}
+						$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
 						header('Content-Disposition: attachment; filename="'.$record_name.'"');
 						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						// header("Content-Length: " . filesize($record_file));
+						header("Content-Length: " . filesize($record_file));
 						ob_clean();
 						fpassthru($fd);
 					}
 			}
 		} //end download method
 
-	} //end the class
+		/**
+		 * delete records
+		 */
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						$records_deleted = 0;
+
+						//loop through records
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+
+									//get the call recordings
+										$sql = "select * from v_call_recordings ";
+										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
+										$parameters['xml_cdr_uuid'] = $record['uuid'];
+										$database = new database;
+										$row = $database->select($sql, $parameters, 'row');
+										unset($sql, $parameters);
+
+									//delete the call recording (file)
+										$call_recording_path = realpath($row['call_recording_path']);
+										$call_recording_name = $row['call_recording_name'];
+										if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+											@unlink($call_recording_path.'/'.$call_recording_name);
+										}
+
+									//build the delete array
+										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
+
+									//increment counter
+										$records_deleted++;
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//grant temporary permissions
+									$p = new permissions;
+									$p->add('call_recording_delete', 'temp');
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//revoke temporary permissions
+									$p->delete('call_recording_delete', 'temp');
+
+								//set message
+									message::add($text['message-delete'].": ".$records_deleted);
+							}
+							unset($records);
+					}
+			}
+		} //method
+
+	} //class
 }
-/*
-//example use
-	$cdr = new xml_cdr;
-	$cdr->read_files();
-*/
+
 ?>

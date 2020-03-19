@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -169,32 +169,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the header
+	if ($action == "add") {
+		$document['title'] = $text['title-settings_add'];
+	}
+	else if ($action == "update") {
+		$document['title'] = $text['title-settings_update'];
+	}
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<input type='hidden' name='setting_uuid' value='".$setting_uuid."'>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
+	if ($action == "add") {
+		echo "<b>".$text['title-settings_add']."</b>";
+	}
+	else if ($action == "update") {
+		echo "<b>".$text['title-settings_update']."</b>";
+	}
+	echo "	</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'never','onclick'=>'submit_form();']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_add']."</b><br><br></td>\n";
-	}
-	else if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['title-settings_update']."</b><br><br></td>\n";
-	}
-	echo "<td width='70%' align='right'>";
-	if (permission_exists('setting_edit')) {
-		echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	}
-	echo "<br><br></td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-event_socket_ip']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_ip_address' maxlength='255' value=\"".escape($event_socket_ip_address)."\">\n";
 	echo "<br />\n";
 	echo $text['description-event_socket_ip']."\n";
@@ -206,7 +213,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-event_socket_port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='event_socket_port' maxlength='255' value=\"".escape($event_socket_port)."\">\n";
+	echo "    <input class='formfld' type='text' name='event_socket_port' maxlength='255' autocomplete='new-password' value=\"".escape($event_socket_port)."\">\n";
+	echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
 	echo $text['description-event_socket_port']."\n";
 	echo "</td>\n";
@@ -217,7 +225,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-event_socket_password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($event_socket_password)."\">\n";
+	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($event_socket_password)."\">\n";
 	echo "<br />\n";
 	echo $text['description-event_socket_password']."\n";
 	echo "</td>\n";
@@ -261,7 +270,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-xml_rpc_auth_user']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' value=\"".escape($xml_rpc_auth_user)."\">\n";
+	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' autocomplete='new-password' value=\"".escape($xml_rpc_auth_user)."\">\n";
+	echo "    <input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	echo "<br />\n";
 	echo $text['description-xml_rpc_auth_user']."\n";
 	echo "</td>\n";
@@ -272,7 +282,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-xml_rpc_auth_pass']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($xml_rpc_auth_pass)."\">\n";
+	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($xml_rpc_auth_pass)."\">\n";
 	echo "<br />\n";
 	echo $text['description-xml_rpc_auth_pass']."\n";
 	echo "</td>\n";
@@ -331,17 +342,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-mod_shout_volume']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (permission_exists('setting_edit')) {
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<br>";
-		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
-	}
+
 	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='setting_uuid' value='".$setting_uuid."'>\n";
 	echo "</form>";
+
+	echo "<script>\n";
+//hide password fields before submit
+	echo "	function submit_form() {\n";
+	echo "		hide_password_fields();\n";
+	echo "		$('form#frm').submit();\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the footer
 	require_once "resources/footer.php";

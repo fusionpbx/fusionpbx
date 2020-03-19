@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,65 +43,71 @@
 		$contact_uuid = $_GET['id'];
 	}
 
-//show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-urls']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+//get the contact list
+	$sql = "select * from v_contact_urls ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and contact_uuid = :contact_uuid ";
+	$sql .= "order by url_primary desc, url_label asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$parameters['contact_uuid'] = $contact_uuid;
+	$database = new database;
+	$contact_urls = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
-	//get the contact list
-		$sql = "select * from v_contact_urls ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and contact_uuid = :contact_uuid ";
-		$sql .= "order by url_primary desc, url_label asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
+//show if exists
+	if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+		//show the content
+			echo "<div class='action_bar sub shrink'>\n";
+			echo "	<div class='heading'><b>".$text['label-urls']."</b></div>\n";
+			echo "	<div style='clear: both;'></div>\n";
+			echo "</div>\n";
 
-	echo "<table class='tr_hover' style='margin-bottom: 20px;' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr>\n";
-	echo "<th>".$text['label-url_label']."</th>\n";
-	echo "<th>".$text['label-url_address']."</th>\n";
-	echo "<th>".$text['label-url_description']."</th>\n";
-	echo "<td class='list_control_icons'>";
-	if (permission_exists('contact_url_add')) {
-		echo "<a href='contact_url_edit.php?contact_uuid=".urlencode($contact_uuid)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
-			if (permission_exists('contact_url_edit')) {
-				$tr_link = "href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."'";
-			}
-			echo "<tr ".$tr_link." ".(escape($row['url_primary']) ? "style='font-weight: bold;'" : null).">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['url_label'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['url_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('contact_url_edit')) {
-				echo "<a href='contact_url_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
 			if (permission_exists('contact_url_delete')) {
-				echo "<a href='contact_url_delete.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_url_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "	<th class='checkbox'>\n";
+				echo "		<input type='checkbox' id='checkbox_all_urls' name='checkbox_all' onclick=\"edit_all_toggle('urls');\" ".($contact_urls ?: "style='visibility: hidden;'").">\n";
+				echo "	</th>\n";
 			}
-			echo "	</td>\n";
+			echo "<th class='pct-15'>".$text['label-url_label']."</th>\n";
+			echo "<th>".$text['label-url_address']."</th>\n";
+			echo "<th class='hide-md-dn'>".$text['label-url_description']."</th>\n";
+			if (permission_exists('contact_url_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>&nbsp;</td>\n";
+			}
 			echo "</tr>\n";
-			$c = $c ? 0 : 1;
-		}
-	}
-	unset($result, $row);
 
-	echo "</table>\n";
+			if (is_array($contact_urls) && @sizeof($contact_urls) != 0) {
+				$x = 0;
+				foreach ($contact_urls as $row) {
+					if (permission_exists('contact_url_edit')) {
+						$list_row_url = "contact_url_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_url_uuid']);
+					}
+					echo "<tr class='list-row' href='".$list_row_url."'>\n";
+					if (permission_exists('contact_url_delete')) {
+						echo "	<td class='checkbox'>\n";
+						echo "		<input type='checkbox' name='contact_urls[$x][checked]' id='checkbox_".$x."' class='checkbox_urls' value='true' onclick=\"edit_delete_action('urls');\">\n";
+						echo "		<input type='hidden' name='contact_urls[$x][uuid]' value='".escape($row['contact_url_uuid'])."' />\n";
+						echo "	</td>\n";
+					}
+					echo "	<td>".escape($row['url_label'])." ".($row['url_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
+					echo "	<td class='no-link overflow no-wrap'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a></td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".escape($row['url_description'])."&nbsp;</td>\n";
+					if (permission_exists('contact_url_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+						echo "	<td class='action-button'>\n";
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo "	</td>\n";
+					}
+					echo "</tr>\n";
+					$x++;
+				}
+			}
+			unset($contact_urls);
+
+			echo "</table>\n";
+			echo "<br />\n";
+
+	}
 
 ?>
