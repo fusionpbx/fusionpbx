@@ -17,17 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
+
+//includes
+	include "root.php";
+	require_once "resources/require.php";
 
 //if reloadxml then run the command
-	if (isset($_SESSION["reload_xml"])) {
+	if (permission_exists('dialplan_edit') && isset($_SESSION["reload_xml"])) {
 		if (strlen($_SESSION["reload_xml"]) > 0) {
 			if ($_SESSION['apply_settings'] == "true") {
 				//show the apply settings prompt
@@ -69,57 +71,51 @@ require_once "resources/require.php";
 	}
 
 //get the parent id
-	$sql = "select * from v_menu_items ";
-	$sql .= "where menu_uuid = '".$_SESSION['domain']['menu']['uuid']."' ";
-	$sql .= "and menu_item_link = '".$_SERVER["SCRIPT_NAME"]."' ";
-	$menu_prep_statement = $db->prepare(check_sql($sql));
-	$menu_prep_statement->execute();
-	$menu_result = $menu_prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($menu_result as &$menu_row) {
-		$_SESSION["menu_item_parent_uuid"] = $menu_row["menu_item_parent_uuid"];
-		break;
-	}
-	unset($menu_prep_statement, $menu_result, $menu_row);
+	$sql = "select menu_item_parent_uuid from v_menu_items ";
+	$sql .= "where menu_uuid = :menu_uuid ";
+	$sql .= "and menu_item_link = :menu_item_link ";
+	$parameters['menu_uuid'] = $_SESSION['domain']['menu']['uuid'];
+	$parameters['menu_item_link'] = $_SERVER["SCRIPT_NAME"];
+	$database = new database;
+	$_SESSION["menu_item_parent_uuid"] = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //get the content
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/content/app_config.php")) {
 		$sql = "select * from v_rss ";
-		$sql .= "where domain_uuid =:domain_uuid ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and rss_category = 'content' ";
-		$sql .= "and rss_link =:content ";
-		$sql .= "and (length(rss_del_date) = 0 ";
-		$sql .= "or rss_del_date is null) ";
+		$sql .= "and rss_link = :content ";
+		$sql .= "and ( ";
+		$sql .= "length(rss_del_date) = 0 ";
+		$sql .= "or rss_del_date is null ";
+		$sql .= ") ";
 		$sql .= "order by rss_order asc ";
-		$content_prep_statement = $db->prepare(check_sql($sql));
-		$content_prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
-		if (strlen($content) == 0) {
-			$content_prep_statement->bindParam(':content', $_SERVER["PHP_SELF"]);
-		}
-		else {
-			$content_prep_statement->bindParam(':content', $content);
-		}
-		$content_prep_statement->execute();
-		$content_result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$page["title"] = '';
-		foreach($content_result as $content_row) {
-			$template_rss_sub_category = $content_row['rss_sub_category'];
-			if (strlen($content_row['rss_group']) == 0) {
-				//content is public
-				$content_from_db = &$content_row['rss_description'];
-				if (strlen($content_row['rss_title']) > 0) {
-					$page["title"] = $content_row['rss_title'];
-				}
-			}
-			else {
-				if (if_group($content_row[rss_group])) { //viewable only to designated group
-					$content_from_db = &$content_row[rss_description];
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['content'] = strlen($content) == 0 ? $_SERVER["PHP_SELF"] : $content;
+		$database = new database;
+		$content_result = $database->select($sql, $parameters, 'all');
+		if (is_array($content_result) && @sizeof($content_result) != 0) {
+			foreach($content_result as $content_row) {
+				$template_rss_sub_category = $content_row['rss_sub_category'];
+				if (strlen($content_row['rss_group']) == 0) {
+					//content is public
+					$content_from_db = &$content_row['rss_description'];
 					if (strlen($content_row['rss_title']) > 0) {
 						$page["title"] = $content_row['rss_title'];
 					}
 				}
+				else {
+					if (if_group($content_row[rss_group])) { //viewable only to designated group
+						$content_from_db = &$content_row[rss_description];
+						if (strlen($content_row['rss_title']) > 0) {
+							$page["title"] = $content_row['rss_title'];
+						}
+					}
+				}
 			}
-		} //end foreach
-		unset($sql, $content_result, $content_row);
+		}
+		unset($sql, $parameters, $content_result, $content_row);
 	}
 
 //start the output buffer

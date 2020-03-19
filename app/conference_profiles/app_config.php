@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Een groep conferentie parameters die gezamenlijk als profiel opgeslagen zijn.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
@@ -79,6 +79,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the profile name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_enabled";
@@ -87,6 +88,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;

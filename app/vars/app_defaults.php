@@ -92,7 +92,7 @@ if ($domains_processed == 1) {
 
 	//set country depend variables as country code and international direct dialing code (exit code)
 		if (!function_exists('set_country_vars')) {
-			function set_country_vars($db, $x) {
+			function set_country_vars($x) {
 				require "resources/countries.php";
 	
 				//$country_iso=$_SESSION['domain']['country']['iso_code'];

@@ -21,6 +21,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('number_translation_view')) {
@@ -35,182 +36,184 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the action
-	if (is_array($_POST["number_translations"])) {
-		$number_translations = $_POST["number_translations"];
-		foreach($number_translations as $row) {
-			if ($row['action'] == 'delete') {
-				$action = 'delete';
+//get posted data
+	if (is_array($_POST['number_translations'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$number_translations = $_POST['number_translations'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($number_translations) && @sizeof($number_translations) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('number_translation_add')) {
+					$obj = new number_translations;
+					$obj->copy($number_translations);
+				}
 				break;
-			}
+			case 'toggle':
+				if (permission_exists('number_translation_edit')) {
+					$obj = new number_translations;
+					$obj->toggle($number_translations);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('number_translation_delete')) {
+					$obj = new number_translations;
+					$obj->delete($number_translations);
+				}
+				break;
 		}
+
+		header('Location: number_translations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
-//delete the number_translations
-	if (permission_exists('number_translation_delete')) {
-		if ($action == "delete") {
-			//download
-				$obj = new number_translations;
-				$obj->delete($number_translations);
-			//delete message
-				message::add($text['message-delete']);
-		}
-	}
-
-//get variables used to control the order
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
 //add the search term
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_search = " (";
-		$sql_search .= "   lower(number_translation_name) like :search ";
-		$sql_search .= "   or lower(number_translation_enabled) like :search ";
-		$sql_search .= "   or lower(number_translation_description) like :search ";
-		$sql_search .= " ) ";
+		$sql_search = "where (";
+		$sql_search .= "lower(number_translation_name) like :search ";
+		$sql_search .= "or lower(number_translation_enabled) like :search ";
+		$sql_search .= "or lower(number_translation_description) like :search ";
+		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
-
 //prepare to page the results
 	$sql = "select count(*) from v_number_translations ";
-	if (isset($sql_search)) {
-		$sql .= "where ".$sql_search;
-	}
+	$sql .= $sql_search;
 	$database = new database;
-	$num_rows = $database->select($sql, (is_array($parameters) ? $parameters : null), 'column');
+	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order);
+	$sql .= order_by($order_by, $order, 'number_translation_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
-	$result = $database->select($sql, (is_array($parameters) ? $parameters : null), 'all');
+	$number_translations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
-//define the checkbox_toggle function
-	echo "<script type=\"text/javascript\">\n";
-	echo "	function checkbox_toggle(item) {\n";
-	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
-	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
-	echo "			if (inputs[i].type === 'checkbox') {\n";
-	echo "				if (document.getElementById('checkbox_all').checked == true) {\n";
-	echo "				inputs[i].checked = true;\n";
-	echo "			}\n";
-	echo "				else {\n";
-	echo "					inputs[i].checked = false;\n";
-	echo "				}\n";
-	echo "			}\n";
-	echo "		}\n";
-	echo "	}\n";
-	echo "</script>\n";
+//additional includes
+	$document['title'] = $text['title-number_translations'];
+	require_once "resources/header.php";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-number_translations']."</b></td>\n";
-	echo "		<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "			<form method='get' action=''>\n";
-	if (permission_exists('number_translation_delete')) {
-		echo "			<input type='button' class='btn' value='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').action = 'number_translation_delete.php'; document.getElementById('frm').submit(); }\">\n";
-	}
-	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</form>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['title_description-number_translation']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-
-	echo "<form method='post' id='frm' action='number_translation_delete.php'>\n";
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "	<th style='width:30px;'>\n";
-	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
-	echo "	</th>\n";
-	echo th_order_by('number_translation_name', $text['label-number_translation_name'], $order_by, $order);
-	echo th_order_by('number_translation_enabled', $text['label-number_translation_enabled'], $order_by, $order);
-	echo th_order_by('number_translation_description', $text['label-number_translation_description'], $order_by, $order);
-	echo "	<td class='list_control_icons'>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-number_translations']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('number_translation_add')) {
-		echo "		<a href='number_translation_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'number_translation_edit.php']);
 	}
-	else {
-		echo "&nbsp;\n";
+	if (permission_exists('number_translation_add') && $number_translations) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
 	}
-	echo "	</td>\n";
-	echo "<tr>\n";
+	if (permission_exists('number_translation_edit') && $number_translations) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('number_translation_delete') && $number_translations) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'number_translations.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
+	echo $text['title_description-number_translation']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($number_translations ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('number_translation_name', $text['label-number_translation_name'], $order_by, $order);
+	echo th_order_by('number_translation_enabled', $text['label-number_translation_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('number_translation_description', $text['label-number_translation_description'], $order_by, $order, null, "class='hide-sm-dn'  style='min-width: 50%;'");
+	if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
+	if (is_array($number_translations) && @sizeof($number_translations) != 0) {
 		$x = 0;
-		foreach($result as $row) {
+		foreach ($number_translations as $row) {
 			if (permission_exists('number_translation_edit')) {
-				$tr_link = "href='number_translation_edit.php?id=".escape($row['number_translation_uuid'])."'";
+				$list_row_url = "number_translation_edit.php?id=".urlencode($row['number_translation_uuid']);
 			}
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
-			echo "		<input type='checkbox' name='number_translations[]' id='checkbox_".$x."' value='".escape($row['number_translation_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['number_translation_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='number_translations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='number_translations[$x][uuid]' value='".escape($row['number_translation_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>";
 			if (permission_exists('number_translation_edit')) {
-				echo "<a href='number_translation_edit.php?id=".escape($row['number_translation_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['number_translation_name'])."</a>";
 			}
-			if (permission_exists('number_translation_delete')) {
-				echo "<a href='number_translation_delete.php?number_translations[]=".escape($row['number_translation_uuid'])."' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { return false; }\">$v_link_label_delete</a>";
+			else {
+				echo escape($row['number_translation_name']);
 			}
 			echo "	</td>\n";
+			if (permission_exists('number_translation_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['number_translation_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['number_translation_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['number_translation_description'])."&nbsp;</td>\n";
+			if (permission_exists('number_translation_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
 			$x++;
-			if ($c==0) { $c=1; } else { $c=0; }
 		}
 	}
-	unset($result, $row);
+	unset($number_translations, $row);
 
-	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('number_translation_add')) {
-		echo 		"<a href='number_translation_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>\n";
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

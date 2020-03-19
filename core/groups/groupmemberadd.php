@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,6 +49,14 @@
 	$group_uuid = $_POST["group_uuid"];
 	$group_name = $_POST["group_name"];
 	$user_uuid = $_POST["user_uuid"];
+
+//validate the token
+	$token = new token;
+	if (!$token->validate('/core/groups/groupmembers.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: groups.php');
+		exit;
+	}
 
 //add the user to the group
 	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {

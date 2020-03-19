@@ -23,10 +23,13 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
 
 //check permissions
 	if (permission_exists('var_view')) {
@@ -41,165 +44,215 @@
 	$language = new text;
 	$text = $language->get();
 
-//toggle enabled state
-	if (is_uuid($_REQUEST['id']) && (strtolower($_REQUEST['enabled']) == 'true' || strtolower($_REQUEST['enabled']) == 'false')) {
-		//build array
-			$array['vars'][0]['var_uuid'] = $_REQUEST['id'];
-			$array['vars'][0]['var_enabled'] = strtolower($_REQUEST['enabled']);
-
-		//grant temporary permissions
-			$p = new permissions;
-			$p->add('var_edit', 'temp');
-
-		//execute update
-			$database = new database;
-			$database->app_name = 'vars';
-			$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-			$database->save($array);
-			unset($array);
-
-		//revoke temporary permissions
-			$p->delete('var_edit', 'temp');
-
-		//unset the user defined variables
-			$_SESSION["user_defined_variables"] = "";
-
-		//synchronize the configuration
-			save_var_xml();
-
-		//set message
-			message::add($text['message-update']);
-
-		//redirect
-			header("Location: vars.php?id=".$_REQUEST['id']);
-			exit;
+//get posted data
+	if (is_array($_POST['vars'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$vars = $_POST['vars'];
 	}
 
-//include the header
-	require_once "resources/header.php";
-	$document['title'] = $text['title-variables'];
+//process the http post data by action
+	if ($action != '' && is_array($vars) && @sizeof($vars) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('var_add')) {
+					$obj = new vars;
+					$obj->copy($vars);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('var_edit')) {
+					$obj = new vars;
+					$obj->toggle($vars);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('var_delete')) {
+					$obj = new vars;
+					$obj->delete($vars);
+				}
+				break;
+		}
 
-//set http values as php variables
+		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
+
+//get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//show the content
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "  <tr>\n";
-	echo "	<td align='left'><b>".$text['header-variables']."</b><br>\n";
-	echo "		".$text['description-variables']."\n";
-	echo "	</td>\n";
-	echo "  </tr>\n";
-	echo "</table>\n";
+//add the search string
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_search = "where (";
+		$sql_search .= "	lower(var_category) like :search ";
+		$sql_search .= "	or lower(var_name) like :search ";
+		$sql_search .= "	or lower(var_value) like :search ";
+		$sql_search .= "	or lower(var_hostname) like :search ";
+		$sql_search .= "	or lower(var_enabled) like :search ";
+		$sql_search .= "	or lower(var_description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 
-	$sql = "select * from v_vars ";
-	$sql .= $order_by != '' ? order_by($order_by, $order) : "order by var_category, var_order asc ";
+//get the count
+	$sql = "select count(var_uuid) from v_vars ";
+	$sql .= $sql_search;
 	$database = new database;
-	$result = $database->select($sql, null, 'all');
+	$num_rows = $database->select($sql, $parameters, 'column');
+
+//prepare to page the results
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = $search ? "&search=".$search : null;
+	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = str_replace('count(var_uuid)', '*', $sql);
+	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by var_category, var_order asc, var_name asc ";
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$vars = $database->select($sql, $parameters, 'all');
 	unset($sql);
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+//include the header
+	$document['title'] = $text['title-variables'];
+	require_once "resources/header.php";
 
-	$tmp_var_header = "<tr>\n";
-	$tmp_var_header .= th_order_by('var_name', $text['label-name'], $order_by, $order);
-	$tmp_var_header .= th_order_by('var_value', $text['label-value'], $order_by, $order);
-	$tmp_var_header .= th_order_by('var_hostname', $text['label-hostname'], $order_by, $order);
-	$tmp_var_header .= th_order_by('var_enabled', $text['label-enabled'], $order_by, $order);
-	$tmp_var_header .= "<th>".$text['label-description']."</th>\n";
-	$tmp_var_header .= "<td class='list_control_icons'>";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-variables']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('var_add')) {
-		$tmp_var_header .= "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'var_edit.php']);
 	}
-	$tmp_var_header .= "</td>\n";
-	$tmp_var_header .= "<tr>\n";
+	if (permission_exists('var_add') && $vars) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('var_edit') && $vars) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('var_delete') && $vars) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'vars.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	if (is_array($result) && @sizeof($result) != 0) {
-		$prev_var_category = '';
-		foreach($result as $row) {
-			$var_value = $row['var_value'];
-			$var_value = substr($var_value, 0, 50);
-			if ($prev_var_category != $row['var_category']) {
-				$c=0;
-				if (strlen($prev_var_category) > 0) {
+	echo $text['description-variables']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	function write_header($modifier) {
+		global $text, $order_by, $order, $vars;
+		$modifier = str_replace('/', '', $modifier);
+		$modifier = str_replace('  ', ' ', $modifier);
+		$modifier = str_replace(' ', '_', $modifier);
+		$modifier = str_replace(':', '', $modifier);
+		$modifier = strtolower(trim($modifier));
+		echo "\n";
+		echo "<tr class='list-header'>\n";
+		if (permission_exists('var_edit') || permission_exists('var_delete')) {
+			echo "	<th class='checkbox'>\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."');\" ".($vars ?: "style='visibility: hidden;'").">\n";
+			echo "	</th>\n";
+		}
+		echo th_order_by('var_name', $text['label-name'], $order_by, $order, null, "class='pct-30'");
+		echo th_order_by('var_value', $text['label-value'], $order_by, $order, null, "class='pct-40'");
+		echo th_order_by('var_hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
+		echo th_order_by('var_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+		echo "<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
+		if (permission_exists('var_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			echo "<td class='action-button'>&nbsp;</td>\n";
+		}
+		echo "</tr>\n";
+	}
+	if (is_array($vars) && @sizeof($vars) != 0) {
+		$previous_category = '';
+		foreach ($vars as $x => $row) {
+			//write category and column headings
+				if ($previous_category != $row["var_category"]) {
 					echo "<tr>\n";
-					echo "<td colspan='6'>\n";
-					echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-					echo "	<tr>\n";
-					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
-					echo "		<td width='33.3%' align='right'>";
-					if (permission_exists('var_add')) {
-						echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-					}
-					echo "		</td>\n";
-					echo "	</tr>\n";
-					echo "	</table>\n";
+					echo "<td colspan='7' class='no-link'>\n";
+					echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
 					echo "</td>\n";
 					echo "</tr>\n";
+					write_header($row["var_category"]);
 				}
-				echo "<tr><td colspan='4' align='left'>\n";
-				echo "	<br />\n";
-				echo "	<br />\n";
-				echo "	<b>".$row['var_category']."</b>&nbsp;</td></tr>\n";
-				echo $tmp_var_header;
-			}
-
-			$tr_link = (permission_exists('var_edit')) ? "href='var_edit.php?id=".$row['var_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			if (permission_exists('var_edit')) {
-				echo "<a href='var_edit.php?id=".$row['var_uuid']."'>".substr($row['var_name'],0,32)."</a>";
+				$list_row_url = "var_edit.php?id=".urlencode($row['var_uuid']);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('var_add') || permission_exists('var_edit') || permission_exists('var_delete')) {
+				$modifier = strtolower(trim($row["var_category"]));
+				$modifier = str_replace('/', '', $modifier);
+				$modifier = str_replace('  ', ' ', $modifier);
+				$modifier = str_replace(' ', '_', $modifier);
+				$modifier = str_replace(':', '', $modifier);
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='vars[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
+				echo "		<input type='hidden' name='vars[$x][uuid]' value='".escape($row['var_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "   <td class='overflow'>";
+			if (permission_exists('var_edit')) {
+				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['var_name'])."</a>";
 			}
 			else {
-				echo substr($row['var_name'],0,32);
+				echo escape($row['var_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_hostname']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
-			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
-			echo "	</td>\n";
-			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
-			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
-			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>";
+			echo "	<td class='overflow'>".$row['var_value']."</td>\n";
+			echo "	<td class='hide-sm-dn'>".$row['var_hostname']."&nbsp;</td>\n";
 			if (permission_exists('var_edit')) {
-				echo "<a href='var_edit.php?id=".escape($row['var_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['var_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
-			if (permission_exists('var_delete')) {
-				echo "<a href='var_delete.php?id=".escape($row['var_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.$row['var_enabled']];
 			}
 			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape(base64_decode($row['var_description']))."</td>\n";
+			if (permission_exists('var_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
 
-			$prev_var_category = $row['var_category'];
-			$c = $c ? 0 : 1;
+			$previous_category = $row["var_category"];
+
+			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($vars);
 
-	echo "<tr>\n";
-	echo "<td colspan='6' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td width='33.3%' class='list_control_icons'>";
-	if (permission_exists('var_add')) {
-		echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

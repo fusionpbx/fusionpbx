@@ -763,7 +763,14 @@
     {/if}
 
     <!-- Config Server Path, MaxLength 128 -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {else}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
+    
     <!-- Firmware File Prefix, MaxLength 128 -->
     <P232></P232>
     <!-- Firmware File Postfix, MaxLength 128 -->

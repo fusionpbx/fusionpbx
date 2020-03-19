@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('xml_cdr_view')) {
@@ -37,9 +38,6 @@
 		echo "access denied";
 		exit;
 	}
-
-//additional includes
-	require_once "resources/paging.php";
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -52,7 +50,7 @@
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
 		$caller_destination = $_REQUEST["caller_destination"];
-		$caller_extension_uuid = $_REQUEST["caller_extension_uuid"];
+		$extension_uuid = $_REQUEST["extension_uuid"];
 		$destination_number = $_REQUEST["destination_number"];
 		$context = $_REQUEST["context"];
 		$start_stamp_begin = $_REQUEST["start_stamp_begin"];
@@ -63,7 +61,8 @@
 		$end_stamp_end = $_REQUEST["end_stamp_end"];
 		$start_epoch = $_REQUEST["start_epoch"];
 		$stop_epoch = $_REQUEST["stop_epoch"];
-		$duration = $_REQUEST["duration"];
+		$duration_min = $_REQUEST["duration_min"];
+		$duration_max = $_REQUEST["duration_max"];
 		$billsec = $_REQUEST["billsec"];
 		$hangup_cause = $_REQUEST["hangup_cause"];
 		$call_result = $_REQUEST["call_result"];
@@ -75,6 +74,9 @@
 		$remote_media_ip = $_REQUEST["remote_media_ip"];
 		$network_addr = $_REQUEST["network_addr"];
 		$bridge_uuid = $_REQUEST["network_addr"];
+		$tta_min = $_REQUEST['tta_min'];
+		$tta_max = $_REQUEST['tta_max'];
+		$recording = $_REQUEST['recording'];
 		$order_by = $_REQUEST["order_by"];
 		$order = $_REQUEST["order"];
 		if (is_array($_SESSION['cdr']['field'])) {
@@ -95,7 +97,8 @@
 				case 'equal': $mos_comparison = "<"; break;
 				case 'notequal': $mos_comparison = "<>"; break;
 			}
-		} else {
+		}
+		else {
 			$mos_comparison = '';
 		}
 		//$mos_comparison = $_REQUEST["mos_comparison"];
@@ -104,7 +107,7 @@
 	}
 
 //check to see if permission does not exist
-	if(!permission_exists(xml_cdr_b_leg)){
+	if (!permission_exists('xml_cdr_b_leg')) {
 		$leg = 'a';
 	}
 
@@ -123,7 +126,7 @@
 	}
 
 //set the assigned extensions
-	if (!permission_exists('xml_cdr_domain')) {
+	if (!permission_exists('xml_cdr_domain') && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
 				$extension_uuids[] = $row['extension_uuid'];
@@ -132,43 +135,47 @@
 	}
 
 //set the param variable which is used with paging
-	$param = "&cdr_id=".escape($cdr_id);
-	$param .= "&missed=".escape($missed);
-	$param .= "&direction=".escape($direction);
-	$param .= "&caller_id_name=".escape($caller_id_name);
-	$param .= "&caller_id_number=".escape($caller_id_number);
-	$param .= "&caller_destination=".escape($caller_destination);
-	$param .= "&caller_extension_uuid=".escape($caller_extension_uuid);
-	$param .= "&destination_number=".escape($destination_number);
-	$param .= "&context=".escape($context);
-	$param .= "&start_stamp_begin=".escape($start_stamp_begin);
-	$param .= "&start_stamp_end=".escape($start_stamp_end);
-	$param .= "&answer_stamp_begin=".escape($answer_stamp_begin);
-	$param .= "&answer_stamp_end=".escape($answer_stamp_end);
-	$param .= "&end_stamp_begin=".escape($end_stamp_begin);
-	$param .= "&end_stamp_end=".escape($end_stamp_end);
-	$param .= "&start_epoch=".escape($start_epoch);
-	$param .= "&stop_epoch=".escape($stop_epoch);
-	$param .= "&duration=".escape($duration);
-	$param .= "&billsec=".escape($billsec);
-	$param .= "&hangup_cause=".escape($hangup_cause);
-	$param .= "&call_result=".escape($call_result);
-	$param .= "&xml_cdr_uuid=".escape($xml_cdr_uuid);
-	$param .= "&bleg_uuid=".escape($bleg_uuid);
-	$param .= "&accountcode=".escape($accountcode);
-	$param .= "&read_codec=".escape($read_codec);
-	$param .= "&write_codec=".escape($write_codec);
-	$param .= "&remote_media_ip=".escape($remote_media_ip);
-	$param .= "&network_addr=".escape($network_addr);
-	$param .= "&bridge_uuid=".escape($bridge_uuid);
-	$param .= "&mos_comparison=".escape($mos_comparison);
-	$param .= "&mos_score=".escape($mos_score);
+	$param = "&cdr_id=".urlencode($cdr_id);
+	$param .= "&missed=".urlencode($missed);
+	$param .= "&direction=".urlencode($direction);
+	$param .= "&caller_id_name=".urlencode($caller_id_name);
+	$param .= "&caller_id_number=".urlencode($caller_id_number);
+	$param .= "&caller_destination=".urlencode($caller_destination);
+	$param .= "&extension_uuid=".urlencode($extension_uuid);
+	$param .= "&destination_number=".urlencode($destination_number);
+	$param .= "&context=".urlencode($context);
+	$param .= "&start_stamp_begin=".urlencode($start_stamp_begin);
+	$param .= "&start_stamp_end=".urlencode($start_stamp_end);
+	$param .= "&answer_stamp_begin=".urlencode($answer_stamp_begin);
+	$param .= "&answer_stamp_end=".urlencode($answer_stamp_end);
+	$param .= "&end_stamp_begin=".urlencode($end_stamp_begin);
+	$param .= "&end_stamp_end=".urlencode($end_stamp_end);
+	$param .= "&start_epoch=".urlencode($start_epoch);
+	$param .= "&stop_epoch=".urlencode($stop_epoch);
+	$param .= "&duration_min=".urlencode($duration_min);
+	$param .= "&duration_max=".urlencode($duration_max);
+	$param .= "&billsec=".urlencode($billsec);
+	$param .= "&hangup_cause=".urlencode($hangup_cause);
+	$param .= "&call_result=".urlencode($call_result);
+	$param .= "&xml_cdr_uuid=".urlencode($xml_cdr_uuid);
+	$param .= "&bleg_uuid=".urlencode($bleg_uuid);
+	$param .= "&accountcode=".urlencode($accountcode);
+	$param .= "&read_codec=".urlencode($read_codec);
+	$param .= "&write_codec=".urlencode($write_codec);
+	$param .= "&remote_media_ip=".urlencode($remote_media_ip);
+	$param .= "&network_addr=".urlencode($network_addr);
+	$param .= "&bridge_uuid=".urlencode($bridge_uuid);
+	$param .= "&mos_comparison=".urlencode($mos_comparison);
+	$param .= "&mos_score=".urlencode($mos_score);
+	$param .= "&tta_min=".urlencode($tta_min);
+	$param .= "&tta_max=".urlencode($tta_max);
+	$param .= "&recording=".urlencode($recording);
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".escape($$field_name);
+				$param .= "&".$field_name."=".urlencode($$field_name);
 			}
 		}
 	}
@@ -176,37 +183,26 @@
 		$param .= "&show=all";
 	}
 	if (isset($order_by)) {
-		$param .= "&order_by=".escape($order_by)."&order=".escape($order);
+		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
 	}
 
 //create the sql query to get the xml cdr records
-	if (strlen($order_by) == 0)  { $order_by  = "start_epoch"; }
-	if (strlen($order) == 0)  { $order  = "desc"; }
+	if (strlen($order_by) == 0) { $order_by  = "start_stamp"; }
+	if (strlen($order) == 0) { $order  = "desc"; }
 
 //set a default number of rows to show
 	$num_rows = '0';
 
-//disable the paging
-	if ($_REQUEST['export_format'] == "csv") { $rows_per_page = 0; }
-	if ($_REQUEST['export_format'] == "pdf") { $rows_per_page = 0; }
-
 //count the records in the database
 	/*
 	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
-		$sql = "select count(xml_cdr_uuid) as num_rows from v_xml_cdr ";
-		$sql .= "where domain_uuid = '".$domain_uuid."' ".$sql_where;
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-		unset($prep_statement, $result);
+		$sql = "select count(*) from v_xml_cdr ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= ".$sql_where;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$num_rows = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 	}
 	*/
 
@@ -246,7 +242,7 @@
 	$sql .= "c.source_number, \n";
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
-	$sql .= "(c.xml IS NOT NULL OR c.json IS NOT NULL) AS raw_data_exists, \n";
+	$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
 	$sql .= "c.json, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
@@ -277,20 +273,20 @@
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		$sql .= "where 1 = 1 ";
-	} else {
+		$sql .= "where true ";
+	}
+	else {
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	
-	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
+	if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids)) { //only show the user their calls
 		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
 	}
 	if ($missed == true) {
 		$sql .= "and missed_call = 1 \n";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
-		$sql .= "and start_epoch BETWEEN :start_epoch AND :stop_epoch \n";
+		$sql .= "and start_epoch between :start_epoch and :stop_epoch \n";
 		$parameters['start_epoch'] = $start_epoch;
 		$parameters['stop_epoch'] = $stop_epoch;
 	}
@@ -316,9 +312,9 @@
 		$parameters['caller_id_number'] = '%'.$mod_caller_id_number.'%';
 	}
 
-	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
+	if (strlen($extension_uuid) > 0 && is_uuid($extension_uuid)) {
 		$sql .= "and e.extension_uuid = :extension_uuid \n";
-		$parameters['extension_uuid'] = $caller_extension_uuid;
+		$parameters['extension_uuid'] = $extension_uuid;
 	}
 	if (strlen($caller_destination) > 0) {
 		$mod_caller_destination = preg_replace("#[^0-9./]#", "", $caller_destination);
@@ -355,7 +351,7 @@
 	}
 
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-		$sql .= "and start_stamp BETWEEN :start_stamp_begin AND :start_stamp_end ";
+		$sql .= "and start_stamp between :start_stamp_begin and :start_stamp_end ";
 		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
 	}
@@ -370,7 +366,7 @@
 		}
 	}
 	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
-		$sql .= "and answer_stamp BETWEEN :answer_stamp_begin AND :answer_stamp_end ";
+		$sql .= "and answer_stamp between :answer_stamp_begin and :answer_stamp_end ";
 		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
 	}
@@ -385,7 +381,7 @@
 		}
 	}
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
-		$sql .= "and end_stamp BETWEEN :end_stamp_begin AND :end_stamp_end ";
+		$sql .= "and end_stamp between :end_stamp_begin and :end_stamp_end ";
 		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
 		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
 	}
@@ -399,9 +395,13 @@
 			$parameters['end_stamp'] = $end_stamp_end.':59.999';
 		}
 	}
-	if (strlen($duration) > 0) {
-		$sql .= "and duration like :duration ";
-		$parameters['duration'] = '%'.$duration.'%';
+	if (is_numeric($duration_min)) {
+		$sql .= "and duration >= :duration_min ";
+		$parameters['duration_min'] = $duration_min;
+	}
+	if (is_numeric($duration_max)) {
+		$sql .= "and duration <= :duration_max ";
+		$parameters['duration_max'] = $duration_max;
 	}
 	if (strlen($billsec) > 0) {
 		$sql .= "and billsec like :billsec ";
@@ -485,11 +485,27 @@
 		$sql .= "and leg = :leg ";
 		$parameters['leg'] = $leg;
 	}
+	if (is_numeric($tta_min)) {
+		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min ";
+		$parameters['tta_min'] = $tta_min;
+	}
+	if (is_numeric($tta_max)) {
+		$sql .= "and (c.answer_epoch - c.start_epoch) <= :tta_max ";
+		$parameters['tta_max'] = $tta_max;
+	}
+	if ($recording == 'true' || $recording == 'false') {
+		if ($recording == 'true') {
+			$sql .= "and c.record_path is not null and c.record_name is not null ";
+		}
+		if ($recording == 'false') {
+			$sql .= "and (c.record_path is null or c.record_name is null) ";
+		}
+	}
 	//end where
 	if (strlen($order_by) > 0) {
-		$sql .= " order by $order_by $order ";
+		$sql .= order_by($order_by, $order);
 	}
-	if ($_REQUEST['export_format'] != "csv" && $_REQUEST['export_format'] != "pdf") {
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
 			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
@@ -501,30 +517,24 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
-	//$sql= str_replace("where and", "where", $sql);
 	$database = new database;
-	if ($archive_request == 'true') {
-		if ($_SESSION['cdr']['archive_database']['boolean'] == 'true') {
-			$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
-			$database->host = $_SESSION['cdr']['archive_database_host']['text'];
-			$database->type = $_SESSION['cdr']['archive_database_type']['text'];
-			$database->port = $_SESSION['cdr']['archive_database_port']['text'];
-			$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
-			$database->username = $_SESSION['cdr']['archive_database_username']['text'];
-			$database->password = $_SESSION['cdr']['archive_database_password']['text'];
-		}
+	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
+		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
+		$database->host = $_SESSION['cdr']['archive_database_host']['text'];
+		$database->type = $_SESSION['cdr']['archive_database_type']['text'];
+		$database->port = $_SESSION['cdr']['archive_database_port']['text'];
+		$database->db_name = $_SESSION['cdr']['archive_database_name']['text'];
+		$database->username = $_SESSION['cdr']['archive_database_username']['text'];
+		$database->password = $_SESSION['cdr']['archive_database_password']['text'];
 	}
 	$result = $database->select($sql, $parameters, 'all');
-	$result_count = count($result);
-	unset($database, $sql);
+	$result_count = (count($result) ? count($result) : 0);
+	unset($database, $sql, $parameters);
 
 //return the paging
-	list($paging_controls_mini, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page, $offset) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
-
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	if ($_REQUEST['export_format'] !== "csv" && $_REQUEST['export_format'] !== "pdf") {
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+	}
 
 ?>

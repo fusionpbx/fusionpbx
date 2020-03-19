@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,11 +25,13 @@
 
 	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (!permission_exists('call_block_view')) {
 		echo "access denied"; exit;
 	}
@@ -38,111 +40,232 @@ require_once "resources/require.php";
 	$language = new text;
 	$text = $language->get();
 
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
+//get posted data
+	if (is_array($_POST['call_blocks'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$call_blocks = $_POST['call_blocks'];
+	}
+
+//process the http post data by action
+	if ($action != '' && is_array($call_blocks) && @sizeof($call_blocks) != 0) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('call_block_add')) {
+					$obj = new call_block;
+					$obj->copy($call_blocks);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('call_block_edit')) {
+					$obj = new call_block;
+					$obj->toggle($call_blocks);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('call_block_delete')) {
+					$obj = new call_block;
+					$obj->delete($call_blocks);
+				}
+				break;
+		}
+
+		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] != '' ? $_GET["order_by"] : 'call_block_number';
+	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//show the content
-	echo "<b>".$text['title-call-block']."</b>\n";
-	echo "<br /><br />\n";
-	echo $text['description-call-block']."\n";
-	echo "<br /><br />\n";
+//add the search term
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql_search = " (";
+		$sql_search .= "lower(call_block_name) like :search ";
+		$sql_search .= "or lower(call_block_number) like :search ";
+		$sql_search .= "or lower(call_block_description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 
 //prepare to page the results
-	$sql = "select count(*) from v_call_block ";
+	$sql = "select count(*) from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+		$sql .= "and extension_uuid in (";
+		$x = 0;
+		foreach ($_SESSION['user']['extension'] as $field) {
+			if (is_uuid($field['extension_uuid'])) {
+				$sql .= ($x == 0) ? "'".$field['extension_uuid']."'" : ",'".$field['extension_uuid']."'";
+			}
+			$x++;
+		}
+		$sql .= ") ";
+	}
+	if (isset($sql_search)) {
+		$sql .= "and ".$sql_search;
+	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
-	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
-//get the  list
-	$sql = "select * from v_call_block ";
+//get the list
+	$sql = "select * from view_call_block ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= order_by($order_by, $order);
+	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
+		$sql .= "and extension_uuid in (";
+		$x = 0;
+		foreach ($_SESSION['user']['extension'] as $field) {
+			if (is_uuid($field['extension_uuid'])) {
+				$sql .= ($x == 0) ? "'".$field['extension_uuid']."'" : ",'".$field['extension_uuid']."'";
+			}
+			$x++;
+		}
+		$sql .= ") ";
+	}
+	if (isset($sql_search)) {
+		$sql .= "and ".$sql_search;
+	}
+	$sql .= order_by($order_by, $order, 'call_block_number');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
-	unset($parameters);
+	unset($sql, $parameters);
 
-//table headers
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
-	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "style='text-align: center;'");
-	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order);
-	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
-	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order);
-	echo "<td class='list_control_icons'>";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-call-block'];
+	require_once "resources/header.php";
+
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call-block']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('call_block_add')) {
-		echo "<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'call_block_edit.php']);
 	}
-	echo "</td>\n";
+	if (permission_exists('call_block_add') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('call_block_edit') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	if (permission_exists('call_block_delete') && $result) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_block.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-call-block']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
+	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
+	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
+	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order, null, "class='shrink no-wrap'");
+	echo "<th class='hide-md-dn pct-20'>".$text['label-description']."</th>\n";
+	if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
 
-//show the results
 	if (is_array($result)) {
+		$x = 0;
 		foreach($result as $row) {
-			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".escape($row['call_block_uuid'])."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a ".$tr_link."'>".escape($row['call_block_number'])."</a>";
+				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('call_block_add') || permission_exists('call_block_edit') || permission_exists('call_block_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='call_blocks[".$x."][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>";
+			if (strlen($row['extension']) == 0) {
+				echo $text['label-all'];
 			}
 			else {
-				echo escape($row['call_block_number']);
+				echo escape($row['extension']);
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_block_name'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['call_block_count'])."</td>\n";
-			if (defined('TIME_24HR') && TIME_24HR == 1) {
-				$tmp_date_added = date("j M Y H:i:s", $row['date_added']);
-			} else {
-				$tmp_date_added = date("j M Y h:i:sa", $row['date_added']);
-			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_block_action'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['call_block_enabled'])]."</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td>".escape($row['call_block_name'])."</td>\n";
+			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
-				echo "<a href='call_block_edit.php?id=".escape($row['call_block_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".$list_row_url."'>".escape(format_phone($row['call_block_number']))."</a>";
 			}
-			if (permission_exists('call_block_delete')) {
-				echo "<a href='call_block_delete.php?id=".escape($row['call_block_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			};
-			echo "  </td>";
+			else {
+				echo escape(format_phone($row['call_block_number']));
+			}
+			echo "	</td>\n";
+			echo "	<td class='center hide-sm-dn'>".escape($row['call_block_count'])."</td>\n";
+			echo "	<td>".$text['label-'.$row['call_block_app']]." ".escape($row['call_block_data'])."</td>\n";
+			if (permission_exists('call_block_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['call_block_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['call_block_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='no-wrap'>".date('j M Y', $row['date_added'])." <span class='hide-sm-dn'>".date(($_SESSION['domain']['time_format']['text'] == '12h' ? 'h:i:s a' : 'H:i:s'), $row['date_added'])."</span></td>\n";
+			echo "	<td class='description overflow hide-md-dn'>".escape($row['call_block_description'])."</td>\n";
+			if (permission_exists('call_block_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			$c = $c == 1 ? 0 : 1;
-		} //end foreach
-		unset($sql, $result, $row_count);
-	} //end if results
-
-//complete the content
-	echo "</table>\n";
-	if (permission_exists('call_block_add')) {
-		echo "<div style='float: right;'>\n";
-		echo "	<a href='call_block_edit.php' alt=\"".$text['button-add']."\">".$v_link_label_add."</a>";
-		echo "</div>\n";
+			$x++;
+		}
+		unset($result);
 	}
+
+	echo "</table>\n";
 	echo "<br />\n";
 	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

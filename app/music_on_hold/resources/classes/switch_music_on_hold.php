@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2016
+	Portions created by the Initial Developer are Copyright (C) 2010-2019
 	All Rights Reserved.
 
 	Contributor(s):
@@ -28,22 +28,39 @@
 include "root.php";
 
 //define the switch_music_on_hold class
+if (!class_exists('switch_music_on_hold')) {
 	class switch_music_on_hold {
 
-		public $domain_uuid;
+		/**
+		 * declare private variables
+		 */
 		private $xml;
-		private $db;
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
 
+		/**
+		 * called when the object is created
+		 */
 		public function __construct() {
-			if (!$this->db) {
-				require_once "resources/classes/database.php";
-				$database = new database;
-				$database->connect();
-				$this->db = $database->db;
-			}
-			$this->domain_uuid = $_SESSION['domain_uuid'];
+
+			//assign private variables
+				$this->app_name = 'music_on_hold';
+				$this->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+				$this->permission_prefix = 'music_on_hold_';
+				$this->list_page = 'music_on_hold.php';
+				$this->table = 'music_on_hold';
+				$this->uuid_prefix = 'music_on_hold_';
+
 		}
 
+		/**
+		 * called when there are no references to a particular object
+		 * unset the variables used in the class
+		 */
 		public function __destruct() {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
@@ -82,7 +99,7 @@ include "root.php";
 					require_once "app/recordings/resources/classes/switch_recordings.php";
 					$recordings_c = new switch_recordings;
 					$recordings = $recordings_c->list_recordings();
-					if (sizeof($recordings) > 0) {
+					if (is_array($recordings) && sizeof($recordings) > 0) {
 						$select .= "	<optgroup label='".$text['label-recordings']."'>";
 						foreach($recordings as $recording_value => $recording_name){
 							$select .= "		<option value='".$recording_value."' ".(($selected == $recording_value) ? 'selected="selected"' : null).">".$recording_name."</option>\n";
@@ -93,22 +110,23 @@ include "root.php";
 			//streams
 				if (is_dir($_SERVER["PROJECT_ROOT"].'/app/streams')) {
 					$sql = "select * from v_streams ";
-					$sql .= "where (domain_uuid = '".$this->domain_uuid."' or domain_uuid is null) ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$sql .= "and stream_enabled = 'true' ";
 					$sql .= "order by stream_name asc ";
-					$prep_statement = $this->db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$streams = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (sizeof($streams) > 0) {
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database = new database;
+					$streams = $database->select($sql, $parameters, 'all');
+					if (is_array($streams) && @sizeof($streams) != 0) {
 						$select .= "	<optgroup label='".$text['label-streams']."'>";
 						foreach($streams as $row){
 							$select .= "		<option value='".$row['stream_location']."' ".(($selected == $row['stream_location']) ? 'selected="selected"' : null).">".$row['stream_name']."</option>\n";
 						}
 						$select .= "	</optgroup>\n";
 					}
+					unset($sql, $parameters, $streams, $row);
 				}
 			//add additional options
-				if (sizeof($options) > 0) {
+				if (is_array($options) && sizeof($options) > 0) {
 					$select .= "	<optgroup label='".$text['label-others']."'>";
 					$select .= $options;
 					$select .= "	</optgroup>\n";
@@ -125,14 +143,16 @@ include "root.php";
 
 			//get moh records, build array
 				$sql = "select ";
-				$sql .= "d.domain_name, m.* ";
+				$sql .= "d.domain_name, ";
+				$sql .= "m.* ";
 				$sql .= "from v_music_on_hold as m ";
-				$sql .= "left join v_domains as d ON d.domain_uuid = m.domain_uuid ";
-				$sql .= "where (m.domain_uuid = '".$this->domain_uuid."' or m.domain_uuid is null) ";
+				$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
+				$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
 				$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
-				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				return $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$database = new database;
+				return $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
 		}
 
 		public function reload() {
@@ -218,7 +238,144 @@ include "root.php";
 				$this->reload();
 		}
 
-	}
+		/**
+		 * delete records/files
+		 */
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter checked records
+							foreach ($records as $music_on_hold_uuid => $record) {
+								if (is_uuid($music_on_hold_uuid)) {
+									if ($record['checked'] == 'true') {
+										foreach ($record as $key => $array) {
+											if (is_numeric($key) && is_array($array) && @sizeof($array) != 0) {
+												$moh[$music_on_hold_uuid][] = $array['file_name'];
+											}
+										}
+										$moh[$music_on_hold_uuid]['delete'] = true;
+										continue;
+									}
+									foreach ($record as $key => $array) {
+										if (is_numeric($key) && is_array($array) && @sizeof($array) != 0 && $array['checked'] == 'true') {
+											$moh[$music_on_hold_uuid][] = $array['file_name'];
+										}
+									}
+								}
+							}
+							unset($array);
+
+						//loop checked records
+							$files_deleted = 0;
+							if (is_array($moh) && @sizeof($moh) != 0) {
+
+								//get music on hold details
+									$sql = "select * from v_music_on_hold ";
+									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ?: "or domain_uuid is null ").") ";
+									$sql .= "and music_on_hold_uuid in ('".implode("','", array_keys($moh))."') ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										foreach ($rows as $row) {
+											$streams[$row['music_on_hold_uuid']] = $row;
+										}
+									}
+									unset($sql, $parameters, $rows, $row);
+
+								//delete files, folders, build delete array
+									$x = 0;
+									foreach ($moh as $music_on_hold_uuid => $row) {
+
+										//prepare path
+											$stream_path = $streams[$music_on_hold_uuid]['music_on_hold_path'];
+											$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+
+										//delete checked files
+											foreach ($row as $key => $stream_file) {
+												if (is_numeric($key)) {
+													$stream_file_path = str_replace('../', '', path_join($stream_path, $stream_file));
+													if (@unlink($stream_file_path)) {
+														$files_deleted++;
+													}
+												}
+											}
+
+										//delete name rate
+											if ($row['delete']) {
+
+												//build delete array
+													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $music_on_hold_uuid;
+													if (!permission_exists('music_on_hold_domain')) {
+														$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+													}
+													$x++;
+
+												//delete rate folder
+													@rmdir($stream_path);
+
+												//delete name (category) folder, if empty
+													$name_path = dirname($stream_path);
+													if (@sizeof(scandir($name_path)) == 2) { //empty (only /.. and /. remaining)
+ 														@rmdir($name_path);
+													}
+											}
+
+									}
+
+							}
+
+						//delete the moh records
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//set flag
+									$moh_deleted = true;
+
+							}
+							unset($records, $moh);
+
+						//post delete
+							if ($moh_deleted || $files_deleted) {
+								//clear the cache
+									$cache = new cache;
+									$cache->delete("configuration:local_stream.conf");
+
+								//reload moh
+									$this->reload();
+
+								//set message
+									message::add($text['message-delete']);
+							}
+
+					}
+
+			}
+		} //method
+
+	} //class
+}
 
 //build and save the XML
 	//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";

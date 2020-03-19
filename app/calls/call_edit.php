@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -85,6 +85,7 @@
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$extension = $row["extension"];
+		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
 		$effective_caller_id_name = $row["effective_caller_id_name"];
 		$effective_caller_id_number = $row["effective_caller_id_number"];
@@ -128,31 +129,45 @@
 				$follow_me_enabled = $_POST["follow_me_enabled"];
 				$follow_me_caller_id_uuid = $_POST["follow_me_caller_id_uuid"];
 				$follow_me_ignore_busy = $_POST["follow_me_ignore_busy"];
+
 				$n = 0;
+				$destination_found = false;
 				foreach ($_POST["destinations"] as $field) {
 					$destinations[$n]['uuid'] = $field['uuid'];
 					$destinations[$n]['destination'] = $field['destination'];
 					$destinations[$n]['delay'] = $field['delay'];
 					$destinations[$n]['prompt'] = $field['prompt'];
 					$destinations[$n]['timeout'] = $field['timeout'];
+					if ($field['destination'] != '') {
+						$destination_found = true;
+					}
 					$n++;
 				}
 				$dnd_enabled = $_POST["dnd_enabled"];
 			}
 
-			//check for all required data
-				if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-					require_once "resources/header.php";
-					require_once "resources/persist_form_var.php";
-					echo "<div align='center'>\n";
-					echo "<table><tr><td>\n";
-					echo $msg."<br />";
-					echo "</td></tr></table>\n";
-					persistformvar($_POST);
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
-				}
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: calls.php');
+				exit;
+			}
+
+		//check for all required data
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				$document['title'] = $text['title-call_routing'];
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+			}
 
 		//include the classes
 			include "resources/classes/call_forward.php";
@@ -169,42 +184,56 @@
 				$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
 
 				//build the array
-				$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-				$extensions['extension_uuid'] = $extension_uuid;
-				$extensions['forward_all_enabled'] = $forward_all_enabled;
-				$extensions['forward_all_destination'] = $forward_all_destination;
-				$extensions['forward_busy_enabled'] = $forward_busy_enabled;
-				$extensions['forward_busy_destination'] = $forward_busy_destination;
-				$extensions['forward_no_answer_enabled'] = $forward_no_answer_enabled;
-				$extensions['forward_no_answer_destination'] = $forward_no_answer_destination;
-				$extensions['forward_user_not_registered_enabled'] = $forward_user_not_registered_enabled;
-				$extensions['forward_user_not_registered_destination'] = $forward_user_not_registered_destination;
-				$extensions['forward_caller_id_uuid'] = $forward_caller_id_uuid;
+				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+				$array['extensions'][0]['forward_all_enabled'] = $forward_all_enabled;
+				$array['extensions'][0]['forward_all_destination'] = $forward_all_destination;
+				$array['extensions'][0]['forward_busy_enabled'] = $forward_busy_enabled;
+				$array['extensions'][0]['forward_busy_destination'] = $forward_busy_destination;
+				$array['extensions'][0]['forward_no_answer_enabled'] = $forward_no_answer_enabled;
+				$array['extensions'][0]['forward_no_answer_destination'] = $forward_no_answer_destination;
+				$array['extensions'][0]['forward_user_not_registered_enabled'] = $forward_user_not_registered_enabled;
+				$array['extensions'][0]['forward_user_not_registered_destination'] = $forward_user_not_registered_destination;
+				$array['extensions'][0]['forward_caller_id_uuid'] = $forward_caller_id_uuid;
 			}
 
 		//do not disturb (dnd) config
 			if (permission_exists('do_not_disturb')) {
-				$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-				$extensions['extension_uuid'] = $extension_uuid;
-				$extensions['do_not_disturb'] = $dnd_enabled;
+				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+				$array['extensions'][0]['do_not_disturb'] = $dnd_enabled;
+				$array['extensions'][0]['dial_string'] = $dnd_enabled == "true" ? "error/user_busy" : '';
 			}
 
 		//follow me config
 			if (permission_exists('follow_me')) {
-				//build the follow me array
+
+				//add follow_me_uuid and follow_me_enabled to the extensions array
 					if ($follow_me_uuid == '') {
 						$follow_me_uuid = uuid();
-						$extensions['domain_uuid'] = $_SESSION['domain_uuid'];
-						$extensions['extension_uuid'] = $extension_uuid;
-						$extensions['follow_me_uuid'] = $follow_me_uuid;
+						$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$array['extensions'][0]['extension_uuid'] = $extension_uuid;
+						$array['extensions'][0]['follow_me_uuid'] = $follow_me_uuid;
 					}
-
-					$follow_me['domain_uuid'] = $_SESSION['domain_uuid'];
-					$follow_me['follow_me_uuid'] = $follow_me_uuid;
-					$follow_me['cid_name_prefix'] = $cid_name_prefix;
-					$follow_me['cid_number_prefix'] = $cid_number_prefix;
-					$follow_me['follow_me_caller_id_uuid'] = $follow_me_caller_id_uuid;
-					$follow_me['follow_me_ignore_busy'] = $follow_me_ignore_busy;
+					if ($destination_found) {
+						$array['extensions'][0]['follow_me_enabled'] = $follow_me_enabled;
+					}
+					else {
+						$array['extensions'][0]['follow_me_enabled'] = 'false';
+					}
+				//build the follow me array
+					$array['follow_me'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['follow_me'][0]['follow_me_uuid'] = $follow_me_uuid;
+					$array['follow_me'][0]['cid_name_prefix'] = $cid_name_prefix;
+					$array['follow_me'][0]['cid_number_prefix'] = $cid_number_prefix;
+					$array['follow_me'][0]['follow_me_caller_id_uuid'] = $follow_me_caller_id_uuid;
+					$array['follow_me'][0]['follow_me_ignore_busy'] = $follow_me_ignore_busy;
+					if ($destination_found) {
+						$array['follow_me'][0]['follow_me_enabled'] = $follow_me_enabled;
+					}
+					else {
+						$array['follow_me'][0]['follow_me_enabled'] = 'false';
+					}
 
 					$d = 0;
 					$destination_found = false;
@@ -215,14 +244,14 @@
 							$field['destination'] = str_replace('$', '', $field['destination']);
 
 							//build the array
-							$follow_me['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
-							$follow_me['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_timeout'] = $field['timeout'];
-							$follow_me['follow_me_destinations'][$d]['follow_me_order'] = $d;
+							$array['follow_me'][0]['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_timeout'] = $field['timeout'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_order'] = $d;
 							$destination_found = true;
 							$d++;
 						}
@@ -230,16 +259,6 @@
 							$follow_me_delete_uuids[] = $field['uuid'];
 						}
 					}
-
-					$follow_me['follow_me_enabled'] = ($destination_found) ? $follow_me_enabled : 'false';
-			}
-
-		//prepare the array
-			if (is_array($extensions) && sizeof($extensions) > 0) {
-				$array['extensions'][] = $extensions;
-			}
-			if (is_array($follow_me) && sizeof($follow_me) > 0) {
-				$array['follow_me'][] = $follow_me;
 			}
 
 		//add the dialplan permission
@@ -269,6 +288,7 @@
 				unset($array);
 			}
 
+		/*
 		//call forward config
 			if (permission_exists('call_forward')) {
 				$call_forward = new call_forward;
@@ -335,6 +355,7 @@
 						unset($dnd);
 				}
 			}
+		*/
 
 		//send feature event notify to the phone
 			if ($_SESSION['device']['feature_sync']['boolean'] == "true") {
@@ -346,26 +367,28 @@
 				$feature_event_notify->ring_count = $ring_count;
 				$feature_event_notify->forward_all_enabled = $forward_all_enabled;
 				$feature_event_notify->forward_busy_enabled = $forward_busy_enabled;
-				$feature_event_notify->forward_no_answer_enabled = $forward_no_answer_enabled;				
+				$feature_event_notify->forward_no_answer_enabled = $forward_no_answer_enabled;
 				//workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
 				if ($forward_all_destination == "") {
 					$feature_event_notify->forward_all_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_all_destination = $forward_all_destination;
 				}
 				
 				if ($forward_busy_destination == "") {
 					$feature_event_notify->forward_busy_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_busy_destination = $forward_busy_destination;
-				}				
+				}
 
 				if ($forward_no_answer_destination == "") {
 					$feature_event_notify->forward_no_answer_destination = "0";
-				} else {
+				}
+				else {
 					$feature_event_notify->forward_no_answer_destination = $forward_no_answer_destination;
-				}					
-				
+				}
 				$feature_event_notify->send_notify();
 				unset($feature_event_notify);
 			}
@@ -381,7 +404,7 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("directory:".$extension."@".$_SESSION['domain_name']);
-			if(strlen($number_alias) > 0){
+			if (strlen($number_alias) > 0) {
 				$cache->delete("directory:".$number_alias."@".$_SESSION['domain_name']);
 			}
 
@@ -390,6 +413,7 @@
 	}
 
 //show the header
+	$document['title'] = $text['title-call_routing'];
 	require_once "resources/header.php";
 
 //pre-populate the form
@@ -428,6 +452,15 @@
 		}
 	}
 
+//get the extensions array - used with autocomplete
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by extension, number_alias asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters, $row);
+
 //set the default
 	if (!isset($dnd_enabled)) {
 		//set the value from the database
@@ -435,19 +468,14 @@
 	}
 
 //prepare the autocomplete
+	if($_SESSION['follow_me']['follow_me_autocomplete']['boolean'] == 'true') {
+
 	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.css\" />\n";
 	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui.min.js\"></script>\n";
 	echo "<script type=\"text/javascript\">\n";
 	echo "\$(function() {\n";
 	echo "	var extensions = [\n";
-
-	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by extension, number_alias asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$result = $database->select($sql, $parameters, 'all');
-	foreach ($result as &$row) {
+	foreach ($extensions as &$row) {
 		if (strlen($number_alias) == 0) {
 			echo "		\"".escape($row["extension"])."\",\n";
 		}
@@ -461,34 +489,36 @@
 		echo "		source: extensions\n";
 		echo "	});\n";
 	}
-	unset($sql, $parameters, $result, $row);
+
 	echo "});\n";
 	echo "</script>\n";
+	}
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-call_routing']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'calls.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description']." <strong>".escape($extension)."</strong>\n";
+	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>\n";
-	echo "	<b>".$text['title']."</b>\n";
-	echo "</td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='/'\" value='".$text['button-back']."'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo "	".$text['description']." <strong>".escape($extension)."</strong><br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	<strong>".$text['label-call-forward']."</strong>\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('follow_me_disabled').checked=true; ";
 	$on_click .= "$('#tr_follow_me_settings').slideUp('fast'); ";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
@@ -576,7 +606,7 @@
 				if(strlen($caller_id_name) == 0){
 					$caller_id_name = $row['destination_description'];
 				}
-				echo "		<option value='".escape($row["destination_uuid"])."' ".escape($selected).">".escape(format_phone($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
+				echo "		<option value='".escape($row["destination_uuid"])."' ".$selected.">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
 			}
 			echo "	</select><br />\n";
 			echo $text['description-cid-number']."\n";
@@ -750,17 +780,14 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
-	}
-	echo "			<br />";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='id' value='".escape($extension_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer

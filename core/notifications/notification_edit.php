@@ -52,6 +52,14 @@ else {
 
 	if (count($_REQUEST) > 0) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: notification_edit.php');
+				exit;
+			}
+
 		// prepare demographic information **********************************************
 
 			// fusionpbx version
@@ -296,11 +304,15 @@ else {
 
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 require_once "resources/header.php";
 $document['title'] = $text['title-notifications'];
 
 // show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm'>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap='nowrap'><b>".$text['header-notifications']."</b><br><br></td>\n";
@@ -426,6 +438,7 @@ $document['title'] = $text['title-notifications'];
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='right'>\n";
+	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

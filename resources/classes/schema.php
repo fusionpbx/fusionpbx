@@ -643,7 +643,7 @@ if (!class_exists('schema')) {
 													}
 
 												//add or rename fields
-													if ($this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
+													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
 														if ($db_type == "pgsql") {
 															$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
 														}
@@ -677,22 +677,37 @@ if (!class_exists('schema')) {
 																	$sql_update .= "AS uuid);\n";
 																}
 																else {
-																	if ($db_field_type = "integer" && strtolower($field_type) == "serial") {
+																	if ($db_field_type == "integer" && strtolower($field_type) == "serial") {
 																		//field type has not changed
-																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
+																	}
+																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") {
 																		//field type has not changed
-																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
+																	}
+																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") {
 																		//field type has not changed
-																	} elseif ($db_field_type = "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
+																	}
+																	else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
 																		//field type has not changed
-																	} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
+																	}
+																	else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") {
 																		//field type has not changed
-																	} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
+																	}
+																	else if ($db_field_type == "character" && strtolower($field_type) == "char") {
 																		//field type has not changed
 																	}
 																	else {
-																		//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
-																		$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
+																		switch ($field_type) {
+																			case 'timestamp':
+																			case 'datetime':
+																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::timestamp without time zone;\n";
+																				break;
+																			case 'timestamptz':
+																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::timestamp with time zone;\n";
+																				break;
+																			default:
+																				//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
+																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
+																		}
 																	}
 																}
 															}
@@ -701,7 +716,7 @@ if (!class_exists('schema')) {
 																if ($type[0] == $field_type) {
 																	//do nothing
 																}
-																elseif ($field_type == "numeric" && $type[0] == "decimal") {
+																else if ($field_type == "numeric" && $type[0] == "decimal") {
 																	//do nothing
 																}
 																else {

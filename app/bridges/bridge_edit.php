@@ -52,14 +52,38 @@
 		$bridge_name = $_POST["bridge_name"];
 		$bridge_destination = $_POST["bridge_destination"];
 		$bridge_enabled = $_POST["bridge_enabled"];
+		$bridge_description = $_POST["bridge_description"];
 	}
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//delete the bridge
+			if (permission_exists('bridge_delete')) {
+				if ($_POST['action'] == 'delete' && is_uuid($bridge_uuid)) {
+					//prepare
+						$array[0]['checked'] = 'true';
+						$array[0]['uuid'] = $bridge_uuid;
+					//delete
+						$obj = new bridges;
+						$obj->delete($array);
+					//redirect
+						header('Location: bridges.php');
+						exit;
+				}
+			}
+
 		//get the uuid from the POST
 			if ($action == "update") {
 				$bridge_uuid = $_POST["bridge_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: bridges.php');
+				exit;
 			}
 
 		//check for all required data
@@ -91,6 +115,7 @@
 			$array['bridges'][0]['bridge_name'] = $bridge_name;
 			$array['bridges'][0]['bridge_destination'] = $bridge_destination;
 			$array['bridges'][0]['bridge_enabled'] = $bridge_enabled;
+			$array['bridges'][0]['bridge_description'] = $bridge_description;
 
 		//save to the data
 			$database = new database;
@@ -107,10 +132,10 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: bridge_edit.php?id='.$bridge_uuid);
+				header('Location: bridges.php');
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -124,30 +149,41 @@
 			$bridge_name = $row["bridge_name"];
 			$bridge_destination = $row["bridge_destination"];
 			$bridge_enabled = $row["bridge_enabled"];
+			$bridge_description = $row["bridge_description"];
 		}
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
+	$document['title'] = $text['title-bridge'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-bridge']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'bridges.php']);
+	if ($action == 'update' && permission_exists('bridge_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-bridge']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='bridges.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-bridge_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-bridge_name']."\n";
@@ -171,7 +207,6 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='bridge_enabled'>\n";
-	echo "		<option value=''></option>\n";
 	if ($bridge_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -190,16 +225,26 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br />\n";
-	echo "			<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-bridge_description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
+	echo "<br />\n";
+	echo $text['description-bridge_description']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

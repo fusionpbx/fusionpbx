@@ -17,23 +17,27 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('recording_add') || permission_exists('recording_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('recording_add') || permission_exists('recording_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -60,6 +64,29 @@ else {
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//get recording uuid to edit
 		$recording_uuid = $_POST["recording_uuid"];
+
+	//delete the recording
+		if (permission_exists('recording_delete')) {
+			if ($_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
+				//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $recording_uuid;
+				//delete
+					$obj = new switch_recordings;
+					$obj->delete($array);
+				//redirect
+					header('Location: recordings.php');
+					exit;
+			}
+		}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: recordings.php');
+			exit;
+		}
 
 	//check for all required data
 		$msg = '';
@@ -100,7 +127,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
-			// set message
+			//set message
 				message::add($text['message-update']);
 
 			//redirect
@@ -128,24 +155,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['title-edit'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
 
-	echo "<table border='0' cellpadding='0' cellspacing='0' align='right'>\n";
-	echo "<tr>\n";
-	echo "<td nowrap='nowrap'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='recordings.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-
-	echo "<b>".$text['title-edit']."</b>\n";
-	echo "<br /><br />\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
+	if (permission_exists('recording_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -182,17 +213,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
-	echo "			<br>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "<br><br>";
+	echo "<br /><br />";
+
+	echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

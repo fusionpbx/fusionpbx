@@ -115,6 +115,14 @@
 //process the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: gateways.php');
+				exit;
+			}
+
 		//check for all required data
 			$msg = '';
 			if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
@@ -299,7 +307,12 @@
 	if (strlen($register) == 0) { $register = "true"; }
 	if (strlen($retry_seconds) == 0) { $retry_seconds = "30"; }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
+	$document['title'] = $text['title-gateway'];
 	require_once "resources/header.php";
 
 //show the content
@@ -318,34 +331,24 @@
 	echo "}\n";
 	echo "</script>";
 
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<span class=\"title\">".$text['title-gateway']."</span><br>\n";
-	echo "		</td>";
-	echo "		<td width='50%' align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='gateways.php'\" value='".$text['button-back']."'>\n";
-	if ($action == "update") {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='gateway_copy.php?id=".escape($gateway_uuid)."';}\" value='".$text['button-copy']."'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-gateway']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'gateways.php']);
+	if ($action == "update" && permission_exists('gateway_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','style'=>'margin-left: 15px;','link'=>'gateway_copy.php?id='.urlencode($gateway_uuid),'onclick'=>"if (!confirm('".$text['confirm-copy']."')){ this.blur(); return false; }"]);
 	}
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "	<tr>";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-gateway-edit']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo $text['description-gateway-edit']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -482,7 +485,7 @@
 	echo "		<tr>\n";
 	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
@@ -826,29 +829,20 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
-	}
-	echo "			<br>";
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
-//capture enter key to submit form
+//hide password fields before submit
 	echo "<script>\n";
-	echo "	$(window).keypress(function(event){\n";
-	echo "		if (event.which == 13) { submit_form(); }\n";
-	echo "	});\n";
-
-// convert password fields to
 	echo "	function submit_form() {\n";
-	echo "		$('input:password').css('visibility','hidden');\n";
-	echo "		$('input:password').attr({type:'text'});\n";
+	echo "		hide_password_fields();\n";
 	echo "		$('form#frm').submit();\n";
 	echo "	}\n";
 	echo "</script>\n";

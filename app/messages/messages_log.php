@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2018
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('message_view')) {
@@ -42,26 +43,26 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the action
-	if (is_array($_POST["messages"])) {
-		$messages = $_POST["messages"];
-		foreach($messages as $row) {
-			if ($row['action'] == 'delete') {
-				$action = 'delete';
-				break;
-			}
-		}
+//get the http post data
+	if (is_array($_POST['messages'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$messages = $_POST['messages'];
 	}
 
-//delete the messages
-	if (permission_exists('message_delete')) {
-		if ($action == "delete") {
-			//download
-				$obj = new messages;
-				$obj->delete($messages);
-			//delete message
-				message::add($text['message-delete']);
+//process the http post data by action
+	if ($action != '' && is_array($messages) && @sizeof($messages) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('message_delete')) {
+					$obj = new messages;
+					$obj->delete($messages);
+				}
+				break;
 		}
+
+		header('Location: messages_log.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
 	}
 
 //get variables used to control the order
@@ -74,18 +75,12 @@
 		$sql_search = " (";
 		$sql_search .= "lower(message_type) like :search ";
 		$sql_search .= "or lower(message_direction) like :search ";
-		$sql_search .= "or lower(message_date) like :search ";
 		$sql_search .= "or lower(message_from) like :search ";
 		$sql_search .= "or lower(message_to) like :search ";
 		$sql_search .= "or lower(message_text) like :search ";
-		$sql_search .= "or lower(message_media_type) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //prepare to page the results
 	$sql = "select count(*) from v_messages ";
@@ -112,10 +107,12 @@
 	if ($_GET['show'] == "all" && permission_exists('message_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
+	if (isset($_GET['page'])) {
+		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+		$offset = $rows_per_page * $page;
+	}
 
 //get the list
 	$sql = str_replace('count(*)', '*', $sql);
@@ -125,10 +122,13 @@
 	$messages = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//alternate the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include header
+	$document['title'] = $text['title-message_log'];
+	require_once "resources/header.php";
 
 //define the checkbox_toggle function
 	echo "<script type=\"text/javascript\">\n";
@@ -148,110 +148,110 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-message_log']."</b><br><br></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
-	echo "				<a href='messages.php'><input type='button' class='btn' value='".$text['button-back']."'></a>\n";
-
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-message_log']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'messages.php']);
+	if (permission_exists('message_delete') && $messages) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('message_all')) {
 		if ($_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='messages_log.php?show=all';\">\n";
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	if (permission_exists('message_delete')) {
-		echo "			<input type='button' class='btn' value='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('form_message_log').action = 'message_delete.php'; document.getElementById('form_message_log').submit(); }\">\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'messages_log.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if ($paging_controls_mini != '') {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
-
-	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
-	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
-	echo "			</td>\n";
 	echo "		</form>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	echo "<form id='form_message_log' method='post' action=''>\n";
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('message_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($messages ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	echo th_order_by('message_type', $text['label-message_type'], $order_by, $order);
+	echo th_order_by('message_direction', $text['label-message_direction'], $order_by, $order);
+	echo th_order_by('message_date', $text['label-message_date'], $order_by, $order);
+	echo th_order_by('message_from', $text['label-message_from'], $order_by, $order);
+	echo th_order_by('message_to', $text['label-message_to'], $order_by, $order);
+	echo th_order_by('message_text', $text['label-message_text'], $order_by, $order, null, "class='pct-20 hide-xs'");
+	if (permission_exists('message_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
 	if (is_array($messages) && @sizeof($messages) != 0) {
 		$x = 0;
-		foreach($messages as $row) {
-
-			if ($x == 0) {
-				echo "	<th style='width:30px;'>\n";
-				echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
-				echo "	</th>\n";
-				echo th_order_by('message_type', $text['label-message_type'], $order_by, $order);
-				echo th_order_by('message_direction', $text['label-message_direction'], $order_by, $order);
-				echo th_order_by('message_date', $text['label-message_date'], $order_by, $order);
-				echo th_order_by('message_from', $text['label-message_from'], $order_by, $order);
-				echo th_order_by('message_to', $text['label-message_to'], $order_by, $order);
-				echo th_order_by('message_text', $text['label-message_text'], $order_by, $order);
-				echo "	<td class='list_control_icons'>";
-				echo "		&nbsp;\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-
-			}
+		foreach ($messages as $row) {
 			if (permission_exists('message_edit')) {
-				$tr_link = "href='message_edit.php?id=".escape($row['message_uuid'])."'";
+				$list_row_url = "message_edit.php?id=".urlencode($row['message_uuid']);
 			}
-			echo "<tr ".$tr_link.">\n";
-			//echo "	<td valign='top' class=''>".escape($row['user_uuid'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 7px;'>\n";
-			echo "		<input type='checkbox' name=\"messages[]\" id='checkbox_".$x."' value='".escape($row['message_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('message_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='messages[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='messages[$x][uuid]' value='".escape($row['message_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>";
 			switch ($row['message_type']) {
 				case 'sms': echo $text['label-sms']; break;
 				case 'mms': echo $text['label-mms']; break;
 				case 'chat': echo $text['label-chat']; break;
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "	<td>";
 			switch ($row['message_direction']) {
 				case "inbound": echo $text['label-inbound']; break;
 				case "outbound": echo $text['label-outbound']; break;
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_date'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['message_from']))."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['message_to']))."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['message_text'])."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
+			echo "	<td>";
+			$message_date = explode(' ', $row['message_date']);
+			$message_date = escape($message_date[0])." <span class='hide-sm-dn'>".$message_date[1]."</span>";
 			if (permission_exists('message_edit')) {
-				echo "<a href='message_edit.php?id=".escape($row['message_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='".$list_row_url."'>".$message_date."</a>";
 			}
-			if (permission_exists('message_delete')) {
-				echo "<a href='message_delete.php?messages[]=".escape($row['message_uuid'])."' alt='".$text['button-delete']."' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('form_message_log').submit(); } else { return false; }\">$v_link_label_delete</a>";
+			else {
+				echo $message_date;
 			}
 			echo "	</td>\n";
+			echo "	<td>".escape(format_phone($row['message_from']))."&nbsp;</td>\n";
+			echo "	<td>".escape(format_phone($row['message_to']))."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-xs'>".escape($row['message_text'])."&nbsp;</td>\n";
+			if (permission_exists('message_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>\n";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
 			$x++;
-			$c = $c ? 0 : 1;
 		}
+		unset($messages);
 	}
-	unset($messages, $row);
 
-	echo "<tr>\n";
-	echo "<td colspan='8' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	echo "			&nbsp;";
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

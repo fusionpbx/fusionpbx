@@ -26,7 +26,7 @@
 
 	if (!function_exists('save_ivr_menu_xml')) {
 		function save_ivr_menu_xml() {
-			global $db, $domain_uuid;
+			global $domain_uuid;
 
 			//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
 				if (count($_SESSION["domains"]) > 1) {
@@ -53,17 +53,17 @@
 				}
 
 			$sql = "select * from v_ivr_menus ";
-			$sql .= " where domain_uuid = '$domain_uuid' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			unset ($prep_statement, $sql);
-			if ($result_count > 0) {
+			$sql .= " where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$database = new database;
+			$result = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+			if (is_array($result) && @sizeof($result) != 0) {
 				foreach($result as $row) {
 					$dialplan_uuid = $row["dialplan_uuid"];
 					$ivr_menu_uuid = $row["ivr_menu_uuid"];
-					$ivr_menu_name = check_str($row["ivr_menu_name"]);
+					$ivr_menu_name = $row["ivr_menu_name"];
 					$ivr_menu_extension = $row["ivr_menu_extension"];
 					$ivr_menu_greet_long = $row["ivr_menu_greet_long"];
 					$ivr_menu_greet_short = $row["ivr_menu_greet_short"];
@@ -83,7 +83,7 @@
 					$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 					$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
 					$ivr_menu_enabled = $row["ivr_menu_enabled"];
-					$ivr_menu_description = check_str($row["ivr_menu_description"]);
+					$ivr_menu_description = $row["ivr_menu_description"];
 
 					//replace space with an underscore
 						$ivr_menu_name = str_replace(" ", "_", $ivr_menu_name);
@@ -132,28 +132,31 @@
 						$tmp .= "		digit-len=\"$ivr_menu_digit_len\">\n";
 
 						$sub_sql = "select * from v_ivr_menu_options ";
-						$sub_sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
-						$sub_sql .= "and domain_uuid = '$domain_uuid' ";
+						$sub_sql .= "where ivr_menu_uuid = :ivr_menu_uuid ";
+						$sub_sql .= "and domain_uuid = :domain_uuid ";
 						$sub_sql .= "order by ivr_menu_option_order asc ";
-						$sub_prep_statement = $db->prepare(check_sql($sub_sql));
-						$sub_prep_statement->execute();
-						$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_ASSOC);
-						foreach ($sub_result as &$sub_row) {
-							//$ivr_menu_uuid = $sub_row["ivr_menu_uuid"];
-							$ivr_menu_option_digits = $sub_row["ivr_menu_option_digits"];
-							$ivr_menu_option_action = $sub_row["ivr_menu_option_action"];
-							$ivr_menu_option_param = $sub_row["ivr_menu_option_param"];
-							$ivr_menu_option_description = $sub_row["ivr_menu_option_description"];
+						$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
+						$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$sub_result = $database->select($sub_sql, $parameters, 'all');
+						if (is_array($sub_result) && @sizeof($sub_result) != 0) {
+							foreach ($sub_result as &$sub_row) {
+								//$ivr_menu_uuid = $sub_row["ivr_menu_uuid"];
+								$ivr_menu_option_digits = $sub_row["ivr_menu_option_digits"];
+								$ivr_menu_option_action = $sub_row["ivr_menu_option_action"];
+								$ivr_menu_option_param = $sub_row["ivr_menu_option_param"];
+								$ivr_menu_option_description = $sub_row["ivr_menu_option_description"];
 
-							$tmp .= "		<entry action=\"$ivr_menu_option_action\" digits=\"$ivr_menu_option_digits\" param=\"$ivr_menu_option_param\"/>";
-							if (strlen($ivr_menu_option_description) == 0) {
-								$tmp .= "\n";
-							}
-							else {
-								$tmp .= "	<!-- $ivr_menu_option_description -->\n";
+								$tmp .= "		<entry action=\"$ivr_menu_option_action\" digits=\"$ivr_menu_option_digits\" param=\"$ivr_menu_option_param\"/>";
+								if (strlen($ivr_menu_option_description) == 0) {
+									$tmp .= "\n";
+								}
+								else {
+									$tmp .= "	<!-- $ivr_menu_option_description -->\n";
+								}
 							}
 						}
-						unset ($sub_prep_statement, $sub_row);
+						unset($sub_sql, $sub_result, $sub_row);
 
 						if ($ivr_menu_direct_dial == "true") {
 							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$_SESSION["context"]."\"/>\n";
@@ -176,6 +179,8 @@
 							fclose($fout);
 				}
 			}
+			unset($result, $row);
+
 			save_dialplan_xml();
 
 			//apply settings

@@ -68,16 +68,16 @@
 	$sql .= "profile_key_id asc ";
 	$parameters['device_profile_uuid'] = $device_profile_uuid;
 	$database = new database;
-	$device_profile_keys = $database->select($sql, $parameters);
+	$device_profile_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get device settings
 	$sql = "select * from v_device_profile_settings ";
 	$sql .= "where device_profile_uuid = :device_profile_uuid ";
-	$sql .= "order by device_profile_name asc ";
+	$sql .= "order by profile_setting_name asc ";
 	$parameters['device_profile_uuid'] = $device_profile_uuid;
 	$database = new database;
-	$device_profile_settings = $database->select($sql, $parameters);
+	$device_profile_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //prepare the devices array

@@ -8,7 +8,8 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = '';
+		$apps[$x]['description']['en-us'] = 'Call Recordings';
+		$apps[$x]['description']['nl-nl'] = 'Gespreksopnamen';
 
 	//permission details
 		$y = 0;
@@ -51,10 +52,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_recording_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_recording_path';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_recording_length';

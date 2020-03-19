@@ -1,10 +1,9 @@
 <?php
-include "root.php";
+
+require_once "root.php";
 require_once "resources/require.php";
 
 header("Content-type: text/css; charset: UTF-8");
-
-$default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 //parse fonts (add surrounding single quotes to each font name)
 	if (is_array($_SESSION['theme']) && sizeof($_SESSION['theme']) > 0) {
@@ -34,7 +33,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 //determine which background image/color settings to use (login or standard)
 	$background_images_enabled = false;
-	if ($default_login) {
+	if (isset($_SESSION['username']) && $_SESSION['username'] != '') {
 		//try using login background images/colors
 		if (isset($_SESSION['theme']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 			$background_images_enabled = true;
@@ -151,6 +150,11 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		else if ($background_colors[0] == '' && $background_colors[1] != '') { // use color 2
 			$background_color = "background: ".$background_colors[1].";";
 		}
+		else if ($background_colors[0] != '' && $background_colors[1] != '' && isset($_SESSION['theme']['background_radial_gradient']['text'])) { // radial gradient
+			$background_color = "background: ".$background_colors[0].";\n";
+			$background_color .= "background: -ms-radial-gradient(center, circle, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+			$background_color .= "background: radial-gradient(circle at center, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
+		}
 		else if ($background_colors[0] != '' && $background_colors[1] != '') { // vertical gradient
 			$background_color = "background: ".$background_colors[0].";\n";
 			$background_color .= "background: -ms-linear-gradient(top, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
@@ -248,7 +252,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 /* MENU: BEGIN ******************************************************************/
 
 	/* help bootstrap v4 menu be scrollable on mobile */
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 575px) {
 		.navbar-collapse {
 			max-height: calc(100vh - 60px);
 			overflow-y: auto;
@@ -315,9 +319,9 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		padding: 15px 10px 14px 10px; !important;
 		}
 
-	.navbar .navbar-nav > li:hover > a,
-	.navbar .navbar-nav > li:focus > a,
-	.navbar .navbar-nav > li:active > a {
+	ul.navbar-nav > li.nav-item:hover > a.nav-link,
+	ul.navbar-nav > li.nav-item:focus > a.nav-link,
+	ul.navbar-nav > li.nav-item:active > a.nav-link {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>
 		}
@@ -430,6 +434,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		}
 */
 
+	button.navbar-toggler {
+		min-height: 50px;
+		}
+
 	button.navbar-toggler > span.fas.fa-bars {
 		color: <?php echo ($_SESSION['theme']['menu_main_toggle_color']['text'] != '') ? $_SESSION['theme']['menu_main_toggle_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
 		}
@@ -527,20 +535,28 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		text-decoration: none;
 		}
 
-	a.menu_side_item_main {
+	div#menu_side_container > a.menu_side_item_main,
+	div#menu_side_container > div > a.menu_side_item_main,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main {
 		display: block;
 		width: 100%;
 		padding: 10px 20px;
 		text-align: left;
 		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
-		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?> !important;
+		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
 		cursor: pointer;
 		}
 
-	a.menu_side_item_main:hover,
-	a.menu_side_item_main:focus,
-	a.menu_side_item_main:active {
+	div#menu_side_container > a.menu_side_item_main:hover,
+	div#menu_side_container a.menu_side_item_main:focus,
+	div#menu_side_container a.menu_side_item_main:active,
+	div#menu_side_container > div > a.menu_side_item_main:hover,
+	div#menu_side_container > div > a.menu_side_item_main:focus,
+	div#menu_side_container > div > a.menu_side_item_main:active,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:hover,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:focus,
+	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;
@@ -575,7 +591,8 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	/* buttons */
 	input.btn,
-	input.button {
+	input.button,
+	button.btn-default {
 		height: <?php echo ($_SESSION['theme']['button_height']['text'] != '') ? $_SESSION['theme']['button_height']['text'] : '28px'; ?>;
 		padding: <?php echo ($_SESSION['theme']['button_padding']['text'] != '') ? $_SESSION['theme']['button_padding']['text'] : '5px 8px'; ?>;
 		border: <?php echo ($_SESSION['theme']['button_border_size']['text'] != '') ? $_SESSION['theme']['button_border_size']['text'] : '1px'; ?> solid <?php echo ($_SESSION['theme']['button_border_color']['text'] != '') ? $_SESSION['theme']['button_border_color']['text'] : '#242424'; ?>;
@@ -604,6 +621,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-weight: <?php echo ($_SESSION['theme']['button_text_weight']['text'] != '') ? $_SESSION['theme']['button_text_weight']['text'] : 'bold'; ?>;
 		font-size: <?php echo ($_SESSION['theme']['button_text_size']['text'] != '') ? $_SESSION['theme']['button_text_size']['text'] : '11px'; ?>;
 		vertical-align: middle;
+		white-space: nowrap;
 		}
 
 	input.btn:hover,
@@ -611,7 +629,10 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	input.btn:focus,
 	input.button:hover,
 	input.button:active,
-	input.button:focus {
+	input.button:focus,
+	button.btn-default:hover,
+	button.btn-default:active,
+	button.btn-default:focus {
 		cursor: pointer;
 		border-color: <?php echo ($_SESSION['theme']['button_border_color_hover']['text'] != '') ? $_SESSION['theme']['button_border_color_hover']['text'] : '#000000'; ?>;
 		<?php
@@ -629,42 +650,13 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		color: <?php echo ($_SESSION['theme']['button_text_color_hover']['text'] != '') ? $_SESSION['theme']['button_text_color_hover']['text'] : '#ffffff'; ?>;
 		}
 
-	/* default bootstrap buttons - not currently used */
-	button.btn-default {
-		font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-		padding: 4px 8px;
-		color: #fff;
-		font-weight: bold;
-		font-size: 8pt;
-		border: 1px solid #26242a;
-		background: #3e3e3e;
-		background-image: -moz-linear-gradient(top, #000 0%, #3e3e3e 100%);
-		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.0, #000), color-stop(1, #3e3e3e));
-		-moz-border-radius: 3px;
-		-webkit-border-radius: 3px;
-		-khtml-border-radius: 3px;
-		border-radius: 3px;
-		text-align: center;
-		text-transform: uppercase;
-		/* text-shadow: 0px 0px 1px rgba(0,0,0,0.9); */
-		opacity: 0.9;
-		-moz-opacity: 0.9;
+	/* remove (along with icons in theme/default/config.php) after transition to button class */
+	button.btn-icon {
+		margin: 0 2px;
+		white-space: nowrap;
 		}
 
-	button.btn-default:hover,
-	button.btn-default:active,
-	button.btn-default:focus {
-		cursor: pointer;
-		color: #ffffff;
-		border: 1px solid #26242a;
-		box-shadow: 0 0 5px #cddaf0;
-		-webkit-box-shadow: 0 0 5px #cddaf0;
-		-moz-box-shadow: 0 0 5px #cddaf0;
-		opacity: 1.0;
-		-moz-opacity: 1.0;
-		}
-
-	/* control icons (must be defined after the default bootstrap buttons) */
+	/* control icons (define after the default bootstrap btn-default class) */
 	button.list_control_icon,
 	button.list_control_icon_disabled {
 		width: 24px;
@@ -718,6 +710,207 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		-moz-opacity: 1.0;
 		opacity: 1.0;
 		}
+
+	<?php if ($_SESSION['theme']['button_icons']['text'] == 'always' || $_SESSION['theme']['button_icons']['text'] == 'auto' || !$_SESSION['theme']['button_icons']['text']) { ?>
+		button:not(.btn-link) > span.button-label.pad {
+			margin-left: 6px;
+			}
+	<?php } ?>
+
+	a.disabled,
+	button.btn.disabled {
+		outline: none; /* hides the dotted outline of the anchor tag on focus/active */
+		cursor: default;
+		}
+
+/* DISPLAY BREAKPOINTS ****************************************************************/
+
+	/* screen = extra small */
+	@media (max-width: 575.98px) {
+		.hide-xs,
+		.hide-sm-dn,
+		.hide-md-dn,
+		.hide-lg-dn {
+			display: none;
+			}
+
+		.show-xs,
+		.show-xs-inline,
+		.show-sm-dn,
+		.show-sm-dn-inline,
+		.show-md-dn,
+		.show-md-dn-inline,
+		.show-lg-dn,
+		.show-lg-dn-inline {
+			display: inline;
+			}
+
+		.show-xs-block,
+		.show-sm-dn-block,
+		.show-md-dn-block,
+		.show-lg-dn-block {
+			display: block;
+			}
+
+		.show-xs-inline-block,
+		.show-sm-dn-inline-block,
+		.show-md-dn-inline-block,
+		.show-lg-dn-inline-block {
+			display: inline-block;
+			}
+
+		.show-xs-table-cell,
+		.show-sm-dn-table-cell,
+		.show-md-dn-table-cell,
+		.show-lg-dn-table-cell {
+			display: table-cell;
+			}
+	}
+
+	/* screen = small */
+	@media (min-width: 576px) and (max-width: 767.98px) {
+		.hide-sm,
+		.hide-sm-dn,
+		.hide-md-dn,
+		.hide-lg-dn,
+		.hide-sm-up {
+			display: none;
+			}
+
+		.show-sm,
+		.show-sm-dn,
+		.show-sm-dn-inline,
+		.show-md-dn,
+		.show-md-dn-inline,
+		.show-lg-dn,
+		.show-lg-dn-inline {
+			display: inline;
+			}
+
+		.show-sm-block,
+		.show-sm-dn-block,
+		.show-md-dn-block,
+		.show-lg-dn-block {
+			display: block;
+			}
+
+		.show-sm-inline-block,
+		.show-sm-dn-inline-block,
+		.show-md-dn-inline-block,
+		.show-lg-dn-inline-block {
+			display: inline-block;
+			}
+
+		.show-sm-table-cell,
+		.show-sm-dn-table-cell,
+		.show-md-dn-table-cell,
+		.show-lg-dn-table-cell {
+			display: table-cell;
+			}
+	}
+
+	/* screen = medium */
+	@media (min-width: 768px) and (max-width: 991.98px) {
+		.hide-md,
+		.hide-md-dn,
+		.hide-lg-dn,
+		.hide-md-up,
+		.hide-sm-up {
+			display: none;
+			}
+
+		.show-md,
+		.show-md-dn,
+		.show-md-dn-inline,
+		.show-lg-dn,
+		.show-lg-dn-inline {
+			display: inline;
+			}
+
+		.show-md-block,
+		.show-md-dn-block,
+		.show-lg-dn-block {
+			display: block;
+			}
+
+		.show-md-inline-block,
+		.show-md-dn-inline-block,
+		.show-lg-dn-inline-block {
+			display: inline-block;
+			}
+
+		.show-md-table-cell,
+		.show-md-dn-table-cell,
+		.show-lg-dn-table-cell {
+			display: table-cell;
+			}
+	}
+
+	/* screen = large */
+	@media (min-width: 992px) and (max-width: 1199.98px) {
+		.hide-lg,
+		.hide-lg-dn,
+		.hide-lg-up,
+		.hide-md-up,
+		.hide-sm-up {
+			display: none;
+			}
+
+		.show-lg,
+		.show-lg-dn,
+		.show-lg-dn-inline {
+			display: inline;
+			}
+
+		.show-lg-block,
+		.show-lg-dn-block {
+			display: block;
+			}
+
+		.show-lg-inline-block,
+		.show-lg-dn-inline-block {
+			display: inline-block;
+			}
+
+		.show-lg-table-cell,
+		.show-lg-dn-table-cell {
+			display: table-cell;
+			}
+	}
+
+	/* screen >= extra large */
+	@media (min-width: 1200px) {
+		.hide-xl,
+		.hide-lg-up,
+		.hide-md-up,
+		.hide-sm-up {
+			display: none;
+			}
+
+		.show-xl,
+		.show-xl-inline {
+			display: inline;
+			}
+
+		.show-xl-block {
+			display: block;
+			}
+
+		.show-xl-inline-block {
+			display: inline-block;
+			}
+
+		.show-xl-table-cell {
+			display: table-cell;
+			}
+	}
+
+	/* hide button labels on medium and smaller screens (only if icons present) */
+	@media (max-width: 991.98px) {
+		button:not(.btn-link) > span.button-label.hide-md-dn {
+			display: none;
+			}
+	}
 
 /* ICONS *********************************************************************/
 
@@ -779,7 +972,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border: 1px solid #a4aebf;
 		}
 
-	div.domains_list_item, div.domains_list_item_active {
+	div.domains_list_item, div.domains_list_item_active, div.domains_list_item_inactive {
 		text-align: left;
 		border-bottom: 1px solid #c5d1e5;
 		padding: 5px 8px 8px 8px;
@@ -788,19 +981,49 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		cursor: pointer;
 		}
 
-	div.domains_list_item span.domain_list_item_description, div.domains_list_item_active span.domain_list_item_description {
-		color: #999;
+	div.domains_list_item span.domain_list_item_description, 
+	div.domains_list_item_active span.domain_list_item_description, 
+	div.domains_list_item_inactive span.domain_list_item_description,
+	
+	div.domains_list_item_active span.domain_active_list_item_description,
+	div.domains_list_item_inactive span.domain_inactive_list_item_description {
 		font-size: 11px;
+		}
+
+	div.domains_list_item span.domain_list_item_description, 
+	div.domains_list_item_active span.domain_list_item_description, 
+	div.domains_list_item_inactive span.domain_list_item_description {
+		color: #999;
+		}
+
+	div.domains_list_item_active a {
+		color: <?php echo ($_SESSION['theme']['domain_active_text_color']['text'] != '') ? $_SESSION['theme']['domain_active_text_color']['text'] : '#004083'; ?>;
+	}
+	div.domains_list_item_inactive a {
+		color: <?php echo ($_SESSION['theme']['domain_inactive_text_color']['text'] != '') ? $_SESSION['theme']['domain_inactive_text_color']['text'] : '#004083'; ?>;
+	}
+
+	div.domains_list_item_active span.domain_active_list_item_description {
+		color: <?php echo ($_SESSION['theme']['domain_active_desc_text_color']['text'] != '') ? $_SESSION['theme']['domain_active_desc_text_color']['text'] : '#999'; ?>;
+		}
+
+	div.domains_list_item_inactive span.domain_inactive_list_item_description {
+		color: <?php echo ($_SESSION['theme']['domain_inactive_desc_text_color']['text'] != '') ? $_SESSION['theme']['domain_inactive_desc_text_color']['text'] : '#999'; ?>;
 		}
 
 	div.domains_list_item:hover a,
 	div.domains_list_item:hover span {
 		color: #5082ca;
 		}
-	
+
 	div.domains_list_item_active:hover a,
 	div.domains_list_item_active:hover span {
 		color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
+	}
+	
+	div.domains_list_item_inactive:hover a,
+	div.domains_list_item_inactive:hover span {
+		color: <?php echo ($_SESSION['theme']['domain_inactive_text_color_hover']['text']); ?>;
 	}
 
 /* DOMAIN SELECTOR: END ********************************************************/
@@ -868,8 +1091,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		width: 100%;
 		<?php
 		if (
-			(strlen($_SESSION["username"]) > 0 || !$default_login)
-			&&
+			isset($_SESSION['username']) && $_SESSION['username'] != '' &&
 			(isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '')
 			) { ?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
@@ -899,7 +1121,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	/* default body padding */
 	.container-fluid {
-		width: 90%;
+		width: <?php echo ($_SESSION['theme']['body_width']['text'] != '') ? $_SESSION['theme']['body_width']['text'] : '90%'; ?>;
 		}
 
 	/* maximize viewport usage on xs displays */
@@ -932,18 +1154,42 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-weight: bold
 		}
 
-	a {
+	a,
+	button.btn.btn-link {
 		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
 		text-decoration: none;
 		}
 
-	a:hover {
+	a:hover,
+	button.btn.btn-link:hover {
 		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
 		text-decoration: underline;
 		}
 
+	button.btn {
+		margin-left: 2px;
+		margin-right: 2px;
+		}
+
+	button.btn.btn-link {
+		margin: 0;
+		margin-top: -2px;
+		padding: 0;
+		border: none;
+		font-size: inherit;
+		font-family: inherit;
+		}
+
+	button.btn > span.fas.fa-spin {
+		display: inline-block;
+		}
+
 	form {
 		margin: 0;
+		}
+
+	form.inline {
+		display: inline-block;
 		}
 
 	/* style placeholder text (for browsers that support the attribute) - note: can't stack, each must be seperate */
@@ -1194,13 +1440,27 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		display: none;
 	}
 
+	/* expand list search input on focus */
+	input[type=text].list-search {
+		width: 70px;
+		min-width: 70px;
+		margin-left: 15px;
+		-webkit-transition: all .5s ease;
+		-moz-transition: all .5s ease;
+		transition: all .5s ease;
+		}
+
+	input[type=text].list-search:focus {
+		width: 150px;
+		}
+
 	input.fileinput {
 		padding: 1px;
 		display: inline;
 		}
 
-	textarea {
-		min-height: 75px;
+	input[type=checkbox] {
+		margin-top: 2px;
 		}
 
 	label {
@@ -1230,15 +1490,15 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		box-shadow: 0 0 3px 0px rgba(255,0,0,0.9);
 		}
 
-	td.playback_progress_bar_background {
+	table.list tr.list-row td.playback_progress_bar_background {
 		padding: 0;
 		border-bottom: none;
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -o-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.15)), color-stop(1, transparent));
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%, transparent 100%);
-		background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 100%);
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -o-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.10)), color-stop(1, transparent));
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.10) 0%, transparent 100%);
+		background-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
 		overflow: hidden;
 		}
 
@@ -1459,6 +1719,12 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		font-size: <?php echo ($_SESSION['theme']['form_table_row_text_size']['text'] != '') ? $_SESSION['theme']['form_table_row_text_size']['text'] : '9pt'; ?>;
 		}
 
+	.vtablerow > label {
+		margin-left: 0.6em;
+		margin-right: 0.6em;
+		margin-bottom: 2px;
+		}
+
 	.row_style0 {
 		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
 		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
@@ -1509,7 +1775,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 	.message_text {
 		z-index: 99999;
 		margin: 0 auto;
-		padding: 10px;
+		padding: 15px;
 		text-align: center;
 		font-family: arial, san-serif;
 		font-size: 10pt;
@@ -1576,7 +1842,7 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 
 	table.op_ext {
 		width: 100%;
-		height: 60px;
+		height: 70px;
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
@@ -1795,6 +2061,21 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		background: <?php echo ($_SESSION['theme']['dashboard_number_background_color']['text'] != '') ? $_SESSION['theme']['dashboard_number_background_color']['text'] : '#a4aebf'; ?>;
 		border-top: 1px solid <?php echo ($_SESSION['theme']['dashboard_number_background_color']['text'] != '') ? color_adjust($_SESSION['theme']['dashboard_number_background_color']['text'], 0.2) : '#c5d1e5'; ?>;
 		overflow: hidden;
+		<?php
+		//calculate font padding
+		if ($_SESSION['theme']['dashboard_heading_text_size']['text'] != '') {
+			$font_size = strtolower($_SESSION['theme']['dashboard_heading_text_size']['text']);
+			$tmp = str_replace(' ', '', $font_size);
+			$tmp = str_replace('pt', '', $tmp);
+			$tmp = str_replace('px', '', $tmp);
+			$tmp = str_replace('em', '', $tmp);
+			$tmp = str_replace('%', '', $tmp);
+			$font_size_number = $tmp;
+			$padding_top_bottom = (int) floor((100-$tmp) * 0.25);
+		}
+		?>
+		padding-top: <?php echo $padding_top_bottom.'px' ?>;
+		padding-bottom: <?php echo $padding_top_bottom.'px' ?>;
 		}
 
 	span.hud_stat:hover {
@@ -1944,4 +2225,445 @@ $default_login = ($_REQUEST['login'] == 'default') ? true : false;
 		border: 1px solid white;
 		background-image: none;
 		background-color: #fff;
+		}
+
+/* CSS GRID ********************************************************************/
+
+	div.form_grid {
+		width: 100%;
+		display: grid;
+		grid-gap: 0;
+		grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+		}
+
+	div.form_set {
+		width: 100%;
+		display: grid;
+		grid_gap: 0;
+		grid-template-columns: 150px minmax(200px, 1fr);
+		}
+
+	div.form_set > .label {
+		background: <?php echo ($_SESSION['theme']['form_table_label_background_color']['text'] != '') ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['form_table_label_border_radius']['text'], '4px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		border-right: 3px solid <?php echo ($_SESSION['theme']['form_table_label_background_color']['text'] != '') ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'; ?>;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['form_table_label_border_color']['text'] != '') ? $_SESSION['theme']['form_table_label_border_color']['text'] : '#ffffff'; ?>;
+		padding: <?php echo ($_SESSION['theme']['form_table_label_padding']['text'] != '') ? $_SESSION['theme']['form_table_label_padding']['text'] : '7px 8px'; ?>;
+		text-align: right;
+		color: <?php echo ($_SESSION['theme']['form_table_label_text_color']['text'] != '') ? $_SESSION['theme']['form_table_label_text_color']['text'] : '#000000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
+		white-space: nowrap;
+		vertical-align: top;
+		}
+
+	div.form_set > .label.required {
+		background: <?php echo ($_SESSION['theme']['form_table_label_required_background_color']['text'] != '') ? $_SESSION['theme']['form_table_label_required_background_color']['text'] : '#e5e9f0'; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['form_table_label_border_radius']['text'], '4px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		border-right: 3px solid <?php echo ($_SESSION['theme']['form_table_label_required_border_color']['text'] != '') ? $_SESSION['theme']['form_table_label_required_border_color']['text'] : '#cbcfd5'; ?>;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['form_table_label_border_color']['text'] != '') ? $_SESSION['theme']['form_table_label_border_color']['text'] : '#ffffff'; ?>;
+		padding: <?php echo ($_SESSION['theme']['form_table_label_padding']['text'] != '') ? $_SESSION['theme']['form_table_label_padding']['text'] : '7px 8px'; ?>;
+		text-align: right;
+		color: <?php echo ($_SESSION['theme']['form_table_label_required_text_color']['text'] != '') ? $_SESSION['theme']['form_table_label_required_text_color']['text'] : '#000000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['form_table_label_text_font']['text'] != '') ? $_SESSION['theme']['form_table_label_text_font']['text'] : 'Arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['form_table_label_text_size']['text'] != '') ? $_SESSION['theme']['form_table_label_text_size']['text'] : '9pt'; ?>;
+		font-weight: <?php echo ($_SESSION['theme']['form_table_label_required_text_weight']['text'] != '') ? $_SESSION['theme']['form_table_label_required_text_weight']['text'] : 'bold'; ?>;
+		white-space: nowrap;
+		vertical-align: top;
+		}
+
+	div.form_set > .field {
+		background: <?php echo ($_SESSION['theme']['form_table_field_background_color']['text'] != '') ? $_SESSION['theme']['form_table_field_background_color']['text'] : '#ffffff'; ?>;
+		<?php $br = format_border_radius($_SESSION['theme']['form_table_field_border_radius']['text'], '0'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['form_table_field_border_color']['text'] != '') ? $_SESSION['theme']['form_table_field_border_color']['text'] : '#e5e9f0'; ?>;
+		padding: <?php echo ($_SESSION['theme']['form_table_field_padding']['text'] != '') ? $_SESSION['theme']['form_table_field_padding']['text'] : '6px'; ?>;
+		text-align: left;
+		vertical-align: middle;
+		color: <?php echo ($_SESSION['theme']['form_table_field_text_color']['text'] != '') ? $_SESSION['theme']['form_table_field_text_color']['text'] : '#666666'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['form_table_field_text_font']['text'] != '') ? $_SESSION['theme']['form_table_field_text_font']['text'] : 'Arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['form_table_field_text_size']['text'] != '') ? $_SESSION['theme']['form_table_field_text_size']['text'] : '8pt'; ?>;
+		position: relative;
+		}
+
+	div.form_set > .field.no-wrap {
+		white-space: nowrap;
+		}
+
+/* LIST ACTION BAR *************************************************************/
+
+	div.action_bar {
+		position: -webkit-sticky;
+		position: sticky;
+		z-index: 5;
+		<?php
+		switch ($_SESSION['theme']['menu_style']['text']) {
+			case 'side':
+				$action_bar_top = '0';
+				break;
+			case 'inline':
+			case 'static':
+				$action_bar_top = '-1px';
+				break;
+			case 'fixed':
+			default:
+				$action_bar_top = '49px';
+		}
+		?>
+		top: <?php echo $action_bar_top; ?>;
+		text-align: right;
+		border-top: <?php echo ($_SESSION['theme']['action_bar_border_top']['text'] != '') ? $_SESSION['theme']['action_bar_border_top']['text'] : '0'; ?>;
+		border-right: <?php echo ($_SESSION['theme']['action_bar_border_right']['text'] != '') ? $_SESSION['theme']['action_bar_border_right']['text'] : '0'; ?>;
+		border-bottom: <?php echo ($_SESSION['theme']['action_bar_border_bottom']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom']['text'] : '0'; ?>;
+		border-left: <?php echo ($_SESSION['theme']['action_bar_border_left']['text'] != '') ? $_SESSION['theme']['action_bar_border_left']['text'] : '0'; ?>;
+		border-radius: <?php echo ($_SESSION['theme']['action_bar_border_radius']['text'] != '') ? $_SESSION['theme']['action_bar_border_radius']['text'] : '0'; ?>;
+		background: <?php echo ($_SESSION['theme']['action_bar_background']['text'] != '') ? $_SESSION['theme']['action_bar_background']['text'] : 'none'; ?>;
+		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow']['text'] != '') ? $_SESSION['theme']['action_bar_shadow']['text'] : 'none'; ?>;
+		padding: 10px;
+		margin: -10px -10px 10px -10px;
+		-webkit-transition: all .2s ease;
+		-moz-transition: all .2s ease;
+		transition: all .2s ease;
+		}
+
+	div.action_bar.scroll {
+		border-top: <?php echo ($_SESSION['theme']['action_bar_border_top_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_top_scroll']['text'] : 'initial'; ?>;
+		border-right: <?php echo ($_SESSION['theme']['action_bar_border_right_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_right_scroll']['text'] : 'initial'; ?>;
+		border-bottom: <?php echo ($_SESSION['theme']['action_bar_border_bottom_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_bottom_scroll']['text'] : 'initial'; ?>;
+		border-left: <?php echo ($_SESSION['theme']['action_bar_border_left_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_left_scroll']['text'] : 'initial'; ?>;
+		border-radius: <?php echo ($_SESSION['theme']['action_bar_border_radius_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_border_radius_scroll']['text'] : 'initial'; ?>;
+		background: <?php echo ($_SESSION['theme']['action_bar_background_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_background_scroll']['text'] : 'rgba(255,255,255,0.9)'; ?>;
+		box-shadow: <?php echo ($_SESSION['theme']['action_bar_shadow_scroll']['text'] != '') ? $_SESSION['theme']['action_bar_shadow_scroll']['text'] : '0 3px 3px 0 rgba(0,0,0,0.2)'; ?>;
+		}
+
+	div.action_bar.sub {
+		position: static;
+		}
+
+	div.action_bar > div.heading {
+		float: left;
+		}
+
+	div.action_bar > div.actions {
+		float: right;
+		white-space: nowrap;
+		}
+
+	/* used primarily in contacts */
+	div.action_bar.shrink {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		}
+
+	div.action_bar.shrink > div.heading > b {
+		font-size: 100%;
+		}
+
+/* LIST ************************************************************************/
+
+	.list {
+		width: 100%;
+		empty-cells: show;
+		}
+
+	.list tr {
+		cursor: default;
+		}
+
+	.list tr:hover td:not(.no-link),
+	.list tr:hover td:not(.no-link) a {
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		cursor: pointer;
+		}
+
+	.list-header > th {
+		padding: <?php echo ($_SESSION['theme']['table_heading_padding']['text'] != '') ? $_SESSION['theme']['table_heading_padding']['text'] : '4px 7px'; ?>;
+		text-align: left;
+		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['table_heading_text_size']['text'] != '') ? $_SESSION['theme']['table_heading_text_size']['text'] : '12px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_heading_text_font']['text'] != '') ? $_SESSION['theme']['table_heading_text_font']['text'] : 'arial'; ?>;
+		background: <?php echo ($_SESSION['theme']['table_heading_background_color']['text'] != '') ? $_SESSION['theme']['table_heading_background_color']['text'] : 'none'; ?>;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_heading_border_color']['text'] != '') ? $_SESSION['theme']['table_heading_border_color']['text'] : '#a4aebf'; ?>;
+		}
+
+	.list-header > th.shrink {
+		width: 1%;
+		}
+
+	.list-header > th > a.default-color {
+		color: <?php echo ($_SESSION['theme']['text_link_color']['text'] != '') ? $_SESSION['theme']['text_link_color']['text'] : '#004083'; ?>;
+		}
+
+	.list-header > th > a.default-color:hover {
+		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
+		}
+
+	.list-row:nth-child(odd) > :not(.action-button) {
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_light']['text'] != '') ? $_SESSION['theme']['table_row_background_color_light']['text'] : '#ffffff'; ?>;
+		}
+
+	.list-row:nth-child(even) > :not(.action-button) {
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
+		}
+
+	.list-row > td:not(.action-button) {
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		color: <?php echo ($_SESSION['theme']['table_row_text_color']['text'] != '') ? $_SESSION['theme']['table_row_text_color']['text'] : '#000'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['table_row_text_font']['text'] != '') ? $_SESSION['theme']['table_row_text_font']['text'] : 'arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['table_row_text_size']['text'] != '') ? $_SESSION['theme']['table_row_text_size']['text'] : '12px'; ?>;
+		text-align: left;
+		vertical-align: middle;
+		}
+
+	.list-row > :not(.checkbox) {
+		padding: <?php echo ($_SESSION['theme']['table_row_padding']['text'] != '') ? $_SESSION['theme']['table_row_padding']['text'] : '4px 7px'; ?>;
+		}
+
+	.list-row > td.description {
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_medium']['text'] != '') ? $_SESSION['theme']['table_row_background_color_medium']['text'] : '#f0f2f6'; ?> !important;
+		}
+
+	.list-header > .checkbox,
+	.list-row > .checkbox {
+		width: 1%;
+		text-align: center !important;
+		cursor: default !important;
+		}
+
+	.list-row > .checkbox {
+		padding: 3px 7px 1px 7px;
+		}
+
+	.list-row > .button {
+		margin: 0;
+		padding-top: 1px;
+		padding-bottom: 1px;
+		white-space: nowrap;
+		}
+
+	.list-row > .input {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		white-space: nowrap;
+		}
+
+	.list-row > .overflow {
+		max-width: 50px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		}
+
+	.list-header > .action-button,
+	.list-row > .action-button {
+		width: 1px;
+		white-space: nowrap;
+		background: none;
+		padding: 0;
+		}
+
+	.list-header > .center,
+	.list-row > .center {
+		text-align: center !important;
+		}
+
+	.list-header > .right,
+	.list-row > .right {
+		text-align: right !important;
+		}
+
+	.list-header > .middle,
+	.list-row > .middle {
+		vertical-align: middle !important;
+		}
+
+	.list-header > .no-wrap,
+	.list-row > .no-wrap {
+		white-space: nowrap;
+		}
+
+/* EDIT ********************************************************************************/
+
+	td.edit_delete_checkbox_all {
+		text-align: center;
+		width: 50px;
+		}
+
+	td.edit_delete_checkbox_all input[type=checkbox] {
+		vertical-align: middle;
+		margin-top: -2px;
+		}
+
+	td.edit_delete_checkbox_all > span:nth-child(2) {
+		display: none;
+		}
+
+/* CURSORS ***********************************************************************/
+
+	.cursor-default { cursor: default; }
+	.cursor-help { cursor: help; }
+	.cursor-pointer { cursor: pointer; }
+	.cursor-denied { cursor: not-allowed; }
+
+/* WIDTH HELPERS **********************************************************************/
+
+	.pct-5 { width: 5%; }
+	.pct-10 { width: 10%; }
+	.pct-15 { width: 15%; }
+	.pct-20 { width: 20%; }
+	.pct-25 { width: 25%; }
+	.pct-30 { width: 30%; }
+	.pct-35 { width: 35%; }
+	.pct-40 { width: 40%; }
+	.pct-45 { width: 45%; }
+	.pct-50 { width: 50%; }
+	.pct-55 { width: 55%; }
+	.pct-60 { width: 60%; }
+	.pct-65 { width: 65%; }
+	.pct-70 { width: 70%; }
+	.pct-75 { width: 75%; }
+	.pct-80 { width: 80%; }
+	.pct-85 { width: 85%; }
+	.pct-90 { width: 90%; }
+	.pct-95 { width: 95%; }
+	.pct-100 { width: 100%; }
+
+/* SIDE PADDING & MARGIN HELPERS **********************************************************************/
+
+	.pl-1 { padding-left: 1px !important; }		.pr-1 { padding-right: 1px !important; }
+	.pl-2 { padding-left: 2px !important; }		.pr-2 { padding-right: 2px !important; }
+	.pl-3 { padding-left: 3px !important; }		.pr-3 { padding-right: 3px !important; }
+	.pl-4 { padding-left: 4px !important; }		.pr-4 { padding-right: 4px !important; }
+	.pl-5 { padding-left: 5px !important; }		.pr-5 { padding-right: 5px !important; }
+	.pl-6 { padding-left: 6px !important; }		.pr-6 { padding-right: 6px !important; }
+	.pl-7 { padding-left: 7px !important; }		.pr-7 { padding-right: 7px !important; }
+	.pl-8 { padding-left: 8px !important; }		.pr-8 { padding-right: 8px !important; }
+	.pl-9 { padding-left: 9px !important; }		.pr-9 { padding-right: 9px !important; }
+	.pl-10 { padding-left: 10px !important; }	.pr-10 { padding-right: 10px !important; }
+	.pl-11 { padding-left: 11px !important; }	.pr-11 { padding-right: 11px !important; }
+	.pl-12 { padding-left: 12px !important; }	.pr-12 { padding-right: 12px !important; }
+	.pl-13 { padding-left: 13px !important; }	.pr-13 { padding-right: 13px !important; }
+	.pl-14 { padding-left: 14px !important; }	.pr-14 { padding-right: 14px !important; }
+	.pl-15 { padding-left: 15px !important; }	.pr-15 { padding-right: 15px !important; }
+	.pl-20 { padding-left: 20px !important; }	.pr-20 { padding-right: 20px !important; }
+	.pl-25 { padding-left: 25px !important; }	.pr-25 { padding-right: 25px !important; }
+	.pl-30 { padding-left: 30px !important; }	.pr-30 { padding-right: 30px !important; }
+	.pl-35 { padding-left: 35px !important; }	.pr-35 { padding-right: 35px !important; }
+	.pl-40 { padding-left: 40px !important; }	.pr-40 { padding-right: 40px !important; }
+	.pl-45 { padding-left: 45px !important; }	.pr-45 { padding-right: 45px !important; }
+	.pl-50 { padding-left: 50px !important; }	.pr-50 { padding-right: 50px !important; }
+
+	.ml-1 { margin-left: 1px !important; }		.mr-1 { margin-right: 1px !important; }
+	.ml-2 { margin-left: 2px !important; }		.mr-2 { margin-right: 2px !important; }
+	.ml-3 { margin-left: 3px !important; }		.mr-3 { margin-right: 3px !important; }
+	.ml-4 { margin-left: 4px !important; }		.mr-4 { margin-right: 4px !important; }
+	.ml-5 { margin-left: 5px !important; }		.mr-5 { margin-right: 5px !important; }
+	.ml-6 { margin-left: 6px !important; }		.mr-6 { margin-right: 6px !important; }
+	.ml-7 { margin-left: 7px !important; }		.mr-7 { margin-right: 7px !important; }
+	.ml-8 { margin-left: 8px !important; }		.mr-8 { margin-right: 8px !important; }
+	.ml-9 { margin-left: 9px !important; }		.mr-9 { margin-right: 9px !important; }
+	.ml-10 { margin-left: 10px !important; }	.mr-10 { margin-right: 10px !important; }
+	.ml-11 { margin-left: 11px !important; }	.mr-11 { margin-right: 11px !important; }
+	.ml-12 { margin-left: 12px !important; }	.mr-12 { margin-right: 12px !important; }
+	.ml-13 { margin-left: 13px !important; }	.mr-13 { margin-right: 13px !important; }
+	.ml-14 { margin-left: 14px !important; }	.mr-14 { margin-right: 14px !important; }
+	.ml-15 { margin-left: 15px !important; }	.mr-15 { margin-right: 15px !important; }
+	.ml-20 { margin-left: 20px !important; }	.mr-20 { margin-right: 20px !important; }
+	.ml-25 { margin-left: 25px !important; }	.mr-25 { margin-right: 25px !important; }
+	.ml-30 { margin-left: 30px !important; }	.mr-30 { margin-right: 30px !important; }
+	.ml-35 { margin-left: 35px !important; }	.mr-35 { margin-right: 35px !important; }
+	.ml-40 { margin-left: 40px !important; }	.mr-40 { margin-right: 40px !important; }
+	.ml-45 { margin-left: 45px !important; }	.mr-45 { margin-right: 45px !important; }
+	.ml-50 { margin-left: 50px !important; }	.mr-50 { margin-right: 50px !important; }
+
+/* MODAL ************************************************************************/
+
+	.modal-window {
+		z-index: 999999;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		opacity: 0;
+		pointer-events: none;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
+		background-color: rgba(0, 0, 0, 0.3);
+		}
+
+	.modal-window:target {
+		opacity: 1;
+		pointer-events: auto;
+		}
+
+	.modal-window > div {
+		position: relative;
+		padding: 15px 20px 20px 20px;
+		text-align: left;
+		color: #444;
+		background: #fff;
+		overflow: auto;
+		}
+
+	@media(min-width: 0px) and (max-width: 699px) {
+		.modal-window > div {
+			width: 100%;
+			min-width: 200px;
+			margin: 50px auto;
+			border-radius: 0;
+			}
+		}
+
+	@media(min-width: 700px) {
+		.modal-window > div {
+			width: 500px;
+			margin: 10% auto;
+			border-radius: 5px;
+			}
+		}
+
+	.modal-window .modal-title {
+		display: block;
+		font-weight: bold;
+		font-size: 120%;
+		margin-bottom: 15px;
+		}
+
+	.modal-close {
+		color: #aaa;
+		line-height: 50px;
+		font-size: 150%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 50px;
+		text-align: center;
+		text-decoration: none !important;
+		}
+
+	.modal-close:hover {
+		color: #000;
+		}
+
+	.modal-window .modal-message {
+		display: block;
+		text-align: left;
+		margin-bottom: 20px;
 		}

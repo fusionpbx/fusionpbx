@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Conferentie besturing maakt het mogelijk om functies aan cijfers toe te wijzen zodat een verbinding op stil of spreken gezet kan worden. of andere acties tijden een conferentie zitting.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
@@ -79,6 +79,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference control name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";
@@ -87,6 +88,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 		$y++;
@@ -109,14 +111,17 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_digits";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the digits.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_action";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the action.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "control_enabled";

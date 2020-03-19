@@ -51,9 +51,32 @@
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
+	//delete the access control
+		if (permission_exists('access_control_delete')) {
+			if ($_POST['action'] == 'delete' && is_uuid($access_control_uuid)) {
+				//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $access_control_uuid;
+				//delete
+					$obj = new access_controls;
+					$obj->delete($array);
+				//redirect
+					header('Location: access_controls.php');
+					exit;
+			}
+		}
+
 	//get the primary key
 		if ($action == "update") {
 			$access_control_uuid = $_POST["access_control_uuid"];
+		}
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: access_controls.php');
+			exit;
 		}
 
 	//check for all required data
@@ -82,15 +105,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$execute = true;
 				$access_control_uuid = uuid();
 
-				//add the message
+				//set the message
 				message::add($text['message-add']);
+
+				//set redirect url
+				$redirect_url = 'access_control_edit.php?id='.$access_control_uuid;
 			}
 
 			if ($action == "update" && permission_exists('access_control_edit')) {
 				$execute = true;
-				//$access_control_uuid //already set
 
-				//add the message
+				//set the message
 				message::add($text['message-update']);
 			}
 
@@ -115,11 +140,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 			//redirect the user
-			header("Location: access_controls.php");
-			return;
+			header('Location: '.($redirect_url ? $redirect_url : 'access_controls.php'));
+			exit;
+		}
 
-		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+}
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
@@ -137,25 +162,36 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
+	$document['title'] = $text['title-access_control'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-access_control']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='access_controls.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-access_control']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-xs','link'=>'access_controls.php']);
+ 	if ($action == 'update' && permission_exists('access_control_delete')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'action','value'=>'delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"if (confirm('".$text['confirm-delete']."')) { document.getElementById('frm').submit(); } else { this.blur(); return false; }"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-access_control_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='access_control_name' maxlength='255' value=\"".escape($access_control_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-access_control_name']."\n";
@@ -163,12 +199,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-access_control_default']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='access_control_default'>\n";
-	echo "	<option value=''></option>\n";
 	if ($access_control_default == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}
@@ -197,17 +232,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-access_control_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
-	}
-	echo "				<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 	if ($action == "update") {
 		require "access_control_nodes.php";

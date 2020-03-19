@@ -11,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Musique d'attente";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מוסיקה בהמתנה";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Musica d'attesa";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Wachtmuziek";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Muzyka na czekanie";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Música de espera";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Musica em Espera";

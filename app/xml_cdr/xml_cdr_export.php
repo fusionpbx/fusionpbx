@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -44,19 +44,17 @@
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
 //get the format
-	$export_format = check_str($_REQUEST['export_format']);
+	$export_format = $_REQUEST['export_format'];
 
-//get the format
-	$showall = check_str($_REQUEST['showall']);
-
-//exprot the csv
+//export the csv
 	if ($export_format == 'csv') {
 
 		//define file name
-			if ($_REQUEST['showall'] == 'true') {
+			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
 				$csv_filename = "cdr_".date("Ymd_His").".csv";
 			}
 			else {
@@ -69,7 +67,7 @@
 
 		//set the csv headers
 			$z = 0;
-			foreach($result[0] as $key => $val) {
+			foreach ($result[0] as $key => $val) {
 				if ($key != "xml" && $key != "json") {
 					if ($z == 0) {
 						echo '"'.$key.'"';
@@ -84,9 +82,9 @@
 
 		//show the csv data
 			$x=0;
-			while(true) {
+			while (true) {
 				$z = 0;
-				foreach($result[0] as $key => $val) {
+				foreach ($result[0] as $key => $val) {
 					if ($key != "xml" && $key != "json") {
 						if ($z == 0) {
 							echo '"'.$result[$x][$key].'"';
@@ -109,20 +107,20 @@
 	if ($export_format == 'pdf') {
 
 		//load pdf libraries
-		require_once("resources/tcpdf/tcpdf.php");
-		require_once("resources/fpdi/fpdi.php");
+		require_once "resources/tcpdf/tcpdf.php";
+		require_once "resources/fpdi/fpdi.php";
 
 		//determine page size
 		switch ($_SESSION['fax']['page_size']['text']) {
-			case 'a4' :
+			case 'a4':
 				$page_width = 11.7; //in
 				$page_height = 8.3; //in
 				break;
-			case 'legal' :
+			case 'legal':
 				$page_width = 14; //in
 				$page_height = 8.5; //in
 				break;
-			case 'letter' :
+			case 'letter':
 			default	:
 				$page_width = 11; //in
 				$page_height = 8.5; //in
@@ -186,7 +184,7 @@
 		$z = 0; // total counter
 		$p = 0; // per page counter
 		if (sizeof($result) > 0) {
-			foreach($result as $cdr_num => $fields) {
+			foreach ($result as $cdr_num => $fields) {
 				$data_body[$p] .= '<tr>';
 				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';

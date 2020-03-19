@@ -10,7 +10,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Historiques Appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Dettaglio Chiamate";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreks data (CDR)";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Wykaz rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Detalhes das gravações de voz";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Detalhes das Gravações de Voz";
@@ -36,7 +36,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statistiques CDR";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Statistiche Chiamate";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Gespreks statistiek";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Statystyki wykazu rozmów";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estatisticas do CDR";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Statistics CDR";
@@ -62,7 +62,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Résumé de l'Extension";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "סיכום שלוחות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Riassunto Interni";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Toestel samenvatting";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Podsumowanie numerów wewnętrznych";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Extensão do sumário";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extension Summary";

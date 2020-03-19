@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,17 +43,27 @@
 	$language = new text;
 	$text = $language->get();
 
-//includes and title
-	$document['title'] = $text['title-contacts'];
-	require_once "resources/header.php";
+//get posted data
+	if (is_array($_POST['contacts'])) {
+		$action = $_POST['action'];
+		$search = $_POST['search'];
+		$contacts = $_POST['contacts'];
+	}
 
-//get the search criteria
-	$search_all = strtolower($_GET["search_all"]);
-	$phone_number = $_GET["phone_number"];
+//process the http post data by action
+	if ($action != '' && is_array($contacts) && @sizeof($contacts) != 0) {
+		switch ($action) {
+			case 'delete':
+				if (permission_exists('contact_delete')) {
+					$obj = new contacts;
+					$obj->delete($contacts);
+				}
+				break;
+		}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+		header('Location: contacts.php'.($search != '' ? '?search='.urlencode($search) : null));
+		exit;
+	}
 
 //retrieve current user's assigned groups (uuids)
 	foreach ($_SESSION['groups'] as $group_data) {
@@ -114,6 +124,41 @@
 	}
 	unset($sql, $parameters, $result);
 
+//get variables used to control the order
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
+
+//add the search term
+	$search = strtolower($_GET["search"]);
+	if (strlen($search) > 0) {
+		if (is_numeric($search)) {
+			$sql_search .= "and contact_uuid in ( ";
+			$sql_search .= "	select contact_uuid from v_contact_phones ";
+			$sql_search .= "	where phone_number like :search ";
+			$sql_search .= ") ";
+		}
+		else {
+			$sql_search .= "and contact_uuid in ( ";
+			$sql_search .= "	select contact_uuid from v_contacts ";
+			$sql_search .= "	where domain_uuid = :domain_uuid ";
+			$sql_search .= "	and ( ";
+			$sql_search .= "		lower(contact_organization) like :search or ";
+			$sql_search .= "		lower(contact_name_given) like :search or ";
+			$sql_search .= "		lower(contact_name_family) like :search or ";
+			$sql_search .= "		lower(contact_nickname) like :search or ";
+			$sql_search .= "		lower(contact_title) like :search or ";
+			$sql_search .= "		lower(contact_category) like :search or ";
+			$sql_search .= "		lower(contact_role) like :search or ";
+			$sql_search .= "		lower(contact_url) like :search or ";
+			$sql_search .= "		lower(contact_time_zone) like :search or ";
+			$sql_search .= "		lower(contact_note) like :search or ";
+			$sql_search .= "		lower(contact_type) like :search ";
+			$sql_search .= "	) ";
+			$sql_search .= ") ";
+		}
+		$parameters['search'] = '%'.$search.'%';
+	}
+
 //build query for paging and list
 	$sql = "select count(*) ";
 	$sql .= "from v_contacts as c ";
@@ -146,55 +191,18 @@
 		$sql .= ") ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	if (strlen($phone_number) > 0) {
-		$phone_number = preg_replace('{\D}', '', $phone_number);
-		$sql .= "and contact_uuid in ( ";
-		$sql .= "	select contact_uuid from v_contact_phones ";
-		$sql .= "	where phone_number like :phone_number ";
-		$sql .= ") ";
-		$parameters['phone_number'] = '%'.$phone_number.'%';
-	}
-	else {
-		if (strlen($search_all) > 0) {
-			if (is_numeric($search_all)) {
-				$sql .= "and contact_uuid in ( ";
-				$sql .= "	select contact_uuid from v_contact_phones ";
-				$sql .= "	where phone_number like :search_all ";
-				$sql .= ") ";
-			}
-			else {
-				$sql .= "and contact_uuid in ( ";
-				$sql .= "	select contact_uuid from v_contacts ";
-				$sql .= "	where domain_uuid = :domain_uuid ";
-				$sql .= "	and ( ";
-				$sql .= "		lower(contact_organization) like :search_all or ";
-				$sql .= "		lower(contact_name_given) like :search_all or ";
-				$sql .= "		lower(contact_name_family) like :search_all or ";
-				$sql .= "		lower(contact_nickname) like :search_all or ";
-				$sql .= "		lower(contact_title) like :search_all or ";
-				$sql .= "		lower(contact_category) like :search_all or ";
-				$sql .= "		lower(contact_role) like :search_all or ";
-				$sql .= "		lower(contact_url) like :search_all or ";
-				$sql .= "		lower(contact_time_zone) like :search_all or ";
-				$sql .= "		lower(contact_note) like :search_all or ";
-				$sql .= "		lower(contact_type) like :search_all ";
-				$sql .= "	) ";
-				$sql .= ") ";
-			}
-			$parameters['search_all'] = '%'.$search_all.'%';
-		}
-	}
+	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "";
+	$param = "&search=".$search;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls_mini, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page, true); //top
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); //bottom
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page); //bottom
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true); //top
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -217,9 +225,16 @@
 	$contacts = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//styles
-	echo "<style>\n";
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
 
+//includes and title
+	$document['title'] = $text['title-contacts'];
+	require_once "resources/header.php";
+
+//contact attachment layer
+	echo "<style>\n";
 	echo "	#contact_attachment_layer {\n";
 	echo "		z-index: 999999;\n";
 	echo "		position: absolute;\n";
@@ -230,118 +245,126 @@
 	echo "		text-align: center;\n";
 	echo "		vertical-align: middle;\n";
 	echo "	}\n";
-
 	echo "</style>\n";
-
-//ticket attachment layer
 	echo "<div id='contact_attachment_layer' style='display: none;'></div>\n";
 
 //show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' valign='top' width='50%'>\n";
-	echo "			<b>".$text['header-contacts']." (".$num_rows.")</b>\n";
-	echo "			<br /><br />";
-	echo "		</td>\n";
-	echo "		<td align='right' valign='top' width='50%' nowrap='nowrap'>\n";
-	echo "			<form method='get' name='frm_search' action=''>\n";
-	echo "				<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".escape($search_all)."\">\n";
-	echo "				<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-contacts']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='actions'>\n";
 	if (permission_exists('contact_add')) {
-		echo 				"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contact_import.php']);
 	}
-	echo "			</form>\n";
-	echo "		</td>\n";
+	if (permission_exists('contact_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
+	}
+	if (permission_exists('contact_delete') && $contacts) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-sm-dn','onclick'=>"document.location.href='#modal-delete'; document.getElementById('btn_delete').focus();"]);
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'contacts.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo "		<td valign='top' nowrap='nowrap' style='padding-left: 15px;'>".$paging_controls_mini."</td>\n";
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='3'>\n";
-	echo "			".$text['description-contacts']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+	echo $text['description-contacts']."\n";
+	echo "<br /><br />\n";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('contact_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($contacts ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
 	echo th_order_by('contact_type', $text['label-contact_type'], $order_by, $order);
 	echo th_order_by('contact_organization', $text['label-contact_organization'], $order_by, $order);
-	echo "<th style='padding: 0px;'>&nbsp;</th>\n";
+	echo "<th class='shrink hide-xs'>&nbsp;</th>\n";
 	echo th_order_by('contact_name_given', $text['label-contact_name_given'], $order_by, $order);
 	echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
-	echo th_order_by('contact_nickname', $text['label-contact_nickname'], $order_by, $order);
-	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order);
-	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order);
-	echo "<th style='padding: 0px;'>&nbsp;</th>\n";
-	echo "<td class='list_control_icons'>";
-	echo 	"<a href='contact_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	echo "</td>\n";
+	echo th_order_by('contact_nickname', $text['label-contact_nickname'], $order_by, $order, null, "class='hide-xs'");
+	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo "<th class='shrink hide-sm-dn'>&nbsp;</th>\n";
+	if (permission_exists('contact_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
 
 	if (is_array($contacts) && @sizeof($contacts) != 0) {
+		$x = 0;
 		foreach($contacts as $row) {
-			$tr_link = "href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'";
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords(escape($row['contact_type']))."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='cursor: pointer; width: 35px; text-align: center;'>";
+			if (permission_exists('contact_edit') || permission_exists('contact_view')) {
+				$list_row_url = "contact_edit.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('contact_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='contacts[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='contacts[$x][uuid]' value='".escape($row['contact_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			echo "	<td>".ucwords(escape($row['contact_type']))."&nbsp;</td>\n";
+			echo "	<td class='overflow'><a href='".$list_row_url."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
+			echo "	<td class='shrink no-link hide-xs center'>";
 			if (is_uuid($row['contact_attachment_uuid'])) {
-				echo "<i class='fas fa-portrait' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\"></i>";
+				echo "<i class='fas fa-portrait' style='cursor: pointer;' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\"></i>";
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_given'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".escape($row['contact_nickname'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_title'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".escape($row['contact_role'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='padding: 2px 2px; text-align: center; width: 25px;'>";
-				if (sizeof($contact_sync_sources[$row['contact_uuid']]) > 0) {
-					foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
-						switch ($contact_sync_source) {
-							case 'google': echo "<img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; padding-left: 2px;' alt='".$text['label-contact_google']."'>"; break;
-						}
+			echo "	<td class='no-wrap'><a href='".$list_row_url."'>".escape($row['contact_name_given'])."</a>&nbsp;</td>\n";
+			echo "	<td class='no-wrap'><a href='".$list_row_url."'>".escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
+			echo "	<td class='no-wrap hide-xs'>".escape($row['contact_nickname'])."&nbsp;</td>\n";
+			echo "	<td class='overflow hide-sm-dn'>".escape($row['contact_title'])."&nbsp;</td>\n";
+			echo "	<td class='overflow hide-sm-dn'>".escape($row['contact_role'])."&nbsp;</td>\n";
+			echo "	<td class='hide-sm-dn'>";
+			if (is_array($contact_sync_sources[$row['contact_uuid']]) && @sizeof($contact_sync_sources[$row['contact_uuid']]) != 0) {
+				foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
+					switch ($contact_sync_source) {
+						case 'google': echo "<img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; padding-left: 2px;' alt='".$text['label-contact_google']."'>"; break;
 					}
 				}
-				else { echo "&nbsp;"; }
+			}
+			else {
+				echo "&nbsp;";
+			}
 			echo "	</td>\n";
-			echo "	<td class='list_control_icons'>";
-			echo 		"<a href='contact_edit.php?id=".escape($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			echo 		"<a href='contact_delete.php?id=".escape($row['contact_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
-			echo "	</td>\n";
+			if (permission_exists('contact_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
 			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($contacts, $row);
-	} //end if results
+			$x++;
+		}
+		unset($contacts);
+	}
 
-	echo "<tr>\n";
-	echo "<td colspan='15' align='right'>\n";
-	echo "	<a href='contact_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 
-	echo "</table>";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo $paging_controls;
-	echo "<br /><br />";
-
-	echo "<script>document.getElementById('search_all').focus();</script>";
+	echo "</form>\n";
 
 //javascript
 	echo "<script>\n";
-
 	echo "	function display_attachment(id) {\n";
 	echo "		$('#contact_attachment_layer').load('contact_attachment.php?id=' + id + '&action=display', function(){\n";
 	echo "			$('#contact_attachment_layer').fadeIn(200);\n";
 	echo "		});\n";
 	echo "	}\n";
-
 	echo "</script>\n";
 
 //include the footer

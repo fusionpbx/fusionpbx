@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('call_center_agent_view')) {
@@ -41,11 +42,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//includes and title
-	require_once "resources/header.php";
-	$document['title'] = $text['title-call_center_agent_status'];
-	require_once "resources/paging.php";
 
 //get the agents from the database
 	$sql = "select * from v_call_center_tiers ";
@@ -66,11 +62,6 @@
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
-
-		//debug info
-		//echo "<pre>\n";
-		//print_r($_POST);
-		//echo "</pre>\n";
 
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
@@ -219,6 +210,8 @@
 	$call_center_queues = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+// 	view_array($call_center_queues, false);
+
 //add the status to the call_center_queues array
 	$x = 0;
 	foreach ($call_center_queues as $queue) {
@@ -229,6 +222,8 @@
 		$call_center_queues[$x]['queue_list'] = $queue_list;
 		$x++;
 	}
+
+// 	view_array($call_center_queues, false);
 
 //get the agent status from mod_callcenter and update the agent status in the agents array
 	$x = 0;
@@ -263,129 +258,129 @@
 			$x++;
 	}
 
-//debug info
-	//echo "<pre>\n";
-	//print_r($agents);
-	//echo "</pre>\n";
+//includes the header
+	$document['title'] = $text['title-call_center_agent_status'];
+	require_once "resources/header.php";
 
-//set the row style
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//radio button cycle script
+	echo "<script>\n";
+	echo "	function get_selected(radio_group) {\n";
+	echo "		for (var i = 0; i < radio_group.length; i++) {\n";
+	echo "			if (radio_group[i].checked) { return i; }\n";
+	echo "		}\n";
+	echo "		return 0;\n";
+	echo "	}\n";
+
+	echo "	function cycle(radio_group_name) {\n";
+	echo "		var radios = document.getElementsByName(radio_group_name);\n";
+	echo "		var i = get_selected(radios);\n";
+	echo "		if (i+1 == radios.length) {\n";
+	echo "			radios[0].checked = true;\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			radios[i+1].checked = true;\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_agent_status']."</b></td>\n";
-	echo "<td width='50%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='call_center_agent_status.php'\" value='".$text['button-refresh']."'>\n";
-	echo "</td>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-call_center_agent_status']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_center_queues.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'collapse'=>'hide-xs','link'=>'call_center_agent_status.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"list_form_submit('form_list');"]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo $text['description-call_center_agent_status']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	echo "	<th class='pct-20'>".$text['label-agent']."</th>\n";
+	echo "	<th class='shrink'>".$text['label-status']."</th>\n";
+// 	echo "	<th>".$text['label-options']."</th>\n";
+	echo "	<th class='pct-20 hide-sm-dn'>&nbsp;</th>\n";
+	if ($per_queue_login) {
+		echo "	<th class='pct-40'>".$text['label-queues']."</th>\n";
+	}
 	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo $text['description-call_center_agent_status']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
 
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='2' cellspacing='2'>\n";
-	echo "<tr>\n";
-	echo "	<th>".$text['label-agent']."</th>\n";
-	echo "	<th>".$text['label-status']."</th>\n";
-	echo "	<th>".$text['label-options']."</th>\n";
-	echo "	<th>".$text['label-queues']."</th>\n";
-	echo "</tr>\n";
-	$x = 0;
-	foreach($agents as $row) {
-		$html = "<tr>\n";
-		$html .= "		<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_name'])."&nbsp;</td>\n";
+	if (is_array($agents) && @sizeof($agents) != 0) {
+		$x = 0;
+		foreach ($agents as $row) {
+			$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
+			$html = "<tr class='list-row'>\n";
+			$html .= "	<td ".$onclick.">".escape($row['agent_name'])."&nbsp;</td>\n";
+// 			$html .= "	<td>".escape($row['agent_status'])."&nbsp;</td>\n";
+			$html .= "	<td class='no-wrap'>";
+			$html .= "		<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($row['agent_name'])."'>\n";
+			$html .= "		<input type='hidden' name='agents[".$x."][agent_uuid]' value='".escape($row['call_center_agent_uuid'])."'>\n";
+			$html .= "		<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($row['agent_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>\n";
+			$html .= "		<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($row['agent_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+			$html .= "		<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='On Break' ".($row['agent_status'] == 'On Break' ? "checked='checked'" : null).">&nbsp;".$text['option-on_break']."</label>\n";
+//			$html .= "		<label><input type='radio' name='agents[".$x."][agent_status]' value='Do Not Disturb' ".($row['agent_status'] == 'Do Not Disturb' ? "checked='checked'" : null).">&nbsp;".$text['option-do_not_disturb']."</label>\n";
+			$html .= "	</td>\n";
+			$html .= "	<td ".$onclick." class='hide-sm-dn'>&nbsp;</td>\n";
 
-		//$html .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
-		$html .= "	<td valign='top' class='".$row_style[$c]."'>".escape($row['agent_status'])."&nbsp;</td>\n";
-		$html .= "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
-		$html .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".escape($row['agent_name'])."'>\n";
-		$html .= "		<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".escape($row['call_center_agent_uuid'])."'>\n";
-		//$html .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
-		$html .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
-		$html .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
-		$html .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_on_break' value='On Break'>&nbsp;<label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>&nbsp;\n";
-		//$html .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>&nbsp;".$text['option-do_not_disturb']."</label>\n";
-		$html .= "	</td>\n";
-
-		$html .= "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
-		if (is_array($row['queues']) && $per_queue_login) {
-			$html .= "		<table width='100%' border='0' cellpadding='2' cellspacing='2'>\n";
-			$html .= "		<tr>\n";
-			$html .= "			<th>".$text['label-agent']."</th>\n";
-			$html .= "			<th width='100'>".$text['label-status']."</th>\n";
-			$html .= "			<th>".$text['label-options']."</th>\n";
-			$html .= "		</tr>\n";
-			foreach ($row['queues'] as $queue) {
-				$x++;
-				$html .= "	<tr>\n";
-				$html .= "		<td valign='top' class='".$row_style[$c]."'>\n";
-				$html .= "			".$queue['queue_name']."\n";
-				$html .= "		</td>\n";
-
-				$html .= "		<td valign='top' class='".$row_style[$c]."'>\n";
-				//.$row[queue_status]."&nbsp;
-				if ($queue['queue_status'] == "Available") {
-					$html .= "		".$text['option-available']."\n";
+			if ($per_queue_login) {
+				$html .= "	<td class='description'>";
+				if (is_array($row['queues'])) {
+					$html .= "	<table class='list' style='border-width: 1px 1px 0 1px; border-style: solid; border-color: ".$_SESSION['theme']['table_row_border_color']['text'].";'>\n";
+// 					$html .= "		<tr>\n";
+// 					$html .= "			<th>".$text['label-queue']."</th>\n";
+// 					$html .= "			<th>".$text['label-status']."</th>\n";
+// 					$html .= "			<th>".$text['label-options']."</th>\n";
+// 					$html .= "		</tr>\n";
+					foreach ($row['queues'] as $queue) {
+						$x++;
+						$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
+						$html .= "	<tr class='list-row'>\n";
+						$html .= "		<td ".$onclick." class='pct-80 no-wrap'>".$queue['queue_name']."</td>\n";
+// 						$html .= "		<td>\n";
+// 						if ($queue['queue_status'] == "Available") {
+// 							$html .= "		".$text['option-available']."\n";
+// 						}
+// 						if ($queue['queue_status'] == "Logged Out") {
+// 							$html .= "		".$text['option-logged_out']."\n";
+// 						}
+// 						$html .= "		</td>\n";
+						$html .= "		<td class='no-wrap right'>";
+						$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' value='".escape($queue['queue_name'])."'>\n";
+						$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($row['agent_name'])."'>\n";
+						$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' value='".escape($row['user_uuid'])."'>\n";
+						$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' value='".escape($queue['call_center_queue_uuid'])."'>\n";
+						$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' value='".escape($row['call_center_agent_uuid'])."'>\n";
+						$html .= "			<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($queue['queue_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>&nbsp;\n";
+						$html .= "			<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($queue['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+						$html .= "		</td>\n";
+						$html .= "	</tr>\n";
+					}
+					$html .= "	</table>\n";
 				}
-				if ($queue['queue_status'] == "Logged Out") {
-					$html .= "		".$text['option-logged_out']."\n";
-				}
-				$html .= "		</td>\n";
-
-				$html .= "		<td valign='middle' class='".$row_style[$c]."' nowrap='nowrap'>";
-				//$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'>&nbsp;<label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>&nbsp;\n";
-				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'>&nbsp;<label for='agent_".$x."_status_available'>".$text['option-available']."</label>&nbsp;\n";
-				$html .= "			<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'>&nbsp;<label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>&nbsp;\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' id='queue_".$x."_name' value='".escape($queue['queue_name'])."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".escape($row['agent_name'])."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' id='agent_".$x."_name' value='".escape($row['user_uuid'])."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' id='queue_".$x."_uuid' value='".escape($queue['call_center_queue_uuid'])."'>\n";
-				$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' id='agent_".$x."_uuid' value='".escape($row['call_center_agent_uuid'])."'>\n";
-				$html .= "		</td>\n";
-				$html .= "	</tr>\n";
+				$html .= "	</td>\n";
 			}
-			$html .= "		</table>\n";
-		}
-		$html .= "	</td>\n";
-		$html .= "</tr>\n";
-		if (count($_SESSION['domains']) > 1) {
-			if ($row['domain_name'] == $_SESSION['domain_name']) {
+			$html .= "</tr>\n";
+			if (count($_SESSION['domains']) > 1) {
+				if ($row['domain_name'] == $_SESSION['domain_name']) {
+					echo $html;
+				}
+			}
+			else {
 				echo $html;
-				if ($c==0) { $c=1; } else { $c=0; }
 			}
+			$x++;
 		}
-		else {
-			echo $html;
-			if ($c==0) { $c=1; } else { $c=0; }
-		}
-		$x++;
-	} //end foreach
-	unset($sql, $agents);
+		unset($agents);
+	}
 
-	echo "<tr>\n";
-	echo "<td colspan='11' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<br />\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br><br>";
+	echo "</table>\n";
+	echo "<br />\n";
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
 //show the footer

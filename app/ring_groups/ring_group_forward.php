@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013-2017
+	Portions created by the Initial Developer are Copyright (C) 2013-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,9 +27,10 @@
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('ring_group_edit') || permission_exists('ring_group_forward')) {
 		//access granted
 	}
@@ -41,10 +42,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
-
-//additional includes
-	require_once "resources/header.php";
-	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -63,45 +60,52 @@
 	}
 
 //update ring group forwarding
-	if (sizeof($_POST) > 0) {
-		if (is_array($_POST['ring_groups']) && @sizeof($_POST['ring_groups']) != 0 && permission_exists('ring_group_forward')) {
-			$x = 0;
-			foreach ($_POST['ring_groups'] as $row) {
-				//remove non-numeric characters
-					$ring_group_uuid = $row['ring_group_uuid'];
-					$ring_group_forward_destination = preg_replace("~[^0-9]~", "", $row['ring_group_forward_destination']);
-					$ring_group_forward_enabled = ($row['ring_group_forward_enabled'] == 'true') ? $ring_group_forward_enabled = 'true' : $ring_group_forward_enabled = 'false';
-				//build array
-					if (is_uuid($ring_group_uuid)) {
-						$array['ring_groups'][$x]['ring_group_uuid'] = $ring_group_uuid;
-						$array['ring_groups'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['ring_groups'][$x]['ring_group_forward_enabled'] =$ring_group_forward_enabled;
-						$array['ring_groups'][$x]['ring_group_forward_destination'] = $ring_group_forward_destination;
-					}
-				//increment counter
-					$x++;
+	if (is_array($_POST['ring_groups']) && @sizeof($_POST['ring_groups']) != 0 && permission_exists('ring_group_forward')) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate('/app/ring_groups/ring_group_forward.php')) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: '.$validated_path);
+				exit;
 			}
 
-			if (is_array($array) && sizeof($array) != 0) {
-				//update ring group
-					$p = new permissions;
-					$p->add('ring_group_edit', 'temp');
+		$x = 0;
+		foreach ($_POST['ring_groups'] as $row) {
+			//remove non-numeric characters
+				$ring_group_uuid = $row['ring_group_uuid'];
+				$ring_group_forward_destination = preg_replace("~[^0-9]~", "", $row['ring_group_forward_destination']);
+				$ring_group_forward_enabled = $row['ring_group_forward_enabled'] == 'true' && is_numeric($ring_group_forward_destination) ? 'true' : 'false';
+			//build array
+				if (is_uuid($ring_group_uuid)) {
+					$array['ring_groups'][$x]['ring_group_uuid'] = $ring_group_uuid;
+					$array['ring_groups'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $ring_group_forward_enabled;
+					$array['ring_groups'][$x]['ring_group_forward_destination'] = $ring_group_forward_destination;
+				}
+			//increment counter
+				$x++;
+		}
 
-					$database = new database;
-					$database->app_name = 'ring_groups';
-					$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-					$database->save($array);
-					unset($array);
+		if (is_array($array) && sizeof($array) != 0) {
+			//update ring group
+				$p = new permissions;
+				$p->add('ring_group_edit', 'temp');
 
-					$p->delete('ring_group_edit', 'temp');
+				$database = new database;
+				$database->app_name = 'ring_groups';
+				$database->app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+				$database->save($array);
+				unset($array);
 
-				//set message
-					message::add($text['message-update']);
+				$p->delete('ring_group_edit', 'temp');
 
-				//redirect the user
-					header("Location: ".$validated_path);
-					exit;
-			}
+			//set message
+				message::add($text['message-update']);
+
+			//redirect the user
+				header("Location: ".$validated_path);
+				exit;
 		}
 	}
 
@@ -128,10 +132,12 @@
 //prepare to page the results
 	$rows_per_page = $is_included ? 10 : (is_numeric($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50);
 	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-	$offset = $rows_per_page * $page;
+	if (isset($_GET['page'])) {
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
+	}
 
 //get the list
 	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
@@ -155,64 +161,73 @@
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-	echo "<form method='post' name='frm' action='".$validated_path."'>\n";
-	echo "	<div style='float: left;'>";
-	echo "		<b>".$text['header-ring-group-forward']."</b><br />";
-	if (!$is_included) {
-		echo "	".$text['description-ring-group-forward']."<br />";
-	}
-	echo "	<br />";
-	echo "	</div>\n";
+//create token
+	$object = new token;
+	$token = $object->create('/app/ring_groups/ring_group_forward.php');
 
-	echo "<div style='float: right;'>\n";
-	if ($num_rows > 10) {
-		echo "	<input id='btn_viewall_ringgroups' type='button' class='btn' value='".$text['button-view_all']."' onclick=\"document.location.href='".PROJECT_PATH."/app/ring_groups/ring_group_forward.php';\">\n";
+//include header
+	require_once "resources/header.php";
+
+//show content
+	echo "<div class='action_bar sub'>\n";
+	echo "	<div class='heading'><b>".$text['header-ring-group-forward']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	if ($is_included && $num_rows > 10) {
+		echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'share-square','collapse'=>'hide-xs','link'=>PROJECT_PATH.'/app/ring_groups/ring_group_forward.php']);
 	}
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"list_form_submit('form_list_ring_group_forward');"]);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	if (!$is_included) {
+		echo $text['description-ring-group-forward']."\n";
+		echo "<br /><br />\n";
+	}
+
+	echo "<form id='form_list_ring_group_forward' method='post' action='".$validated_path."'>\n";
+
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
-	echo "<th>".$text['label-forwarding']."</th>";
+	echo "<th class='shrink'>".$text['label-forwarding']."</th>";
 	if (!$is_included) {
-		echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order);
+		echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
 	}
 	echo "</tr>\n";
 
-	$c = 0; $x = 0;
 	if (is_array($result) && @sizeof($result) != 0) {
-		foreach($result as $row) {
+		$x = 0;
+		foreach ($result as $row) {
 			$onclick = "onclick=\"document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex = (document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex) ? 0 : 1; if (document.getElementById('".escape($row['ring_group_uuid'])."').selectedIndex) { document.getElementById('destination').focus(); }\"";
-			echo "<tr>\n";
-			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".escape($row['ring_group_name'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_style".$c."' ".$onclick.">".escape($row['ring_group_extension'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_style".$c." row_style_slim' width='5'>";
-			echo "		<input type='hidden' name='ring_groups[".$x."][ring_group_uuid]' id='destination'  value=\"".escape($row["ring_group_uuid"])."\">";
-			echo "		<select class='formfld' name='ring_groups[".$x."][ring_group_forward_enabled]\" id='".escape($row['ring_group_uuid'])."' onchange=\"(this.selectedIndex == 1) ? document.getElementById('destination').focus() : null;\">";
+			echo "<tr class='list-row'>\n";
+			echo "	<td ".$onclick.">".escape($row['ring_group_name'])."&nbsp;</td>\n";
+			echo "	<td ".$onclick.">".escape($row['ring_group_extension'])."&nbsp;</td>\n";
+			echo "	<td class='input'>";
+			echo "		<input type='hidden' name='ring_groups[".$x."][ring_group_uuid]' value=\"".escape($row["ring_group_uuid"])."\">";
+			echo "		<select class='formfld' name='ring_groups[".$x."][ring_group_forward_enabled]' id='".escape($row['ring_group_uuid'])."' onchange=\"this.selectedIndex ? document.getElementById('destination').focus() : null;\">";
 			echo "			<option value='false'>".$text['option-disabled']."</option>";
-			echo "			<option value='true' ".(($row["ring_group_forward_enabled"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+			echo "			<option value='true' ".($row["ring_group_forward_enabled"] == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
 			echo "		</select>";
 			echo "		<input class='formfld' style='width: 100px;' type='text' name='ring_groups[".$x."][ring_group_forward_destination]' id='destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($row["ring_group_forward_destination"])."\">";
 			echo "	</td>\n";
 			if (!$is_included) {
-				echo "	<td valign='top' class='row_stylebg tr_link_void' ".$onclick.">".escape($row['ring_group_description'])."&nbsp;</td>\n";
+				echo "	<td class='description overflow hide-sm-dn' ".$onclick.">".escape($row['ring_group_description'])."&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
-			$c = ($c) ? 0 : 1;
 			$x++;
 		}
 	}
-	unset($result, $row);
+	unset($result);
 
-	echo "</table>";
-	echo "</form>";
-
+	echo "</table>\n";
+	echo "<br />\n";
 	if (!$is_included) {
-		echo "<center>".$paging_controls."</center>\n";
-		echo "<br><br>";
+		echo "<div align='center'>".$paging_controls."</div>\n";
 	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "</form>\n";
 
 //include the footer
 	if (!$is_included) {

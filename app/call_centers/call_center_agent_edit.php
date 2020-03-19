@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -99,9 +99,12 @@
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		//get the uuid from the POST
-			if ($action == "update") {
-				$call_center_agent_uuid = $_POST["call_center_agent_uuid"];
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_center_agents.php');
+				exit;
 			}
 
 		//check for all required data
@@ -114,7 +117,7 @@
 			if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-agent_call_timeout']."<br>\n"; }
 			//if (strlen($agent_id) == 0) { $msg .= $text['message-required']." ".$text['label-agent_id']."<br>\n"; }
 			//if (strlen($agent_password) == 0) { $msg .= $text['message-required']." ".$text['label-agent_password']."<br>\n"; }
-			if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
+			//if (strlen($agent_status) == 0) { $msg .= $text['message-required']." ".$text['label-agent_status']."<br>\n"; }
 			if (strlen($agent_contact) == 0) { $msg .= $text['message-required']." ".$text['label-agent_contact']."<br>\n"; }
 			if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required']." ".$text['label-agent_no_answer_delay_time']."<br>\n"; }
 			if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required']." ".$text['label-agent_max_no_answer']."<br>\n"; }
@@ -134,6 +137,56 @@
 				require_once "resources/footer.php";
 				return;
 			}
+
+		//add the call_center_agent_uuid
+			if (strlen($call_center_agent_uuid) == 0) {
+				$call_center_agent_uuid = uuid();
+			}
+
+		//get the users array
+			$sql = "select * from v_users ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "order by username asc ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$database = new database;
+			$users = $database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+		//prepare the array
+			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['call_center_agents'][0]['call_center_agent_uuid'] = $call_center_agent_uuid;
+			$array['call_center_agents'][0]['agent_name'] = $agent_name;
+			$array['call_center_agents'][0]['agent_type'] = $agent_type;
+			$array['call_center_agents'][0]['agent_call_timeout'] = $agent_call_timeout;
+			$array['call_center_agents'][0]['user_uuid'] = $user_uuid;
+			$array['call_center_agents'][0]['agent_id'] = $agent_id;
+			$array['call_center_agents'][0]['agent_password'] = $agent_password;
+			$array['call_center_agents'][0]['agent_contact'] = $agent_contact;
+			$array['call_center_agents'][0]['agent_status'] = $agent_status;
+			$array['call_center_agents'][0]['agent_no_answer_delay_time'] = $agent_no_answer_delay_time;
+			$array['call_center_agents'][0]['agent_max_no_answer'] = $agent_max_no_answer;
+			$array['call_center_agents'][0]['agent_wrap_up_time'] = $agent_wrap_up_time;
+			$array['call_center_agents'][0]['agent_reject_delay_time'] = $agent_reject_delay_time;
+			$array['call_center_agents'][0]['agent_busy_delay_time'] = $agent_busy_delay_time;
+			if (is_uuid($user_uuid)) {
+				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['users'][0]['user_uuid'] = $user_uuid;
+				$array['users'][0]['user_status'] = $agent_status;
+			}
+
+		//save to the data
+			$database = new database;
+			$database->app_name = 'call_center';
+			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+			$database->save($array);
+			//$message = $database->message;
+
+		//syncrhonize configuration
+			save_call_center_xml();
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete('configuration:callcenter.conf');
 
 	//get and then set the complete agent_contact with the call_timeout and when necessary confirm
 		//if you change this variable, also change resources/switch.php
@@ -201,48 +254,6 @@
 					$response = event_socket_request($fp, $cmd);
 			}
 
-		//set the domain_uuid
-			$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-
-		//add the call_center_agent_uuid
-			if (strlen($_POST["call_center_agent_uuid"]) == 0) {
-				$call_center_agent_uuid = uuid();
-				$_POST["call_center_agent_uuid"] = $call_center_agent_uuid;
-			}
-
-		//get the users array
-			$sql = "select * from v_users ";
-			$sql .= "where domain_uuid = :domain_uuid'".$_SESSION['domain_uuid']."' ";
-			$sql .= "order by username asc ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			unset($prep_statement, $sql);
-
-		//prepare the array
-			$array['call_center_agents'][] = $_POST;
-			if (isset($user_uuid) && strlen($user_uuid) > 0) {
-				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['users'][0]['user_uuid'] = $user_uuid;
-				$array['users'][0]['user_status'] = $agent_status;
-			}
-
-		//save to the data
-			$database = new database;
-			$database->app_name = 'call_center';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-			if (strlen($call_center_agent_uuid) > 0) {
-				$database->uuid($call_center_agent_uuid);
-			}
-			$database->save($array);
-			$message = $database->message;
-
-		//syncrhonize configuration
-			save_call_center_xml();
-
-		//clear the cache
-			remove_config_from_cache('configuration:callcenter.conf');
-
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -260,7 +271,7 @@
 	$destination = new destinations;
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
 		$call_center_agent_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -269,7 +280,7 @@
 		$parameters['call_center_agent_uuid'] = $call_center_agent_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
+		if (is_array($row) && @sizeof($row) != 0) {
 			$call_center_agent_uuid = $row["call_center_agent_uuid"];
 			$user_uuid = $row["user_uuid"];
 			$agent_name = $row["agent_name"];
@@ -286,7 +297,7 @@
 			$agent_busy_delay_time = $row["agent_busy_delay_time"];
 			//$agent_logout = $row["agent_logout"];
 		}
-		unset($sql, $parameters);
+		unset($sql, $parameters, $row);
 	}
 
 //set default values
@@ -298,14 +309,18 @@
 	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "90"; }
 	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "90"; }
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
-	require_once "resources/header.php";
 	if ($action == "add") {
 		$document['title'] = $text['title-call_center_agent_add'];
 	}
 	if ($action == "update") {
 		$document['title'] = $text['title-call_center_agent_edit'];
 	}
+	require_once "resources/header.php";
 
 //get the list of users for this domain
 	$sql = "select * from v_users ";
@@ -345,29 +360,30 @@
 
 <?php
 //show the content
-	echo "<form method='post' name='frm' id='frm' action='' onsubmit='check_duplicates(); return false;'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "<form method='post' name='frm' id='frm' onsubmit='check_duplicates(); return false;'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'>";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_agent_add']."</b></td>\n";
+		echo "<b>".$text['header-call_center_agent_add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_agent_edit']."</b></td>\n";
+		echo "<b>".$text['header-call_center_agent_edit']."</b>";
 	}
-	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_agents.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
+	echo 	"</div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'call_center_agents.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-agent_name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='agent_name' maxlength='255' value=\"".escape($agent_name)."\" />\n";
 	/*
 	echo "<select id=\"agent_name\" name=\"agent_name\" class='formfld'>\n";
@@ -471,6 +487,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
+	echo "	<option value=''></option>\n";
 	if ($agent_status == "Logged Out") {
 		echo "	<option value='Logged Out' SELECTED >".$text['option-logged_out']."</option>\n";
 	}
@@ -569,18 +586,15 @@
 	echo "</tr>\n";
 	*/
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='call_center_agent_uuid' value='".escape($call_center_agent_uuid)."'>\n";
-	}
-	echo "			<br />";
-	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
-	echo "</form>";
 	echo "<br /><br />";
+
+	if ($action == "update") {
+		echo "<input type='hidden' name='call_center_agent_uuid' value='".escape($call_center_agent_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

@@ -1,38 +1,79 @@
 <?php
 /*
-	FusionPBX
-	Version: MPL 1.1
+ FusionPBX
+ Version: MPL 1.1
 
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/
 
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the
+ License.
 
-	The Original Code is FusionPBX
+ The Original Code is FusionPBX
 
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
-	All Rights Reserved.
+ The Initial Developer of the Original Code is
+ Mark J Crane <markjcrane@fusionpbx.com>
+ Portions created by the Initial Developer are Copyright (C) 2008-2019
+ the Initial Developer. All Rights Reserved.
 
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
+ Contributor(s):
+ Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
-//define the directory class
+//define the modules class
+if (!class_exists('modules')) {
 	class modules {
-		//define the variables
-			public $db;
-			public $dir;
-			public $fp;
-			public $modules;
-			public $msg;
+
+		/**
+		 * declare public variables
+		 */
+		public $dir;
+		public $fp;
+		public $modules;
+		public $msg;
+
+		/**
+		 * declare private variables
+		 */
+		private $app_name;
+		private $app_uuid;
+		private $permission_prefix;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $toggle_field;
+		private $toggle_values;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct() {
+
+			//assign private variables
+				$this->app_name = 'modules';
+				$this->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+				$this->permission_prefix = 'module_';
+				$this->list_page = 'modules.php';
+				$this->table = 'modules';
+				$this->uuid_prefix = 'module_';
+				$this->toggle_field = 'module_enabled';
+				$this->toggle_values = ['true','false'];
+
+		}
+
+		/**
+		 * called when there are no references to a particular object
+		 * unset the variables used in the class
+		 */
+		public function __destruct() {
+			foreach ($this as $key => $value) {
+				unset($this->$key);
+			}
+		}
 
 		//get the additional information about a specific module
 			public function info($name) {
@@ -601,8 +642,8 @@ include "root.php";
 						$mod['module_label'] = 'Translate';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'format numbers into a specified format.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_xml_cdr":
 						$mod['module_label'] = 'XML CDR';
@@ -656,12 +697,7 @@ include "root.php";
 				if ($this->fp) {
 					$cmd = "api module_exists ".$name;
 					$response = trim(event_socket_request($this->fp, $cmd));
-					if ($response == "true") {
-						return true;
-					}
-					else {
-						return false;
-					}
+					return $response == "true" ? true : false;
 				}
 				else {
 					return false;
@@ -672,10 +708,9 @@ include "root.php";
 			public function get_modules() {
 				$sql = " select * from v_modules ";
 				$sql .= "order by module_category,  module_label";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$this->modules = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				unset ($prep_statement, $sql);
+				$database = new database;
+				$this->modules = $database->select($sql, null, 'all');
+				unset($sql);
 			}
 
 		//add missing modules for more module info see http://wiki.freeswitch.com/wiki/Modules
@@ -683,6 +718,7 @@ include "root.php";
 				if ($handle = opendir($this->dir)) {
 					$modules_new = '';
 					$module_found = false;
+					$x = 0;
 					while (false !== ($file = readdir($handle))) {
 						if ($file != "." && $file != "..") {
 							if (substr($file, -3) == ".so" || substr($file, -4) == ".dll") {
@@ -701,35 +737,32 @@ include "root.php";
 										$modules_new .= "<li>".$mod['module_label']."</li>\n";
 									//set the order
 										$order = $mod['module_order'];
-									//insert the data
-										$module_uuid = uuid();
-										$sql = "insert into v_modules ";
-										$sql .= "(";
-										$sql .= "module_uuid, ";
-										$sql .= "module_label, ";
-										$sql .= "module_name, ";
-										$sql .= "module_description, ";
-										$sql .= "module_category, ";
-										$sql .= "module_order, ";
-										$sql .= "module_enabled, ";
-										$sql .= "module_default_enabled ";
-										$sql .= ")";
-										$sql .= "values ";
-										$sql .= "(";
-										$sql .= "'".$module_uuid."', ";
-										$sql .= "'".$mod['module_label']."', ";
-										$sql .= "'".$mod['module_name']."', ";
-										$sql .= "'".$mod['module_description']."', ";
-										$sql .= "'".$mod['module_category']."', ";
-										$sql .= "'".$order."', ";
-										$sql .= "'".$mod['module_enabled']."', ";
-										$sql .= "'".$mod['module_default_enabled']."' ";
-										$sql .= ")";
-										$this->db->exec($sql);
-										unset($sql);
+									//build insert array
+										$array['modules'][$x]['module_uuid'] = uuid();
+										$array['modules'][$x]['module_label'] = $mod['module_label'];
+										$array['modules'][$x]['module_name'] = $mod['module_name'];
+										$array['modules'][$x]['module_description'] = $mod['module_description'];
+										$array['modules'][$x]['module_category'] = $mod['module_category'];
+										$array['modules'][$x]['module_order'] = $order;
+										$array['modules'][$x]['module_enabled'] = $mod['module_enabled'];
+										$array['modules'][$x]['module_default_enabled'] = $mod['module_default_enabled'];
+									$x++;
 								}
 							}
 						}
+					}
+					if (is_array($array) && @sizeof($array) != 0) {
+						//grant temporary permissions
+							$p = new permissions;
+							$p->add('module_add', 'temp');
+						//execute insert
+							$database = new database;
+							$database->app_name = 'modules';
+							$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
+							$database->save($array);
+							unset($array);
+						//revoke temporary permissions
+							$p->delete('module_add', 'temp');
 					}
 					closedir($handle);
 					if ($module_found) {
@@ -747,31 +780,31 @@ include "root.php";
 				//set the globals
 					global $config, $domain_uuid;
 
-				//get the database connection
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$db = $database->db;
-
+				//compose xml
 					$xml = "<configuration name=\"modules.conf\" description=\"Modules\">\n";
 					$xml .= "	<modules>\n";
 
 					$sql = "select * from v_modules ";
-					$sql .= "order by module_order ASC, ";
-					$sql .= "module_category ASC";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
+					$sql .= "order by module_order asc, ";
+					$sql .= "module_category asc ";
+					$database = new database;
+					$result = $database->select($sql, null, 'all');
+					unset($sql);
+
 					$prev_module_cat = '';
-					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					foreach ($result as $row) {
-						if ($prev_module_cat != $row['module_category']) {
-							$xml .= "\n		<!-- ".$row['module_category']." -->\n";
+					if (is_array($result) && @sizeof($result) != 0) {
+						foreach ($result as $row) {
+							if ($prev_module_cat != $row['module_category']) {
+								$xml .= "\n		<!-- ".$row['module_category']." -->\n";
+							}
+							if ($row['module_enabled'] == "true"){
+								$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
+							}
+							$prev_module_cat = $row['module_category'];
 						}
-						if ($row['module_enabled'] == "true"){
-							$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
-						}
-						$prev_module_cat = $row['module_category'];
 					}
+					unset($result, $row);
+
 					$xml .= "\n";
 					$xml .= "	</modules>\n";
 					$xml .= "</configuration>";
@@ -783,18 +816,308 @@ include "root.php";
 
 				//apply settings
 					$_SESSION["reload_xml"] = true;
+			}
+
+		/**
+		 * start modules
+		 */
+		public function start($records) {
+			$this->control('start', $records);
+		}
+
+		/**
+		 * stop modules
+		 */
+		public function stop($records) {
+			$this->control('stop', $records);
+		}
+
+		/**
+		 * control (load/unload) modules
+		 */
+		private function control($action, $records) {
+			if (permission_exists($this->permission_prefix.'edit')) {
+
+				//set local variables
+					switch ($action) {
+						case 'start':
+							$action = 'load';
+							$response_message = 'message-module_started';
+							break;
+						case 'stop':
+							$action = 'unload';
+							$response_message = 'message-module_stopped';
+							break;
+						default:
+							exit;
+					}
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//control the checked modules
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked modules, build where clause for below
+							foreach($records as $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+
+						//get module details
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, module_name as module, module_enabled as enabled from v_".$this->table." ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$modules[$row['uuid']]['name'] = $row['module'];
+										$modules[$row['uuid']]['enabled'] = $row['enabled'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						if (is_array($modules) && @sizeof($modules) != 0) {
+							//create the event socket connection
+								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+							if ($fp) {
+								//control modules
+									foreach ($modules as $module_uuid => $module) {
+										if ($module['enabled'] == 'true') {
+											$cmd = 'api '.$action.' '.$module['name'];
+											$responses[$module_uuid]['module'] = $module['name'];
+											$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+										}
+										else {
+											$responses[$module_uuid]['module'] = $module['name'];
+											$responses[$module_uuid]['message'] = $text['label-disabled'];
+										}
+									}
+
+								//set message
+									$message = $text[$response_message];
+									if (is_array($responses) && @sizeof($responses) != 0) {
+										foreach ($responses as $response) {
+											$message .= "<br><strong>".$response['module']."</strong>: ".$response['message'];
+										}
+									}
+									message::add($message, 'positive', 7000);
+							}
+						}
+					}
 
 			}
-	} //class
+		}
 
-	//add the database structure
+		/**
+		 * delete modules
+		 */
+		public function delete($records) {
+			if (permission_exists($this->permission_prefix.'delete')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//delete the checked modules
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//filter out unchecked modules, build where clause for below
+							foreach($records as $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+
+						//get module details
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, module_name as module from v_".$this->table." ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$modules[$row['uuid']]['name'] = $row['module'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//build the delete array
+							if (is_array($modules) && @sizeof($modules) != 0) {
+								$x = 0;
+								foreach ($modules as $module_uuid => $module) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $module_uuid;
+									$x++;
+								}
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//create the event socket connection
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+								//stop modules
+									if ($fp) {
+										foreach ($modules as $module_uuid => $module) {
+											if ($this->active($module['name'])) {
+												$cmd = 'api unload '.$module['name'];
+												$responses[$module_uuid]['module'] = $module['name'];
+												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											}
+										}
+									}
+
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->delete($array);
+									unset($array);
+
+								//rewrite mod
+									$this->xml();
+
+								//set message
+									$message = $text['message-delete'];
+									if (is_array($responses) && @sizeof($responses) != 0) {
+										foreach ($responses as $response) {
+											$message .= "<br><strong>".$response['module']."</strong>: ".$response['message'];
+										}
+									}
+									message::add($message, 'positive', 7000);
+
+							}
+					}
+
+			}
+		}
+
+		/**
+		 * toggle records
+		 */
+		public function toggle($records) {
+			if (permission_exists($this->permission_prefix.'edit')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->list_page);
+						exit;
+					}
+
+				//toggle the checked records
+					if (is_array($records) && @sizeof($records) != 0) {
+
+						//get current toggle state
+							foreach($records as $x => $record) {
+								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$uuids[] = "'".$record['uuid']."'";
+								}
+							}
+							if (is_array($uuids) && @sizeof($uuids) != 0) {
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as state, module_name as name from v_".$this->table." ";
+								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								$database = new database;
+								$rows = $database->select($sql, $parameters, 'all');
+								if (is_array($rows) && @sizeof($rows) != 0) {
+									foreach ($rows as $row) {
+										$modules[$row['uuid']]['state'] = $row['state'];
+										$modules[$row['uuid']]['name'] = $row['name'];
+									}
+								}
+								unset($sql, $parameters, $rows, $row);
+							}
+
+						//build update array
+							$x = 0;
+							if (is_array($modules) && @sizeof($modules) != 0) {
+								foreach($modules as $uuid => $module) {
+									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+									$array[$this->table][$x][$this->toggle_field] = $module['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+									$x++;
+								}
+							}
+
+						//save the changes
+							if (is_array($array) && @sizeof($array) != 0) {
+
+								//save the array
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//create the event socket connection
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+								//stop modules if active
+									if ($fp) {
+										foreach ($modules as $module_uuid => $module) {
+											if ($this->active($module['name'])) {
+												$cmd = 'api unload '.$module['name'];
+												$responses[$module_uuid]['module'] = $module['name'];
+												$responses[$module_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											}
+										}
+									}
+
+								//rewrite mod
+									$this->xml();
+
+								//set message
+									$message = $text['message-toggle'];
+									if (is_array($responses) && @sizeof($responses) != 0) {
+										foreach ($responses as $response) {
+											$message .= "<br><strong>".$response['module']."</strong>: ".$response['message'];
+										}
+									}
+									message::add($message, 'positive', 7000);
+
+							}
+							unset($records, $modules);
+					}
+
+			}
+		} //method
+
+
+	} //class
+}
+
 /*
 require_once "resources/classes/modules.php";
 $mod = new modules;
 $mod->dir = $_SESSION['switch']['mod']['dir'];
 echo $mod->dir."\n";
-//database connection object
-	$mod->db = $db;
 //get modules from the database
 	$mod->get_modules();
 //module exists

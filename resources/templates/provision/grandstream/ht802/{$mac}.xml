@@ -89,19 +89,25 @@
     <!-- # Mandatory -->
     <P212>2</P212>
 
-<!-- Firmware Server Path -->
-<!-- Server address -->
-{if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/ht802/{$firmware_version}</P192>
-{elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/ht802</P192>
-{else}
-<P192>{$domain_name}{$project_path}/app/provision</P192>
-{/if}
+    <!-- Firmware Server Path -->
+    <!-- Server address -->
+    {if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/ht802/{$firmware_version}</P192>
+    {elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}/ht802</P192>
+    {else}
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
+    {/if}
 
-<!-- Config Server Path -->
-<!-- Server address;  -->
-<P237>{$domain_name}{$project_path}/app/provision</P237>
+    <!-- Config Server Path -->
+    <!-- Server address;  -->
+    {if $grandstream_config_server_path=="none"}
+    <P237></P237>
+    {elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+    {else}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+    {/if}
 
     <!-- # XML Config File Password -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -530,7 +536,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -867,7 +873,7 @@
     <!-- # Enable Call Features. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P191>1</P191>
+    <P191>0</P191>
 
     <!-- # Offhook Auto-Dial (User ID/extension to dial automatically when offhook) -->
     <!-- # String: 0-9, #, * -->
@@ -927,7 +933,11 @@
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_call_waiting)}
+    <P91>{$grandstream_call_waiting}</P91>
+    {else}
     <P91>0</P91>
+    {/if}
 
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -1180,7 +1190,11 @@
     <!-- # FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_fax_mode)}
+    <P228>1</P228>
+{else}
     <P228>0</P228>
+{/if}
 
     <!-- # Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
     <!-- # Number: 0, 1 -->
@@ -1419,7 +1433,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P747>{$account.2.server_address}</P747>
+<P747>{$account.2.server_address}:{$account.2.sip_port}</P747>
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -1800,7 +1814,11 @@
     <!-- # Disable Call-Waiting. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_call_waiting)}
+    <P791>{$grandstream_call_waiting}</P791>
+    {else}
     <P791>0</P791>
+    {/if}
 
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -2289,7 +2307,7 @@
     <!-- # Web Access Mode. 0 - HTTPS, 1 - HTTP. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1650>1</P1650>
+    <P1650>0</P1650>
 
     <!-- # HTTP Web Port. Default HTTP is 80. -->
     <!-- # Number: 1 to 65535 -->

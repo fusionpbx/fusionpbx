@@ -19,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Gebruikt om externe bestemmingen vast te leggen.";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "";
+		$apps[$x]['description']['pt-br'] = "Usado para gerenciar números de destinos externos.";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para definir os números de destino externos.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
@@ -53,7 +53,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -63,11 +62,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_upload";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_import";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_upload";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_domain";
@@ -79,10 +77,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_record";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_context";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
+		$apps[$x]['permissions'][$y]['name'] = "destination_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_name";
@@ -90,6 +85,18 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y = 0;
@@ -152,11 +159,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_type";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the type.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_number";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prefix";
@@ -169,10 +178,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_cid_name_prefix";
@@ -181,6 +192,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
@@ -189,6 +201,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_voice";
@@ -209,6 +222,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the data.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_alternate_app";
@@ -225,6 +239,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 
 ?>

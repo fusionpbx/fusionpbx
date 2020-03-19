@@ -29,7 +29,7 @@
 		<P212>1</P212>
 		<!-- Firmware Server Path -->
 	
-		{if isset($grandstream_firmware_path) && isset($firmware_version)}
+              {if isset($grandstream_firmware_path) && isset($firmware_version)}
 		<P192>{$grandstream_firmware_path}/dp715/{$firmware_version}</P192>
 		{elseif isset($grandstream_firmware_path)}
 		<P192>{$grandstream_firmware_path}/dp715</P192>
@@ -38,7 +38,14 @@
 		{/if}
 
 		<!-- Config Server Path -->
-		<P237>{$domain_name}{$project_path}/app/provision</P237>
+                {if $grandstream_config_server_path=="none"}
+                <P237></P237>
+                {elseif isset($grandstream_config_server_path)}
+                <P237>{$grandstream_config_server_path}</P237>
+                {else}
+                <P237>{$domain_name}{$project_path}/app/provision</P237>
+                {/if}
+	
 		<!-- XML Config File Password -->
 		<P1359></P1359>
 		<!-- HTTP/HTTPS User Name -->

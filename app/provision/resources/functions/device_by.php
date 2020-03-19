@@ -1,6 +1,6 @@
 <?php
 
-function device_by_mac($db, $mac) {
+function device_by_mac($mac) {
 	$sql = "select * from v_devices ";
 	$sql .= "where device_mac_address = :mac ";
 	$sql .= "and device_enabled = 'true' ";
@@ -11,7 +11,7 @@ function device_by_mac($db, $mac) {
 	unset($sql, $parameters, $row);
 }
 
-function device_by_ext($db, $ext, $domain) {
+function device_by_ext($ext, $domain) {
 	$sql = "select t1.* ";
 	$sql .= "from v_devices t1 ";
 	$sql .- "inner join v_device_lines t2 on t1.device_uuid = t2.device_uuid ";

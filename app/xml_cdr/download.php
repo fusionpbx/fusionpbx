@@ -40,6 +40,6 @@
 
 //download
 	$obj = new xml_cdr;
-	$obj->download();
+	$obj->download($_GET['id']);
 
 ?>

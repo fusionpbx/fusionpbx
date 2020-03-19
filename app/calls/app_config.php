@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, Follow Me et ne pas deranger.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Oproep doorsturen, Volg mij en Niet storen";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Desvio de chamadas, Siga-me e Não perturbe (DND).";
 		$apps[$x]['description']['pt-pt'] = "Desvio de Chamadas, Seguir-me e Não Perturbar.";
@@ -52,6 +52,15 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "655447f1-e969-4885-b3da-28889b531568";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "follow_me";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "follow_me_autocomplete";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_order'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "follow me destinations autocomplete list. true=autocomplete On, false=autocomplete Off";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4fedc226-caca-4ebf-b4eb-31de93e5bed3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "follow_me";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_destinations";

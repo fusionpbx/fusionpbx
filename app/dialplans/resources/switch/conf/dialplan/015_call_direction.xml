@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="call-direction" number="" continue="true" app_uuid="3780f814-5543-4350-b65d-563512d1fe71" enabled="true" order="15">
+		<condition field="${call_direction}" expression="^(inbound|outbound|local)$" break="never">
+			<anti-action application="export" data="call_direction=local" inline="true"/>
+		</condition>
+	</extension>
+</context>

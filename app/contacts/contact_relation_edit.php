@@ -24,16 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('contact_relation_edit') || permission_exists('contact_relation_add')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('contact_relation_edit') || permission_exists('contact_relation_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -73,6 +77,14 @@ else {
 		//set the uuid
 			if ($action == "update") {
 				$contact_relation_uuid = $_POST["contact_relation_uuid"];
+			}
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: contacts.php');
+				exit;
 			}
 
 		//check for all required data
@@ -172,6 +184,10 @@ else {
 		unset($sql, $parameters, $row);
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the header
 	$document['title'] = $text['title-contact_relation'];
 	require_once "resources/header.php";
@@ -188,21 +204,19 @@ else {
 	echo "</script>";
 
 //show the content
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' valign='top' nowrap='nowrap'>";
-	echo "	<b>".$text['header-contact_relation']."</b>";
-	echo "</td>\n";
-	echo "<td align='right' valign='top'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br />\n";
+	echo "<form method='post' name='frm'>\n";
+
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-contact_relation']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-contact_relation_label']."\n";
@@ -270,8 +284,6 @@ else {
 	}
 	unset($sql, $parameters, $result, $row);
 	echo "</select>\n";
-// 	echo "<br />\n";
-// 	echo $text['description-related_contact']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -310,24 +322,21 @@ else {
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
-
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	}
-
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>\n";
-	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
-	if ($action == "update") {
-		echo "		<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
+	else {
+		echo "</table>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
 	echo "<br><br>";
+
+	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+	if ($action == "update") {
+		echo "<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
+	}
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
 	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

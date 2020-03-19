@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Ecrit les fichiers de provisioning à partir des modèles.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Maakt de voorzining bestanden uit sjablonen.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
@@ -194,7 +194,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "daylight_savings_start_day";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "8";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -226,7 +226,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "daylight_savings_stop_day";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -325,6 +325,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "day/month";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94d7d463-770e-48d9-8ba7-6009a54be413";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_provision_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA Provision URL";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c9886a0-92f6-4dd7-8c1b-d04f240d9a9b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -452,7 +460,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "No";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "spa secure call No or Yes";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA secure call No or Yes";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2672dbbc-2834-4e95-9ea9-e9ff6dc07838";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -461,6 +469,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "User level password for phone embeded web server.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e8efadd1-8753-42b3-92d8-d2b40f111c63";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_resync_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA resync at 0300 every night at 3:00 am. Default disabled.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "753ed706-a5b0-47c1-a466-5ed35c4d27da";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_upgrade_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA upgrade firmware enable Yes or No Default No.";
 		$y++;
 
 ?>

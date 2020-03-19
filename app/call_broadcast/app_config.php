@@ -19,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Programmation de campagnes d'appels vers des extensions, IVR, salles de conferences ou tout autre numéro.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "";
+		$apps[$x]['description']['nl-nl'] = "Methode om direct meerdere parallele oproepen naar toestellen, IVR menu, Conferentie, of een ander nummer te maken.";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Programação para imediatamente realizar várias chamadas para uma extensão, um menu IVR, Sala de Conferência ou qualquer outro número.";
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
@@ -89,11 +89,13 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "broadcast_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "broadcast_desc";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_timeout";
@@ -116,10 +118,12 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_destination_type";
@@ -128,6 +132,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_phone_numbers";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_avmd";

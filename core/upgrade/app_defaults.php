@@ -17,49 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2019
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 if ($domains_processed == 1) {
-
-	//update the software table
-		$sql = "select count(*) from v_software ";
-		$database = new database;
-		$num_rows = $database->select($sql, null, 'column');
-		if ($row['num_rows'] == 0) {
-			$sql = "insert into v_software ";
-			$sql .= "(";
-			$sql .= "software_uuid, ";
-			$sql .= "software_name, ";
-			$sql .= "software_url, ";
-			$sql .= "software_version ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= ":software_uuid, ";
-			$sql .= "'FusionPBX', ";
-			$sql .= "'www.fusionpbx.com', ";
-			$sql .= ":software_version ";
-			$sql .= ")";
-			$parameters['software_uuid'] = uuid();
-			$parameters['software_version'] = software_version();
-			$database = new database;
-			$database->execute($sql, $parameters);
-			unset($sql, $parameters);
-		}
-		else {
-			$sql = "update v_software ";
-			$sql .= "set software_version = :software_version ";
-			$parameters['software_version'] = software_version();
-			$database = new database;
-			$database->execute($sql, $parameters);
-			unset($sql, $parameters);
-		}
 
 	//ensure the login message is set, if new message exists
 		$sql = "select count(*) as num_rows from v_default_settings ";
@@ -108,27 +73,27 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			if (is_array($result) && count($result) > 0) {
-					foreach($result as $row) {
-						$current_default_setting_uuid = $row["default_setting_uuid"];
-						$current_default_setting_value = $row["default_setting_value"];
-						break;
-					}
-
-					// compare to message in language file, update and enable if different
-					$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
-					if ($current_default_setting_value != $new_default_setting_value) {
-						$sql = "update v_default_settings set ";
-						$sql .= "default_setting_value = :default_setting_value, ";
-						$sql .= "default_setting_enabled = 'true' ";
-						$sql .= "where default_setting_uuid = :default_setting_uuid ";
-						$parameters['default_setting_value'] = $text['login-message_text'];
-						$parameters['default_setting_uuid'] = $current_default_setting_uuid;
-						$database = new database;
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
-					}
+				foreach($result as $row) {
+					$current_default_setting_uuid = $row["default_setting_uuid"];
+					$current_default_setting_value = $row["default_setting_value"];
+					break;
 				}
-				unset($prep_statement, $result);
+
+				// compare to message in language file, update and enable if different
+				$new_default_setting_value = str_replace("''", "'", $text['login-message_text']);
+				if ($current_default_setting_value != $new_default_setting_value) {
+					$sql = "update v_default_settings set ";
+					$sql .= "default_setting_value = :default_setting_value, ";
+					$sql .= "default_setting_enabled = 'true' ";
+					$sql .= "where default_setting_uuid = :default_setting_uuid ";
+					$parameters['default_setting_value'] = $text['login-message_text'];
+					$parameters['default_setting_uuid'] = $current_default_setting_uuid;
+					$database = new database;
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
+				}
+			}
+			unset($sql, $result, $row);
 		}
 
 }

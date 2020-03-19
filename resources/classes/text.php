@@ -31,17 +31,23 @@ class text {
 			$text = array();
 
 		//get the global app_languages.php so we can get the list of languages
-			include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
+				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
+			}
 
 		//get the list of languages, remove en-us, sort it then put en-us in front
 			unset($text['language-name']['en-us']);
-			$languages = array_keys($text['language-name']);
-			asort($languages);
-			array_unshift($languages, 'en-us');
+			if (is_array($text['language-name'])) {
+				$languages = array_keys($text['language-name']);
+				asort($languages);
+				array_unshift($languages, 'en-us');
+			}
 
 		//support legacy variable
-			$_SESSION['app']['languages'] = $languages;
-			$this->languages = $languages;
+			if (is_array($languages)) {
+				$_SESSION['app']['languages'] = $languages;
+				$this->languages = $languages;
+			}
 	}
 
 	/**
@@ -102,13 +108,15 @@ class text {
 
 		//reduce to specific language
 			if ($language_code != 'all') {
-				if (is_array($text)) foreach ($text as $key => $value) {
-					if (strlen($value[$language_code]) > 0) {
-						$text[$key] = $value[$language_code];
-					}
-					else {
-						//fallback to en-us
-						$text[$key] = $value['en-us'];
+				if (is_array($text)) {
+					foreach ($text as $key => $value) {
+						if (isset($value[$language_code]) && strlen($value[$language_code]) > 0) {
+							$text[$key] = $value[$language_code];
+						}
+						else {
+							//fallback to en-us
+							$text[$key] = $value['en-us'];
+						}
 					}
 				}
 			}
@@ -265,7 +273,7 @@ class text {
 			$text = array();
 			$languages = array();
 
-		//fetch all the languages
+		//retrieve all the languages
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
 				include $file;
@@ -309,7 +317,7 @@ class text {
 				$language_totals[$language_code] = 0;
 			}
 
-		//fetch all the languages
+		//retrieve all the languages
 			$text = array();
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 			foreach($files as $file) {
@@ -327,7 +335,7 @@ class text {
 			}
 			unset($text);
 
-		//fetch all the menus
+		//retrieve all the menus
 			$x = 0;
 			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
 			foreach($files as $file) {

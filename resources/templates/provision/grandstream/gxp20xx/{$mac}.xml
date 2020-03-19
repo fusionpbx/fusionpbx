@@ -81,7 +81,13 @@
 {/if}
 
 <!--  Config Server Path -->
+{if $grandstream_config_server_path=="none"}
+<P237></P237>
+{elseif isset($grandstream_config_server_path)}
+<P237>{$grandstream_config_server_path}</P237>
+{else}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
 
 <!--  XML Config File Password   (for GXP280/GXP285/GXP1200 only) -->
 <P1359></P1359>
