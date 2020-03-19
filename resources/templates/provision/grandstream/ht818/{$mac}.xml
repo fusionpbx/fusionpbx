@@ -16,11 +16,11 @@
     <!-- # Admin password for web interface -->
     <!-- # String; between ascii values 33 and 126 -->
     <!-- # Mandatory -->
-{if isset($admin_password)}
+    {if isset($admin_password)}
     <P2>{$admin_password}</P2>
-{else}
+    {else}
     <P2>{$mac|replace:'-':''}</P2>
-{/if}
+    {/if}
 
 
     <!-- # Layer 2 QoS.  -->
@@ -85,18 +85,15 @@
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
     {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/ht818/{$firmware_version}</P192>
+    <P192>{$grandstream_firmware_path}/gxw4004/{$firmware_version}</P192>
     {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/ht818</P192>
+    <P192>{$grandstream_firmware_path}/gxw4004</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
 
     <!-- # Config Server Path -->
     <!-- # Server address;  -->
-<<<<<<< HEAD
-    <P237>{$domain_name}{$project_path}/app/provision</P237>
-=======
     {if $grandstream_config_server_path=="none"}
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
@@ -104,7 +101,6 @@
     {else}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
->>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
     <!-- # XML Config File Password -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -545,11 +541,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {$tp=0}
-<<<<<<< HEAD
-	{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
-=======
     {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
->>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 	{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 	{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
 	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
@@ -571,32 +563,19 @@
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
     {if isset($grandstream_nat_traversal)}
-<<<<<<< HEAD
-<P52>{$grandstream_nat_traversal}</P52>
-{else}
-<P52>0</P52>
-{/if}
-=======
     <P52>{$grandstream_nat_traversal}</P52>
     {else}
     <P52>0</P52>
     {/if}
->>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
 
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     {if isset($grandstream_dns_mode)}
-<<<<<<< HEAD
-<P103>{$grandstream_dns_mode}</P103>
-{else}
-<P103>0</P103>
-=======
     <P103>{$grandstream_dns_mode}</P103>
     {else}
     <P103>0</P103>
->>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
     {/if}
 
 
@@ -618,7 +597,7 @@
     <!-- # Unregister On Reboot. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P81>1</P81>
+    <P81>0</P81>
 
     <!-- # Outgoing call without Registration. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -912,16 +891,12 @@
     <!-- # Disable Call-Waiting Caller ID. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-<<<<<<< HEAD
-    <P714>{$grandstream_call_waiting_caller_id}</P714>
-=======
     <P714>0</P714>
->>>>>>> 11770c555edd56a3e6fc3ddad89e7bc1a9c04f04
 
     <!-- # Disable Call-Waiting Tone. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P186>{$grandstream_call_waiting_tone}</P186>
+    <P186>0</P186>
 
     <!-- # Disable Receiver Offhook Tone. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
@@ -1692,16 +1667,16 @@
     <!-- # Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- # Offhook Auto-dial(Set the destination for auto-dial after offhook) -->
     <!-- # String Max Length: 64   -->
-    <P4067>{$account.8.user_id}</P4067>
+    <P4067>{$account.4.user_id}</P4067>
 
     <!-- # String Max Length: 64   -->
-    <P4097>{$account.8.user_id}</P4097>
+    <P4097>{$account.4.user_id}</P4097>
 
     <!-- # String Max Length: 64   -->
-    <P4127>{$account.8.password}</P4127>
+    <P4127>{$account.4.password}</P4127>
 
     <!-- # String Max Length: 64   -->
-    <P4187>{$account.8.display_name}</P4187>
+    <P4187>{$account.4.display_name}</P4187>
 
     <!-- # Number: 0 to 1 -->
     <!-- # Mandatory -->
@@ -1780,7 +1755,7 @@
     <!-- # if the device is using private IP address, it will be enabled. -->
     <!-- # Number: 0,1,2  -->
     <!-- # Mandatory  -->
-    <P190>{$wan_side_webssh_access}</P190>
+    <P190>0</P190>
 
     <!-- # White List for WAN Side. Only the IP address in white list can access Web and SSH. -->
     <!-- # String ipaddress -->
@@ -1807,7 +1782,7 @@
 
     <!-- # DHCP Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
     <!-- # String -->
-    <P148>HT818</P148>
+    <P148>HT802</P148>
 
     <!-- ################################################################################# -->
     <!-- # PPPoE -->
@@ -2060,7 +2035,7 @@
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
     <!-- # Reboot required  -->
-    <P231>{$device_mode}</P231>
+    <P231>0</P231>
 
     <!-- # NAT maximum ports. range: 0 - 4096, default is 1024 -->
     <!-- # Number: 0 to 4096  -->
@@ -2122,7 +2097,7 @@
     <!-- # Reply to ICMP on WAN port. 0 - No, 1 - Yes. Unit will not respond to PING from WAN side if set to No. -->
     <!-- # Number: 0,1  -->
     <!-- # Mandatory  -->
-    <P189>{$reply_to_icmp_on_wan_port}</P189>
+    <P189>0</P189>
 
     <!-- # Enable LAN DHCP. 0 - No, 1 - Yes -->
     <!-- # Number: 0,1  -->
