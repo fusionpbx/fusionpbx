@@ -29,6 +29,7 @@
 
 --general functions
 	require "resources.functions.is_uuid";
+	require "resources.functions.explode";
 
 --set the default
 	continue = true;
@@ -47,10 +48,9 @@
 	macro_name = params:getHeader("macro_name");
 
 --get the cache
-	local explode = require "resources.functions.explode"
-	local cache = require "resources.functions.cache"
+	local cache = require "resources.functions.cache";
 	local language_cache_key = "languages:" .. language..":" .. macro_name;
-	XML_STRING, err = cache.get(language_cache_key)
+	XML_STRING, err = cache.get(language_cache_key);
 
 --build the XML string from the database
 	if not XML_STRING then
@@ -60,9 +60,9 @@
 			dbh = Database.new('system');
 
 		--include json library
-			local json
+			local json;
 			if (debug["sql"]) then
-				json = require "resources.functions.lunajson"
+				json = require "resources.functions.lunajson";
 			end
 
 		--exits the script if we didn't connect properly
@@ -97,19 +97,23 @@
 				-- if macro_name is a uuid get from the phrase details
 					if (is_uuid(macro_name)) then
 						--define the xml table
-							local xml = {}
+							local xml = {};
 
 						--get the language components
 							local locale = explode('-', language);
 							local dir_lang = locale[1];
 							local dir_dialect = locale[2];
 							local dir_voice = locale[3];
+							if (locale[2] == nil) then
+								dir_dialect = 'us';
+								dir_voice = 'callie';
+							end
 
 						--get the xml
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang..[[/]]..dir_dialect..[[/]]..dir_voice" tts-engine="flite" tts-voice="rms">]]);
+							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang..[[/]]..dir_dialect..[[/]]..dir_voice..[[" tts-engine="flite" tts-voice="rms">]]);
 							table.insert(xml, [[			<phrases>]]);
 							table.insert(xml, [[				<macros>]]);
 
