@@ -99,6 +99,7 @@
 					switch($subcategory) {
 						//exceptions
 							case 'favicon':
+							case 'custom_css':
 								if ($setting['text'] != '') {
 									$tmp_url = parse_url($setting['text']);
 									$tmp_path = pathinfo($setting['text']);
