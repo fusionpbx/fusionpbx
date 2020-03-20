@@ -89,7 +89,7 @@
 
 //process the changes from the http post
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$phrase_uuid = $_POST["phrase_uuid"];
@@ -244,7 +244,7 @@
 				}
 
 			}
-	
+
 	}
 
 //pre-populate the form
@@ -280,6 +280,20 @@
 		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
+	}
+
+//get installed languages
+	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+	foreach ($language_paths as $key => $path) {
+		$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+		$path_array = explode('/', $path);
+		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
+			unset($language_paths[$key]);
+		}
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
+		if (strlen($language_paths[$key]) == 0) {
+			unset($language_paths[$key]);
+		}
 	}
 
 //get the recordings
@@ -340,6 +354,7 @@
 		}
 		unset($recordings, $row);
 	//sounds
+	// TODO: make sounds lookup depend on the selected language
 		$file = new file;
 		$sound_files = $file->sounds();
 		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
@@ -459,14 +474,38 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+// Language field
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_language' maxlength='255' value=\"".escape($phrase_language)."\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-language']."\n";
+	echo "  <select class='formfld' type='text' name='phrase_language'>\n";
+	echo "		<option></option>\n";
+
+	if (empty($phrase_language)) {
+		$phrase_language = "$phrase_language_code/$phrase_dialect/$phrase_voice";
+		$language_formatted = "$phrase_language_code-$phrase_dialect $phrase_voice";
+		echo "		<option value='".escape($phrase_language)."'>".escape($language_formatted)."</option>\n";
+	}
+	else {
+		$language_array = explode ('/', $phrase_language);
+		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
+		echo "		<option value='".escape($phrase_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
+	}
+
+	foreach ($language_paths as $key => $language_variables) {
+		$language_variables = explode ('/',$language_paths[$key]);
+		$language = $language_variables[0];
+		$dialect = $language_variables[1];
+		$voice = $language_variables[2];
+		if ($language_formatted <> "$language-$dialect $voice") {
+			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
+		}
+	}
+	echo "  </select>\n";
+	echo "  <br />\n";
+	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
