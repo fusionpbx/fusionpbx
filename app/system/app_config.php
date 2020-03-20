@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Displays information for CPU, HDD, RAM and more.";
+		$apps[$x]['description']['en-gb'] = "Displays information for CPU, HDD, RAM and more.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Zeigt Informationen über die CPU, Festplatten, Speicher und anderes an.";
 		$apps[$x]['description']['de-ch'] = "";

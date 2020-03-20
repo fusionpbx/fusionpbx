@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-time_conditions']['en-us'] = "Time Conditions";
+$text['title-time_conditions']['en-gb'] = "Time Conditions";
 $text['title-time_conditions']['ar-eg'] = "";
 $text['title-time_conditions']['de-at'] = "Zeitschaltung"; //copied from de-de
 $text['title-time_conditions']['de-ch'] = "Zeitschaltung"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-time_conditions']['sv-se'] = "Tidsstyrning";
 $text['title-time_conditions']['uk-ua'] = "Часові умови";
 
 $text['title-time_condition']['en-us'] = "Time Condition";
+$text['title-time_condition']['en-gb'] = "Time Condition";
 $text['title-time_condition']['ar-eg'] = "";
 $text['title-time_condition']['de-at'] = "Zeitschaltung"; //copied from de-de
 $text['title-time_condition']['de-ch'] = "Zeitschaltung"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-time_condition']['sv-se'] = "Tidsstyrning";
 $text['title-time_condition']['uk-ua'] = "Часові умови";
 
 $text['button-dialplan']['en-us'] = "Dialplan";
+$text['button-dialplan']['en-gb'] = "Dialplan";
 $text['button-dialplan']['ar-eg'] = "";
 $text['button-dialplan']['de-at'] = "Wählplan"; //copied from de-de
 $text['button-dialplan']['de-ch'] = "Wählplan"; //copied from de-de
@@ -62,6 +65,7 @@ $text['button-dialplan']['sv-se'] = "Nummerplan";
 $text['button-dialplan']['uk-ua'] = "";
 
 $text['message-alternate_destination_required']['en-us'] = "Alternate Destination Required";
+$text['message-alternate_destination_required']['en-gb'] = "Alternate Destination Required";
 $text['message-alternate_destination_required']['ar-eg'] = "";
 $text['message-alternate_destination_required']['de-at'] = "Alternatives Ziel benötigt"; //copied from de-de
 $text['message-alternate_destination_required']['de-ch'] = "Alternatives Ziel benötigt"; //copied from de-de
@@ -82,6 +86,7 @@ $text['message-alternate_destination_required']['sv-se'] = "Alternativ Destinati
 $text['message-alternate_destination_required']['uk-ua'] = "";
 
 $text['label-year']['en-us'] = "Year";
+$text['label-year']['en-gb'] = "Year";
 $text['label-year']['ar-eg'] = "";
 $text['label-year']['de-at'] = "Jahr"; //copied from de-de
 $text['label-year']['de-ch'] = "Jahr"; //copied from de-de
@@ -102,6 +107,7 @@ $text['label-year']['sv-se'] = "År";
 $text['label-year']['uk-ua'] = "Рік";
 
 $text['label-week-of-year']['en-us'] = "Week of Year";
+$text['label-week-of-year']['en-gb'] = "Week of Year";
 $text['label-week-of-year']['ar-eg'] = "";
 $text['label-week-of-year']['de-at'] = "Woche des Jahres"; //copied from de-de
 $text['label-week-of-year']['de-ch'] = "Woche des Jahres"; //copied from de-de
@@ -122,6 +128,7 @@ $text['label-week-of-year']['sv-se'] = "Vecka på Året";
 $text['label-week-of-year']['uk-ua'] = "Тиждень року";
 
 $text['label-week-of-month']['en-us'] = "Week of Month";
+$text['label-week-of-month']['en-gb'] = "Week of Month";
 $text['label-week-of-month']['ar-eg'] = "";
 $text['label-week-of-month']['de-at'] = "Woche des Monats"; //copied from de-de
 $text['label-week-of-month']['de-ch'] = "Woche des Monats"; //copied from de-de
@@ -142,6 +149,7 @@ $text['label-week-of-month']['sv-se'] = "Vecka i Månad";
 $text['label-week-of-month']['uk-ua'] = "Тиждень місяця";
 
 $text['label-time-of-day_minute']['en-us'] = "Minute";
+$text['label-time-of-day_minute']['en-gb'] = "Minute";
 $text['label-time-of-day_minute']['ar-eg'] = "";
 $text['label-time-of-day_minute']['de-at'] = "Minute"; //copied from de-de
 $text['label-time-of-day_minute']['de-ch'] = "Minute"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-time-of-day_minute']['sv-se'] = "Minut";
 $text['label-time-of-day_minute']['uk-ua'] = "Хвилина";
 
 $text['label-time-of-day_hour']['en-us'] = "Hour";
+$text['label-time-of-day_hour']['en-gb'] = "Hour";
 $text['label-time-of-day_hour']['ar-eg'] = "";
 $text['label-time-of-day_hour']['de-at'] = "Stunde"; //copied from de-de
 $text['label-time-of-day_hour']['de-ch'] = "Stunde"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-time-of-day_hour']['sv-se'] = "Timma";
 $text['label-time-of-day_hour']['uk-ua'] = "Година";
 
 $text['label-time-of-day']['en-us'] = "Time of Day";
+$text['label-time-of-day']['en-gb'] = "Time of Day";
 $text['label-time-of-day']['ar-eg'] = "";
 $text['label-time-of-day']['de-at'] = "Tageszeit"; //copied from de-de
 $text['label-time-of-day']['de-ch'] = "Tageszeit"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-time-of-day']['sv-se'] = "Tid på Dag";
 $text['label-time-of-day']['uk-ua'] = "Час дня";
 
 $text['label-template']['en-us'] = "Template";
+$text['label-template']['en-gb'] = "Template";
 $text['label-template']['ar-eg'] = "";
 $text['label-template']['de-at'] = "Vorlage"; //copied from de-de
 $text['label-template']['de-ch'] = "Vorlage"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-template']['sv-se'] = "Mall";
 $text['label-template']['uk-ua'] = "Шаблон";
 
 $text['label-settings']['en-us'] = "Settings";
+$text['label-settings']['en-gb'] = "Settings";
 $text['label-settings']['ar-eg'] = "";
 $text['label-settings']['de-at'] = "Einstellungen"; //copied from de-de
 $text['label-settings']['de-ch'] = "Einstellungen"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-settings']['sv-se'] = "Inställningar";
 $text['label-settings']['uk-ua'] = "Налаштування";
 
 $text['label-select_destination']['en-us'] = "Select Destination";
+$text['label-select_destination']['en-gb'] = "Select Destination";
 $text['label-select_destination']['ar-eg'] = "";
 $text['label-select_destination']['de-at'] = "Wählen Sie ein Ziel"; //copied from de-de
 $text['label-select_destination']['de-ch'] = "Wählen Sie ein Ziel"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-select_destination']['sv-se'] = "Välj Destination";
 $text['label-select_destination']['uk-ua'] = "";
 
 $text['label-select_default_destination']['en-us'] = "Select Default Destination";
+$text['label-select_default_destination']['en-gb'] = "Select Default Destination";
 $text['label-select_default_destination']['ar-eg'] = "";
 $text['label-select_default_destination']['de-at'] = "Wählen Sie das Standard Ziel"; //copied from de-de
 $text['label-select_default_destination']['de-ch'] = "Wählen Sie das Standard Ziel"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-select_default_destination']['sv-se'] = "Välj Standard Destination
 $text['label-select_default_destination']['uk-ua'] = "";
 
 $text['label-required-dialplan_number']['en-us'] = "Please provide: Extension Number";
+$text['label-required-dialplan_number']['en-gb'] = "Please provide: Extension Number";
 $text['label-required-dialplan_number']['ar-eg'] = "";
 $text['label-required-dialplan_number']['de-at'] = "Bitte geben Sie folgendes an: Nebenstellen Nummer"; //copied from de-de
 $text['label-required-dialplan_number']['de-ch'] = "Bitte geben Sie folgendes an: Nebenstellen Nummer"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-required-dialplan_number']['sv-se'] = "Ange: Anknytningsnummer";
 $text['label-required-dialplan_number']['uk-ua'] = "";
 
 $text['label-required-dialplan_name']['en-us'] = "Please provide: Extension Name";
+$text['label-required-dialplan_name']['en-gb'] = "Please provide: Extension Name";
 $text['label-required-dialplan_name']['ar-eg'] = "";
 $text['label-required-dialplan_name']['de-at'] = "Bitte geben Sie folgendes an: Nebenstellen Name"; //copied from de-de
 $text['label-required-dialplan_name']['de-ch'] = "Bitte geben Sie folgendes an: Nebenstellen Name"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-required-dialplan_name']['sv-se'] = "Ange: Anknytningsnamn";
 $text['label-required-dialplan_name']['uk-ua'] = "Будь ласка, надайте назву розширення";
 
 $text['label-required-action']['en-us'] = "Please provide: Destination";
+$text['label-required-action']['en-gb'] = "Please provide: Destination";
 $text['label-required-action']['ar-eg'] = "";
 $text['label-required-action']['de-at'] = "Bitte geben Sie folgendes an: Ziel"; //copied from de-de
 $text['label-required-action']['de-ch'] = "Bitte geben Sie folgendes an: Ziel"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-required-action']['sv-se'] = "Ange: Destination";
 $text['label-required-action']['uk-ua'] = "";
 
 $text['label-presets']['en-us'] = "Presets";
+$text['label-presets']['en-gb'] = "Presets";
 $text['label-presets']['ar-eg'] = "";
 $text['label-presets']['de-at'] = "Voreinstellungen"; //copied from de-de
 $text['label-presets']['de-ch'] = "Voreinstellungen"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-presets']['sv-se'] = "Förinställningar";
 $text['label-presets']['uk-ua'] = "";
 
 $text['label-preset_veterans_day']['en-us'] = "Veteran's Day";
+$text['label-preset_veterans_day']['en-gb'] = "Veteran's Day";
 $text['label-preset_veterans_day']['ar-eg'] = "";
 $text['label-preset_veterans_day']['de-at'] = "Veteran's Day"; //copied from de-de
 $text['label-preset_veterans_day']['de-ch'] = "Veteran's Day"; //copied from de-de
@@ -382,6 +401,7 @@ $text['label-preset_veterans_day']['sv-se'] = "Veterandagen";
 $text['label-preset_veterans_day']['uk-ua'] = "";
 
 $text['label-preset_thanksgiving_day']['en-us'] = "Thanksgiving Day";
+$text['label-preset_thanksgiving_day']['en-gb'] = "Thanksgiving Day";
 $text['label-preset_thanksgiving_day']['ar-eg'] = "";
 $text['label-preset_thanksgiving_day']['de-at'] = "Erntedankfest"; //copied from de-de
 $text['label-preset_thanksgiving_day']['de-ch'] = "Erntedankfest"; //copied from de-de
@@ -402,6 +422,7 @@ $text['label-preset_thanksgiving_day']['sv-se'] = "Tacksägelsedagen";
 $text['label-preset_thanksgiving_day']['uk-ua'] = "";
 
 $text['label-preset_presidents_day']['en-us'] = "Presidents Day";
+$text['label-preset_presidents_day']['en-gb'] = "Presidents Day";
 $text['label-preset_presidents_day']['ar-eg'] = "";
 $text['label-preset_presidents_day']['de-at'] = "Präsidententag"; //copied from de-de
 $text['label-preset_presidents_day']['de-ch'] = "Präsidententag"; //copied from de-de
@@ -422,6 +443,7 @@ $text['label-preset_presidents_day']['sv-se'] = "Presidentdagen";
 $text['label-preset_presidents_day']['uk-ua'] = "";
 
 $text['label-preset_new_years_day']['en-us'] = "New Year's Day";
+$text['label-preset_new_years_day']['en-gb'] = "New Year's Day";
 $text['label-preset_new_years_day']['ar-eg'] = "";
 $text['label-preset_new_years_day']['de-at'] = "Neujahrstag"; //copied from de-de
 $text['label-preset_new_years_day']['de-ch'] = "Neujahrstag"; //copied from de-de
@@ -442,6 +464,7 @@ $text['label-preset_new_years_day']['sv-se'] = "Nyårsdagen";
 $text['label-preset_new_years_day']['uk-ua'] = "";
 
 $text['label-preset_memorial_day']['en-us'] = "Memorial Day";
+$text['label-preset_memorial_day']['en-gb'] = "Memorial Day";
 $text['label-preset_memorial_day']['ar-eg'] = "";
 $text['label-preset_memorial_day']['de-at'] = "Heldengedenktag"; //copied from de-de
 $text['label-preset_memorial_day']['de-ch'] = "Heldengedenktag"; //copied from de-de
@@ -462,6 +485,7 @@ $text['label-preset_memorial_day']['sv-se'] = "Minnesdagen";
 $text['label-preset_memorial_day']['uk-ua'] = "";
 
 $text['label-preset_martin_luther_king_jr_day']['en-us'] = "Martin Luther King Jr. Day";
+$text['label-preset_martin_luther_king_jr_day']['en-gb'] = "Martin Luther King Jr. Day";
 $text['label-preset_martin_luther_king_jr_day']['ar-eg'] = "";
 $text['label-preset_martin_luther_king_jr_day']['de-at'] = "Martin Luther King Jr. Tag"; //copied from de-de
 $text['label-preset_martin_luther_king_jr_day']['de-ch'] = "Martin Luther King Jr. Tag"; //copied from de-de
@@ -482,6 +506,7 @@ $text['label-preset_martin_luther_king_jr_day']['sv-se'] = "Martin Luther King J
 $text['label-preset_martin_luther_king_jr_day']['uk-ua'] = "";
 
 $text['label-preset_labor_day']['en-us'] = "Labor Day";
+$text['label-preset_labor_day']['en-gb'] = "Labor Day";
 $text['label-preset_labor_day']['ar-eg'] = "";
 $text['label-preset_labor_day']['de-at'] = "Tag der Arbeit"; //copied from de-de
 $text['label-preset_labor_day']['de-ch'] = "Tag der Arbeit"; //copied from de-de
@@ -502,6 +527,7 @@ $text['label-preset_labor_day']['sv-se'] = "Arbetardagen";
 $text['label-preset_labor_day']['uk-ua'] = "";
 
 $text['label-preset_independence_day']['en-us'] = "Independence Day";
+$text['label-preset_independence_day']['en-gb'] = "Independence Day";
 $text['label-preset_independence_day']['ar-eg'] = "";
 $text['label-preset_independence_day']['de-at'] = "Unabhängigkeitstag"; //copied from de-de
 $text['label-preset_independence_day']['de-ch'] = "Unabhängigkeitstag"; //copied from de-de
@@ -522,6 +548,7 @@ $text['label-preset_independence_day']['sv-se'] = "Självständighetsdagen";
 $text['label-preset_independence_day']['uk-ua'] = "";
 
 $text['label-preset_columbus_day']['en-us'] = "Columbus Day";
+$text['label-preset_columbus_day']['en-gb'] = "Columbus Day";
 $text['label-preset_columbus_day']['ar-eg'] = "";
 $text['label-preset_columbus_day']['de-at'] = "Columbus Tag"; //copied from de-de
 $text['label-preset_columbus_day']['de-ch'] = "Columbus Tag"; //copied from de-de
@@ -542,6 +569,7 @@ $text['label-preset_columbus_day']['sv-se'] = "Columbusdagen";
 $text['label-preset_columbus_day']['uk-ua'] = "";
 
 $text['label-preset_christmas_day']['en-us'] = "Christmas Day";
+$text['label-preset_christmas_day']['en-gb'] = "Christmas Day";
 $text['label-preset_christmas_day']['ar-eg'] = "";
 $text['label-preset_christmas_day']['de-at'] = "Erster Weihnachtsfeiertag"; //copied from de-de
 $text['label-preset_christmas_day']['de-ch'] = "Erster Weihnachtsfeiertag"; //copied from de-de
@@ -562,6 +590,7 @@ $text['label-preset_christmas_day']['sv-se'] = "Juldagen";
 $text['label-preset_christmas_day']['uk-ua'] = "";
 
 $text['label-number']['en-us'] = "Number";
+$text['label-number']['en-gb'] = "Number";
 $text['label-number']['ar-eg'] = "";
 $text['label-number']['de-at'] = "Nummer"; //copied from de-de
 $text['label-number']['de-ch'] = "Nummer"; //copied from de-de
@@ -582,6 +611,7 @@ $text['label-number']['sv-se'] = "Nummer";
 $text['label-number']['uk-ua'] = "Номер";
 
 $text['label-month']['en-us'] = "Month";
+$text['label-month']['en-gb'] = "Month";
 $text['label-month']['ar-eg'] = "";
 $text['label-month']['de-at'] = "Monat"; //copied from de-de
 $text['label-month']['de-ch'] = "Monat"; //copied from de-de
@@ -602,6 +632,7 @@ $text['label-month']['sv-se'] = "Månad";
 $text['label-month']['uk-ua'] = "Місяць";
 
 $text['label-minute-of-hour']['en-us'] = "Minute of Hour";
+$text['label-minute-of-hour']['en-gb'] = "Minute of Hour";
 $text['label-minute-of-hour']['ar-eg'] = "";
 $text['label-minute-of-hour']['de-at'] = "Minute der Stunde"; //copied from de-de
 $text['label-minute-of-hour']['de-ch'] = "Minute der Stunde"; //copied from de-de
@@ -622,6 +653,7 @@ $text['label-minute-of-hour']['sv-se'] = "Minut i timma";
 $text['label-minute-of-hour']['uk-ua'] = "Хвилина години";
 
 $text['label-minute-of-day']['en-us'] = "Minute of Day";
+$text['label-minute-of-day']['en-gb'] = "Minute of Day";
 $text['label-minute-of-day']['ar-eg'] = "";
 $text['label-minute-of-day']['de-at'] = "Minute des Tages"; //copied from de-de
 $text['label-minute-of-day']['de-ch'] = "Minute des Tages"; //copied from de-de
@@ -642,6 +674,7 @@ $text['label-minute-of-day']['sv-se'] = "Minut på dag";
 $text['label-minute-of-day']['uk-ua'] = "Хвилина дня";
 
 $text['label-label']['en-us'] = "Label";
+$text['label-label']['en-gb'] = "Label";
 $text['label-label']['ar-eg'] = "";
 $text['label-label']['de-at'] = "Kennzeichnung"; //copied from de-de
 $text['label-label']['de-ch'] = "Kennzeichnung"; //copied from de-de
@@ -662,6 +695,7 @@ $text['label-label']['sv-se'] = "Etikett";
 $text['label-label']['uk-ua'] = "Назва";
 
 $text['label-hour-of-day']['en-us'] = "Hour of Day";
+$text['label-hour-of-day']['en-gb'] = "Hour of Day";
 $text['label-hour-of-day']['ar-eg'] = "";
 $text['label-hour-of-day']['de-at'] = "Stunde des Tages"; //copied from de-de
 $text['label-hour-of-day']['de-ch'] = "Stunde des Tages"; //copied from de-de
@@ -682,6 +716,7 @@ $text['label-hour-of-day']['sv-se'] = "Timma på dag";
 $text['label-hour-of-day']['uk-ua'] = "Година дня";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
 $text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
@@ -702,6 +737,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
 $text['label-day-of-year']['en-us'] = "Day of Year";
+$text['label-day-of-year']['en-gb'] = "Day of Year";
 $text['label-day-of-year']['ar-eg'] = "";
 $text['label-day-of-year']['de-at'] = "Tag des Jahres"; //copied from de-de
 $text['label-day-of-year']['de-ch'] = "Tag des Jahres"; //copied from de-de
@@ -722,6 +758,7 @@ $text['label-day-of-year']['sv-se'] = "Dag på År";
 $text['label-day-of-year']['uk-ua'] = "День року";
 
 $text['label-day-of-week']['en-us'] = "Day of Week";
+$text['label-day-of-week']['en-gb'] = "Day of Week";
 $text['label-day-of-week']['ar-eg'] = "";
 $text['label-day-of-week']['de-at'] = "Tag der Woche"; //copied from de-de
 $text['label-day-of-week']['de-ch'] = "Tag der Woche"; //copied from de-de
@@ -742,6 +779,7 @@ $text['label-day-of-week']['sv-se'] = "Dag i Vecka";
 $text['label-day-of-week']['uk-ua'] = "День тижня";
 
 $text['label-day-of-month']['en-us'] = "Day of Month";
+$text['label-day-of-month']['en-gb'] = "Day of Month";
 $text['label-day-of-month']['ar-eg'] = "";
 $text['label-day-of-month']['de-at'] = "Tag des Monats"; //copied from de-de
 $text['label-day-of-month']['de-ch'] = "Tag des Monats"; //copied from de-de
@@ -762,6 +800,7 @@ $text['label-day-of-month']['sv-se'] = "Dag i Månad";
 $text['label-day-of-month']['uk-ua'] = "День місяця";
 
 $text['label-date-and-time']['en-us'] = "Date & Time";
+$text['label-date-and-time']['en-gb'] = "Date & Time";
 $text['label-date-and-time']['ar-eg'] = "";
 $text['label-date-and-time']['de-at'] = "Datum & Zeit"; //copied from de-de
 $text['label-date-and-time']['de-ch'] = "Datum & Zeit"; //copied from de-de
@@ -782,6 +821,7 @@ $text['label-date-and-time']['sv-se'] = "Datum & Tid";
 $text['label-date-and-time']['uk-ua'] = "Дата і час";
 
 $text['label-context']['en-us'] = "Context";
+$text['label-context']['en-gb'] = "Context";
 $text['label-context']['ar-eg'] = "";
 $text['label-context']['de-at'] = "Kontext"; //copied from de-de
 $text['label-context']['de-ch'] = "Kontext"; //copied from de-de
@@ -802,6 +842,7 @@ $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk-ua'] = "Контекст";
 
 $text['label-conditions']['en-us'] = "Conditions";
+$text['label-conditions']['en-gb'] = "Conditions";
 $text['label-conditions']['ar-eg'] = "";
 $text['label-conditions']['de-at'] = "Bedingungen"; //copied from de-de
 $text['label-conditions']['de-ch'] = "Bedingungen"; //copied from de-de
@@ -822,6 +863,7 @@ $text['label-conditions']['sv-se'] = "Villkor";
 $text['label-conditions']['uk-ua'] = "Умови";
 
 $text['label-condition_value']['en-us'] = "Value";
+$text['label-condition_value']['en-gb'] = "Value";
 $text['label-condition_value']['ar-eg'] = "";
 $text['label-condition_value']['de-at'] = "Wert"; //copied from de-de
 $text['label-condition_value']['de-ch'] = "Wert"; //copied from de-de
@@ -842,6 +884,7 @@ $text['label-condition_value']['sv-se'] = "Värde";
 $text['label-condition_value']['uk-ua'] = "Значення";
 
 $text['label-condition_range']['en-us'] = "Range";
+$text['label-condition_range']['en-gb'] = "Range";
 $text['label-condition_range']['ar-eg'] = "";
 $text['label-condition_range']['de-at'] = "Bereich"; //copied from de-de
 $text['label-condition_range']['de-ch'] = "Bereich"; //copied from de-de
@@ -862,6 +905,7 @@ $text['label-condition_range']['sv-se'] = "Intervall";
 $text['label-condition_range']['uk-ua'] = "";
 
 $text['label-condition_parameter']['en-us'] = "Parameter";
+$text['label-condition_parameter']['en-gb'] = "Parameter";
 $text['label-condition_parameter']['ar-eg'] = "";
 $text['label-condition_parameter']['de-at'] = "Parameter"; //copied from de-de
 $text['label-condition_parameter']['de-ch'] = "Parameter"; //copied from de-de
@@ -882,6 +926,7 @@ $text['label-condition_parameter']['sv-se'] = "Parameter";
 $text['label-condition_parameter']['uk-ua'] = "Параметр";
 
 $text['label-condition']['en-us'] = "Condition";
+$text['label-condition']['en-gb'] = "Condition";
 $text['label-condition']['ar-eg'] = "";
 $text['label-condition']['de-at'] = "Bedingung"; //copied from de-de
 $text['label-condition']['de-ch'] = "Bedingung"; //copied from de-de
@@ -902,6 +947,7 @@ $text['label-condition']['sv-se'] = "Villkor";
 $text['label-condition']['uk-ua'] = "Умова";
 
 $text['label-alternate-destination']['en-us'] = "Alternate Destination";
+$text['label-alternate-destination']['en-gb'] = "Alternate Destination";
 $text['label-alternate-destination']['ar-eg'] = "";
 $text['label-alternate-destination']['de-at'] = "Alternatives Ziel"; //copied from de-de
 $text['label-alternate-destination']['de-ch'] = "Alternatives Ziel"; //copied from de-de
@@ -922,6 +968,7 @@ $text['label-alternate-destination']['sv-se'] = "Alternativ Destination";
 $text['label-alternate-destination']['uk-ua'] = "";
 
 $text['label-group']['en-us'] = "Group";
+$text['label-group']['en-gb'] = "Group";
 $text['label-group']['ar-eg'] = "";
 $text['label-group']['de-at'] = "Gruppe"; //copied from de-de
 $text['label-group']['de-ch'] = "Gruppe"; //copied from de-de
@@ -942,6 +989,7 @@ $text['label-group']['sv-se'] = "Grupp";
 $text['label-group']['uk-ua'] = "";
 
 $text['header-time_conditions']['en-us'] = "Time Conditions";
+$text['header-time_conditions']['en-gb'] = "Time Conditions";
 $text['header-time_conditions']['ar-eg'] = "";
 $text['header-time_conditions']['de-at'] = "Zeitschaltung"; //copied from de-de
 $text['header-time_conditions']['de-ch'] = "Zeitschaltung"; //copied from de-de
@@ -962,6 +1010,7 @@ $text['header-time_conditions']['sv-se'] = "Tids Förhållande";
 $text['header-time_conditions']['uk-ua'] = "Часові умови";
 
 $text['description-time_conditions']['en-us'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
+$text['description-time_conditions']['en-gb'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
 $text['description-time_conditions']['ar-eg'] = "";
 $text['description-time_conditions']['de-at'] = "Dynamische weiterleitung von Anrufen an IVR Menüs, externe Rufnummern, Skripte, oder andere Ziele abhängig von zeitlichen Bedingungen."; //copied from de-de
 $text['description-time_conditions']['de-ch'] = "Dynamische weiterleitung von Anrufen an IVR Menüs, externe Rufnummern, Skripte, oder andere Ziele abhängig von zeitlichen Bedingungen."; //copied from de-de
@@ -982,6 +1031,7 @@ $text['description-time_conditions']['sv-se'] = "Styr samtal dynamiskt till IVR 
 $text['description-time_conditions']['uk-ua'] = "Маршрут дзвінків буде залежати від часу. Можна використовувати для переадресації на голосове меню (IVR), на зовнішні номери, сценарії, або інші напрямки.";
 
 $text['description-template']['en-us'] = "The templates provides a list of preset time conditions.";
+$text['description-template']['en-gb'] = "The templates provides a list of preset time conditions.";
 $text['description-template']['ar-eg'] = "";
 $text['description-template']['de-at'] = "Die Vorlagen bieten eine Liste von Voreingestellten Zeitschaltungen."; //copied from de-de
 $text['description-template']['de-ch'] = "Die Vorlagen bieten eine Liste von Voreingestellten Zeitschaltungen."; //copied from de-de
@@ -1002,6 +1052,7 @@ $text['description-template']['sv-se'] = "Mallarna ger en lista med förinställ
 $text['description-template']['uk-ua'] = "";
 
 $text['description-settings']['en-us'] = "Define custom conditions necessary to execute the destination selected above.";
+$text['description-settings']['en-gb'] = "Define custom conditions necessary to execute the destination selected above.";
 $text['description-settings']['ar-eg'] = "";
 $text['description-settings']['de-at'] = "Definieren Sie benutzerdefinierte Bedingungen für das oben ausgewählte Ziel."; //copied from de-de
 $text['description-settings']['de-ch'] = "Definieren Sie benutzerdefinierte Bedingungen für das oben ausgewählte Ziel."; //copied from de-de
@@ -1022,6 +1073,7 @@ $text['description-settings']['sv-se'] = "Definiera anpassade villkor som krävs
 $text['description-settings']['uk-ua'] = "";
 
 $text['description-presets_advanced']['en-us'] = "Select a Default Destination above to be <i>applied</i> to each preset checked (without a destination already defined).";
+$text['description-presets_advanced']['en-gb'] = "Select a Default Destination above to be <i>applied</i> to each preset checked (without a destination already defined).";
 $text['description-presets_advanced']['ar-eg'] = "";
 $text['description-presets_advanced']['de-at'] = "Wählen Sie oben ein Standard Ziel , welches jeder ausgewählten Vorgabe zugewiesen wird."; //copied from de-de
 $text['description-presets_advanced']['de-ch'] = "Wählen Sie oben ein Standard Ziel , welches jeder ausgewählten Vorgabe zugewiesen wird."; //copied from de-de
@@ -1042,6 +1094,7 @@ $text['description-presets_advanced']['sv-se'] = "Välj ett standarddestination 
 $text['description-presets_advanced']['uk-ua'] = "";
 
 $text['description-presets']['en-us'] = "Select from available presets. Click a preset name to further customize the conditions and/or destination of each.";
+$text['description-presets']['en-gb'] = "Select from available presets. Click a preset name to further customize the conditions and/or destination of each.";
 $text['description-presets']['ar-eg'] = "";
 $text['description-presets']['de-at'] = "Wählen Sie aus den vorhandenen Vorgaben. Klicken Sie den Namen der Voreinstellung um weitere persönliche Anpassungen vorzunehmen"; //copied from de-de
 $text['description-presets']['de-ch'] = "Wählen Sie aus den vorhandenen Vorgaben. Klicken Sie den Namen der Voreinstellung um weitere persönliche Anpassungen vorzunehmen"; //copied from de-de
@@ -1062,6 +1115,7 @@ $text['description-presets']['sv-se'] = "Välj från de tillgängliga förinstä
 $text['description-presets']['uk-ua'] = "";
 
 $text['description-name']['en-us'] = "Enter the name for the time condition.";
+$text['description-name']['en-gb'] = "Enter the name for the time condition.";
 $text['description-name']['ar-eg'] = "";
 $text['description-name']['de-at'] = "Geben Sie den Namen der Zeitschaltung ein."; //copied from de-de
 $text['description-name']['de-ch'] = "Geben Sie den Namen der Zeitschaltung ein."; //copied from de-de
@@ -1082,6 +1136,7 @@ $text['description-name']['sv-se'] = "Skriv in namnet på tidsstyrningen.";
 $text['description-name']['uk-ua'] = "Введіть назву меню";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
+$text['description-extension']['en-gb'] = "Enter the extension number.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Geben Sie eine Nebenstelle an."; //copied from de-de
 $text['description-extension']['de-ch'] = "Geben Sie eine Nebenstelle an."; //copied from de-de

@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-gateways']['en-us'] = "Gateways";
+$text['title-gateways']['en-gb'] = "Gateways";
 $text['title-gateways']['ar-eg'] = "البوابات";
 $text['title-gateways']['de-at'] = "Gateways"; //copied from de-de
 $text['title-gateways']['de-ch'] = "Gateways"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-gateways']['sv-se'] = "Gateways";
 $text['title-gateways']['uk-ua'] = "Шлюзи";
 
 $text['title-gateway']['en-us'] = "Gateway";
+$text['title-gateway']['en-gb'] = "Gateway";
 $text['title-gateway']['ar-eg'] = "البوابة";
 $text['title-gateway']['de-at'] = "Gateway"; //copied from de-de
 $text['title-gateway']['de-ch'] = "Gateway"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-gateway']['sv-se'] = "Gateway";
 $text['title-gateway']['uk-ua'] = "Шлюз";
 
 $text['select-global']['en-us'] = "Global";
+$text['select-global']['en-gb'] = "Global";
 $text['select-global']['ar-eg'] = "";
 $text['select-global']['de-at'] = "Global"; //copied from de-de
 $text['select-global']['de-ch'] = "Global"; //copied from de-de
@@ -62,6 +65,7 @@ $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "Global";
 
 $text['message-maximum_gateways']['en-us'] = "Maximum Gateways:";
+$text['message-maximum_gateways']['en-gb'] = "Maximum Gateways:";
 $text['message-maximum_gateways']['ar-eg'] = "";
 $text['message-maximum_gateways']['de-at'] = "Maximale Anzahl an Gateways:"; //copied from de-de
 $text['message-maximum_gateways']['de-ch'] = "Maximale Anzahl an Gateways:"; //copied from de-de
@@ -82,6 +86,7 @@ $text['message-maximum_gateways']['sv-se'] = "Max antal Gateways:";
 $text['message-maximum_gateways']['uk-ua'] = "Максимальна кількість шлюзів";
 
 $text['message-gateway_started']['en-us'] = "Gateway(s) Started";
+$text['message-gateway_started']['en-gb'] = "Gateway(s) Started";
 $text['message-gateway_started']['ar-eg'] = "Gateway(s) Started";
 $text['message-gateway_started']['de-at'] = "Gateway(s) Started";
 $text['message-gateway_started']['de-ch'] = "Gateway(s) Started";
@@ -102,6 +107,7 @@ $text['message-gateway_started']['sv-se'] = "Gateway(s) Started";
 $text['message-gateway_started']['uk-ua'] = "Gateway(s) Started";
 
 $text['message-gateway_stopped']['en-us'] = "Gateway(s) Stopped";
+$text['message-gateway_stopped']['en-gb'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['ar-eg'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['de-at'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['de-ch'] = "Gateway(s) Stopped";
@@ -122,6 +128,7 @@ $text['message-gateway_stopped']['sv-se'] = "Gateway(s) Stopped";
 $text['message-gateway_stopped']['uk-ua'] = "Gateway(s) Stopped";
 
 $text['confirm-start_gateways']['en-us'] = "Are you sure you wish to START these gateways?";
+$text['confirm-start_gateways']['en-gb'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['ar-eg'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['de-at'] = "Are you sure you wish to START these gateways?";
 $text['confirm-start_gateways']['de-ch'] = "Are you sure you wish to START these gateways?";
@@ -142,6 +149,7 @@ $text['confirm-start_gateways']['sv-se'] = "Are you sure you wish to START these
 $text['confirm-start_gateways']['uk-ua'] = "Are you sure you wish to START these gateways?";
 
 $text['confirm-stop_gateways']['en-us'] = "Are you sure you wish to STOP these gateways?";
+$text['confirm-stop_gateways']['en-gb'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['ar-eg'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['de-at'] = "Are you sure you wish to STOP these gateways?";
 $text['confirm-stop_gateways']['de-ch'] = "Are you sure you wish to STOP these gateways?";
@@ -162,6 +170,7 @@ $text['confirm-stop_gateways']['sv-se'] = "Are you sure you wish to STOP these g
 $text['confirm-stop_gateways']['uk-ua'] = "Are you sure you wish to STOP these gateways?";
 
 $text['label-username']['en-us'] = "Username";
+$text['label-username']['en-gb'] = "Username";
 $text['label-username']['ar-eg'] = "اسم المستخدم";
 $text['label-username']['de-at'] = "Benutzername"; //copied from de-de
 $text['label-username']['de-ch'] = "Benutzername"; //copied from de-de
@@ -182,6 +191,7 @@ $text['label-username']['sv-se'] = "Användarnamn";
 $text['label-username']['uk-ua'] = "Ім’я користувача";
 
 $text['label-supress_cng']['en-us'] = "Supress CNG";
+$text['label-supress_cng']['en-gb'] = "Supress CNG";
 $text['label-supress_cng']['ar-eg'] = "";
 $text['label-supress_cng']['de-at'] = "CNG unterdrücken"; //copied from de-de
 $text['label-supress_cng']['de-ch'] = "CNG unterdrücken"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-supress_cng']['sv-se'] = "Göm CNG";
 $text['label-supress_cng']['uk-ua'] = "Supress CNG";
 
 $text['label-status-stopped']['en-us'] = "Stopped";
+$text['label-status-stopped']['en-gb'] = "Stopped";
 $text['label-status-stopped']['ar-eg'] = "متوقف";
 $text['label-status-stopped']['de-at'] = "Gestoppt"; //copied from de-de
 $text['label-status-stopped']['de-ch'] = "Gestoppt"; //copied from de-de
@@ -222,6 +233,7 @@ $text['label-status-stopped']['sv-se'] = "Stoppad";
 $text['label-status-stopped']['uk-ua'] = "Зупинено";
 
 $text['label-status-running']['en-us'] = "Running";
+$text['label-status-running']['en-gb'] = "Running";
 $text['label-status-running']['ar-eg'] = "فعال";
 $text['label-status-running']['de-at'] = "Aktiv"; //copied from de-de
 $text['label-status-running']['de-ch'] = "Aktiv"; //copied from de-de
@@ -242,6 +254,7 @@ $text['label-status-running']['sv-se'] = "I drift";
 $text['label-status-running']['uk-ua'] = "Запущено";
 
 $text['label-status']['en-us'] = "Status";
+$text['label-status']['en-gb'] = "Status";
 $text['label-status']['ar-eg'] = "الحالة";
 $text['label-status']['de-at'] = "Status"; //copied from de-de
 $text['label-status']['de-ch'] = "Status"; //copied from de-de
@@ -262,6 +275,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
 
 $text['label-state']['en-us'] = "State";
+$text['label-state']['en-gb'] = "State";
 $text['label-state']['ar-eg'] = "";
 $text['label-state']['de-at'] = "Status"; //copied from de-de
 $text['label-state']['de-ch'] = "Status"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-state']['sv-se'] = "Status";
 $text['label-state']['uk-ua'] = "Стан";
 
 $text['label-sip_cid_type']['en-us'] = "Sip CID Type";
+$text['label-sip_cid_type']['en-gb'] = "Sip CID Type";
 $text['label-sip_cid_type']['ar-eg'] = "";
 $text['label-sip_cid_type']['de-at'] = "Art der SIP Anruferkennung (CID)"; //copied from de-de
 $text['label-sip_cid_type']['de-ch'] = "Art der SIP Anruferkennung (CID)"; //copied from de-de
@@ -302,6 +317,7 @@ $text['label-sip_cid_type']['sv-se'] = "Sip CID Typ";
 $text['label-sip_cid_type']['uk-ua'] = "Sip CID Type";
 
 $text['label-retry_seconds']['en-us'] = "Retry Seconds";
+$text['label-retry_seconds']['en-gb'] = "Retry Seconds";
 $text['label-retry_seconds']['ar-eg'] = "";
 $text['label-retry_seconds']['de-at'] = "Wiederholung (Sekunden)"; //copied from de-de
 $text['label-retry_seconds']['de-ch'] = "Wiederholung (Sekunden)"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-retry_seconds']['sv-se'] = "Retry sekunder";
 $text['label-retry_seconds']['uk-ua'] = "Retry Seconds ";
 
 $text['label-register_transport']['en-us'] = "Register Transport";
+$text['label-register_transport']['en-gb'] = "Register Transport";
 $text['label-register_transport']['ar-eg'] = "";
 $text['label-register_transport']['de-at'] = "Register Transportprotokoll"; //copied from de-de
 $text['label-register_transport']['de-ch'] = "Register Transportprotokoll"; //copied from de-de
@@ -342,6 +359,7 @@ $text['label-register_transport']['sv-se'] = "Register Transport";
 $text['label-register_transport']['uk-ua'] = "Транспорт для реєстрації";
 
 $text['label-register_proxy']['en-us'] = "Register Proxy";
+$text['label-register_proxy']['en-gb'] = "Register Proxy";
 $text['label-register_proxy']['ar-eg'] = "";
 $text['label-register_proxy']['de-at'] = "Register Proxy"; //copied from de-de
 $text['label-register_proxy']['de-ch'] = "Register Proxy"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-register_proxy']['sv-se'] = "Register Proxy";
 $text['label-register_proxy']['uk-ua'] = "Проксі для реєстрації";
 
 $text['label-register']['en-us'] = "Register";
+$text['label-register']['en-gb'] = "Register";
 $text['label-register']['ar-eg'] = "";
 $text['label-register']['de-at'] = "Registrieren"; //copied from de-de
 $text['label-register']['de-ch'] = "Registrieren"; //copied from de-de
@@ -382,6 +401,7 @@ $text['label-register']['sv-se'] = "Register";
 $text['label-register']['uk-ua'] = "Реєстрація";
 
 $text['label-realm']['en-us'] = "Realm";
+$text['label-realm']['en-gb'] = "Realm";
 $text['label-realm']['ar-eg'] = "";
 $text['label-realm']['de-at'] = "Realm"; //copied from de-de
 $text['label-realm']['de-ch'] = "Realm"; //copied from de-de
@@ -402,6 +422,7 @@ $text['label-realm']['sv-se'] = "Realm";
 $text['label-realm']['uk-ua'] = "Realm";
 
 $text['label-proxy']['en-us'] = "Proxy";
+$text['label-proxy']['en-gb'] = "Proxy";
 $text['label-proxy']['ar-eg'] = "";
 $text['label-proxy']['de-at'] = "Proxy"; //copied from de-de
 $text['label-proxy']['de-ch'] = "Proxy"; //copied from de-de
@@ -422,6 +443,7 @@ $text['label-proxy']['sv-se'] = "Proxy";
 $text['label-proxy']['uk-ua'] = "Проксі";
 
 $text['label-profile']['en-us'] = "Profile";
+$text['label-profile']['en-gb'] = "Profile";
 $text['label-profile']['ar-eg'] = "";
 $text['label-profile']['de-at'] = "Profil"; //copied from de-de
 $text['label-profile']['de-ch'] = "Profil"; //copied from de-de
@@ -442,6 +464,7 @@ $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['uk-ua'] = "Профіль";
 
 $text['label-ping']['en-us'] = "Ping";
+$text['label-ping']['en-gb'] = "Ping";
 $text['label-ping']['ar-eg'] = "";
 $text['label-ping']['de-at'] = "Ping"; //copied from de-de
 $text['label-ping']['de-ch'] = "Ping"; //copied from de-de
@@ -462,6 +485,7 @@ $text['label-ping']['sv-se'] = "Ping";
 $text['label-ping']['uk-ua'] = "Пінг";
 
 $text['label-password']['en-us'] = "Password";
+$text['label-password']['en-gb'] = "Password";
 $text['label-password']['ar-eg'] = "كلمة السر";
 $text['label-password']['de-at'] = "Passwort"; //copied from de-de
 $text['label-password']['de-ch'] = "Passwort"; //copied from de-de
@@ -482,6 +506,7 @@ $text['label-password']['sv-se'] = "Lösenord";
 $text['label-password']['uk-ua'] = "Пароль";
 
 $text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
+$text['label-outbound_proxy']['en-gb'] = "Outbound Proxy";
 $text['label-outbound_proxy']['ar-eg'] = "";
 $text['label-outbound_proxy']['de-at'] = "Outbound Proxy"; //copied from de-de
 $text['label-outbound_proxy']['de-ch'] = "Outbound Proxy"; //copied from de-de
@@ -502,6 +527,7 @@ $text['label-outbound_proxy']['sv-se'] = "Utgående Proxy";
 $text['label-outbound_proxy']['uk-ua'] = "Вихідний проксі";
 
 $text['label-gateway']['en-us'] = "Gateway";
+$text['label-gateway']['en-gb'] = "Gateway";
 $text['label-gateway']['ar-eg'] = "";
 $text['label-gateway']['de-at'] = "Gateway"; //copied from de-de
 $text['label-gateway']['de-ch'] = "Gateway"; //copied from de-de
@@ -522,6 +548,7 @@ $text['label-gateway']['sv-se'] = "Gateway";
 $text['label-gateway']['uk-ua'] = "Шлюз";
 
 $text['label-from_user']['en-us'] = "From User";
+$text['label-from_user']['en-gb'] = "From User";
 $text['label-from_user']['ar-eg'] = "";
 $text['label-from_user']['de-at'] = "From User"; //copied from de-de
 $text['label-from_user']['de-ch'] = "From User"; //copied from de-de
@@ -542,6 +569,7 @@ $text['label-from_user']['sv-se'] = "From User";
 $text['label-from_user']['uk-ua'] = "Від користувача";
 
 $text['label-from_domain']['en-us'] = "From Domain";
+$text['label-from_domain']['en-gb'] = "From Domain";
 $text['label-from_domain']['ar-eg'] = "";
 $text['label-from_domain']['de-at'] = "From Domain"; //copied from de-de
 $text['label-from_domain']['de-ch'] = "From Domain"; //copied from de-de
@@ -562,6 +590,7 @@ $text['label-from_domain']['sv-se'] = "From Domain";
 $text['label-from_domain']['uk-ua'] = "From Domain";
 
 $text['label-extension_in_contact']['en-us'] = "Extension In Contact";
+$text['label-extension_in_contact']['en-gb'] = "Extension In Contact";
 $text['label-extension_in_contact']['ar-eg'] = "";
 $text['label-extension_in_contact']['de-at'] = "Extension In Contact"; //copied from de-de
 $text['label-extension_in_contact']['de-ch'] = "Extension In Contact"; //copied from de-de
@@ -582,6 +611,7 @@ $text['label-extension_in_contact']['sv-se'] = "Anknytning In Contact";
 $text['label-extension_in_contact']['uk-ua'] = "Розширення у контакта";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "رقم داخلي";
 $text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
@@ -602,6 +632,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення";
 
 $text['label-expire_seconds']['en-us'] = "Expire Seconds";
+$text['label-expire_seconds']['en-gb'] = "Expire Seconds";
 $text['label-expire_seconds']['ar-eg'] = "";
 $text['label-expire_seconds']['de-at'] = "Expire Seconds"; //copied from de-de
 $text['label-expire_seconds']['de-ch'] = "Expire Seconds"; //copied from de-de
@@ -622,6 +653,7 @@ $text['label-expire_seconds']['sv-se'] = "Utgår Sekunder";
 $text['label-expire_seconds']['uk-ua'] = "Expire Seconds";
 
 $text['label-hostname']['en-us'] = "Hostname";
+$text['label-hostname']['en-gb'] = "Hostname";
 $text['label-hostname']['ar-eg'] = "";
 $text['label-hostname']['de-at'] = "Hostname"; //copied from de-de
 $text['label-hostname']['de-ch'] = "Hostname"; //copied from de-de
@@ -642,6 +674,7 @@ $text['label-hostname']['sv-se'] = "Hostname";
 $text['label-hostname']['uk-ua'] = "Назва хоста";
 
 $text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['en-gb'] = "Domain";
 $text['label-domain']['ar-eg'] = "النطاق";
 $text['label-domain']['de-at'] = "Domain"; //copied from de-de
 $text['label-domain']['de-ch'] = "Domain"; //copied from de-de
@@ -662,6 +695,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 
 $text['label-distinct_to']['en-us'] = "Distinct To";
+$text['label-distinct_to']['en-gb'] = "Distinct To";
 $text['label-distinct_to']['ar-eg'] = "";
 $text['label-distinct_to']['de-at'] = "Distinct To"; //copied from de-de
 $text['label-distinct_to']['de-ch'] = "Distinct To"; //copied from de-de
@@ -682,6 +716,7 @@ $text['label-distinct_to']['sv-se'] = "Distinct To";
 $text['label-distinct_to']['uk-ua'] = "Distinct To";
 
 $text['label-context']['en-us'] = "Context";
+$text['label-context']['en-gb'] = "Context";
 $text['label-context']['ar-eg'] = "";
 $text['label-context']['de-at'] = "Kontext"; //copied from de-de
 $text['label-context']['de-ch'] = "Kontext"; //copied from de-de
@@ -702,6 +737,7 @@ $text['label-context']['sv-se'] = "Context";
 $text['label-context']['uk-ua'] = "Контекст";
 
 $text['label-codec_prefs']['en-us'] = "Codec Preferences";
+$text['label-codec_prefs']['en-gb'] = "Codec Preferences";
 $text['label-codec_prefs']['ar-eg'] = "";
 $text['label-codec_prefs']['de-at'] = "Bevorzugte Codecs"; //copied from de-de
 $text['label-codec_prefs']['de-ch'] = "Bevorzugte Codecs"; //copied from de-de
@@ -722,6 +758,7 @@ $text['label-codec_prefs']['sv-se'] = "Codec Preferences";
 $text['label-codec_prefs']['uk-ua'] = "Codec Preferences";
 
 $text['label-channels']['en-us'] = "Channels";
+$text['label-channels']['en-gb'] = "Channels";
 $text['label-channels']['ar-eg'] = "";
 $text['label-channels']['de-at'] = "Kanäle"; //copied from de-de
 $text['label-channels']['de-ch'] = "Kanäle"; //copied from de-de
@@ -742,6 +779,7 @@ $text['label-channels']['sv-se'] = "Kanaler";
 $text['label-channels']['uk-ua'] = "Канали";
 
 $text['label-caller_id_in_from']['en-us'] = "Caller ID In From";
+$text['label-caller_id_in_from']['en-gb'] = "Caller ID In From";
 $text['label-caller_id_in_from']['ar-eg'] = "";
 $text['label-caller_id_in_from']['de-at'] = "Caller ID In From"; //copied from de-de
 $text['label-caller_id_in_from']['de-ch'] = "Caller ID In From"; //copied from de-de
@@ -762,6 +800,7 @@ $text['label-caller_id_in_from']['sv-se'] = "Caller ID In From";
 $text['label-caller_id_in_from']['uk-ua'] = "Caller ID In From ";
 
 $text['label-auth_username']['en-us'] = "Auth Username";
+$text['label-auth_username']['en-gb'] = "Auth Username";
 $text['label-auth_username']['ar-eg'] = "";
 $text['label-auth_username']['de-at'] = "Auth. Benutzername"; //copied from de-de
 $text['label-auth_username']['de-ch'] = "Auth. Benutzername"; //copied from de-de
@@ -782,6 +821,7 @@ $text['label-auth_username']['sv-se'] = "Auth Username";
 $text['label-auth_username']['uk-ua'] = "Auth Username ";
 
 $text['label-action-stop']['en-us'] = "Stop";
+$text['label-action-stop']['en-gb'] = "Stop";
 $text['label-action-stop']['ar-eg'] = "تعطيل";
 $text['label-action-stop']['de-at'] = "Stop"; //copied from de-de
 $text['label-action-stop']['de-ch'] = "Stop"; //copied from de-de
@@ -802,6 +842,7 @@ $text['label-action-stop']['sv-se'] = "Stopp";
 $text['label-action-stop']['uk-ua'] = "Зупинити";
 
 $text['label-action-start']['en-us'] = "Start";
+$text['label-action-start']['en-gb'] = "Start";
 $text['label-action-start']['ar-eg'] = "تشغيل";
 $text['label-action-start']['de-at'] = "Start"; //copied from de-de
 $text['label-action-start']['de-ch'] = "Start"; //copied from de-de
@@ -822,6 +863,7 @@ $text['label-action-start']['sv-se'] = "Start";
 $text['label-action-start']['uk-ua'] = "Запустити";
 
 $text['label-action']['en-us'] = "Action";
+$text['label-action']['en-gb'] = "Action";
 $text['label-action']['ar-eg'] = "";
 $text['label-action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-action']['de-ch'] = "Aktion"; //copied from de-de
@@ -842,6 +884,7 @@ $text['label-action']['sv-se'] = "Åtgärd";
 $text['label-action']['uk-ua'] = "Дія";
 
 $text['label-copy']['en-us'] = "Copy";
+$text['label-copy']['en-gb'] = "Copy";
 $text['label-copy']['ar-eg'] = "Copy";
 $text['label-copy']['de-at'] = "Copy";
 $text['label-copy']['de-ch'] = "Copy";
@@ -862,6 +905,7 @@ $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
 
 $text['description-username']['en-us'] = "Enter the username here.";
+$text['description-username']['en-gb'] = "Enter the username here.";
 $text['description-username']['ar-eg'] = "أدخل اسم المستخدم هنا";
 $text['description-username']['de-at'] = "Geben Sie den Benutzernamen an."; //copied from de-de
 $text['description-username']['de-ch'] = "Geben Sie den Benutzernamen an."; //copied from de-de
@@ -882,6 +926,7 @@ $text['description-username']['sv-se'] = "Ange användarnamn här.";
 $text['description-username']['uk-ua'] = "Введіть ім’я користувача";
 
 $text['description-supress_cng']['en-us'] = "Enter the supress-cng";
+$text['description-supress_cng']['en-gb'] = "Enter the supress-cng";
 $text['description-supress_cng']['ar-eg'] = "";
 $text['description-supress_cng']['de-at'] = "Wählen Sie, ob der Komfortgeräusch-Generator (CNG) deaktiviert werden soll."; //copied from de-de
 $text['description-supress_cng']['de-ch'] = "Wählen Sie, ob der Komfortgeräusch-Generator (CNG) deaktiviert werden soll."; //copied from de-de
@@ -902,6 +947,7 @@ $text['description-supress_cng']['sv-se'] = "Ange 'supress-cng'";
 $text['description-supress_cng']['uk-ua'] = "Enter the supress-cng";
 
 $text['description-sip_cid_type']['en-us'] = "Enter the sip cid type: none, pid, and rpid.";
+$text['description-sip_cid_type']['en-gb'] = "Enter the sip cid type: none, pid, and rpid.";
 $text['description-sip_cid_type']['ar-eg'] = "";
 $text['description-sip_cid_type']['de-at'] = "eben Sie den Wert für die SIP Anruferkennung (CID) an: none, pid, rpid.";
 $text['description-sip_cid_type']['de-ch'] = "Geben Sie den Wert für die SIP Anruferkennung (CID) an: none, pid, rpid."; //copied from de-de
@@ -922,6 +968,7 @@ $text['description-sip_cid_type']['sv-se'] = "Ange sip cid type: none, pid, and 
 $text['description-sip_cid_type']['uk-ua'] = "";
 
 $text['description-retry_seconds']['en-us'] = "Enter the retry-seconds here.";
+$text['description-retry_seconds']['en-gb'] = "Enter the retry-seconds here.";
 $text['description-retry_seconds']['ar-eg'] = "";
 $text['description-retry_seconds']['de-at'] = "Geben Sie an, nach welcher Zeit die Registrierung erneut versucht werden soll (nach fehlgeschlagener Registrierung)."; //copied from de-de
 $text['description-retry_seconds']['de-ch'] = "Geben Sie an, nach welcher Zeit die Registrierung erneut versucht werden soll (nach fehlgeschlagener Registrierung)."; //copied from de-de
@@ -942,6 +989,7 @@ $text['description-retry_seconds']['sv-se'] = "Ange 'retry-sekunder' här.";
 $text['description-retry_seconds']['uk-ua'] = "Enter the retry-seconds here.";
 
 $text['description-register_transport']['en-us'] = "Choose whether to register-transport.";
+$text['description-register_transport']['en-gb'] = "Choose whether to register-transport.";
 $text['description-register_transport']['ar-eg'] = "";
 $text['description-register_transport']['de-at'] = "Wählen Sie, welches Transportprotokoll für die Registrierung verwendet werden soll."; //copied from de-de
 $text['description-register_transport']['de-ch'] = "Wählen Sie, welches Transportprotokoll für die Registrierung verwendet werden soll."; //copied from de-de
@@ -962,6 +1010,7 @@ $text['description-register_transport']['sv-se'] = "Välj om registrera transpor
 $text['description-register_transport']['uk-ua'] = "Choose whether to register-transport.";
 
 $text['description-register_proxy']['en-us'] = "Enter the hostname or IP address of the register proxy. host[:port]";
+$text['description-register_proxy']['en-gb'] = "Enter the hostname or IP address of the register proxy. host[:port]";
 $text['description-register_proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بروكسي السجل. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)";
 $text['description-register_proxy']['de-at'] = "Geben Sie den Hostnamen oder IP-Adresse des Register-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
 $text['description-register_proxy']['de-ch'] = "Geben Sie den Hostnamen oder IP-Adresse des Register-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
@@ -982,6 +1031,7 @@ $text['description-register_proxy']['sv-se'] = "Ange värdprofilens värdnamn el
 $text['description-register_proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу зареєстрованого проксі. (Це може мати формат host:port)";
 
 $text['description-register']['en-us'] = "Choose whether to register.";
+$text['description-register']['en-gb'] = "Choose whether to register.";
 $text['description-register']['ar-eg'] = "";
 $text['description-register']['de-at'] = "Wählen Sie, ob eine Registrierung am Gateway erfolgen soll."; //copied from de-de
 $text['description-register']['de-ch'] = "Wählen Sie, ob eine Registrierung am Gateway erfolgen soll."; //copied from de-de
@@ -1002,6 +1052,7 @@ $text['description-register']['sv-se'] = "Välj om du vill registrera.";
 $text['description-register']['uk-ua'] = "Choose whether to register.";
 
 $text['description-realm']['en-us'] = "Enter the realm here.";
+$text['description-realm']['en-gb'] = "Enter the realm here.";
 $text['description-realm']['ar-eg'] = "";
 $text['description-realm']['de-at'] = "Geben Sie den Realm hier an."; //copied from de-de
 $text['description-realm']['de-ch'] = "Geben Sie den Realm hier an."; //copied from de-de
@@ -1022,6 +1073,7 @@ $text['description-realm']['sv-se'] = "Ange 'realm' här.";
 $text['description-realm']['uk-ua'] = "Enter the realm here.";
 
 $text['description-proxy']['en-us'] = "Enter the hostname or IP address of the proxy. host[:port]";
+$text['description-proxy']['en-gb'] = "Enter the hostname or IP address of the proxy. host[:port]";
 $text['description-proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بالوكيل. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)";
 $text['description-proxy']['de-at'] = "Geben Sie des Hostnamen oder IP-Adresse des Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
 $text['description-proxy']['de-ch'] = "Geben Sie des Hostnamen oder IP-Adresse des Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
@@ -1042,6 +1094,7 @@ $text['description-proxy']['sv-se'] = "Ange värdnamn eller IP-adress för proxy
 $text['description-proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу проксі-сервера. (Це може мати формат host:port)";
 
 $text['description-profile']['en-us'] = "Enter the profile here.";
+$text['description-profile']['en-gb'] = "Enter the profile here.";
 $text['description-profile']['ar-eg'] = "";
 $text['description-profile']['de-at'] = "Definieren Sie die Einstellungen für dieses Profil."; //copied from de-de
 $text['description-profile']['de-ch'] = "Definieren Sie die Einstellungen für dieses Profil."; //copied from de-de
@@ -1062,6 +1115,7 @@ $text['description-profile']['sv-se'] = "Definiera inställningar för denna pro
 $text['description-profile']['uk-ua'] = "Введіть профіль";
 
 $text['description-ping']['en-us'] = "Enter the ping interval here in seconds.";
+$text['description-ping']['en-gb'] = "Enter the ping interval here in seconds.";
 $text['description-ping']['ar-eg'] = "";
 $text['description-ping']['de-at'] = "Geben Sie das Ping Interval in Sekunden an."; //copied from de-de
 $text['description-ping']['de-ch'] = "Geben Sie das Ping Interval in Sekunden an."; //copied from de-de
@@ -1082,6 +1136,7 @@ $text['description-ping']['sv-se'] = "Ange interval för ping i sekunder.";
 $text['description-ping']['uk-ua'] = "Введіть інтервал пінгування в секундах.";
 
 $text['description-password']['en-us'] = "Enter the password here.";
+$text['description-password']['en-gb'] = "Enter the password here.";
 $text['description-password']['ar-eg'] = "";
 $text['description-password']['de-at'] = "Geben Sie das Passwort ein."; //copied from de-de
 $text['description-password']['de-ch'] = "Geben Sie das Passwort ein."; //copied from de-de
@@ -1102,6 +1157,7 @@ $text['description-password']['sv-se'] = "Fyll i lösenord.";
 $text['description-password']['uk-ua'] = "Введіть пароль";
 
 $text['description-outbound_proxy']['en-us'] = "Enter the hostname or IP address of the outbound proxy. host[:port]";
+$text['description-outbound_proxy']['en-gb'] = "Enter the hostname or IP address of the outbound proxy. host[:port]";
 $text['description-outbound_proxy']['ar-eg'] = "أدخل اسم المضيف أو عنوان إب الخاص بالوكيل الصادر. (وهذا يمكن أن تتخذ شكل المضيف: ميناء)";
 $text['description-outbound_proxy']['de-at'] = "Geben Sie des Hostnamen oder IP-Adresse des Outbound-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
 $text['description-outbound_proxy']['de-ch'] = "Geben Sie des Hostnamen oder IP-Adresse des Outbound-Proxy ein. (Der Zielport kann mittels Hostname:port oder IP-Adresse:port spezifiziert werden)"; //copied from de-de
@@ -1122,6 +1178,7 @@ $text['description-outbound_proxy']['sv-se'] = "Ange värdnamn eller IP-adress f
 $text['description-outbound_proxy']['uk-ua'] = "Введіть ім'я хоста або IP-адресу вихідного проксі. (Це може мати формат host:port)";
 
 $text['description-gateway-name']['en-us'] = "Enter the gateway name here.";
+$text['description-gateway-name']['en-gb'] = "Enter the gateway name here.";
 $text['description-gateway-name']['ar-eg'] = "";
 $text['description-gateway-name']['de-at'] = "Geben Sie den Namen für das Gateway hier ein."; //copied from de-de
 $text['description-gateway-name']['de-ch'] = "Geben Sie den Namen für das Gateway hier ein."; //copied from de-de
@@ -1142,6 +1199,7 @@ $text['description-gateway-name']['sv-se'] = "Ange gateway namn här.";
 $text['description-gateway-name']['uk-ua'] = "Введіть назву шлюзу";
 
 $text['description-gateway-edit']['en-us'] = "Defines a connections to a SIP Provider or another SIP server.";
+$text['description-gateway-edit']['en-gb'] = "Defines a connections to a SIP Provider or another SIP server.";
 $text['description-gateway-edit']['ar-eg'] = "";
 $text['description-gateway-edit']['de-at'] = "Definiert eine Verbindung zu einem SIP Provider oder einem anderen SIP Server."; //copied from de-de
 $text['description-gateway-edit']['de-ch'] = "Definiert eine Verbindung zu einem SIP Provider oder einem anderen SIP Server."; //copied from de-de
@@ -1162,6 +1220,7 @@ $text['description-gateway-edit']['sv-se'] = "Definierar anslutning till en SIP 
 $text['description-gateway-edit']['uk-ua'] = "Визначає підключення до провайдера SIP або іншого SIP-сервера.";
 
 $text['description-gateway']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
+$text['description-gateway']['en-gb'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 $text['description-gateway']['ar-eg'] = "";
 $text['description-gateway']['de-at'] = "Gateways ermöglichen die Verbindung in andere Sprachnetze. Gateways können Voice over IP Provider oder andere Systeme sein, die eine SIP Registrierung voraussetzen."; //copied from de-de
 $text['description-gateway']['de-ch'] = "Gateways ermöglichen die Verbindung in andere Sprachnetze. Gateways können Voice over IP Provider oder andere Systeme sein, die eine SIP Registrierung voraussetzen."; //copied from de-de
@@ -1182,6 +1241,7 @@ $text['description-gateway']['sv-se'] = "Gateways ger tillgång till andra röst
 $text['description-gateway']['uk-ua'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 
 $text['description-from_user']['en-us'] = "Enter the from-user here.";
+$text['description-from_user']['en-gb'] = "Enter the from-user here.";
 $text['description-from_user']['ar-eg'] = "";
 $text['description-from_user']['de-at'] = "Geben Sie den Wert für 'From-User' im SIP Header hier an."; //copied from de-de
 $text['description-from_user']['de-ch'] = "Geben Sie den Wert für 'From-User' im SIP Header hier an."; //copied from de-de
@@ -1202,6 +1262,7 @@ $text['description-from_user']['sv-se'] = "Ange 'from-user' här.";
 $text['description-from_user']['uk-ua'] = "Enter the from-user here.";
 
 $text['description-from_domain']['en-us'] = "Enter the from-domain here.";
+$text['description-from_domain']['en-gb'] = "Enter the from-domain here.";
 $text['description-from_domain']['ar-eg'] = "";
 $text['description-from_domain']['de-at'] = "Geben Sie Wert für 'From-Domain' im SIP Header hier an."; //copied from de-de
 $text['description-from_domain']['de-ch'] = "Geben Sie Wert für 'From-Domain' im SIP Header hier an."; //copied from de-de
@@ -1222,6 +1283,7 @@ $text['description-from_domain']['sv-se'] = "Ange 'from-domain' här.";
 $text['description-from_domain']['uk-ua'] = "Enter the from-domain here.";
 
 $text['description-extension_in_contact']['en-us'] = "Enter the Extension In Contact";
+$text['description-extension_in_contact']['en-gb'] = "Enter the Extension In Contact";
 $text['description-extension_in_contact']['ar-eg'] = "";
 $text['description-extension_in_contact']['de-at'] = "Geben Sie den Wert für 'Extension in Contact' im SIP Header hier an."; //copied from de-de
 $text['description-extension_in_contact']['de-ch'] = "Geben Sie den Wert für 'Extension in Contact' im SIP Header hier an."; //copied from de-de
@@ -1242,6 +1304,7 @@ $text['description-extension_in_contact']['sv-se'] = "Ange 'Extension In Contact
 $text['description-extension_in_contact']['uk-ua'] = "Enter the Extension In Contact";
 
 $text['description-extension']['en-us'] = "Enter the extension here.";
+$text['description-extension']['en-gb'] = "Enter the extension here.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Tragen Sie die Nebenstellen hier ein."; //copied from de-de
 $text['description-extension']['de-ch'] = "Tragen Sie die Nebenstellen hier ein."; //copied from de-de
@@ -1262,6 +1325,7 @@ $text['description-extension']['sv-se'] = "Ange anknytningen här.";
 $text['description-extension']['uk-ua'] = "Введіть розширення";
 
 $text['description-expire_seconds']['en-us'] = "Enter the expire-seconds here.";
+$text['description-expire_seconds']['en-gb'] = "Enter the expire-seconds here.";
 $text['description-expire_seconds']['ar-eg'] = "";
 $text['description-expire_seconds']['de-at'] = "Geben Sie an, nach wie vielen Sekunden die Registrierung des Gateways erneuert werden soll."; //copied from de-de
 $text['description-expire_seconds']['de-ch'] = "Geben Sie an, nach wie vielen Sekunden die Registrierung des Gateways erneuert werden soll."; //copied from de-de
@@ -1282,6 +1346,7 @@ $text['description-expire_seconds']['sv-se'] = "Ange 'expire-seconds' här.";
 $text['description-expire_seconds']['uk-ua'] = "Enter the expire-seconds here.";
 
 $text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
+$text['description-hostname']['en-gb'] = "Enter the hostname / switchname.";
 $text['description-hostname']['ar-eg'] = "";
 $text['description-hostname']['de-at'] = "Geben Sie den Hostnamen / Switchnamen an."; //copied from de-de
 $text['description-hostname']['de-ch'] = "Geben Sie den Hostnamen / Switchnamen an."; //copied from de-de
@@ -1302,6 +1367,7 @@ $text['description-hostname']['sv-se'] = "Fyll i hostname / switchname.";
 $text['description-hostname']['uk-ua'] = "Введіть назву хоста / switchname.";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the Gateway";
+$text['description-enabled']['en-gb'] = "Enable or Disable the Gateway";
 $text['description-enabled']['ar-eg'] = "";
 $text['description-enabled']['de-at'] = "Dieses Gateway aktivieren oder deaktivieren."; //copied from de-de
 $text['description-enabled']['de-ch'] = "Dieses Gateway aktivieren oder deaktivieren."; //copied from de-de
@@ -1322,6 +1388,7 @@ $text['description-enabled']['sv-se'] = "Aktivera eller In-aktivera Gateway";
 $text['description-enabled']['uk-ua'] = "Enable or Disable the Gateway";
 
 $text['description-distinct_to']['en-us'] = "Enter the distinct_to here.";
+$text['description-distinct_to']['en-gb'] = "Enter the distinct_to here.";
 $text['description-distinct_to']['ar-eg'] = "";
 $text['description-distinct_to']['de-at'] = "Geben Sie den Wert für 'Distinct To' hier an."; //copied from de-de
 $text['description-distinct_to']['de-ch'] = "Geben Sie den Wert für 'Distinct To' hier an."; //copied from de-de
@@ -1342,6 +1409,7 @@ $text['description-distinct_to']['sv-se'] = "Ange 'distinct_to' här. ";
 $text['description-distinct_to']['uk-ua'] = "Enter the distinct_to here.";
 
 $text['description-context']['en-us'] = "Enter the context here.";
+$text['description-context']['en-gb'] = "Enter the context here.";
 $text['description-context']['ar-eg'] = "";
 $text['description-context']['de-at'] = "Geben Sie den Kontext hier an."; //copied from de-de
 $text['description-context']['de-ch'] = "Geben Sie den Kontext hier an."; //copied from de-de
@@ -1362,6 +1430,7 @@ $text['description-context']['sv-se'] = "Ange 'context' här.";
 $text['description-context']['uk-ua'] = "Enter the context here.";
 
 $text['description-codec_prefs']['en-us'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
+$text['description-codec_prefs']['en-gb'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
 $text['description-codec_prefs']['ar-eg'] = "";
 $text['description-codec_prefs']['de-at'] = "Geben Sie hier die Liste der bevorzugten Codecs an. (z.B. PCMA,PCMU,G722)"; //copied from de-de
 $text['description-codec_prefs']['de-ch'] = "Geben Sie hier die Liste der bevorzugten Codecs an. (z.B. PCMA,PCMU,G722)"; //copied from de-de
@@ -1382,6 +1451,7 @@ $text['description-codec_prefs']['sv-se'] = "Ange codec preferenser som en lista
 $text['description-codec_prefs']['uk-ua'] = "";
 
 $text['description-channels']['en-us'] = "Maximum number of simultaneous channels available in the gateway.";
+$text['description-channels']['en-gb'] = "Maximum number of simultaneous channels available in the gateway.";
 $text['description-channels']['ar-eg'] = "";
 $text['description-channels']['de-at'] = "Maximale Anzahl gleichzeitiger Gespräche welche über diese Gateway möglich sind."; //copied from de-de
 $text['description-channels']['de-ch'] = "Maximale Anzahl gleichzeitiger Gespräche welche über diese Gateway möglich sind."; //copied from de-de
@@ -1402,6 +1472,7 @@ $text['description-channels']['sv-se'] = "Max antal samtidiga kanaler för gatew
 $text['description-channels']['uk-ua'] = "Maximum number of simultaneous channels available in the gateway.";
 
 $text['description-caller_id_in_from']['en-us'] = "Enter the caller-id-in-from.";
+$text['description-caller_id_in_from']['en-gb'] = "Enter the caller-id-in-from.";
 $text['description-caller_id_in_from']['ar-eg'] = "";
 $text['description-caller_id_in_from']['de-at'] = "Geben Sie den Wert für 'Caller ID in From' an."; //copied from de-de
 $text['description-caller_id_in_from']['de-ch'] = "Geben Sie den Wert für 'Caller ID in From' an."; //copied from de-de
@@ -1422,6 +1493,7 @@ $text['description-caller_id_in_from']['sv-se'] = "Ange 'caller-id-in-from'.";
 $text['description-caller_id_in_from']['uk-ua'] = "";
 
 $text['description-auth_username']['en-us'] = "Enter the auth-username here.";
+$text['description-auth_username']['en-gb'] = "Enter the auth-username here.";
 $text['description-auth_username']['ar-eg'] = "";
 $text['description-auth_username']['de-at'] = "Geben Sie den Benutzernamen für die Authentifizierung hier an."; //copied from de-de
 $text['description-auth_username']['de-ch'] = "Geben Sie den Benutzernamen für die Authentifizierung hier an."; //copied from de-de

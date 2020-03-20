@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-conference_controls']['en-us'] = "Conference Controls";
+$text['title-conference_controls']['en-gb'] = "Conference Controls";
 $text['title-conference_controls']['ar-eg'] = "";
 $text['title-conference_controls']['de-at'] = "Konferenzsteuerung"; //copied from de-de
 $text['title-conference_controls']['de-ch'] = "Konferenzsteuerung"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-conference_controls']['sv-se'] = "Konferens Kontroller";
 $text['title-conference_controls']['uk-ua'] = "";
 
 $text['title-conference_control']['en-us'] = "Conference Control";
+$text['title-conference_control']['en-gb'] = "Conference Control";
 $text['title-conference_control']['ar-eg'] = "";
 $text['title-conference_control']['de-at'] = "Konferenzsteuerung"; //copied from de-de
 $text['title-conference_control']['de-ch'] = "Konferenzsteuerung"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-conference_control']['sv-se'] = "Konferens Kontroll";
 $text['title-conference_control']['uk-ua'] = "";
 
 $text['description-conference_controls']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
+$text['description-conference_controls']['en-gb'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
 $text['description-conference_controls']['ar-eg'] = "";
 $text['description-conference_controls']['de-at'] = "Funktionen zur Anrufsteuerung können Ziffern zugeordnet werden. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen."; //copied from de-de
 $text['description-conference_controls']['de-ch'] = "Funktionen zur Anrufsteuerung können Ziffern zugeordnet werden. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen."; //copied from de-de
@@ -62,6 +65,7 @@ $text['description-conference_controls']['sv-se'] = "Samtalskontroller möjligg�
 $text['description-conference_controls']['uk-ua'] = "";
 
 $text['label-control_name']['en-us'] = "Name";
+$text['label-control_name']['en-gb'] = "Name";
 $text['label-control_name']['ar-eg'] = "";
 $text['label-control_name']['de-at'] = "Name"; //copied from de-de
 $text['label-control_name']['de-ch'] = "Name"; //copied from de-de
@@ -82,6 +86,7 @@ $text['label-control_name']['sv-se'] = "Namn";
 $text['label-control_name']['uk-ua'] = "";
 
 $text['description-control_name']['en-us'] = "Enter the conference control name.";
+$text['description-control_name']['en-gb'] = "Enter the conference control name.";
 $text['description-control_name']['ar-eg'] = "";
 $text['description-control_name']['de-at'] = "Geben Sie den Namen des Steuerelements ein."; //copied from de-de
 $text['description-control_name']['de-ch'] = "Geben Sie den Namen des Steuerelements ein."; //copied from de-de
@@ -102,6 +107,7 @@ $text['description-control_name']['sv-se'] = "Ange konferens kontroll namnet.";
 $text['description-control_name']['uk-ua'] = "";
 
 $text['label-control_enabled']['en-us'] = "Enabled";
+$text['label-control_enabled']['en-gb'] = "Enabled";
 $text['label-control_enabled']['ar-eg'] = "";
 $text['label-control_enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['label-control_enabled']['de-ch'] = "Aktiviert"; //copied from de-de
@@ -122,6 +128,7 @@ $text['label-control_enabled']['sv-se'] = "Aktiverad";
 $text['label-control_enabled']['uk-ua'] = "";
 
 $text['description-control_enabled']['en-us'] = "Set the status of the control.";
+$text['description-control_enabled']['en-gb'] = "Set the status of the control.";
 $text['description-control_enabled']['ar-eg'] = "";
 $text['description-control_enabled']['de-at'] = "Setzen Sie den Status des Steuerelements"; //copied from de-de
 $text['description-control_enabled']['de-ch'] = "Setzen Sie den Status des Steuerelements"; //copied from de-de
@@ -142,6 +149,7 @@ $text['description-control_enabled']['sv-se'] = "Ange statusen för kontrollen."
 $text['description-control_enabled']['uk-ua'] = "";
 
 $text['label-control_description']['en-us'] = "Description";
+$text['label-control_description']['en-gb'] = "Description";
 $text['label-control_description']['ar-eg'] = "";
 $text['label-control_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-control_description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-control_description']['sv-se'] = "Beskrivning";
 $text['label-control_description']['uk-ua'] = "";
 
 $text['description-control_description']['en-us'] = "Enter the description.";
+$text['description-control_description']['en-gb'] = "Enter the description.";
 $text['description-control_description']['ar-eg'] = "";
 $text['description-control_description']['de-at'] = "Geben Sie eine Beschreibung ein."; //copied from de-de
 $text['description-control_description']['de-ch'] = "Geben Sie eine Beschreibung ein."; //copied from de-de
@@ -182,6 +191,7 @@ $text['description-control_description']['sv-se'] = "Ange beskrivningen.";
 $text['description-control_description']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
+$text['message-required']['en-gb'] = "Please provide: ";
 $text['message-required']['ar-eg'] = "";
 $text['message-required']['de-at'] = "Bitte geben Sie folgendes an:"; //copied from de-de
 $text['message-required']['de-ch'] = "Bitte geben Sie folgendes an:"; //copied from de-de
@@ -202,6 +212,7 @@ $text['message-required']['sv-se'] = "Var god ange: ";
 $text['message-required']['uk-ua'] = "";
 
 $text['title-conference_control_details']['en-us'] = "Controls";
+$text['title-conference_control_details']['en-gb'] = "Controls";
 $text['title-conference_control_details']['ar-eg'] = "";
 $text['title-conference_control_details']['de-at'] = "Steuerelemente"; //copied from de-de
 $text['title-conference_control_details']['de-ch'] = "Steuerelemente"; //copied from de-de
@@ -222,6 +233,7 @@ $text['title-conference_control_details']['sv-se'] = "Kontroller";
 $text['title-conference_control_details']['uk-ua'] = "";
 
 $text['title-conference_control_detail']['en-us'] = "Control";
+$text['title-conference_control_detail']['en-gb'] = "Control";
 $text['title-conference_control_detail']['ar-eg'] = "";
 $text['title-conference_control_detail']['de-at'] = "Steuern"; //copied from de-de
 $text['title-conference_control_detail']['de-ch'] = "Steuern"; //copied from de-de
@@ -242,6 +254,7 @@ $text['title-conference_control_detail']['sv-se'] = "Kontrol";
 $text['title-conference_control_detail']['uk-ua'] = "";
 
 $text['title_description-conference_control_detail']['en-us'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
+$text['title_description-conference_control_detail']['en-gb'] = "Call controls enable ability to assign digits to actions. They can be used to mute, unmute, or other actions during the conference call.";
 $text['title_description-conference_control_detail']['ar-eg'] = "";
 $text['title_description-conference_control_detail']['de-at'] = "Anrufsteuerung anhand von zugeordneten Ziffern. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen."; //copied from de-de
 $text['title_description-conference_control_detail']['de-ch'] = "Anrufsteuerung anhand von zugeordneten Ziffern. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen."; //copied from de-de
@@ -262,6 +275,7 @@ $text['title_description-conference_control_detail']['sv-se'] = "";
 $text['title_description-conference_control_detail']['uk-ua'] = "";
 
 $text['label-control_digits']['en-us'] = "Digits";
+$text['label-control_digits']['en-gb'] = "Digits";
 $text['label-control_digits']['ar-eg'] = "";
 $text['label-control_digits']['de-at'] = "Ziffern"; //copied from de-de
 $text['label-control_digits']['de-ch'] = "Ziffern"; //copied from de-de
@@ -282,6 +296,7 @@ $text['label-control_digits']['sv-se'] = "Siffror";
 $text['label-control_digits']['uk-ua'] = "";
 
 $text['description-control_digits']['en-us'] = "Enter the digits.";
+$text['description-control_digits']['en-gb'] = "Enter the digits.";
 $text['description-control_digits']['ar-eg'] = "";
 $text['description-control_digits']['de-at'] = "Geben Sie die Ziffern ein."; //copied from de-de
 $text['description-control_digits']['de-ch'] = "Geben Sie die Ziffern ein."; //copied from de-de
@@ -302,6 +317,7 @@ $text['description-control_digits']['sv-se'] = "Ange siffrorna.";
 $text['description-control_digits']['uk-ua'] = "";
 
 $text['label-control_action']['en-us'] = "Action";
+$text['label-control_action']['en-gb'] = "Action";
 $text['label-control_action']['ar-eg'] = "";
 $text['label-control_action']['de-at'] = "Aktion"; //copied from de-de
 $text['label-control_action']['de-ch'] = "Aktion"; //copied from de-de
@@ -322,6 +338,7 @@ $text['label-control_action']['sv-se'] = "Handling";
 $text['label-control_action']['uk-ua'] = "";
 
 $text['description-control_action']['en-us'] = "Enter the action.";
+$text['description-control_action']['en-gb'] = "Enter the action.";
 $text['description-control_action']['ar-eg'] = "";
 $text['description-control_action']['de-at'] = "Geben Sie die Aktion an."; //copied from de-de
 $text['description-control_action']['de-ch'] = "Geben Sie die Aktion an."; //copied from de-de
@@ -342,6 +359,7 @@ $text['description-control_action']['sv-se'] = "Ange handlingen.";
 $text['description-control_action']['uk-ua'] = "";
 
 $text['label-control_data']['en-us'] = "Data";
+$text['label-control_data']['en-gb'] = "Data";
 $text['label-control_data']['ar-eg'] = "";
 $text['label-control_data']['de-at'] = "Daten"; //copied from de-de
 $text['label-control_data']['de-ch'] = "Daten"; //copied from de-de
@@ -362,6 +380,7 @@ $text['label-control_data']['sv-se'] = "Data";
 $text['label-control_data']['uk-ua'] = "";
 
 $text['description-control_data']['en-us'] = "Enter the data.";
+$text['description-control_data']['en-gb'] = "Enter the data.";
 $text['description-control_data']['ar-eg'] = "";
 $text['description-control_data']['de-at'] = "Geben Sie die Daten ein."; //copied from de-de
 $text['description-control_data']['de-ch'] = "Geben Sie die Daten ein."; //copied from de-de

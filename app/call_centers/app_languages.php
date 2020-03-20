@@ -2,6 +2,7 @@
 #This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-call_centers']['en-us'] = "Call Center";
+$text['title-call_centers']['en-gb'] = "Call Center";
 $text['title-call_centers']['ar-eg'] = "";
 $text['title-call_centers']['de-at'] = "Callcenter"; //copied from de-de
 $text['title-call_centers']['de-ch'] = "Callcenter"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-call_centers']['sv-se'] = "Call Center";
 $text['title-call_centers']['uk-ua'] = "Кол-центр";
 
 $text['title-call_center_tier_edit']['en-us'] = "Call Center Tier";
+$text['title-call_center_tier_edit']['en-gb'] = "Call Center Tier";
 $text['title-call_center_tier_edit']['ar-eg'] = "";
 $text['title-call_center_tier_edit']['de-at'] = "Callcenter Ebene"; //copied from de-de
 $text['title-call_center_tier_edit']['de-ch'] = "Callcenter Ebene"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-call_center_tier_edit']['sv-se'] = "Call Center Kunskap";
 $text['title-call_center_tier_edit']['uk-ua'] = "Рівень кол-центра";
 
 $text['title-call_center_queues_edit']['en-us'] = "Edit Call Center Queue";
+$text['title-call_center_queues_edit']['en-gb'] = "Edit Call Center Queue";
 $text['title-call_center_queues_edit']['ar-eg'] = "";
 $text['title-call_center_queues_edit']['de-at'] = "Callcenter Warteschlange bearbeiten"; //copied from de-de
 $text['title-call_center_queues_edit']['de-ch'] = "Callcenter Warteschlange bearbeiten"; //copied from de-de
@@ -62,6 +65,7 @@ $text['title-call_center_queues_edit']['sv-se'] = "Ändra Call Center Kö";
 $text['title-call_center_queues_edit']['uk-ua'] = "";
 
 $text['title-call_center_queues_add']['en-us'] = "Add Call Center Queue";
+$text['title-call_center_queues_add']['en-gb'] = "Add Call Center Queue";
 $text['title-call_center_queues_add']['ar-eg'] = "";
 $text['title-call_center_queues_add']['de-at'] = "Callcenter Warteschalange hinzufügen"; //copied from de-de
 $text['title-call_center_queues_add']['de-ch'] = "Callcenter Warteschalange hinzufügen"; //copied from de-de
@@ -82,6 +86,7 @@ $text['title-call_center_queues_add']['sv-se'] = "Lägg till Call Center Kö";
 $text['title-call_center_queues_add']['uk-ua'] = "";
 
 $text['title-call_center_queues']['en-us'] = "Call Center Queues";
+$text['title-call_center_queues']['en-gb'] = "Call Center Queues";
 $text['title-call_center_queues']['ar-eg'] = "";
 $text['title-call_center_queues']['de-at'] = "Callcenter Warteschlangen"; //copied from de-de
 $text['title-call_center_queues']['de-ch'] = "Callcenter Warteschlangen"; //copied from de-de
@@ -102,6 +107,7 @@ $text['title-call_center_queues']['sv-se'] = "Call Center Kö:er";
 $text['title-call_center_queues']['uk-ua'] = "Черги кол-центра";
 
 $text['title-call_center_queue_edit']['en-us'] = "Call Center Queue";
+$text['title-call_center_queue_edit']['en-gb'] = "Call Center Queue";
 $text['title-call_center_queue_edit']['ar-eg'] = "";
 $text['title-call_center_queue_edit']['de-at'] = "Callcenter Warteschlange"; //copied from de-de
 $text['title-call_center_queue_edit']['de-ch'] = "Callcenter Warteschlange"; //copied from de-de
@@ -122,6 +128,7 @@ $text['title-call_center_queue_edit']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_edit']['uk-ua'] = "Черга кол-центра";
 
 $text['title-call_center_queue_add']['en-us'] = "Call Center Queue";
+$text['title-call_center_queue_add']['en-gb'] = "Call Center Queue";
 $text['title-call_center_queue_add']['ar-eg'] = "";
 $text['title-call_center_queue_add']['de-at'] = "Callcenter Warteschlange"; //copied from de-de
 $text['title-call_center_queue_add']['de-ch'] = "Callcenter Warteschlange"; //copied from de-de
@@ -142,6 +149,7 @@ $text['title-call_center_queue_add']['sv-se'] = "Call Center Kö";
 $text['title-call_center_queue_add']['uk-ua'] = "Черга кол-центра";
 
 $text['title-call_center_agents']['en-us'] = "Call Center Agents";
+$text['title-call_center_agents']['en-gb'] = "Call Center Agents";
 $text['title-call_center_agents']['ar-eg'] = "";
 $text['title-call_center_agents']['de-at'] = "Callcenter Agenten"; //copied from de-de
 $text['title-call_center_agents']['de-ch'] = "Callcenter Agenten"; //copied from de-de
@@ -162,6 +170,7 @@ $text['title-call_center_agents']['sv-se'] = "Call Center Agenter";
 $text['title-call_center_agents']['uk-ua'] = "Оператори кол-центра";
 
 $text['title-call_center_agent_status']['en-us'] = "Call Center Agent Status";
+$text['title-call_center_agent_status']['en-gb'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['ar-eg'] = "";
 $text['title-call_center_agent_status']['de-at'] = "Callcenter Agenten Status"; //copied from de-de
 $text['title-call_center_agent_status']['de-ch'] = "Callcenter Agenten Status"; //copied from de-de
@@ -182,6 +191,7 @@ $text['title-call_center_agent_status']['sv-se'] = "Call Center Agent Status";
 $text['title-call_center_agent_status']['uk-ua'] = "Статус оператора кол-центра";
 
 $text['title-call_center_agent_edit']['en-us'] = "Call Center Agent";
+$text['title-call_center_agent_edit']['en-gb'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['ar-eg'] = "";
 $text['title-call_center_agent_edit']['de-at'] = "Callcenter Agenten"; //copied from de-de
 $text['title-call_center_agent_edit']['de-ch'] = "Callcenter Agenten"; //copied from de-de
@@ -202,6 +212,7 @@ $text['title-call_center_agent_edit']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_edit']['uk-ua'] = "Оператор кол-центра";
 
 $text['title-call_center_agent_add']['en-us'] = "Call Center Agent";
+$text['title-call_center_agent_add']['en-gb'] = "Call Center Agent";
 $text['title-call_center_agent_add']['ar-eg'] = "";
 $text['title-call_center_agent_add']['de-at'] = "Callcenter Agenten"; //copied from de-de
 $text['title-call_center_agent_add']['de-ch'] = "Callcenter Agenten"; //copied from de-de
@@ -222,6 +233,7 @@ $text['title-call_center_agent_add']['sv-se'] = "Call Center Agent";
 $text['title-call_center_agent_add']['uk-ua'] = "Оператор кол-центра";
 
 $text['title-call_center']['en-us'] = "Call Center";
+$text['title-call_center']['en-gb'] = "Call Center";
 $text['title-call_center']['ar-eg'] = "";
 $text['title-call_center']['de-at'] = "Callcenter"; //copied from de-de
 $text['title-call_center']['de-ch'] = "Callcenter"; //copied from de-de
@@ -242,6 +254,7 @@ $text['title-call_center']['sv-se'] = "Call Center";
 $text['title-call_center']['uk-ua'] = "Кол-центр";
 
 $text['option-usring']['en-us'] = "us-ring";
+$text['option-usring']['en-gb'] = "us-ring";
 $text['option-usring']['ar-eg'] = "";
 $text['option-usring']['de-at'] = "us-ring"; //copied from de-de
 $text['option-usring']['de-ch'] = "us-ring"; //copied from de-de
@@ -262,6 +275,7 @@ $text['option-usring']['sv-se'] = "us-ring";
 $text['option-usring']['uk-ua'] = "us-ring";
 
 $text['option-ukring']['en-us'] = "uk-ring";
+$text['option-ukring']['en-gb'] = "uk-ring";
 $text['option-ukring']['ar-eg'] = "";
 $text['option-ukring']['de-at'] = "uk-ring"; //copied from de-de
 $text['option-ukring']['de-ch'] = "uk-ring"; //copied from de-de
@@ -282,6 +296,7 @@ $text['option-ukring']['sv-se'] = "uk-ring";
 $text['option-ukring']['uk-ua'] = "uk-ring";
 
 $text['option-true']['en-us'] = "True";
+$text['option-true']['en-gb'] = "True";
 $text['option-true']['ar-eg'] = "";
 $text['option-true']['de-at'] = "Ein"; //copied from de-de
 $text['option-true']['de-ch'] = "Ein"; //copied from de-de
@@ -302,6 +317,7 @@ $text['option-true']['sv-se'] = "Sann";
 $text['option-true']['uk-ua'] = "Так";
 
 $text['option-top_down']['en-us'] = "Top Down";
+$text['option-top_down']['en-gb'] = "Top Down";
 $text['option-top_down']['ar-eg'] = "";
 $text['option-top_down']['de-at'] = "Absteigend"; //copied from de-de
 $text['option-top_down']['de-ch'] = "Absteigend"; //copied from de-de
@@ -322,6 +338,7 @@ $text['option-top_down']['sv-se'] = "Uppifrån Ned";
 $text['option-top_down']['uk-ua'] = "";
 
 $text['option-system']['en-us'] = "System";
+$text['option-system']['en-gb'] = "System";
 $text['option-system']['ar-eg'] = "";
 $text['option-system']['de-at'] = "System"; //copied from de-de
 $text['option-system']['de-ch'] = "System"; //copied from de-de
@@ -342,6 +359,7 @@ $text['option-system']['sv-se'] = "System";
 $text['option-system']['uk-ua'] = "Система";
 
 $text['option-sequentially_by_next_agent_order']['en-us'] = "Sequentially By Next Agent Order";
+$text['option-sequentially_by_next_agent_order']['en-gb'] = "Sequentially By Next Agent Order";
 $text['option-sequentially_by_next_agent_order']['ar-eg'] = "";
 $text['option-sequentially_by_next_agent_order']['de-at'] = "Sequentielle Anordnung nächster Agent"; //copied from de-de
 $text['option-sequentially_by_next_agent_order']['de-ch'] = "Sequentielle Anordnung nächster Agent"; //copied from de-de
@@ -362,6 +380,7 @@ $text['option-sequentially_by_next_agent_order']['sv-se'] = "Sekventiellt genom 
 $text['option-sequentially_by_next_agent_order']['uk-ua'] = "Послідовно до наступного оператора за порядком";
 
 $text['option-sequentially_by_agent_order']['en-us'] = "Sequentially By Agent Order";
+$text['option-sequentially_by_agent_order']['en-gb'] = "Sequentially By Agent Order";
 $text['option-sequentially_by_agent_order']['ar-eg'] = "";
 $text['option-sequentially_by_agent_order']['de-at'] = "Sequentielle Reihung nach Agenten";
 $text['option-sequentially_by_agent_order']['de-ch'] = "Sequentielle Anordnung nach Agenten"; //copied from de-de
@@ -382,6 +401,7 @@ $text['option-sequentially_by_agent_order']['sv-se'] = "Sekventiellt genom Agent
 $text['option-sequentially_by_agent_order']['uk-ua'] = "";
 
 $text['option-rsring']['en-us'] = "rs-ring";
+$text['option-rsring']['en-gb'] = "rs-ring";
 $text['option-rsring']['ar-eg'] = "";
 $text['option-rsring']['de-at'] = "rs-ring"; //copied from de-de
 $text['option-rsring']['de-ch'] = "rs-ring"; //copied from de-de
@@ -402,6 +422,7 @@ $text['option-rsring']['sv-se'] = "rs-ring";
 $text['option-rsring']['uk-ua'] = "rs-ring";
 
 $text['option-round_robin']['en-us'] = "Round Robin";
+$text['option-round_robin']['en-gb'] = "Round Robin";
 $text['option-round_robin']['ar-eg'] = "";
 $text['option-round_robin']['de-at'] = "Ringverteilung"; //copied from de-de
 $text['option-round_robin']['de-ch'] = "Ringverteilung"; //copied from de-de
@@ -422,6 +443,7 @@ $text['option-round_robin']['sv-se'] = "Round Robin (Cirkulär)";
 $text['option-round_robin']['uk-ua'] = "";
 
 $text['option-ring_all']['en-us'] = "Ring All";
+$text['option-ring_all']['en-gb'] = "Ring All";
 $text['option-ring_all']['ar-eg'] = "";
 $text['option-ring_all']['de-at'] = "Alle läuten"; //copied from de-de
 $text['option-ring_all']['de-ch'] = "Alle läuten"; //copied from de-de
@@ -442,6 +464,7 @@ $text['option-ring_all']['sv-se'] = "Ring på Alla";
 $text['option-ring_all']['uk-ua'] = "Дзвонити всім";
 
 $text['option-random']['en-us'] = "Random";
+$text['option-random']['en-gb'] = "Random";
 $text['option-random']['ar-eg'] = "";
 $text['option-random']['de-at'] = "Zufallsprinzip"; //copied from de-de
 $text['option-random']['de-ch'] = "Zufallsprinzip"; //copied from de-de
@@ -462,6 +485,7 @@ $text['option-random']['sv-se'] = "Slumpvis";
 $text['option-random']['uk-ua'] = "Випадково";
 
 $text['option-queue']['en-us'] = "Queue";
+$text['option-queue']['en-gb'] = "Queue";
 $text['option-queue']['ar-eg'] = "";
 $text['option-queue']['de-at'] = "Warteschlange"; //copied from de-de
 $text['option-queue']['de-ch'] = "Warteschlange"; //copied from de-de
@@ -482,6 +506,7 @@ $text['option-queue']['sv-se'] = "Kö";
 $text['option-queue']['uk-ua'] = "Черга";
 
 $text['option-ptring']['en-us'] = "pt-ring";
+$text['option-ptring']['en-gb'] = "pt-ring";
 $text['option-ptring']['ar-eg'] = "";
 $text['option-ptring']['de-at'] = "pt-ring"; //copied from de-de
 $text['option-ptring']['de-ch'] = "pt-ring"; //copied from de-de
@@ -502,6 +527,7 @@ $text['option-ptring']['sv-se'] = "pt-ring";
 $text['option-ptring']['uk-ua'] = "pt-ring";
 
 $text['option-on_break']['en-us'] = "On Break";
+$text['option-on_break']['en-gb'] = "On Break";
 $text['option-on_break']['ar-eg'] = "";
 $text['option-on_break']['de-at'] = "In Pause"; //copied from de-de
 $text['option-on_break']['de-ch'] = "In Pause"; //copied from de-de
@@ -522,6 +548,7 @@ $text['option-on_break']['sv-se'] = "På Rast";
 $text['option-on_break']['uk-ua'] = "На перерві";
 
 $text['option-no_change']['en-us'] = "No Change";
+$text['option-no_change']['en-gb'] = "No Change";
 $text['option-no_change']['ar-eg'] = "";
 $text['option-no_change']['de-at'] = "Keine Änderung"; //copied from de-de
 $text['option-no_change']['de-ch'] = "Keine Änderung"; //copied from de-de
@@ -542,6 +569,7 @@ $text['option-no_change']['sv-se'] = "Ingen Förändring";
 $text['option-no_change']['uk-ua'] = "Без змін";
 
 $text['option-longest_idle_agent']['en-us'] = "Longest Idle Agent";
+$text['option-longest_idle_agent']['en-gb'] = "Longest Idle Agent";
 $text['option-longest_idle_agent']['ar-eg'] = "";
 $text['option-longest_idle_agent']['de-at'] = "Agent mit der höchsten Wartezeit"; //copied from de-de
 $text['option-longest_idle_agent']['de-ch'] = "Agent mit der höchsten Wartezeit"; //copied from de-de
@@ -562,6 +590,7 @@ $text['option-longest_idle_agent']['sv-se'] = "Agent Längst Ledig";
 $text['option-longest_idle_agent']['uk-ua'] = "";
 
 $text['option-logged_out']['en-us'] = "Logged Out";
+$text['option-logged_out']['en-gb'] = "Logged Out";
 $text['option-logged_out']['ar-eg'] = "";
 $text['option-logged_out']['de-at'] = "Abgemeldet"; //copied from de-de
 $text['option-logged_out']['de-ch'] = "Abgemeldet"; //copied from de-de
@@ -582,6 +611,7 @@ $text['option-logged_out']['sv-se'] = "Utloggad";
 $text['option-logged_out']['uk-ua'] = "Вийшов";
 
 $text['option-itring']['en-us'] = "it-ring";
+$text['option-itring']['en-gb'] = "it-ring";
 $text['option-itring']['ar-eg'] = "";
 $text['option-itring']['de-at'] = "it-ring"; //copied from de-de
 $text['option-itring']['de-ch'] = "it-ring"; //copied from de-de
@@ -602,6 +632,7 @@ $text['option-itring']['sv-se'] = "it-ring";
 $text['option-itring']['uk-ua'] = "it-ring";
 
 $text['option-frring']['en-us'] = "fr-ring";
+$text['option-frring']['en-gb'] = "fr-ring";
 $text['option-frring']['ar-eg'] = "";
 $text['option-frring']['de-at'] = "fr-ring"; //copied from de-de
 $text['option-frring']['de-ch'] = "fr-ring"; //copied from de-de
@@ -622,6 +653,7 @@ $text['option-frring']['sv-se'] = "fr-ring";
 $text['option-frring']['uk-ua'] = "fr-ring";
 
 $text['option-dering']['en-us'] = "de-ring";
+$text['option-dering']['en-gb'] = "de-ring";
 $text['option-dering']['ar-eg'] = "";
 $text['option-dering']['de-at'] = "de-ring"; //copied from de-de
 $text['option-dering']['de-ch'] = "de-ring"; //copied from de-de
@@ -642,6 +674,7 @@ $text['option-dering']['sv-se'] = "de-ring";
 $text['option-dering']['uk-ua'] = "de-ring";
 
 $text['option-false']['en-us'] = "False";
+$text['option-false']['en-gb'] = "False";
 $text['option-false']['ar-eg'] = "";
 $text['option-false']['de-at'] = "Aus"; //copied from de-de
 $text['option-false']['de-ch'] = "Aus"; //copied from de-de
@@ -662,6 +695,7 @@ $text['option-false']['sv-se'] = "Falsk";
 $text['option-false']['uk-ua'] = "Ні";
 
 $text['option-do_not_disturb']['en-us'] = "Do Not Disturb";
+$text['option-do_not_disturb']['en-gb'] = "Do Not Disturb";
 $text['option-do_not_disturb']['ar-eg'] = "";
 $text['option-do_not_disturb']['de-at'] = "Bitte nicht stören"; //copied from de-de
 $text['option-do_not_disturb']['de-ch'] = "Bitte nicht stören"; //copied from de-de
@@ -682,6 +716,7 @@ $text['option-do_not_disturb']['sv-se'] = "Stör Ej";
 $text['option-do_not_disturb']['uk-ua'] = "Не турбувати";
 
 $text['option-available_on_demand']['en-us'] = "Available (On Demand)";
+$text['option-available_on_demand']['en-gb'] = "Available (On Demand)";
 $text['option-available_on_demand']['ar-eg'] = "";
 $text['option-available_on_demand']['de-at'] = "Verfügbar (auf Anfrage)"; //copied from de-de
 $text['option-available_on_demand']['de-ch'] = "Verfügbar (auf Anfrage)"; //copied from de-de
@@ -702,6 +737,7 @@ $text['option-available_on_demand']['sv-se'] = "Tillgänglig (På Begäran)";
 $text['option-available_on_demand']['uk-ua'] = "Доступний (на вимогу)";
 
 $text['option-available']['en-us'] = "Available";
+$text['option-available']['en-gb'] = "Available";
 $text['option-available']['ar-eg'] = "";
 $text['option-available']['de-at'] = "Verfügbar"; //copied from de-de
 $text['option-available']['de-ch'] = "Verfügbar"; //copied from de-de
@@ -722,6 +758,7 @@ $text['option-available']['sv-se'] = "Tillgänglig";
 $text['option-available']['uk-ua'] = "Доступний";
 
 $text['option-agent_with_least_talk_time']['en-us'] = "Agent With Least Talk Time";
+$text['option-agent_with_least_talk_time']['en-gb'] = "Agent With Least Talk Time";
 $text['option-agent_with_least_talk_time']['ar-eg'] = "";
 $text['option-agent_with_least_talk_time']['de-at'] = "Agent mit geringster Sprechzeit"; //copied from de-de
 $text['option-agent_with_least_talk_time']['de-ch'] = "Agent mit geringster Sprechzeit"; //copied from de-de
@@ -742,6 +779,7 @@ $text['option-agent_with_least_talk_time']['sv-se'] = "Agent med minst taltid";
 $text['option-agent_with_least_talk_time']['uk-ua'] = "Оператор з найменшим часом розмови";
 
 $text['option-agent_with_fewest_calls']['en-us'] = "Agent With Fewest Calls";
+$text['option-agent_with_fewest_calls']['en-gb'] = "Agent With Fewest Calls";
 $text['option-agent_with_fewest_calls']['ar-eg'] = "";
 $text['option-agent_with_fewest_calls']['de-at'] = "Agent mit wenigsten Anrufen"; //copied from de-de
 $text['option-agent_with_fewest_calls']['de-ch'] = "Agent mit wenigsten Anrufen"; //copied from de-de
@@ -762,6 +800,7 @@ $text['option-agent_with_fewest_calls']['sv-se'] = "Agent med minst antal samtal
 $text['option-agent_with_fewest_calls']['uk-ua'] = "Оператор з найменшою кількістю дзвінків";
 
 $text['message-maximum_queues']['en-us'] = "Maximum Queues:";
+$text['message-maximum_queues']['en-gb'] = "Maximum Queues:";
 $text['message-maximum_queues']['ar-eg'] = "";
 $text['message-maximum_queues']['de-at'] = "Maximale Anzahl Warteschlangen:"; //copied from de-de
 $text['message-maximum_queues']['de-ch'] = "Maximale Anzahl Warteschlangen:"; //copied from de-de
@@ -782,6 +821,7 @@ $text['message-maximum_queues']['sv-se'] = "Max Antal Kö:er:";
 $text['message-maximum_queues']['uk-ua'] = "Максимальна кількість черг:";
 
 $text['message-duplicate_agent_id']['en-us'] = "Duplicate Agent ID Detected";
+$text['message-duplicate_agent_id']['en-gb'] = "Duplicate Agent ID Detected";
 $text['message-duplicate_agent_id']['ar-eg'] = "";
 $text['message-duplicate_agent_id']['de-at'] = "Agenten ID bereits vorhanden"; //copied from de-de
 $text['message-duplicate_agent_id']['de-ch'] = "Agenten ID bereits vorhanden"; //copied from de-de
@@ -802,6 +842,7 @@ $text['message-duplicate_agent_id']['sv-se'] = "Duplicate Agent-ID Funnet";
 $text['message-duplicate_agent_id']['uk-ua'] = "Повторювані Ідентифікатор агента Виявлено";
 
 $text['label-wrap_up_time']['en-us'] = "Wrap Up Time";
+$text['label-wrap_up_time']['en-gb'] = "Wrap Up Time";
 $text['label-wrap_up_time']['ar-eg'] = "";
 $text['label-wrap_up_time']['de-at'] = "Nachbereitungszeit"; //copied from de-de
 $text['label-wrap_up_time']['de-ch'] = "Nachbereitungszeit"; //copied from de-de
@@ -822,6 +863,7 @@ $text['label-wrap_up_time']['sv-se'] = "'Wrap Up' Tid";
 $text['label-wrap_up_time']['uk-ua'] = "";
 
 $text['label-type']['en-us'] = "Type";
+$text['label-type']['en-gb'] = "Type";
 $text['label-type']['ar-eg'] = "";
 $text['label-type']['de-at'] = "Typ"; //copied from de-de
 $text['label-type']['de-ch'] = "Typ"; //copied from de-de
@@ -842,6 +884,7 @@ $text['label-type']['sv-se'] = "Typ";
 $text['label-type']['uk-ua'] = "Тип";
 
 $text['label-timeout_action']['en-us'] = "Timeout Action";
+$text['label-timeout_action']['en-gb'] = "Timeout Action";
 $text['label-timeout_action']['ar-eg'] = "";
 $text['label-timeout_action']['de-at'] = "Aktion bei Zeitüberschreitung"; //copied from de-de
 $text['label-timeout_action']['de-ch'] = "Aktion bei Zeitüberschreitung"; //copied from de-de
@@ -862,6 +905,7 @@ $text['label-timeout_action']['sv-se'] = "Timeout Åtgärd";
 $text['label-timeout_action']['uk-ua'] = "";
 
 $text['label-time_base_score']['en-us'] = "Time Base Score";
+$text['label-time_base_score']['en-gb'] = "Time Base Score";
 $text['label-time_base_score']['ar-eg'] = "";
 $text['label-time_base_score']['de-at'] = "Zeitgeber für Klassifikation"; //copied from de-de
 $text['label-time_base_score']['de-ch'] = "Zeitgeber für Klassifikation"; //copied from de-de
@@ -882,6 +926,7 @@ $text['label-time_base_score']['sv-se'] = "Tidsbaserat Resultat";
 $text['label-time_base_score']['uk-ua'] = "";
 
 $text['label-tiers']['en-us'] = "Tiers";
+$text['label-tiers']['en-gb'] = "Tiers";
 $text['label-tiers']['ar-eg'] = "";
 $text['label-tiers']['de-at'] = "Ebenen"; //copied from de-de
 $text['label-tiers']['de-ch'] = "Ebenen"; //copied from de-de
@@ -902,6 +947,7 @@ $text['label-tiers']['sv-se'] = "Kunskap";
 $text['label-tiers']['uk-ua'] = "";
 
 $text['label-tier_rules_apply']['en-us'] = "Tier Rules Apply";
+$text['label-tier_rules_apply']['en-gb'] = "Tier Rules Apply";
 $text['label-tier_rules_apply']['ar-eg'] = "";
 $text['label-tier_rules_apply']['de-at'] = "Ebenen-Regeln werden angewendet"; //copied from de-de
 $text['label-tier_rules_apply']['de-ch'] = "Ebenen-Regeln werden angewendet"; //copied from de-de
@@ -922,6 +968,7 @@ $text['label-tier_rules_apply']['sv-se'] = "Kunskap Regler Gäller";
 $text['label-tier_rules_apply']['uk-ua'] = "";
 
 $text['label-tier_rule_wait_second']['en-us'] = "Tier Rule Wait Second";
+$text['label-tier_rule_wait_second']['en-gb'] = "Tier Rule Wait Second";
 $text['label-tier_rule_wait_second']['ar-eg'] = "";
 $text['label-tier_rule_wait_second']['de-at'] = "Ebenen-Regel Wartezeit"; //copied from de-de
 $text['label-tier_rule_wait_second']['de-ch'] = "Ebenen-Regel Wartezeit"; //copied from de-de
@@ -942,6 +989,7 @@ $text['label-tier_rule_wait_second']['sv-se'] = "Kunskap Regel Väntetid i Sekun
 $text['label-tier_rule_wait_second']['uk-ua'] = "";
 
 $text['label-tier_rule_wait_multiply_level']['en-us'] = "Tier Rule Wait Multiply Level";
+$text['label-tier_rule_wait_multiply_level']['en-gb'] = "Tier Rule Wait Multiply Level";
 $text['label-tier_rule_wait_multiply_level']['ar-eg'] = "";
 $text['label-tier_rule_wait_multiply_level']['de-at'] = "Multiplikator für die Ebenen-Regel Wartezeit"; //copied from de-de
 $text['label-tier_rule_wait_multiply_level']['de-ch'] = "Multiplikator für die Ebenen-Regel Wartezeit"; //copied from de-de
@@ -962,6 +1010,7 @@ $text['label-tier_rule_wait_multiply_level']['sv-se'] = "Kunskap Regel Väntetid
 $text['label-tier_rule_wait_multiply_level']['uk-ua'] = "";
 
 $text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
+$text['label-tier_rule_no_agent_no_wait']['en-gb'] = "Tier Rule No Agent No Wait";
 $text['label-tier_rule_no_agent_no_wait']['ar-eg'] = "";
 $text['label-tier_rule_no_agent_no_wait']['de-at'] = "Ebenen-Regel kein Agent nicht warten"; //copied from de-de
 $text['label-tier_rule_no_agent_no_wait']['de-ch'] = "Ebenen-Regel kein Agent nicht warten"; //copied from de-de
@@ -982,6 +1031,7 @@ $text['label-tier_rule_no_agent_no_wait']['sv-se'] = "Kunskap Regel Ingen Agent 
 $text['label-tier_rule_no_agent_no_wait']['uk-ua'] = "";
 
 $text['label-tier_position']['en-us'] = "Tier Position";
+$text['label-tier_position']['en-gb'] = "Tier Position";
 $text['label-tier_position']['ar-eg'] = "";
 $text['label-tier_position']['de-at'] = "Ebenen-Position"; //copied from de-de
 $text['label-tier_position']['de-ch'] = "Ebenen-Position"; //copied from de-de
@@ -1002,6 +1052,7 @@ $text['label-tier_position']['sv-se'] = "Kunskap Position";
 $text['label-tier_position']['uk-ua'] = "";
 
 $text['label-tier_level']['en-us'] = "Tier Level";
+$text['label-tier_level']['en-gb'] = "Tier Level";
 $text['label-tier_level']['ar-eg'] = "";
 $text['label-tier_level']['de-at'] = "Ebenen-Niveau"; //copied from de-de
 $text['label-tier_level']['de-ch'] = "Ebenen-Niveau"; //copied from de-de
@@ -1022,6 +1073,7 @@ $text['label-tier_level']['sv-se'] = "Kunskap Nivå";
 $text['label-tier_level']['uk-ua'] = "";
 
 $text['label-strategy']['en-us'] = "Strategy";
+$text['label-strategy']['en-gb'] = "Strategy";
 $text['label-strategy']['ar-eg'] = "";
 $text['label-strategy']['de-at'] = "Strategie"; //copied from de-de
 $text['label-strategy']['de-ch'] = "Strategie"; //copied from de-de
@@ -1042,6 +1094,7 @@ $text['label-strategy']['sv-se'] = "Strategi";
 $text['label-strategy']['uk-ua'] = "";
 
 $text['label-status']['en-us'] = "Status";
+$text['label-status']['en-gb'] = "Status";
 $text['label-status']['ar-eg'] = "";
 $text['label-status']['de-at'] = "Status"; //copied from de-de
 $text['label-status']['de-ch'] = "Status"; //copied from de-de
@@ -1062,6 +1115,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
 
 $text['label-reject_delay_time']['en-us'] = "Reject Delay Time";
+$text['label-reject_delay_time']['en-gb'] = "Reject Delay Time";
 $text['label-reject_delay_time']['ar-eg'] = "";
 $text['label-reject_delay_time']['de-at'] = "Zeitverzögerung für Zeitüberschreitung"; //copied from de-de
 $text['label-reject_delay_time']['de-ch'] = "Zeitverzögerung für Zeitüberschreitung"; //copied from de-de
@@ -1082,6 +1136,7 @@ $text['label-reject_delay_time']['sv-se'] = "Fördröjning vid Neka";
 $text['label-reject_delay_time']['uk-ua'] = "";
 
 $text['label-record_template']['en-us'] = "Record";
+$text['label-record_template']['en-gb'] = "Record";
 $text['label-record_template']['ar-eg'] = "";
 $text['label-record_template']['de-at'] = "Aufnehmen"; //copied from de-de
 $text['label-record_template']['de-ch'] = "Aufnehmen"; //copied from de-de
@@ -1102,6 +1157,7 @@ $text['label-record_template']['sv-se'] = "Spela In";
 $text['label-record_template']['uk-ua'] = "Запис";
 
 $text['label-queue']['en-us'] = "Queue";
+$text['label-queue']['en-gb'] = "Queue";
 $text['label-queue']['ar-eg'] = "طابور";
 $text['label-queue']['de-at'] = "Warteschlange"; //copied from de-de
 $text['label-queue']['de-ch'] = "Warteschlange"; //copied from de-de
@@ -1122,6 +1178,7 @@ $text['label-queue']['sv-se'] = "Grupp";
 $text['label-queue']['uk-ua'] = "";
 
 $text['label-queues']['en-us'] = "Queues";
+$text['label-queues']['en-gb'] = "Queues";
 $text['label-queues']['ar-eg'] = "";
 $text['label-queues']['de-at'] = "Warteschlangen"; //copied from de-de
 $text['label-queues']['de-ch'] = "Warteschlangen"; //copied from de-de
@@ -1142,6 +1199,7 @@ $text['label-queues']['sv-se'] = "Kö:er";
 $text['label-queues']['uk-ua'] = "";
 
 $text['label-queue_name']['en-us'] = "Queue Name";
+$text['label-queue_name']['en-gb'] = "Queue Name";
 $text['label-queue_name']['ar-eg'] = "";
 $text['label-queue_name']['de-at'] = "Name der Warteschlange"; //copied from de-de
 $text['label-queue_name']['de-ch'] = "Name der Warteschlange"; //copied from de-de
@@ -1162,6 +1220,7 @@ $text['label-queue_name']['sv-se'] = "Kö Namn";
 $text['label-queue_name']['uk-ua'] = "Назва черги";
 
 $text['label-options']['en-us'] = "Options";
+$text['label-options']['en-gb'] = "Options";
 $text['label-options']['ar-eg'] = "";
 $text['label-options']['de-at'] = "Optionen"; //copied from de-de
 $text['label-options']['de-ch'] = "Optionen"; //copied from de-de
@@ -1182,6 +1241,7 @@ $text['label-options']['sv-se'] = "Val";
 $text['label-options']['uk-ua'] = "Параметри";
 
 $text['label-no_answer_delay_time']['en-us'] = "No Answer Delay Time";
+$text['label-no_answer_delay_time']['en-gb'] = "No Answer Delay Time";
 $text['label-no_answer_delay_time']['ar-eg'] = "";
 $text['label-no_answer_delay_time']['de-at'] = "Verzögerung für keine Antwort"; //copied from de-de
 $text['label-no_answer_delay_time']['de-ch'] = "Verzögerung für keine Antwort"; //copied from de-de
@@ -1202,6 +1262,7 @@ $text['label-no_answer_delay_time']['sv-se'] = "Fördröjning vid ej svar";
 $text['label-no_answer_delay_time']['uk-ua'] = "";
 
 $text['label-music_on_hold']['en-us'] = "Music on Hold";
+$text['label-music_on_hold']['en-gb'] = "Music on Hold";
 $text['label-music_on_hold']['ar-eg'] = "";
 $text['label-music_on_hold']['de-at'] = "Wartemusik"; //copied from de-de
 $text['label-music_on_hold']['de-ch'] = "Wartemusik"; //copied from de-de
@@ -1222,6 +1283,7 @@ $text['label-music_on_hold']['sv-se'] = "Väntmusik";
 $text['label-music_on_hold']['uk-ua'] = "Мелодія на утримуванні";
 
 $text['label-max_wait_time_with_no_agent_time_reached']['en-us'] = "Max Wait Time with No Agent Time Reached";
+$text['label-max_wait_time_with_no_agent_time_reached']['en-gb'] = "Max Wait Time with No Agent Time Reached";
 $text['label-max_wait_time_with_no_agent_time_reached']['ar-eg'] = "";
 $text['label-max_wait_time_with_no_agent_time_reached']['de-at'] = "Maximale Wartezeit ohne Agent erreicht"; //copied from de-de
 $text['label-max_wait_time_with_no_agent_time_reached']['de-ch'] = "Maximale Wartezeit ohne Agent erreicht"; //copied from de-de
@@ -1242,6 +1304,7 @@ $text['label-max_wait_time_with_no_agent_time_reached']['sv-se'] = "Tidsgräns f
 $text['label-max_wait_time_with_no_agent_time_reached']['uk-ua'] = "";
 
 $text['label-max_wait_time_with_no_agent']['en-us'] = "Max Wait Time with No Agent";
+$text['label-max_wait_time_with_no_agent']['en-gb'] = "Max Wait Time with No Agent";
 $text['label-max_wait_time_with_no_agent']['ar-eg'] = "";
 $text['label-max_wait_time_with_no_agent']['de-at'] = "Maximale Wartezeit ohne Agent"; //copied from de-de
 $text['label-max_wait_time_with_no_agent']['de-ch'] = "Maximale Wartezeit ohne Agent"; //copied from de-de
@@ -1262,6 +1325,7 @@ $text['label-max_wait_time_with_no_agent']['sv-se'] = "Max Vänt Tid utan Agent"
 $text['label-max_wait_time_with_no_agent']['uk-ua'] = "Максимальний час очікування без оператора";
 
 $text['label-max_wait_time']['en-us'] = "Max Wait Time";
+$text['label-max_wait_time']['en-gb'] = "Max Wait Time";
 $text['label-max_wait_time']['ar-eg'] = "";
 $text['label-max_wait_time']['de-at'] = "Maximale Wartezeit"; //copied from de-de
 $text['label-max_wait_time']['de-ch'] = "Maximale Wartezeit"; //copied from de-de
@@ -1282,6 +1346,7 @@ $text['label-max_wait_time']['sv-se'] = "Max Vänt Tid";
 $text['label-max_wait_time']['uk-ua'] = "Максимальний час очікування";
 
 $text['label-max_no_answer']['en-us'] = "Max No Answer";
+$text['label-max_no_answer']['en-gb'] = "Max No Answer";
 $text['label-max_no_answer']['ar-eg'] = "";
 $text['label-max_no_answer']['de-at'] = "Max keine Antwort"; //copied from de-de
 $text['label-max_no_answer']['de-ch'] = "Max keine Antwort"; //copied from de-de
@@ -1302,6 +1367,7 @@ $text['label-max_no_answer']['sv-se'] = "Max Inget Svar";
 $text['label-max_no_answer']['uk-ua'] = "Максимальний час без відповіді";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "";
 $text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de
@@ -1322,6 +1388,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
 $text['label-discard_abandoned_after']['en-us'] = "Discard Abandoned After";
+$text['label-discard_abandoned_after']['en-gb'] = "Discard Abandoned After";
 $text['label-discard_abandoned_after']['ar-eg'] = "";
 $text['label-discard_abandoned_after']['de-at'] = "Zurückweisen nach Zeitüberschreitung"; //copied from de-de
 $text['label-discard_abandoned_after']['de-ch'] = "Zurückweisen nach Zeitüberschreitung"; //copied from de-de
@@ -1342,6 +1409,7 @@ $text['label-discard_abandoned_after']['sv-se'] = "Uteslut Ej Besvarat Efter";
 $text['label-discard_abandoned_after']['uk-ua'] = "";
 
 $text['label-default_status']['en-us'] = "Default Status";
+$text['label-default_status']['en-gb'] = "Default Status";
 $text['label-default_status']['ar-eg'] = "";
 $text['label-default_status']['de-at'] = "Standardzustand"; //copied from de-de
 $text['label-default_status']['de-ch'] = "Standardzustand"; //copied from de-de
@@ -1362,6 +1430,7 @@ $text['label-default_status']['sv-se'] = "i förväg fastställda status";
 $text['label-default_status']['uk-ua'] = "Статус за замовчуванням";
 
 $text['label-contact']['en-us'] = "Contact";
+$text['label-contact']['en-gb'] = "Contact";
 $text['label-contact']['ar-eg'] = "";
 $text['label-contact']['de-at'] = "Kontakt"; //copied from de-de
 $text['label-contact']['de-ch'] = "Kontakt"; //copied from de-de
@@ -1382,6 +1451,7 @@ $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['uk-ua'] = "Контакт";
 
 $text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
+$text['label-caller_id_name_prefix']['en-gb'] = "Caller ID Name Prefix";
 $text['label-caller_id_name_prefix']['ar-eg'] = "";
 $text['label-caller_id_name_prefix']['de-at'] = "Anruferkennung (Name) Prefix"; //copied from de-de
 $text['label-caller_id_name_prefix']['de-ch'] = "Anruferkennung (Name) Prefix"; //copied from de-de
@@ -1402,6 +1472,7 @@ $text['label-caller_id_name_prefix']['sv-se'] = "Caller ID Namn Prefix";
 $text['label-caller_id_name_prefix']['uk-ua'] = "";
 
 $text['label-caller_announce_sound']['en-us'] = "Announce Sound";
+$text['label-caller_announce_sound']['en-gb'] = "Announce Sound";
 $text['label-caller_announce_sound']['ar-eg'] = "";
 $text['label-caller_announce_sound']['de-at'] = "Ton für Ankündigungn";
 $text['label-caller_announce_sound']['de-ch'] = "Ton für Ankündigung"; //copied from de-de
@@ -1422,6 +1493,7 @@ $text['label-caller_announce_sound']['sv-se'] = "Meddelande Ljud";
 $text['label-caller_announce_sound']['uk-ua'] = "";
 
 $text['label-caller_announce_frequency']['en-us'] = "Announce Frequency";
+$text['label-caller_announce_frequency']['en-gb'] = "Announce Frequency";
 $text['label-caller_announce_frequency']['ar-eg'] = "";
 $text['label-caller_announce_frequency']['de-at'] = "Häufigkeit der Ankündigung"; //copied from de-de
 $text['label-caller_announce_frequency']['de-ch'] = "Häufigkeit der Ankündigung"; //copied from de-de
@@ -1442,6 +1514,7 @@ $text['label-caller_announce_frequency']['sv-se'] = "Meddelande Frekvens";
 $text['label-caller_announce_frequency']['uk-ua'] = "";
 
 $text['label-exit_keys']['en-us'] = "Exit Key";
+$text['label-exit_keys']['en-gb'] = "Exit Key";
 $text['label-exit_keys']['ar-eg'] = "";
 $text['label-exit_keys']['de-at'] = "Abbruch Taste"; //copied from de-de
 $text['label-exit_keys']['de-ch'] = "Abbruch Taste"; //copied from de-de
@@ -1462,6 +1535,7 @@ $text['label-exit_keys']['sv-se'] = "Knapp för att lämna";
 $text['label-exit_keys']['uk-ua'] = "";
 
 $text['description-exit_keys']['en-us'] = "Keys to quit the current queue waiting.";
+$text['description-exit_keys']['en-gb'] = "Keys to quit the current queue waiting.";
 $text['description-exit_keys']['ar-eg'] = "";
 $text['description-exit_keys']['de-at'] = "Tasten um die aktuelle Warteschlange zu verlassen."; //copied from de-de
 $text['description-exit_keys']['de-ch'] = "Tasten um die aktuelle Warteschlange zu verlassen."; //copied from de-de
@@ -1482,6 +1556,7 @@ $text['description-exit_keys']['sv-se'] = "Knapp för att lämna den nuvarande k
 $text['description-exit_keys']['uk-ua'] = "";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
+$text['label-call_timeout']['en-gb'] = "Call Timeout";
 $text['label-call_timeout']['ar-eg'] = "";
 $text['label-call_timeout']['de-at'] = "Zeitüberschreitung"; //copied from de-de
 $text['label-call_timeout']['de-ch'] = "Zeitüberschreitung"; //copied from de-de
@@ -1502,6 +1577,7 @@ $text['label-call_timeout']['sv-se'] = "Ring Tidsgräns";
 $text['label-call_timeout']['uk-ua'] = "Тайм-аут дзвінка";
 
 $text['label-busy_delay_time']['en-us'] = "Busy Delay Time";
+$text['label-busy_delay_time']['en-gb'] = "Busy Delay Time";
 $text['label-busy_delay_time']['ar-eg'] = "";
 $text['label-busy_delay_time']['de-at'] = "Verzögerungszeit für Besetzt"; //copied from de-de
 $text['label-busy_delay_time']['de-ch'] = "Verzögerungszeit für Besetzt"; //copied from de-de
@@ -1522,6 +1598,7 @@ $text['label-busy_delay_time']['sv-se'] = "Fördröjning vid Upptaget";
 $text['label-busy_delay_time']['uk-ua'] = "";
 
 $text['label-agent_password']['en-us'] = "Agent Password";
+$text['label-agent_password']['en-gb'] = "Agent Password";
 $text['label-agent_password']['ar-eg'] = "";
 $text['label-agent_password']['de-at'] = "Agenten Passwort"; //copied from de-de
 $text['label-agent_password']['de-ch'] = "Agenten Passwort"; //copied from de-de
@@ -1542,6 +1619,7 @@ $text['label-agent_password']['sv-se'] = "Agent Lösen";
 $text['label-agent_password']['uk-ua'] = "";
 
 $text['label-agent_name']['en-us'] = "Agent Name";
+$text['label-agent_name']['en-gb'] = "Agent Name";
 $text['label-agent_name']['ar-eg'] = "";
 $text['label-agent_name']['de-at'] = "Agenten Name"; //copied from de-de
 $text['label-agent_name']['de-ch'] = "Agenten Name"; //copied from de-de
@@ -1562,6 +1640,7 @@ $text['label-agent_name']['sv-se'] = "Agent Namn";
 $text['label-agent_name']['uk-ua'] = "Ім’я оператора";
 
 $text['label-agent_logout']['en-us'] = "Agent Logout";
+$text['label-agent_logout']['en-gb'] = "Agent Logout";
 $text['label-agent_logout']['ar-eg'] = "";
 $text['label-agent_logout']['de-at'] = "Agent Abmelden"; //copied from de-de
 $text['label-agent_logout']['de-ch'] = "Agent Abmelden"; //copied from de-de
@@ -1582,6 +1661,7 @@ $text['label-agent_logout']['sv-se'] = "Agent Logga Ut";
 $text['label-agent_logout']['uk-ua'] = "";
 
 $text['label-agent_id']['en-us'] = "Agent ID";
+$text['label-agent_id']['en-gb'] = "Agent ID";
 $text['label-agent_id']['ar-eg'] = "";
 $text['label-agent_id']['de-at'] = "Agenten ID"; //copied from de-de
 $text['label-agent_id']['de-ch'] = "Agenten ID"; //copied from de-de
@@ -1602,6 +1682,7 @@ $text['label-agent_id']['sv-se'] = "Agent Identitet";
 $text['label-agent_id']['uk-ua'] = "";
 
 $text['label-agent']['en-us'] = "Agent";
+$text['label-agent']['en-gb'] = "Agent";
 $text['label-agent']['ar-eg'] = "";
 $text['label-agent']['de-at'] = "Agent"; //copied from de-de
 $text['label-agent']['de-ch'] = "Agent"; //copied from de-de
@@ -1622,6 +1703,7 @@ $text['label-agent']['sv-se'] = "Agent";
 $text['label-agent']['uk-ua'] = "Оператор";
 
 $text['label-agents']['en-us'] = "Agents";
+$text['label-agents']['en-gb'] = "Agents";
 $text['label-agents']['ar-eg'] = "";
 $text['label-agents']['de-at'] = "Agenten"; //copied from de-de
 $text['label-agents']['de-ch'] = "Agenten"; //copied from de-de
@@ -1642,6 +1724,7 @@ $text['label-agents']['sv-se'] = "Agenter";
 $text['label-agents']['uk-ua'] = "Оператори";
 
 $text['label-abandoned_resume_allowed']['en-us'] = "Abandoned Resume Allowed";
+$text['label-abandoned_resume_allowed']['en-gb'] = "Abandoned Resume Allowed";
 $text['label-abandoned_resume_allowed']['ar-eg'] = "";
 $text['label-abandoned_resume_allowed']['de-at'] = "Wiederaufnahme nach Zurückweisung erlaubt"; //copied from de-de
 $text['label-abandoned_resume_allowed']['de-ch'] = "Wiederaufnahme nach Zurückweisung erlaubt"; //copied from de-de
@@ -1662,6 +1745,7 @@ $text['label-abandoned_resume_allowed']['sv-se'] = "Återuppta Ej Besvarade Till
 $text['label-abandoned_resume_allowed']['uk-ua'] = "";
 
 $text['header-call_center_tier_edit']['en-us'] = "Call Center Tier";
+$text['header-call_center_tier_edit']['en-gb'] = "Call Center Tier";
 $text['header-call_center_tier_edit']['ar-eg'] = "";
 $text['header-call_center_tier_edit']['de-at'] = "Callcenter Ebene"; //copied from de-de
 $text['header-call_center_tier_edit']['de-ch'] = "Callcenter Ebene"; //copied from de-de
@@ -1682,6 +1766,7 @@ $text['header-call_center_tier_edit']['sv-se'] = "Call Center Kunskap";
 $text['header-call_center_tier_edit']['uk-ua'] = "";
 
 $text['header-call_center_queues']['en-us'] = "Call Center Queues";
+$text['header-call_center_queues']['en-gb'] = "Call Center Queues";
 $text['header-call_center_queues']['ar-eg'] = "";
 $text['header-call_center_queues']['de-at'] = "Callcenter Warteschlangen"; //copied from de-de
 $text['header-call_center_queues']['de-ch'] = "Callcenter Warteschlangen"; //copied from de-de
@@ -1702,6 +1787,7 @@ $text['header-call_center_queues']['sv-se'] = "Call Center Kö:er";
 $text['header-call_center_queues']['uk-ua'] = "";
 
 $text['header-call_center_queue_edit']['en-us'] = "Call Center Queue";
+$text['header-call_center_queue_edit']['en-gb'] = "Call Center Queue";
 $text['header-call_center_queue_edit']['ar-eg'] = "";
 $text['header-call_center_queue_edit']['de-at'] = "Callcenter Warteschlange"; //copied from de-de
 $text['header-call_center_queue_edit']['de-ch'] = "Callcenter Warteschlange"; //copied from de-de
@@ -1722,6 +1808,7 @@ $text['header-call_center_queue_edit']['sv-se'] = "Call Center Kö";
 $text['header-call_center_queue_edit']['uk-ua'] = "";
 
 $text['header-call_center_queue_add']['en-us'] = "Call Center Queue";
+$text['header-call_center_queue_add']['en-gb'] = "Call Center Queue";
 $text['header-call_center_queue_add']['ar-eg'] = "";
 $text['header-call_center_queue_add']['de-at'] = "Callcenter Warteschlange"; //copied from de-de
 $text['header-call_center_queue_add']['de-ch'] = "Callcenter Warteschlange"; //copied from de-de
@@ -1742,6 +1829,7 @@ $text['header-call_center_queue_add']['sv-se'] = "Call Center Kö";
 $text['header-call_center_queue_add']['uk-ua'] = "";
 
 $text['header-call_center_agents']['en-us'] = "Call Center Agents";
+$text['header-call_center_agents']['en-gb'] = "Call Center Agents";
 $text['header-call_center_agents']['ar-eg'] = "";
 $text['header-call_center_agents']['de-at'] = "Callcenter Agent"; //copied from de-de
 $text['header-call_center_agents']['de-ch'] = "Callcenter Agent"; //copied from de-de
@@ -1762,6 +1850,7 @@ $text['header-call_center_agents']['sv-se'] = "Call Center Agenter";
 $text['header-call_center_agents']['uk-ua'] = "";
 
 $text['header-call_center_agent_status']['en-us'] = "Call Center Agent Status";
+$text['header-call_center_agent_status']['en-gb'] = "Call Center Agent Status";
 $text['header-call_center_agent_status']['ar-eg'] = "";
 $text['header-call_center_agent_status']['de-at'] = "Callcenter Agenten-Status"; //copied from de-de
 $text['header-call_center_agent_status']['de-ch'] = "Callcenter Agenten-Status"; //copied from de-de
@@ -1782,6 +1871,7 @@ $text['header-call_center_agent_status']['sv-se'] = "Call Center Agent Status";
 $text['header-call_center_agent_status']['uk-ua'] = "";
 
 $text['header-call_center_agent_edit']['en-us'] = "Call Center Agent";
+$text['header-call_center_agent_edit']['en-gb'] = "Call Center Agent";
 $text['header-call_center_agent_edit']['ar-eg'] = "";
 $text['header-call_center_agent_edit']['de-at'] = "Callcenter Agent"; //copied from de-de
 $text['header-call_center_agent_edit']['de-ch'] = "Callcenter Agent"; //copied from de-de
@@ -1802,6 +1892,7 @@ $text['header-call_center_agent_edit']['sv-se'] = "Call Center Agent";
 $text['header-call_center_agent_edit']['uk-ua'] = "";
 
 $text['header-call_center_agent_add']['en-us'] = "Call Center Agents";
+$text['header-call_center_agent_add']['en-gb'] = "Call Center Agents";
 $text['header-call_center_agent_add']['ar-eg'] = "";
 $text['header-call_center_agent_add']['de-at'] = "Callcenter Agenten"; //copied from de-de
 $text['header-call_center_agent_add']['de-ch'] = "Callcenter Agenten"; //copied from de-de
@@ -1822,6 +1913,7 @@ $text['header-call_center_agent_add']['sv-se'] = "Call Center Agenter";
 $text['header-call_center_agent_add']['uk-ua'] = "";
 
 $text['description-wrap_up_time']['en-us'] = "Enter the wrap up time.";
+$text['description-wrap_up_time']['en-gb'] = "Enter the wrap up time.";
 $text['description-wrap_up_time']['ar-eg'] = "";
 $text['description-wrap_up_time']['de-at'] = "Geben Sie die Nachbereitungszeit ein."; //copied from de-de
 $text['description-wrap_up_time']['de-ch'] = "Geben Sie die Nachbereitungszeit ein."; //copied from de-de
@@ -1842,6 +1934,7 @@ $text['description-wrap_up_time']['sv-se'] = "Ange 'Wrap Up' tid.";
 $text['description-wrap_up_time']['uk-ua'] = "";
 
 $text['description-type']['en-us'] = "Enter the agent type.";
+$text['description-type']['en-gb'] = "Enter the agent type.";
 $text['description-type']['ar-eg'] = "";
 $text['description-type']['de-at'] = "Geben Sie den Agenten Typ an."; //copied from de-de
 $text['description-type']['de-ch'] = "Geben Sie den Agenten Typ an."; //copied from de-de
@@ -1862,6 +1955,7 @@ $text['description-type']['sv-se'] = "Ange agent typen.";
 $text['description-type']['uk-ua'] = "";
 
 $text['description-timeout_action']['en-us'] = "Set the action to perform when the max wait time is reached.";
+$text['description-timeout_action']['en-gb'] = "Set the action to perform when the max wait time is reached.";
 $text['description-timeout_action']['ar-eg'] = "";
 $text['description-timeout_action']['de-at'] = "Aktion, wenn die maximale Wartezeit erreicht wurde."; //copied from de-de
 $text['description-timeout_action']['de-ch'] = "Aktion, wenn die maximale Wartezeit erreicht wurde."; //copied from de-de
@@ -1882,6 +1976,7 @@ $text['description-timeout_action']['sv-se'] = "Ange vad som skall utföras när
 $text['description-timeout_action']['uk-ua'] = "";
 
 $text['description-time_base_score']['en-us'] = "Select the time base score.";
+$text['description-time_base_score']['en-gb'] = "Select the time base score.";
 $text['description-time_base_score']['ar-eg'] = "";
 $text['description-time_base_score']['de-at'] = "Wählen Sie die Zeitgeber für Klassifikation"; //copied from de-de
 $text['description-time_base_score']['de-ch'] = "Wählen Sie die Zeitgeber für Klassifikation"; //copied from de-de
@@ -1902,6 +1997,7 @@ $text['description-time_base_score']['sv-se'] = "Ange tids-baserad poäng.";
 $text['description-time_base_score']['uk-ua'] = "";
 
 $text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
+$text['description-tiers']['en-gb'] = "Tiers assign agents to queues.";
 $text['description-tiers']['ar-eg'] = "";
 $text['description-tiers']['de-at'] = "Agenten einer Warteschlange pro Ebene zuweisen."; //copied from de-de
 $text['description-tiers']['de-ch'] = "Agenten einer Warteschlange pro Ebene zuweisen."; //copied from de-de
@@ -1922,6 +2018,7 @@ $text['description-tiers']['sv-se'] = "Kunskap tilldelar agenter till kö:er.";
 $text['description-tiers']['uk-ua'] = "";
 
 $text['description-tier_rules_apply']['en-us'] = "Set the tier rule rules apply to true or false.";
+$text['description-tier_rules_apply']['en-gb'] = "Set the tier rule rules apply to true or false.";
 $text['description-tier_rules_apply']['ar-eg'] = "";
 $text['description-tier_rules_apply']['de-at'] = "Setzen Sie die Ebenen-Regel. Regeln sind Ein oder Aus"; //copied from de-de
 $text['description-tier_rules_apply']['de-ch'] = "Setzen Sie die Ebenen-Regel. Regeln sind Ein oder Aus"; //copied from de-de
@@ -1942,6 +2039,7 @@ $text['description-tier_rules_apply']['sv-se'] = "Välj om Kunskap Regler Gälle
 $text['description-tier_rules_apply']['uk-ua'] = "";
 
 $text['description-tier_rule_wait_second']['en-us'] = "Enter the tier rule wait seconds.";
+$text['description-tier_rule_wait_second']['en-gb'] = "Enter the tier rule wait seconds.";
 $text['description-tier_rule_wait_second']['ar-eg'] = "";
 $text['description-tier_rule_wait_second']['de-at'] = "Geben Sie die Ebenen-Regel Wartezeit in Sekunden ein."; //copied from de-de
 $text['description-tier_rule_wait_second']['de-ch'] = "Geben Sie die Ebenen-Regel Wartezeit in Sekunden ein."; //copied from de-de
@@ -1962,6 +2060,7 @@ $text['description-tier_rule_wait_second']['sv-se'] = "Ange kunskaps-regel vänt
 $text['description-tier_rule_wait_second']['uk-ua'] = "";
 
 $text['description-tier_rule_wait_multiply_level']['en-us'] = "Set the tier rule wait multiply level to true or false.";
+$text['description-tier_rule_wait_multiply_level']['en-gb'] = "Set the tier rule wait multiply level to true or false.";
 $text['description-tier_rule_wait_multiply_level']['ar-eg'] = "";
 $text['description-tier_rule_wait_multiply_level']['de-at'] = "Setzen Sie den Multiplikator für die Ebenen-Regel Wartezeit auf Ein oder Aus."; //copied from de-de
 $text['description-tier_rule_wait_multiply_level']['de-ch'] = "Setzen Sie den Multiplikator für die Ebenen-Regel Wartezeit auf Ein oder Aus."; //copied from de-de
@@ -1982,6 +2081,7 @@ $text['description-tier_rule_wait_multiply_level']['sv-se'] = "Välj om 'kunskap
 $text['description-tier_rule_wait_multiply_level']['uk-ua'] = "";
 
 $text['description-tier_rule_no_agent_no_wait']['en-us'] = "Enter the tier rule no agent no wait.";
+$text['description-tier_rule_no_agent_no_wait']['en-gb'] = "Enter the tier rule no agent no wait.";
 $text['description-tier_rule_no_agent_no_wait']['ar-eg'] = "";
 $text['description-tier_rule_no_agent_no_wait']['de-at'] = "Geben Sie die Ebenen Regel kein Agent keine Wartezeit ein."; //copied from de-de
 $text['description-tier_rule_no_agent_no_wait']['de-ch'] = "Geben Sie die Ebenen Regel kein Agent keine Wartezeit ein."; //copied from de-de
@@ -2002,6 +2102,7 @@ $text['description-tier_rule_no_agent_no_wait']['sv-se'] = "Välj kunskaps-regel
 $text['description-tier_rule_no_agent_no_wait']['uk-ua'] = "";
 
 $text['description-tier_position']['en-us'] = "Select the tier position.";
+$text['description-tier_position']['en-gb'] = "Select the tier position.";
 $text['description-tier_position']['ar-eg'] = "";
 $text['description-tier_position']['de-at'] = "Wählen Sie die Ebenen Position."; //copied from de-de
 $text['description-tier_position']['de-ch'] = "Wählen Sie die Ebenen Position."; //copied from de-de
@@ -2022,6 +2123,7 @@ $text['description-tier_position']['sv-se'] = "Välj Kunskaps position.";
 $text['description-tier_position']['uk-ua'] = "";
 
 $text['description-tier_level']['en-us'] = "Select the tier level.";
+$text['description-tier_level']['en-gb'] = "Select the tier level.";
 $text['description-tier_level']['ar-eg'] = "";
 $text['description-tier_level']['de-at'] = "Wählen Sie das Ebenen-Niveau."; //copied from de-de
 $text['description-tier_level']['de-ch'] = "Wählen Sie das Ebenen-Niveau."; //copied from de-de
@@ -2042,6 +2144,7 @@ $text['description-tier_level']['sv-se'] = "Välj Kunskaps-nivå";
 $text['description-tier_level']['uk-ua'] = "";
 
 $text['description-strategy']['en-us'] = "Select the queue ring strategy.";
+$text['description-strategy']['en-gb'] = "Select the queue ring strategy.";
 $text['description-strategy']['ar-eg'] = "";
 $text['description-strategy']['de-at'] = "Wählen Sie eine Rufstrategie für die Warteschlange."; //copied from de-de
 $text['description-strategy']['de-ch'] = "Wählen Sie eine Rufstrategie für die Warteschlange."; //copied from de-de
@@ -2062,6 +2165,7 @@ $text['description-strategy']['sv-se'] = "Välj strategi för ringflöde i kö:n
 $text['description-strategy']['uk-ua'] = "";
 
 $text['description-status']['en-us'] = "Select the default agent status.";
+$text['description-status']['en-gb'] = "Select the default agent status.";
 $text['description-status']['ar-eg'] = "";
 $text['description-status']['de-at'] = "Standard Benutzerstatus auswählen."; //copied from de-de
 $text['description-status']['de-ch'] = "Standard Benutzerstatus auswählen."; //copied from de-de
@@ -2082,6 +2186,7 @@ $text['description-status']['sv-se'] = "Välj agentens status";
 $text['description-status']['uk-ua'] = "Виберіть статус користувача";
 
 $text['description-reject_delay_time']['en-us'] = "Enter the reject delay time.";
+$text['description-reject_delay_time']['en-gb'] = "Enter the reject delay time.";
 $text['description-reject_delay_time']['ar-eg'] = "";
 $text['description-reject_delay_time']['de-at'] = "Geben Sie die Verzögerung bis zur Zurückweisung an."; //copied from de-de
 $text['description-reject_delay_time']['de-ch'] = "Geben Sie die Verzögerung bis zur Zurückweisung an."; //copied from de-de
@@ -2102,6 +2207,7 @@ $text['description-reject_delay_time']['sv-se'] = "Ange 'neka' tids-fördröjnin
 $text['description-reject_delay_time']['uk-ua'] = "";
 
 $text['description-record_template']['en-us'] = "Save the recording.";
+$text['description-record_template']['en-gb'] = "Save the recording.";
 $text['description-record_template']['ar-eg'] = "";
 $text['description-record_template']['de-at'] = "Aufnahme speichern."; //copied from de-de
 $text['description-record_template']['de-ch'] = "Aufnahme speichern."; //copied from de-de
@@ -2122,6 +2228,7 @@ $text['description-record_template']['sv-se'] = "Spara inspelningen.";
 $text['description-record_template']['uk-ua'] = "";
 
 $text['description-queue_name']['en-us'] = "Enter the queue name.";
+$text['description-queue_name']['en-gb'] = "Enter the queue name.";
 $text['description-queue_name']['ar-eg'] = "";
 $text['description-queue_name']['de-at'] = "Geben Sie den Namen der Warteschlange ein."; //copied from de-de
 $text['description-queue_name']['de-ch'] = "Geben Sie den Namen der Warteschlange ein."; //copied from de-de
@@ -2142,6 +2249,7 @@ $text['description-queue_name']['sv-se'] = "Ange kö namn.";
 $text['description-queue_name']['uk-ua'] = "";
 
 $text['description-options']['en-us'] = "Select the queue name.";
+$text['description-options']['en-gb'] = "Select the queue name.";
 $text['description-options']['ar-eg'] = "";
 $text['description-options']['de-at'] = "Wählen Sie den Namen der Warteschlange."; //copied from de-de
 $text['description-options']['de-ch'] = "Wählen Sie den Namen der Warteschlange."; //copied from de-de
@@ -2162,6 +2270,7 @@ $text['description-options']['sv-se'] = "Välj kö namn.";
 $text['description-options']['uk-ua'] = "";
 
 $text['description-no_answer_delay_time']['en-us'] = "Enter the agent no answer delay time in seconds.";
+$text['description-no_answer_delay_time']['en-gb'] = "Enter the agent no answer delay time in seconds.";
 $text['description-no_answer_delay_time']['ar-eg'] = "";
 $text['description-no_answer_delay_time']['de-at'] = "Geben Sie die Zeit in Sekunden an, die gewartet werden soll bis ein Agent annimmt."; //copied from de-de
 $text['description-no_answer_delay_time']['de-ch'] = "Geben Sie die Zeit in Sekunden an, die gewartet werden soll bis ein Agent annimmt."; //copied from de-de
@@ -2182,6 +2291,7 @@ $text['description-no_answer_delay_time']['sv-se'] = "Ange 'Inget svar Agent fö
 $text['description-no_answer_delay_time']['uk-ua'] = "";
 
 $text['description-music_on_hold']['en-us'] = "Select the desired hold music.";
+$text['description-music_on_hold']['en-gb'] = "Select the desired hold music.";
 $text['description-music_on_hold']['ar-eg'] = "";
 $text['description-music_on_hold']['de-at'] = "Wählen Sie die gewünschte Wartemusik."; //copied from de-de
 $text['description-music_on_hold']['de-ch'] = "Wählen Sie die gewünschte Wartemusik."; //copied from de-de
@@ -2202,6 +2312,7 @@ $text['description-music_on_hold']['sv-se'] = "Välj önskad vänt-musik.";
 $text['description-music_on_hold']['uk-ua'] = "";
 
 $text['description-max_wait_time_with_no_agent_time_reached']['en-us'] = "Enter the max wait time with no agent time reached.";
+$text['description-max_wait_time_with_no_agent_time_reached']['en-gb'] = "Enter the max wait time with no agent time reached.";
 $text['description-max_wait_time_with_no_agent_time_reached']['ar-eg'] = "";
 $text['description-max_wait_time_with_no_agent_time_reached']['de-at'] = "Geben Sie die maximale Wartezeit in Sekunden an, die ohne Agent gewartet werden soll."; //copied from de-de
 $text['description-max_wait_time_with_no_agent_time_reached']['de-ch'] = "Geben Sie die maximale Wartezeit in Sekunden an, die ohne Agent gewartet werden soll."; //copied from de-de
@@ -2222,6 +2333,7 @@ $text['description-max_wait_time_with_no_agent_time_reached']['sv-se'] = "Ange m
 $text['description-max_wait_time_with_no_agent_time_reached']['uk-ua'] = "";
 
 $text['description-max_wait_time_with_no_agent']['en-us'] = "Enter the max wait time with no agent.";
+$text['description-max_wait_time_with_no_agent']['en-gb'] = "Enter the max wait time with no agent.";
 $text['description-max_wait_time_with_no_agent']['ar-eg'] = "";
 $text['description-max_wait_time_with_no_agent']['de-at'] = "Geben Sie die maximale Wartezeit ohne Agent an."; //copied from de-de
 $text['description-max_wait_time_with_no_agent']['de-ch'] = "Geben Sie die maximale Wartezeit ohne Agent an."; //copied from de-de
@@ -2242,6 +2354,7 @@ $text['description-max_wait_time_with_no_agent']['sv-se'] = "Ange max vänt-tid 
 $text['description-max_wait_time_with_no_agent']['uk-ua'] = "";
 
 $text['description-max_wait_time']['en-us'] = "Enter the max wait time.";
+$text['description-max_wait_time']['en-gb'] = "Enter the max wait time.";
 $text['description-max_wait_time']['ar-eg'] = "";
 $text['description-max_wait_time']['de-at'] = "Geben Sie die maximale Wartezeit an."; //copied from de-de
 $text['description-max_wait_time']['de-ch'] = "Geben Sie die maximale Wartezeit an."; //copied from de-de
@@ -2262,6 +2375,7 @@ $text['description-max_wait_time']['sv-se'] = "Ange max vänt-tid.";
 $text['description-max_wait_time']['uk-ua'] = "";
 
 $text['description-max_no_answer']['en-us'] = "Enter max no answer.";
+$text['description-max_no_answer']['en-gb'] = "Enter max no answer.";
 $text['description-max_no_answer']['ar-eg'] = "";
 $text['description-max_no_answer']['de-at'] = "Geben Sie Max keine Antwort an."; //copied from de-de
 $text['description-max_no_answer']['de-ch'] = "Geben Sie Max keine Antwort an."; //copied from de-de
@@ -2282,6 +2396,7 @@ $text['description-max_no_answer']['sv-se'] = "Ange max inget svar.";
 $text['description-max_no_answer']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Enter the extension number.";
+$text['description-extension']['en-gb'] = "Enter the extension number.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Geben Sie die Nebenstelle an."; //copied from de-de
 $text['description-extension']['de-ch'] = "Geben Sie die Nebenstelle an."; //copied from de-de
@@ -2302,6 +2417,7 @@ $text['description-extension']['sv-se'] = "Ange anknytningsnumret.";
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-discard_abandoned_after']['en-us'] = "Set the discard abandoned after seconds.";
+$text['description-discard_abandoned_after']['en-gb'] = "Set the discard abandoned after seconds.";
 $text['description-discard_abandoned_after']['ar-eg'] = "";
 $text['description-discard_abandoned_after']['de-at'] = "Setzen Sie die Zeit in Sekunden, nach der ein Anrufer nicht wieder in die Warteschlange eingereiht wird."; //copied from de-de
 $text['description-discard_abandoned_after']['de-ch'] = "Setzen Sie die Zeit in Sekunden, nach der ein Anrufer nicht wieder in die Warteschlange eingereiht wird."; //copied from de-de
@@ -2322,6 +2438,7 @@ $text['description-discard_abandoned_after']['sv-se'] = "Ange uteslut Ej Besvara
 $text['description-discard_abandoned_after']['uk-ua'] = "";
 
 $text['description-contact']['en-us'] = "Select the contact number.";
+$text['description-contact']['en-gb'] = "Select the contact number.";
 $text['description-contact']['ar-eg'] = "";
 $text['description-contact']['de-at'] = "Wählen Sie die Kontakt Nummer."; //copied from de-de
 $text['description-contact']['de-ch'] = "Wählen Sie die Kontakt Nummer."; //copied from de-de
@@ -2342,6 +2459,7 @@ $text['description-contact']['sv-se'] = "Välj kontakt numret.";
 $text['description-contact']['uk-ua'] = "Призначити контакт в цей обліковий запис користувача.";
 
 $text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
+$text['description-caller_id_name_prefix']['en-gb'] = "Set a prefix on the caller ID name.";
 $text['description-caller_id_name_prefix']['ar-eg'] = "";
 $text['description-caller_id_name_prefix']['de-at'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)."; //copied from de-de
 $text['description-caller_id_name_prefix']['de-ch'] = "Setzen Sie ein Präfix für die Anruferkennung (Name)."; //copied from de-de
@@ -2362,6 +2480,7 @@ $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Call
 $text['description-caller_id_name_prefix']['uk-ua'] = "";
 
 $text['description-caller_announce_sound']['en-us'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
+$text['description-caller_announce_sound']['en-gb'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
 $text['description-caller_announce_sound']['ar-eg'] = "";
 $text['description-caller_announce_sound']['de-at'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei."; //copied from de-de
 $text['description-caller_announce_sound']['de-ch'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei."; //copied from de-de
@@ -2382,6 +2501,7 @@ $text['description-caller_announce_sound']['sv-se'] = "Ett ljud som spelas upp e
 $text['description-caller_announce_sound']['uk-ua'] = "";
 
 $text['description-caller_announce_frequency']['en-us'] = "How often should we play the announce sound. Enter a number in seconds";
+$text['description-caller_announce_frequency']['en-gb'] = "How often should we play the announce sound. Enter a number in seconds";
 $text['description-caller_announce_frequency']['ar-eg'] = "";
 $text['description-caller_announce_frequency']['de-at'] = "Wie häufig soll der Anmeldeton abgespielt werden. Geben Sie eine Zahl in Sekunden an."; //copied from de-de
 $text['description-caller_announce_frequency']['de-ch'] = "Wie häufig soll der Anmeldeton abgespielt werden. Geben Sie eine Zahl in Sekunden an."; //copied from de-de
@@ -2402,6 +2522,7 @@ $text['description-caller_announce_frequency']['sv-se'] = "Hur ofta skall meddel
 $text['description-caller_announce_frequency']['uk-ua'] = "";
 
 $text['description-call_timeout']['en-us'] = "Enter the call timeout.";
+$text['description-call_timeout']['en-gb'] = "Enter the call timeout.";
 $text['description-call_timeout']['ar-eg'] = "";
 $text['description-call_timeout']['de-at'] = "Geben Sie den Wert für die Zeitüberschreitung an."; //copied from de-de
 $text['description-call_timeout']['de-ch'] = "Geben Sie den Wert für die Zeitüberschreitung an."; //copied from de-de
@@ -2422,6 +2543,7 @@ $text['description-call_timeout']['sv-se'] = "Ange 'call timeout'";
 $text['description-call_timeout']['uk-ua'] = "";
 
 $text['description-call_center_queues']['en-us'] = "List of queues for the call center.";
+$text['description-call_center_queues']['en-gb'] = "List of queues for the call center.";
 $text['description-call_center_queues']['ar-eg'] = "";
 $text['description-call_center_queues']['de-at'] = "Liste der Callcenter Warteschlangen"; //copied from de-de
 $text['description-call_center_queues']['de-ch'] = "Liste der Callcenter Warteschlangen"; //copied from de-de
@@ -2442,6 +2564,7 @@ $text['description-call_center_queues']['sv-se'] = "Lista med kö:er för Call C
 $text['description-call_center_queues']['uk-ua'] = "";
 
 $text['description-call_center_agents']['en-us'] = "List of call center agents.";
+$text['description-call_center_agents']['en-gb'] = "List of call center agents.";
 $text['description-call_center_agents']['ar-eg'] = "";
 $text['description-call_center_agents']['de-at'] = "Liste der Callcenter Agenten"; //copied from de-de
 $text['description-call_center_agents']['de-ch'] = "Liste der Callcenter Agenten"; //copied from de-de
@@ -2462,6 +2585,7 @@ $text['description-call_center_agents']['sv-se'] = "Lista med Call Center Agente
 $text['description-call_center_agents']['uk-ua'] = "";
 
 $text['description-call_center_agent_status']['en-us'] = "List all the call center agents with the option to change the status of one or more agents.";
+$text['description-call_center_agent_status']['en-gb'] = "List all the call center agents with the option to change the status of one or more agents.";
 $text['description-call_center_agent_status']['ar-eg'] = "";
 $text['description-call_center_agent_status']['de-at'] = "Liste aller Callcenter Agenten mit der Option, den Status der einzelnen Agenten zu ändern."; //copied from de-de
 $text['description-call_center_agent_status']['de-ch'] = "Liste aller Callcenter Agenten mit der Option, den Status der einzelnen Agenten zu ändern."; //copied from de-de
@@ -2482,6 +2606,7 @@ $text['description-call_center_agent_status']['sv-se'] = "Lista med alla Call Ce
 $text['description-call_center_agent_status']['uk-ua'] = "";
 
 $text['description-busy_delay_time']['en-us'] = "Enter the agent busy delay time.";
+$text['description-busy_delay_time']['en-gb'] = "Enter the agent busy delay time.";
 $text['description-busy_delay_time']['ar-eg'] = "";
 $text['description-busy_delay_time']['de-at'] = "Geben Sie eine Wartezeit für den Agenten an."; //copied from de-de
 $text['description-busy_delay_time']['de-ch'] = "Geben Sie eine Wartezeit für den Agenten an."; //copied from de-de
@@ -2502,6 +2627,7 @@ $text['description-busy_delay_time']['sv-se'] = "Ange Agent Upptagen Fördröjni
 $text['description-busy_delay_time']['uk-ua'] = "";
 
 $text['description-agent_password']['en-us'] = "Enter the agent password.";
+$text['description-agent_password']['en-gb'] = "Enter the agent password.";
 $text['description-agent_password']['ar-eg'] = "";
 $text['description-agent_password']['de-at'] = "Geben Sie ein Agenten Passwort ein"; //copied from de-de
 $text['description-agent_password']['de-ch'] = "Geben Sie ein Agenten Passwort ein"; //copied from de-de
@@ -2522,6 +2648,7 @@ $text['description-agent_password']['sv-se'] = "Ange agenten lösenord.";
 $text['description-agent_password']['uk-ua'] = "";
 
 $text['description-agent_name']['en-us'] = "Select the agent name.";
+$text['description-agent_name']['en-gb'] = "Select the agent name.";
 $text['description-agent_name']['ar-eg'] = "";
 $text['description-agent_name']['de-at'] = "Wählen Sie einen Agentennamen."; //copied from de-de
 $text['description-agent_name']['de-ch'] = "Wählen Sie einen Agentennamen."; //copied from de-de
@@ -2542,6 +2669,7 @@ $text['description-agent_name']['sv-se'] = "Välj Agent namn.";
 $text['description-agent_name']['uk-ua'] = "Виберіть ім’я оператора";
 
 $text['description-agent_logout']['en-us'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
+$text['description-agent_logout']['en-gb'] = "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.";
 $text['description-agent_logout']['ar-eg'] = "";
 $text['description-agent_logout']['de-at'] = "Geben Sie die Zeit im Format 00:00 an, nach der Agenten automatisch abgemeldet werden. (Benötigt einen Cron Job)"; //copied from de-de
 $text['description-agent_logout']['de-ch'] = "Geben Sie die Zeit im Format 00:00 an, nach der Agenten automatisch abgemeldet werden. (Benötigt einen Cron Job)"; //copied from de-de
@@ -2562,6 +2690,7 @@ $text['description-agent_logout']['sv-se'] = "Ange Automatisk utläggning av Age
 $text['description-agent_logout']['uk-ua'] = "";
 
 $text['description-agent_id']['en-us'] = "Enter the agent ID.";
+$text['description-agent_id']['en-gb'] = "Enter the agent ID.";
 $text['description-agent_id']['ar-eg'] = "";
 $text['description-agent_id']['de-at'] = "Wählen Sie eine Agenten ID."; //copied from de-de
 $text['description-agent_id']['de-ch'] = "Wählen Sie eine Agenten ID."; //copied from de-de
@@ -2582,6 +2711,7 @@ $text['description-agent_id']['sv-se'] = "Ange agent-ID.";
 $text['description-agent_id']['uk-ua'] = "";
 
 $text['description-agent']['en-us'] = "Select the agent name.";
+$text['description-agent']['en-gb'] = "Select the agent name.";
 $text['description-agent']['ar-eg'] = "";
 $text['description-agent']['de-at'] = "Wählen Sie einen Agentennamen."; //copied from de-de
 $text['description-agent']['de-ch'] = "Wählen Sie einen Agentennamen."; //copied from de-de
@@ -2602,6 +2732,7 @@ $text['description-agent']['sv-se'] = "Välj Agent namnet.";
 $text['description-agent']['uk-ua'] = "Виберіть ім’я оператора";
 
 $text['description-abandoned_resume_allowed']['en-us'] = "Set the abandoned resume allowed to true or false.";
+$text['description-abandoned_resume_allowed']['en-gb'] = "Set the abandoned resume allowed to true or false.";
 $text['description-abandoned_resume_allowed']['ar-eg'] = "";
 $text['description-abandoned_resume_allowed']['de-at'] = "Schalten Sie die Wideraufnahme von Anrufern in der Warteschlange Ein oder Aus."; //copied from de-de
 $text['description-abandoned_resume_allowed']['de-ch'] = "Schalten Sie die Wideraufnahme von Anrufern in der Warteschlange Ein oder Aus."; //copied from de-de
@@ -2622,6 +2753,7 @@ $text['description-abandoned_resume_allowed']['sv-se'] = "Välj 'Ej Besvarat Åt
 $text['description-abandoned_resume_allowed']['uk-ua'] = "";
 
 $text['confirm-copy']['en-us'] = "Do you really want to copy this?";
+$text['confirm-copy']['en-gb'] = "Do you really want to copy this?";
 $text['confirm-copy']['ar-eg'] = "";
 $text['confirm-copy']['de-at'] = "Wollen Sie das wirklich kopieren?"; //copied from de-de
 $text['confirm-copy']['de-ch'] = "Wollen Sie das wirklich kopieren?"; //copied from de-de
@@ -2642,6 +2774,7 @@ $text['confirm-copy']['sv-se'] = "Vill du verkligen kopiera detta?";
 $text['confirm-copy']['uk-ua'] = "Ви дійсно бажаєте це скопіювати?";
 
 $text['button-update_status']['en-us'] = "Update Status";
+$text['button-update_status']['en-gb'] = "Update Status";
 $text['button-update_status']['ar-eg'] = "";
 $text['button-update_status']['de-at'] = "Status Aktualisieren"; //copied from de-de
 $text['button-update_status']['de-ch'] = "Status Aktualisieren"; //copied from de-de
@@ -2662,6 +2795,7 @@ $text['button-update_status']['sv-se'] = "Uppdatera Status";
 $text['button-update_status']['uk-ua'] = "Оновити статус";
 
 $text['button-tiers']['en-us'] = "Tiers";
+$text['button-tiers']['en-gb'] = "Tiers";
 $text['button-tiers']['ar-eg'] = "";
 $text['button-tiers']['de-at'] = "Ebenen"; //copied from de-de
 $text['button-tiers']['de-ch'] = "Ebenen"; //copied from de-de
@@ -2682,6 +2816,7 @@ $text['button-tiers']['sv-se'] = "Kunskap";
 $text['button-tiers']['uk-ua'] = "Рівні";
 
 $text['button-agents']['en-us'] = "Agents";
+$text['button-agents']['en-gb'] = "Agents";
 $text['button-agents']['ar-eg'] = "";
 $text['button-agents']['de-at'] = "Agenten"; //copied from de-de
 $text['button-agents']['de-ch'] = "Agenten"; //copied from de-de
@@ -2702,6 +2837,7 @@ $text['button-agents']['sv-se'] = "Agenter";
 $text['button-agents']['uk-ua'] = "Оператори";
 
 $text['button-wallboard']['en-us'] = "Wallboard";
+$text['button-wallboard']['en-gb'] = "Wallboard";
 $text['button-wallboard']['ar-eg'] = "";
 $text['button-wallboard']['de-at'] = "";
 $text['button-wallboard']['de-ch'] = "";

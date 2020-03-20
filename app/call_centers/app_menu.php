@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Centers";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Callcenter";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -28,6 +29,7 @@
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Agent Status";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Agent Status";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Agenten Status";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
