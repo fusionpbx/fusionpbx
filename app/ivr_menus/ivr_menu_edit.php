@@ -312,6 +312,7 @@
 
 				//build the xml dialplan
 					$ivr_menu_language = explode("/",$_POST["ivr_menu_language"]);
+					$ivr_menu_language_name = $ivr_menu_language[0].'-'.$ivr_menu_language[1].'-'.$ivr_menu_language[2];
 
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
@@ -325,6 +326,7 @@
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"language=".$ivr_menu_language_name."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
