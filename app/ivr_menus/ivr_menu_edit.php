@@ -609,7 +609,7 @@
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
@@ -628,7 +628,7 @@
 		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
 		echo "		<option value='".escape($ivr_menu_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
 	}
-	
+
 	foreach ($language_paths as $key => $language_variables) {
 		$language_variables = explode ('/',$language_paths[$key]);
 		$language = $language_variables[0];
@@ -638,7 +638,8 @@
 			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
 		}
 	}
-	echo "<br />\n";
+	echo "  </select>\n";
+	echo "  <br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
