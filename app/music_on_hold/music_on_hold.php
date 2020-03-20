@@ -484,8 +484,8 @@
 					echo "	<tr class='list-header'>\n";
 					if (permission_exists('music_on_hold_delete')) {
 						echo "	<th class='checkbox'>\n";
-						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : 'false';\">\n";
-						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]' value='true' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."');\">\n";
+						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : '';\">\n";
+						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
 						echo "	</th>\n";
 					}
 					echo "		<th class='pct-50'>".$stream_details."</th>\n";
