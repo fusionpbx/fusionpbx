@@ -589,7 +589,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_9 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8a0f19ed-7648-4e16-b92b-49d2844b3968";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e6a634a-8cbc-4b6d-8e05-1e2901138bb9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
