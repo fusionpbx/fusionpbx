@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Active Queues";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Active Queues";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Aktive Warteschlangen";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";

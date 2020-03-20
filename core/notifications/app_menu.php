@@ -2,6 +2,7 @@
 
 	$y = 0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Notifications";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Notifications";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Benachrichtigungen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benachrichtigungen";

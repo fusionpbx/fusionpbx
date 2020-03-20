@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
+		$apps[$x]['description']['en-gb'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Gateways stellen Verbindungen zu andere Sprach-Netzwerke bereit. Diese können Voice-Provider oder andere Systeme sein, die eine SIP Registrierung benötigen.";
 		$apps[$x]['description']['de-ch'] = "";

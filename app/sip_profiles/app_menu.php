@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "SIP Profiles";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "SIP Profiles";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "SIP Profile";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "SIP Profile";

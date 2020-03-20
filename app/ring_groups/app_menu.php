@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Ring Groups";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Ring Groups";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Rufgruppen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Rufgruppen";

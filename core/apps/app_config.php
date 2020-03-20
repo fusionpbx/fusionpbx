@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage Applications";
+		$apps[$x]['description']['en-gb'] = "Manage Applications";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Applikationen Verwalten";
 		$apps[$x]['description']['de-ch'] = "";

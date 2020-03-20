@@ -2,6 +2,7 @@
 
 	//Messages
 		$text['title-messages']['en-us'] = 'Messages';
+		$text['title-messages']['en-gb'] = 'Messages';
 		$text['title-messages']['ar-eg'] = 'Messages';
 		$text['title-messages']['de-at'] = 'Messages';
 		$text['title-messages']['de-ch'] = 'Messages';
@@ -22,6 +23,7 @@
 		$text['title-messages']['uk-ua'] = 'Messages';
 
 		$text['title-message']['en-us'] = 'Message';
+		$text['title-message']['en-gb'] = 'Message';
 		$text['title-message']['ar-eg'] = 'Message';
 		$text['title-message']['de-at'] = 'Message';
 		$text['title-message']['de-ch'] = 'Message';
@@ -42,6 +44,7 @@
 		$text['title-message']['uk-ua'] = 'Message';
 
 		$text['title-message_log']['en-us'] = 'Message Log';
+		$text['title-message_log']['en-gb'] = 'Message Log';
 		$text['title-message_log']['ar-eg'] = 'Message Log';
 		$text['title-message_log']['de-at'] = 'Message Log';
 		$text['title-message_log']['de-ch'] = 'Message Log';
@@ -62,6 +65,7 @@
 		$text['title-message_log']['uk-ua'] = 'Message Log';
 
 		$text['label-message_type']['en-us'] = 'Type';
+		$text['label-message_type']['en-gb'] = 'Type';
 		$text['label-message_type']['ar-eg'] = 'Type';
 		$text['label-message_type']['de-at'] = 'Type';
 		$text['label-message_type']['de-ch'] = 'Type';
@@ -82,6 +86,7 @@
 		$text['label-message_type']['uk-ua'] = 'Type';
 
 		$text['description-message_type']['en-us'] = 'Enter the message type.';
+		$text['description-message_type']['en-gb'] = 'Enter the message type.';
 		$text['description-message_type']['ar-eg'] = 'Enter the message type.';
 		$text['description-message_type']['de-at'] = 'Enter the message type.';
 		$text['description-message_type']['de-ch'] = 'Enter the message type.';
@@ -102,6 +107,7 @@
 		$text['description-message_type']['uk-ua'] = 'Enter the message type.';
 
 		$text['label-sms']['en-us'] = 'SMS';
+		$text['label-sms']['en-gb'] = 'SMS';
 		$text['label-sms']['ar-eg'] = 'SMS';
 		$text['label-sms']['de-at'] = 'SMS';
 		$text['label-sms']['de-ch'] = 'SMS';
@@ -121,6 +127,7 @@
 		$text['label-sms']['uk-ua'] = 'SMS';
 
 		$text['label-mms']['en-us'] = 'MMS';
+		$text['label-mms']['en-gb'] = 'MMS';
 		$text['label-mms']['ar-eg'] = 'MMS';
 		$text['label-mms']['de-at'] = 'MMS';
 		$text['label-mms']['de-ch'] = 'MMS';
@@ -140,6 +147,7 @@
 		$text['label-mms']['uk-ua'] = 'MMS';
 
 		$text['label-sms']['en-us'] = 'SMS';
+		$text['label-sms']['en-gb'] = 'SMS';
 		$text['label-sms']['ar-eg'] = 'SMS';
 		$text['label-sms']['de-at'] = 'SMS';
 		$text['label-sms']['de-ch'] = 'SMS';
@@ -159,6 +167,7 @@
 		$text['label-sms']['uk-ua'] = 'SMS';
 
 		$text['label-sip']['en-us'] = 'SIP';
+		$text['label-sip']['en-gb'] = 'SIP';
 		$text['label-sip']['ar-eg'] = 'SIP';
 		$text['label-sip']['de-at'] = 'SIP';
 		$text['label-sip']['de-ch'] = 'SIP';
@@ -178,6 +187,7 @@
 		$text['label-sip']['uk-ua'] = 'SIP';
 
 		$text['label-chat']['en-us'] = 'Chat';
+		$text['label-chat']['en-gb'] = 'Chat';
 		$text['label-chat']['ar-eg'] = 'Chat';
 		$text['label-chat']['de-at'] = 'Chat';
 		$text['label-chat']['de-ch'] = 'Chat';
@@ -197,6 +207,7 @@
 		$text['label-chat']['uk-ua'] = 'Chat';
 
 		$text['label-message']['en-us'] = 'Message';
+		$text['label-message']['en-gb'] = 'Message';
 		$text['label-message']['ar-eg'] = 'Message';
 		$text['label-message']['de-at'] = 'Message';
 		$text['label-message']['de-ch'] = 'Message';
@@ -216,6 +227,7 @@
 		$text['label-message']['uk-ua'] = 'Message';
 
 		$text['label-messages']['en-us'] = 'Messages';
+		$text['label-messages']['en-gb'] = 'Messages';
 		$text['label-messages']['ar-eg'] = 'Messages';
 		$text['label-messages']['de-at'] = 'Messages';
 		$text['label-messages']['de-ch'] = 'Messages';
@@ -235,6 +247,7 @@
 		$text['label-messages']['uk-ua'] = 'Messages';
 
 		$text['label-message_direction']['en-us'] = 'Direction';
+		$text['label-message_direction']['en-gb'] = 'Direction';
 		$text['label-message_direction']['ar-eg'] = 'Direction';
 		$text['label-message_direction']['de-at'] = 'Direction';
 		$text['label-message_direction']['de-ch'] = 'Direction';
@@ -255,6 +268,7 @@
 		$text['label-message_direction']['uk-ua'] = 'Direction';
 
 		$text['description-message_direction']['en-us'] = 'Enter the message direction.';
+		$text['description-message_direction']['en-gb'] = 'Enter the message direction.';
 		$text['description-message_direction']['ar-eg'] = 'Enter the message direction.';
 		$text['description-message_direction']['de-at'] = 'Enter the message direction.';
 		$text['description-message_direction']['de-ch'] = 'Enter the message direction.';
@@ -275,6 +289,7 @@
 		$text['description-message_direction']['uk-ua'] = 'Enter the message direction.';
 
 		$text['label-outbound']['en-us'] = 'Outbound';
+		$text['label-outbound']['en-gb'] = 'Outbound';
 		$text['label-outbound']['ar-eg'] = 'Outbound';
 		$text['label-outbound']['de-at'] = 'Outbound';
 		$text['label-outbound']['de-ch'] = 'Outbound';
@@ -294,6 +309,7 @@
 		$text['label-outbound']['uk-ua'] = 'Outbound';
 
 		$text['label-inbound']['en-us'] = 'Inbound';
+		$text['label-inbound']['en-gb'] = 'Inbound';
 		$text['label-inbound']['ar-eg'] = 'Inbound';
 		$text['label-inbound']['de-at'] = 'Inbound';
 		$text['label-inbound']['de-ch'] = 'Inbound';
@@ -313,6 +329,7 @@
 		$text['label-inbound']['uk-ua'] = 'Inbound';
 
 		$text['label-new_message']['en-us'] = 'New Message';
+		$text['label-new_message']['en-gb'] = 'New Message';
 		$text['label-new_message']['ar-eg'] = 'New Message';
 		$text['label-new_message']['de-at'] = 'New Message';
 		$text['label-new_message']['de-ch'] = 'New Message';
@@ -332,6 +349,7 @@
 		$text['label-new_message']['uk-ua'] = 'New Message';
 
 		$text['label-log']['en-us'] = 'Log';
+		$text['label-log']['en-gb'] = 'Log';
 		$text['label-log']['ar-eg'] = 'Log';
 		$text['label-log']['de-at'] = 'Log';
 		$text['label-log']['de-ch'] = 'Log';
@@ -351,6 +369,7 @@
 		$text['label-log']['uk-ua'] = 'Log';
 
 		$text['label-contacts']['en-us'] = 'Contacts';
+		$text['label-contacts']['en-gb'] = 'Contacts';
 		$text['label-contacts']['ar-eg'] = 'Contacts';
 		$text['label-contacts']['de-at'] = 'Contacts';
 		$text['label-contacts']['de-ch'] = 'Contacts';
@@ -370,6 +389,7 @@
 		$text['label-contacts']['uk-ua'] = 'Contacts';
 
 		$text['label-message_date']['en-us'] = 'Date';
+		$text['label-message_date']['en-gb'] = 'Date';
 		$text['label-message_date']['ar-eg'] = 'Date';
 		$text['label-message_date']['de-at'] = 'Date';
 		$text['label-message_date']['de-ch'] = 'Date';
@@ -390,6 +410,7 @@
 		$text['label-message_date']['uk-ua'] = 'Date';
 
 		$text['description-message_date']['en-us'] = 'Enter the message date.';
+		$text['description-message_date']['en-gb'] = 'Enter the message date.';
 		$text['description-message_date']['ar-eg'] = 'Enter the message date.';
 		$text['description-message_date']['de-at'] = 'Enter the message date.';
 		$text['description-message_date']['de-ch'] = 'Enter the message date.';
@@ -410,6 +431,7 @@
 		$text['description-message_date']['uk-ua'] = 'Enter the message date.';
 
 		$text['label-message_from']['en-us'] = 'From';
+		$text['label-message_from']['en-gb'] = 'From';
 		$text['label-message_from']['ar-eg'] = 'From';
 		$text['label-message_from']['de-at'] = 'From';
 		$text['label-message_from']['de-ch'] = 'From';
@@ -430,6 +452,7 @@
 		$text['label-message_from']['uk-ua'] = 'From';
 
 		$text['description-message_from']['en-us'] = 'Enter the message from.';
+		$text['description-message_from']['en-gb'] = 'Enter the message from.';
 		$text['description-message_from']['ar-eg'] = 'Enter the message from.';
 		$text['description-message_from']['de-at'] = 'Enter the message from.';
 		$text['description-message_from']['de-ch'] = 'Enter the message from.';
@@ -450,6 +473,7 @@
 		$text['description-message_from']['uk-ua'] = 'Enter the message from.';
 
 		$text['label-message_to']['en-us'] = 'To';
+		$text['label-message_to']['en-gb'] = 'To';
 		$text['label-message_to']['ar-eg'] = 'To';
 		$text['label-message_to']['de-at'] = 'To';
 		$text['label-message_to']['de-ch'] = 'To';
@@ -470,6 +494,7 @@
 		$text['label-message_to']['uk-ua'] = 'To';
 
 		$text['description-message_to']['en-us'] = 'Enter the message to.';
+		$text['description-message_to']['en-gb'] = 'Enter the message to.';
 		$text['description-message_to']['ar-eg'] = 'Enter the message to.';
 		$text['description-message_to']['de-at'] = 'Enter the message to.';
 		$text['description-message_to']['de-ch'] = 'Enter the message to.';
@@ -490,6 +515,7 @@
 		$text['description-message_to']['uk-ua'] = 'Enter the message to.';
 
 		$text['label-message_text']['en-us'] = 'Text';
+		$text['label-message_text']['en-gb'] = 'Text';
 		$text['label-message_text']['ar-eg'] = 'Text';
 		$text['label-message_text']['de-at'] = 'Text';
 		$text['label-message_text']['de-ch'] = 'Text';
@@ -510,6 +536,7 @@
 		$text['label-message_text']['uk-ua'] = 'Text';
 
 		$text['label-message_media']['en-us'] = 'Media';
+		$text['label-message_media']['en-gb'] = 'Media';
 		$text['label-message_media']['ar-eg'] = 'Media';
 		$text['label-message_media']['de-at'] = 'Media';
 		$text['label-message_media']['de-ch'] = 'Media';
@@ -530,6 +557,7 @@
 		$text['label-message_media']['uk-ua'] = 'Media';
 
 		$text['description-message_text']['en-us'] = 'Enter the message text.';
+		$text['description-message_text']['en-gb'] = 'Enter the message text.';
 		$text['description-message_text']['ar-eg'] = 'Enter the message text.';
 		$text['description-message_text']['de-at'] = 'Enter the message text.';
 		$text['description-message_text']['de-ch'] = 'Enter the message text.';
@@ -550,6 +578,7 @@
 		$text['description-message_text']['uk-ua'] = 'Enter the message text.';
 
 		$text['label-message_media_type']['en-us'] = 'Media Type';
+		$text['label-message_media_type']['en-gb'] = 'Media Type';
 		$text['label-message_media_type']['ar-eg'] = 'Media Type';
 		$text['label-message_media_type']['de-at'] = 'Media Type';
 		$text['label-message_media_type']['de-ch'] = 'Media Type';
@@ -570,6 +599,7 @@
 		$text['label-message_media_type']['uk-ua'] = 'Media Type';
 
 		$text['description-message_media_type']['en-us'] = 'Enter the message media type.';
+		$text['description-message_media_type']['en-gb'] = 'Enter the message media type.';
 		$text['description-message_media_type']['ar-eg'] = 'Enter the message media type.';
 		$text['description-message_media_type']['de-at'] = 'Enter the message media type.';
 		$text['description-message_media_type']['de-ch'] = 'Enter the message media type.';
@@ -590,6 +620,7 @@
 		$text['description-message_media_type']['uk-ua'] = 'Enter the message media type.';
 
 		$text['label-message_media_url']['en-us'] = 'Media URL';
+		$text['label-message_media_url']['en-gb'] = 'Media URL';
 		$text['label-message_media_url']['ar-eg'] = 'Media URL';
 		$text['label-message_media_url']['de-at'] = 'Media URL';
 		$text['label-message_media_url']['de-ch'] = 'Media URL';
@@ -610,6 +641,7 @@
 		$text['label-message_media_url']['uk-ua'] = 'Media URL';
 
 		$text['description-message_media_url']['en-us'] = 'Enter the message media url.';
+		$text['description-message_media_url']['en-gb'] = 'Enter the message media url.';
 		$text['description-message_media_url']['ar-eg'] = 'Enter the message media url.';
 		$text['description-message_media_url']['de-at'] = 'Enter the message media url.';
 		$text['description-message_media_url']['de-ch'] = 'Enter the message media url.';
@@ -630,6 +662,7 @@
 		$text['description-message_media_url']['uk-ua'] = 'Enter the message media url.';
 
 		$text['label-message_media_content']['en-us'] = 'Message Media Content';
+		$text['label-message_media_content']['en-gb'] = 'Message Media Content';
 		$text['label-message_media_content']['ar-eg'] = 'Message Media Content';
 		$text['label-message_media_content']['de-at'] = 'Message Media Content';
 		$text['label-message_media_content']['de-ch'] = 'Message Media Content';
@@ -650,6 +683,7 @@
 		$text['label-message_media_content']['uk-ua'] = 'Message Media Content';
 
 		$text['description-message_media_content']['en-us'] = 'Enter the message media content.';
+		$text['description-message_media_content']['en-gb'] = 'Enter the message media content.';
 		$text['description-message_media_content']['ar-eg'] = 'Enter the message media content.';
 		$text['description-message_media_content']['de-at'] = 'Enter the message media content.';
 		$text['description-message_media_content']['de-ch'] = 'Enter the message media content.';
@@ -670,6 +704,7 @@
 		$text['description-message_media_content']['uk-ua'] = 'Enter the message media content.';
 
 		$text['label-message_json']['en-us'] = 'JSON';
+		$text['label-message_json']['en-gb'] = 'JSON';
 		$text['label-message_json']['ar-eg'] = 'JSON';
 		$text['label-message_json']['de-at'] = 'JSON';
 		$text['label-message_json']['de-ch'] = 'JSON';
@@ -690,6 +725,7 @@
 		$text['label-message_json']['uk-ua'] = 'JSON';
 
 		$text['label-refresh_pause']['en-us'] = "Pause Refresh";
+		$text['label-refresh_pause']['en-gb'] = "Pause Refresh";
 		$text['label-refresh_pause']['ar-eg'] = "Pause Refresh";
 		$text['label-refresh_pause']['de-at'] = "Seite neu laden deaktivieren"; //copied from de-de
 		$text['label-refresh_pause']['de-ch'] = "Seite neu laden deaktivieren"; //copied from de-de
@@ -710,6 +746,7 @@
 		$text['label-refresh_pause']['uk-ua'] = "пауза Оновити";
 
 		$text['label-refresh_enable']['en-us'] = "Enable Refresh";
+		$text['label-refresh_enable']['en-gb'] = "Enable Refresh";
 		$text['label-refresh_enable']['ar-eg'] = "Enable Refresh";
 		$text['label-refresh_enable']['de-at'] = "Seite neu laden aktivieren"; //copied from de-de
 		$text['label-refresh_enable']['de-ch'] = "Seite neu laden aktivieren"; //copied from de-de
@@ -730,6 +767,7 @@
 		$text['label-refresh_enable']['uk-ua'] = "включити Оновити";
 
 		$text['description-enter_response']['en-us'] = 'Enter Response...';
+		$text['description-enter_response']['en-gb'] = 'Enter Response...';
 		$text['description-enter_response']['ar-eg'] = 'Enter Response...';
 		$text['description-enter_response']['de-at'] = 'Enter Response...';
 		$text['description-enter_response']['de-ch'] = 'Enter Response...';
@@ -750,6 +788,7 @@
 		$text['description-enter_response']['uk-ua'] = 'Enter Response...';
 
 		$text['label-ctrl_enter']['en-us'] = 'Ctrl + Enter';
+		$text['label-ctrl_enter']['en-gb'] = 'Ctrl + Enter';
 		$text['label-ctrl_enter']['ar-eg'] = 'Ctrl + Enter';
 		$text['label-ctrl_enter']['de-at'] = 'Ctrl + Enter';
 		$text['label-ctrl_enter']['de-ch'] = 'Ctrl + Enter';
@@ -770,6 +809,7 @@
 		$text['label-ctrl_enter']['uk-ua'] = 'Ctrl + Enter';
 
 		$text['button-close']['en-us'] = 'Close';
+		$text['button-close']['en-gb'] = 'Close';
 		$text['button-close']['ar-eg'] = 'Close';
 		$text['button-close']['de-at'] = 'Close';
 		$text['button-close']['de-ch'] = 'Close';
@@ -790,6 +830,7 @@
 		$text['button-close']['uk-ua'] = 'Close';
 
 		$text['label-view_contact']['en-us'] = 'View Contact';
+		$text['label-view_contact']['en-gb'] = 'View Contact';
 		$text['label-view_contact']['ar-eg'] = 'View Contact';
 		$text['label-view_contact']['de-at'] = 'View Contact';
 		$text['label-view_contact']['de-ch'] = 'View Contact';
@@ -810,6 +851,7 @@
 		$text['label-view_contact']['uk-ua'] = 'View Contact';
 
 		$text['label-send_email']['en-us'] = 'Send Email';
+		$text['label-send_email']['en-gb'] = 'Send Email';
 		$text['label-send_email']['ar-eg'] = 'Send Email';
 		$text['label-send_email']['de-at'] = 'Send Email';
 		$text['label-send_email']['de-ch'] = 'Send Email';

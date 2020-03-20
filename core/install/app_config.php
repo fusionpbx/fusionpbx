@@ -8,6 +8,7 @@
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Install the fusionPBX system or add new switches";
+		$apps[$x]['description']['en-gb'] = "Install the fusionPBX system or add new switches";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Installiere das FusionPBX System oder füge neue Switches hinzu.";
 		$apps[$x]['description']['de-ch'] = "";

@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Outbound Routes";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Outbound Routes";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Ausgehendes Routing";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";

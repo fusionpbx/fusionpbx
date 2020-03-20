@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Track database transactions";
+		$apps[$x]['description']['en-gb'] = "Track database transactions";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Datenbanktransaktionen verfolgen";
 		$apps[$x]['description']['de-ch'] = "";

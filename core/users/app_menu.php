@@ -2,6 +2,7 @@
 
 	$y = 0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Users";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Users";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Benutzerverwaltung";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benutzerverwaltung";
@@ -27,6 +28,7 @@
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;	
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Account Settings";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Account Settings";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "إعدادات الحساب";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Kontoeinstellungen";
