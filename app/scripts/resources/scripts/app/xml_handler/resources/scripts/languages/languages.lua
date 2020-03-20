@@ -108,12 +108,13 @@
 								dir_dialect = 'us';
 								dir_voice = 'callie';
 							end
+							local dir_lang_path = dir_lang.."/"..dir_dialect.."/"..dir_voice;
 
 						--get the xml
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang..[[/]]..dir_dialect..[[/]]..dir_voice..[[" tts-engine="flite" tts-voice="rms">]]);
+							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang_path..[[" tts-engine="flite" tts-voice="rms">]]);
 							table.insert(xml, [[			<phrases>]]);
 							table.insert(xml, [[				<macros>]]);
 
@@ -124,7 +125,7 @@
 							sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
 							sql = sql .. "AND p.phrase_enabled = 'true' ";
 							sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
-							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = language};
+							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = dir_lang_path};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
