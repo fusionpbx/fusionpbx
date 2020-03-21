@@ -388,6 +388,21 @@
 
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
+
+		--set the outbound caller id
+			if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
+				caller_id = "origination_caller_id_name='"..outbound_caller_id_name.."'";
+			end
+			if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
+				caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
+			end
+			if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
+				caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'";
+			end
+			if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
+				caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
+			end
+
 		--forward the ring group
 			session:setVariable("toll_allow", ring_group_forward_toll_allow);
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
