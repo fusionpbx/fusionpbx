@@ -874,8 +874,8 @@
 	{*//logged in *}
 		{if $authenticated}
 			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
-				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
 				{$container_open}
+				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
 				{$menu}
 				{if $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}<br />{/if}
 			{else} {*//default: fixed *}
