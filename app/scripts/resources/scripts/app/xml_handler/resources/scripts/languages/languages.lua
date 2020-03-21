@@ -29,7 +29,6 @@
 
 --general functions
 	require "resources.functions.is_uuid";
-	require "resources.functions.explode";
 
 --set the default
 	continue = true;
@@ -98,71 +97,79 @@
 					if (is_uuid(macro_name)) then
 						--define the xml table
 							local xml = {};
-
-						--get the language components
-							local locale = explode('-', language);
-							local dir_lang = locale[1];
-							local dir_dialect = locale[2];
-							local dir_voice = locale[3];
-							if (locale[2] == nil) then
-								dir_dialect = 'us';
-								dir_voice = 'callie';
-							end
-							local dir_lang_path = dir_lang.."/"..dir_dialect.."/"..dir_voice;
-
-						--get the xml
 							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 							table.insert(xml, [[<document type="freeswitch/xml">]]);
 							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..dir_lang..[[" sound-prefix="]]..sounds_dir..[[/]]..dir_lang_path..[[" tts-engine="flite" tts-voice="rms">]]);
-							table.insert(xml, [[			<phrases>]]);
-							table.insert(xml, [[				<macros>]]);
 
-							local sql = "SELECT * FROM v_phrases as p, v_phrase_details as d ";
+						--get the dialplan language db prefix
+							local phrase_language = string.gsub(language, "-", "/");
+
+						--determine if we should override the phrase language
+							local use_db_language = (string.find(language, "^%w+-%w+-%w+$") == nil);
+
+						--query the db
+							local sql = "SELECT p.phrase_language, p.phrase_uuid, d.phrase_detail_function, d.phrase_detail_data ";
+							sql = sql .. "FROM v_phrases as p, v_phrase_details as d ";
 							sql = sql .. "WHERE d.domain_uuid = :domain_uuid ";
 							sql = sql .. "AND p.phrase_uuid = :macro_name ";
-							sql = sql .. "AND p.phrase_language = :language ";
+							--sql = sql .. "AND p.phrase_language LIKE ':language%' ";
 							sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
 							sql = sql .. "AND p.phrase_enabled = 'true' ";
-							sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
-							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = dir_lang_path};
+							sql = sql .. "ORDER BY d.domain_uuid, p.phrase_language, p.phrase_uuid, d.phrase_detail_order ASC ";
+							local params = {
+								domain_uuid = domain_uuid,
+								macro_name = macro_name,
+								language = phrase_language
+							};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
-							previous_phrase_uuid = "";
-							match_tag = "open";
-							x = 0;
-							dbh:query(sql, params, function(row)
-								--phrase_uuid,domain_uuid,phrase_name,phrase_language
-								--phrase_description,phrase_enabled,phrase_detail_uuid
-								--phrase_detail_group,phrase_detail_tag,phrase_detail_pattern
-								--phrase_detail_function,phrase_detail_data,phrase_detail_method
-								--phrase_detail_type,phrase_detail_order
-								if (previous_phrase_uuid ~= row.phrase_uuid) then
-									if (x > 0) then
-										table.insert(xml, [[							</match>]]);
-										table.insert(xml, [[						</input>]]);
-										table.insert(xml, [[					</macro>]]);
-									end
-									table.insert(xml, [[					<macro name="]]..row.phrase_uuid..[[">]]);
-									table.insert(xml, [[						<input pattern=\"(.*)\">]]);
-									table.insert(xml, [[							<match>]]);
-									match_open_tag = true
+							local previous_phrase_language = "";
+							local previous_phrase_uuid = "";
+						dbh:query(sql, params, function(row)
+						--get the xml
+							if (use_db_language) then phrase_language = row.phrase_language end
+							if (previous_phrase_language ~= phrase_language) then
+								if (previous_phrase_language ~= "") then
+									table.insert(xml, [[				</macros>]]);
+									table.insert(xml, [[			</phrases>]]);
+									table.insert(xml, [[		</language>]]);
 								end
-								table.insert(xml, [[								<action function="]]..row.phrase_detail_function..[[" data="]]..row.phrase_detail_data..[["/>]]);
+								previous_phrase_language = phrase_language;
+
+								local say_module = string.sub(phrase_language, 1, 2);
+								table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..say_module..[[" sound-prefix="]]..sounds_dir..[[/]]..phrase_language..[[" tts-engine="flite" tts-voice="rms">]]);
+								table.insert(xml, [[			<phrases>]]);
+								table.insert(xml, [[				<macros>]]);
+							end
+
+							if (previous_phrase_uuid ~= row.phrase_uuid) then
+								if (previous_phrase_uuid ~= "") then
+									table.insert(xml, [[							</match>]]);
+									table.insert(xml, [[						</input>]]);
+									table.insert(xml, [[					</macro>]]);
+								end
 								previous_phrase_uuid = row.phrase_uuid;
-								x = x + 1;
-							end);
-							if (x > 0) then
+								table.insert(xml, [[					<macro name="]]..row.phrase_uuid..[[">]]);
+								table.insert(xml, [[						<input pattern=\"(.*)\">]]);
+								table.insert(xml, [[							<match>]]);
+							end
+
+							table.insert(xml, [[								<action function="]]..row.phrase_detail_function..[[" data="]]..row.phrase_detail_data..[["/>]]);
+						end);
+
+							if (previous_phrase_uuid ~= "") then
 								table.insert(xml, [[							</match>]]);
 								table.insert(xml, [[						</input>]]);
 								table.insert(xml, [[					</macro>]]);
 							end
-							table.insert(xml, [[				</macros>]]);
+							if (previous_phrase_language ~= "") then
+								table.insert(xml, [[				</macros>]]);
+								table.insert(xml, [[			</phrases>]]);
+								table.insert(xml, [[		</language>]]);
+							end
 
 						--output xml & close previous file
-							table.insert(xml, [[			</phrases>]]);
-							table.insert(xml, [[		</language>]]);
 							table.insert(xml, [[	</section>]]);
 							table.insert(xml, [[</document>]]);
 							XML_STRING = table.concat(xml, "\n");
