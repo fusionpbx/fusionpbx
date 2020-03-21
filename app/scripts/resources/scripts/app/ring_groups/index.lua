@@ -391,20 +391,30 @@
 
 		--set the outbound caller id
 			if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
-				caller_id = "origination_caller_id_name='"..outbound_caller_id_name.."'";
+				caller_id_name = outbound_caller_id_name;
 			end
 			if (caller_is_local == 'true' and outbound_caller_id_number ~= nil) then
-				caller_id = caller_id .. ",origination_caller_id_number='"..outbound_caller_id_number.."'";
+				caller_id_number = outbound_caller_id_number;
 			end
 			if (ring_group_caller_id_name ~= nil and ring_group_caller_id_name ~= '') then
-				caller_id = "origination_caller_id_name='"..ring_group_caller_id_name.."'";
+				caller_id_name = ring_group_caller_id_name;
 			end
 			if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
-				caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
+				caller_id_number = ring_group_caller_id_number;
 			end
 
 		--forward the ring group
-			session:setVariable("toll_allow", ring_group_forward_toll_allow);
+			if (caller_id_name) then
+				session:setVariable("effective_caller_id_name", caller_id_name);
+				session:setVariable("outbound_caller_id_name", caller_id_name);
+			end
+			if (caller_id_number) then
+				session:setVariable("effective_caller_id_number", caller_id_number);
+				session:setVariable("outbound_caller_id_number", caller_id_number);
+			end
+			if (ring_group_forward_toll_allow) then
+				session:setVariable("toll_allow", ring_group_forward_toll_allow);
+			end
 			session:execute("transfer", ring_group_forward_destination.." XML "..context);
 	else
 		--get the strategy of the ring group, if random, we use random() to order the destinations
