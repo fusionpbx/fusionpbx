@@ -1093,10 +1093,8 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		display: inline-block;
 		width: 100%;
 		<?php
-		if (
-			isset($_SESSION['username']) && $_SESSION['username'] != '' &&
-			(isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '')
-			) { ?>
+		if (isset($background_images) || $background_colors[0] != '' || $background_colors[1] != '') {
+			?>
 			background: <?php echo ($_SESSION['theme']['body_color']['text'] != '') ? $_SESSION['theme']['body_color']['text'] : "#ffffff"; ?>;
 			background-attachment: fixed;
 			<?php $br = format_border_radius($_SESSION['theme']['body_border_radius']['text'], '4px'); ?>
