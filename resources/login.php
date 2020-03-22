@@ -376,6 +376,7 @@
 	}
 
 //add the footer
+	$login_page = true;
 	include "resources/footer.php";
 
 ?>

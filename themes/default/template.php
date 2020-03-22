@@ -871,8 +871,18 @@
 			</td></tr></table>
 		</div>
 
-	{*//logged in *}
-		{if $authenticated}
+	{*//login page *}
+		{if $login_page}
+			<div id='default_login'>
+				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
+				{$document_body}
+			</div>
+			<div id='footer_login'>
+				<span class='footer'>{$settings.theme.footer}</span>
+			</div>
+
+	{*//other pages *}
+		{else}
 			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'inline' || $settings.theme.menu_style == 'static'}
 				{$container_open}
 				{if $settings.theme.menu_style == 'inline'}{$logo}{/if}
@@ -889,16 +899,6 @@
 				<span class='footer'>{$settings.theme.footer}</span>
 			</div>
 			{$container_close}
-
-	{*//not logged in *}
-		{else}
-			<div id='default_login'>
-				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}'></a><br />
-				{$document_body}
-			</div>
-			<div id='footer_login'>
-				<span class='footer'>{$settings.theme.footer}</span>
-			</div>
 		{/if}
 
 </body>

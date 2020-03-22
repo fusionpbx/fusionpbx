@@ -247,6 +247,8 @@
 		$view->assign('login_logo_source', $login_logo_source);
 		$view->assign('login_logo_width', $login_logo_width);
 		$view->assign('login_logo_height', $login_logo_height);
+	//login page
+		$view->assign('login_page', $login_page);
 	//messages
 		$view->assign('messages', message::html(true, '		'));
 
