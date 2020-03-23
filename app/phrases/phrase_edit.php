@@ -32,13 +32,14 @@
 
 //local functions
 	function delete_cache($language, $uuid) {
+		// delete both because we don't know if the language changed
 		$cache = new cache;
-		if (empty($language)) {
-			$vars = new variables;
-			$key_language = $vars->get_variable('language');
-		} else {
-			$key_language = str_replace('/', '-', $language);
-		}
+		$vars = new variables;
+
+		$key_language = $vars->get_variable('language');
+		$cache->delete("languages:".$key_language.".".$uuid);
+
+		$key_language = str_replace('/', '-', $language);
 		$cache->delete("languages:".$key_language.".".$uuid);
 	}
 
