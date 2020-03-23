@@ -26,6 +26,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
+--	Richard Case <rich@racitup.com>
 
 --general functions
 	require "resources.functions.is_uuid";
@@ -102,10 +103,7 @@
 							table.insert(xml, [[	<section name="languages">]]);
 
 						--get the dialplan language db prefix
-							local phrase_language = string.gsub(language, "-", "/");
-
-						--determine if we should override the phrase language
-							local use_db_language = (string.find(language, "^%w+-%w+-%w+$") == nil);
+							local default_phrase_language = string.gsub(language, "-", "/");
 
 						--query the db
 							local sql = "SELECT p.phrase_language, p.phrase_uuid, d.phrase_detail_function, d.phrase_detail_data ";
@@ -119,16 +117,23 @@
 							local params = {
 								domain_uuid = domain_uuid,
 								macro_name = macro_name,
-								language = phrase_language
+								language = default_phrase_language
 							};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
 							local previous_phrase_language = "";
 							local previous_phrase_uuid = "";
+							local phrase_language;
 						dbh:query(sql, params, function(row)
 						--get the xml
-							if (use_db_language) then phrase_language = row.phrase_language end
+							--determine if we should override the phrase language
+							if (row.phrase_language == "") then
+								phrase_language = default_phrase_language;
+							else
+								phrase_language = row.phrase_language;
+							end
+
 							if (previous_phrase_language ~= phrase_language) then
 								if (previous_phrase_language ~= "") then
 									table.insert(xml, [[				</macros>]]);

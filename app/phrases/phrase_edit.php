@@ -30,6 +30,18 @@
 	require_once "resources/check_auth.php";
 	require_once "resources/functions/save_phrases_xml.php";
 
+//local functions
+	function delete_cache($language, $uuid) {
+		$cache = new cache;
+		if (empty($language)) {
+			$vars = new variables;
+			$key_language = $vars->get_variable('language');
+		} else {
+			$key_language = str_replace('/', '-', $language);
+		}
+		$cache->delete("languages:".$key_language.".".$uuid);
+	}
+
 //check permissions
 	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
 		//access granted
@@ -106,7 +118,6 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($phrase_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($phrase_language) == 0) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -168,8 +179,7 @@
 						//save_phrases_xml();
 
 					//clear the cache
-						$cache = new cache;
-						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
+						delete_cache($phrase_language, $phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-add']);
@@ -233,8 +243,7 @@
 						save_phrases_xml();
 
 					//clear the cache
-						$cache = new cache;
-						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
+						delete_cache($phrase_language, $phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-update']);
@@ -354,9 +363,8 @@
 		}
 		unset($recordings, $row);
 	//sounds
-	// TODO: make sounds lookup depend on the selected language
 		$file = new file;
-		$sound_files = $file->sounds();
+		$sound_files = $file->sounds($phrase_language);
 		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
@@ -476,19 +484,14 @@
 
 // Language field
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <select class='formfld' type='text' name='phrase_language'>\n";
 	echo "		<option></option>\n";
 
-	if (empty($phrase_language)) {
-		$phrase_language = "$phrase_language_code/$phrase_dialect/$phrase_voice";
-		$language_formatted = "$phrase_language_code-$phrase_dialect $phrase_voice";
-		echo "		<option value='".escape($phrase_language)."'>".escape($language_formatted)."</option>\n";
-	}
-	else {
+	if (!empty($phrase_language)) {
 		$language_array = explode ('/', $phrase_language);
 		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
 		echo "		<option value='".escape($phrase_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
