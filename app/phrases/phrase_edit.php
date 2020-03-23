@@ -31,16 +31,9 @@
 	require_once "resources/functions/save_phrases_xml.php";
 
 //local functions
-	function delete_cache($language, $uuid) {
-		// delete both because we don't know if the language changed
+	function delete_cache($uuid) {
 		$cache = new cache;
-		$vars = new variables;
-
-		$key_language = $vars->get_variable('language');
-		$cache->delete("languages:".$key_language.".".$uuid);
-
-		$key_language = str_replace('/', '-', $language);
-		$cache->delete("languages:".$key_language.".".$uuid);
+		$cache->delete("languages:phrase:$uuid");
 	}
 
 //check permissions
@@ -180,7 +173,7 @@
 						//save_phrases_xml();
 
 					//clear the cache
-						delete_cache($phrase_language, $phrase_uuid);
+						delete_cache($phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-add']);
@@ -244,7 +237,7 @@
 						save_phrases_xml();
 
 					//clear the cache
-						delete_cache($phrase_language, $phrase_uuid);
+						delete_cache($phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-update']);
