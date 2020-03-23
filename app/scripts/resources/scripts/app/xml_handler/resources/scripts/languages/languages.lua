@@ -49,7 +49,8 @@
 
 --get the cache
 	local cache = require "resources.functions.cache";
-	local language_cache_key = "languages:" .. language..":" .. macro_name;
+	--This key will need to change if generating language-specific xml outputs. Phrases are not.
+	local language_cache_key = "languages:phrase:" .. macro_name;
 	XML_STRING, err = cache.get(language_cache_key);
 
 --build the XML string from the database
