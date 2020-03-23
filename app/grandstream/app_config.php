@@ -622,5 +622,13 @@
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Language. See provision profile for codes.";
                 $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "19604f85-b643-4b92-8e28-9c09c34cf559";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blind_xfer_blf";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Blind Transfer to BLF Yes=1, No=0. Default=0";
+                $y++;
 
 ?>
