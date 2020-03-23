@@ -199,6 +199,7 @@
 			echo "	</td>\n";
 			$formatted_language = preg_replace('/^([[:alnum:]]+)[[:punct:]]([[:alnum:]]+)[[:punct:]]([[:alnum:]]+)/',
 				'$1-$2 $3', $row['phrase_language']);
+			if (empty($formatted_language)) $formatted_language = $text['label-language-default'];
 			echo "	<td>".escape($formatted_language)."&nbsp;</td>\n";
 			if (permission_exists('phrase_edit')) {
 				echo "	<td class='no-link center'>";
