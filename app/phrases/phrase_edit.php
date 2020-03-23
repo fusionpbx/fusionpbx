@@ -489,7 +489,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <select class='formfld' type='text' name='phrase_language'>\n";
-	echo "		<option>".$text['label-language-default']."</option>\n";
+	echo "		<option value=''>".$text['label-language-default']."</option>\n";
 
 	if (!empty($phrase_language)) {
 		$language_array = explode ('/', $phrase_language);
