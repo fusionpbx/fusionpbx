@@ -107,10 +107,10 @@
 			$database = new database;
 			$uuid = $database->select($sql, null, 'column');
 			if (!is_uuid($uuid) && PHP_OS == 'FreeBSD') {
-				$uuid = shell_exec("uuidgen");
+				$uuid = trim(shell_exec("uuidgen"));
 			}
 			if (!is_uuid($uuid) && PHP_OS == 'Linux') {
-				$uuid = file_get_contents('/proc/sys/kernel/random/uuid');
+				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
 			}
 			return $uuid;
 		}
