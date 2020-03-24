@@ -894,19 +894,17 @@ function format_string ($format, $data) {
 //generate a random password with upper, lowercase and symbols
 	function generate_password($length = 0, $strength = 0) {
 		$password = '';
-		$charset = '';
+		$chars = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
 			$length = (is_numeric($_SESSION["extension"]["password_length"]["numeric"])) ? $_SESSION["extension"]["password_length"]["numeric"] : 10;
 			$strength = (is_numeric($_SESSION["extension"]["password_strength"]["numeric"])) ? $_SESSION["extension"]["password_strength"]["numeric"] : 4;
 		}
-		if ($strength >= 1) { $charset .= "0123456789"; }
-		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
-		if ($strength >= 3) { $charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";	}
-		if ($strength >= 4) { $charset .= "!!!!!^$%*?....."; }
-		srand((double)microtime() * rand(1000000, 9999999));
-		while ($length > 0) {
-				$password .= $charset[rand(0, strlen($charset)-1)];
-				$length--;
+		if ($strength >= 1) { $chars .= "0123456789"; }
+		if ($strength >= 2) { $chars .= "abcdefghijkmnopqrstuvwxyz"; }
+		if ($strength >= 3) { $chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ"; }
+		if ($strength >= 4) { $chars .= "!^$%*?."; }
+		for ($i = 0; $i < $length; $i++) {
+			$password .= $chars[random_int(0, strlen($chars)-1)];
 		}
 		return $password;
 	}
@@ -2078,13 +2076,11 @@ function number_pad($number,$n) {
 //add a random_bytes function when it doesn't exist for old versions of PHP
 	if (!function_exists('random_bytes')) {
 		function random_bytes($length) {
-			$charset .= "0123456789";
-			$charset .= "abcdefghijkmnopqrstuvwxyz";
-			$charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
-			srand((double)microtime() * rand(1000000, 9999999));
-			while ($length > 0) {
-				$string .= $charset[rand(0, strlen($charset)-1)];
-				$length--;
+			$chars .= "0123456789";
+			$chars .= "abcdefghijkmnopqrstuvwxyz";
+			$chars .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+			for ($i = 0; $i < $length; $i++) {
+				$string .= $chars[random_int(0, strlen($chars)-1)];
 			}
 			return $string.' ';
 		}
