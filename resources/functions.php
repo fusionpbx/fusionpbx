@@ -103,28 +103,17 @@
 
 	if (!function_exists('uuid')) {
 		function uuid() {
-			//uuid version 4
-			return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-				// 32 bits for "time_low"
-				mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
-				// 16 bits for "time_mid"
-				mt_rand( 0, 0xffff ),
-
-				// 16 bits for "time_hi_and_version",
-				// four most significant bits holds version number 4
-				mt_rand( 0, 0x0fff ) | 0x4000,
-
-				// 16 bits, 8 bits for "clk_seq_hi_res",
-				// 8 bits for "clk_seq_low",
-				// two most significant bits holds zero and one for variant DCE1.1
-				mt_rand( 0, 0x3fff ) | 0x8000,
-
-				// 48 bits for "node"
-				mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-			);
+			$sql .= 'select gen_random_uuid();';
+			$database = new database;
+			$uuid = $database->select($sql, null, 'column');
+			if (!is_uuid($uuid) && PHP_OS == 'FreeBSD') {
+				$uuid = shell_exec("uuidgen");
+			}
+			if (!is_uuid($uuid) && PHP_OS == 'Linux') {
+				$uuid = file_get_contents('/proc/sys/kernel/random/uuid');
+			}
+			return $uuid;
 		}
-		//echo uuid();
 	}
 
 	if (!function_exists('is_uuid')) {
