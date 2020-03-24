@@ -103,11 +103,15 @@
 
 	if (!function_exists('uuid')) {
 		function uuid() {
-			$sql .= 'select gen_random_uuid();';
-			$database = new database;
-			$uuid = $database->select($sql, null, 'column');
-			if (!is_uuid($uuid) && PHP_OS == 'FreeBSD') {
-				$uuid = trim(shell_exec("uuidgen"));
+			$uuid = null;
+			$which_uuidgen = shell_exec("which uuidgen");
+			if (strlen($which_uuidgen) > 0) {
+				if (PHP_OS == 'FreeBSD') {
+					$uuid = trim(shell_exec("uuidgen"));
+				}
+				if (PHP_OS == 'Linux') {
+					$uuid = trim(shell_exec("uuidgen -r"));
+				}
 			}
 			if (!is_uuid($uuid) && PHP_OS == 'Linux') {
 				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
