@@ -2109,4 +2109,11 @@ function number_pad($number,$n) {
 		}
 	}
 
+//convert bytes to readable human format
+	if (!function_exists('random_int')) {
+		function random_int() {
+			return rand ();
+		}
+	}
+
 ?>
