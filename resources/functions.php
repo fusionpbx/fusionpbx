@@ -105,7 +105,12 @@
 		function uuid() {
 			$uuid = null;
 			if (PHP_OS === 'FreeBSD') {
-				$uuid = trim(shell_exec("uuidgen"));
+				$uuid = trim(shell_exec("uuid -v 4"));
+				if (!is_uuid($uuid)) {
+					echo "Please install the following package.\n";
+					echo "pkg install ossp-uuid\n";
+					exit;
+				}
 			}
 			if (PHP_OS === 'Linux' && !is_uuid($uuid)) {
 				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
