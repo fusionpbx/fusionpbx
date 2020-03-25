@@ -1877,8 +1877,8 @@ $text['description-contact']['ru-ru'] = "Назначить контакт дл�
 $text['description-contact']['sv-se'] = "Tilldela en kontakt till detta konto.";
 $text['description-contact']['uk-ua'] = "Призначити контакт в цей обліковий запис користувача.";
 
-$text['description-api_key']['en-us'] = "Use the generate button to create a 128 bit key.";
-$text['description-api_key']['en-gb'] = "Use the generate button to create a 128 bit key.";
+$text['description-api_key']['en-us'] = "Use the generate button to create a key.";
+$text['description-api_key']['en-gb'] = "Use the generate button to create a key.";
 $text['description-api_key']['ar-eg'] = "";
 $text['description-api_key']['de-at'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein."; //copied from de-de
 $text['description-api_key']['de-ch'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein."; //copied from de-de
@@ -1898,8 +1898,8 @@ $text['description-api_key']['ru-ru'] = "Введите ключ API (обычн
 $text['description-api_key']['sv-se'] = "Ange API nyckel (ofta UUID). API nyckeln borde vara 128 bit eller mer.";
 $text['description-api_key']['uk-ua'] = "Введіть ключ API, зазвичай UUID. Ключ API повинен бути 128 біт або більше.";
 
-$text['description-message_key']['en-us'] = "Use the generate button to create a 128 bit key.";
-$text['description-message_key']['en-gb'] = "Use the generate button to create a 128 bit key.";
+$text['description-message_key']['en-us'] = "Use the generate button to create a key.";
+$text['description-message_key']['en-gb'] = "Use the generate button to create a key.";
 $text['description-message_key']['ar-eg'] = "";
 $text['description-message_key']['de-at'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein."; //copied from de-de
 $text['description-message_key']['de-ch'] = "Geben Sie den API Schlüssel an. Der API Schlüssel sollte mindestens 128 bit oder länger sein."; //copied from de-de
