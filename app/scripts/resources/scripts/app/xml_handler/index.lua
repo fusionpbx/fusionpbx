@@ -55,20 +55,13 @@
 	end
 
 --get the params and set them as variables
-	domain_name = params:getHeader("sip_from_host");
-	if (domain_uuid == nil) then
-		domain_uuid = params:getHeader("domain_uuid");
-	end
-	domain_name = params:getHeader("domain");
-	if (domain_name == nil) then
-		domain_name = params:getHeader("domain_name");
-	end
-	if (domain_name == nil) then
-		domain_name = params:getHeader("variable_domain_name");
-	end
-	if (domain_name == nil) then
-		domain_name = params:getHeader("variable_sip_from_host");
-	end
+	domain_uuid = params:getHeader("domain_uuid")
+
+	domain_name = params:getHeader("domain") or params:getHeader("domain_name")
+	domain_name = domain_name or params:getHeader("variable_domain_name")
+	domain_name = domain_name or params:getHeader("variable_sip_from_host")
+	domain_name = domain_name or params:getHeader("Caller-Context")
+
 	purpose   = params:getHeader("purpose");
 	profile   = params:getHeader("profile");
 	key    = params:getHeader("key");
