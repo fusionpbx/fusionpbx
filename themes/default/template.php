@@ -57,8 +57,8 @@
 		//message bar display
 			{literal}
 			function display_message(msg, mood, delay) {
-				mood = typeof mood !== 'undefined' ? mood : 'default';
-				delay = typeof delay !== 'undefined' ? delay : {/literal}{$settings.theme.message_delay}{literal};
+				mood = mood !== undefined ? mood : 'default';
+				delay = delay !== undefined ? delay : {/literal}{$settings.theme.message_delay}{literal};
 				if (msg !== '') {
 					var message_text = $(document.createElement('div'));
 					message_text.addClass('message_text message_mood_'+mood);
@@ -287,12 +287,12 @@
 						{literal}
 						if (e.which == 45 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							e.preventDefault();
-							var list_add_button;
-							list_add_button = document.getElementById('btn_add');
-							if (list_add_button === null || list_add_button === 'undefined') {
-								list_add_button = document.querySelector('button[name=btn_add]');
+							var add_button;
+							add_button = document.getElementById('btn_add');
+							if (add_button === null || add_button === undefined) {
+								add_button = document.querySelector('button[name=btn_add]');
 							}
-							if (list_add_button !== null) { list_add_button.click(); }
+							if (add_button !== null) { add_button.click(); }
 						}
 						{/literal}
 					{/if}
@@ -302,22 +302,21 @@
 						{literal}
 						if (e.which == 46 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							e.preventDefault();
-							if (list_checkboxes.length !== 0) {
-								var list_delete_button;
-								list_delete_button = document.querySelector('button[name=btn_delete]');
-								if (list_delete_button === null || list_delete_button === 'undefined') {
-									list_delete_button = document.getElementById('btn_delete');
-								}
-								if (list_delete_button !== null) { list_delete_button.click(); }
+							var delete_button;
+							delete_button = document.querySelector('button[name=btn_delete]');
+							if (delete_button === null || delete_button === undefined) {
+								delete_button = document.getElementById('btn_delete');
 							}
-							else {
-								var edit_delete_button;
-								edit_delete_button = document.querySelector('button[name=btn_delete]');
-								if (edit_delete_button === null || edit_delete_button === 'undefined') {
-									edit_delete_button = document.getElementById('btn_delete');
-								}
-								if (edit_delete_button !== null) { edit_delete_button.click(); }
-							}
+							if (delete_button !== null) { delete_button.click(); }
+						}
+						{/literal}
+					{/if}
+
+				//key: [space], list,edit:prevent default space key behavior when opening toggle confirmation (which would automatically *click* the focused continue button on key-up)
+					{if $settings.theme.keyboard_shortcut_toggle_enabled}
+						{literal}
+						if (e.which == 32 && e.target.id == 'btn_toggle') {
+							e.preventDefault();
 						}
 						{/literal}
 					{/if}
@@ -335,14 +334,14 @@
 				//key: [space], list: to toggle checked - note: for default [space] checkbox behavior (ie. toggle focused checkbox) include in the if statement: && !(e.target.tagName == 'INPUT' && e.target.type == 'checkbox')
 					{if $settings.theme.keyboard_shortcut_toggle_enabled}
 						{literal}
-						if (e.which == 32 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA' && list_checkboxes.length !== 0) {
+						if (e.which == 32 && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'BUTTON' && !(e.target.tagName == 'INPUT' && e.target.type == 'button') && !(e.target.tagName == 'INPUT' && e.target.type == 'submit') && e.target.tagName != 'TEXTAREA' && list_checkboxes.length !== 0) {
 							e.preventDefault();
-							var list_toggle_button;
-							list_toggle_button = document.querySelector('button[name=btn_toggle]');
-							if (list_toggle_button === null || list_toggle_button === 'undefined') {
-								list_toggle_button = document.getElementById('btn_toggle');
+							var toggle_button;
+							toggle_button = document.querySelector('button[name=btn_toggle]');
+							if (toggle_button === null || toggle_button === undefined) {
+								toggle_button = document.getElementById('btn_toggle');
 							}
-							if (list_toggle_button !== null) { list_toggle_button.click(); }
+							if (toggle_button !== null) { toggle_button.click(); }
 						}
 						{/literal}
 					{/if}
@@ -351,20 +350,15 @@
 					{if $settings.theme.keyboard_shortcut_check_all_enabled}
 						{literal}
 						if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
-							var list_checkbox_all;
-							list_checkbox_all = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');
-							if (list_checkbox_all !== null && list_checkbox_all.length > 0) {
-								e.preventDefault();
-								for (var x = 0, max = list_checkbox_all.length; x < max; x++) {
-									list_checkbox_all[x].click();
-								}
+							var all_checkboxes;
+							all_checkboxes = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');
+							if (all_checkboxes === null || all_checkboxes === undefined) {
+								all_checkboxes = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');
 							}
-							var edit_checkbox_all;
-							edit_checkbox_all = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');
-							if (edit_checkbox_all !== null && edit_checkbox_all.length > 0) {
+							if (all_checkboxes !== null && all_checkboxes.length > 0) {
 								e.preventDefault();
-								for (var x = 0, max = edit_checkbox_all.length; x < max; x++) {
-									edit_checkbox_all[x].click();
+								for (var x = 0, max = all_checkboxes.length; x < max; x++) {
+									all_checkboxes[x].click();
 								}
 							}
 						}
@@ -376,12 +370,12 @@
 						{literal}
 						if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) {
 							e.preventDefault();
-							var edit_save_button;
-							edit_save_button = document.getElementById('btn_save');
-							if (edit_save_button === null || edit_save_button === 'undefined') {
-								edit_save_button = document.querySelector('button[name=btn_save]');
+							var save_button;
+							save_button = document.getElementById('btn_save');
+							if (save_button === null || save_button === undefined) {
+								save_button = document.querySelector('button[name=btn_save]');
 							}
-							if (edit_save_button !== null) { edit_save_button.click(); }
+							if (save_button !== null) { save_button.click(); }
 						}
 						{/literal}
 					{/if}
@@ -400,11 +394,11 @@
 						{literal}
 							var current_selection, copy_button;
 							current_selection = window.getSelection();
-							if (current_selection === null || current_selection == 'undefined' || current_selection.toString() == '') {
+							if (current_selection === null || current_selection === undefined || current_selection.toString() == '') {
 								e.preventDefault();
-								copy_button = document.getElementById('btn_copy');
-								if (copy_button === null || copy_button === 'undefined') {
-									copy_button = document.querySelector('button[name=btn_copy]');
+								copy_button = document.querySelector('button[name=btn_copy]');
+								if (copy_button === null || copy_button === undefined) {
+									copy_button = document.getElementById('btn_copy');
 								}
 								if (copy_button !== null) { copy_button.click(); }
 							}
@@ -747,6 +741,29 @@
 		}
 		{/literal}
 
+	//modal functions
+		{literal}
+		function modal_open(modal_id, focus_id) {
+			var modal = document.getElementById(modal_id);
+			modal.style.opacity = '1';
+			modal.style.pointerEvents = 'auto';
+			if (focus_id !== undefined) {
+				document.getElementById(focus_id).focus();
+			}
+		}
+
+		function modal_close() {
+			var modals = document.getElementsByClassName('modal-window');
+			if (modals.length > 0) {
+				for (var m = 0; m < modals.length; ++m) {
+					modals[m].style.opacity = '0';
+					modals[m].style.pointerEvents = 'none';
+				}
+			}
+			document.activeElement.blur();
+		}
+		{/literal}
+
 	//misc functions
 		{literal}
 		function swap_display(a_id, b_id, display_value) {
@@ -761,11 +778,6 @@
 				a.style.display = 'none';
 				b.style.display = display_value;
 			}
-		}
-
-		function modal_close() {
-			document.location.href='#';
-			document.activeElement.blur();
 		}
 
 		function hide_password_fields() {

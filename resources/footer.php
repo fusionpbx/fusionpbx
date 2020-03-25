@@ -78,7 +78,7 @@
 //add multi-lingual support
 	$language = new text;
 	$text_default = $language->get();
-	$text_application = $language->get(null,'themes/default');
+	$text_application = $language->get(null,'themes/'.$_SESSION['domain']['template']['name']);
 	$text = array_merge($text_default, $text_application);
 
 //set template variables
