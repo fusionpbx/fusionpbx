@@ -303,6 +303,12 @@
 	end
 	uri_array = explode("/",fax_uri);
 	number_dialed = uri_array[4];
+	if (number_dialed == nil) then
+		number_dialed = uri_array[3];
+		if (number_dialed == nil) then
+			number_dialed = '0';
+		end
+	end
 	--do not use apostrophies in message, they are not escaped and the mail will fail.
 	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
