@@ -372,7 +372,7 @@
 					{/if}
 
 				//key: [ctrl]+[s], edit: to save
-					{if $settings.theme.keyboard_shortcut_check_save_enabled}
+					{if $settings.theme.keyboard_shortcut_save_enabled}
 						{literal}
 						if (((e.which == 115 || e.which == 83) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) {
 							e.preventDefault();
@@ -387,7 +387,7 @@
 					{/if}
 
 				//key: [ctrl]+[c], list,edit: to copy
-					{if $settings.theme.keyboard_shortcut_check_copy_enabled}
+					{if $settings.theme.keyboard_shortcut_copy_enabled}
 						{if $browser_name_short == 'Safari'} //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 							{literal}
 							if ((e.which == 99 || e.which == 67) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
