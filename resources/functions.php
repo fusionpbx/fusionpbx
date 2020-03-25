@@ -107,14 +107,11 @@
 			if (PHP_OS === 'FreeBSD') {
 				$uuid = trim(shell_exec("uuidgen"));
 			}
-			if (PHP_OS === 'Linux') {
-				$uuid = trim(shell_exec("uuidgen -r"));
+			if (PHP_OS === 'Linux' && !is_uuid($uuid)) {
+				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
 			}
 			if (!is_uuid($uuid)) {
 				$uuid = trim(shell_exec("uuidgen"));
-			}
-			if (!is_uuid($uuid) && PHP_OS === 'Linux') {
-				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
 			}
 			if (function_exists('com_create_guid') === true && PHP_OS === 'Windows') {
 				$uuid = trim(com_create_guid(), '{}');
