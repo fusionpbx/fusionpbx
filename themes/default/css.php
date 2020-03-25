@@ -2609,11 +2609,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		background-color: rgba(0, 0, 0, 0.3);
 		}
 
-	.modal-window:target {
-		opacity: 1;
-		pointer-events: auto;
-		}
-
 	.modal-window > div {
 		position: relative;
 		padding: 15px 20px 20px 20px;
@@ -2657,6 +2652,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		width: 50px;
 		text-align: center;
 		text-decoration: none !important;
+		cursor: pointer;
 		}
 
 	.modal-close:hover {
