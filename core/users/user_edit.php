@@ -995,7 +995,7 @@
 		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
 		echo "			<input type='text' class='formfld' style='width: 250px;' name='api_key' id='api_key' value=\"".escape($api_key)."\" >";
-		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('api_key').value = uuid();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('api_key').value = '".generate_password()."';"]);
 		if (strlen($text['description-api_key']) > 0) {
 			echo "			<br />".$text['description-api_key']."<br />\n";
 		}
@@ -1008,7 +1008,7 @@
 		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
 		echo "		<td class='vtable'>\n";
 		echo "			<input type='text' class='formfld' style='width: 250px;' name='message_key' id='message_key' value=\"".escape($user_settings["message"]["key"]["text"])."\" >";
-		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('message_key').value = uuid();"]);
+		echo button::create(['type'=>'button','label'=>$text['button-generate'],'icon'=>'key','onclick'=>"document.getElementById('message_key').value = '".generate_password()."';"]);
 		if (strlen($text['description-message_key']) > 0) {
 			echo "			<br />".$text['description-message_key']."<br />\n";
 		}
