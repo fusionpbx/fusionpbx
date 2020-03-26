@@ -806,7 +806,7 @@
 		echo modal::create([
 			'id'=>'modal-copy',
 			'type'=>'general',
-			'message'=>$text['message_device']."...<br /><br /><input class='formfld' style='font-family: monospace;' type='text' id='new_mac_address' maxlength='17' placeholder='FF-FF-FF-FF-FF-FF'>",
+			'message'=>$text['message_device']."...<br /><br /><input class='formfld modal-input' data-continue='btn_copy' style='font-family: monospace;' type='text' id='new_mac_address' maxlength='17' placeholder='FF-FF-FF-FF-FF-FF'>",
 			'actions'=>button::create([
 				'type'=>'button',
 				'label'=>$text['button-continue'],
