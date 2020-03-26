@@ -352,10 +352,10 @@
 						if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
 							var all_checkboxes;
 							all_checkboxes = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');
-							if (all_checkboxes === null || all_checkboxes === undefined) {
+							if (typeof all_checkboxes != 'object' || all_checkboxes.length == 0) {
 								all_checkboxes = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');
 							}
-							if (all_checkboxes !== null && all_checkboxes.length > 0) {
+							if (typeof all_checkboxes == 'object' && all_checkboxes.length > 0) {
 								e.preventDefault();
 								for (var x = 0, max = all_checkboxes.length; x < max; x++) {
 									all_checkboxes[x].click();
@@ -363,6 +363,7 @@
 							}
 						}
 						{/literal}
+
 					{/if}
 
 				//key: [ctrl]+[s], edit: to save
