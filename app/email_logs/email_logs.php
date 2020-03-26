@@ -197,13 +197,13 @@
 	echo "		<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		</form>";
 	if (permission_exists('email_log_resend') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"if (confirm('".$text['confirm-resend']."')) { list_action_set('resend'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"modal_open('modal-resend','btn_resend');"]);
 	}
 	if (permission_exists('email_log_download') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('email_log_delete') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('email_log_all')) {
@@ -225,6 +225,13 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if (permission_exists('email_log_resend') && $result) {
+		echo modal::create(['id'=>'modal-resend','type'=>'general','message'=>$text['confirm-resend'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_resend','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('resend'); list_form_submit('form_list');"])]);
+	}
+	if (permission_exists('email_log_delete') && $result) {
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+	}
 
 	echo $text['description-emails']."\n";
 	echo "<br /><br />\n";
