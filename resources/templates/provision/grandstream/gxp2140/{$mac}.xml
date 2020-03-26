@@ -8098,7 +8098,7 @@
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
     <!-- # Number: 0-4 -->
     <!-- # Mandatory -->
-    <P2916>0</P2916>
+    <!-- # P2916 is defined below in if/else -->
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
