@@ -236,8 +236,7 @@
 
 				//set the variables
 					$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
-// echo $stream_new_name ? 'new stream name' : 'not new stream name';
-// echo '<br>';
+
 				//add new path
 					if ($stream_new_name) {
 						$stream_uuid = uuid();
@@ -261,12 +260,11 @@
 						$database->app_name = 'music_on_hold';
 						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 						$database->save($array);
-// view_array($database->message, false);
 						unset($array);
 
 						$p->delete('music_on_hold_add', 'temp');
 					}
-// echo '$stream_path = '.$stream_path.'<br>';exit;
+
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
 						event_socket_mkdir($stream_path);
