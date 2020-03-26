@@ -441,7 +441,7 @@
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
-	echo "<input type='hidden' id='btn_delete' name='action' value='delete' />\n";
+// 	echo "<input type='hidden' id='btn_delete' name='action' value='delete' />\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-voicemail']."</b></div>\n";
