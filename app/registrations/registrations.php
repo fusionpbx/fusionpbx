@@ -126,9 +126,9 @@
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);
 	}
 	if ($registrations) {
-		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['confirm-unregister']."')) { list_action_set('unregister'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-		echo button::create(['type'=>'button','label'=>$text['button-provision'],'title'=>$text['button-provision'],'icon'=>'fax','onclick'=>"if (confirm('".$text['confirm-provision']."')) { list_action_set('provision'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
-		echo button::create(['type'=>'button','label'=>$text['button-reboot'],'title'=>$text['button-reboot'],'icon'=>'power-off','onclick'=>"if (confirm('".$text['confirm-reboot']."')) { list_action_set('reboot'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-unregister','btn_unregister');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'title'=>$text['button-provision'],'icon'=>'fax','onclick'=>"modal_open('modal-provision','btn_provision');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-reboot'],'title'=>$text['button-reboot'],'icon'=>'power-off','onclick'=>"modal_open('modal-reboot','btn_reboot');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('registration_all')) {
@@ -153,6 +153,12 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if ($registrations) {
+		echo modal::create(['id'=>'modal-unregister','type'=>'general','message'=>$text['confirm-unregister'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_unregister','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('unregister'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-provision','type'=>'general','message'=>$text['confirm-provision'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_provision','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('provision'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-reboot','type'=>'general','message'=>$text['confirm-reboot'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_reboot','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('reboot'); list_form_submit('form_list');"])]);
+	}
 
 	echo $text['description-registrations']."\n";
 	echo "<br /><br />\n";
