@@ -328,7 +328,7 @@
 			|| permission_exists('outbound_route_add')
 			|| permission_exists('time_condition_add')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','style'=>$button_margin,'onclick'=>"var name = prompt('".$text['label-new_sip_profile_name']."'); if (name != null) { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + name; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','new_profile_name');"]);
 			unset($button_margin);
 		}
 		if (
@@ -336,7 +336,7 @@
 			|| permission_exists('sip_profile_domain_delete')
 			|| permission_exists('sip_profile_setting_delete')
 			) {
-			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
@@ -344,6 +344,38 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if ($action == 'update') {
+		if (
+			permission_exists('dialplan_add')
+			|| permission_exists('inbound_route_add')
+			|| permission_exists('outbound_route_add')
+			|| permission_exists('time_condition_add')
+			) {
+			echo modal::create([
+				'id'=>'modal-copy',
+				'type'=>'general',
+				'message'=>$text['label-new_sip_profile_name']."...<br /><br /><input class='formfld modal-input' data-continue='btn_copy' type='text' id='new_profile_name' maxlength='255'>",
+				'actions'=>button::create([
+					'type'=>'button',
+					'label'=>$text['button-continue'],
+					'icon'=>'check',
+					'id'=>'btn_copy',
+					'style'=>'float: right; margin-left: 15px;',
+					'collapse'=>'never',
+					'onclick'=>"modal_close(); if (document.getElementById('new_profile_name').value != '') { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + document.getElementById('new_profile_name').value; }"
+					]),
+				'onclose'=>"document.getElementById('new_profile_name').value = '';",
+				]);
+		}
+		if (
+			permission_exists('sip_profile_delete')
+			|| permission_exists('sip_profile_domain_delete')
+			|| permission_exists('sip_profile_setting_delete')
+			) {
+			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+		}
+	}
 
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
