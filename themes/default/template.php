@@ -214,7 +214,7 @@
 		//key: [enter] - retain default behavior to submit form, when present - note: safari does not honor the first submit element when hiding it using 'display: none;' in the setAttribute method
 			{if $settings.theme.keyboard_shortcut_submit_enabled}
 				{literal}
-				var action_bar_actions, first_form, first_submit;
+				var action_bar_actions, first_form, first_submit, modal_input_class, modal_continue_button;
 				action_bar_actions = document.querySelector('div#action_bar.action_bar > div.actions');
 				first_form = document.querySelector('form#frm');
 
@@ -226,9 +226,17 @@
 						first_submit.setAttribute('style','position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;');
 						first_form.prepend(first_submit);
 						window.addEventListener('keydown',function(e){
+							modal_input_class = e.target.className;
 							if (e.which == 13 && (e.target.tagName == 'INPUT' || e.target.tagName == 'SELECT')) {
-								if (typeof window.submit_form === 'function') { submit_form(); }
-								else { document.getElementById('frm').submit(); }
+								if (modal_input_class.includes('modal-input')) {
+									e.preventDefault();
+									modal_continue_button = document.getElementById(e.target.dataset.continue);
+									if (modal_continue_button) { modal_continue_button.click(); }
+								}
+								else {
+									if (typeof window.submit_form === 'function') { submit_form(); }
+									else { document.getElementById('frm').submit(); }
+								}
 							}
 						});
 					}
