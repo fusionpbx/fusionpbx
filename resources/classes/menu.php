@@ -1156,10 +1156,15 @@ if (!class_exists('menu')) {
 					}
 				//logout icon
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
-						$html .= "<a id='header_logout_icon' href='".PROJECT_PATH."/logout.php' title=\"".$this->text['theme-label-logout']."\" onclick=\"return confirm('".$this->text['theme-confirm-logout']."')\"><span class='fas fa-log-out'></span></a>";
+						$html .= "<a id='header_logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
 					}
 				$html .= "</span>";
 			$html .= "	</div>\n";
+
+			//modal for logout icon (above)
+				if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
+					$html .= modal::create(['id'=>'modal-logout','type'=>'general','message'=>$this->text['theme-confirm-logout'],'actions'=>button::create(['type'=>'button','label'=>$this->text['theme-label-logout'],'icon'=>'sign-out-alt','id'=>'btn_logout','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>PROJECT_PATH.'/logout.php','onclick'=>"modal_close();"])]);
+				}
 
 			return $html;
 			unset($html);
