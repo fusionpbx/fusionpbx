@@ -895,8 +895,8 @@ function format_string ($format, $data) {
 		$password = '';
 		$chars = '';
 		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-			$length = (is_numeric($_SESSION["extension"]["password_length"]["numeric"])) ? $_SESSION["extension"]["password_length"]["numeric"] : 10;
-			$strength = (is_numeric($_SESSION["extension"]["password_strength"]["numeric"])) ? $_SESSION["extension"]["password_strength"]["numeric"] : 4;
+			$length = (is_numeric($_SESSION["users"]["password_length"]["numeric"])) ? $_SESSION["users"]["password_length"]["numeric"] : 20;
+			$strength = (is_numeric($_SESSION["users"]["password_strength"]["numeric"])) ? $_SESSION["users"]["password_strength"]["numeric"] : 4;
 		}
 		if ($strength >= 1) { $chars .= "0123456789"; }
 		if ($strength >= 2) { $chars .= "abcdefghijkmnopqrstuvwxyz"; }
