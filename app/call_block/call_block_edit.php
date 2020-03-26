@@ -529,11 +529,15 @@
 				unset($select_margin);
 			}
 			call_block_action_select(true);
-			echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"if (confirm('".$text['confirm-block']."')) { list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"modal_open('modal-block','btn_block');"]);
 		}
 		echo 	"</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
+
+		if ($result) {
+			echo modal::create(['id'=>'modal-block','type'=>'general','message'=>$text['confirm-block'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_block','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
+		}
 
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
