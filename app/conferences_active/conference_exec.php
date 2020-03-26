@@ -240,6 +240,8 @@
 					}
 					elseif ($data == "mute" || $data == "unmute" || $data == "mute non_moderator" || $data == "unmute non_moderator") {
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$switch_cmd = "uuid_setvar ".$uuid. " hand_raised false";
+						event_socket_request($fp, 'api '.$switch_cmd);
 					}
 					elseif ($data == "deaf" || $data == "undeaf" ) {
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
