@@ -194,9 +194,9 @@
 		echo "	<div class='heading'><b>".$text['header-call_routing']." (".$num_rows.")</b></div>\n";
 		echo "	<div class='actions'>\n";
 		if ($extensions) {
-			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
+			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
 		}
-		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_control_feature' onchange=\"if (confirm('".$text['confirm-toggle']."')) { list_action_set('toggle_' + this.options[this.selectedIndex].value); list_form_submit('form_list'); } else { this.blur(); this.style.display = 'none'; return false; }\">";
+		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_control_feature' onchange=\"if (this.selectedIndex != 0) { modal_open('modal-toggle','btn_toggle'); }\">";
 		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";
 		if (permission_exists('call_forward')) {
 			echo "		<option value='call_forward'>".$text['label-call-forward']."</option>";
@@ -219,6 +219,10 @@
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
+
+		if ($extensions) {
+			echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle_' + document.getElementById('call_control_feature').options[document.getElementById('call_control_feature').selectedIndex].value); list_form_submit('form_list');"])]);
+		}
 
 		echo $text['description-call_routing']."\n";
 		echo "<br /><br />\n";
