@@ -751,7 +751,7 @@
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input type='hidden' name='file_action' id='file_action' value='' />\n";
-	echo "<input type='hidden' id='btn_delete' name='action' value='delete' />\n";
+// 	echo "<input type='hidden' id='btn_delete' name='action' value='delete' />\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
@@ -826,7 +826,7 @@
 		permission_exists('device_key_delete') ||
 		permission_exists('device_setting_delete')
 		) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete_do','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); submit_form();"])]);
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete_do','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close(); submit_form();"])]);
 	}
 
 	echo $text['description-device']."\n";
