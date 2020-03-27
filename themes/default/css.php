@@ -2671,6 +2671,10 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		margin: <?php echo $_SESSION['theme']['modal_message_margin']['text'] != '' ? $_SESSION['theme']['modal_message_margin']['text'] : '0 0 20px 0'; ?>;
 		}
 
+	.modal-actions {
+		display: block;
+		text-align: left;
+		}
 
 <?php
 
