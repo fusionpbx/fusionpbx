@@ -526,7 +526,7 @@ $text['label-mute']['ru-ru'] = "Отключить микрофон";
 $text['label-mute']['sv-se'] = "Stäng av mikrofon";
 $text['label-mute']['uk-ua'] = "";
 
-$text['label-hand_raised']['en-us'] = "Hand Raised";//hh
+$text['label-hand_raised']['en-us'] = "Hand Raised";
 $text['label-hand_raised']['ar-eg'] = "";
 $text['label-hand_raised']['de-at'] = ""; 
 $text['label-hand_raised']['de-ch'] = ""; 
