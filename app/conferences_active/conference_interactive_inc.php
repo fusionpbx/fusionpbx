@@ -207,7 +207,7 @@
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".escape($join_time_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-xs'>".escape($last_talking_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($flag_has_floor == "true") ? 'yes' : 'no')]."</td>\n";
-					$hand_raise_icon = "<img src='resources/images/hand_raise.png' style='width: 16px; height: 16px; border: none; margin: -2px 10px -2px 15px; visibility: ".($hand_raised == "true" ? 'visible' : 'hidden').";' align='absmiddle' title=\"".$text['label-hand_raised']."\">";
+					$hand_raise_icon = "<span class='fas fa-hand-paper' style='font-size: 16px; margin: -2px 10px -2px 15px; visibility: ".($hand_raised == "true" ? 'visible' : 'hidden').";' align='absmiddle' title=\"".$text['label-hand_raised']."\">"; 
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($hand_raised == "true") ? 'yes' : 'no')].$hand_raise_icon."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='center'>";
 					echo 	($flag_can_speak == "true") ? "<i class='fas fa-microphone fa-fw' title=\"".$text['label-speak']."\"></i>" : "<i class='fas fa-microphone-slash fa-fw' title=\"".$text['label-speak']."\"></i>";
