@@ -526,6 +526,26 @@ $text['label-mute']['ru-ru'] = "Отключить микрофон";
 $text['label-mute']['sv-se'] = "Stäng av mikrofon";
 $text['label-mute']['uk-ua'] = "";
 
+$text['label-hand_raised']['en-us'] = "Hand Raised";
+$text['label-hand_raised']['ar-eg'] = "";
+$text['label-hand_raised']['de-at'] = ""; 
+$text['label-hand_raised']['de-ch'] = ""; 
+$text['label-hand_raised']['de-de'] = "";
+$text['label-hand_raised']['es-cl'] = "";
+$text['label-hand_raised']['es-mx'] = ""; 
+$text['label-hand_raised']['fr-ca'] = ""; 
+$text['label-hand_raised']['fr-fr'] = "";
+$text['label-hand_raised']['he-il'] = "";
+$text['label-hand_raised']['it-it'] = "";
+$text['label-hand_raised']['nl-nl'] = "";
+$text['label-hand_raised']['pl-pl'] = "";
+$text['label-hand_raised']['pt-br'] = ""; 
+$text['label-hand_raised']['pt-pt'] = "";
+$text['label-hand_raised']['ro-ro'] = "";
+$text['label-hand_raised']['ru-ru'] = "";
+$text['label-hand_raised']['sv-se'] = "";
+$text['label-hand_raised']['uk-ua'] = "";
+
 $text['label-moderator']['en-us'] = "Moderator";
 $text['label-moderator']['en-gb'] = "Moderator";
 $text['label-moderator']['ar-eg'] = "";

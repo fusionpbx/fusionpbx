@@ -150,6 +150,7 @@
 		echo "<th class='hide-sm-dn'>".$text['label-joined']."</th>\n";
 		echo "<th class='hide-xs'>".$text['label-quiet']."</th>\n";
 		echo "<th class='hide-sm-dn'>".$text['label-floor']."</th>\n";
+		echo "<th class='hide-sm-dn'>".$text['label-hand_raised']."</th>\n";
 		echo "<th class='center'>".$text['label-capabilities']."</th>\n";
 		if (permission_exists('conference_interactive_energy')) {
 			echo "<th class='center'>".$text['label-energy']."</th>\n";
@@ -162,7 +163,6 @@
 		}
 		echo "<th>&nbsp;</th>\n";
 		echo "</tr>\n";
-
 		if ($valid_xml && isset($xml->conference->members->member)) {
 			foreach ($xml->conference->members->member as $row) {
 				$id = $row->id;
@@ -179,7 +179,8 @@
 				$caller_id_name = $row->caller_id_name;
 				$caller_id_name = urldecode($caller_id_name);
 				$caller_id_number = $row->caller_id_number;
-
+				$switch_cmd = "uuid_getvar ".$uuid. " hand_raised";
+				$hand_raised = (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") ? "true" : "false";
 				//format seconds
 				$join_time_formatted = sprintf('%02d:%02d:%02d', ($join_time/3600), ($join_time/60%60), $join_time%60);
 				$last_talking_formatted = sprintf('%02d:%02d:%02d', ($last_talking/3600), ($last_talking/60%60), $last_talking%60);
@@ -206,6 +207,7 @@
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".escape($join_time_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-xs'>".escape($last_talking_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($flag_has_floor == "true") ? 'yes' : 'no')]."</td>\n";
+					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($hand_raised == "true") ? 'yes' : 'no')]."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='center'>";
 					echo 	($flag_can_speak == "true") ? "<i class='fas fa-microphone fa-fw' title=\"".$text['label-speak']."\"></i>" : "<i class='fas fa-microphone-slash fa-fw' title=\"".$text['label-speak']."\"></i>";
 					echo 	($flag_can_hear == "true") ? "<i class='fas fa-headphones fa-fw' title=\"".$text['label-speak']."\" style='margin-left: 10px;'></i>" : "<i class='fas fa-deaf fa-fw' title=\"".$text['label-hear']."\" style='margin-left: 10px;'></i>";
@@ -241,7 +243,7 @@
 								echo button::create(['type'=>'button','label'=>$text['label-mute'],'icon'=>'microphone-slash','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=mute&id=".urlencode($id)."');"]);
 							}
 							else { //unmute
-								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=unmute&id=".urlencode($id)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=unmute&id=".urlencode($id)."&uuid=".escape($uuid)."');"]);
 							}
 						}
 					//deaf and undeaf
