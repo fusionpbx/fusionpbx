@@ -99,7 +99,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "20";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The default length of characters in a user password.";
 		$y++;
