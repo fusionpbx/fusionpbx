@@ -258,9 +258,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_vendor_function_group_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "device_export";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
