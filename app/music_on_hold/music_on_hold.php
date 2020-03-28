@@ -199,12 +199,12 @@
 			if ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') {
 
 				//strip slashes, replace spaces
+					$slashes = ["/","\\"];
+					$stream_file_name = str_replace($slashes, '', $stream_file_name);
+					$stream_file_name = str_replace(' ', '-', $stream_file_name);
 					if ($action == "add") {
-						$slashes = array("/", "\\");
 						$stream_name = str_replace($slashes, '', $stream_name);
 						$stream_name = str_replace(' ', '_', $stream_name);
-						$stream_file_name = str_replace($slashes, '', $stream_file_name);
-						$stream_file_name = str_replace(' ', '-', $stream_file_name);
 					}
 
 				//detect auto rate
