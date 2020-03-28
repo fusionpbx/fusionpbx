@@ -389,6 +389,14 @@
 									}
 									$array["extensions"][$i]["description"] = $description;
 
+								//assign the user to the extension
+									if (is_uuid($_POST["extension_users"][0]["user_uuid"])) {
+										$array["extension_users"][$i]["extension_user_uuid"] = uuid();
+										$array["extension_users"][$i]["domain_uuid"] = $_SESSION['domain_uuid'];
+										$array["extension_users"][$i]["user_uuid"] = $_POST["extension_users"][0]["user_uuid"];
+										$array["extension_users"][$i]["extension_uuid"] = $extension_uuid;
+									}
+
 							}
 
 						//add or update voicemail
@@ -473,6 +481,7 @@
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
+
 				//update device key label
 					if (strlen($effective_caller_id_name) > 0) {
 						$sql = "update v_device_keys set ";
@@ -486,7 +495,8 @@
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
-				//assign the user to the extension 
+
+				//assign the user to an existing extension
 					if ($action == "update" && is_uuid($_POST["extension_users"][0]["user_uuid"])) {
 						$array["extension_users"][0]["extension_user_uuid"] = uuid();
 						$array["extension_users"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
@@ -558,7 +568,7 @@
 					$message = $database->message;
 					unset($array);
 				
-				// reload ACL if allowed
+				//reload acl if allowed
 					if (permission_exists("extension_cidr")) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 						if ($fp) { event_socket_request($fp, "api reloadacl"); }
@@ -937,11 +947,11 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('extension_user_edit') && $action == "update") {
+	if (permission_exists('extension_user_edit')) {
 		echo "	<tr>";
-		echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
+		echo "		<td class='vncell' valign='top'>".($action == "update" ? $text['label-users'] : $text['label-user'])."</td>";
 		echo "		<td class='vtable'>";
-		if (count($assigned_users) > 0) {
+		if (is_array($assigned_users) && @sizeof($assigned_users) != 0 && $action == "update") {
 			echo "		<table width='30%'>\n";
 			foreach($assigned_users as $field) {
 				echo "		<tr>\n";
@@ -961,7 +971,9 @@
 			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 		echo "			</select>";
-		echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+		if ($action == "update") {
+			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+		}
 		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
 		echo "			<br />\n";
