@@ -90,8 +90,8 @@ $text['message-update']['sv-se'] = "Uppdatering Klar";
 $text['message-update']['uk-ua'] = "Оновлення завершено";
 $text['message-update']['tr-tr'] = "Güncelleme Tamamlandı";
 
-$text['message-required']['en-us'] = "Please provide: ";
-$text['message-required']['en-gb'] = "Please provide: ";
+$text['message-required']['en-us'] = "Required Fields: ";
+$text['message-required']['en-gb'] = "Required Fields: ";
 $text['message-required']['ar-eg'] = "يرجى تقديم:";
 $text['message-required']['de-at'] = "Bitte geben Sie folgendes an:"; //copied from de-de
 $text['message-required']['de-ch'] = "Bitte geben Sie folgendes an:"; //copied from de-de
