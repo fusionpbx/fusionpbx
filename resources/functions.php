@@ -2118,4 +2118,40 @@ function number_pad($number,$n) {
 		}
 	}
 
+//manage submitted form values in a session array
+	if (!function_exists('persistent_form_values')) {
+		function persistent_form_values($action, $array = null) {
+			switch ($action) {
+				case 'store':
+					if (is_array($array) && @sizeof($array) != 0) {
+						$_SESSION[$_SERVER['PHP_SELF']] = $array;
+					}
+					break;
+				case 'exists':
+					return is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0 ? true : false;
+					break;
+				case 'load':
+					if (is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0) {
+						foreach ($_SESSION[$_SERVER['PHP_SELF']] as $key => $value) {
+							if ($key != 'XID' && $key != 'ACT' && $key != 'RET') {
+								global $$key;
+								$$key = $value;
+							}
+						}
+						global $unsaved;
+						$unsaved = true;
+					}
+					break;
+				case 'view':
+					if (is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0) {
+						view_array($_SESSION[$_SERVER['PHP_SELF']], false);
+					}
+					break;
+				case 'clear':
+					unset($_SESSION[$_SERVER['PHP_SELF']]);
+					break;
+			}
+		}
+	}
+
 ?>
