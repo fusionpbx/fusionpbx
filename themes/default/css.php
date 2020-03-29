@@ -38,6 +38,17 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	$background_images_enabled = false;
 	if (isset($_SESSION['username']) && $_SESSION['username'] != '') {
 		//try using login background images/colors
+		if (isset($_SESSION['theme']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+			$background_images_enabled = true;
+			$background_images = $_SESSION['theme']['background_image'];
+		}
+		else {
+			$background_colors[0] = $_SESSION['theme']['background_color'][0];
+			$background_colors[1] = $_SESSION['theme']['background_color'][1];
+		}
+	}
+	else {
+		//use login background images/colors
 		if (isset($_SESSION['theme']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 			$background_images_enabled = true;
 			$background_images = $_SESSION['theme']['login_background_image'];
@@ -45,24 +56,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		else if ($_SESSION['theme']['login_background_color'][0] != '' || $_SESSION['theme']['login_background_color'][1] != '') {
 			$background_colors[0] = $_SESSION['theme']['login_background_color'][0];
 			$background_colors[1] = $_SESSION['theme']['login_background_color'][1];
-		}
-		else {
-			//otherwise, use standard background images/colors
-			if ($_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
-				$background_images_enabled = true;
-				$background_images = $_SESSION['theme']['background_image'];
-			}
-			else {
-				$background_colors[0] = $_SESSION['theme']['background_color'][0];
-				$background_colors[1] = $_SESSION['theme']['background_color'][1];
-			}
-		}
-	}
-	else {
-		//use standard background images/colors
-		if (isset($_SESSION['theme']) && isset($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
-			$background_images_enabled = true;
-			$background_images = $_SESSION['theme']['background_image'];
 		}
 		else {
 			$background_colors[0] = $_SESSION['theme']['background_color'][0];
