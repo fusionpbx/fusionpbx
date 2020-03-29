@@ -201,7 +201,7 @@
 
 					}
 					echo "</td>\n";
-					$talking_icon = "<img src='resources/images/talking.png' style='width: 16px; height: 16px; border: none; margin: -2px 10px -2px 15px; visibility: ".($flag_talking == "true" ? 'visible' : 'hidden').";' align='absmiddle' title=\"".$text['label-talking']."\">";
+					$talking_icon = "<span class='far fa-comment' style='font-size: 14px; margin: -2px 10px -2px 15px; visibility: ".($flag_talking == "true" ? 'visible' : 'hidden').";' align='absmiddle' title=\"".$text['label-talking']."\">";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='no-wrap'>".escape($caller_id_name).$talking_icon."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title.">".escape($caller_id_number)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".escape($join_time_formatted)."</td>\n";
