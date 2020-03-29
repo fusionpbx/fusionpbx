@@ -142,6 +142,16 @@
 		echo "<strong>".$text['label-members'].": ".escape($member_count)."</strong>\n";
 		echo "<br /><br />\n";
 
+		$hands_raised = 0;
+		if ($valid_xml && isset($xml->conference->members->member)) {
+			foreach ($xml->conference->members->member as $row) {
+				$uuid = $row->uuid;
+				$switch_cmd = "uuid_getvar ".$uuid. " hand_raised";//hh
+				if (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true"){
+					$hands_raised++;
+				}
+			}
+		}
 		echo "<table class='list'>\n";
 		echo "<tr class='list-header'>\n";
 		echo "<th width='1px'>&nbsp;</th>\n";
@@ -150,7 +160,7 @@
 		echo "<th class='hide-sm-dn'>".$text['label-joined']."</th>\n";
 		echo "<th class='hide-xs'>".$text['label-quiet']."</th>\n";
 		echo "<th class='hide-sm-dn'>".$text['label-floor']."</th>\n";
-		echo "<th class='hide-sm-dn'>".$text['label-hand_raised']."</th>\n";
+		echo "<th class='hide-sm-dn'>".$text['label-hand_raised']." (".$hands_raised.")"."</th>\n";
 		echo "<th class='center'>".$text['label-capabilities']."</th>\n";
 		if (permission_exists('conference_interactive_energy')) {
 			echo "<th class='center'>".$text['label-energy']."</th>\n";
