@@ -1945,8 +1945,14 @@ function number_pad($number,$n) {
 
 //output pre-formatted array keys and values
 	if (!function_exists('view_array')) {
-		function view_array($array, $exit = true) {
-			echo "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
+		function view_array($array, $exit = true, $return = false) {
+			$html = "<br><pre style='text-align: left;'>".print_r($array, true).'</pre><br>';
+			if ($return) {
+				return $html;
+			}
+			else {
+				echo $html;
+			}
 			$exit and exit();
 		}
 	}
