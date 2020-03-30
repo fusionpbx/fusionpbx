@@ -66,7 +66,9 @@
 		$start_datetime = $_POST["start_datetime"];
 		$stop_datetime = $_POST["stop_datetime"];
 		$wait_mod = $_POST["wait_mod"];
-		$announce = $_POST["announce"];
+		$name_announce = $_POST["name_announce"];
+		$recording_announce = $_POST["recording_announce"];
+		$count_announce = $_POST["count_announce"];
 		$sounds = $_POST["sounds"];
 		$mute = $_POST["mute"];
 		$created = $_POST["created"];
@@ -285,7 +287,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($record) == 0) { $record = 'false'; }
 					if (strlen($max_members) == 0) { $max_members = 0; }
 					if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
-					if (strlen($announce) == 0) { $announce = 'true'; }
+					if (strlen($name_announce) == 0) { $name_announce = 'true'; }
+					if (strlen($recording_announce) == 0) { $recording_announce = 'true'; }
+					if (strlen($count_announce) == 0) { $count_announce = 'true'; }
 					if (strlen($mute) == 0) { $mute = 'false'; }
 					if (strlen($enabled) == 0) { $enabled = 'true'; }
 					if (strlen($sounds) == 0) { $sounds = 'false'; }
@@ -323,7 +327,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
 					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
 					$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
-					$array['conference_rooms'][0]['announce'] = $announce;
+					$array['conference_rooms'][0]['name_announce'] = $name_announce;
+					$array['conference_rooms'][0]['recording_announce'] = $recording_announce;
+					$array['conference_rooms'][0]['count_announce'] = $count_announce;
 					$array['conference_rooms'][0]['sounds'] = $sounds;
 					$array['conference_rooms'][0]['mute'] = $mute;
 					$array['conference_rooms'][0]['created'] = 'now()';
@@ -415,8 +421,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($wait_mod) > 0) {
 						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 					}
-					if (strlen($announce) > 0) {
-						$array['conference_rooms'][0]['announce'] = $announce;
+					if (strlen($name_announce) > 0) {
+						$array['conference_rooms'][0]['name_announce'] = $name_announce;
+					}
+					if (strlen($name_announce) > 0) {
+						$array['conference_rooms'][0]['recording_announce'] = $recording_announce;
+					}
+					if (strlen($name_announce) > 0) {
+						$array['conference_rooms'][0]['count_announce'] = $count_announce;
 					}
 					if (strlen($mute) > 0) {
 						$array['conference_rooms'][0]['mute'] = $mute;
@@ -490,7 +502,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$start_datetime = $row["start_datetime"];
 				$stop_datetime = $row["stop_datetime"];
 				$wait_mod = $row["wait_mod"];
-				$announce = $row["announce"];
+				$name_announce = $row["name_announce"];
+				$recording_announce = $row["recording_announce"];
+				$count_announce = $row["count_announce"];
 				$sounds = $row["sounds"];
 				$mute = $row["mute"];
 				$created = $row["created"];
@@ -555,7 +569,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($record) == 0) { $record = 'false'; }
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
-	if (strlen($announce) == 0) { $announce = 'true'; }
+	if (strlen($name_announce) == 0) { $name_announce = 'true'; }
+	if (strlen($recording_announce) == 0) { $recording_announce = 'true'; }
+	if (strlen($count_announce) == 0) { $count_announce = 'true'; }
 	if (strlen($mute) == 0) { $mute = 'false'; }
 	if (strlen($sounds) == 0) { $sounds = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
@@ -756,19 +772,67 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_announce')) {
+	if (permission_exists('conference_room_name_announce')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-announce']."</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-name_announce']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='announce'>\n";
+		echo "	<select class='formfld' name='name_announce'>\n";
 		echo "	<option value=''></option>\n";
-		if ($announce == "true") {
+		if ($name_announce == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($announce == "false") {
+		if ($name_announce == "false") {
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('conference_room_count_announce')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-count_announce']."</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='count_announce'>\n";
+		echo "	<option value=''></option>\n";
+		if ($count_announce == "true") {
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($count_announce == "false") {
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('conference_room_recording_announce')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-recording_announce']."</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='recording_announce'>\n";
+		echo "	<option value=''></option>\n";
+		if ($recording_announce == "true") {
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($recording_announce == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
