@@ -692,7 +692,7 @@
 						--when the moderator leaves end the conference
 							--flags = flags .. "|endconf";
 						--set the moderator controls
-							session:execute("set","conference_controls=moderator");
+							--session:execute("set","conference_controls=moderator");
 					end
 
 				--get the conference xml_list
