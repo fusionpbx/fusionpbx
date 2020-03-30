@@ -37,7 +37,18 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 //determine which background image/color settings to use (login or standard)
 	$background_images_enabled = false;
 	if (isset($_SESSION['username']) && $_SESSION['username'] != '') {
-		//try using login background images/colors
+		//logged in - use standard background images/colors
+		if (isset($_SESSION['theme']) && isset($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
+			$background_images_enabled = true;
+			$background_images = $_SESSION['theme']['background_image'];
+		}
+		else {
+			$background_colors[0] = $_SESSION['theme']['background_color'][0];
+			$background_colors[1] = $_SESSION['theme']['background_color'][1];
+		}
+	}
+	else {
+		//not logged in - try using login background images/colors
 		if (isset($_SESSION['theme']) && $_SESSION['theme']['login_background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['login_background_image'])) {
 			$background_images_enabled = true;
 			$background_images = $_SESSION['theme']['login_background_image'];
@@ -58,21 +69,10 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			}
 		}
 	}
-	else {
-		//use standard background images/colors
-		if (isset($_SESSION['theme']) && isset($_SESSION['theme']['background_image_enabled']) && $_SESSION['theme']['background_image_enabled']['boolean'] == 'true' && is_array($_SESSION['theme']['background_image'])) {
-			$background_images_enabled = true;
-			$background_images = $_SESSION['theme']['background_image'];
-		}
-		else {
-			$background_colors[0] = $_SESSION['theme']['background_color'][0];
-			$background_colors[1] = $_SESSION['theme']['background_color'][1];
-		}
-	}
 
 //check for background image
 	if ($background_images_enabled) {
-		// background image is enabled
+		//background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
 		if (count($background_images) > 0) {
@@ -82,7 +82,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 				$background_image = $_SESSION['background_image'];
 			}
 
-			// background image(s) specified, check if source is file or folder
+			//background image(s) specified, check if source is file or folder
 			if (in_array(strtolower(pathinfo($background_image, PATHINFO_EXTENSION)), $image_extensions)) {
 				$image_source = 'file';
 			}
@@ -90,29 +90,29 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 				$image_source = 'folder';
 			}
 
-			// is source (file/folder) local or remote
+			//is source (file/folder) local or remote
 			if (substr($background_image, 0, 4) == 'http') {
 				$source_path = $background_image;
 			}
 			else if (substr($background_image, 0, 1) == '/') { //
-				// use project path as root
+				//use project path as root
 				$source_path = PROJECT_PATH.$background_image;
 			}
 			else {
-				// use theme images/backgrounds folder as root
+				//use theme images/backgrounds folder as root
 				$source_path = PROJECT_PATH.'/themes/default/images/backgrounds/'.$background_image;
 			}
 
 		}
 		else {
-			// not set, so use default backgrounds folder and images
+			//not set, so use default backgrounds folder and images
 			$image_source = 'folder';
 			$source_path = PROJECT_PATH.'/themes/default/images/backgrounds';
 		}
 
 		if ($image_source == 'folder') {
 			if (file_exists($_SERVER["DOCUMENT_ROOT"].$source_path)) {
-				// retrieve a random background image
+				//retrieve a random background image
 				$dir_list = opendir($_SERVER["DOCUMENT_ROOT"].$source_path);
 				$v_background_array = array();
 				$x = 0;
@@ -141,11 +141,11 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 	}
 
-// check for background color
+//check for background color
 	else if (
 		$background_colors[0] != '' ||
 		$background_colors[1] != ''
-		) { // background color 1 or 2 is enabled
+		) { //background color 1 or 2 is enabled
 
 		if ($background_colors[0] != '' && $background_colors[1] == '') { // use color 1
 			$background_color = "background: ".$background_colors[0].";";
@@ -168,7 +168,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			$background_color .= "background: linear-gradient(to bottom, ".$background_colors[0]." 0%, ".$background_colors[1]." 100%);\n";
 		}
 	}
-	else { // default: white
+	else { //default: white
 		$background_color = "background: #ffffff;\n";
 	}
 ?>
