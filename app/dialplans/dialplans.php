@@ -389,22 +389,6 @@
 		$x = 0;
 		foreach ($dialplans as $row) {
 
-			//get the application id
-// 			if (is_uuid($row['app_uuid'])) {
-// 				$app_uuid = $row['app_uuid'];
-// 			}
-
-			// blank app id if doesn't match others, so will return to dialplan manager
-// 			switch ($app_uuid) {
-// 				case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": // inbound route
-// 				case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": // outbound route
-// 				case "16589224-c876-aeb3-f59f-523a1c0801f7": // fifo
-// 				case "4b821450-926b-175a-af93-a03c441818b1": // time condition
-// 					break;
-// 				default:
-// 					unset($app_uuid);
-// 			}
-
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_condition_edit') || permission_exists('dialplan_edit')) {
 					$list_row_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
