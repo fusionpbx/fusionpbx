@@ -59,13 +59,17 @@ class token {
 	 */
 	public function create($key) {
 
+		//clear previously validated tokens
+			$this->clear_validated();
+
 		//allow only specific characters
 			$key = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $key);
 
 		//create a token for the key submitted
 			$token = [
 				'name'=>hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
-				'hash'=>hash_hmac('sha256', $key, bin2hex(random_bytes(32)))
+				'hash'=>hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
+				'validated'=>false
 				];
 
 		//save in the token session array
@@ -79,6 +83,7 @@ class token {
 	/**
 	 * validate the token
 	 * @var string $key
+	 * @var string $value
 	 */
 	public function validate($key, $value = null) {
 
@@ -102,13 +107,30 @@ class token {
 			if (is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
 				foreach ($_SESSION['tokens'][$key] as $t => $token) {
 					if (hash_equals($token['hash'], $value)) {
-						unset($_SESSION['tokens'][$key][$t]);
+						$_SESSION['tokens'][$key][$t]['validated'] = true;
 						return true;
 					}
 				}
 			}
 			return false;
 
+	}
+
+	/**
+	 * clear previously validated tokens
+	 */
+	private function clear_validated() {
+		if (is_array($_SESSION['tokens']) && @sizeof($_SESSION['tokens']) != 0) {
+			foreach ($_SESSION['tokens'] as $key => $tokens) {
+				if (is_array($tokens) && @sizeof($tokens) != 0) {
+					foreach ($tokens as $t => $token) {
+						if ($token['validated']) {
+							unset($_SESSION['tokens'][$key][$t]);
+						}
+					}
+				}
+			}
+		}
 	}
 
 }
@@ -130,6 +152,8 @@ echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash'].
 		header('Location: bridges.php');
 		exit;
 	}
+
+//note: can use $_SERVER['PHP_SELF'] instead of actual file path
 
 */
 
