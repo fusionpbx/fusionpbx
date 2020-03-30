@@ -188,11 +188,16 @@
 				$dialplan_uuid = uuid();
 				$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 			}
-			if (is_uuid($_POST["domain_uuid"])) {
-				$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+			if (permission_exists('dialplan_domain')) {
+				if (is_uuid($_POST["domain_uuid"])) {
+					$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+				}
+				else {
+					$array['dialplans'][$x]['domain_uuid'] = ''; //global
+				}
 			}
 			else {
-				$array['dialplans'][$x]['domain_uuid'] = '';
+				$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 			}
 			if ($action == 'add') {
 				$array['dialplans'][$x]['app_uuid'] = uuid();
