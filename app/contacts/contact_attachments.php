@@ -110,7 +110,7 @@
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_attachment_delete')) {
 						echo "	<td class='checkbox'>\n";
-						echo "		<input type='checkbox' name='contact_attachments[$x][checked]' id='checkbox_".$x."' class='checkbox_attachments' value='true' onclick=\"edit_delete_action('attachments');\">\n";
+						echo "		<input type='checkbox' name='contact_attachments[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_attachments' value='true' onclick=\"edit_delete_action('attachments');\">\n";
 						echo "		<input type='hidden' name='contact_attachments[$x][uuid]' value='".escape($row['contact_attachment_uuid'])."' />\n";
 						echo "	</td>\n";
 					}
