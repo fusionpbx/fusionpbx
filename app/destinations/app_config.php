@@ -43,6 +43,7 @@
 		$apps[$x]['destinations'][$y]['field']['description'] = "destination_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 
 	//permission details
