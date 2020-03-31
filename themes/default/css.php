@@ -2230,6 +2230,35 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 /* CSS GRID ********************************************************************/
 
+	div.grid {
+		width: 100%;
+		display: grid;
+		grid-gap: 0;
+		}
+
+	div.grid > div.box.contact-details {
+		padding: 15px;
+		border: 1px solid <?php echo ($_SESSION['theme']['table_row_border_color']['text'] != '') ? $_SESSION['theme']['table_row_border_color']['text'] : '#c5d1e5'; ?>;
+		border-radius: 5px;
+		background: <?php echo ($_SESSION['theme']['table_row_background_color_dark']['text'] != '') ? $_SESSION['theme']['table_row_background_color_dark']['text'] : '#e5e9f0'; ?>;
+		}
+
+	div.grid.contact-details {
+		grid-template-columns: 50px auto;
+		}
+
+	div.grid > div.box {
+		padding: 0;
+		padding-bottom: 5px;
+		}
+
+	div.grid > div.box.contact-details-label {
+		font-size: 87%;
+		letter-spacing: -0.03em;
+		vertical-align: middle;
+		white-space: nowrap;
+		}
+
 	div.form_grid {
 		width: 100%;
 		display: grid;

@@ -300,7 +300,7 @@
 	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo "<th class='shrink hide-sm-dn'>&nbsp;</th>\n";
-	if (permission_exists('contact_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -308,9 +308,7 @@
 	if (is_array($contacts) && @sizeof($contacts) != 0) {
 		$x = 0;
 		foreach($contacts as $row) {
-			if (permission_exists('contact_edit') || permission_exists('contact_view')) {
-				$list_row_url = "contact_edit.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
-			}
+			$list_row_url = "contact_view.php?id=".urlencode($row['contact_uuid'])."&query_string=".urlencode($_SERVER["QUERY_STRING"]);
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('contact_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -342,9 +340,9 @@
 				echo "&nbsp;";
 			}
 			echo "	</td>\n";
-			if (permission_exists('contact_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if ($_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
