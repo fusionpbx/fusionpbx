@@ -60,9 +60,93 @@
 //setup the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
-//get the http post values and set them as php variables
-	if (count($_POST) > 0) {
+//get the agents from the database
+	$sql = "select * from v_call_center_agents ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by agent_name asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$agents = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
+//get the agent list from event socket
+	$switch_cmd = 'callcenter_config agent list';
+	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$agent_list = csv_to_named_array($event_socket_str, '|');
+
+//get the agent list from event socket
+	$switch_cmd = 'callcenter_config tier list';
+	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
+
+//get the call center queues from the database
+	$sql = "select * from v_call_center_queues ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by queue_name asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$call_center_queues = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+	//view_array($call_center_queues, false);
+
+//add the status to the call_center_queues array
+	$x = 0;
+	foreach ($call_center_queues as $queue) {
+		//get the queue list from event socket
+		$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
+		$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		$queue_list = csv_to_named_array($event_socket_str, '|');
+		$call_center_queues[$x]['queue_list'] = $queue_list;
+		$x++;
+	}
+	//view_array($call_center_queues, false);
+
+//get the agent status from mod_callcenter and update the agent status in the agents array
+	$x = 0;
+	foreach ($agents as $row) {
+		//add the domain name
+			$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+			$agents[$x]['domain_name'] = $domain_name;
+
+		//update the queue status
+			$i = 0;
+			foreach ($call_center_queues as $queue) {
+				$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
+				$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
+				$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
+				$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
+				$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
+				foreach ($queue['queue_list'] as $queue_list) {
+					if ($row['call_center_agent_uuid'] == $queue_list['name']) {
+						$agents[$x]['queues'][$i]['queue_status'] = 'Available';
+					}
+				}
+				$i++;
+			}
+
+		//update the agent status
+			foreach ($agent_list as $r) {
+				if ($r['name'] == $row['call_center_agent_uuid']) {
+					$agents[$x]['agent_status'] = $r['status'];
+				}
+			}
+		//increment x
+			$x++;
+	}
+
+//remove rows from the http post array where the status has not changed
+	if (count($_POST['agents']) > 0) {
+		foreach($_POST['agents'] as $key => $row) {
+			foreach($agents as $k => $field) {
+				if ($field['agent_name'] === $row['agent_name'] && $field['agent_status'] === $row['agent_status']) {
+					unset($_POST['agents'][$key]);
+				}
+			}
+		}
+	}
+
+//use the http post array to change the status
+	if (count($_POST['agents']) > 0) {
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
@@ -181,82 +265,6 @@
 		header("Location: call_center_agent_status.php");
 		return;
 	} //post
-
-//get the agents from the database
-	$sql = "select * from v_call_center_agents ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by agent_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$agents = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
-//get the agent list from event socket
-	$switch_cmd = 'callcenter_config agent list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-	$agent_list = csv_to_named_array($event_socket_str, '|');
-
-//get the agent list from event socket
-	$switch_cmd = 'callcenter_config tier list';
-	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
-
-//get the call center queues from the database
-	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by queue_name asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
-	$call_center_queues = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
-// 	view_array($call_center_queues, false);
-
-//add the status to the call_center_queues array
-	$x = 0;
-	foreach ($call_center_queues as $queue) {
-		//get the queue list from event socket
-		$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
-		$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-		$queue_list = csv_to_named_array($event_socket_str, '|');
-		$call_center_queues[$x]['queue_list'] = $queue_list;
-		$x++;
-	}
-
-// 	view_array($call_center_queues, false);
-
-//get the agent status from mod_callcenter and update the agent status in the agents array
-	$x = 0;
-	foreach ($agents as $row) {
-		//add the domain name
-			$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-			$agents[$x]['domain_name'] = $domain_name;
-
-		//update the queue status
-			$i = 0;
-			foreach ($call_center_queues as $queue) {
-				$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
-				$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
-				$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
-				$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
-				$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
-				foreach ($queue['queue_list'] as $queue_list) {
-					if ($row['call_center_agent_uuid'] == $queue_list['name']) {
-						$agents[$x]['queues'][$i]['queue_status'] = 'Available';
-					}
-				}
-				$i++;
-			}
-
-		//update the agent status
-			foreach ($agent_list as $r) {
-				if ($r['name'] == $row['call_center_agent_uuid']) {
-					$agents[$x]['agent_status'] = $r['status'];
-				}
-			}
-		//increment x
-			$x++;
-	}
 
 //includes the header
 	$document['title'] = $text['title-call_center_agent_status'];
