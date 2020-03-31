@@ -102,7 +102,7 @@
 			$stream_path = str_replace('..', '', $stream_path);
 
 		//get the file and sanitize it
-			$stream_file = basename('danza-espanola-op-37-h-142-xii-arabesca.wav');
+			$stream_file = basename($_GET['file']);
 			$search = array('..', '/', ':');
 			$stream_file = str_replace($search, '', $stream_file);
 
@@ -136,7 +136,7 @@
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				if ($_GET['t'] == "bin") {
 					header("Content-Length: ".filesize($stream_full_path));
-				}
+					}
 				ob_clean();
 				fpassthru($fd);
 			}
