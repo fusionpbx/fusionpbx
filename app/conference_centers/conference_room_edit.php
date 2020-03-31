@@ -68,7 +68,7 @@
 		$wait_mod = $_POST["wait_mod"];
 		$announce_name = $_POST["announce_name"];
 		$announce_recording = $_POST["announce_recording"];
-		$announce_member_count = $_POST["announce_member_count"];
+		$announce_count = $_POST["announce_count"];
 		$sounds = $_POST["sounds"];
 		$mute = $_POST["mute"];
 		$created = $_POST["created"];
@@ -289,7 +289,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
 					if (strlen($announce_name) == 0) { $announce_name = 'true'; }
 					if (strlen($announce_recording) == 0) { $announce_recording = 'true'; }
-					if (strlen($announce_member_count) == 0) { $announce_member_count = 'true'; }
+					if (strlen($announce_count) == 0) { $announce_count = 'true'; }
 					if (strlen($mute) == 0) { $mute = 'false'; }
 					if (strlen($enabled) == 0) { $enabled = 'true'; }
 					if (strlen($sounds) == 0) { $sounds = 'false'; }
@@ -329,7 +329,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 					$array['conference_rooms'][0]['announce_name'] = $announce_name;
 					$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
-					$array['conference_rooms'][0]['announce_member_count'] = $announce_member_count;
+					$array['conference_rooms'][0]['announce_count'] = $announce_count;
 					$array['conference_rooms'][0]['sounds'] = $sounds;
 					$array['conference_rooms'][0]['mute'] = $mute;
 					$array['conference_rooms'][0]['created'] = 'now()';
@@ -428,7 +428,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
 					}
 					if (strlen($announce_name) > 0) {
-						$array['conference_rooms'][0]['announce_member_count'] = $announce_member_count;
+						$array['conference_rooms'][0]['announce_count'] = $announce_count;
 					}
 					if (strlen($mute) > 0) {
 						$array['conference_rooms'][0]['mute'] = $mute;
@@ -504,7 +504,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$wait_mod = $row["wait_mod"];
 				$announce_name = $row["announce_name"];
 				$announce_recording = $row["announce_recording"];
-				$announce_member_count = $row["announce_member_count"];
+				$announce_count = $row["announce_count"];
 				$sounds = $row["sounds"];
 				$mute = $row["mute"];
 				$created = $row["created"];
@@ -571,7 +571,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
 	if (strlen($announce_name) == 0) { $announce_name = 'true'; }
 	if (strlen($announce_recording) == 0) { $announce_recording = 'true'; }
-	if (strlen($announce_member_count) == 0) { $announce_member_count = 'true'; }
+	if (strlen($announce_count) == 0) { $announce_count = 'true'; }
 	if (strlen($mute) == 0) { $mute = 'false'; }
 	if (strlen($sounds) == 0) { $sounds = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
@@ -796,19 +796,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_announce_member_count')) {
+	if (permission_exists('conference_room_announce_count')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-announce_member_count']."</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-announce_count']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='announce_member_count'>\n";
+		echo "	<select class='formfld' name='announce_count'>\n";
 		echo "	<option value=''></option>\n";
-		if ($announce_member_count == "true") {
+		if ($announce_count == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($announce_member_count == "false") {
+		if ($announce_count == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
