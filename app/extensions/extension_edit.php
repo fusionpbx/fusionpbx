@@ -234,7 +234,6 @@
 			if (permission_exists('extension_enabled')) {
 				if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			}
-			//if (strlen($description) == 0) { $msg .= $text['message-required']."Description<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -1919,7 +1918,7 @@
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea class='formfld' name='description' rows='4'>".$description."</textarea>\n";
+	echo "    <input type='text' class='formfld' name='description' value=\"".$description."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
