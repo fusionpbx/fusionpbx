@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.";
+		$apps[$x]['description']['en-gb'] = "To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Um ein Fax zu empfangen, legen Sie eine Fax-Nebenstelle an und leiten das eingehende Fax über eine dedizierte Rufnummer oder die Faxerkennung in den Einstellungen an das Ziel.";
 		$apps[$x]['description']['de-ch'] = "";

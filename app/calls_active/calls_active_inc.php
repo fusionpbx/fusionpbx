@@ -122,7 +122,7 @@
 			echo "	<div class='actions'>\n";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 			if (permission_exists('call_active_hangup') && $rows) {
-				echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','onclick'=>"if (confirm('".$text['confirm-hangups']."')) { list_action_set('hangup'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+				echo button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'phone-slash','id'=>'btn_delete','onclick'=>"refresh_stop(); modal_open('modal-hangup','btn_hangup');"]);
 			}
 			if (permission_exists('call_active_all')) {
 				if ($show == "all") {
@@ -135,6 +135,10 @@
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
+
+			if (permission_exists('call_active_hangup') && $rows) {
+				echo modal::create(['id'=>'modal-hangup','type'=>'general','message'=>$text['confirm-hangups'],'actions'=>button::create(['type'=>'button','label'=>$text['label-hangup'],'icon'=>'check','id'=>'btn_hangup','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('hangup'); list_form_submit('form_list');"])]);
+			}
 
 			echo $text['description']."\n";
 			echo "<br /><br />\n";

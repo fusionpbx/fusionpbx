@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Conference Centers";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Conference Centers";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Konferenz Zentrale";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";

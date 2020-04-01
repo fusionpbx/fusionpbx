@@ -1,6 +1,7 @@
 <?php
 
 $text['title-devices']['en-us'] = "Devices";
+$text['title-devices']['en-gb'] = "Devices";
 $text['title-devices']['ar-eg'] = "الأجهزة";
 $text['title-devices']['de-at'] = "Geräte"; //copied from de-de
 $text['title-devices']['de-ch'] = "Geräte"; //copied from de-de
@@ -21,6 +22,7 @@ $text['title-devices']['sv-se'] = "Enheter";
 $text['title-devices']['uk-ua'] = "Пристрої";
 
 $text['title-device']['en-us'] = "Device";
+$text['title-device']['en-gb'] = "Device";
 $text['title-device']['ar-eg'] = "";
 $text['title-device']['de-at'] = "Gerät"; //copied from de-de
 $text['title-device']['de-ch'] = "Gerät"; //copied from de-de
@@ -41,6 +43,7 @@ $text['title-device']['sv-se'] = "Enhet";
 $text['title-device']['uk-ua'] = "";
 
 $text['title-device_import']['en-us'] = "Device Import";
+$text['title-device_import']['en-gb'] = "Device Import";
 $text['title-device_import']['ar-eg'] = "";
 $text['title-device_import']['de-at'] = "Importieren"; //copied from de-de
 $text['title-device_import']['de-ch'] = "Importieren"; //copied from de-de
@@ -63,6 +66,7 @@ $text['title-device_import']['uk-ua'] = "";
 $text['title-device_import']['tr-tr'] = "İçe Aktar";
 
 $text['title-device_export']['en-us'] = "Device Export";
+$text['title-device_export']['en-gb'] = "Device Export";
 $text['title-device_export']['ar-eg'] = "";
 $text['title-device_export']['de-at'] = "Exportieren"; //copied from de-de
 $text['title-device_export']['de-ch'] = "Exportieren"; //copied from de-de
@@ -85,6 +89,7 @@ $text['title-device_export']['uk-ua'] = "Експортувати";
 $text['title-device_export']['tr-tr'] = "Dışa Aktar";
 
 $text['title-device_profiles']['en-us'] = "Device Profiles";
+$text['title-device_profiles']['en-gb'] = "Device Profiles";
 $text['title-device_profiles']['ar-eg'] = "";
 $text['title-device_profiles']['de-at'] = "Profile"; //copied from de-de
 $text['title-device_profiles']['de-ch'] = "Profile"; //copied from de-de
@@ -105,6 +110,7 @@ $text['title-device_profiles']['sv-se'] = "Profiler";
 $text['title-device_profiles']['uk-ua'] = "Профілі";
 
 $text['title-device_profile']['en-us'] = "Device Profile";
+$text['title-device_profile']['en-gb'] = "Device Profile";
 $text['title-device_profile']['ar-eg'] = "";
 $text['title-device_profile']['de-at'] = "Profil"; //copied from de-de
 $text['title-device_profile']['de-ch'] = "Profil"; //copied from de-de
@@ -125,6 +131,7 @@ $text['title-device_profile']['sv-se'] = "Profil";
 $text['title-device_profile']['uk-ua'] = "Профіль";
 
 $text['title-device_keys']['en-us'] = "Device Keys";
+$text['title-device_keys']['en-gb'] = "Device Keys";
 $text['title-device_keys']['ar-eg'] = "";
 $text['title-device_keys']['de-at'] = "Geräte Tasten"; //copied from de-de
 $text['title-device_keys']['de-ch'] = "Geräte Tasten"; //copied from de-de
@@ -145,6 +152,7 @@ $text['title-device_keys']['sv-se'] = "Enhets Knappar";
 $text['title-device_keys']['uk-ua'] = "";
 
 $text['title-device_key']['en-us'] = "Device Key";
+$text['title-device_key']['en-gb'] = "Device Key";
 $text['title-device_key']['ar-eg'] = "";
 $text['title-device_key']['de-at'] = "Geräte Taste"; //copied from de-de
 $text['title-device_key']['de-ch'] = "Geräte Taste"; //copied from de-de
@@ -165,6 +173,7 @@ $text['title-device_key']['sv-se'] = "Enhets Knapp";
 $text['title-device_key']['uk-ua'] = "";
 
 $text['select-global']['en-us'] = "Global";
+$text['select-global']['en-gb'] = "Global";
 $text['select-global']['ar-eg'] = "";
 $text['select-global']['de-at'] = "Global"; //copied from de-de
 $text['select-global']['de-ch'] = "Global"; //copied from de-de
@@ -184,27 +193,29 @@ $text['select-global']['ru-ru'] = "Глобально";
 $text['select-global']['sv-se'] = "Global";
 $text['select-global']['uk-ua'] = "";
 
-$text['message_device']['en-us'] = "Enter the new MAC Address.";
+$text['message_device']['en-us'] = "Enter the New MAC Address";
+$text['message_device']['en-gb'] = "Enter the New MAC Address";
 $text['message_device']['ar-eg'] = "";
-$text['message_device']['de-at'] = "Geben Sie die neue MAC Adresse ein."; //copied from de-de
-$text['message_device']['de-ch'] = "Geben Sie die neue MAC Adresse ein."; //copied from de-de
-$text['message_device']['de-de'] = "Geben Sie die neue MAC Adresse ein.";
-$text['message_device']['es-cl'] = "Introduzca la nueva dirección MAC.";
-$text['message_device']['es-mx'] = "Introduzca la nueva dirección MAC."; //copied from es-cl
-$text['message_device']['fr-ca'] = "Insérer la nouvelle adresse MAC."; //copied from fr-fr
-$text['message_device']['fr-fr'] = "Insérer la nouvelle adresse MAC.";
+$text['message_device']['de-at'] = "Geben Sie die neue MAC Adresse ein"; //copied from de-de
+$text['message_device']['de-ch'] = "Geben Sie die neue MAC Adresse ein"; //copied from de-de
+$text['message_device']['de-de'] = "Geben Sie die neue MAC Adresse ein";
+$text['message_device']['es-cl'] = "Introduzca la nueva dirección MAC";
+$text['message_device']['es-mx'] = "Introduzca la nueva dirección MAC"; //copied from es-cl
+$text['message_device']['fr-ca'] = "Insérer la nouvelle adresse MAC"; //copied from fr-fr
+$text['message_device']['fr-fr'] = "Insérer la nouvelle adresse MAC";
 $text['message_device']['he-il'] = "הכנס כתובת מאק חדשה";
-$text['message_device']['it-it'] = "Inserire il nuovo MAC address.";
-$text['message_device']['nl-nl'] = "Voer het nieuwe MAC adres in.";
+$text['message_device']['it-it'] = "Inserire il nuovo MAC address";
+$text['message_device']['nl-nl'] = "Voer het nieuwe MAC adres in";
 $text['message_device']['pl-pl'] = "Wpisz nowy adres MAC";
-$text['message_device']['pt-br'] = "Insira o novo endereço MAC.";
-$text['message_device']['pt-pt'] = "Introduza o novo endereço MAC.";
+$text['message_device']['pt-br'] = "Insira o novo endereço MAC";
+$text['message_device']['pt-pt'] = "Introduza o novo endereço MAC";
 $text['message_device']['ro-ro'] = "";
-$text['message_device']['ru-ru'] = "Введите новый MAC-адрес.";
-$text['message_device']['sv-se'] = "Fyll i den nya MAC-adressen.";
+$text['message_device']['ru-ru'] = "Введите новый MAC-адрес";
+$text['message_device']['sv-se'] = "Fyll i den nya MAC-adressen";
 $text['message_device']['uk-ua'] = "Введіть нову MAC адресу";
 
 $text['message-maximum_devices']['en-us'] = "Maximum Devices:";
+$text['message-maximum_devices']['en-gb'] = "Maximum Devices:";
 $text['message-maximum_devices']['ar-eg'] = "";
 $text['message-maximum_devices']['de-at'] = "Maximale Anzahl der Geräte:"; //copied from de-de
 $text['message-maximum_devices']['de-ch'] = "Maximale Anzahl der Geräte:"; //copied from de-de
@@ -225,6 +236,7 @@ $text['message-maximum_devices']['sv-se'] = "Max Antal Enheter";
 $text['message-maximum_devices']['uk-ua'] = "Максимальна кількість пристроїв";
 
 $text['message-duplicate_username']['en-us'] = "Duplicate Username Detected";
+$text['message-duplicate_username']['en-gb'] = "Duplicate Username Detected";
 $text['message-duplicate_username']['ar-eg'] = "";
 $text['message-duplicate_username']['de-at'] = "Benutzername bereits vorhanden"; //copied from de-de
 $text['message-duplicate_username']['de-ch'] = "Benutzername bereits vorhanden"; //copied from de-de
@@ -245,6 +257,7 @@ $text['message-duplicate_username']['sv-se'] = "Duplicera Användarnamn upptäck
 $text['message-duplicate_username']['uk-ua'] = "Виявлено дублікат імені користувача";
 
 $text['message-duplicate']['en-us'] = "Duplicate Detected";
+$text['message-duplicate']['en-gb'] = "Duplicate Detected";
 $text['message-duplicate']['ar-eg'] = "";
 $text['message-duplicate']['de-at'] = "bereits vorhanden"; //copied from de-de
 $text['message-duplicate']['de-ch'] = "bereits vorhanden"; //copied from de-de
@@ -265,6 +278,7 @@ $text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
 $text['message-duplicate']['uk-ua'] = "Знайдено дублікат";
 
 $text['label-zero_sp_touch']['en-us'] = "Zero-Sp-Touch";
+$text['label-zero_sp_touch']['en-gb'] = "Zero-Sp-Touch";
 $text['label-zero_sp_touch']['ar-eg'] = "";
 $text['label-zero_sp_touch']['de-at'] = "Zero-SP-Touch"; //copied from de-de
 $text['label-zero_sp_touch']['de-ch'] = "Zero-SP-Touch"; //copied from de-de
@@ -285,6 +299,7 @@ $text['label-zero_sp_touch']['sv-se'] = "Zero-Sp-Touch";
 $text['label-zero_sp_touch']['uk-ua'] = "";
 
 $text['label-zero_touch']['en-us'] = "Zero Touch";
+$text['label-zero_touch']['en-gb'] = "Zero Touch";
 $text['label-zero_touch']['ar-eg'] = "";
 $text['label-zero_touch']['de-at'] = "Zero Touch"; //copied from de-de
 $text['label-zero_touch']['de-ch'] = "Zero Touch"; //copied from de-de
@@ -305,6 +320,7 @@ $text['label-zero_touch']['sv-se'] = "Zero Touch";
 $text['label-zero_touch']['uk-ua'] = "";
 
 $text['label-xml_directory']['en-us'] = "XML Directory";
+$text['label-xml_directory']['en-gb'] = "XML Directory";
 $text['label-xml_directory']['ar-eg'] = "";
 $text['label-xml_directory']['de-at'] = "Verzeichnis"; //copied from de-de
 $text['label-xml_directory']['de-ch'] = "Verzeichnis"; //copied from de-de
@@ -325,6 +341,7 @@ $text['label-xml_directory']['sv-se'] = "Katalog";
 $text['label-xml_directory']['uk-ua'] = "";
 
 $text['label-xml_phonebook']['en-us'] = "XML Phonebook";
+$text['label-xml_phonebook']['en-gb'] = "XML Phonebook";
 $text['label-xml_phonebook']['ar-eg'] = "";
 $text['label-xml_phonebook']['de-at'] = "XML Telefonbuch"; //copied from de-de
 $text['label-xml_phonebook']['de-ch'] = "XML Telefonbuch"; //copied from de-de
@@ -345,6 +362,7 @@ $text['label-xml_phonebook']['sv-se'] = "XML Telefonbok";
 $text['label-xml_phonebook']['uk-ua'] = "";
 
 $text['label-xml_group']['en-us'] = "XML Group";
+$text['label-xml_group']['en-gb'] = "XML Group";
 $text['label-xml_group']['ar-eg'] = "";
 $text['label-xml_group']['de-at'] = "XML Gruppe"; //copied from de-de
 $text['label-xml_group']['de-ch'] = "XML Gruppe"; //copied from de-de
@@ -365,6 +383,7 @@ $text['label-xml_group']['sv-se'] = "XML Grupp";
 $text['label-xml_group']['uk-ua'] = "";
 
 $text['label-xml_browser']['en-us'] = "XML Browser";
+$text['label-xml_browser']['en-gb'] = "XML Browser";
 $text['label-xml_browser']['ar-eg'] = "";
 $text['label-xml_browser']['de-at'] = "XML Browser"; //copied from de-de
 $text['label-xml_browser']['de-ch'] = "XML Browser"; //copied from de-de
@@ -385,6 +404,7 @@ $text['label-xml_browser']['sv-se'] = "XML Browser";
 $text['label-xml_browser']['uk-ua'] = "";
 
 $text['label-voicemail']['en-us'] = "Voicemail";
+$text['label-voicemail']['en-gb'] = "Voicemail";
 $text['label-voicemail']['ar-eg'] = "البريد الصوتي";
 $text['label-voicemail']['de-at'] = "Sprachnachricht"; //copied from de-de
 $text['label-voicemail']['de-ch'] = "Sprachnachricht"; //copied from de-de
@@ -405,6 +425,7 @@ $text['label-voicemail']['sv-se'] = "Röstbrevlåda";
 $text['label-voicemail']['uk-ua'] = "Голосова пошта";
 
 $text['label-user']['en-us'] = "User";
+$text['label-user']['en-gb'] = "User";
 $text['label-user']['ar-eg'] = "";
 $text['label-user']['de-at'] = "Benutzer"; //copied from de-de
 $text['label-user']['de-ch'] = "Benutzer"; //copied from de-de
@@ -425,6 +446,7 @@ $text['label-user']['sv-se'] = "Användare";
 $text['label-user']['uk-ua'] = "Користувачі";
 
 $text['label-user_id']['en-us'] = "User ID";
+$text['label-user_id']['en-gb'] = "User ID";
 $text['label-user_id']['ar-eg'] = "";
 $text['label-user_id']['de-at'] = "Benutzer ID"; //copied from de-de
 $text['label-user_id']['de-ch'] = "Benutzer ID"; //copied from de-de
@@ -445,6 +467,7 @@ $text['label-user_id']['sv-se'] = "Användar ID";
 $text['label-user_id']['uk-ua'] = "";
 
 $text['label-url_record']['en-us'] = "URL Record";
+$text['label-url_record']['en-gb'] = "URL Record";
 $text['label-url_record']['ar-eg'] = "";
 $text['label-url_record']['de-at'] = "URL Wert"; //copied from de-de
 $text['label-url_record']['de-ch'] = "URL Wert"; //copied from de-de
@@ -465,6 +488,7 @@ $text['label-url_record']['sv-se'] = "URL Post";
 $text['label-url_record']['uk-ua'] = "";
 
 $text['label-url']['en-us'] = "URL";
+$text['label-url']['en-gb'] = "URL";
 $text['label-url']['ar-eg'] = "URL";
 $text['label-url']['de-at'] = "URL"; //copied from de-de
 $text['label-url']['de-ch'] = "URL"; //copied from de-de
@@ -485,6 +509,7 @@ $text['label-url']['sv-se'] = "URL";
 $text['label-url']['uk-ua'] = "URL";
 
 $text['label-transfer']['en-us'] = "Transfer";
+$text['label-transfer']['en-gb'] = "Transfer";
 $text['label-transfer']['ar-eg'] = "";
 $text['label-transfer']['de-at'] = "";
 $text['label-transfer']['de-ch'] = "";
@@ -505,6 +530,7 @@ $text['label-transfer']['sv-se'] = "";
 $text['label-transfer']['uk-ua'] = "";
 
 $text['label-tools']['en-us'] = "Tools";
+$text['label-tools']['en-gb'] = "Tools";
 $text['label-tools']['ar-eg'] = "الأدوات";
 $text['label-tools']['de-at'] = "Werkzeug"; //copied from de-de
 $text['label-tools']['de-ch'] = "Werkzeug"; //copied from de-de
@@ -525,6 +551,7 @@ $text['label-tools']['sv-se'] = "Verktyg";
 $text['label-tools']['uk-ua'] = "Параметри";
 
 $text['label-switch_account_up']['en-us'] = "Switch Account Up";
+$text['label-switch_account_up']['en-gb'] = "Switch Account Up";
 $text['label-switch_account_up']['ar-eg'] = "";
 $text['label-switch_account_up']['de-at'] = "Switch Account nach oben"; //copied from de-de
 $text['label-switch_account_up']['de-ch'] = "Switch Account nach oben"; //copied from de-de
@@ -545,6 +572,7 @@ $text['label-switch_account_up']['sv-se'] = "Switch Konto Igång";
 $text['label-switch_account_up']['uk-ua'] = "";
 
 $text['label-switch_account_down']['en-us'] = "Switch Account Down";
+$text['label-switch_account_down']['en-gb'] = "Switch Account Down";
 $text['label-switch_account_down']['ar-eg'] = "";
 $text['label-switch_account_down']['de-at'] = "Switch Account nach unten"; //copied from de-de
 $text['label-switch_account_down']['de-ch'] = "Switch Account nach unten"; //copied from de-de
@@ -565,6 +593,7 @@ $text['label-switch_account_down']['sv-se'] = "Switch Konto Avstängd";
 $text['label-switch_account_down']['uk-ua'] = "";
 
 $text['label-status']['en-us'] = "Status";
+$text['label-status']['en-gb'] = "Status";
 $text['label-status']['ar-eg'] = "الحالة";
 $text['label-status']['de-at'] = "Status"; //copied from de-de
 $text['label-status']['de-ch'] = "Status"; //copied from de-de
@@ -585,6 +614,7 @@ $text['label-status']['sv-se'] = "Status";
 $text['label-status']['uk-ua'] = "Статус";
 
 $text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
+$text['label-speed_dial_active']['en-gb'] = "Speed Dial Active";
 $text['label-speed_dial_active']['ar-eg'] = "";
 $text['label-speed_dial_active']['de-at'] = "Kurzwahl aktiv"; //copied from de-de
 $text['label-speed_dial_active']['de-ch'] = "Kurzwahl aktiv"; //copied from de-de
@@ -605,6 +635,7 @@ $text['label-speed_dial_active']['sv-se'] = "Kortnummer Aktiv";
 $text['label-speed_dial_active']['uk-ua'] = "Швидкий набір активовано";
 
 $text['label-speed_dial']['en-us'] = "Speed Dial";
+$text['label-speed_dial']['en-gb'] = "Speed Dial";
 $text['label-speed_dial']['ar-eg'] = "";
 $text['label-speed_dial']['de-at'] = "";
 $text['label-speed_dial']['de-ch'] = "";
@@ -625,6 +656,7 @@ $text['label-speed_dial']['sv-se'] = "";
 $text['label-speed_dial']['uk-ua'] = "";
 
 $text['label-speed_dial_prefix']['en-us'] = "Speed Dial Prefix";
+$text['label-speed_dial_prefix']['en-gb'] = "Speed Dial Prefix";
 $text['label-speed_dial_prefix']['ar-eg'] = "";
 $text['label-speed_dial_prefix']['de-at'] = "Präfix für Kurzwahl"; //copied from de-de
 $text['label-speed_dial_prefix']['de-ch'] = "Präfix für Kurzwahl"; //copied from de-de
@@ -645,6 +677,7 @@ $text['label-speed_dial_prefix']['sv-se'] = "Speed Dial Prefix";
 $text['label-speed_dial_prefix']['uk-ua'] = "";
 
 $text['label-sms']['en-us'] = "SMS";
+$text['label-sms']['en-gb'] = "SMS";
 $text['label-sms']['ar-eg'] = "رسالة نصية";
 $text['label-sms']['de-at'] = "SMS"; //copied from de-de
 $text['label-sms']['de-ch'] = "SMS"; //copied from de-de
@@ -665,6 +698,7 @@ $text['label-sms']['sv-se'] = "SMS";
 $text['label-sms']['uk-ua'] = "SMS";
 
 $text['label-sip_transport']['en-us'] = "Transport";
+$text['label-sip_transport']['en-gb'] = "Transport";
 $text['label-sip_transport']['ar-eg'] = "";
 $text['label-sip_transport']['de-at'] = "Transport"; //copied from de-de
 $text['label-sip_transport']['de-ch'] = "Transport"; //copied from de-de
@@ -685,6 +719,7 @@ $text['label-sip_transport']['sv-se'] = "Transport";
 $text['label-sip_transport']['uk-ua'] = "Транспорт";
 
 $text['label-sip_port']['en-us'] = "Port";
+$text['label-sip_port']['en-gb'] = "Port";
 $text['label-sip_port']['ar-eg'] = "منفذ";
 $text['label-sip_port']['de-at'] = "Port"; //copied from de-de
 $text['label-sip_port']['de-ch'] = "Port"; //copied from de-de
@@ -705,6 +740,7 @@ $text['label-sip_port']['sv-se'] = "Port";
 $text['label-sip_port']['uk-ua'] = "Порт";
 
 $text['label-shared_line']['en-us'] = "Shared Line";
+$text['label-shared_line']['en-gb'] = "Shared Line";
 $text['label-shared_line']['ar-eg'] = "";
 $text['label-shared_line']['de-at'] = "Gemeinsame Leitung"; //copied from de-de
 $text['label-shared_line']['de-ch'] = "Gemeinsame Leitung"; //copied from de-de
@@ -725,6 +761,7 @@ $text['label-shared_line']['sv-se'] = "Delad Linje";
 $text['label-shared_line']['uk-ua'] = "";
 
 $text['label-settings']['en-us'] = "Settings";
+$text['label-settings']['en-gb'] = "Settings";
 $text['label-settings']['ar-eg'] = "الأعدادات";
 $text['label-settings']['de-at'] = "Einstellungen"; //copied from de-de
 $text['label-settings']['de-ch'] = "Einstellungen"; //copied from de-de
@@ -745,6 +782,7 @@ $text['label-settings']['sv-se'] = "Inställningar";
 $text['label-settings']['uk-ua'] = "Налаштування";
 
 $text['label-server_address']['en-us'] = "Server Address";
+$text['label-server_address']['en-gb'] = "Server Address";
 $text['label-server_address']['ar-eg'] = "";
 $text['label-server_address']['de-at'] = "Server Adresse"; //copied from de-de
 $text['label-server_address']['de-ch'] = "Server Adresse"; //copied from de-de
@@ -765,6 +803,7 @@ $text['label-server_address']['sv-se'] = "Serveradress";
 $text['label-server_address']['uk-ua'] = "";
 
 $text['label-server_address_primary']['en-us'] = "Primary Address";
+$text['label-server_address_primary']['en-gb'] = "Primary Address";
 $text['label-server_address_primary']['ar-eg'] = "";
 $text['label-server_address_primary']['de-at'] = "Server Adresse"; //copied from de-de
 $text['label-server_address_primary']['de-ch'] = "Server Adresse"; //copied from de-de
@@ -785,6 +824,7 @@ $text['label-server_address_primary']['sv-se'] = "Serveradress";
 $text['label-server_address_primary']['uk-ua'] = "";
 
 $text['label-server_address_secondary']['en-us'] = "Secondary Address";
+$text['label-server_address_secondary']['en-gb'] = "Secondary Address";
 $text['label-server_address_secondary']['ar-eg'] = "";
 $text['label-server_address_secondary']['de-at'] = "Server Adresse"; //copied from de-de
 $text['label-server_address_secondary']['de-ch'] = "Server Adresse"; //copied from de-de
@@ -805,6 +845,7 @@ $text['label-server_address_secondary']['sv-se'] = "Serveradress";
 $text['label-server_address_secondary']['uk-ua'] = "";
 
 $text['label-register_expires']['en-us'] = "Register Expires";
+$text['label-register_expires']['en-gb'] = "Register Expires";
 $text['label-register_expires']['ar-eg'] = "";
 $text['label-register_expires']['de-at'] = "Ablauf der Registrierung"; //copied from de-de
 $text['label-register_expires']['de-ch'] = "Ablauf der Registrierung"; //copied from de-de
@@ -825,6 +866,7 @@ $text['label-register_expires']['sv-se'] = "Registrering Utgår";
 $text['label-register_expires']['uk-ua'] = "";
 
 $text['label-redirect']['en-us'] = "Redirect";
+$text['label-redirect']['en-gb'] = "Redirect";
 $text['label-redirect']['ar-eg'] = "";
 $text['label-redirect']['de-at'] = "Weiterleitung"; //copied from de-de
 $text['label-redirect']['de-ch'] = "Weiterleitung"; //copied from de-de
@@ -845,6 +887,7 @@ $text['label-redirect']['sv-se'] = "Omdirigera";
 $text['label-redirect']['uk-ua'] = "Перенаправлення";
 
 $text['label-redial']['en-us'] = "Redial";
+$text['label-redial']['en-gb'] = "Redial";
 $text['label-redial']['ar-eg'] = "Redial";
 $text['label-redial']['de-at'] = "Wahlwiderholung";
 $text['label-redial']['de-ch'] = "Wahlwiederholung"; //copied from de-de
@@ -865,6 +908,7 @@ $text['label-redial']['sv-se'] = "Redial";
 $text['label-redial']['uk-ua'] = "Redial";
 
 $text['label-record']['en-us'] = "Record";
+$text['label-record']['en-gb'] = "Record";
 $text['label-record']['ar-eg'] = "تسجيل";
 $text['label-record']['de-at'] = "Aufnehmen"; //copied from de-de
 $text['label-record']['de-ch'] = "Aufnehmen"; //copied from de-de
@@ -885,6 +929,7 @@ $text['label-record']['sv-se'] = "Spela In";
 $text['label-record']['uk-ua'] = "Запис";
 
 $text['label-pickup']['en-us'] = "Pickup";
+$text['label-pickup']['en-gb'] = "Pickup";
 $text['label-pickup']['ar-eg'] = "";
 $text['label-pickup']['de-at'] = "Heranholen"; //copied from de-de
 $text['label-pickup']['de-ch'] = "Heranholen"; //copied from de-de
@@ -905,6 +950,7 @@ $text['label-pickup']['sv-se'] = "Plocka";
 $text['label-pickup']['uk-ua'] = "";
 
 $text['label-public_hold']['en-us'] = "Public Hold";
+$text['label-public_hold']['en-gb'] = "Public Hold";
 $text['label-public_hold']['ar-eg'] = "";
 $text['label-public_hold']['de-at'] = "Allgemeines Halten"; //copied from de-de
 $text['label-public_hold']['de-ch'] = "Allgemeines Halten"; //copied from de-de
@@ -925,6 +971,7 @@ $text['label-public_hold']['sv-se'] = "Gemensam Vänt";
 $text['label-public_hold']['uk-ua'] = "";
 
 $text['label-programmable']['en-us'] = "Programmable";
+$text['label-programmable']['en-gb'] = "Programmable";
 $text['label-programmable']['ar-eg'] = "قابل للترجمة";
 $text['label-programmable']['de-at'] = "Programmierbar"; //copied from de-de
 $text['label-programmable']['de-ch'] = "Programmierbar"; //copied from de-de
@@ -945,6 +992,7 @@ $text['label-programmable']['sv-se'] = "Programmerbar";
 $text['label-programmable']['uk-ua'] = "Програмується";
 
 $text['label-device_profile_name']['en-us'] = "Name";
+$text['label-device_profile_name']['en-gb'] = "Name";
 $text['label-device_profile_name']['ar-eg'] = "الأسم";
 $text['label-device_profile_name']['de-at'] = "Name"; //copied from de-de
 $text['label-device_profile_name']['de-ch'] = "Name"; //copied from de-de
@@ -965,6 +1013,7 @@ $text['label-device_profile_name']['sv-se'] = "Namn";
 $text['label-device_profile_name']['uk-ua'] = "Назва";
 
 $text['label-device_profile_enabled']['en-us'] = "Enabled";
+$text['label-device_profile_enabled']['en-gb'] = "Enabled";
 $text['label-device_profile_enabled']['ar-eg'] = "";
 $text['label-device_profile_enabled']['de-at'] = "Ein"; //copied from de-de
 $text['label-device_profile_enabled']['de-ch'] = "Ein"; //copied from de-de
@@ -985,6 +1034,7 @@ $text['label-device_profile_enabled']['sv-se'] = "Aktiverad";
 $text['label-device_profile_enabled']['uk-ua'] = "Включено";
 
 $text['label-profile_domain']['en-us'] = "Domain";
+$text['label-profile_domain']['en-gb'] = "Domain";
 $text['label-profile_domain']['ar-eg'] = "النطاق";
 $text['label-profile_domain']['de-at'] = "Domäne"; //copied from de-de
 $text['label-profile_domain']['de-ch'] = "Domäne"; //copied from de-de
@@ -1005,6 +1055,7 @@ $text['label-profile_domain']['sv-se'] = "Domän";
 $text['label-profile_domain']['uk-ua'] = "Домен";
 
 $text['label-device_profile_description']['en-us'] = "Description";
+$text['label-device_profile_description']['en-gb'] = "Description";
 $text['label-device_profile_description']['ar-eg'] = "";
 $text['label-device_profile_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-device_profile_description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -1025,6 +1076,7 @@ $text['label-device_profile_description']['sv-se'] = "Beskrivning";
 $text['label-device_profile_description']['uk-ua'] = "Опис";
 
 $text['label-profile']['en-us'] = "Profile";
+$text['label-profile']['en-gb'] = "Profile";
 $text['label-profile']['ar-eg'] = "";
 $text['label-profile']['de-at'] = "Profil"; //copied from de-de
 $text['label-profile']['de-ch'] = "Profil"; //copied from de-de
@@ -1045,6 +1097,7 @@ $text['label-profile']['sv-se'] = "Profil";
 $text['label-profile']['uk-ua'] = "";
 
 $text['label-private']['en-us'] = "Private";
+$text['label-private']['en-gb'] = "Private";
 $text['label-private']['ar-eg'] = "";
 $text['label-private']['de-at'] = "Privat"; //copied from de-de
 $text['label-private']['de-ch'] = "Privat"; //copied from de-de
@@ -1065,6 +1118,7 @@ $text['label-private']['sv-se'] = "Privat";
 $text['label-private']['uk-ua'] = "Опис";
 
 $text['label-private_hold']['en-us'] = "Private Hold";
+$text['label-private_hold']['en-gb'] = "Private Hold";
 $text['label-private_hold']['ar-eg'] = "";
 $text['label-private_hold']['de-at'] = "Privat Hold"; //copied from de-de
 $text['label-private_hold']['de-ch'] = "Privat Hold"; //copied from de-de
@@ -1085,6 +1139,7 @@ $text['label-private_hold']['sv-se'] = "";
 $text['label-private_hold']['uk-ua'] = "";
 
 $text['label-presence_watcher']['en-us'] = "Presence Watcher";
+$text['label-presence_watcher']['en-gb'] = "Presence Watcher";
 $text['label-presence_watcher']['ar-eg'] = "";
 $text['label-presence_watcher']['de-at'] = "Anwesenheitsüberwachung"; //copied from de-de
 $text['label-presence_watcher']['de-ch'] = "Anwesenheitsüberwachung"; //copied from de-de
@@ -1105,6 +1160,7 @@ $text['label-presence_watcher']['sv-se'] = "Närvaro Hantering";
 $text['label-presence_watcher']['uk-ua'] = "";
 
 $text['label-presence']['en-us'] = "Presence";
+$text['label-presence']['en-gb'] = "Presence";
 $text['label-presence']['ar-eg'] = "";
 $text['label-presence']['de-at'] = "Anwesenheit"; //copied from de-de
 $text['label-presence']['de-ch'] = "Anwesenheit"; //copied from de-de
@@ -1125,6 +1181,7 @@ $text['label-presence']['sv-se'] = "Närvaro";
 $text['label-presence']['uk-ua'] = "";
 
 $text['label-prefix']['en-us'] = "Prefix";
+$text['label-prefix']['en-gb'] = "Prefix";
 $text['label-prefix']['ar-eg'] = "";
 $text['label-prefix']['de-at'] = "Präfix"; //copied from de-de
 $text['label-prefix']['de-ch'] = "Präfix"; //copied from de-de
@@ -1145,6 +1202,7 @@ $text['label-prefix']['sv-se'] = "Prefix";
 $text['label-prefix']['uk-ua'] = "Префікс";
 
 $text['label-paging']['en-us'] = "Paging";
+$text['label-paging']['en-gb'] = "Paging";
 $text['label-paging']['ar-eg'] = "";
 $text['label-paging']['de-at'] = "Durchsage"; //copied from de-de
 $text['label-paging']['de-ch'] = "Durchsage"; //copied from de-de
@@ -1165,6 +1223,7 @@ $text['label-paging']['sv-se'] = "Personsökning";
 $text['label-paging']['uk-ua'] = "";
 
 $text['label-p2t']['en-us'] = "Push to Talk";
+$text['label-p2t']['en-gb'] = "Push to Talk";
 $text['label-p2t']['ar-eg'] = "";
 $text['label-p2t']['de-at'] = "Push to Talk"; //copied from de-de
 $text['label-p2t']['de-ch'] = "Push to Talk"; //copied from de-de
@@ -1185,6 +1244,7 @@ $text['label-p2t']['sv-se'] = "Push to Talk ";
 $text['label-p2t']['uk-ua'] = "";
 
 $text['label-outbound_proxy_primary']['en-us'] = "Outbound Proxy";
+$text['label-outbound_proxy_primary']['en-gb'] = "Outbound Proxy";
 $text['label-outbound_proxy_primary']['ar-eg'] = "";
 $text['label-outbound_proxy_primary']['de-at'] = "Outbound Proxy"; //copied from de-de
 $text['label-outbound_proxy_primary']['de-ch'] = "Outbound Proxy"; //copied from de-de
@@ -1205,6 +1265,7 @@ $text['label-outbound_proxy_primary']['sv-se'] = "Utgående Proxy";
 $text['label-outbound_proxy_primary']['uk-ua'] = "";
 
 $text['label-outbound_proxy_secondary']['en-us'] = "Outbound Proxy";
+$text['label-outbound_proxy_secondary']['en-gb'] = "Outbound Proxy";
 $text['label-outbound_proxy_secondary']['ar-eg'] = "";
 $text['label-outbound_proxy_secondary']['de-at'] = "Outbound Proxy"; //copied from de-de
 $text['label-outbound_proxy_secondary']['de-ch'] = "Outbound Proxy"; //copied from de-de
@@ -1225,6 +1286,7 @@ $text['label-outbound_proxy_secondary']['sv-se'] = "Utgående Proxy";
 $text['label-outbound_proxy_secondary']['uk-ua'] = "";
 
 $text['label-primary']['en-us'] = "Primary";
+$text['label-primary']['en-gb'] = "Primary";
 $text['label-primary']['ar-eg'] = "1";
 $text['label-primary']['de-at'] = "1"; //copied from de-de
 $text['label-primary']['de-ch'] = "1"; //copied from de-de
@@ -1245,6 +1307,7 @@ $text['label-primary']['sv-se'] = "Primär";
 $text['label-primary']['uk-ua'] = "1";
 
 $text['label-secondary']['en-us'] = "Secondary";
+$text['label-secondary']['en-gb'] = "Secondary";
 $text['label-secondary']['ar-eg'] = "2";
 $text['label-secondary']['de-at'] = "2"; //copied from de-de
 $text['label-secondary']['de-ch'] = "2"; //copied from de-de
@@ -1265,6 +1328,7 @@ $text['label-secondary']['sv-se'] = "Sekundär";
 $text['label-secondary']['uk-ua'] = "2";
 
 $text['label-orbit']['en-us'] = "Park + Orbit";
+$text['label-orbit']['en-gb'] = "Park + Orbit";
 $text['label-orbit']['ar-eg'] = "";
 $text['label-orbit']['de-at'] = "Park + Orbit"; //copied from de-de
 $text['label-orbit']['de-ch'] = "Park + Orbit"; //copied from de-de
@@ -1285,6 +1349,7 @@ $text['label-orbit']['sv-se'] = "Park + Orbit ";
 $text['label-orbit']['uk-ua'] = "";
 
 $text['label-normal']['en-us'] = "Normal";
+$text['label-normal']['en-gb'] = "Normal";
 $text['label-normal']['ar-eg'] = "Normal";
 $text['label-normal']['de-at'] = "Normal"; //copied from de-de
 $text['label-normal']['de-ch'] = "Normal"; //copied from de-de
@@ -1305,6 +1370,7 @@ $text['label-normal']['sv-se'] = "Normal";
 $text['label-normal']['uk-ua'] = "Звичайно";
 
 $text['label-new_sms']['en-us'] = "New SMS";
+$text['label-new_sms']['en-gb'] = "New SMS";
 $text['label-new_sms']['ar-eg'] = "رسالة جديدة";
 $text['label-new_sms']['de-at'] = "Neue SMS"; //copied from de-de
 $text['label-new_sms']['de-ch'] = "Neue SMS"; //copied from de-de
@@ -1325,6 +1391,7 @@ $text['label-new_sms']['sv-se'] = "Nytt SMS";
 $text['label-new_sms']['uk-ua'] = "";
 
 $text['label-na']['en-us'] = "N/A";
+$text['label-na']['en-gb'] = "N/A";
 $text['label-na']['ar-eg'] = "لا يوجد";
 $text['label-na']['de-at'] = "N/A"; //copied from de-de
 $text['label-na']['de-ch'] = "N/A"; //copied from de-de
@@ -1345,6 +1412,7 @@ $text['label-na']['sv-se'] = "N/A";
 $text['label-na']['uk-ua'] = "";
 
 $text['label-multicast_page']['en-us'] = "Multicast Page";
+$text['label-multicast_page']['en-gb'] = "Multicast Page";
 $text['label-multicast_page']['ar-eg'] = "";
 $text['label-multicast_page']['de-at'] = "Multicast Durchsage"; //copied from de-de
 $text['label-multicast_page']['de-ch'] = "Multicast Durchsage"; //copied from de-de
@@ -1365,6 +1433,7 @@ $text['label-multicast_page']['sv-se'] = "Muticast Sida";
 $text['label-multicast_page']['uk-ua'] = "";
 
 $text['label-multicast']['en-us'] = "Multicast";
+$text['label-multicast']['en-gb'] = "Multicast";
 $text['label-multicast']['ar-eg'] = "";
 $text['label-multicast']['de-at'] = "Multicast"; //copied from de-de
 $text['label-multicast']['de-ch'] = "Multicast"; //copied from de-de
@@ -1385,6 +1454,7 @@ $text['label-multicast']['sv-se'] = "Muticast";
 $text['label-multicast']['uk-ua'] = "";
 
 $text['label-menu']['en-us'] = "Menu";
+$text['label-menu']['en-gb'] = "Menu";
 $text['label-menu']['ar-eg'] = "القائمة";
 $text['label-menu']['de-at'] = "Menü"; //copied from de-de
 $text['label-menu']['de-ch'] = "Menü"; //copied from de-de
@@ -1405,6 +1475,7 @@ $text['label-menu']['sv-se'] = "Meny";
 $text['label-menu']['uk-ua'] = "Меню";
 
 $text['label-memory']['en-us'] = "Memory";
+$text['label-memory']['en-gb'] = "Memory";
 $text['label-memory']['ar-eg'] = "الذاكرة";
 $text['label-memory']['de-at'] = "Speicher"; //copied from de-de
 $text['label-memory']['de-ch'] = "Speicher"; //copied from de-de
@@ -1425,6 +1496,7 @@ $text['label-memory']['sv-se'] = "Minne";
 $text['label-memory']['uk-ua'] = "Пам’ять";
 
 $text['label-local_phonebook']['en-us'] = "Local Phonebook";
+$text['label-local_phonebook']['en-gb'] = "Local Phonebook";
 $text['label-local_phonebook']['ar-eg'] = "";
 $text['label-local_phonebook']['de-at'] = "Lokales Telefonbuch"; //copied from de-de
 $text['label-local_phonebook']['de-ch'] = "Lokales Telefonbuch"; //copied from de-de
@@ -1445,6 +1517,7 @@ $text['label-local_phonebook']['sv-se'] = "Lokal Telefonbok";
 $text['label-local_phonebook']['uk-ua'] = "";
 
 $text['label-local_group']['en-us'] = "Local Group";
+$text['label-local_group']['en-gb'] = "Local Group";
 $text['label-local_group']['ar-eg'] = "";
 $text['label-local_group']['de-at'] = "Lokale Gruppe"; //copied from de-de
 $text['label-local_group']['de-ch'] = "Lokale Gruppe"; //copied from de-de
@@ -1465,6 +1538,7 @@ $text['label-local_group']['sv-se'] = "Lokal Grupp";
 $text['label-local_group']['uk-ua'] = "";
 
 $text['label-lines']['en-us'] = "Lines";
+$text['label-lines']['en-gb'] = "Lines";
 $text['label-lines']['ar-eg'] = "";
 $text['label-lines']['de-at'] = "Leitungen"; //copied from de-de
 $text['label-lines']['de-ch'] = "Leitungen"; //copied from de-de
@@ -1485,6 +1559,7 @@ $text['label-lines']['sv-se'] = "Linjer";
 $text['label-lines']['uk-ua'] = "Лінії";
 
 $text['label-line_number']['en-us'] = "Line Number";
+$text['label-line_number']['en-gb'] = "Line Number";
 $text['label-line_number']['ar-eg'] = "";
 $text['label-line_number']['de-at'] = "Leitungs Nummer"; //copied from de-de
 $text['label-line_number']['de-ch'] = "Leitungs Nummer"; //copied from de-de
@@ -1505,6 +1580,7 @@ $text['label-line_number']['sv-se'] = "Linje Nummer";
 $text['label-line_number']['uk-ua'] = "Номер лінії";
 
 $text['label-line']['en-us'] = "Line";
+$text['label-line']['en-gb'] = "Line";
 $text['label-line']['ar-eg'] = "";
 $text['label-line']['de-at'] = "Leitung"; //copied from de-de
 $text['label-line']['de-ch'] = "Leitung"; //copied from de-de
@@ -1525,6 +1601,7 @@ $text['label-line']['sv-se'] = "Linje";
 $text['label-line']['uk-ua'] = "";
 
 $text['label-ldap_search']['en-us'] = "LDAP Search";
+$text['label-ldap_search']['en-gb'] = "LDAP Search";
 $text['label-ldap_search']['ar-eg'] = "";
 $text['label-ldap_search']['de-at'] = "LDAP Suche"; //copied from de-de
 $text['label-ldap_search']['de-ch'] = "LDAP Suche"; //copied from de-de
@@ -1545,6 +1622,7 @@ $text['label-ldap_search']['sv-se'] = "LDAP Sökning";
 $text['label-ldap_search']['uk-ua'] = "";
 
 $text['label-ldap']['en-us'] = "LDAP";
+$text['label-ldap']['en-gb'] = "LDAP";
 $text['label-ldap']['ar-eg'] = "";
 $text['label-ldap']['de-at'] = "LDAP"; //copied from de-de
 $text['label-ldap']['de-ch'] = "LDAP"; //copied from de-de
@@ -1565,6 +1643,7 @@ $text['label-ldap']['sv-se'] = "LDAP";
 $text['label-ldap']['uk-ua'] = "";
 
 $text['label-keys']['en-us'] = "Keys";
+$text['label-keys']['en-gb'] = "Keys";
 $text['label-keys']['ar-eg'] = "";
 $text['label-keys']['de-at'] = "Tasten"; //copied from de-de
 $text['label-keys']['de-ch'] = "Tasten"; //copied from de-de
@@ -1585,6 +1664,7 @@ $text['label-keys']['sv-se'] = "Knappar";
 $text['label-keys']['uk-ua'] = "";
 
 $text['label-keypad_lock']['en-us'] = "Keypad Lock";
+$text['label-keypad_lock']['en-gb'] = "Keypad Lock";
 $text['label-keypad_lock']['ar-eg'] = "";
 $text['label-keypad_lock']['de-at'] = "Tastenfeld Sperre"; //copied from de-de
 $text['label-keypad_lock']['de-ch'] = "Tastenfeld Sperre"; //copied from de-de
@@ -1605,6 +1685,7 @@ $text['label-keypad_lock']['sv-se'] = "Knapplås";
 $text['label-keypad_lock']['uk-ua'] = "";
 
 $text['label-key_event']['en-us'] = "Key Event";
+$text['label-key_event']['en-gb'] = "Key Event";
 $text['label-key_event']['ar-eg'] = "";
 $text['label-key_event']['de-at'] = "Tasten Ereignis"; //copied from de-de
 $text['label-key_event']['de-ch'] = "Tasten Ereignis"; //copied from de-de
@@ -1625,6 +1706,7 @@ $text['label-key_event']['sv-se'] = "Knapp Händelse";
 $text['label-key_event']['uk-ua'] = "";
 
 $text['label-ivr']['en-us'] = "IVR";
+$text['label-ivr']['en-gb'] = "IVR";
 $text['label-ivr']['ar-eg'] = "";
 $text['label-ivr']['de-at'] = "IVR"; //copied from de-de
 $text['label-ivr']['de-ch'] = "IVR"; //copied from de-de
@@ -1645,6 +1727,7 @@ $text['label-ivr']['sv-se'] = "IVR";
 $text['label-ivr']['uk-ua'] = "Голосове меню";
 
 $text['label-intercom']['en-us'] = "Intercom";
+$text['label-intercom']['en-gb'] = "Intercom";
 $text['label-intercom']['ar-eg'] = "";
 $text['label-intercom']['de-at'] = "Gegensprechanlage"; //copied from de-de
 $text['label-intercom']['de-ch'] = "Gegensprechanlage"; //copied from de-de
@@ -1665,6 +1748,7 @@ $text['label-intercom']['sv-se'] = "Intercom";
 $text['label-intercom']['uk-ua'] = "";
 
 $text['label-hot_desking']['en-us'] = "Hot Desking";
+$text['label-hot_desking']['en-gb'] = "Hot Desking";
 $text['label-hot_desking']['ar-eg'] = "";
 $text['label-hot_desking']['de-at'] = "Hot Desking"; //copied from de-de
 $text['label-hot_desking']['de-ch'] = "Hot Desking"; //copied from de-de
@@ -1685,6 +1769,7 @@ $text['label-hot_desking']['sv-se'] = "Hot Desking";
 $text['label-hot_desking']['uk-ua'] = "";
 
 $text['label-hold']['en-us'] = "Hold";
+$text['label-hold']['en-gb'] = "Hold";
 $text['label-hold']['ar-eg'] = "";
 $text['label-hold']['de-at'] = "";
 $text['label-hold']['de-ch'] = "";
@@ -1705,6 +1790,7 @@ $text['label-hold']['sv-se'] = "";
 $text['label-hold']['uk-ua'] = "";
 
 $text['label-history']['en-us'] = "History";
+$text['label-history']['en-gb'] = "History";
 $text['label-history']['ar-eg'] = "";
 $text['label-history']['de-at'] = "Verlauf"; //copied from de-de
 $text['label-history']['de-ch'] = "Verlauf"; //copied from de-de
@@ -1725,6 +1811,7 @@ $text['label-history']['sv-se'] = "Historia";
 $text['label-history']['uk-ua'] = "";
 
 $text['label-group_pickup']['en-us'] = "Group Pickup";
+$text['label-group_pickup']['en-gb'] = "Group Pickup";
 $text['label-group_pickup']['ar-eg'] = "";
 $text['label-group_pickup']['de-at'] = "Gruppe Heranholen"; //copied from de-de
 $text['label-group_pickup']['de-ch'] = "Gruppe Heranholen"; //copied from de-de
@@ -1745,6 +1832,7 @@ $text['label-group_pickup']['sv-se'] = "Plocka Grupp";
 $text['label-group_pickup']['uk-ua'] = "";
 
 $text['label-group_listening']['en-us'] = "Group Listening";
+$text['label-group_listening']['en-gb'] = "Group Listening";
 $text['label-group_listening']['ar-eg'] = "";
 $text['label-group_listening']['de-at'] = "Gruppe Heranholen"; //copied from de-de
 $text['label-group_listening']['de-ch'] = "Gruppe Heranholen"; //copied from de-de
@@ -1765,6 +1853,7 @@ $text['label-group_listening']['sv-se'] = "Plocka Grupp";
 $text['label-group_listening']['uk-ua'] = "";
 
 $text['label-call_forward']['en-us'] = "Call Forward";
+$text['label-call_forward']['en-gb'] = "Call Forward";
 $text['label-call_forward']['ar-eg'] = "";
 $text['label-call_forward']['de-at'] = "";
 $text['label-call_forward']['de-ch'] = "";
@@ -1785,6 +1874,7 @@ $text['label-call_forward']['sv-se'] = "";
 $text['label-call_forward']['uk-ua'] = "";
 
 $text['label-conf']['en-us'] = "Conf";
+$text['label-conf']['en-gb'] = "Conf";
 $text['label-conf']['ar-eg'] = "";
 $text['label-conf']['de-at'] = "Konf"; //copied from de-de
 $text['label-conf']['de-ch'] = "Konf"; //copied from de-de
@@ -1805,6 +1895,7 @@ $text['label-conf']['sv-se'] = "Konf";
 $text['label-conf']['uk-ua'] = "";
 
 $text['label-empty']['en-us'] = "Empty";
+$text['label-empty']['en-gb'] = "Empty";
 $text['label-empty']['ar-eg'] = "";
 $text['label-empty']['de-at'] = "Leer"; //copied from de-de
 $text['label-empty']['de-ch'] = "Leer"; //copied from de-de
@@ -1825,6 +1916,7 @@ $text['label-empty']['sv-se'] = "Tom";
 $text['label-empty']['uk-ua'] = "";
 
 $text['label-filter']['en-us'] = "Filter";
+$text['label-filter']['en-gb'] = "Filter";
 $text['label-filter']['ar-eg'] = "";
 $text['label-filter']['de-at'] = "Filter"; //copied from de-de
 $text['label-filter']['de-ch'] = "Filter"; //copied from de-de
@@ -1845,6 +1937,7 @@ $text['label-filter']['sv-se'] = "Filter";
 $text['label-filter']['uk-ua'] = "";
 
 $text['label-flash']['en-us'] = "Flash";
+$text['label-flash']['en-gb'] = "Flash";
 $text['label-flash']['ar-eg'] = "";
 $text['label-flash']['de-at'] = "Flash"; //copied from de-de
 $text['label-flash']['de-ch'] = "Flash"; //copied from de-de
@@ -1865,6 +1958,7 @@ $text['label-flash']['sv-se'] = "Flash";
 $text['label-flash']['uk-ua'] = "";
 
 $text['label-icom']['en-us'] = "Icom";
+$text['label-icom']['en-gb'] = "Icom";
 $text['label-icom']['ar-eg'] = "";
 $text['label-icom']['de-at'] = "Icom"; //copied from de-de
 $text['label-icom']['de-ch'] = "Icom"; //copied from de-de
@@ -1885,6 +1979,7 @@ $text['label-icom']['sv-se'] = "Icom";
 $text['label-icom']['uk-ua'] = "";
 
 $text['label-lcr']['en-us'] = "LCR";
+$text['label-lcr']['en-gb'] = "LCR";
 $text['label-lcr']['ar-eg'] = "";
 $text['label-lcr']['de-at'] = "LCR"; //copied from de-de
 $text['label-lcr']['de-ch'] = "LCR"; //copied from de-de
@@ -1905,6 +2000,7 @@ $text['label-lcr']['sv-se'] = "LCR";
 $text['label-lcr']['uk-ua'] = "";
 
 $text['label-monitored_call_park']['en-us'] = "Monitored Call Park";
+$text['label-monitored_call_park']['en-gb'] = "Monitored Call Park";
 $text['label-monitored_call_park']['ar-eg'] = "";
 $text['label-monitored_call_park']['de-at'] = "Monitored Call Park"; //copied from de-de
 $text['label-monitored_call_park']['de-ch'] = "Monitored Call Park"; //copied from de-de
@@ -1925,6 +2021,7 @@ $text['label-monitored_call_park']['sv-se'] = "Monitored Call Park";
 $text['label-monitored_call_park']['uk-ua'] = "";
 
 $text['label-multicast_paging']['en-us'] = "Multicast Paging";
+$text['label-multicast_paging']['en-gb'] = "Multicast Paging";
 $text['label-multicast_paging']['ar-eg'] = "";
 $text['label-multicast_paging']['de-at'] = "Multicast Paging"; //copied from de-de
 $text['label-multicast_paging']['de-ch'] = "Multicast Paging"; //copied from de-de
@@ -1945,6 +2042,7 @@ $text['label-multicast_paging']['sv-se'] = "Multicast Paging";
 $text['label-multicast_paging']['uk-ua'] = "";
 
 $text['label-park']['en-us'] = "Park";
+$text['label-park']['en-gb'] = "Park";
 $text['label-park']['ar-eg'] = "";
 $text['label-park']['de-at'] = "Park"; //copied from de-de
 $text['label-park']['de-ch'] = "Park"; //copied from de-de
@@ -1965,6 +2063,7 @@ $text['label-park']['sv-se'] = "Parkera";
 $text['label-park']['uk-ua'] = "";
 
 $text['label-park_return']['en-us'] = "Park Return";
+$text['label-park_return']['en-gb'] = "Park Return";
 $text['label-park_return']['ar-eg'] = "";
 $text['label-park_return']['de-at'] = "Park Return"; //copied from de-de
 $text['label-park_return']['de-ch'] = "Park Return"; //copied from de-de
@@ -1985,6 +2084,7 @@ $text['label-park_return']['sv-se'] = "Parkera Return";
 $text['label-park']['uk-ua'] = "";
 
 $text['label-phonelock']['en-us'] = "Phone Lock";
+$text['label-phonelock']['en-gb'] = "Phone Lock";
 $text['label-phonelock']['ar-eg'] = "";
 $text['label-phonelock']['de-at'] = "Telefonsperre"; //copied from de-de
 $text['label-phonelock']['de-ch'] = "Telefonsperre"; //copied from de-de
@@ -2005,6 +2105,7 @@ $text['label-phonelock']['sv-se'] = "Telefonlås";
 $text['label-phonelock']['uk-ua'] = "";
 
 $text['label-speed_dial_conf']['en-us'] = "Speed Dial Conf";
+$text['label-speed_dial_conf']['en-gb'] = "Speed Dial Conf";
 $text['label-speed_dial_conf']['ar-eg'] = "";
 $text['label-speed_dial_conf']['de-at'] = "Kurzwahl Konf"; //copied from de-de
 $text['label-speed_dial_conf']['de-ch'] = "Kurzwahl Konf"; //copied from de-de
@@ -2025,6 +2126,7 @@ $text['label-speed_dial_conf']['sv-se'] = "";
 $text['label-speed_dial_conf']['uk-ua'] = "";
 
 $text['label-speed_dial_mwi']['en-us'] = "Speed Dial MWI";
+$text['label-speed_dial_mwi']['en-gb'] = "Speed Dial MWI";
 $text['label-speed_dial_mwi']['ar-eg'] = "";
 $text['label-speed_dial_mwi']['de-at'] = "Kurzwahl MWI"; //copied from de-de
 $text['label-speed_dial_mwi']['de-ch'] = "Kurzwahl MWI"; //copied from de-de
@@ -2045,6 +2147,7 @@ $text['label-speed_dial_mwi']['sv-se'] = "Speed Dial MWI";
 $text['label-speed_dial_mwi']['uk-ua'] = "";
 
 $text['label-mwi']['en-us'] = "MWI";
+$text['label-mwi']['en-gb'] = "MWI";
 $text['label-mwi']['ar-eg'] = "";
 $text['label-mwi']['de-at'] = "MWI"; //copied from de-de
 $text['label-mwi']['de-ch'] = "MWI"; //copied from de-de
@@ -2065,6 +2168,7 @@ $text['label-mwi']['sv-se'] = "MWI";
 $text['label-mwi']['uk-ua'] = "";
 
 $text['label-speed_dial_xfer']['en-us'] = "Speed Dial Xfer";
+$text['label-speed_dial_xfer']['en-gb'] = "Speed Dial Xfer";
 $text['label-speed_dial_xfer']['ar-eg'] = "";
 $text['label-speed_dial_xfer']['de-at'] = "Kurzwahl Xfer"; //copied from de-de
 $text['label-speed_dial_xfer']['de-ch'] = "Kurzwahl Xfer"; //copied from de-de
@@ -2085,6 +2189,7 @@ $text['label-speed_dial_xfer']['sv-se'] = "Speed Dial Xfer";
 $text['label-speed_dial_xfer']['uk-ua'] = "";
 
 $text['label-sprecode']['en-us'] = "Sprecode";
+$text['label-sprecode']['en-gb'] = "Sprecode";
 $text['label-sprecode']['ar-eg'] = "";
 $text['label-sprecode']['de-at'] = "Sprecode"; //copied from de-de
 $text['label-sprecode']['de-ch'] = "Sprecode"; //copied from de-de
@@ -2105,6 +2210,7 @@ $text['label-sprecode']['sv-se'] = "Sprecode";
 $text['label-sprecode']['uk-ua'] = "";
 
 $text['label-xml']['en-us'] = "XML";
+$text['label-xml']['en-gb'] = "XML";
 $text['label-xml']['ar-eg'] = "";
 $text['label-xml']['de-at'] = "XML"; //copied from de-de
 $text['label-xml']['de-ch'] = "XML"; //copied from de-de
@@ -2125,6 +2231,7 @@ $text['label-xml']['sv-se'] = "XML";
 $text['label-xml']['uk-ua'] = "";
 
 $text['label-forward']['en-us'] = "Forward";
+$text['label-forward']['en-gb'] = "Forward";
 $text['label-forward']['ar-eg'] = "تحويل";
 $text['label-forward']['de-at'] = "Weiterleiten"; //copied from de-de
 $text['label-forward']['de-ch'] = "Weiterleiten"; //copied from de-de
@@ -2145,6 +2252,7 @@ $text['label-forward']['sv-se'] = "Vidarekoppla";
 $text['label-forward']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "رقم داخلي";
 $text['label-extension']['de-at'] = "Durchwahl"; //copied from de-de
 $text['label-extension']['de-ch'] = "Durchwahl"; //copied from de-de
@@ -2165,6 +2273,7 @@ $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "Розширення (Extention)";
 
 $text['label-expansion']['en-us'] = "Expansion";
+$text['label-expansion']['en-gb'] = "Expansion";
 $text['label-expansion']['ar-eg'] = "";
 $text['label-expansion']['de-at'] = "Erweiterung"; //copied from de-de
 $text['label-expansion']['de-ch'] = "Erweiterung"; //copied from de-de
@@ -2185,6 +2294,7 @@ $text['label-expansion']['sv-se'] = "Tillsats";
 $text['label-expansion']['uk-ua'] = "";
 
 $text['label-eventlist_blf']['en-us'] = "Eventlist BLF";
+$text['label-eventlist_blf']['en-gb'] = "Eventlist BLF";
 $text['label-eventlist_blf']['ar-eg'] = "";
 $text['label-eventlist_blf']['de-at'] = "Eventlisten BLF"; //copied from de-de
 $text['label-eventlist_blf']['de-ch'] = "Eventlisten BLF"; //copied from de-de
@@ -2205,6 +2315,7 @@ $text['label-eventlist_blf']['sv-se'] = "Eventlist BLF";
 $text['label-eventlist_blf']['uk-ua'] = "";
 
 $text['label-dtmf']['en-us'] = "DTMF";
+$text['label-dtmf']['en-gb'] = "DTMF";
 $text['label-dtmf']['ar-eg'] = "";
 $text['label-dtmf']['de-at'] = "DTMF"; //copied from de-de
 $text['label-dtmf']['de-ch'] = "DTMF"; //copied from de-de
@@ -2225,6 +2336,7 @@ $text['label-dtmf']['sv-se'] = "DTMF";
 $text['label-dtmf']['uk-ua'] = "";
 
 $text['label-domain-name']['en-us'] = "Domain Name";
+$text['label-domain-name']['en-gb'] = "Domain Name";
 $text['label-domain-name']['ar-eg'] = "";
 $text['label-domain-name']['de-at'] = "Domänen Name"; //copied from de-de
 $text['label-domain-name']['de-ch'] = "Domänen Name"; //copied from de-de
@@ -2245,6 +2357,7 @@ $text['label-domain-name']['sv-se'] = "Domän Namn";
 $text['label-domain-name']['uk-ua'] = "";
 
 $text['label-domain']['en-us'] = "Domain";
+$text['label-domain']['en-gb'] = "Domain";
 $text['label-domain']['ar-eg'] = "النطاق";
 $text['label-domain']['de-at'] = "Domäne"; //copied from de-de
 $text['label-domain']['de-ch'] = "Domäne"; //copied from de-de
@@ -2265,6 +2378,7 @@ $text['label-domain']['sv-se'] = "Domän";
 $text['label-domain']['uk-ua'] = "Домен";
 
 $text['label-dnd']['en-us'] = "DND";
+$text['label-dnd']['en-gb'] = "DND";
 $text['label-dnd']['ar-eg'] = "عدم الازعاج";
 $text['label-dnd']['de-at'] = "Nicht stören"; //copied from de-de
 $text['label-dnd']['de-ch'] = "Nicht stören"; //copied from de-de
@@ -2285,6 +2399,7 @@ $text['label-dnd']['sv-se'] = "Stör Ej";
 $text['label-dnd']['uk-ua'] = "Не турбувати";
 
 $text['label-display_name']['en-us'] = "Display Name";
+$text['label-display_name']['en-gb'] = "Display Name";
 $text['label-display_name']['ar-eg'] = "";
 $text['label-display_name']['de-at'] = "Angezeigter Name"; //copied from de-de
 $text['label-display_name']['de-ch'] = "Angezeigter Name"; //copied from de-de
@@ -2305,6 +2420,7 @@ $text['label-display_name']['sv-se'] = "Display Namn";
 $text['label-display_name']['uk-ua'] = "Назва для відображення";
 
 $text['label-directory']['en-us'] = "Directory";
+$text['label-directory']['en-gb'] = "Directory";
 $text['label-directory']['ar-eg'] = "";
 $text['label-directory']['de-at'] = "Verzeichnis"; //copied from de-de
 $text['label-directory']['de-ch'] = "Verzeichnis"; //copied from de-de
@@ -2325,6 +2441,7 @@ $text['label-directory']['sv-se'] = "Katalog";
 $text['label-directory']['uk-ua'] = "";
 
 $text['label-dial_dtmf']['en-us'] = "Dial DTMF";
+$text['label-dial_dtmf']['en-gb'] = "Dial DTMF";
 $text['label-dial_dtmf']['ar-eg'] = "";
 $text['label-dial_dtmf']['de-at'] = "DTMF wählen"; //copied from de-de
 $text['label-dial_dtmf']['de-ch'] = "DTMF wählen"; //copied from de-de
@@ -2345,6 +2462,7 @@ $text['label-dial_dtmf']['sv-se'] = "Ring DTMF";
 $text['label-dial_dtmf']['uk-ua'] = "";
 
 $text['label-device_vendor']['en-us'] = "Vendor";
+$text['label-device_vendor']['en-gb'] = "Vendor";
 $text['label-device_vendor']['ar-eg'] = "";
 $text['label-device_vendor']['de-at'] = "Hersteller"; //copied from de-de
 $text['label-device_vendor']['de-ch'] = "Hersteller"; //copied from de-de
@@ -2365,6 +2483,7 @@ $text['label-device_vendor']['sv-se'] = "Tillverkare";
 $text['label-device_vendor']['uk-ua'] = "";
 
 $text['label-device_key_vendor']['en-us'] = "Vendor";
+$text['label-device_key_vendor']['en-gb'] = "Vendor";
 $text['label-device_key_vendor']['ar-eg'] = "";
 $text['label-device_key_vendor']['de-at'] = "Hersteller"; //copied from de-de
 $text['label-device_key_vendor']['de-ch'] = "Hersteller"; //copied from de-de
@@ -2385,6 +2504,7 @@ $text['label-device_key_vendor']['sv-se'] = "Tillverkare";
 $text['label-device_key_vendor']['uk-ua'] = "";
 
 $text['label-device_uuid_alternate']['en-us'] = "Alternate";
+$text['label-device_uuid_alternate']['en-gb'] = "Alternate";
 $text['label-device_uuid_alternate']['ar-eg'] = "";
 $text['label-device_uuid_alternate']['de-at'] = "Alternativ"; //copied from de-de
 $text['label-device_uuid_alternate']['de-ch'] = "Alternativ"; //copied from de-de
@@ -2405,6 +2525,7 @@ $text['label-device_uuid_alternate']['sv-se'] = "Alternate";
 $text['label-device_uuid_alternate']['uk-ua'] = "заступник";
 
 $text['label-device_username']['en-us'] = "Username";
+$text['label-device_username']['en-gb'] = "Username";
 $text['label-device_username']['ar-eg'] = "اسم المستخدم";
 $text['label-device_username']['de-at'] = "Benutzername"; //copied from de-de
 $text['label-device_username']['de-ch'] = "Benutzername"; //copied from de-de
@@ -2425,6 +2546,7 @@ $text['label-device_username']['sv-se'] = "Användarnamn";
 $text['label-device_username']['uk-ua'] = "Ім’я користувача";
 
 $text['label-device_time_zone']['en-us'] = "Time Zone";
+$text['label-device_time_zone']['en-gb'] = "Time Zone";
 $text['label-device_time_zone']['ar-eg'] = "منطقة التوقيت";
 $text['label-device_time_zone']['de-at'] = "Zeitzone"; //copied from de-de
 $text['label-device_time_zone']['de-ch'] = "Zeitzone"; //copied from de-de
@@ -2445,6 +2567,7 @@ $text['label-device_time_zone']['sv-se'] = "Tidszon";
 $text['label-device_time_zone']['uk-ua'] = "";
 
 $text['label-device_template']['en-us'] = "Template";
+$text['label-device_template']['en-gb'] = "Template";
 $text['label-device_template']['ar-eg'] = "";
 $text['label-device_template']['de-at'] = "Vorlage"; //copied from de-de
 $text['label-device_template']['de-ch'] = "Vorlage"; //copied from de-de
@@ -2465,6 +2588,7 @@ $text['label-device_template']['sv-se'] = "Mall";
 $text['label-device_template']['uk-ua'] = "";
 
 $text['label-device_setting_value']['en-us'] = "Value";
+$text['label-device_setting_value']['en-gb'] = "Value";
 $text['label-device_setting_value']['ar-eg'] = "";
 $text['label-device_setting_value']['de-at'] = "Wert"; //copied from de-de
 $text['label-device_setting_value']['de-ch'] = "Wert"; //copied from de-de
@@ -2485,6 +2609,7 @@ $text['label-device_setting_value']['sv-se'] = "Värde";
 $text['label-device_setting_value']['uk-ua'] = "";
 
 $text['label-device_setting_name']['en-us'] = "Name";
+$text['label-device_setting_name']['en-gb'] = "Name";
 $text['label-device_setting_name']['ar-eg'] = "";
 $text['label-device_setting_name']['de-at'] = "Name"; //copied from de-de
 $text['label-device_setting_name']['de-ch'] = "Name"; //copied from de-de
@@ -2505,6 +2630,7 @@ $text['label-device_setting_name']['sv-se'] = "Namn";
 $text['label-device_setting_name']['uk-ua'] = "";
 
 $text['label-device_setting_description']['en-us'] = "Description";
+$text['label-device_setting_description']['en-gb'] = "Description";
 $text['label-device_setting_description']['ar-eg'] = "";
 $text['label-device_setting_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-device_setting_description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -2525,6 +2651,7 @@ $text['label-device_setting_description']['sv-se'] = "Beskrivning";
 $text['label-device_setting_description']['uk-ua'] = "";
 
 $text['label-device_profiles']['en-us'] = "Profiles";
+$text['label-device_profiles']['en-gb'] = "Profiles";
 $text['label-device_profiles']['ar-eg'] = "";
 $text['label-device_profiles']['de-at'] = "Profile"; //copied from de-de
 $text['label-device_profiles']['de-ch'] = "Profile"; //copied from de-de
@@ -2545,6 +2672,7 @@ $text['label-device_profiles']['sv-se'] = "Profiler";
 $text['label-device_profiles']['uk-ua'] = "";
 
 $text['label-device_enabled']['en-us'] = "Enabled";
+$text['label-device_enabled']['en-gb'] = "Enabled";
 $text['label-device_enabled']['ar-eg'] = "";
 $text['label-device_enabled']['de-at'] = "Ein"; //copied from de-de
 $text['label-device_enabled']['de-ch'] = "Ein"; //copied from de-de
@@ -2565,6 +2693,7 @@ $text['label-device_enabled']['sv-se'] = "Aktiverad";
 $text['label-device_enabled']['uk-ua'] = "";
 
 $text['label-device_password']['en-us'] = "Password";
+$text['label-device_password']['en-gb'] = "Password";
 $text['label-device_password']['ar-eg'] = "كلمة السر";
 $text['label-device_password']['de-at'] = "Passwort"; //copied from de-de
 $text['label-device_password']['de-ch'] = "Passwort"; //copied from de-de
@@ -2585,6 +2714,7 @@ $text['label-device_password']['sv-se'] = "Lösenord";
 $text['label-device_password']['uk-ua'] = "Пароль";
 
 $text['label-device_profile']['en-us'] = "Profile";
+$text['label-device_profile']['en-gb'] = "Profile";
 $text['label-device_profile']['ar-eg'] = "Profile";
 $text['label-device_profile']['de-at'] = "Profile"; //copied from de-de
 $text['label-device_profile']['de-ch'] = "Profile"; //copied from de-de
@@ -2605,6 +2735,7 @@ $text['label-device_profile']['sv-se'] = "Profiler";
 $text['label-device_profile']['uk-ua'] = "Профіль";
 
 $text['label-device_profile_keys']['en-us'] = "Keys";
+$text['label-device_profile_keys']['en-gb'] = "Keys";
 $text['label-device_profile_keys']['ar-eg'] = "";
 $text['label-device_profile_keys']['de-at'] = "Tasten"; //copied from de-de
 $text['label-device_profile_keys']['de-ch'] = "Tasten"; //copied from de-de
@@ -2625,6 +2756,7 @@ $text['label-device_profile_keys']['sv-se'] = "Knappar";
 $text['label-device_profile_keys']['uk-ua'] = "";
 
 $text['label-device_profile_settings']['en-us'] = "Settings";
+$text['label-device_profile_settings']['en-gb'] = "Settings";
 $text['label-device_profile_settings']['ar-eg'] = "الأعدادات";
 $text['label-device_profile_settings']['de-at'] = "Einstellungen"; //copied from de-de
 $text['label-device_profile_settings']['de-ch'] = "Einstellungen"; //copied from de-de
@@ -2645,6 +2777,7 @@ $text['label-device_profile_settings']['sv-se'] = "Inställningar";
 $text['label-device_profile_settings']['uk-ua'] = "Налаштування";
 
 $text['label-device_model']['en-us'] = "Model";
+$text['label-device_model']['en-gb'] = "Model";
 $text['label-device_model']['ar-eg'] = "";
 $text['label-device_model']['de-at'] = "Modell"; //copied from de-de
 $text['label-device_model']['de-ch'] = "Modell"; //copied from de-de
@@ -2665,6 +2798,7 @@ $text['label-device_model']['sv-se'] = "Modell";
 $text['label-device_model']['uk-ua'] = "";
 
 $text['label-device_mac_address']['en-us'] = "MAC Address";
+$text['label-device_mac_address']['en-gb'] = "MAC Address";
 $text['label-device_mac_address']['ar-eg'] = "";
 $text['label-device_mac_address']['de-at'] = "MAC Adresse"; //copied from de-de
 $text['label-device_mac_address']['de-ch'] = "MAC Adresse"; //copied from de-de
@@ -2685,6 +2819,7 @@ $text['label-device_mac_address']['sv-se'] = "MAC-adress";
 $text['label-device_mac_address']['uk-ua'] = "";
 
 $text['label-download']['en-us'] = "Download";
+$text['label-download']['en-gb'] = "Download";
 $text['label-download']['ar-eg'] = "";
 $text['label-download']['de-at'] = "Herunterladen"; //copied from de-de
 $text['label-download']['de-ch'] = "Herunterladen"; //copied from de-de
@@ -2705,6 +2840,7 @@ $text['label-download']['sv-se'] = "Ladda ned";
 $text['label-download']['uk-ua'] = "";
 
 $text['label-device_label']['en-us'] = "Label";
+$text['label-device_label']['en-gb'] = "Label";
 $text['label-device_label']['ar-eg'] = "";
 $text['label-device_label']['de-at'] = "Kennzeichnung"; //copied from de-de
 $text['label-device_label']['de-ch'] = "Kennzeichnung"; //copied from de-de
@@ -2725,6 +2861,7 @@ $text['label-device_label']['sv-se'] = "Etikett";
 $text['label-device_label']['uk-ua'] = "";
 
 $text['label-device_key_value']['en-us'] = "Value";
+$text['label-device_key_value']['en-gb'] = "Value";
 $text['label-device_key_value']['ar-eg'] = "";
 $text['label-device_key_value']['de-at'] = "Wert"; //copied from de-de
 $text['label-device_key_value']['de-ch'] = "Wert"; //copied from de-de
@@ -2745,6 +2882,7 @@ $text['label-device_key_value']['sv-se'] = "Värde";
 $text['label-device_key_value']['uk-ua'] = "";
 
 $text['label-device_key_type']['en-us'] = "Type";
+$text['label-device_key_type']['en-gb'] = "Type";
 $text['label-device_key_type']['ar-eg'] = "";
 $text['label-device_key_type']['de-at'] = "Typ"; //copied from de-de
 $text['label-device_key_type']['de-ch'] = "Typ"; //copied from de-de
@@ -2765,6 +2903,7 @@ $text['label-device_key_type']['sv-se'] = "Typ";
 $text['label-device_key_type']['uk-ua'] = "";
 
 $text['label-device_key_line']['en-us'] = "Line";
+$text['label-device_key_line']['en-gb'] = "Line";
 $text['label-device_key_line']['ar-eg'] = "";
 $text['label-device_key_line']['de-at'] = "Leitung"; //copied from de-de
 $text['label-device_key_line']['de-ch'] = "Leitung"; //copied from de-de
@@ -2785,6 +2924,7 @@ $text['label-device_key_line']['sv-se'] = "Linje";
 $text['label-device_key_line']['uk-ua'] = "";
 
 $text['label-device_key_label']['en-us'] = "Label";
+$text['label-device_key_label']['en-gb'] = "Label";
 $text['label-device_key_label']['ar-eg'] = "";
 $text['label-device_key_label']['de-at'] = "Kennzeichnung"; //copied from de-de
 $text['label-device_key_label']['de-ch'] = "Kennzeichnung"; //copied from de-de
@@ -2805,6 +2945,7 @@ $text['label-device_key_label']['sv-se'] = "Etikett";
 $text['label-device_key_label']['uk-ua'] = "";
 
 $text['label-device_key_icon']['en-us'] = "Icon";
+$text['label-device_key_icon']['en-gb'] = "Icon";
 $text['label-device_key_icon']['ar-eg'] = "";
 $text['label-device_key_icon']['de-at'] = "";
 $text['label-device_key_icon']['de-ch'] = "";
@@ -2825,6 +2966,7 @@ $text['label-device_key_icon']['sv-se'] = "";
 $text['label-device_key_icon']['uk-ua'] = "";
 
 $text['label-device_key_id']['en-us'] = "Key";
+$text['label-device_key_id']['en-gb'] = "Key";
 $text['label-device_key_id']['ar-eg'] = "";
 $text['label-device_key_id']['de-at'] = "Taste"; //copied from de-de
 $text['label-device_key_id']['de-ch'] = "Taste"; //copied from de-de
@@ -2845,6 +2987,7 @@ $text['label-device_key_id']['sv-se'] = "Knapp";
 $text['label-device_key_id']['uk-ua'] = "";
 
 $text['label-device_key_extension']['en-us'] = "Extension";
+$text['label-device_key_extension']['en-gb'] = "Extension";
 $text['label-device_key_extension']['ar-eg'] = "";
 $text['label-device_key_extension']['de-at'] = "Erweiterung"; //copied from de-de
 $text['label-device_key_extension']['de-ch'] = "Erweiterung"; //copied from de-de
@@ -2865,6 +3008,7 @@ $text['label-device_key_extension']['sv-se'] = "Anknytning";
 $text['label-device_key_extension']['uk-ua'] = "Розширення";
 
 $text['label-device_key_category']['en-us'] = "Category";
+$text['label-device_key_category']['en-gb'] = "Category";
 $text['label-device_key_category']['ar-eg'] = "";
 $text['label-device_key_category']['de-at'] = "Kategorie"; //copied from de-de
 $text['label-device_key_category']['de-ch'] = "Kategorie"; //copied from de-de
@@ -2885,6 +3029,7 @@ $text['label-device_key_category']['sv-se'] = "Kategori";
 $text['label-device_key_category']['uk-ua'] = "Категорія";
 
 $text['label-device_firmware_version']['en-us'] = "Firmware";
+$text['label-device_firmware_version']['en-gb'] = "Firmware";
 $text['label-device_firmware_version']['ar-eg'] = "";
 $text['label-device_firmware_version']['de-at'] = "Firmware"; //copied from de-de
 $text['label-device_firmware_version']['de-ch'] = "Firmware"; //copied from de-de
@@ -2905,6 +3050,7 @@ $text['label-device_firmware_version']['sv-se'] = "Mjukvara";
 $text['label-device_firmware_version']['uk-ua'] = "";
 
 $text['label-device_description']['en-us'] = "Description";
+$text['label-device_description']['en-gb'] = "Description";
 $text['label-device_description']['ar-eg'] = "";
 $text['label-device_description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-device_description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -2925,6 +3071,7 @@ $text['label-device_description']['sv-se'] = "Beskrivning";
 $text['label-device_description']['uk-ua'] = "Опис";
 
 $text['label-device_status']['en-us'] = "Status";
+$text['label-device_status']['en-gb'] = "Status";
 $text['label-device_status']['ar-eg'] = "";
 $text['label-device_status']['de-at'] = "Status"; //copied from de-de
 $text['label-device_status']['de-ch'] = "Status"; //copied from de-de
@@ -2945,6 +3092,7 @@ $text['label-device_status']['sv-se'] = "Status";
 $text['label-device_status']['uk-ua'] = "Стан";
 
 $text['label-device']['en-us'] = "Device";
+$text['label-device']['en-gb'] = "Device";
 $text['label-device']['ar-eg'] = "الجهاز";
 $text['label-device']['de-at'] = "Gerät"; //copied from de-de
 $text['label-device']['de-ch'] = "Gerät"; //copied from de-de
@@ -2965,6 +3113,7 @@ $text['label-device']['sv-se'] = "Enheter";
 $text['label-device']['uk-ua'] = "Пристрої";
 
 $text['label-conference']['en-us'] = "Conference";
+$text['label-conference']['en-gb'] = "Conference";
 $text['label-conference']['ar-eg'] = "";
 $text['label-conference']['de-at'] = "";
 $text['label-conference']['de-ch'] = "";
@@ -2985,6 +3134,7 @@ $text['label-conference']['sv-se'] = "";
 $text['label-conference']['uk-ua'] = "";
 
 $text['label-call_return']['en-us'] = "Call Return";
+$text['label-call_return']['en-gb'] = "Call Return";
 $text['label-call_return']['ar-eg'] = "";
 $text['label-call_return']['de-at'] = "Wahlwiderholung"; //copied from de-de
 $text['label-call_return']['de-ch'] = "Wahlwiderholung"; //copied from de-de
@@ -3005,6 +3155,7 @@ $text['label-call_return']['sv-se'] = "Tillbakaringning";
 $text['label-call_return']['uk-ua'] = "";
 
 $text['label-call_pickup']['en-us'] = "Call Pickup";
+$text['label-call_pickup']['en-gb'] = "Call Pickup";
 $text['label-call_pickup']['ar-eg'] = "";
 $text['label-call_pickup']['de-at'] = "Anruf heranholen"; //copied from de-de
 $text['label-call_pickup']['de-ch'] = "Anruf heranholen"; //copied from de-de
@@ -3025,6 +3176,7 @@ $text['label-call_pickup']['sv-se'] = "Plocka Samtal";
 $text['label-call_pickup']['uk-ua'] = "";
 
 $text['label-call_park']['en-us'] = "Call Park";
+$text['label-call_park']['en-gb'] = "Call Park";
 $text['label-call_park']['ar-eg'] = "";
 $text['label-call_park']['de-at'] = "Anruf parken"; //copied from de-de
 $text['label-call_park']['de-ch'] = "Anruf parken"; //copied from de-de
@@ -3045,6 +3197,7 @@ $text['label-call_park']['sv-se'] = "Parkera Samtal";
 $text['label-call_park']['uk-ua'] = "";
 
 $text['label-call_agent']['en-us'] = "Call Agent";
+$text['label-call_agent']['en-gb'] = "Call Agent";
 $text['label-call_agent']['ar-eg'] = "";
 $text['label-call_agent']['de-at'] = "Call Agent"; //copied from de-de
 $text['label-call_agent']['de-ch'] = "Call Agent"; //copied from de-de
@@ -3065,6 +3218,7 @@ $text['label-call_agent']['sv-se'] = "Agent Samtal";
 $text['label-call_agent']['uk-ua'] = "";
 
 $text['label-button']['en-us'] = "Button";
+$text['label-button']['en-gb'] = "Button";
 $text['label-button']['ar-eg'] = "";
 $text['label-button']['de-at'] = "Taste"; //copied from de-de
 $text['label-button']['de-ch'] = "Taste"; //copied from de-de
@@ -3085,6 +3239,7 @@ $text['label-button']['sv-se'] = "Knapp";
 $text['label-button']['uk-ua'] = "Кнопка";
 
 $text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
+$text['label-broadsoft_phonebook']['en-gb'] = "Broadsoft Phonebook";
 $text['label-broadsoft_phonebook']['ar-eg'] = "";
 $text['label-broadsoft_phonebook']['de-at'] = "Broadsoft Telefonbuch"; //copied from de-de
 $text['label-broadsoft_phonebook']['de-ch'] = "Broadsoft Telefonbuch"; //copied from de-de
@@ -3105,6 +3260,7 @@ $text['label-broadsoft_phonebook']['sv-se'] = "Broadsoft Telefonbok";
 $text['label-broadsoft_phonebook']['uk-ua'] = "";
 
 $text['label-broadsoft_group']['en-us'] = "Broadsoft Group";
+$text['label-broadsoft_group']['en-gb'] = "Broadsoft Group";
 $text['label-broadsoft_group']['ar-eg'] = "";
 $text['label-broadsoft_group']['de-at'] = "Broadsoft Gruppe"; //copied from de-de
 $text['label-broadsoft_group']['de-ch'] = "Broadsoft Gruppe"; //copied from de-de
@@ -3125,6 +3281,7 @@ $text['label-broadsoft_group']['sv-se'] = "Broadsoft Group";
 $text['label-broadsoft_group']['uk-ua'] = "";
 
 $text['label-blf_bxfer']['en-us'] = "BLF Blind Xfer";
+$text['label-blf_bxfer']['en-gb'] = "BLF Blind Xfer";
 $text['label-blf_bxfer']['ar-eg'] = "";
 $text['label-blf_bxfer']['de-at'] = "BLF Blind Transfer"; //copied from de-de
 $text['label-blf_bxfer']['de-ch'] = "BLF Blind Transfer"; //copied from de-de
@@ -3145,6 +3302,7 @@ $text['label-blf_bxfer']['sv-se'] = "BLF Blind Xfer";
 $text['label-blf_bxfer']['uk-ua'] = "";
 
 $text['label-blf_axfer']['en-us'] = "BLF Attended Xfer";
+$text['label-blf_axfer']['en-gb'] = "BLF Attended Xfer";
 $text['label-blf_axfer']['ar-eg'] = "";
 $text['label-blf_axfer']['de-at'] = "BLF Attended Transfer"; //copied from de-de
 $text['label-blf_axfer']['de-ch'] = "BLF Attended Transfer"; //copied from de-de
@@ -3166,6 +3324,7 @@ $text['label-blf_axfer']['uk-ua'] = "";
 
 
 $text['label-blf_xfer']['en-us'] = "BLF Xfer";
+$text['label-blf_xfer']['en-gb'] = "BLF Xfer";
 $text['label-blf_xfer']['ar-eg'] = "";
 $text['label-blf_xfer']['de-at'] = "BLF Transfer"; //copied from de-de
 $text['label-blf_xfer']['de-ch'] = "BLF Transfer"; //copied from de-de
@@ -3186,6 +3345,7 @@ $text['label-blf_xfer']['sv-se'] = "BLF Xfer";
 $text['label-blf_xfer']['uk-ua'] = "";
 
 $text['label-blf_list']['en-us'] = "BLF List";
+$text['label-blf_list']['en-gb'] = "BLF List";
 $text['label-blf_list']['ar-eg'] = "";
 $text['label-blf_list']['de-at'] = "BLF Liste"; //copied from de-de
 $text['label-blf_list']['de-ch'] = "BLF Liste"; //copied from de-de
@@ -3206,6 +3366,7 @@ $text['label-blf_list']['sv-se'] = "BLF List";
 $text['label-blf_list']['uk-ua'] = "";
 
 $text['label-blf']['en-us'] = "BLF";
+$text['label-blf']['en-gb'] = "BLF";
 $text['label-blf']['ar-eg'] = "";
 $text['label-blf']['de-at'] = "BLF"; //copied from de-de
 $text['label-blf']['de-ch'] = "BLF"; //copied from de-de
@@ -3226,6 +3387,7 @@ $text['label-blf']['sv-se'] = "BLF";
 $text['label-blf']['uk-ua'] = "";
 
 $text['label-blf_new']['en-us'] = "BLF/New Call";
+$text['label-blf_new']['en-gb'] = "BLF/New Call";
 $text['label-blf_new']['ar-eg'] = "";
 $text['label-blf_new']['de-at'] = "BLF/New Call"; //copied from de-de
 $text['label-blf_new']['de-ch'] = "BLF/New Call"; //copied from de-de
@@ -3246,6 +3408,7 @@ $text['label-blf_new']['sv-se'] = "BLF/New Call";
 $text['label-blf_new']['uk-ua'] = "";
 
 $text['label-blf_new_video']['en-us'] = "BLF New Video Call";
+$text['label-blf_new_video']['en-gb'] = "BLF New Video Call";
 $text['label-blf_new_video']['ar-eg'] = "";
 $text['label-blf_new_video']['de-at'] = "BLF New Video Call"; //copied from de-de
 $text['label-blf_new_video']['de-ch'] = "BLF New Video Call"; //copied from de-de
@@ -3266,6 +3429,7 @@ $text['label-blf_new_video']['sv-se'] = "BLF New Video Call";
 $text['label-blf_new_video']['uk-ua'] = "";
 
 $text['label-blf_conference']['en-us'] = "BLF/Conference";
+$text['label-blf_conference']['en-gb'] = "BLF/Conference";
 $text['label-blf_conference']['ar-eg'] = "";
 $text['label-blf_conference']['de-at'] = "BLF/Conference"; //copied from de-de
 $text['label-blf_conference']['de-ch'] = "BLF/Conference"; //copied from de-de
@@ -3286,6 +3450,7 @@ $text['label-blf_conference']['sv-se'] = "BLF/Conference";
 $text['label-blf_conference']['uk-ua'] = "";
 
 $text['label-callers']['en-us'] = "Callers";
+$text['label-callers']['en-gb'] = "Callers";
 $text['label-callers']['ar-eg'] = "";
 $text['label-callers']['de-at'] = "Anrufer"; //copied from de-de
 $text['label-callers']['de-ch'] = "Anrufer"; //copied from de-de
@@ -3306,6 +3471,7 @@ $text['label-callers']['sv-se'] = "Uppringare";
 $text['label-callers']['uk-ua'] = "";
 
 $text['label-xfer']['en-us'] = "Xfer";
+$text['label-xfer']['en-gb'] = "Xfer";
 $text['label-xfer']['ar-eg'] = "";
 $text['label-xfer']['de-at'] = "Xfer"; //copied from de-de
 $text['label-xfer']['de-ch'] = "Xfer"; //copied from de-de
@@ -3326,6 +3492,7 @@ $text['label-xfer']['sv-se'] = "Xfer";
 $text['label-xfer']['uk-ua'] = "";
 
 $text['label-automata']['en-us'] = "Automata";
+$text['label-automata']['en-gb'] = "Automata";
 $text['label-automata']['ar-eg'] = "Automata";
 $text['label-automata']['de-at'] = "Automata"; //copied from de-de
 $text['label-automata']['de-ch'] = "Automata"; //copied from de-de
@@ -3346,6 +3513,7 @@ $text['label-automata']['sv-se'] = "Automata";
 $text['label-automata']['uk-ua'] = "Automata";
 
 $text['label-messages']['en-us'] = "Messages";
+$text['label-messages']['en-gb'] = "Messages";
 $text['label-messages']['ar-eg'] = "رسائل";
 $text['label-messages']['de-at'] = "Nachrichten"; //copied from de-de
 $text['label-messages']['de-ch'] = "Nachrichten"; //copied from de-de
@@ -3366,6 +3534,7 @@ $text['label-messages']['sv-se'] = "mMddelanden";
 $text['label-messages']['uk-ua'] = "повідомлення";
 
 $text['label-micmute']['en-us'] = "MicMute";
+$text['label-micmute']['en-gb'] = "MicMute";
 $text['label-micmute']['ar-eg'] = "MicMute";
 $text['label-micmute']['de-at'] = "MicMute"; //copied from de-de
 $text['label-micmute']['de-ch'] = "MicMute"; //copied from de-de
@@ -3386,6 +3555,7 @@ $text['label-micmute']['sv-se'] = "MicMute";
 $text['label-micmute']['uk-ua'] = "MicMute";
 
 $text['label-null']['en-us'] = "Null";
+$text['label-null']['en-gb'] = "Null";
 $text['label-null']['ar-eg'] = "Null";
 $text['label-null']['de-at'] = "Null"; //copied from de-de
 $text['label-null']['de-ch'] = "Null"; //copied from de-de
@@ -3406,6 +3576,7 @@ $text['label-null']['sv-se'] = "Null";
 $text['label-null']['uk-ua'] = "Null";
 
 $text['label-speeddial']['en-us'] = "SpeedDial";
+$text['label-speeddial']['en-gb'] = "SpeedDial";
 $text['label-speeddial']['ar-eg'] = "SpeedDial";
 $text['label-speeddial']['de-at'] = "Kurzwahl"; //copied from de-de
 $text['label-speeddial']['de-ch'] = "Kurzwahl"; //copied from de-de
@@ -3426,6 +3597,7 @@ $text['label-speeddial']['sv-se'] = "SpeedDial";
 $text['label-speeddial']['uk-ua'] = "SpeedDial";
 
 $text['label-direct_pickup']['en-us'] = "Direct Pickup";
+$text['label-direct_pickup']['en-gb'] = "Direct Pickup";
 $text['label-direct_pickup']['ar-eg'] = "";
 $text['label-direct_pickup']['de-at'] = ""; 
 $text['label-direct_pickup']['de-ch'] = ""; 
@@ -3446,6 +3618,7 @@ $text['label-direct_pickup']['sv-se'] = "";
 $text['label-direct_pickup']['uk-ua'] = "";
 
 $text['label-speeddialmenu']['en-us'] = "SpeedDialMenu";
+$text['label-speeddialmenu']['en-gb'] = "SpeedDialMenu";
 $text['label-speeddialmenu']['ar-eg'] = "SpeedDialMenu";
 $text['label-speeddialmenu']['de-at'] = "KurzwahlMenu"; //copied from de-de
 $text['label-speeddialmenu']['de-ch'] = "KurzwahlMenu"; //copied from de-de
@@ -3466,6 +3639,7 @@ $text['label-speeddialmenu']['sv-se'] = "SpeedDialMenu";
 $text['label-speeddialmenu']['uk-ua'] = "SpeedDialMenu";
 
 $text['label-auto_answer']['en-us'] = "Auto Answer";
+$text['label-auto_answer']['en-gb'] = "Auto Answer";
 $text['label-auto_answer']['ar-eg'] = "";
 $text['label-auto_answer']['de-at'] = "Automatische Antwort"; //copied from de-de
 $text['label-auto_answer']['de-ch'] = "Automatische Antwort"; //copied from de-de
@@ -3486,6 +3660,7 @@ $text['label-auto_answer']['sv-se'] = "Svara Automatiskt";
 $text['label-auto_answer']['uk-ua'] = "";
 
 $text['label-auth_id']['en-us'] = "Auth ID";
+$text['label-auth_id']['en-gb'] = "Auth ID";
 $text['label-auth_id']['ar-eg'] = "";
 $text['label-auth_id']['de-at'] = "Auth ID"; //copied from de-de
 $text['label-auth_id']['de-ch'] = "Auth ID"; //copied from de-de
@@ -3506,6 +3681,7 @@ $text['label-auth_id']['sv-se'] = "Auth ID";
 $text['label-auth_id']['uk-ua'] = "";
 
 $text['label-action_url']['en-us'] = "Action URL";
+$text['label-action_url']['en-gb'] = "Action URL";
 $text['label-action_url']['ar-eg'] = "";
 $text['label-action_url']['de-at'] = "";
 $text['label-action_url']['de-ch'] = "";
@@ -3526,6 +3702,7 @@ $text['label-action_url']['sv-se'] = "";
 $text['label-action_url']['uk-ua'] = "";
 
 $text['label-acd']['en-us'] = "ACD";
+$text['label-acd']['en-gb'] = "ACD";
 $text['label-acd']['ar-eg'] = "";
 $text['label-acd']['de-at'] = "ACD"; //copied from de-de
 $text['label-acd']['de-ch'] = "ACD"; //copied from de-de
@@ -3546,6 +3723,7 @@ $text['label-acd']['sv-se'] = "ACD";
 $text['label-acd']['uk-ua'] = "";
 
 $text['label-not_programmed']['en-us'] = "Not Programmed";
+$text['label-not_programmed']['en-gb'] = "Not Programmed";
 $text['label-not_programmed']['ar-eg'] = "";
 $text['label-not_programmed']['de-at'] = "Nicht programmiert"; //copied from de-de
 $text['label-not_programmed']['de-ch'] = "Nicht programmiert"; //copied from de-de
@@ -3566,6 +3744,7 @@ $text['label-not_programmed']['sv-se'] = "Ej Programmerad";
 $text['label-not_programmed']['uk-ua'] = "";
 
 $text['label-call_log']['en-us'] = "Call Log";
+$text['label-call_log']['en-gb'] = "Call Log";
 $text['label-call_log']['ar-eg'] = "";
 $text['label-call_log']['de-at'] = "Anrufer Protokoll"; //copied from de-de
 $text['label-call_log']['de-ch'] = "Anrufer Protokoll"; //copied from de-de
@@ -3586,6 +3765,7 @@ $text['label-call_log']['sv-se'] = "Samtals Log";
 $text['label-call_log']['uk-ua'] = "";
 
 $text['label-phone_book']['en-us'] = "Phone Book";
+$text['label-phone_book']['en-gb'] = "Phone Book";
 $text['label-phone_book']['ar-eg'] = "";
 $text['label-phone_book']['de-at'] = "Telefonbuch"; //copied from de-de
 $text['label-phone_book']['de-ch'] = "Telefonbuch"; //copied from de-de
@@ -3606,6 +3786,7 @@ $text['label-phone_book']['sv-se'] = "Telefonbok";
 $text['label-phone_book']['uk-ua'] = "";
 
 $text['label-advisory_message']['en-us'] = "Advisory Message on/off";
+$text['label-advisory_message']['en-gb'] = "Advisory Message on/off";
 $text['label-advisory_message']['ar-eg'] = "";
 $text['label-advisory_message']['de-at'] = "Warnmeldungen ein/aus"; //copied from de-de
 $text['label-advisory_message']['de-ch'] = "Warnmeldungen ein/aus"; //copied from de-de
@@ -3626,6 +3807,7 @@ $text['label-advisory_message']['sv-se'] = "Rådgivande meddelande på/av";
 $text['label-advisory_message']['uk-ua'] = "";
 
 $text['label-pc_application']['en-us'] = "PC Application";
+$text['label-pc_application']['en-gb'] = "PC Application";
 $text['label-pc_application']['ar-eg'] = "";
 $text['label-pc_application']['de-at'] = "PC Anwendung"; //copied from de-de
 $text['label-pc_application']['de-ch'] = "PC Anwendung"; //copied from de-de
@@ -3646,6 +3828,7 @@ $text['label-pc_application']['sv-se'] = "PC Applikation";
 $text['label-pc_application']['uk-ua'] = "";
 
 $text['label-headset_on_off']['en-us'] = "Headset on/off";
+$text['label-headset_on_off']['en-gb'] = "Headset on/off";
 $text['label-headset_on_off']['ar-eg'] = "";
 $text['label-headset_on_off']['de-at'] = "Freisprecheinrichtung ein/aus"; //copied from de-de
 $text['label-headset_on_off']['de-ch'] = "Freisprecheinrichtung ein/aus"; //copied from de-de
@@ -3666,6 +3849,7 @@ $text['label-headset_on_off']['sv-se'] = "Headset  på/av";
 $text['label-headset_on_off']['uk-ua'] = "";
 
 $text['label-rss_feed']['en-us'] = "RSS Feed";
+$text['label-rss_feed']['en-gb'] = "RSS Feed";
 $text['label-rss_feed']['ar-eg'] = "";
 $text['label-rss_feed']['de-at'] = "RSS Feed"; //copied from de-de
 $text['label-rss_feed']['de-ch'] = "RSS Feed"; //copied from de-de
@@ -3686,6 +3870,7 @@ $text['label-rss_feed']['sv-se'] = "RSS Feed";
 $text['label-rss_feed']['uk-ua'] = "";
 
 $text['label-html_application']['en-us'] = "HTML Application";
+$text['label-html_application']['en-gb'] = "HTML Application";
 $text['label-html_application']['ar-eg'] = "";
 $text['label-html_application']['de-at'] = "HTML Anwendung"; //copied from de-de
 $text['label-html_application']['de-ch'] = "HTML Anwendung"; //copied from de-de
@@ -3706,6 +3891,7 @@ $text['label-html_application']['sv-se'] = "HTML Application";
 $text['label-html_application']['uk-ua'] = "";
 
 $text['label-speed_dial_blf']['en-us'] = "Speed Dial + BLF";
+$text['label-speed_dial_blf']['en-gb'] = "Speed Dial + BLF";
 $text['label-speed_dial_blf']['ar-eg'] = "";
 $text['label-speed_dial_blf']['de-at'] = "Kurzwahl + BLF"; //copied from de-de
 $text['label-speed_dial_blf']['de-ch'] = "Kurzwahl + BLF"; //copied from de-de
@@ -3726,6 +3912,7 @@ $text['label-speed_dial_blf']['sv-se'] = "Speed Dial + BLF";
 $text['label-speed_dial_blf']['uk-ua'] = "";
 
 $text['label-ent_phone_book']['en-us'] = "Enterprise Phonebook";
+$text['label-ent_phone_book']['en-gb'] = "Enterprise Phonebook";
 $text['label-ent_phone_book']['ar-eg'] = "";
 $text['label-ent_phone_book']['de-at'] = "Unternehmens Telefonbuch"; //copied from de-de
 $text['label-ent_phone_book']['de-ch'] = "Unternehmens Telefonbuch"; //copied from de-de
@@ -3746,6 +3933,7 @@ $text['label-ent_phone_book']['sv-se'] = "Enterprise Telefonbok";
 $text['label-ent_phone_book']['uk-ua'] = "";
 
 $text['label-missed_calls']['en-us'] = "Missed Calls";
+$text['label-missed_calls']['en-gb'] = "Missed Calls";
 $text['label-missed_calls']['ar-eg'] = "";
 $text['label-missed_calls']['de-at'] = "Verpasste Anrufe"; //copied from de-de
 $text['label-missed_calls']['de-ch'] = "Verpasste Anrufe"; //copied from de-de
@@ -3766,6 +3954,7 @@ $text['label-missed_calls']['sv-se'] = "Missade Samtal";
 $text['label-missed_calls']['uk-ua'] = "";
 
 $text['label-received_calls']['en-us'] = "Received Calls";
+$text['label-received_calls']['en-gb'] = "Received Calls";
 $text['label-received_calls']['ar-eg'] = "";
 $text['label-received_calls']['de-at'] = "Eingegangene Anrufe"; //copied from de-de
 $text['label-received_calls']['de-ch'] = "Eingegangene Anrufe"; //copied from de-de
@@ -3786,6 +3975,7 @@ $text['label-received_calls']['sv-se'] = "Mottagna Samtal";
 $text['label-received_calls']['uk-ua'] = "";
 
 $text['label-dialed_calls']['en-us'] = "Dialed Calls";
+$text['label-dialed_calls']['en-gb'] = "Dialed Calls";
 $text['label-dialed_calls']['ar-eg'] = "";
 $text['label-dialed_calls']['de-at'] = "Gewählte Rufnummern"; //copied from de-de
 $text['label-dialed_calls']['de-ch'] = "Gewählte Rufnummern"; //copied from de-de
@@ -3806,6 +3996,7 @@ $text['label-dialed_calls']['sv-se'] = "Ringda Samtal";
 $text['label-dialed_calls']['uk-ua'] = "";
 
 $text['label-enable_account']['en-us'] = "Enable/Disable SIP Account";
+$text['label-enable_account']['en-gb'] = "Enable/Disable SIP Account";
 $text['label-enable_account']['ar-eg'] = "";
 $text['label-enable_account']['de-at'] = "SIP Account aktivieren/deaktivieren"; //copied from de-de
 $text['label-enable_account']['de-ch'] = "SIP Account aktivieren/deaktivieren"; //copied from de-de
@@ -3826,6 +4017,7 @@ $text['label-enable_account']['sv-se'] = "Aktivera/Avaktivera SIP Konto";
 $text['label-enable_account']['uk-ua'] = "";
 
 $text['label-provison_now']['en-us'] = "Auto Provison Now";
+$text['label-provison_now']['en-gb'] = "Auto Provison Now";
 $text['label-provison_now']['ar-eg'] = "";
 $text['label-provison_now']['de-at'] = "Jetzt automatisch Bereitstellen"; //copied from de-de
 $text['label-provison_now']['de-ch'] = "Jetzt automatisch Bereitstellen"; //copied from de-de
@@ -3846,6 +4038,7 @@ $text['label-provison_now']['sv-se'] = "Auto Provisionera Nu";
 $text['label-provison_now']['uk-ua'] = "";
 
 $text['label-paging_list']['en-us'] = "Paging List";
+$text['label-paging_list']['en-gb'] = "Paging List";
 $text['label-paging_list']['ar-eg'] = "";
 $text['label-paging_list']['de-at'] = "Ausrufliste"; //copied from de-de
 $text['label-paging_list']['de-ch'] = "Ausrufliste"; //copied from de-de
@@ -3866,6 +4059,7 @@ $text['label-paging_list']['sv-se'] = "Paging List";
 $text['label-paging_list']['uk-ua'] = "";
 
 $text['label-auto_answer_intercom']['en-us'] = "Auto Answer Intercom";
+$text['label-auto_answer_intercom']['en-gb'] = "Auto Answer Intercom";
 $text['label-auto_answer_intercom']['ar-eg'] = "";
 $text['label-auto_answer_intercom']['de-at'] = "";
 $text['label-auto_answer_intercom']['de-ch'] = "";
@@ -3886,6 +4080,7 @@ $text['label-auto_answer_intercom']['sv-se'] = "";
 $text['label-auto_answer_intercom']['uk-ua'] = "";
 
 $text['label-acd_sign_on_off']['en-us'] = "ACD Sign On/Off";
+$text['label-acd_sign_on_off']['en-gb'] = "ACD Sign On/Off";
 $text['label-acd_sign_on_off']['ar-eg'] = "";
 $text['label-acd_sign_on_off']['de-at'] = "";
 $text['label-acd_sign_on_off']['de-ch'] = "";
@@ -3906,6 +4101,7 @@ $text['label-acd_sign_on_off']['sv-se'] = "";
 $text['label-acd_sign_on_off']['uk-ua'] = "";
 
 $text['label-blind_transfer']['en-us'] = "Blind Transfer";
+$text['label-blind_transfer']['en-gb'] = "Blind Transfer";
 $text['label-blind_transfer']['ar-eg'] = "";
 $text['label-blind_transfer']['de-at'] = "";
 $text['label-blind_transfer']['de-ch'] = "";
@@ -3926,6 +4122,7 @@ $text['label-blind_transfer']['sv-se'] = "";
 $text['label-blind_transfer']['uk-ua'] = "";
 
 $text['label-block_anonymous_call']['en-us'] = "Block Anonymous Call";
+$text['label-block_anonymous_call']['en-gb'] = "Block Anonymous Call";
 $text['label-block_anonymous_call']['ar-eg'] = "";
 $text['label-block_anonymous_call']['de-at'] = "";
 $text['label-block_anonymous_call']['de-ch'] = "";
@@ -3946,6 +4143,7 @@ $text['label-block_anonymous_call']['sv-se'] = "";
 $text['label-block_anonymous_call']['uk-ua'] = "";
 
 $text['label-block_caller_id']['en-us'] = "Block Caller ID";
+$text['label-block_caller_id']['en-gb'] = "Block Caller ID";
 $text['label-block_caller_id']['ar-eg'] = "";
 $text['label-block_caller_id']['de-at'] = "";
 $text['label-block_caller_id']['de-ch'] = "";
@@ -3966,6 +4164,7 @@ $text['label-block_caller_id']['sv-se'] = "";
 $text['label-block_caller_id']['uk-ua'] = "";
 
 $text['label-busy_lamp_field']['en-us'] = "Busy Lamp Field";
+$text['label-busy_lamp_field']['en-gb'] = "Busy Lamp Field";
 $text['label-busy_lamp_field']['ar-eg'] = "";
 $text['label-busy_lamp_field']['de-at'] = "";
 $text['label-busy_lamp_field']['de-ch'] = "";
@@ -3986,6 +4185,7 @@ $text['label-busy_lamp_field']['sv-se'] = "";
 $text['label-busy_lamp_field']['uk-ua'] = "";
 
 $text['label-call_appearance']['en-us'] = "Call Appearance";
+$text['label-call_appearance']['en-gb'] = "Call Appearance";
 $text['label-call_appearance']['ar-eg'] = "";
 $text['label-call_appearance']['de-at'] = "";
 $text['label-call_appearance']['de-ch'] = "";
@@ -4006,6 +4206,7 @@ $text['label-call_appearance']['sv-se'] = "";
 $text['label-call_appearance']['uk-ua'] = "";
 
 $text['label-call_park_monitor']['en-us'] = "Call Park Monitor";
+$text['label-call_park_monitor']['en-gb'] = "Call Park Monitor";
 $text['label-call_park_monitor']['ar-eg'] = "";
 $text['label-call_park_monitor']['de-at'] = "";
 $text['label-call_park_monitor']['de-ch'] = "";
@@ -4026,6 +4227,7 @@ $text['label-call_park_monitor']['sv-se'] = "";
 $text['label-call_park_monitor']['uk-ua'] = "";
 
 $text['label-call_waiting']['en-us'] = "Call Waiting";
+$text['label-call_waiting']['en-gb'] = "Call Waiting";
 $text['label-call_waiting']['ar-eg'] = "";
 $text['label-call_waiting']['de-at'] = "";
 $text['label-call_waiting']['de-ch'] = "";
@@ -4046,6 +4248,7 @@ $text['label-call_waiting']['sv-se'] = "";
 $text['label-call_waiting']['uk-ua'] = "";
 
 $text['label-disposition_code']['en-us'] = "Disposition Code";
+$text['label-disposition_code']['en-gb'] = "Disposition Code";
 $text['label-disposition_code']['ar-eg'] = "";
 $text['label-disposition_code']['de-at'] = "";
 $text['label-disposition_code']['de-ch'] = "";
@@ -4066,6 +4269,7 @@ $text['label-disposition_code']['sv-se'] = "";
 $text['label-disposition_code']['uk-ua'] = "";
 
 $text['label-do_not_disturb']['en-us'] = "Do Not Disturb";
+$text['label-do_not_disturb']['en-gb'] = "Do Not Disturb";
 $text['label-do_not_disturb']['ar-eg'] = "";
 $text['label-do_not_disturb']['de-at'] = "";
 $text['label-do_not_disturb']['de-ch'] = "";
@@ -4086,6 +4290,7 @@ $text['label-do_not_disturb']['sv-se'] = "";
 $text['label-do_not_disturb']['uk-ua'] = "";
 
 $text['label-do_not_ring']['en-us'] = "Do Not Ring";
+$text['label-do_not_ring']['en-gb'] = "Do Not Ring";
 $text['label-do_not_ring']['ar-eg'] = "";
 $text['label-do_not_ring']['de-at'] = "";
 $text['label-do_not_ring']['de-ch'] = "";
@@ -4106,6 +4311,7 @@ $text['label-do_not_ring']['sv-se'] = "";
 $text['label-do_not_ring']['uk-ua'] = "";
 
 $text['label-exec_filter_on_off']['en-us'] = "Exec Filter On/Off";
+$text['label-exec_filter_on_off']['en-gb'] = "Exec Filter On/Off";
 $text['label-exec_filter_on_off']['ar-eg'] = "";
 $text['label-exec_filter_on_off']['de-at'] = "";
 $text['label-exec_filter_on_off']['de-ch'] = "";
@@ -4126,6 +4332,7 @@ $text['label-exec_filter_on_off']['sv-se'] = "";
 $text['label-exec_filter_on_off']['uk-ua'] = "";
 
 $text['label-exec_assistant']['en-us'] = "Exec Assistant";
+$text['label-exec_assistant']['en-gb'] = "Exec Assistant";
 $text['label-exec_assistant']['ar-eg'] = "";
 $text['label-exec_assistant']['de-at'] = "";
 $text['label-exec_assistant']['de-ch'] = "";
@@ -4146,6 +4353,7 @@ $text['label-exec_assistant']['sv-se'] = "";
 $text['label-exec_assistant']['uk-ua'] = "";
 
 $text['label-hoteling']['en-us'] = "Hoteling";
+$text['label-hoteling']['en-gb'] = "Hoteling";
 $text['label-hoteling']['ar-eg'] = "";
 $text['label-hoteling']['de-at'] = "";
 $text['label-hoteling']['de-ch'] = "";
@@ -4166,6 +4374,7 @@ $text['label-hoteling']['sv-se'] = "";
 $text['label-hoteling']['uk-ua'] = "";
 
 $text['label-line_monitor']['en-us'] = "Line Monitor";
+$text['label-line_monitor']['en-gb'] = "Line Monitor";
 $text['label-line_monitor']['ar-eg'] = "";
 $text['label-line_monitor']['de-at'] = "";
 $text['label-line_monitor']['de-ch'] = "";
@@ -4186,6 +4395,7 @@ $text['label-line_monitor']['sv-se'] = "";
 $text['label-line_monitor']['uk-ua'] = "";
 
 $text['label-next_tab']['en-us'] = "Next Tab";
+$text['label-next_tab']['en-gb'] = "Next Tab";
 $text['label-next_tab']['ar-eg'] = "";
 $text['label-next_tab']['de-at'] = "";
 $text['label-next_tab']['de-ch'] = "";
@@ -4206,6 +4416,7 @@ $text['label-next_tab']['sv-se'] = "";
 $text['label-next_tab']['uk-ua'] = "";
 
 $text['label-message_status']['en-us'] = "Message Status";
+$text['label-message_status']['en-gb'] = "Message Status";
 $text['label-message_status']['ar-eg'] = "";
 $text['label-message_status']['de-at'] = "";
 $text['label-message_status']['de-ch'] = "";
@@ -4226,6 +4437,7 @@ $text['label-message_status']['sv-se'] = "";
 $text['label-message_status']['uk-ua'] = "";
 
 $text['label-page_group_1']['en-us'] = "Page Group 1";
+$text['label-page_group_1']['en-gb'] = "Page Group 1";
 $text['label-page_group_1']['ar-eg'] = "";
 $text['label-page_group_1']['de-at'] = "";
 $text['label-page_group_1']['de-ch'] = "";
@@ -4246,6 +4458,7 @@ $text['label-page_group_1']['sv-se'] = "";
 $text['label-page_group_1']['uk-ua'] = "";
 
 $text['label-page_group_2']['en-us'] = "Page Group 2";
+$text['label-page_group_2']['en-gb'] = "Page Group 2";
 $text['label-page_group_2']['ar-eg'] = "";
 $text['label-page_group_2']['de-at'] = "";
 $text['label-page_group_2']['de-ch'] = "";
@@ -4266,6 +4479,7 @@ $text['label-page_group_2']['sv-se'] = "";
 $text['label-page_group_2']['uk-ua'] = "";
 
 $text['label-presence_monitor']['en-us'] = "Presence Monitor";
+$text['label-presence_monitor']['en-gb'] = "Presence Monitor";
 $text['label-presence_monitor']['ar-eg'] = "";
 $text['label-presence_monitor']['de-at'] = "";
 $text['label-presence_monitor']['de-ch'] = "";
@@ -4286,6 +4500,7 @@ $text['label-presence_monitor']['sv-se'] = "";
 $text['label-presence_monitor']['uk-ua'] = "";
 
 $text['label-security_class']['en-us'] = "Security Class";
+$text['label-security_class']['en-gb'] = "Security Class";
 $text['label-security_class']['ar-eg'] = "";
 $text['label-security_class']['de-at'] = "";
 $text['label-security_class']['de-ch'] = "";
@@ -4306,6 +4521,7 @@ $text['label-security_class']['sv-se'] = "";
 $text['label-security_class']['uk-ua'] = "";
 
 $text['label-add_to_conference']['en-us'] = "Add to Conference";
+$text['label-add_to_conference']['en-gb'] = "Add to Conference";
 $text['label-add_to_conference']['ar-eg'] = "";
 $text['label-add_to_conference']['de-at'] = "";
 $text['label-add_to_conference']['de-ch'] = "";
@@ -4326,6 +4542,7 @@ $text['label-add_to_conference']['sv-se'] = "";
 $text['label-add_to_conference']['uk-ua'] = "";
 
 $text['label-custom']['en-us'] = "Custom";
+$text['label-custom']['en-gb'] = "Custom";
 $text['label-custom']['ar-eg'] = "";
 $text['label-custom']['de-at'] = "";
 $text['label-custom']['de-ch'] = "";
@@ -4346,6 +4563,7 @@ $text['label-custom']['sv-se'] = "";
 $text['label-custom']['uk-ua'] = "";
 
 $text['header-device_import']['en-us'] = "Device Import";
+$text['header-device_import']['en-gb'] = "Device Import";
 $text['header-device_import']['ar-eg'] = "";
 $text['header-device_import']['de-at'] = "Importieren"; //copied from de-de
 $text['header-device_import']['de-ch'] = "Importieren"; //copied from de-de
@@ -4368,6 +4586,7 @@ $text['header-device_import']['uk-ua'] = "";
 $text['header-device_import']['tr-tr'] = "İçe Aktar";
 
 $text['header-device_export']['en-us'] = "Device Export";
+$text['header-device_export']['en-gb'] = "Device Export";
 $text['header-device_export']['ar-eg'] = "";
 $text['header-device_export']['de-at'] = "Exportieren"; //copied from de-de
 $text['header-device_export']['de-ch'] = "Exportieren"; //copied from de-de
@@ -4390,6 +4609,7 @@ $text['header-device_export']['uk-ua'] = "Експортувати";
 $text['header-device_export']['tr-tr'] = "Dışa Aktar";
 
 $text['header-profiles']['en-us'] = "Profiles";
+$text['header-profiles']['en-gb'] = "Profiles";
 $text['header-profiles']['ar-eg'] = "";
 $text['header-profiles']['de-at'] = "Profile"; //copied from de-de
 $text['header-profiles']['de-ch'] = "Profile"; //copied from de-de
@@ -4410,6 +4630,7 @@ $text['header-profiles']['sv-se'] = "Profiler";
 $text['header-profiles']['uk-ua'] = "Профіль";
 
 $text['header-profile']['en-us'] = "Profile";
+$text['header-profile']['en-gb'] = "Profile";
 $text['header-profile']['ar-eg'] = "";
 $text['header-profile']['de-at'] = "Profil"; //copied from de-de
 $text['header-profile']['de-ch'] = "Profil"; //copied from de-de
@@ -4430,6 +4651,7 @@ $text['header-profile']['sv-se'] = "Profil";
 $text['header-profile']['uk-ua'] = "Профіль";
 
 $text['header-devices']['en-us'] = "Devices";
+$text['header-devices']['en-gb'] = "Devices";
 $text['header-devices']['ar-eg'] = "";
 $text['header-devices']['de-at'] = "Geräte"; //copied from de-de
 $text['header-devices']['de-ch'] = "Geräte"; //copied from de-de
@@ -4450,6 +4672,7 @@ $text['header-devices']['sv-se'] = "Enheter";
 $text['header-devices']['uk-ua'] = "Пристрої";
 
 $text['header-device']['en-us'] = "Device";
+$text['header-device']['en-gb'] = "Device";
 $text['header-device']['ar-eg'] = "";
 $text['header-device']['de-at'] = "Gerät"; //copied from de-de
 $text['header-device']['de-ch'] = "Gerät"; //copied from de-de
@@ -4470,6 +4693,7 @@ $text['header-device']['sv-se'] = "Enhet";
 $text['header-device']['uk-ua'] = "";
 
 $text['description-user']['en-us'] = "Assign a user to this device.";
+$text['description-user']['en-gb'] = "Assign a user to this device.";
 $text['description-user']['ar-eg'] = "";
 $text['description-user']['de-at'] = "Diesem Gerät einen Benutzer zuweisen."; //copied from de-de
 $text['description-user']['de-ch'] = "Diesem Gerät einen Benutzer zuweisen."; //copied from de-de
@@ -4490,6 +4714,7 @@ $text['description-user']['sv-se'] = "Tilldela en användare till den här enhet
 $text['description-user']['uk-ua'] = "Призначення користувача Цей пристрій.";
 
 $text['description-user_id']['en-us'] = "Enter the user ID.";
+$text['description-user_id']['en-gb'] = "Enter the user ID.";
 $text['description-user_id']['ar-eg'] = "";
 $text['description-user_id']['de-at'] = "Geben Sie den Benutzernamen an."; //copied from de-de
 $text['description-user_id']['de-ch'] = "Geben Sie den Benutzernamen an."; //copied from de-de
@@ -4510,6 +4735,7 @@ $text['description-user_id']['sv-se'] = "Fyll i användar ID.";
 $text['description-user_id']['uk-ua'] = "";
 
 $text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
+$text['description-sip_transport']['en-gb'] = "Enter the SIP transport protocol.";
 $text['description-sip_transport']['ar-eg'] = "";
 $text['description-sip_transport']['de-at'] = "Geben Sie das SIP transport Protokoll an."; //copied from de-de
 $text['description-sip_transport']['de-ch'] = "Geben Sie das SIP transport Protokoll an."; //copied from de-de
@@ -4530,6 +4756,7 @@ $text['description-sip_transport']['sv-se'] = "Fyll i SIP transport protokoll.";
 $text['description-sip_transport']['uk-ua'] = "";
 
 $text['description-sip_port']['en-us'] = "Enter the SIP port.";
+$text['description-sip_port']['en-gb'] = "Enter the SIP port.";
 $text['description-sip_port']['ar-eg'] = "";
 $text['description-sip_port']['de-at'] = "Geben Sie den SIP Port an."; //copied from de-de
 $text['description-sip_port']['de-ch'] = "Geben Sie den SIP Port an."; //copied from de-de
@@ -4550,6 +4777,7 @@ $text['description-sip_port']['sv-se'] = "Fyll i SIP port.";
 $text['description-sip_port']['uk-ua'] = "";
 
 $text['description-server_address']['en-us'] = "Select a server address.";
+$text['description-server_address']['en-gb'] = "Select a server address.";
 $text['description-server_address']['ar-eg'] = "";
 $text['description-server_address']['de-at'] = "Wählen Sie eine Server Adresse."; //copied from de-de
 $text['description-server_address']['de-ch'] = "Wählen Sie eine Server Adresse."; //copied from de-de
@@ -4570,6 +4798,7 @@ $text['description-server_address']['sv-se'] = "Välj en server-adress.";
 $text['description-server_address']['uk-ua'] = "";
 
 $text['description-register_expires']['en-us'] = "Enter the expire time for the SIP registration.";
+$text['description-register_expires']['en-gb'] = "Enter the expire time for the SIP registration.";
 $text['description-register_expires']['ar-eg'] = "";
 $text['description-register_expires']['de-at'] = "Geben Sie die Ablaufzeit der SIP Registrierung an."; //copied from de-de
 $text['description-register_expires']['de-ch'] = "Geben Sie die Ablaufzeit der SIP Registrierung an."; //copied from de-de
@@ -4590,6 +4819,7 @@ $text['description-register_expires']['sv-se'] = "Fyll i 'expire' tiden för SIP
 $text['description-register_expires']['uk-ua'] = "";
 
 $text['description-device_profiles']['en-us'] = "Define a set of keys as a profile.  Any changes to the profile effect all devices assigned to the profile.";
+$text['description-device_profiles']['en-gb'] = "Define a set of keys as a profile.  Any changes to the profile effect all devices assigned to the profile.";
 $text['description-device_profiles']['ar-eg'] = "";
 $text['description-device_profiles']['de-at'] = "Definieren Sie eine Gruppe von Tasten als Profil. Jede Änderung in diesem Profil wirkt sich auf alle Geräte aus denen dieses Profil zugeordnet ist."; //copied from de-de
 $text['description-device_profiles']['de-ch'] = "Definieren Sie eine Gruppe von Tasten als Profil. Jede Änderung in diesem Profil wirkt sich auf alle Geräte aus denen dieses Profil zugeordnet ist."; //copied from de-de
@@ -4610,6 +4840,7 @@ $text['description-device_profiles']['sv-se'] = "Definiera en uppsättning knapp
 $text['description-device_profiles']['uk-ua'] = "";
 
 $text['description-profile_name']['en-us'] = "Enter a name to identify this profile.";
+$text['description-profile_name']['en-gb'] = "Enter a name to identify this profile.";
 $text['description-profile_name']['ar-eg'] = "";
 $text['description-profile_name']['de-at'] = "Geben Sie einen Namen für dieses Profil an."; //copied from de-de
 $text['description-profile_name']['de-ch'] = "Geben Sie einen Namen für dieses Profil an."; //copied from de-de
@@ -4630,6 +4861,7 @@ $text['description-profile_name']['sv-se'] = "Fyll i ett namn för att identifie
 $text['description-profile_name']['uk-ua'] = "";
 
 $text['description-profile_enabled']['en-us'] = "Select the current state of this profile.";
+$text['description-profile_enabled']['en-gb'] = "Select the current state of this profile.";
 $text['description-profile_enabled']['ar-eg'] = "";
 $text['description-profile_enabled']['de-at'] = "Geben Sie den Status für dieses Profil an."; //copied from de-de
 $text['description-profile_enabled']['de-ch'] = "Geben Sie den Status für dieses Profil an."; //copied from de-de
@@ -4650,6 +4882,7 @@ $text['description-profile_enabled']['sv-se'] = "Välj status för denna profil.
 $text['description-profile_enabled']['uk-ua'] = "";
 
 $text['description-profile_description']['en-us'] = "Additional details about this profile.";
+$text['description-profile_description']['en-gb'] = "Additional details about this profile.";
 $text['description-profile_description']['ar-eg'] = "";
 $text['description-profile_description']['de-at'] = "Weitere Angaben für dieses Profil."; //copied from de-de
 $text['description-profile_description']['de-ch'] = "Weitere Angaben für dieses Profil."; //copied from de-de
@@ -4670,6 +4903,7 @@ $text['description-profile_description']['sv-se'] = "Ytterligare detaljer för d
 $text['description-profile_description']['uk-ua'] = "";
 
 $text['description-profile2']['en-us'] = "Select a Key Profile and/or define custom keys below.";
+$text['description-profile2']['en-gb'] = "Select a Key Profile and/or define custom keys below.";
 $text['description-profile2']['ar-eg'] = "";
 $text['description-profile2']['de-at'] = "Wählen Sie ein Tastenprofil und/oder definieren sie benutzerdefinierte Tasten unterhalb."; //copied from de-de
 $text['description-profile2']['de-ch'] = "Wählen Sie ein Tastenprofil und/oder definieren sie benutzerdefinierte Tasten unterhalb."; //copied from de-de
@@ -4690,6 +4924,7 @@ $text['description-profile2']['sv-se'] = "Välj en Knapp-profil och / eller defi
 $text['description-profile2']['uk-ua'] = "";
 
 $text['description-profile']['en-us'] = "Define the settings for this profile.";
+$text['description-profile']['en-gb'] = "Define the settings for this profile.";
 $text['description-profile']['ar-eg'] = "";
 $text['description-profile']['de-at'] = "Definieren Sie die Einstellungen für dieses Profil."; //copied from de-de
 $text['description-profile']['de-ch'] = "Definieren Sie die Einstellungen für dieses Profil."; //copied from de-de
@@ -4710,6 +4945,7 @@ $text['description-profile']['sv-se'] = "Definiera inställningar för denna pro
 $text['description-profile']['uk-ua'] = "";
 
 $text['description-password']['en-us'] = "Enter the password.";
+$text['description-password']['en-gb'] = "Enter the password.";
 $text['description-password']['ar-eg'] = "";
 $text['description-password']['de-at'] = "Geben Sie das Passwort ein."; //copied from de-de
 $text['description-password']['de-ch'] = "Geben Sie das Passwort ein."; //copied from de-de
@@ -4730,6 +4966,7 @@ $text['description-password']['sv-se'] = "Fyll i lösenord.";
 $text['description-password']['uk-ua'] = "";
 
 $text['description-outbound_proxy']['en-us'] = "Enter the outbound proxy.";
+$text['description-outbound_proxy']['en-gb'] = "Enter the outbound proxy.";
 $text['description-outbound_proxy']['ar-eg'] = "";
 $text['description-outbound_proxy']['de-at'] = "Geben Sie den Outbound Proxy ein."; //copied from de-de
 $text['description-outbound_proxy']['de-ch'] = "Geben Sie den Outbound Proxy ein."; //copied from de-de
@@ -4750,6 +4987,7 @@ $text['description-outbound_proxy']['sv-se'] = "Fyll i utgående proxy.";
 $text['description-outbound_proxy']['uk-ua'] = "";
 
 $text['description-line_number']['en-us'] = "Select a line number.";
+$text['description-line_number']['en-gb'] = "Select a line number.";
 $text['description-line_number']['ar-eg'] = "";
 $text['description-line_number']['de-at'] = "Wählen Sie eine Leitungennummer."; //copied from de-de
 $text['description-line_number']['de-ch'] = "Wählen Sie eine Leitungennummer."; //copied from de-de
@@ -4770,6 +5008,7 @@ $text['description-line_number']['sv-se'] = "Välj ett linje nummer.";
 $text['description-line_number']['uk-ua'] = "";
 
 $text['description-extension']['en-us'] = "Assign the extension and line numbers to the device.";
+$text['description-extension']['en-gb'] = "Assign the extension and line numbers to the device.";
 $text['description-extension']['ar-eg'] = "";
 $text['description-extension']['de-at'] = "Weisen Sie die Nebenstellen und Leitungen einem Gerät zu."; //copied from de-de
 $text['description-extension']['de-ch'] = "Weisen Sie die Nebenstellen und Leitungen einem Gerät zu."; //copied from de-de
@@ -4790,6 +5029,7 @@ $text['description-extension']['sv-se'] = "Tilldela anknytning och linje nummer 
 $text['description-extension']['uk-ua'] = "";
 
 $text['description-display_name']['en-us'] = "Enter the display name.";
+$text['description-display_name']['en-gb'] = "Enter the display name.";
 $text['description-display_name']['ar-eg'] = "";
 $text['description-display_name']['de-at'] = "Geben Sie den angezeigten Namen an."; //copied from de-de
 $text['description-display_name']['de-ch'] = "Geben Sie den angezeigten Namen an."; //copied from de-de
@@ -4810,6 +5050,7 @@ $text['description-display_name']['sv-se'] = "Fyll i display namn.";
 $text['description-display_name']['uk-ua'] = "";
 
 $text['description-devices']['en-us'] = "Devices are endpoints that register to one or more extensions. They are added to the list manually or automatically when the device requests the provisioning information over HTTP/HTTPS.";
+$text['description-devices']['en-gb'] = "Devices are endpoints that register to one or more extensions. They are added to the list manually or automatically when the device requests the provisioning information over HTTP/HTTPS.";
 $text['description-devices']['ar-eg'] = "";
 $text['description-devices']['de-at'] = "Geräte sind Endgeräte die sich an eine oder mehrere Nebenstellen registrieren. Die Endgeräte können manuell hinzugefügt werden, oder werden automatisch hinzugefügt, wenn das Endgerät Provisioning Informationen über HTTP oder HTTPS anfordert."; //copied from de-de
 $text['description-devices']['de-ch'] = "Geräte sind Endgeräte die sich an eine oder mehrere Nebenstellen registrieren. Die Endgeräte können manuell hinzugefügt werden, oder werden automatisch hinzugefügt, wenn das Endgerät Provisioning Informationen über HTTP oder HTTPS anfordert."; //copied from de-de
@@ -4830,6 +5071,7 @@ $text['description-devices']['sv-se'] = "Enheter är ändpunkter som registrerar
 $text['description-devices']['uk-ua'] = "";
 
 $text['description-device_vendor']['en-us'] = "Enter the vendor name.";
+$text['description-device_vendor']['en-gb'] = "Enter the vendor name.";
 $text['description-device_vendor']['ar-eg'] = "";
 $text['description-device_vendor']['de-at'] = "Geben Sie den Hersteller ein."; //copied from de-de
 $text['description-device_vendor']['de-ch'] = "Geben Sie den Hersteller ein."; //copied from de-de
@@ -4850,6 +5092,7 @@ $text['description-device_vendor']['sv-se'] = "Fyll i tillverkar-namn.";
 $text['description-device_vendor']['uk-ua'] = "";
 
 $text['description-device_time_zone']['en-us'] = "Enter the time zone.";
+$text['description-device_time_zone']['en-gb'] = "Enter the time zone.";
 $text['description-device_time_zone']['ar-eg'] = "";
 $text['description-device_time_zone']['de-at'] = "Geben Sie die Zeitzone ein."; //copied from de-de
 $text['description-device_time_zone']['de-ch'] = "Geben Sie die Zeitzone ein."; //copied from de-de
@@ -4870,6 +5113,7 @@ $text['description-device_time_zone']['sv-se'] = "Fyll i tidszon.";
 $text['description-device_time_zone']['uk-ua'] = "";
 
 $text['description-device_template']['en-us'] = "Select a template.";
+$text['description-device_template']['en-gb'] = "Select a template.";
 $text['description-device_template']['ar-eg'] = "";
 $text['description-device_template']['de-at'] = "Wählen Sie eine Vorlage."; //copied from de-de
 $text['description-device_template']['de-ch'] = "Wählen Sie eine Vorlage."; //copied from de-de
@@ -4890,6 +5134,7 @@ $text['description-device_template']['sv-se'] = "Välj en mall.";
 $text['description-device_template']['uk-ua'] = "";
 
 $text['description-device_enabled']['en-us'] = "Enable or disable provisioning for this device.";
+$text['description-device_enabled']['en-gb'] = "Enable or disable provisioning for this device.";
 $text['description-device_enabled']['ar-eg'] = "";
 $text['description-device_enabled']['de-at'] = "Bereitstellung ein oder ausschalten."; //copied from de-de
 $text['description-device_enabled']['de-ch'] = "Bereitstellung ein oder ausschalten."; //copied from de-de
@@ -4910,6 +5155,7 @@ $text['description-device_enabled']['sv-se'] = "Aktivera eller av-aktivera provi
 $text['description-device_enabled']['uk-ua'] = "";
 
 $text['description-device_model']['en-us'] = "Enter the model name or number.";
+$text['description-device_model']['en-gb'] = "Enter the model name or number.";
 $text['description-device_model']['ar-eg'] = "";
 $text['description-device_model']['de-at'] = "Geben Sie die Modellnummer oder den Modellnamen an."; //copied from de-de
 $text['description-device_model']['de-ch'] = "Geben Sie die Modellnummer oder den Modellnamen an."; //copied from de-de
@@ -4930,6 +5176,7 @@ $text['description-device_model']['sv-se'] = "Fyll i modell beteckning eller num
 $text['description-device_model']['uk-ua'] = "";
 
 $text['description-device_mac_address']['en-us'] = "Enter the MAC address.";
+$text['description-device_mac_address']['en-gb'] = "Enter the MAC address.";
 $text['description-device_mac_address']['ar-eg'] = "";
 $text['description-device_mac_address']['de-at'] = "Geben Sie die MAC Adresse ein."; //copied from de-de
 $text['description-device_mac_address']['de-ch'] = "Geben Sie die MAC Adresse ein."; //copied from de-de
@@ -4950,6 +5197,7 @@ $text['description-device_mac_address']['sv-se'] = "Fyll i MAC-adress.";
 $text['description-device_mac_address']['uk-ua'] = "";
 
 $text['description-device_label']['en-us'] = "Enter the device label.";
+$text['description-device_label']['en-gb'] = "Enter the device label.";
 $text['description-device_label']['ar-eg'] = "";
 $text['description-device_label']['de-at'] = "Geben Sie die Gerätebezeichnung ein."; //copied from de-de
 $text['description-device_label']['de-ch'] = "Geben Sie die Gerätebezeichnung ein."; //copied from de-de
@@ -4970,6 +5218,7 @@ $text['description-device_label']['sv-se'] = "Fyll i enhets beteckning.";
 $text['description-device_label']['uk-ua'] = "";
 
 $text['description-device_key_value']['en-us'] = "Enter the value.";
+$text['description-device_key_value']['en-gb'] = "Enter the value.";
 $text['description-device_key_value']['ar-eg'] = "";
 $text['description-device_key_value']['de-at'] = "Geben Sie den Wert ein."; //copied from de-de
 $text['description-device_key_value']['de-ch'] = "Geben Sie den Wert ein."; //copied from de-de
@@ -4990,6 +5239,7 @@ $text['description-device_key_value']['sv-se'] = "Fyll i värdet.";
 $text['description-device_key_value']['uk-ua'] = "";
 
 $text['description-device_key_type']['en-us'] = "Select the type of key.";
+$text['description-device_key_type']['en-gb'] = "Select the type of key.";
 $text['description-device_key_type']['ar-eg'] = "";
 $text['description-device_key_type']['de-at'] = "Wählen Sie den Typ der Taste."; //copied from de-de
 $text['description-device_key_type']['de-ch'] = "Wählen Sie den Typ der Taste."; //copied from de-de
@@ -5010,6 +5260,7 @@ $text['description-device_key_type']['sv-se'] = "Väl typ av knapp.";
 $text['description-device_key_type']['uk-ua'] = "";
 
 $text['description-device_key_line']['en-us'] = "Select the line number.";
+$text['description-device_key_line']['en-gb'] = "Select the line number.";
 $text['description-device_key_line']['ar-eg'] = "";
 $text['description-device_key_line']['de-at'] = "Wählen Sie die Leitungennummer."; //copied from de-de
 $text['description-device_key_line']['de-ch'] = "Wählen Sie die Leitungennummer."; //copied from de-de
@@ -5030,6 +5281,7 @@ $text['description-device_key_line']['sv-se'] = "Välj linje nummer.";
 $text['description-device_key_line']['uk-ua'] = "";
 
 $text['label-device_key_protected']['en-us'] = "Protected";
+$text['label-device_key_protected']['en-gb'] = "Protected";
 $text['label-device_key_protected']['ar-eg'] = "";
 $text['label-device_key_protected']['de-at'] = "Geschützt"; //copied from de-de
 $text['label-device_key_protected']['de-ch'] = "Geschützt"; //copied from de-de
@@ -5050,6 +5302,7 @@ $text['label-device_key_protected']['sv-se'] = "Skyddad";
 $text['label-device_key_protected']['uk-ua'] = "Захищено";
 
 $text['description-device_key_label']['en-us'] = "Enter the label.";
+$text['description-device_key_label']['en-gb'] = "Enter the label.";
 $text['description-device_key_label']['ar-eg'] = "";
 $text['description-device_key_label']['de-at'] = "Geben Sie die Bezeichnung ein."; //copied from de-de
 $text['description-device_key_label']['de-ch'] = "Geben Sie die Bezeichnung ein."; //copied from de-de
@@ -5070,6 +5323,7 @@ $text['description-device_key_label']['sv-se'] = "Fyll i beteckning.";
 $text['description-device_key_label']['uk-ua'] = "";
 
 $text['description-device_key_extension']['en-us'] = "Enter the extension.";
+$text['description-device_key_extension']['en-gb'] = "Enter the extension.";
 $text['description-device_key_extension']['ar-eg'] = "";
 $text['description-device_key_extension']['de-at'] = "Geben Sie die Nebenstelle ein."; //copied from de-de
 $text['description-device_key_extension']['de-ch'] = "Geben Sie die Nebenstelle ein."; //copied from de-de
@@ -5090,6 +5344,7 @@ $text['description-device_key_extension']['sv-se'] = "Fyll i anknytning.";
 $text['description-device_key_extension']['uk-ua'] = "";
 
 $text['description-device_key_category']['en-us'] = "Select the category.";
+$text['description-device_key_category']['en-gb'] = "Select the category.";
 $text['description-device_key_category']['ar-eg'] = "";
 $text['description-device_key_category']['de-at'] = "Wählen Sie eine Kategorie."; //copied from de-de
 $text['description-device_key_category']['de-ch'] = "Wählen Sie eine Kategorie."; //copied from de-de
@@ -5110,6 +5365,7 @@ $text['description-device_key_category']['sv-se'] = "Välj kategori.";
 $text['description-device_key_category']['uk-ua'] = "";
 
 $text['description-device_key']['en-us'] = "Select the key.";
+$text['description-device_key']['en-gb'] = "Select the key.";
 $text['description-device_key']['ar-eg'] = "";
 $text['description-device_key']['de-at'] = "Wählen Sie eine Taste."; //copied from de-de
 $text['description-device_key']['de-ch'] = "Wählen Sie eine Taste."; //copied from de-de
@@ -5130,6 +5386,7 @@ $text['description-device_key']['sv-se'] = "Välj knapp.";
 $text['description-device_key']['uk-ua'] = "";
 
 $text['description-device_firmware_version']['en-us'] = "Enter the firmware version.";
+$text['description-device_firmware_version']['en-gb'] = "Enter the firmware version.";
 $text['description-device_firmware_version']['ar-eg'] = "";
 $text['description-device_firmware_version']['de-at'] = "Geben Sie die Firmware Version ein."; //copied from de-de
 $text['description-device_firmware_version']['de-ch'] = "Geben Sie die Firmware Version ein."; //copied from de-de
@@ -5150,6 +5407,7 @@ $text['description-device_firmware_version']['sv-se'] = "Fyll i mjukvara version
 $text['description-device_firmware_version']['uk-ua'] = "";
 
 $text['description-device_description']['en-us'] = "Enter the description.";
+$text['description-device_description']['en-gb'] = "Enter the description.";
 $text['description-device_description']['ar-eg'] = "";
 $text['description-device_description']['de-at'] = "Geben Sie eine Beschreibung ein."; //copied from de-de
 $text['description-device_description']['de-ch'] = "Geben Sie eine Beschreibung ein."; //copied from de-de
@@ -5170,6 +5428,7 @@ $text['description-device_description']['sv-se'] = "Fyll i beskrivning.";
 $text['description-device_description']['uk-ua'] = "";
 
 $text['description-device']['en-us'] = "The following information is used to provision endpoints.";
+$text['description-device']['en-gb'] = "The following information is used to provision endpoints.";
 $text['description-device']['ar-eg'] = "";
 $text['description-device']['de-at'] = "Die Folgenden Informationen werden für die Bereitstellung der Endgeräte verwendet."; //copied from de-de
 $text['description-device']['de-ch'] = "Die Folgenden Informationen werden für die Bereitstellung der Endgeräte verwendet."; //copied from de-de
@@ -5190,6 +5449,7 @@ $text['description-device']['sv-se'] = "Följande används för att provisionera
 $text['description-device']['uk-ua'] = "";
 
 $text['description-auth_id']['en-us'] = "Enter the auth ID.";
+$text['description-auth_id']['en-gb'] = "Enter the auth ID.";
 $text['description-auth_id']['ar-eg'] = "";
 $text['description-auth_id']['de-at'] = "Geben Sie die Auth ID an."; //copied from de-de
 $text['description-auth_id']['de-ch'] = "Geben Sie die Auth ID an."; //copied from de-de
@@ -5210,6 +5470,7 @@ $text['description-auth_id']['sv-se'] = "Fyll i auth ID.";
 $text['description-auth_id']['uk-ua'] = "";
 
 $text['button-profiles']['en-us'] = "Profiles";
+$text['button-profiles']['en-gb'] = "Profiles";
 $text['button-profiles']['ar-eg'] = "";
 $text['button-profiles']['de-at'] = "Profile"; //copied from de-de
 $text['button-profiles']['de-ch'] = "Profile"; //copied from de-de
@@ -5230,6 +5491,7 @@ $text['button-profiles']['sv-se'] = "Profiler";
 $text['button-profiles']['uk-ua'] = "";
 
 $text['button-files']['en-us'] = "Files";
+$text['button-files']['en-gb'] = "Files";
 $text['button-files']['ar-eg'] = "";
 $text['button-files']['de-at'] = "Dateien"; //copied from de-de
 $text['button-files']['de-ch'] = "Dateien"; //copied from de-de
@@ -5250,6 +5512,7 @@ $text['button-files']['sv-se'] = "Filer";
 $text['button-files']['uk-ua'] = "";
 
 $text['title-device_vendors']['en-us'] = "Device Vendors";
+$text['title-device_vendors']['en-gb'] = "Device Vendors";
 $text['title-device_vendors']['ar-eg'] = "";
 $text['title-device_vendors']['de-at'] = "Hersteller"; //copied from de-de
 $text['title-device_vendors']['de-ch'] = "Hersteller"; //copied from de-de
@@ -5270,6 +5533,7 @@ $text['title-device_vendors']['sv-se'] = "Tillverkare";
 $text['title-device_vendors']['uk-ua'] = "";
 
 $text['description-device_vendors']['en-us'] = "Defines the list of vendors used with provisioning devices.";
+$text['description-device_vendors']['en-gb'] = "Defines the list of vendors used with provisioning devices.";
 $text['description-device_vendors']['ar-eg'] = "";
 $text['description-device_vendors']['de-at'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
 $text['description-device_vendors']['de-ch'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
@@ -5290,6 +5554,7 @@ $text['description-device_vendors']['sv-se'] = "Definierar listan över leverant
 $text['description-device_vendors']['uk-ua'] = "";
 
 $text['title-device_vendor']['en-us'] = "Device Vendor";
+$text['title-device_vendor']['en-gb'] = "Device Vendor";
 $text['title-device_vendor']['ar-eg'] = "";
 $text['title-device_vendor']['de-at'] = "Hersteller"; //copied from de-de
 $text['title-device_vendor']['de-ch'] = "Hersteller"; //copied from de-de
@@ -5310,6 +5575,7 @@ $text['title-device_vendor']['sv-se'] = "Tillverkare";
 $text['title-device_vendor']['uk-ua'] = "";
 
 $text['title-device_vendor_functions']['en-us'] = "Vendor Functions";
+$text['title-device_vendor_functions']['en-gb'] = "Vendor Functions";
 $text['title-device_vendor_functions']['ar-eg'] = "Vendor Functions";
 $text['title-device_vendor_functions']['de-at'] = "Vendor Functions";
 $text['title-device_vendor_functions']['de-ch'] = "Vendor Functions";
@@ -5330,6 +5596,7 @@ $text['title-device_vendor_functions']['sv-se'] = "Vendor Functions";
 $text['title-device_vendor_functions']['uk-ua'] = "Vendor Functions";
 
 $text['title-device_vendor_function']['en-us'] = "Vendor Function";
+$text['title-device_vendor_function']['en-gb'] = "Vendor Function";
 $text['title-device_vendor_function']['ar-eg'] = "Vendor Function";
 $text['title-device_vendor_function']['de-at'] = "Vendor Function";
 $text['title-device_vendor_function']['de-ch'] = "Vendor Function";
@@ -5350,6 +5617,7 @@ $text['title-device_vendor_function']['sv-se'] = "Vendor Function";
 $text['title-device_vendor_function']['uk-ua'] = "Vendor Function";
 
 $text['description-device_vendor']['en-us'] = "Defines the list of vendors used with provisioning devices.";
+$text['description-device_vendor']['en-gb'] = "Defines the list of vendors used with provisioning devices.";
 $text['description-device_vendor']['ar-eg'] = "";
 $text['description-device_vendor']['de-at'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
 $text['description-device_vendor']['de-ch'] = "Definiert die Liste der Hersteller welche für die Bereitstellung der Geräte verwendet wird."; //copied from de-de
@@ -5370,6 +5638,7 @@ $text['description-device_vendor']['sv-se'] = "Definierar listan över leverant�
 $text['description-device_vendor']['uk-ua'] = "";
 
 $text['button-vendors']['en-us'] = "Vendors";
+$text['button-vendors']['en-gb'] = "Vendors";
 $text['button-vendors']['ar-eg'] = "";
 $text['button-vendors']['de-at'] = "Hersteller"; //copied from de-de
 $text['button-vendors']['de-ch'] = "Hersteller"; //copied from de-de
@@ -5390,6 +5659,7 @@ $text['button-vendors']['sv-se'] = "Tillverkare";
 $text['button-vendors']['uk-ua'] = "";
 
 $text['label-column_name']['en-us'] = "Column Name";
+$text['label-column_name']['en-gb'] = "Column Name";
 $text['label-column_name']['ar-eg'] = "";
 $text['label-column_name']['de-at'] = "";
 $text['label-column_name']['de-ch'] = "";

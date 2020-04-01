@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more.";
+		$apps[$x]['description']['en-gb'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Anrufzentralen spielen eine Aufnahme oder vordefinierte Phrasen ab und bieten denm Anrufer verschieden Optionen zur Auswahl. Jede Option hat ei dazugehöriges Ziel. Diese können Nebenstellen, Autromatische Zentralen, Hunt Groups, Fax Nebenstellen und anderes sein.";
 		$apps[$x]['description']['de-ch'] = "";

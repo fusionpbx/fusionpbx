@@ -135,7 +135,7 @@
 		$x++;
 
 		$array['email_templates'][$x]['email_template_uuid'] = '5d73fb7f-c48a-4752-b5e9-bfe94b4b02d6';
-		$array['email_templates'][$x]['template_language'] = 'en-us';
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
 		$array['email_templates'][$x]['template_category'] = 'voicemail';
 		$array['email_templates'][$x]['template_subcategory'] = 'transcription';
 		$array['email_templates'][$x]['template_subject'] = 'Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}';
@@ -415,6 +415,64 @@
 		$array['email_templates'][$x]['template_type'] = 'html';
 		$array['email_templates'][$x]['template_enabled'] = 'true';
 		$array['email_templates'][$x]['template_description'] = '';
+
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = '297a3e32-125d-4e21-a528-17edc0d50829';
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
+		$array['email_templates'][$x]['template_category'] = 'fax';
+		$array['email_templates'][$x]['template_subcategory'] = 'success_default';
+		$array['email_templates'][$x]['template_subject'] = 'Subject, Fax to: ${number_dialed} SENT';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "We are happy to report the fax was sent successfully. It has been attached for your records.\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = '420d56d8-6cc5-484a-961e-da02ae0646a5';
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
+		$array['email_templates'][$x]['template_category'] = 'fax';
+		$array['email_templates'][$x]['template_subcategory'] = 'fail_default';
+		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} has Failed';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "We are sorry the fax failed to go through. It has been attached. Please check the number \${number_dialed}, and if it was correct you might consider emailing it instead.\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = '3899a9f2-96f2-4778-8f77-9962e4bc7ec8';
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
+		$array['email_templates'][$x]['template_category'] = 'fax';
+		$array['email_templates'][$x]['template_subcategory'] = 'fail_busy';
+		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Busy';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the call was busy \${fax_busy_attempts} of those times.\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+		$x++;
+		$array['email_templates'][$x]['email_template_uuid'] = '307499c6-f390-446e-884a-3b5d7554771b';
+		$array['email_templates'][$x]['template_language'] = 'en-gb';
+		$array['email_templates'][$x]['template_category'] = 'fax';
+		$array['email_templates'][$x]['template_subcategory'] = 'fail_invalid';
+		$array['email_templates'][$x]['template_subject'] = 'Fax to: ${number_dialed} was Invalid';
+		$array['email_templates'][$x]['template_body'] .= "<html>\n";
+		$array['email_templates'][$x]['template_body'] .= "<body>\n";
+		$array['email_templates'][$x]['template_body'] .= "We tried sending, but the number entered was not a working phone number.\n";
+		$array['email_templates'][$x]['template_body'] .= "</body>\n";
+		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = 'html';
+		$array['email_templates'][$x]['template_enabled'] = 'true';
+		$array['email_templates'][$x]['template_description'] = '';
+
 
 		//build array of email template uuids
 		foreach ($array['email_templates'] as $row) {

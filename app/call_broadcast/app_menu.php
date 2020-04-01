@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Broadcast";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Broadcast";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Rundrufe";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";

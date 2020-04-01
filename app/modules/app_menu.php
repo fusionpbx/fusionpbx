@@ -2,6 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Modules";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Modules";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Module";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Module";

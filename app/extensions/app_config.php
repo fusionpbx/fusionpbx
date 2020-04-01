@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used Configure SIP extensions.";
+		$apps[$x]['description']['en-gb'] = "Used Configure SIP extensions.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Wird verwendet um SIP Nebenstellen zu konfigurieren.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -42,6 +43,18 @@
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "user/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "loopback";
+		$apps[$x]['destinations'][$y]['name'] = "extensions";
+		$apps[$x]['destinations'][$y]['sql'] = "select extension, number_alias, user_context as context, description from v_extensions ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
+		//$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
+		$apps[$x]['destinations'][$y]['field']['description'] = "description";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
@@ -179,9 +192,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_force_ping";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "extension_export";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

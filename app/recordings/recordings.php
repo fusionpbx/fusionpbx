@@ -40,7 +40,6 @@
 
 //download the recording
 	if ($_GET['a'] == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
-		//session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
 			//set the path for the directory
 				$path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'];
@@ -77,7 +76,7 @@
 			//send the headers and then the data stream
 				if (file_exists($full_recording_path)) {
 					//content-range
-					if (isset($_SERVER['HTTP_RANGE']))  {
+					if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
 						range_download($full_recording_path);
 					}
 
@@ -89,18 +88,19 @@
 						header("Content-Description: File Transfer");
 					}
 					else {
-						$file_ext = substr($recording_filename, -3);
-						if ($file_ext == "wav") {
-							header("Content-Type: audio/x-wav");
-						}
-						if ($file_ext == "mp3") {
-							header("Content-Type: audio/mpeg");
+						$file_ext = pathinfo($recording_filename, PATHINFO_EXTENSION);
+						switch ($file_ext) {
+							case "wav" : header("Content-Type: audio/x-wav"); break;
+							case "mp3" : header("Content-Type: audio/mpeg"); break;
+							case "ogg" : header("Content-Type: audio/ogg"); break;
 						}
 					}
 					header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
 					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-					// header("Content-Length: ".filesize($full_recording_path));
+					if ($_GET['t'] == "bin") {
+						header("Content-Length: ".filesize($full_recording_path));
+					}
 					ob_clean();
 					fpassthru($fd);
 				}
@@ -223,38 +223,44 @@
 					}
 					else {
 						//file found in db, check if base64 present
-						if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
-							$found_recording_uuid = array_search($recording_filename, $array_recordings);
-							if (!$array_base64_exists[$found_recording_uuid]) {
-								$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename));
-								//build array
-									$array['recordings'][0]['domain_uuid'] = $domain_uuid;
-									$array['recordings'][0]['recording_uuid'] = $found_recording_uuid;
-									$array['recordings'][0]['recording_base64'] = $recording_base64;
-								//set temporary permissions
-									$p = new permissions;
-									$p->add('recording_edit', 'temp');
-								//execute update
-									$database = new database;
-									$database->app_name = 'recordings';
-									$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
-									$database->save($array);
-									unset($array);
-								//remove temporary permissions
-									$p->delete('recording_edit', 'temp');
+							if ($_SESSION['recordings']['storage_type']['text'] == 'base64') {
+								$found_recording_uuid = array_search($recording_filename, $array_recordings);
+								if (!$array_base64_exists[$found_recording_uuid]) {
+									$recording_base64 = base64_encode(file_get_contents($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename));
+									//build array
+										$array['recordings'][0]['domain_uuid'] = $domain_uuid;
+										$array['recordings'][0]['recording_uuid'] = $found_recording_uuid;
+										$array['recordings'][0]['recording_base64'] = $recording_base64;
+									//set temporary permissions
+										$p = new permissions;
+										$p->add('recording_edit', 'temp');
+									//execute update
+										$database = new database;
+										$database->app_name = 'recordings';
+										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
+										$database->save($array);
+										unset($array);
+									//remove temporary permissions
+										$p->delete('recording_edit', 'temp');
+								}
 							}
-						}
 					}
 
 					//if base64, remove local file
-					if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename)) {
-						@unlink($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
-					}
+						if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename)) {
+							@unlink($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
+						}
 
 				}
 			}
 			closedir($dh);
 		}
+
+		//redirect
+			if ($_GET['rd'] != '') {
+				header("Location: recordings.php");
+				exit;
+			}
 	}
 
 //get posted data
@@ -362,7 +368,7 @@
 		echo 	"</form>";
 	}
 	if (permission_exists('recording_delete') && $recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','onclick'=>"if (confirm('".$text['confirm-delete']."')) { list_action_set('delete'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
@@ -375,6 +381,10 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if (permission_exists('recording_delete') && $recordings) {
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+	}
 
 	echo $text['description']."\n";
 	echo "<br /><br />\n";
@@ -502,7 +512,7 @@
 //include the footer
 	require_once "resources/footer.php";
 
-//define the download function
+//define the download function (helps safari play audio sources)
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -512,16 +522,16 @@
 		$end    = $size - 1;       // End byte
 		// Now that we've gotten so far without errors we send the accept range header
 		/* At the moment we only support single ranges.
-		 * Multiple ranges requires some more work to ensure it works correctly
-		 * and comply with the spesifications: http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
-		 *
-		 * Multirange support annouces itself with:
-		 * header('Accept-Ranges: bytes');
-		 *
-		 * Multirange content must be sent with multipart/byteranges mediatype,
-		 * (mediatype = mimetype)
-		 * as well as a boundry header to indicate the various chunks of data.
-		 */
+		* Multiple ranges requires some more work to ensure it works correctly
+		* and comply with the spesifications: http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
+		*
+		* Multirange support annouces itself with:
+		* header('Accept-Ranges: bytes');
+		*
+		* Multirange content must be sent with multipart/byteranges mediatype,
+		* (mediatype = mimetype)
+		* as well as a boundry header to indicate the various chunks of data.
+		*/
 		header("Accept-Ranges: 0-$length");
 		// header('Accept-Ranges: bytes');
 		// multipart/byteranges
@@ -555,8 +565,8 @@
 				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
 			}
 			/* Check the range and make sure it's treated according to the specs.
-			 * http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-			 */
+			* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+			*/
 			// End bytes can not be larger than $end.
 			$c_end = ($c_end > $end) ? $end : $c_end;
 			// Validate the requested range and return an error if it's not correct.

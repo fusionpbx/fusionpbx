@@ -188,11 +188,16 @@
 				$dialplan_uuid = uuid();
 				$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
 			}
-			if (is_uuid($_POST["domain_uuid"])) {
-				$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+			if (permission_exists('dialplan_domain')) {
+				if (is_uuid($_POST["domain_uuid"])) {
+					$array['dialplans'][$x]['domain_uuid'] = $_POST['domain_uuid'];
+				}
+				else {
+					$array['dialplans'][$x]['domain_uuid'] = ''; //global
+				}
 			}
 			else {
-				$array['dialplans'][$x]['domain_uuid'] = '';
+				$array['dialplans'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 			}
 			if ($action == 'add') {
 				$array['dialplans'][$x]['app_uuid'] = uuid();
@@ -468,7 +473,7 @@
 			permission_exists('fifo_add') ||
 			permission_exists('time_condition_add')
 			) {
-			echo button::create(['type'=>'submit','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'action','value'=>'copy','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-copy']."')) { this.blur(); return false; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>$button_margin,'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 			unset($button_margin);
 		}
 		if (
@@ -479,7 +484,7 @@
 			permission_exists('fifo_delete') ||
 			permission_exists('time_condition_delete')
 			) {
-			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>$button_margin,'onclick'=>"if (!confirm('".$text['confirm-delete']."')) { this.blur(); return false; }"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>$button_margin,'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
@@ -487,6 +492,28 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if ($action == 'update') {
+		if (
+			permission_exists('dialplan_add') ||
+			permission_exists('inbound_route_add') ||
+			permission_exists('outbound_route_add') ||
+			permission_exists('fifo_add') ||
+			permission_exists('time_condition_add')
+			) {
+			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
+		}
+		if (
+			permission_exists('dialplan_delete') ||
+			permission_exists('dialplan_detail_delete') ||
+			permission_exists('inbound_route_delete') ||
+			permission_exists('outbound_route_delete') ||
+			permission_exists('fifo_delete') ||
+			permission_exists('time_condition_delete')
+			) {
+			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+		}
+	}
 
 	echo $text['description-dialplan-edit']."\n";
 	echo "<br /><br />\n";

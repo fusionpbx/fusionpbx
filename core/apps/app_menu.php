@@ -2,6 +2,7 @@
 
 	$y=0;	
 	$apps[$x]['menu'][$y]['title']['en-us'] = "App Manager";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "App Manager";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Applikation Verwalten";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Applikation Verwalten";

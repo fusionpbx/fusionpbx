@@ -568,7 +568,9 @@
 					wait_mod = row["wait_mod"];
 					moderator_pin = row["moderator_pin"];
 					participant_pin = row["participant_pin"];
-					announce = row["announce"];
+					announce_name = row["announce_name"];
+					announce_count = row["announce_count"];
+					announce_recording = row["announce_recording"];
 					mute = row["mute"];
 					sounds = row["sounds"];
 					created = row["created"];
@@ -640,7 +642,7 @@
 					if (conference_locked) then
 						announce = "false";
 					end
-					if (announce == "true") then
+					if (announce_name == "true") then
 						--prompt for the name of the caller
 							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-say_name.wav");
 							session:execute("playback", "tone_stream://v=-7;%%(500,0,500.0)");
@@ -670,6 +672,9 @@
 				--set the exit sound
 					if (sounds == "true") then
 						session:execute("set","conference_exit_sound="..exit_sound);
+					else
+						session:execute("set","conference_enter_sound=none");
+						session:execute("set","conference_exit_sound=none");
 					end
 
 				--set flags and moderator controls
@@ -725,17 +730,19 @@
 					end
 
 				--record the conference
-					if (record == "true") then
-						--play a message that the conference is being a recorded
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
-						--play a message that the conference is being a recorded
-							--cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
-							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
-							--response = api:executeString(cmd);
+					if (announce_recording == "true") then
+						if (record == "true") then
+							--play a message that the conference is being a recorded
+								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
+							--play a message that the conference is being a recorded
+								--cmd = "conference "..meeting_uuid.."@"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
+								--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
+								--response = api:executeString(cmd);
+						end
 					end
 
 				--announce the caller
-					if (announce == "true") then
+					if (announce_name == "true") then
 						--announce the caller - play the recording
 							cmd = "conference "..meeting_uuid.."@"..domain_name.." play " .. temp_dir:gsub("\\", "/") .. "/conference-"..uuid..".wav";
 							--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
@@ -762,16 +769,18 @@
 					end
 
 				--play member count
-					if (member_count == "1") then
-						--there is one other member in this conference
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
-					elseif (member_count == "0") then
-						--conference profile defines the alone sound file
-					else
-						--say the count
-							session:execute("say", default_language.." number pronounced "..member_count);
-						--members in this conference
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-members_in_conference.wav");
+					if (announce_count == "true") then
+						if (member_count == "1") then
+							--there is one other member in this conference
+								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
+						elseif (member_count == "0") then
+							--conference profile defines the alone sound file
+						else
+							--say the count
+								session:execute("say", default_language.." number pronounced "..member_count);
+							--members in this conference
+								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-members_in_conference.wav");
+						end
 					end
 				--record the conference
 					if (record == "true") then

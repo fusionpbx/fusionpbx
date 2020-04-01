@@ -91,7 +91,7 @@
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					if (permission_exists('contact_address_delete')) {
 						echo "	<td class='checkbox'>\n";
-						echo "		<input type='checkbox' name='contact_addresses[$x][checked]' id='checkbox_".$x."' class='checkbox_addresses' value='true' onclick=\"edit_delete_action('addresses');\">\n";
+						echo "		<input type='checkbox' name='contact_addresses[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_addresses' value='true' onclick=\"edit_delete_action('addresses');\">\n";
 						echo "		<input type='hidden' name='contact_addresses[$x][uuid]' value='".escape($row['contact_address_uuid'])."' />\n";
 						echo "	</td>\n";
 					}

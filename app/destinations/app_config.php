@@ -9,6 +9,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
+		$apps[$x]['description']['en-gb'] = "Used to define external destination numbers.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Wird verwendet um externe Ziele zu definieren.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -42,6 +43,7 @@
 		$apps[$x]['destinations'][$y]['field']['description'] = "destination_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 
 	//permission details

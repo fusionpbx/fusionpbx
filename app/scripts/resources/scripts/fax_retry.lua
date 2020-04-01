@@ -315,7 +315,10 @@
 	uri_array = explode("/",fax_uri);
 	number_dialed = uri_array[4];
 	if (number_dialed == nil) then
-		number_dialed = '0';
+		number_dialed = uri_array[3];
+		if (number_dialed == nil) then
+			number_dialed = '0';
+		end
 	end
 	--do not use apostrophies in message, they are not escaped and the mail will fail.
 

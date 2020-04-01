@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "";
+		$apps[$x]['description']['en-gb'] = "";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -589,7 +590,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Also use grandstream_distinctive_ringtone_name_9 -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8a0f19ed-7648-4e16-b92b-49d2844b3968";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4e6a634a-8cbc-4b6d-8e05-1e2901138bb9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_distinctive_ringtone_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -620,6 +621,14 @@
                 $apps[$x]['default_settings'][$y]['default_setting_value'] = "Auto";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Display Language. See provision profile for codes.";
+                $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "19604f85-b643-4b92-8e28-9c09c34cf559";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blind_xfer_blf";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Blind Transfer to BLF Yes=1, No=0. Default=0";
                 $y++;
 
 ?>

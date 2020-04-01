@@ -1,6 +1,7 @@
 <?php
 
 $text['title-gswave']['en-us'] = "Grandstream Wave";
+$text['title-gswave']['en-gb'] = "Grandstream Wave";
 $text['title-gswave']['ar-eg'] = "";
 $text['title-gswave']['de-at'] = "";
 $text['title-gswave']['de-ch'] = "";
@@ -21,6 +22,7 @@ $text['title-gswave']['sv-se'] = "";
 $text['title-gswave']['uk-ua'] = "";
 
 $text['title_description-gswave']['en-us'] = "Grandstream Wave is a soft phone for smart phones or tablets. It can be configured easily with a QR code provided here. To use it download and install Grandstream Wave for your device. Start the application and then go to Account Settings press the + to add a new account. Press on UCM Account (Scan QR Code) and then select the extension and scan the QR code.";
+$text['title_description-gswave']['en-gb'] = "Grandstream Wave is a soft phone for smart phones or tablets. It can be configured easily with a QR code provided here. To use it download and install Grandstream Wave for your device. Start the application and then go to Account Settings press the + to add a new account. Press on UCM Account (Scan QR Code) and then select the extension and scan the QR code.";
 $text['title_description-gswave']['ar-eg'] = "";
 $text['title_description-gswave']['de-at'] = "";
 $text['title_description-gswave']['de-ch'] = "";
@@ -41,6 +43,7 @@ $text['title_description-gswave']['sv-se'] = "";
 $text['title_description-gswave']['uk-ua'] = "";
 
 $text['label-extension']['en-us'] = "Extension";
+$text['label-extension']['en-gb'] = "Extension";
 $text['label-extension']['ar-eg'] = "رقم داخلي";
 $text['label-extension']['de-at'] = "Nebenstelle"; //copied from de-de
 $text['label-extension']['de-ch'] = "Nebenstelle"; //copied from de-de

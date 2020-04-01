@@ -2,6 +2,7 @@
 #This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-pin_numbers']['en-us'] = "PIN Numbers";
+$text['title-pin_numbers']['en-gb'] = "PIN Numbers";
 $text['title-pin_numbers']['ar-eg'] = "";
 $text['title-pin_numbers']['de-at'] = "PIN Nummern"; //copied from de-de
 $text['title-pin_numbers']['de-ch'] = "PIN Nummern"; //copied from de-de
@@ -22,6 +23,7 @@ $text['title-pin_numbers']['sv-se'] = "PIN Nummer";
 $text['title-pin_numbers']['uk-ua'] = "";
 
 $text['title-pin_number']['en-us'] = "PIN Number";
+$text['title-pin_number']['en-gb'] = "PIN Number";
 $text['title-pin_number']['ar-eg'] = "";
 $text['title-pin_number']['de-at'] = "PIN Nummer"; //copied from de-de
 $text['title-pin_number']['de-ch'] = "PIN Nummer"; //copied from de-de
@@ -42,6 +44,7 @@ $text['title-pin_number']['sv-se'] = "PIN Nummer";
 $text['title-pin_number']['uk-ua'] = "";
 
 $text['title_description-pin_number']['en-us'] = "List of PIN Numbers and account codes.";
+$text['title_description-pin_number']['en-gb'] = "List of PIN Numbers and account codes.";
 $text['title_description-pin_number']['ar-eg'] = "";
 $text['title_description-pin_number']['de-at'] = "Liste von PIN Nummern und Kontoschlüssel."; //copied from de-de
 $text['title_description-pin_number']['de-ch'] = "Liste von PIN Nummern und Kontoschlüssel."; //copied from de-de
@@ -62,6 +65,7 @@ $text['title_description-pin_number']['sv-se'] = "Lista med PIN Nummer och accou
 $text['title_description-pin_number']['uk-ua'] = "";
 
 $text['label-pin_number']['en-us'] = "PIN Number";
+$text['label-pin_number']['en-gb'] = "PIN Number";
 $text['label-pin_number']['ar-eg'] = "";
 $text['label-pin_number']['de-at'] = "PIN Nummer"; //copied from de-de
 $text['label-pin_number']['de-ch'] = "PIN Nummer"; //copied from de-de
@@ -82,6 +86,7 @@ $text['label-pin_number']['sv-se'] = "PIN Nummer";
 $text['label-pin_number']['uk-ua'] = "";
 
 $text['description-pin_number']['en-us'] = "Enter the PIN number.";
+$text['description-pin_number']['en-gb'] = "Enter the PIN number.";
 $text['description-pin_number']['ar-eg'] = "";
 $text['description-pin_number']['de-at'] = "Geben Sie die PIN Nummer ein."; //copied from de-de
 $text['description-pin_number']['de-ch'] = "Geben Sie die PIN Nummer ein."; //copied from de-de
@@ -102,6 +107,7 @@ $text['description-pin_number']['sv-se'] = "Ange PIN NUmret.";
 $text['description-pin_number']['uk-ua'] = "";
 
 $text['label-accountcode']['en-us'] = "Accountcode";
+$text['label-accountcode']['en-gb'] = "Accountcode";
 $text['label-accountcode']['ar-eg'] = "";
 $text['label-accountcode']['de-at'] = "Kontoschlüssel"; //copied from de-de
 $text['label-accountcode']['de-ch'] = "Kontoschlüssel"; //copied from de-de
@@ -122,6 +128,7 @@ $text['label-accountcode']['sv-se'] = "Accountcode";
 $text['label-accountcode']['uk-ua'] = "";
 
 $text['description-accountcode']['en-us'] = "Enter the accountcode.";
+$text['description-accountcode']['en-gb'] = "Enter the accountcode.";
 $text['description-accountcode']['ar-eg'] = "";
 $text['description-accountcode']['de-at'] = "Geben Sie den Kontoschlüssel ein."; //copied from de-de
 $text['description-accountcode']['de-ch'] = "Geben Sie den Kontoschlüssel ein."; //copied from de-de
@@ -142,6 +149,7 @@ $text['description-accountcode']['sv-se'] = "Ange Accountcode";
 $text['description-accountcode']['uk-ua'] = "";
 
 $text['label-enabled']['en-us'] = "Enabled";
+$text['label-enabled']['en-gb'] = "Enabled";
 $text['label-enabled']['ar-eg'] = "";
 $text['label-enabled']['de-at'] = "Aktiviert"; //copied from de-de
 $text['label-enabled']['de-ch'] = "Aktiviert"; //copied from de-de
@@ -162,6 +170,7 @@ $text['label-enabled']['sv-se'] = "Aktiverad";
 $text['label-enabled']['uk-ua'] = "";
 
 $text['description-enabled']['en-us'] = "Enable or Disable the PIN Number.";
+$text['description-enabled']['en-gb'] = "Enable or Disable the PIN Number.";
 $text['description-enabled']['ar-eg'] = "";
 $text['description-enabled']['de-at'] = "Die PIN Nummer aktivieren und deaktivieren."; //copied from de-de
 $text['description-enabled']['de-ch'] = "Die PIN Nummer aktivieren und deaktivieren."; //copied from de-de
@@ -182,6 +191,7 @@ $text['description-enabled']['sv-se'] = "Aktivera eller inaktivera PIN Nummer.";
 $text['description-enabled']['uk-ua'] = "";
 
 $text['label-description']['en-us'] = "Description";
+$text['label-description']['en-gb'] = "Description";
 $text['label-description']['ar-eg'] = "";
 $text['label-description']['de-at'] = "Beschreibung"; //copied from de-de
 $text['label-description']['de-ch'] = "Beschreibung"; //copied from de-de
@@ -202,6 +212,7 @@ $text['label-description']['sv-se'] = "Beskrivning";
 $text['label-description']['uk-ua'] = "";
 
 $text['description-description']['en-us'] = "Enter the description.";
+$text['description-description']['en-gb'] = "Enter the description.";
 $text['description-description']['ar-eg'] = "";
 $text['description-description']['de-at'] = "Geben Sie die Beschreibung ein."; //copied from de-de
 $text['description-description']['de-ch'] = "Geben Sie die Beschreibung ein."; //copied from de-de
@@ -222,6 +233,7 @@ $text['description-description']['sv-se'] = "Ange beskrivningen.";
 $text['description-description']['uk-ua'] = "";
 
 $text['label-column_name']['en-us'] = "Column Name";
+$text['label-column_name']['en-gb'] = "Column Name";
 $text['label-column_name']['ar-eg'] = "";
 $text['label-column_name']['de-at'] = "";
 $text['label-column_name']['de-ch'] = "";
@@ -242,6 +254,7 @@ $text['label-column_name']['sv-se'] = "";
 $text['label-column_name']['uk-ua'] = "";
 
 $text['button-add']['en-us'] = "Add";
+$text['button-add']['en-gb'] = "Add";
 $text['button-add']['ar-eg'] = "";
 $text['button-add']['de-at'] = "Hinzufügen"; //copied from de-de
 $text['button-add']['de-ch'] = "Hinzufügen"; //copied from de-de
@@ -262,6 +275,7 @@ $text['button-add']['sv-se'] = "Lägg Till";
 $text['button-add']['uk-ua'] = "";
 
 $text['button-edit']['en-us'] = "Edit";
+$text['button-edit']['en-gb'] = "Edit";
 $text['button-edit']['ar-eg'] = "";
 $text['button-edit']['de-at'] = "Bearbeiten"; //copied from de-de
 $text['button-edit']['de-ch'] = "Bearbeiten"; //copied from de-de
@@ -282,6 +296,7 @@ $text['button-edit']['sv-se'] = "Ändra";
 $text['button-edit']['uk-ua'] = "";
 
 $text['button-delete']['en-us'] = "Delete";
+$text['button-delete']['en-gb'] = "Delete";
 $text['button-delete']['ar-eg'] = "";
 $text['button-delete']['de-at'] = "Löschen"; //copied from de-de
 $text['button-delete']['de-ch'] = "Löschen"; //copied from de-de
@@ -302,6 +317,7 @@ $text['button-delete']['sv-se'] = "Ta Bort";
 $text['button-delete']['uk-ua'] = "";
 
 $text['button-save']['en-us'] = "Save";
+$text['button-save']['en-gb'] = "Save";
 $text['button-save']['ar-eg'] = "";
 $text['button-save']['de-at'] = "Speichern"; //copied from de-de
 $text['button-save']['de-ch'] = "Speichern"; //copied from de-de
@@ -322,6 +338,7 @@ $text['button-save']['sv-se'] = "Spara";
 $text['button-save']['uk-ua'] = "";
 
 $text['button-view']['en-us'] = "View";
+$text['button-view']['en-gb'] = "View";
 $text['button-view']['ar-eg'] = "";
 $text['button-view']['de-at'] = "Anzeigen"; //copied from de-de
 $text['button-view']['de-ch'] = "Anzeigen"; //copied from de-de
@@ -342,6 +359,7 @@ $text['button-view']['sv-se'] = "Visa";
 $text['button-view']['uk-ua'] = "";
 
 $text['button-back']['en-us'] = "Back";
+$text['button-back']['en-gb'] = "Back";
 $text['button-back']['ar-eg'] = "";
 $text['button-back']['de-at'] = "Zurück"; //copied from de-de
 $text['button-back']['de-ch'] = "Zurück"; //copied from de-de
@@ -362,6 +380,7 @@ $text['button-back']['sv-se'] = "Tillbaka";
 $text['button-back']['uk-ua'] = "";
 
 $text['confirm-delete']['en-us'] = "Do you really want to delete this?";
+$text['confirm-delete']['en-gb'] = "Do you really want to delete this?";
 $text['confirm-delete']['ar-eg'] = "";
 $text['confirm-delete']['de-at'] = "Möchten Sie dieses wirklich löschen?"; //copied from de-de
 $text['confirm-delete']['de-ch'] = "Möchten Sie dieses wirklich löschen?"; //copied from de-de
@@ -382,6 +401,7 @@ $text['confirm-delete']['sv-se'] = "Vill du verkligen ta bort detta?";
 $text['confirm-delete']['uk-ua'] = "";
 
 $text['message-add']['en-us'] = "Add Completed";
+$text['message-add']['en-gb'] = "Add Completed";
 $text['message-add']['ar-eg'] = "";
 $text['message-add']['de-at'] = "Erfolgreich hinzugefügt"; //copied from de-de
 $text['message-add']['de-ch'] = "Erfolgreich hinzugefügt"; //copied from de-de
@@ -402,6 +422,7 @@ $text['message-add']['sv-se'] = "Tillagd";
 $text['message-add']['uk-ua'] = "";
 
 $text['message-update']['en-us'] = "Update Completed";
+$text['message-update']['en-gb'] = "Update Completed";
 $text['message-update']['ar-eg'] = "";
 $text['message-update']['de-at'] = "Aktualisierung durchgeführt"; //copied from de-de
 $text['message-update']['de-ch'] = "Aktualisierung durchgeführt"; //copied from de-de
@@ -422,6 +443,7 @@ $text['message-update']['sv-se'] = "Ändring Utförd";
 $text['message-update']['uk-ua'] = "";
 
 $text['message-delete']['en-us'] = "Delete Completed";
+$text['message-delete']['en-gb'] = "Delete Completed";
 $text['message-delete']['ar-eg'] = "";
 $text['message-delete']['de-at'] = "Erfolgreich gelöscht"; //copied from de-de
 $text['message-delete']['de-ch'] = "Erfolgreich gelöscht"; //copied from de-de
@@ -442,6 +464,7 @@ $text['message-delete']['sv-se'] = "Borttagen";
 $text['message-delete']['uk-ua'] = "";
 
 $text['message-required']['en-us'] = "Please provide: ";
+$text['message-required']['en-gb'] = "Please provide: ";
 $text['message-required']['ar-eg'] = "";
 $text['message-required']['de-at'] = "Bitte geben Sie folgendes an:"; //copied from de-de
 $text['message-required']['de-ch'] = "Bitte geben Sie folgendes an:"; //copied from de-de
