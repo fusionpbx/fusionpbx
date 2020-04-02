@@ -251,7 +251,9 @@
 		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";
 		echo "			<option value='record'>".$text['label-record']."</option>";
 		echo "			<option value='wait_mod'>".$text['label-wait_moderator']."</option>";
-		echo "			<option value='announce'>".$text['label-announce']."</option>";
+		echo "			<option value='announce_name'>".$text['label-announce_name']."</option>";
+		echo "			<option value='announce_count'>".$text['label-announce_count']."</option>";
+		echo "			<option value='announce_recording'>".$text['label-announce_recording']."</option>";
 		echo "			<option value='mute'>".$text['label-mute']."</option>";
 		echo "			<option value='sounds'>".$text['label-sounds']."</option>";
 		echo "			<option value='enabled'>".$text['label-enabled']."</option>";
@@ -303,7 +305,9 @@
 	echo th_order_by('record', $text['label-record'], $order_by, $order, null, "class='center'");
 	//echo th_order_by('max_members', 'Max', $order_by, $order);
 	echo th_order_by('wait_mod', $text['label-wait_moderator'], $order_by, $order, null, "class='center'");
-	echo th_order_by('announce', $text['label-announce'], $order_by, $order, null, "class='center'");
+	echo th_order_by('announce', $text['label-announce_name'], $order_by, $order, null, "class='center'");
+	echo th_order_by('announce', $text['label-announce_count'], $order_by, $order, null, "class='center'");
+	echo th_order_by('announce', $text['label-announce_recording'], $order_by, $order, null, "class='center'");
 	//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
 	echo th_order_by('mute', $text['label-mute'], $order_by, $order, null, "class='center'");
 	echo th_order_by('sounds', $text['label-sounds'], $order_by, $order, null, "class='center'");
@@ -388,13 +392,31 @@
 // 			}
 // 			echo "	</td>\n";
 
-			if (permission_exists('conference_room_edit')) {
+			if (permission_exists('conference_room_edit') && permission_exists('conference_room_announce_name')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['announce'] == "true" ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'announce'; list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['announce_name'] == "true" ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'announce_name'; list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
-				echo $text['label-'.($row['announce'] == "true" ? 'true' : 'false')];
+				echo $text['label-'.($row['announce_name'] == "true" ? 'true' : 'false')];
+			}
+			echo "	</td>\n";
+			if (permission_exists('conference_room_edit') && permission_exists('conference_room_announce_count')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['announce_count'] == "true" ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'announce_count'; list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.($row['announce_count'] == "true" ? 'true' : 'false')];
+			}
+			echo "	</td>\n";
+			if (permission_exists('conference_room_edit') && permission_exists('conference_room_announce_recording')) {
+				echo "	<td class='no-link center'>\n";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['announce_recording'] == "true" ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'announce_recording'; list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>\n";
+				echo $text['label-'.($row['announce_recording'] == "true" ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
 // 			echo "	<td>";
