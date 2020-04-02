@@ -140,7 +140,7 @@ if (!class_exists('conference_centers')) {
 					$not_admin = 0;
 				}
 				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, r.conference_room_name, max_members, ";
-				$fields .= "wait_mod, announce, mute, sounds, created, created_by, r.enabled, r.description, record, ";
+				$fields .= "wait_mod, announce_name, announce_count, announce_recording, mute, sounds, created, created_by, r.enabled, r.description, record, ";
 				$fields .= "profile, moderator_pin, participant_pin";
 				if ($not_admin) {
 					$fields .= ", meeting_user_uuid, user_uuid";
@@ -194,7 +194,9 @@ if (!class_exists('conference_centers')) {
 							$result[$x]["conference_room_name"] = $row["conference_room_name"];
 							$result[$x]["max_members"] = $row["max_members"];
 							$result[$x]["wait_mod"] = $row["wait_mod"];
-							$result[$x]["announce"] = $row["announce"];
+							$result[$x]["announce_name"] = $row["announce_name"];
+							$result[$x]["announce_count"] = $row["announce_count"];
+							$result[$x]["announce_recording"] = $row["announce_recording"];
 							$result[$x]["mute"] = $row["mute"];
 							$result[$x]["record"] = $row["record"];
 							$result[$x]["sounds"] = $row["sounds"];
@@ -581,7 +583,7 @@ if (!class_exists('conference_centers')) {
 					if (is_array($records) && @sizeof($records) != 0) {
 
 						//validate submitted toggle field
-							if (!in_array($this->toggle_field, ['record','wait_mod','announce','mute','sounds','enabled'])) {
+							if (!in_array($this->toggle_field, ['record','wait_mod','announce_name','announce_count','announce_recording','mute','sounds','enabled'])) {
 								header('Location: '.$this->list_page);
 								exit;
 							}
