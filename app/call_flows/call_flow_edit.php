@@ -73,6 +73,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
+			$call_flow_enabled = $_POST["call_flow_enabled"];
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -194,7 +195,7 @@
 			$array["dialplans"][$i]["dialplan_continue"] = "false";
 			$array["dialplans"][$i]["dialplan_xml"] = $dialplan_xml;
 			$array["dialplans"][$i]["dialplan_order"] = "333";
-			$array["dialplans"][$i]["dialplan_enabled"] = "true";
+			$array["dialplans"][$i]["dialplan_enabled"] = $call_flow_enabled;
 			$array["dialplans"][$i]["dialplan_description"] = $call_flow_description;
 			$array["dialplans"][$i]["app_uuid"] = "b1b70f85-6b42-429b-8c5a-60c8b02b7d14";
 
@@ -219,6 +220,7 @@
 				$array["call_flows"][$i]["call_flow_alternate_data"] = $call_flow_alternate_data;
 			}
 			$array["call_flows"][$i]["call_flow_context"] = $call_flow_context;
+			$array["call_flows"][$i]["call_flow_enabled"] = $call_flow_enabled;
 			$array["call_flows"][$i]["call_flow_description"] = $call_flow_description;
 
 		//add the dialplan permission
@@ -297,6 +299,7 @@
 				$call_flow_alternate_sound = $row["call_flow_alternate_sound"];
 				$call_flow_alternate_app = $row["call_flow_alternate_app"];
 				$call_flow_alternate_data = $row["call_flow_alternate_data"];
+				$call_flow_enabled = $row["call_flow_enabled"];
 				$call_flow_description = $row["call_flow_description"];
 
 			//if superadmin show both the app and data
@@ -678,6 +681,26 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td width=\"70%\" class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='call_flow_enabled'>\n";
+	if ($call_flow_enabled == "true") {
+		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($call_flow_enabled == "false") {
+		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "	<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "	</select>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
