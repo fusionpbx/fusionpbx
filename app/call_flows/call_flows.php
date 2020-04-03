@@ -48,6 +48,7 @@
 		$action = $_POST['action'];
 		$search = $_POST['search'];
 		$call_flows = $_POST['call_flows'];
+		$toggle_field = $_POST['toggle_field'];
 	}
 
 //process the http post data by action
@@ -62,6 +63,7 @@
 			case 'toggle':
 				if (permission_exists('call_flow_edit')) {
 					$obj = new call_flows;
+					$obj->toggle_field = $toggle_field;
 					$obj->toggle($call_flows);
 				}
 				break;
@@ -130,6 +132,16 @@
 	$document['title'] = $text['title-call_flows'];
 	require_once "resources/header.php";
 
+//javascript for toggle select box
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	function toggle_select() {\n";
+	echo "		$('#call_flow_feature').fadeToggle(400, function() {\n";
+	echo "			document.getElementById('call_flow_feature').selectedIndex = 0;\n";
+	echo "			document.getElementById('call_flow_feature').focus();\n";
+	echo "		});\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_flows']." (".$num_rows.")</b></div>\n";
@@ -141,7 +153,12 @@
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('call_flow_edit') && $call_flows) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
+		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_flow_feature' onchange=\"if (this.selectedIndex != 0) { modal_open('modal-toggle','btn_toggle'); }\">";
+		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";
+		echo "			<option value='call_flow_status'>".$text['label-call_flow_status']."</option>";
+		echo "			<option value='call_flow_enabled'>".$text['label-enabled']."</option>";
+		echo "		</select>";
 	}
 	if (permission_exists('call_flow_delete') && $call_flows) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
@@ -162,7 +179,7 @@
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('call_flow_edit') && $call_flows) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); document.getElementById('toggle_field').value = document.getElementById('call_flow_feature').options[document.getElementById('call_flow_feature').selectedIndex].value; list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('call_flow_delete') && $call_flows) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
@@ -173,6 +190,7 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' id='toggle_field' name='toggle_field' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<table class='list'>\n";
@@ -189,6 +207,7 @@
 	if (permission_exists('call_flow_context')) {
 		echo th_order_by('call_flow_context', $text['label-call_flow_context'], $order_by, $order);
 	}
+	echo th_order_by('call_flow_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_flow_description', $text['label-call_flow_description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('call_flow_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -214,7 +233,7 @@
 			$status_label = $row['call_flow_status'] != 'false' ? $row['call_flow_label'] : $row['call_flow_alternate_label'];
 			if (permission_exists('call_flow_edit')) {
 				echo "	<td class='no-link'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>escape($status_label),'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>escape($status_label),'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'call_flow_status'; list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td>";
@@ -223,6 +242,14 @@
 			echo "	</td>\n";
 			if (permission_exists('call_flow_context')) {
 				echo "	<td>".escape($row['call_flow_context'])."&nbsp;</td>\n";
+			}
+			if (permission_exists('call_flow_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['call_flow_enabled'] == "true" ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); document.getElementById('toggle_field').value = 'call_flow_enabled';list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo escape($row['call_flow_enabled']);
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['call_flow_description'])."&nbsp;</td>\n";
 			if (permission_exists('call_flow_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
