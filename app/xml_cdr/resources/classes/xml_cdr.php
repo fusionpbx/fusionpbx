@@ -780,6 +780,9 @@ if (!class_exists('xml_cdr')) {
 								//get the xml cdr string
 									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
+								//decode the xml string
+									//$xml_string = urldecode($xml_string);
+
 								//parse the xml and insert the data into the db
 									$this->xml_array($x, $leg, $xml_string);
 
