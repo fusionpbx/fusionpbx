@@ -554,7 +554,8 @@
 	if (!is_uuid($call_center_queue_uuid)) {
 		$call_center_queue_uuid = null;
 	}
-	//option to change select to text
+
+//option to change select to text
 	if (if_group("superadmin")) {
 		echo "<script>\n";
 		echo "var Objs;\n";
