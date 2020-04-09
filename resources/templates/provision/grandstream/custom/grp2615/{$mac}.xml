@@ -700,7 +700,7 @@
 
     <!-- # Bypass Dial Plan -->
     <!-- # String: contact,incoming,outgoing,dialing,mpk,api. Default is mpk -->
-    <P2382>mpk</P2382>
+    <P2382>mpk,contact,incoming,outgoing</P2382>
 
     <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
@@ -6031,7 +6031,7 @@
     <!-- # Bluetooth Name. -->
     <!-- # String -->
     <!-- #P8364 = -->
-
+<P7800>1</P7800>
     <!-- ############################################################################## -->
     <!-- ## Network/OpenVPN Settings                     ## -->
     <!-- ############################################################################## -->
@@ -7426,7 +7426,7 @@
     <!-- # Disable Active MPK Page. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6764>0</P6764>
+    <P6764>1</P6764>
 
     <!-- # Enable Active VPK Page. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7522,12 +7522,12 @@
     <!-- # Local Call Recording Feature. 0 - Disable, 1 - Enable. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6760>0</P6760>
+    <P6760>1</P6760>
 
     <!-- # Saved Local Call Recording Location. 0 - Internal Storage 1 - USB. Default is 0. ~~for GXP2140/2160/2170 only -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6761>0</P6761>
+    <P6761>1</P6761>
 
     <!-- # Enable IM Popup Timeout. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
@@ -7629,17 +7629,17 @@
 
     <!-- # Multicast Sender ID -->
     <!-- # Strings -->
-    <P8455></P8455>
+    <P8455>{$account.1.display_name}</P8455>
 
     <!-- ### Multicast Listening ###  -->
     <!-- # Priority 1 -->
     <!-- # Listening Address -->
     <!-- # String -->
-    <P1569></P1569>
+    <P1569>224.0.1.117:5003</P1569>
 
     <!-- # Label -->
     <!-- # String -->
-    <P1570></P1570>
+    <P1570>Page</P1570>
 
     <!-- # Priority 2 -->
     <!-- # Listening Address -->
@@ -7947,7 +7947,7 @@
 
     <!-- # NTP Update Interval -->
     <!-- # String -->
-    <!-- # Number: 5 - 1440， Default is 1440  -->
+    <!-- # Number: 5 - 1440ï¼Œ Default is 1440  -->
     <P5005>1440</P5005>
 
     <!-- # Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is 1 -->
@@ -8110,7 +8110,7 @@
 {if isset($grandstream_screensaver)}
     <P2918>{$grandstream_screensaver}</P2918>
 {else}
-    <P2918>1</P2918>
+    <P2918>2</P2918>
 {/if}
 
     <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. ~~for GXP2140/2160/2170 only -->
@@ -9346,7 +9346,11 @@
     <!-- # One Page Display Mode. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1. Default is 0 -->
     <!-- # Mandatory -->
-    <P8357>0</P8357>
+{if isset($grandstream_ext_1page)}	    
+    <P8357>{$grandstream_ext_1page}</P8357>
+{else}
+    <P8357>1</P8357>
+{/if}
 
     <!-- # Sync Backlight with LCD. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -9378,7 +9382,7 @@
     <!-- # String -->
     <!-- <P23003></P23003> -->
 
-{if $template == "grandstream/gxp2140"||$template == "grandstream/AA-SS-gxp2170"}
+
 
 {assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 {$start_id=23000}
@@ -9397,8 +9401,7 @@
 {/if}
 
 {/for}
-{/if}
-
+{
 
   </config>
 </gs_provision>
