@@ -219,18 +219,25 @@
 										$destination_number = $row['destination_number'];
 										$destination_app = $row['destination_app'];
 										$destination_data = $row['destination_data'];
+										$destination_prefix = $row['destination_prefix'];
 										$destination_accountcode = $row['destination_accountcode'];
 										$destination_cid_name_prefix = $row['destination_cid_name_prefix'];
 										$destination_description = $row['destination_description'];
 
 									//convert the number to a regular expression
-										$destination_number_regex = string_to_regex($destination_number);
+										if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
+											$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
+										}
+										else {
+											$destination_number_regex = string_to_regex($destination_number);
+										}
 
 									//add the additional fields
 										$dialplan_uuid = uuid();
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
+										$array["destinations"][$row_id]['destination_number_regex'] = $destination_number_regex;
 										$array["destinations"][$row_id]['destination_enabled'] = $destination_enabled;
 										$array["destinations"][$row_id]['dialplan_uuid'] = $dialplan_uuid;
 
