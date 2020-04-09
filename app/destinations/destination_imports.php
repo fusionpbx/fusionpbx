@@ -69,6 +69,7 @@
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
 	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="outbound" && strlen($destination_context) == 0) { $destination_context = $_SESSION['domain_name']; }
+	if (strlen($from_row) == 0) { $from_row = '2'; }
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
