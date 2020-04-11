@@ -1166,7 +1166,7 @@ function number_pad($number,$n) {
 					for ($i = 0; $i <= 2; $i++) {
 						$hex_color = dechex($color[$i]);
 						if (strlen($hex_color) == 1) { $hex_color = '0'.$hex_color; }
-						$hex = $hex_color;
+						$hex .= $hex_color;
 					}
 					return $hash.$hex;
 				}
