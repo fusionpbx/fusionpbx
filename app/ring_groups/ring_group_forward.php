@@ -72,16 +72,12 @@
 
 		$x = 0;
 		foreach ($_POST['ring_groups'] as $row) {
-			//remove non-numeric characters
-				$ring_group_uuid = $row['ring_group_uuid'];
-				$ring_group_forward_destination = preg_replace("~[^0-9]~", "", $row['ring_group_forward_destination']);
-				$ring_group_forward_enabled = $row['ring_group_forward_enabled'] == 'true' && is_numeric($ring_group_forward_destination) ? 'true' : 'false';
 			//build array
-				if (is_uuid($ring_group_uuid)) {
-					$array['ring_groups'][$x]['ring_group_uuid'] = $ring_group_uuid;
+				if (is_uuid($row['ring_group_uuid'])) {
+					$array['ring_groups'][$x]['ring_group_uuid'] = $row['ring_group_uuid'];
 					$array['ring_groups'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $ring_group_forward_enabled;
-					$array['ring_groups'][$x]['ring_group_forward_destination'] = $ring_group_forward_destination;
+					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $row['ring_group_forward_enabled'] == 'true' && $row['ring_group_forward_destination'] != '' ? 'true' : 'false';
+					$array['ring_groups'][$x]['ring_group_forward_destination'] = $row['ring_group_forward_destination'];
 				}
 			//increment counter
 				$x++;
