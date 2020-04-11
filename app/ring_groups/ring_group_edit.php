@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2019
+	Portions created by the Initial Developer are Copyright (C) 2010-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -173,6 +173,7 @@
 			$ring_group_cid_number_prefix = $_POST["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $_POST["ring_group_distinctive_ring"];
 			$ring_group_ringback = $_POST["ring_group_ringback"];
+			$ring_group_call_forward_enabled = $_POST["ring_group_call_forward_enabled"];
 			$ring_group_follow_me_enabled = $_POST["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $_POST["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $_POST["ring_group_missed_call_data"];
@@ -334,6 +335,7 @@
 			}
 			$array["ring_groups"][0]["ring_group_distinctive_ring"] = $ring_group_distinctive_ring;
 			$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
+			$array["ring_groups"][0]["ring_group_call_forward_enabled"] = $ring_group_call_forward_enabled;
 			$array["ring_groups"][0]["ring_group_follow_me_enabled"] = $ring_group_follow_me_enabled;
 			if (permission_exists('ring_group_missed_call') && $destination->valid($ring_group_missed_call_app.':'.$ring_group_missed_call_data)) {
 				$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
@@ -473,6 +475,7 @@
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
+			$ring_group_call_forward_enabled = $row["ring_group_call_forward_enabled"];
 			$ring_group_follow_me_enabled = $row["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
@@ -943,6 +946,31 @@
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-ring_group_call_forward_enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='ring_group_call_forward_enabled'>\n";
+	echo "	<option value=''></option>\n";
+	if ($ring_group_call_forward_enabled == "true") {
+		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($ring_group_call_forward_enabled == "false") {
+		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "	<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-ring_group_call_forward_enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
