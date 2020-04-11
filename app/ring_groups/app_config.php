@@ -245,9 +245,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the ringback.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_call_forward_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose to follow a ring group destination's call forward.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_follow_me_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the follow me enabled.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose to follow a ring group destination's follow me.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_missed_call_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
