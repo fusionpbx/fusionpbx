@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -232,6 +232,7 @@
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
+		ring_group_call_forward_enabled = row["ring_group_call_forward_enabled"];
 		ring_group_follow_me_enabled = row["ring_group_follow_me_enabled"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
@@ -480,7 +481,11 @@
 				end
 
 				--follow the forwards
-				count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
+				if (ring_group_call_forward_enabled == "true") then
+					count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
+				else
+					destination_number = row.destination_number;
+				end
 
 				--update values
 				row['destination_number'] = destination_number
@@ -669,7 +674,9 @@
 						user_exists = row.user_exists;
 
 					--follow the forwards
-						count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+						if (row.ring_group_call_forward_enabled == "true") then
+							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+						end
 
 					--check if the user exists
 						cmd = "user_exists id ".. destination_number .." "..domain_name;
