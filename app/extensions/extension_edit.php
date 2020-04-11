@@ -428,7 +428,7 @@
 								//assign the user to the extension
 									if (is_uuid($user_uuid)) {
 										$array["extension_users"][$i]["extension_user_uuid"] = uuid();
-										$array["extension_users"][$i]["domain_uuid"] = $_SESSION['domain_uuid'];
+										$array["extension_users"][$i]["domain_uuid"] = $domain_uuid;
 										$array["extension_users"][$i]["user_uuid"] = $user_uuid;
 										$array["extension_users"][$i]["extension_uuid"] = $extension_uuid;
 									}
