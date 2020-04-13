@@ -384,29 +384,31 @@
 				$parameters = explode('&', $http_get_params);
 				if (is_array($parameters)) {
 					foreach ($parameters as $parameter) {
-						$array = explode('=', $parameter);
-						$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
-						$value = urldecode($array['1']);
-						if ($key == 'order_by' && strlen($value) > 0) {
-							//validate order by
-							$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
-						}
-						else if ($key == 'order' && strlen($value) > 0) {
-							//validate order
-							switch ($value) {
-								case 'asc':
-									$sanitized_parameters .= "&order=asc";
-									break;
-								case 'desc':
-									$sanitized_parameters .= "&order=desc";
-									break;
+						if (substr_count($parameter, '=') != 0) {
+							$array = explode('=', $parameter);
+							$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
+							$value = urldecode($array['1']);
+							if ($key == 'order_by' && strlen($value) > 0) {
+								//validate order by
+								$sanitized_parameters .= "&order_by=". preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 							}
-						}
-						else if (strlen($value) > 0 && is_numeric($value)) {
-							$sanitized_parameters .= "&".$key."=".$value;
-						}
-						else {
-							$sanitized_parameters .= "&".$key."=".urlencode($value);
+							else if ($key == 'order' && strlen($value) > 0) {
+								//validate order
+								switch ($value) {
+									case 'asc':
+										$sanitized_parameters .= "&order=asc";
+										break;
+									case 'desc':
+										$sanitized_parameters .= "&order=desc";
+										break;
+								}
+							}
+							else if (strlen($value) > 0 && is_numeric($value)) {
+								$sanitized_parameters .= "&".$key."=".$value;
+							}
+							else {
+								$sanitized_parameters .= "&".$key."=".urlencode($value);
+							}
 						}
 					}
 				}

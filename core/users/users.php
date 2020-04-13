@@ -122,7 +122,7 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = $search ? "&search=".$search : null;
-	$param = ($_GET['show'] == 'all' && permission_exists('user_all')) ? "&show=all" : null;
+	$param .= ($_GET['show'] == 'all' && permission_exists('user_all')) ? "&show=all" : null;
 	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
@@ -228,16 +228,16 @@
 		echo "	</th>\n";
 	}
 	if ($_GET['show'] == 'all' && permission_exists('user_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo th_order_by('groups', $text['label-groups'], $order_by, $order);
-	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order);
-	echo th_order_by('contact_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
+	echo th_order_by('groups', $text['label-groups'], $order_by, $order, null, null, $param);
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
+	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
 	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
 	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
-	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $param);
 	if (permission_exists('user_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
