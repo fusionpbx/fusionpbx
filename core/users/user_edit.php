@@ -508,7 +508,7 @@
 			$p->add("user_setting_edit", "temp");
 			$p->add("user_edit", "temp");
 			$p->add('user_group_add', 'temp');
-	
+
 		//save the data
 			$database = new database;
 			$database->app_name = 'users';
@@ -555,14 +555,7 @@
 			else {
 				message::add($text['message-add'],'positive');
 			}
-			if ($domain_uuid == $_SESSION['domain_uuid']) {
-				//same domain, edit user
-				header("Location: user_edit.php?id=".urldecode($user_uuid));
-			}
-			else {
-				//different domain, return to list
-				header('Location: users.php');
-			}
+			header("Location: user_edit.php?id=".urlencode($user_uuid));
 			exit;
 	}
 
@@ -928,7 +921,7 @@
 		$sql .= "order by ";
 		$sql .= "	g.domain_uuid desc, ";
 		$sql .= "	g.group_name asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $user_uuid;
 		$database = new database;
 		$user_groups = $database->select($sql, $parameters, 'all');
@@ -961,7 +954,7 @@
 			$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 		}
 		$sql .= "order by domain_uuid desc, group_name asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$groups = $database->select($sql, $parameters, 'all');
 		if (is_array($groups)) {
