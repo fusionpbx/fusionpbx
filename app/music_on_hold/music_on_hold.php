@@ -352,10 +352,11 @@
 	echo "	<div class='heading'><b>".$text['title-music_on_hold']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('music_on_hold_add')) {
+		$modify_add_action = !is_array($streams) || @sizeof($streams) == 0 ? "name_mode('new'); $('#btn_select').hide();" : null; //hide categories select box when none exist
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); });"]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ ".$modify_add_action." $('span#form_upload').fadeIn(250); });"]);
 		echo 	"<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
