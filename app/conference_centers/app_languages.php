@@ -233,8 +233,8 @@ $text['label-conference_center_greeting']['ru-ru'] = "Приветствие";
 $text['label-conference_center_greeting']['sv-se'] = "Hälsning";
 $text['label-conference_center_greeting']['uk-ua'] = "Привітання";
 
-$text['description-conference_center_greeting']['en-us'] = "Select the greeting that is played before joining the conference room.";
-$text['description-conference_center_greeting']['en-gb'] = "Select the greeting that is played before joining the conference room.";
+$text['description-conference_center_greeting']['en-us'] = "Select the greeting that is played before joining the conference room. Note: No PIN prompt will be played.";
+$text['description-conference_center_greeting']['en-gb'] = "Select the greeting that is played before joining the conference room. Note: No PIN prompt will be played.";
 $text['description-conference_center_greeting']['ar-eg'] = "";
 $text['description-conference_center_greeting']['de-at'] = "Wählen Sie die Begrüßung für den Konferenzraum."; //copied from de-de
 $text['description-conference_center_greeting']['de-ch'] = "Wählen Sie die Begrüßung für den Konferenzraum."; //copied from de-de
