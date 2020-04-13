@@ -275,19 +275,15 @@
 						foreach ($ring_group_missed_call_data_array as $array_index => $email_address) {
 							if (!valid_email($email_address)) { unset($ring_group_missed_call_data_array[$array_index]); }
 						}
-						//echo "<pre>".print_r($ring_group_missed_call_data_array, true)."</pre><br><br>";
 						if (sizeof($ring_group_missed_call_data_array) > 0) {
 							$ring_group_missed_call_data = implode(',', $ring_group_missed_call_data_array);
 						}
 						else {
 							unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 						}
-						//echo "Multiple Emails = ".$ring_group_missed_call_data;
 					}
 					else {
-						//echo "Single Email = ".$ring_group_missed_call_data."<br>";
 						if (!valid_email($ring_group_missed_call_data)) {
-							//echo "Invalid Email<br><br>";
 							unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 						}
 					}
@@ -300,6 +296,8 @@
 					$ring_group_missed_call_data = str_replace(' ','',$ring_group_missed_call_data);
 					if (!is_numeric($ring_group_missed_call_data)) { unset($ring_group_missed_call_app, $ring_group_missed_call_data); }
 					break;
+				default:
+					unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 			}
 
 		//set the app and data
@@ -337,7 +335,7 @@
 			$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
 			$array["ring_groups"][0]["ring_group_call_forward_enabled"] = $ring_group_call_forward_enabled;
 			$array["ring_groups"][0]["ring_group_follow_me_enabled"] = $ring_group_follow_me_enabled;
-			if (permission_exists('ring_group_missed_call') && $destination->valid($ring_group_missed_call_app.':'.$ring_group_missed_call_data)) {
+			if (permission_exists('ring_group_missed_call')) {
 				$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
 				$array["ring_groups"][0]["ring_group_missed_call_data"] = $ring_group_missed_call_data;
 			}
