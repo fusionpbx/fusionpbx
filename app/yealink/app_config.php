@@ -1079,5 +1079,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = ON 0 = OFF.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4351b29e-d12e-4887-bd60-3b4ae0c33784";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_inter_digit_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "#Configure the time (in seconds) the phone automatically dials out the dialed digits. It ranges from 1 to 14, the default value is 4.";
+		$y++;
 
 ?>
