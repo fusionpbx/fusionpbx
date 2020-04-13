@@ -150,12 +150,15 @@
 //get the list
 	$sql = "select d.*, d2.device_label as alternate_label ";
 	$sql .= "from v_devices as d, v_devices as d2 ";
+	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
+		$sql .= ", v_domains as d3 ";
+	}
 	$sql .= "where ( ";
 	$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
 	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
 	$sql .= ") ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-		//echo __line__."<br \>\n";
+		$sql .= " and d.domain_uuid = d3.domain_uuid ";
 	}
 	else {
 		$sql .= "and (";
@@ -285,19 +288,19 @@
 		echo "	</th>\n";
 	}
 	if ($_GET['show'] == "all" && permission_exists('device_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
-	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
+	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param);
 	if ($device_alternate) {
-		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order);
+		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
-	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
+	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $param);
 	echo "<th>". $text['label-device_profiles']."</th>\n";
-	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('device_status', $text['label-device_status'], $order_by, $order);
-	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param);
+	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
 	if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
