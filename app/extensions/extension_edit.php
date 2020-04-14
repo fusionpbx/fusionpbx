@@ -17,7 +17,8 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2019 All Rights Reserved.
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -25,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -1274,7 +1275,7 @@
 		if (permission_exists('outbound_caller_id_select')) {
 			if (count($destinations) > 0) {
 				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
-				echo "	<option value=''></option>\n";
+				echo "		<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
 					if(strlen($tmp) == 0){
@@ -1289,19 +1290,22 @@
 						}
 					}
 				}
-				echo "		</select>\n";
-				echo "<br />\n";
-				echo $text['description-outbound_caller_id_name-select']."\n";
+				echo "	</select>\n";
 			}
 			else {
 				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 			}
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
+			echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
 		}
 		echo "<br />\n";
-		echo $text['description-emergency_caller_id_name']."\n";
+		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+			echo $text['description-emergency_caller_id_name-select']."\n";
+		}
+		else {
+			echo $text['description-emergency_caller_id_name']."\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1331,8 +1335,6 @@
 					}
 				}
 				echo "		</select>\n";
-				echo "<br />\n";
-				echo $text['description-outbound_caller_id_name-select']."\n";
 			}
 			else {
 				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
@@ -1342,7 +1344,12 @@
 			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
 		}
 		echo "<br />\n";
-		echo $text['description-emergency_caller_id_number']."\n";
+		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+			echo $text['description-emergency_caller_id_number-select']."\n";
+		}
+		else {
+			echo $text['description-emergency_caller_id_number']."\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
