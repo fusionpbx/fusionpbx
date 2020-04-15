@@ -57,6 +57,42 @@
 	$language = new text;
 	$text = $language->get();
 
+//process permission reload
+	if ($_GET['action'] == 'reload' && is_uuid($_GET['group_uuid'])) {
+		if (is_array($_SESSION["groups"]) && @sizeof($_SESSION["groups"]) != 0) {
+			//clear current permissions
+				unset($_SESSION['permissions'], $_SESSION['user']['permissions']);
+			//get the permissions assigned to the groups that the current user is a member of, set the permissions in session variables
+				$x = 0;
+				$sql = "select distinct(permission_name) from v_group_permissions ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				foreach ($_SESSION["groups"] as $field) {
+					if (strlen($field['group_name']) > 0) {
+						$sql_where_or[] = "group_name = :group_name_".$x;
+						$parameters['group_name_'.$x] = $field['group_name'];
+						$x++;
+					}
+				}
+				if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+					$sql .= "and (".implode(' or ', $sql_where_or).") ";
+				}
+				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+				$database = new database;
+				$result = $database->select($sql, $parameters, 'all');
+				if (is_array($result) && @sizeof($result) != 0) {
+					foreach ($result as $row) {
+						$_SESSION['permissions'][$row["permission_name"]] = true;
+						$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
+					}
+				}
+				unset($sql, $parameters, $result, $row);
+			//set message and redirect
+				message::add($text['message-permissions_reloaded'],'positive');
+				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']));
+				exit;
+		}
+	}
+
 //get the http post data
 	if (is_array($_POST['group_permissions'])) {
 		$action = $_POST['action'];
@@ -205,9 +241,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-group_permissions']." (".escape($group_name).")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-sm-dn','link'=>'groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-sm-dn','link'=>'groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>'key','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload']);
 	if (permission_exists('group_member_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>'margin-left: 15px;','link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
