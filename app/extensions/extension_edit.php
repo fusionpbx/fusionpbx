@@ -969,17 +969,18 @@
 			echo "		</table>\n";
 			echo "		<br />\n";
 		}
-
-		echo "			<select name='extension_users[0][user_uuid]' id='user_uuid' class='formfld' style='width: auto;'>\n";
-		echo "			<option value=''></option>\n";
-		foreach($users as $field) {
-			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+		if (is_array($users) && @sizeof($users) != 0) {
+			echo "			<select name='extension_users[0][user_uuid]' id='user_uuid' class='formfld' style='width: auto;'>\n";
+			echo "			<option value=''></option>\n";
+			foreach($users as $field) {
+				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+			}
+			echo "			</select>";
+			if ($action == "update") {
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+			}
+			echo "			<br>\n";
 		}
-		echo "			</select>";
-		if ($action == "update") {
-			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-		}
-		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
 		echo "			<br />\n";
 		echo "		</td>";
