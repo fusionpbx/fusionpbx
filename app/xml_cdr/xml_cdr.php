@@ -388,7 +388,7 @@
 		if (permission_exists('caller_destination')) {
 			echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, null, $param);
 		}
-		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
+//		echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
 		if (permission_exists('recording_play') || permission_exists('recording_download')) {
 			echo "<th>".$text['label-recording']."</th>\n";
 			$col_count++;
@@ -570,7 +570,7 @@
 					echo "		</a>";
 					echo "	</td>\n";
 				}
-			//destination
+/*			//destination
 			
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
@@ -582,6 +582,7 @@
 				}
 				echo "		</a>\n";
 				echo "	</td>\n";
+ */			
 			//recording
 				if (permission_exists('recording_play') || permission_exists('recording_download')) {
 					if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
@@ -625,9 +626,9 @@
 					$accountcode = (strlen($row["accountcode"])?$row["accountcode"]:$_SESSION[domain_name]);
 					$database->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
 					$database->result = $database->execute();
-					$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
+					$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'ARS');
 					$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:
-						(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
+						(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'ARS')
 					);
 					unset($database->sql);
 					unset($database->result);
@@ -663,15 +664,17 @@
 					$database->table = "v_lcr";
 					$database->sql = "SELECT currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='$lcr_direction' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 					$database->result = $database->execute();
-					// print "<pre>"; print $database->sql . ":";print "[".$database->result[0]['currency']."]"; print_r($array); print "</pre>";
+					//print $database->result;
+					//print "<pre>"; print $database->result . ":";print $database->sql . ":";print "[".$database->result[0]['currency']."]"; print_r($array); print "</pre>";
 
 					$lcr_currency = ((is_string($database->result[0]['currency']) && strlen($database->result[0]['currency']))?$database->result[0]['currency']:
-						(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
+						(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'ARS')
 					);      //billed currency
 					unset($database->sql);
 					unset($database->result);
 					if ($sell_price){
-						$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
+						//$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
+						$price = $sell_price;
 					}
 					else {
 						$price = 0;

@@ -1,0 +1,57 @@
+This adds a one-click install for both the Desktop and Mobile Zoiper APPs in the User Portal. The page is accessible by end users.
+
+I used the FREE Zoiper OEM account
+
+Go to: https://oem.zoiper.com/
+Sign up for Login
+Configure your Desktop and Mobile Apps with the information you want.
+Then click "CONFIGURE" Under Desktop. 
+This will give you a LINK with a PAGE ID:
+https://www.zoiper.com/en/page/MYPAGEID?u=&h=&p=&o=&t=&x=&a=&tr="
+Copy the page ID
+
+Then click "CONFIGURE" Under Mobile. 
+This will give you a LINK with a MOBILE PAGE ID:
+https://www.zoiper.com/en/page/MYMOBILEPAGEID?u=&h=&p=&o=&t=&x=&a=&tr="
+Copy the mobile page ID
+
+On your server
+git clone https://github.com/fusionpbx/fusionpbx-apps
+Copy or move the directory 'zoiper' into your main FusionPBX directory
+cp -R fusionpbx-apps/zoiper /var/www/fusionpbx/app
+chown -R www-data:www-data /var/www/fusionpbx/app/zoiper
+
+Log into the FusionPBX webpage
+Advanced -> Upgrade
+Menu Defaults and Permission Defaults.
+Log out and back in
+
+Advanced -> Default Settings
+Add a Default Setting
+
+Category: zoiper
+Subcategory: page_id
+Type: text
+Value: MYPAGEID
+Enabled: True
+Save
+
+Category: zoiper
+Subcategory: provider_id
+Type: text
+Value: MYMOBILEPAGEID
+Enabled: True
+Save
+
+Category: zoiper
+Subcategory: outbound_proxy
+Type: text
+Value: OUTBOUND PROXY SETTING
+Enabled: True
+Save
+
+Then go to Apps -> Zoiper
+Superadmin will see a list of ALL USER EXTENSIONS
+Users will only see the extensions assigned to them.
+
+Click on a link and it will take you to the Zoiper Site. Follow instructions there to download and install.

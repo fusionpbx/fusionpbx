@@ -105,16 +105,8 @@
 
 		//parse the xml to get the call detail record info
 			try {
-				//send info to lthe log
 				xml_cdr_log($xml_string);
-
-				//disable xml entities
-				libxml_disable_entity_loader(true);
-
-				//load the string into an xml object
-				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
-
-				//send info to the log
+				$xml = simplexml_load_string($xml_string);
 				xml_cdr_log("\nxml load done\n");
 			}
 			catch(Exception $e) {
@@ -287,19 +279,24 @@
 					$fields = explode(",", $field);
 					$field_name = end($fields);
 					if (count($fields) == 1) {
-						$database->fields[$field_name] = urldecode($array['variables'][$fields[0]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array['variables'][$fields[0]]);
 					}
 					if (count($fields) == 2) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]]);
 					}
 					if (count($fields) == 3) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][0][$fields[1]][$fields[2]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][0][$fields[1]][$fields[2]]);
 					}
 					if (count($fields) == 4) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]]);
 					}
 					if (count($fields) == 5) {
-						$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]][$fields[4]]);
+						if (is_null($database->fields[$field_name]))
+							$database->fields[$field_name] = urldecode($array[$fields[0]][$fields[1]][$fields[2]][$fields[3]][$fields[4]]);
 					}
 				}
 			}
@@ -685,11 +682,7 @@
 
 				//parse the xml to get the call detail record info
 					try {
-						//disable xml entities
-						libxml_disable_entity_loader(true);
-
-						//load the string into an xml object
-						$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+						$conf_xml = simplexml_load_string($conf_xml_string);
 					}
 					catch(Exception $e) {
 						echo $e->getMessage();

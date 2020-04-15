@@ -348,9 +348,7 @@
 									}
 									$array["extensions"][$i]["hold_music"] = $hold_music;
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
-									if (permission_exists("extension_cidr")) {
-										$array["extensions"][$i]["cidr"] = $cidr;
-									}
+									$array["extensions"][$i]["cidr"] = $cidr;
 									$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
 									$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
 									if (permission_exists('extension_nibble_account')) {
@@ -528,12 +526,6 @@
 					// echo "<pre>".print_r($array, true)."<pre>\n";
 					// echo "<pre>".print_r($message, true)."<pre>\n";
 					// die();
-
-				// reload ACL if allowed
-					if (permission_exists("extension_cidr")) {
-						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						if ($fp) { event_socket_request($fp, "api reloadacl"); }
-					}
 
 				//check the permissions
 					if (permission_exists('extension_add') || permission_exists('extension_edit')) {

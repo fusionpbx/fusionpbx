@@ -154,7 +154,9 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "sip_hangup_disposition";
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
-					$this->fields[] = $field;
+					if (!in_array($field, $this->fields)){
+						$this->fields[] = $field;
+					}
 				}
 			}
 		}
@@ -232,11 +234,9 @@ if (!class_exists('xml_cdr')) {
 
 			//parse the xml to get the call detail record info
 				try {
-					//disable xml entities
-					libxml_disable_entity_loader(true);
-
-					//load the string into an xml object
-					$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+					//$this->log($xml_string);
+					$xml = simplexml_load_string($xml_string);
+					//$this->log("\nxml load done\n");
 				}
 				catch(Exception $e) {
 					echo $e->getMessage();
@@ -394,15 +394,19 @@ if (!class_exists('xml_cdr')) {
 							foreach ($_SESSION['cdr']['field'] as $field) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
-								$this->fields[] = $field_name;
+								if (!in_array($field_name, $this->fields))
+									$this->fields[] = $field_name;
 								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
 								}
 								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
 								}
 								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
 								}
 							}
 						}

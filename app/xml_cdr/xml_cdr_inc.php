@@ -404,6 +404,10 @@
 	if (permission_exists("xml_cdr_mos")) {
 		$sql .= "c.rtp_audio_in_mos, \n";
 	}
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+	        $sql .= "carrier_name, call_buy, call_sell_local_currency as call_sell, ";
+//	        $sql .= "carrier_name, call_buy, call_sell, ";
+	}
 	$sql .= "(c.answer_epoch - c.start_epoch) as tta ";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
 		$sql .= ", c.domain_name \n";

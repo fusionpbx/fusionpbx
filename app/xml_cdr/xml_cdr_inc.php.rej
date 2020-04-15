@@ -1,0 +1,12 @@
+--- app/xml_cdr/xml_cdr_inc.php.original	2017-04-01 15:40:39.102971598 -0400
++++ app/xml_cdr/xml_cdr_inc.php	2017-04-01 15:41:28.274667060 -0400
+@@ -387,6 +387,9 @@
+ 	if (permission_exists("xml_cdr_mos")) {
+ 		$sql .= "rtp_audio_in_mos, ";
+ 	}
++	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
++		$sql .= "carrier_name, call_buy, call_sell, ";
++	}
+ 	$sql .= "(answer_epoch - start_epoch) as tta ";
+ 	if ($_REQUEST['showall'] == "true" && permission_exists('xml_cdr_all')) {
+ 		$sql .= ", domain_name ";
