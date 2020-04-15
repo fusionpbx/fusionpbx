@@ -2374,4 +2374,25 @@ $text['button-restore_default']['ru-ru'] = "Восстановить значе�
 $text['button-restore_default']['sv-se'] = "Återställ Standard";
 $text['button-restore_default']['uk-ua'] = "Відновити значення за замовчуванням";
 
+$text['message-permissions_reloaded']['en-us'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['en-gb'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['ar-eg'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['de-at'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['de-ch'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['de-de'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['es-cl'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['es-mx'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['fr-ca'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['fr-fr'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['he-il'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['it-it'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['nl-nl'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['pl-pl'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['pt-br'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['pt-pt'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['ro-ro'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['ru-ru'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['sv-se'] = "Permissions Reloaded";
+$text['message-permissions_reloaded']['uk-ua'] = "Permissions Reloaded";
+
 ?>
