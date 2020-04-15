@@ -312,7 +312,8 @@
 						'INCOMPATIBLE_DESTINATION',
 						'USER_NOT_REGISTERED',
 						'SYSTEM_SHUTDOWN',
-						'MANDATORY_IE_MISSING'
+						'MANDATORY_IE_MISSING',
+						'REQUESTED_CHAN_UNAVAIL'
 						);
 					sort($cdr_status_options);
 					foreach ($cdr_status_options as $cdr_status) {
