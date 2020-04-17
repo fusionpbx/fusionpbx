@@ -1013,7 +1013,7 @@
 		echo "	</tr>";
 	}
 
-	if (permission_exists('message_view')) {
+	if (permission_exists('message_key')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
 		echo "		<td class='vtable'>\n";
