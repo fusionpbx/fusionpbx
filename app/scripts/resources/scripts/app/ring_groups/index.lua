@@ -920,7 +920,7 @@
 								if (tonumber(ring_group_call_timeout) == timeout) then
 									break;	
 								end
-				
+
 							--send the call to the destination
 								if (user_exists == "true") then
 									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction="..call_direction..",dialed_extension=" .. destination_number .. ",domain_name="..domain_name..",domain_uuid="..domain_uuid..row.record_session.."]user/" .. destination_number .. "@" .. domain_name;
