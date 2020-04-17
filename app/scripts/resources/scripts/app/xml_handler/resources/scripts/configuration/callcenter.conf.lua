@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015-2018 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -184,14 +184,14 @@
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								tmp_pos = string.find(agent_contact, "}");
 								tmp_first = string.sub(agent_contact, 0, tmp_pos);
 								tmp_last = string.sub(agent_contact, tmp_pos);
 								agent_contact = tmp_first..',call_timeout='..agent_call_timeout..tmp_last;
-								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							end
 						else
 							--found
