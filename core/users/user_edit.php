@@ -136,7 +136,7 @@
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_enabled = $_POST["user_enabled"];
 			$api_key = $_POST["api_key"];
-			if (permission_exists('message_view')) {
+			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
 
@@ -329,7 +329,7 @@
 			unset($sql, $parameters, $row);
 
 		//check to see if message key is set
-			if (permission_exists('message_view')) {
+			if (permission_exists('message_key')) {
 				$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
 				$sql .= "where user_setting_category = 'message' ";
 				$sql .= "and user_setting_subcategory = 'key' ";
