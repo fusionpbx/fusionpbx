@@ -984,17 +984,17 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		cursor: pointer;
 		}
 
-	div.domains_list_item span.domain_list_item_description, 
-	div.domains_list_item_active span.domain_list_item_description, 
+	div.domains_list_item span.domain_list_item_description,
+	div.domains_list_item_active span.domain_list_item_description,
 	div.domains_list_item_inactive span.domain_list_item_description,
-	
+
 	div.domains_list_item_active span.domain_active_list_item_description,
 	div.domains_list_item_inactive span.domain_inactive_list_item_description {
 		font-size: 11px;
 		}
 
-	div.domains_list_item span.domain_list_item_description, 
-	div.domains_list_item_active span.domain_list_item_description, 
+	div.domains_list_item span.domain_list_item_description,
+	div.domains_list_item_active span.domain_list_item_description,
 	div.domains_list_item_inactive span.domain_list_item_description {
 		color: #999;
 		}
@@ -1023,7 +1023,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	div.domains_list_item_active:hover span {
 		color: <?php echo ($_SESSION['theme']['domain_active_text_color_hover']['text']); ?>;
 	}
-	
+
 	div.domains_list_item_inactive:hover a,
 	div.domains_list_item_inactive:hover span {
 		color: <?php echo ($_SESSION['theme']['domain_inactive_text_color_hover']['text']); ?>;
