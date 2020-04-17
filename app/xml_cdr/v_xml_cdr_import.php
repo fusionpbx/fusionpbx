@@ -230,11 +230,6 @@
 				if ($i == 0) {
 					$context = urldecode($row->caller_profile->context);
 					$destination_number = urldecode($row->caller_profile->destination_number);
-					if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
-						$provider_prefix = $xml->variables->provider_prefix;
-						$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
-					}
-					$database->fields['destination_number'] = $destination_number;
 					$database->fields['context'] = $context;
 					$database->fields['network_addr'] = urldecode($row->caller_profile->network_addr);
 				}
@@ -251,12 +246,18 @@
 		//if last_sent_callee_id_number is set use it for the destination_number
 			if (($leg == 'a') && (strlen($xml->variables->last_sent_callee_id_number) > 0)) {
 				$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
-				if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
-					$provider_prefix = $xml->variables->provider_prefix;
+			}
+
+		//remove the provider prefix
+			if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
+				$provider_prefix = $xml->variables->provider_prefix;
+				if ($provider_prefix == substr($destination_number, 0, strlen($provider_prefix))) {
 					$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
 				}
-				$database->fields['destination_number'] = $destination_number;
 			}
+
+		//store the destination_number
+			$database->fields['destination_number'] = $destination_number;
 
 		//store the call leg
 			$database->fields['leg'] = $leg;
