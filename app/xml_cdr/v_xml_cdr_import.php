@@ -138,6 +138,7 @@
 
 		//caller info
 			$database->fields['caller_destination'] = urldecode($xml->variables->caller_destination);
+
 		//misc
 			$uuid = urldecode($xml->variables->uuid);
 			$database->fields['xml_cdr_uuid'] = $uuid;
@@ -147,6 +148,7 @@
 			//$database->fields['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 			$database->fields['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 			$database->fields['pin_number'] = urldecode($xml->variables->pin_number);
+
 		//time
 			$database->fields['start_epoch'] = urldecode($xml->variables->start_epoch);
 			$start_stamp = urldecode($xml->variables->start_stamp);
@@ -159,6 +161,7 @@
 			$database->fields['mduration'] = urldecode($xml->variables->mduration);
 			$database->fields['billsec'] = urldecode($xml->variables->billsec);
 			$database->fields['billmsec'] = urldecode($xml->variables->billmsec);
+
 		//codecs
 			$database->fields['read_codec'] = urldecode($xml->variables->read_codec);
 			$database->fields['read_rate'] = urldecode($xml->variables->read_rate);
@@ -167,6 +170,7 @@
 			$database->fields['remote_media_ip'] = urldecode($xml->variables->remote_media_ip);
 			$database->fields['hangup_cause'] = urldecode($xml->variables->hangup_cause);
 			$database->fields['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
+
 		//call center
 			$database->fields['cc_side'] = urldecode($xml->variables->cc_side);
 			$database->fields['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -183,13 +187,16 @@
 			$database->fields['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
 			$database->fields['cc_cause'] = urldecode($xml->variables->cc_cause);
 			$database->fields['waitsec'] = urldecode($xml->variables->waitsec);
+
 		//app info
 			$database->fields['last_app'] = urldecode($xml->variables->last_app);
 			$database->fields['last_arg'] = urldecode($xml->variables->last_arg);
+
 		//conference
 			$database->fields['conference_name'] = urldecode($xml->variables->conference_name);
 			$database->fields['conference_uuid'] = urldecode($xml->variables->conference_uuid);
 			$database->fields['conference_member_id'] = urldecode($xml->variables->conference_member_id);
+
 		//call quality
 			$rtp_audio_in_mos = urldecode($xml->variables->rtp_audio_in_mos);
 			if (strlen($rtp_audio_in_mos) > 0) {
@@ -222,7 +229,12 @@
 			foreach ($xml->callflow as $row) {
 				if ($i == 0) {
 					$context = urldecode($row->caller_profile->context);
-					$database->fields['destination_number'] = urldecode($row->caller_profile->destination_number);
+					$destination_number = urldecode($row->caller_profile->destination_number);
+					if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
+						$provider_prefix = $xml->variables->provider_prefix;
+						$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
+					}
+					$database->fields['destination_number'] = $destination_number;
 					$database->fields['context'] = $context;
 					$database->fields['network_addr'] = urldecode($row->caller_profile->network_addr);
 				}
@@ -238,7 +250,12 @@
 
 		//if last_sent_callee_id_number is set use it for the destination_number
 			if (($leg == 'a') && (strlen($xml->variables->last_sent_callee_id_number) > 0)) {
-				$database->fields['destination_number'] = urldecode($xml->variables->last_sent_callee_id_number);
+				$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
+				if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
+					$provider_prefix = $xml->variables->provider_prefix;
+					$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
+				}
+				$database->fields['destination_number'] = $destination_number;
 			}
 
 		//store the call leg
@@ -614,6 +631,7 @@
 					return;
 				}
 			}
+
 		//loop through all attribues
 			//foreach($xml->settings->param[1]->attributes() as $a => $b) {
 			//		echo $a,'="',$b,"\"<br />\n";
@@ -631,6 +649,7 @@
 			}
 
 			xml_cdr_log("process cdr via post\n");
+
 		//parse the xml and insert the data into the db
 			process_xml_cdr($db, $leg, $xml_string);
 	}
