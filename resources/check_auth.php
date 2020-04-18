@@ -261,8 +261,10 @@
 					exit();
 				}
 				else if ($_SESSION['login']['destination']['url'] != '') {
-					header("Location: ".$_SESSION['login']['destination']['url']);
-					exit();
+					if (isset($_SESSION["username"]) && (strlen($_SESSION["username"]) > 0)) {
+						header("Location: ".$_SESSION['login']['destination']['url']);
+						exit();
+					}
 				}
 			}
 
