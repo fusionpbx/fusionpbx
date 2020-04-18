@@ -2024,4 +2024,25 @@ $text['button-add_member']['ru-ru'] = "Добавить участника";
 $text['button-add_member']['sv-se'] = "Lägg Till Medlem";
 $text['button-add_member']['uk-ua'] = "Додати учасника";
 
+$text['button-permissions']['en-us'] = "Permissions";
+$text['button-permissions']['en-gb'] = "Permissions";
+$text['button-permissions']['ar-eg'] = "";
+$text['button-permissions']['de-at'] = "Berechtigungen"; //copied from de-de
+$text['button-permissions']['de-ch'] = "Berechtigungen"; //copied from de-de
+$text['button-permissions']['de-de'] = "Berechtigungen";
+$text['button-permissions']['es-cl'] = "Permisos";
+$text['button-permissions']['es-mx'] = "Permisos"; //copied from es-cl
+$text['button-permissions']['fr-ca'] = "Permissions"; //copied from fr-fr
+$text['button-permissions']['fr-fr'] = "Permissions";
+$text['button-permissions']['he-il'] = "הרשאות";
+$text['button-permissions']['it-it'] = "Permessi";
+$text['button-permissions']['nl-nl'] = "";
+$text['button-permissions']['pl-pl'] = "Uprawnienia";
+$text['button-permissions']['pt-br'] = "Permissões"; //copied from pt-pt
+$text['button-permissions']['pt-pt'] = "Permissões";
+$text['button-permissions']['ro-ro'] = "";
+$text['button-permissions']['ru-ru'] = "Права";
+$text['button-permissions']['sv-se'] = "Rättigheter";
+$text['button-permissions']['uk-ua'] = "Привілеї";
+
 ?>

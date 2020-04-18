@@ -251,6 +251,15 @@
 		$view->assign('login_page', $login_page);
 	//messages
 		$view->assign('messages', message::html(true, '		'));
+	//session timer
+		if (
+			$authenticated &&
+			file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/session_timer/session_timer.php') &&
+			$_SESSION['security']['session_timer_enabled']['boolean'] == 'true'
+			) {
+			include_once PROJECT_PATH.'app/session_timer/session_timer.php';
+			$view->assign('session_timer', $session_timer);
+		}
 
 	//render the view
 		$output = $view->render('template.php');
