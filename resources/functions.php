@@ -1019,7 +1019,7 @@ function number_pad($number,$n) {
 // validate email address syntax
 	if(!function_exists('valid_email')) {
 		function valid_email($email) {
-			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+(\.[A-z0-9]{2,6})?$/';
+			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+(\.[A-z0-9]{2,7})?$/';
 			if ($email != "" && preg_match($regex, $email) == 1) {
 				return true; // email address has valid syntax
 			}
@@ -1349,7 +1349,7 @@ function number_pad($number,$n) {
 			include_once("resources/phpmailer/class.phpmailer.php");
 			include_once("resources/phpmailer/class.smtp.php");
 
-			$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
+			$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,7}$/';
 
 			$mail = new PHPMailer();
 			$mail -> IsSMTP();
