@@ -28,6 +28,12 @@
 	$language = new text;
 	$text = $language->get(null,'core/user_settings');
 
+//check if redirect
+if ($_REQUEST["path"]) {
+	header("Location: ".urldecode($_REQUEST["path"]));
+	exit;
+}
+
 //get action, if any
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
