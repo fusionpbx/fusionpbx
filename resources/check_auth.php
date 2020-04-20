@@ -39,7 +39,6 @@
 	if (!isset($_SESSION)) { session_start(); }
 
 //define variables
-	if (!isset($_SESSION['login']['destination']['url'])) { $_SESSION['login']['destination']['url'] = null; }
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
 //if the username is not provided then send to login.php
@@ -260,12 +259,6 @@
 					header("Location: ".$path);
 					exit();
 				}
-				else if ($_SESSION['login']['destination']['url'] != '') {
-					if (isset($_SESSION["username"]) && (strlen($_SESSION["username"]) > 0)) {
-						header("Location: ".$_SESSION['login']['destination']['url']);
-						exit();
-					}
-				}
 			}
 
 		//get the domains
@@ -284,11 +277,6 @@
 	else {
 		//set the user defined time zone
 		date_default_timezone_set($_SESSION["time_zone"]["user"]);
-	}
-
-//hide the path unless logged in as a superadmin.
-	if (!if_group("superadmin")) {
-		$v_path_show = false;
 	}
 
 ?>
