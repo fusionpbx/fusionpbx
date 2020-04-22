@@ -437,7 +437,7 @@
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
 					else
-						sql_order = 'random()' --both postgresql and sqlite uses random() instead of rand()
+						sql_order = 'random() * random()' --both postgresql and sqlite uses random() instead of rand()
 					end
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
@@ -741,7 +741,8 @@
 					--set confirm
 						if (ring_group_strategy == "simultaneous"
 							or ring_group_strategy == "sequence"
-							or ring_group_strategy == "rollover") then
+							or ring_group_strategy == "rollover"
+							or ring_group_strategy == "random") then
 								session:execute("set", "group_confirm_key=exec");
 								session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
 						end
