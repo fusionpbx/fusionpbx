@@ -151,7 +151,7 @@
 		<!-- <param name="core-db-name" value="/dev/shm/core.db" /> -->
 
 		<!-- The system will create all the db schemas automatically, set this to false to avoid this behaviour -->
-		<!-- <param name="auto-create-schemas" value="true"/> -->
+		<param name="auto-create-schemas" value="true"/>
 		<!-- <param name="auto-clear-sql" value="true"/> -->
 		<!-- <param name="enable-early-hangup" value="true"/> -->
 

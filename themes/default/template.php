@@ -802,6 +802,9 @@
 		});
 		{/literal}
 
+	{*//session timer *}
+		{$session_timer}
+
 	</script>
 
 </head>

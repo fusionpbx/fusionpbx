@@ -250,11 +250,13 @@
 			$queue_timeout_data = implode($action_array);
 
 		//add the recording path if needed
-			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting)) {
-				$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting;
-			}
-			else if (trim($queue_greeting) != '') {
-				$queue_greeting_path = $queue_greeting;
+			if ($queue_greeting != '') {
+				if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting)) {
+					$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting;
+				}
+				else {
+					$queue_greeting_path = trim($queue_greeting);
+				}
 			}
 
 		//prepare the array

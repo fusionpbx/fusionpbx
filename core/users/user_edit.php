@@ -136,7 +136,7 @@
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_enabled = $_POST["user_enabled"];
 			$api_key = $_POST["api_key"];
-			if (permission_exists('message_view')) {
+			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
 
@@ -329,7 +329,7 @@
 			unset($sql, $parameters, $row);
 
 		//check to see if message key is set
-			if (permission_exists('message_view')) {
+			if (permission_exists('message_key')) {
 				$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
 				$sql .= "where user_setting_category = 'message' ";
 				$sql .= "and user_setting_subcategory = 'key' ";
@@ -670,12 +670,18 @@
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'users.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'users.php']);
 	}
+	$button_margin = 'margin-left: 15px;';
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-tickets'],'icon'=>'tags','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/tickets/tickets.php?user_uuid='.urlencode($user_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-tickets'],'icon'=>'tags','style'=>$button_margin,'link'=>PROJECT_PATH.'/app/tickets/tickets.php?user_uuid='.urlencode($user_uuid)]);
+		unset($button_margin);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','onclick'=>'submit_form();']);
+	if (permission_exists('user_permissions') && file_exists('../../app/user_permissions/user_permissions.php')) {
+		echo button::create(['type'=>'button','label'=>$text['button-permissions'],'icon'=>'key','style'=>$button_margin,'link'=>PROJECT_PATH.'/app/user_permissions/user_permissions.php?id='.urlencode($user_uuid)]);
+		unset($button_margin);
+	}
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -1013,7 +1019,7 @@
 		echo "	</tr>";
 	}
 
-	if (permission_exists('message_view')) {
+	if (permission_exists('message_key')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-message_key']."</td>";
 		echo "		<td class='vtable'>\n";
@@ -1032,8 +1038,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='user_enabled'>\n";
-	echo "		<option value='true'>".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(($user_enabled != "true") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".(($user_enabled == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".(($user_enabled == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
@@ -1059,16 +1065,7 @@
 	}
 
 	echo "<script>\n";
-//uuid generation script
-	echo "function uuid() {\n";
-	echo "	var d = new Date().getTime();\n";
-	echo "	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n";
-	echo "		var r = (d + Math.random()*16)%16 | 0;\n";
-	echo "		d = Math.floor(d/16);\n";
-	echo "		return (c=='x' ? r : (r&0x3|0x8)).toString(16);\n";
-	echo "	});\n";
-	echo "	return uuid;\n";
-	echo "};\n";
+
 //hide password fields before submit
 	echo "	function submit_form() {\n";
 	echo "		hide_password_fields();\n";

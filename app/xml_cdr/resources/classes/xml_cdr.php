@@ -303,6 +303,14 @@ if (!class_exists('xml_cdr')) {
 							$destination_number = urldecode($xml->variables->last_sent_callee_id_number);
 						}
 
+					//remove the provider prefix
+						if (isset($xml->variables->provider_prefix) && isset($destination_number)) {
+							$provider_prefix = $xml->variables->provider_prefix;
+							if ($provider_prefix == substr($destination_number, 0, strlen($provider_prefix))) {
+								$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
+							}
+						}
+
 					//set missed calls
 						$missed_call = 'false';
 						if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {

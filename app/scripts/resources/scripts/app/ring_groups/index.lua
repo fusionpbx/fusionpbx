@@ -903,6 +903,18 @@
 								user_exists = row.user_exists;
 								destination_number = row.destination_number;
 								domain_name = row.domain_name;
+								destination_prompt = row.destination_prompt;
+
+							--determine confirm prompt
+								if (destination_prompt == nil) then
+									group_confirm = "confirm=false,";
+								elseif (destination_prompt == "1") then
+									group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+								elseif (destination_prompt == "2") then
+									group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+								else
+									group_confirm = "confirm=false,";
+								end
 
 							--if the timeout was reached exit the loop and go to the timeout action
 								if (tonumber(ring_group_call_timeout) == timeout) then
