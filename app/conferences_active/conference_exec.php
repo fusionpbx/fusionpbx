@@ -1,9 +1,6 @@
 <?php
 /* $Id$ */
 /*
-	v_exec.php
-	Copyright (C) 2008 Mark J Crane
-	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -30,7 +27,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -163,8 +160,9 @@
 		$session_uuid = $xml->conference['uuid'];
 		$x = 0;
 		foreach ($xml->conference->members->member as $row) {
-			if (is_uuid($row->uuid)) {
-				$switch_result = event_socket_request($fp, 'api uuid_kill '.$row->uuid);
+			$uuid = (string)$row->uuid;
+			if (is_uuid($uuid)) {
+				$switch_result = event_socket_request($fp, 'api uuid_kill '.$uuid);
 			}
 			if ($x < 1) {
 				usleep(500000); //500000 = 0.5 seconds
@@ -174,6 +172,7 @@
 			}
 			$x++;
 		}
+		unset($uuid);
 	}
 
 //execute the command
