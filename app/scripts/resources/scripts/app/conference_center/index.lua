@@ -489,6 +489,8 @@
 						max_tries = 1;
 						digit_timeout = 5000;
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", prompt_audio_file, "", "\\d+");
+						--remove non numerics
+						pin_number = pin_number:gsub("%p","")
 					end
 				--use the pin_number to find the conference room
 					if (pin_number ~= "") then
