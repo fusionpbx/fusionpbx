@@ -437,7 +437,7 @@
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
 					else
-						sql_order = 'random() * random()' --both postgresql and sqlite uses random() instead of rand()
+						sql_order = 'random() * 1000000' --both postgresql and sqlite uses random() instead of rand()
 					end
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
