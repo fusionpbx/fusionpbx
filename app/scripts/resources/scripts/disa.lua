@@ -206,6 +206,7 @@
 				session:execute("set", "outbound_caller_id_number="..caller_id_number);
 				session:execute("set", "effective_caller_id_number="..caller_id_number);
 			end
+                        session:execute("set","disa_outbound=true");
 			session:execute("transfer", destination_number .. " XML " .. context);
 		end
 	end
