@@ -1288,7 +1288,7 @@ include "root.php";
 														}
 														elseif ($array_value === "user_uuid()") {
 															$sql .= ':'.$array_key.", ";
-															$params[$array_key] = $_SESSION['username'];
+															$params[$array_key] = $_SESSION['user_uuid'];
 														}
 														elseif ($array_value === "remote_address()") {
 															$sql .= ':'.$array_key.", ";
@@ -1376,7 +1376,7 @@ include "root.php";
 														}
 														elseif ($array_value === "user_uuid()") {
 															$sql .= $array_key." = :".$array_key.", ";
-															$params[$array_key] = $_SESSION['username'];
+															$params[$array_key] = $_SESSION['user_uuid'];
 														}
 														elseif ($array_value === "remote_address()") {
 															$sql .= $array_key." = :".$array_key.", ";
@@ -1534,7 +1534,7 @@ include "root.php";
 																			}
 																			elseif ($v === "user_uuid()") {
 																				$sql .= $k." = :".$k.", ";
-																				$params[$k] = $_SESSION['username'];
+																				$params[$k] = $_SESSION['user_uuid'];
 																			}
 																			elseif ($v === "remote_address()") {
 																				$sql .= $k." = :".$k.", ";
@@ -1659,7 +1659,7 @@ include "root.php";
 																		}
 																		elseif ($v === "user_uuid()") {
 																			$sql .= ':'.$k.", ";
-																			$params[$k] = $_SESSION['username'];
+																			$params[$k] = $_SESSION['user_uuid'];
 																		}
 																		elseif ($v === "remote_address()") {
 																			$sql .= ':'.$k.", ";
