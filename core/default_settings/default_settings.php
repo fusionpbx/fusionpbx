@@ -105,7 +105,7 @@
 
 //get the list
 	$sql = str_replace('count(default_setting_uuid)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'default_setting_category', 'asc');
+	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$default_settings = $database->select($sql, $parameters, 'all');
