@@ -346,8 +346,29 @@
 				domain_uuid = string.lower(row["domain_uuid"]);
 			end);
 
-		--get the message count and send the mwi event
-			message_waiting(voicemail_id, domain_uuid);
+		--get voicemail message details
+			if (voicemail_id) then
+				local sql = [[SELECT * FROM v_voicemails
+					WHERE domain_uuid = :domain_uuid
+					AND voicemail_id = :voicemail_id]]
+				local params = {domain_uuid = domain_uuid, voicemail_id = id};
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				end
+				dbh:query(sql, params, function(row)
+					voicemail_local_after_email = row["voicemail_local_after_email"];
+				end);
+
+			--set default values
+				if (voicemail_local_after_email == nil) then
+					voicemail_local_after_email = "true";
+				end
+
+			--get the message count and send the mwi event
+				if (voicemail_local_after_email == 'true') then
+					message_waiting(voicemail_id, domain_uuid);
+				end
+			end
 	end
 
 --check messages
