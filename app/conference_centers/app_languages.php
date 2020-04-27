@@ -527,6 +527,27 @@ $text['label-wait_for_moderator']['ru-ru'] = "Ждать модератора";
 $text['label-wait_for_moderator']['sv-se'] = "Vänta på Moderator";
 $text['label-wait_for_moderator']['uk-ua'] = "Очікування на модератора";
 
+$text['label-mod_endconf']['en-us'] = "Moderator endconf";
+$text['label-mod_endconf']['en-gb'] = "Moderator endconf";
+$text['label-mod_endconf']['ar-eg'] = "";
+$text['label-mod_endconf']['de-at'] = ""; //copied from de-de
+$text['label-mod_endconf']['de-ch'] = ""; //copied from de-de
+$text['label-mod_endconf']['de-de'] = "";
+$text['label-mod_endconf']['es-cl'] = "";
+$text['label-mod_endconf']['es-mx'] = ""; //copied from es-cl
+$text['label-mod_endconf']['fr-ca'] = ""; //copied from fr-fr
+$text['label-mod_endconf']['fr-fr'] = "";
+$text['label-mod_endconf']['he-il'] = "";
+$text['label-mod_endconf']['it-it'] = "";
+$text['label-mod_endconf']['nl-nl'] = "";
+$text['label-mod_endconf']['pl-pl'] = "";
+$text['label-mod_endconf']['pt-br'] = "";
+$text['label-mod_endconf']['pt-pt'] = "";
+$text['label-mod_endconf']['ro-ro'] = "";
+$text['label-mod_endconf']['ru-ru'] = "";
+$text['label-mod_endconf']['sv-se'] = "";
+$text['label-mod_endconf']['uk-ua'] = "";
+
 $text['label-view']['en-us'] = "View";
 $text['label-view']['en-gb'] = "View";
 $text['label-view']['ar-eg'] = "";
