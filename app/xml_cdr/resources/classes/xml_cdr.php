@@ -783,8 +783,8 @@ if (!class_exists('xml_cdr')) {
 								$import = true;
 							}
 
-						//import the call detail record
-							if ($import) {
+						//import the call detail files are less than 3 mb - 3 million bytes
+							if ($import && filesize($xml_cdr_dir.'/'.$file) < 3000000) {
 								//get the xml cdr string
 									$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
@@ -796,11 +796,9 @@ if (!class_exists('xml_cdr')) {
 
 								//delete the file after it has been imported
 									unlink($xml_cdr_dir.'/'.$file);
-							}
 
-						//increment the value
-							if ($import) {
-								$x++;
+								//increment the value
+									$x++;
 							}
 
 						//if limit exceeded exit the loop
