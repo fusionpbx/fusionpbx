@@ -118,7 +118,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "conference_room_mod_endconf";
+		$apps[$x]['permissions'][$y]['name'] = "conference_room_moderator_endconf";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
@@ -315,7 +315,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Wait for the moderator to join before starting the conference.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "mod_endconf";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "moderator_endconf";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "When moderator exits end conference.";
 		$z++;
