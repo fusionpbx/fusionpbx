@@ -818,6 +818,9 @@
 					$content .= "</tr>\n";
 
 				//show the leg b only to those with the permission
+					if (!permission_exists('xml_cdr_lose_race') && $row['hangup_cause'] == 'LOSE_RACE') {
+						$content = '';
+					}
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
