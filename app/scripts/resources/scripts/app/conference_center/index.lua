@@ -568,7 +568,7 @@
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];
-					mod_endconf = row["mod_endconf"];
+					moderator_endconf = row["moderator_endconf"];
 					moderator_pin = row["moderator_pin"];
 					participant_pin = row["participant_pin"];
 					announce_name = row["announce_name"];
@@ -696,7 +696,7 @@
 						--set as the moderator
 							flags = flags .. "|moderator";
 						--when the moderator leaves end the conference
-							if (mod_endconf == "true") then
+							if (moderator_endconf == "true") then
 								flags = flags .. "|endconf";
 							end
 						--set the moderator controls
