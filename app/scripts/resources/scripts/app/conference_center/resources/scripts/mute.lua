@@ -2,7 +2,7 @@
 --get the argv values
 	script_name = argv[0];
 
---options all, last, non_moderator, member_id
+--options all, last, non_moderator, ${conference_member_id}
 	data = argv[1];
 
 --prepare the api object
