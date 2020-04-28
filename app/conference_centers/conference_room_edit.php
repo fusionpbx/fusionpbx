@@ -66,7 +66,7 @@
 		$start_datetime = $_POST["start_datetime"];
 		$stop_datetime = $_POST["stop_datetime"];
 		$wait_mod = $_POST["wait_mod"];
-		$mod_endconf = $_POST["mod_endconf"];
+		$moderator_endconf = $_POST["moderator_endconf"];
 		$announce_name = $_POST["announce_name"];
 		$announce_recording = $_POST["announce_recording"];
 		$announce_count = $_POST["announce_count"];
@@ -288,7 +288,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($record) == 0) { $record = 'false'; }
 					if (strlen($max_members) == 0) { $max_members = 0; }
 					if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
-					if (strlen($mod_endconf) == 0) { $mod_endconf = 'false'; }
+					if (strlen($moderator_endconf) == 0) { $moderator_endconf = 'false'; }
 					if (strlen($announce_name) == 0) { $announce_name = 'true'; }
 					if (strlen($announce_recording) == 0) { $announce_recording = 'true'; }
 					if (strlen($announce_count) == 0) { $announce_count = 'true'; }
@@ -329,7 +329,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
 					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
 					$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
-					$array['conference_rooms'][0]['mod_endconf'] = $mod_endconf;
+					$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
 					$array['conference_rooms'][0]['announce_name'] = $announce_name;
 					$array['conference_rooms'][0]['announce_recording'] = $announce_recording;
 					$array['conference_rooms'][0]['announce_count'] = $announce_count;
@@ -424,8 +424,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($wait_mod) > 0) {
 						$array['conference_rooms'][0]['wait_mod'] = $wait_mod;
 					}
-					if (strlen($mod_endconf) > 0) {
-						$array['conference_rooms'][0]['mod_endconf'] = $mod_endconf;
+					if (strlen($moderator_endconf) > 0) {
+						$array['conference_rooms'][0]['moderator_endconf'] = $moderator_endconf;
 					}
 					if (strlen($announce_name) > 0) {
 						$array['conference_rooms'][0]['announce_name'] = $announce_name;
@@ -508,7 +508,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$start_datetime = $row["start_datetime"];
 				$stop_datetime = $row["stop_datetime"];
 				$wait_mod = $row["wait_mod"];
-				$mod_endconf = $row["mod_endconf"];
+				$moderator_endconf = $row["moderator_endconf"];
 				$announce_name = $row["announce_name"];
 				$announce_recording = $row["announce_recording"];
 				$announce_count = $row["announce_count"];
@@ -576,7 +576,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($record) == 0) { $record = 'false'; }
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
-	if (strlen($mod_endconf) == 0) { $mod_endconf = 'false'; }
+	if (strlen($moderator_endconf) == 0) { $moderator_endconf = 'false'; }
 	if (strlen($announce_name) == 0) { $announce_name = 'true'; }
 	if (strlen($announce_recording) == 0) { $announce_recording = 'true'; }
 	if (strlen($announce_count) == 0) { $announce_count = 'true'; }
@@ -780,19 +780,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_mod_endconf')) {
+	if (permission_exists('conference_room_moderator_endconf')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-mod_endconf']."</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-moderator_endconf']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='mod_endconf'>\n";
+		echo "	<select class='formfld' name='moderator_endconf'>\n";
 		echo "	<option value=''></option>\n";
-		if ($mod_endconf == "true") {
+		if ($moderator_endconf == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($mod_endconf == "false") {
+		if ($moderator_endconf == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
