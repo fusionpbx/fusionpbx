@@ -661,7 +661,8 @@
 	$x = 0;
 	while($file = readdir($dir_handle)) {
 		if ($file != '.' && $file != '..') {
-			if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
+			//import the call detail files are less than 3 mb - 3 million bytes
+			if (!is_dir($xml_cdr_dir . '/' . $file) && filesize($xml_cdr_dir.'/'.$file) < 3000000) {
 				//get the leg of the call
 					if (substr($file, 0, 2) == "a_") {
 						$leg = "a";
