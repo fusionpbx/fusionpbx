@@ -221,7 +221,7 @@ if (!class_exists('conference_centers')) {
 		 * download the recordings
 		 */
 		public function download() {
-			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+			if (permission_exists('conference_session_play') || permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
 				//cache limiter
 					session_cache_limiter('public');
