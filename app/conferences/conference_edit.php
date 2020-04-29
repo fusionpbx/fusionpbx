@@ -57,7 +57,7 @@
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
 		$conference_member_pin = $_POST["conference_member_pin"];
-		$conference_moderator_pin = $_POST["conference_moderaror_pin"];
+		$conference_moderator_pin = $_POST["conference_moderator_pin"];
 		$conference_profile = $_POST["conference_profile"];
 		$conference_member_flags = $_POST["conference_member_flags"];
 		$conference_moderator_flags = $_POST["conference_moderator_flags"];
@@ -461,7 +461,7 @@
 	echo "	".$text['label-moderator_pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_moderaror_pin' maxlength='255' value=\"".escape($conference_moderator_pin)."\">\n";
+	echo "	<input class='formfld' type='text' name='conference_moderator_pin' maxlength='255' value=\"".escape($conference_moderator_pin)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-moderator_pin']."\n";
 	echo "</td>\n";
