@@ -192,12 +192,12 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($conferences ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('conference_name', $text['table-name'], $order_by, $order);
-	echo th_order_by('conference_extension', $text['table-extension'], $order_by, $order);
-	echo th_order_by('conference_profile', $text['table-profile'], $order_by, $order);
-	echo th_order_by('conference_order', $text['table-order'], $order_by, $order, null, "class='center'");
-	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('conference_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('conference_extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('conference_profile', $text['label-profile'], $order_by, $order);
+	echo th_order_by('conference_order', $text['label-order'], $order_by, $order, null, "class='center'");
+	echo th_order_by('conference_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('conference_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('conference_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
