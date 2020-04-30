@@ -221,7 +221,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM, 6-Preference";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba0ebf59-6364-47b2-9a98-73430669a4c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -1078,6 +1078,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = ON 0 = OFF.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4351b29e-d12e-4887-bd60-3b4ae0c33784";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_inter_digit_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "#Configure the time (in seconds) the phone automatically dials out the dialed digits. It ranges from 1 to 14, the default value is 4.";
 		$y++;
 
 ?>

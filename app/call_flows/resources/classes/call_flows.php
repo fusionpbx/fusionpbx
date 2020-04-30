@@ -29,6 +29,11 @@ if (!class_exists('call_flows')) {
 	class call_flows {
 
 		/**
+		 * declare public variables
+		 */
+		public $toggle_field;
+
+		/**
 		 * declare private variables
 		 */
 		private $app_name;
@@ -37,7 +42,6 @@ if (!class_exists('call_flows')) {
 		private $list_page;
 		private $table;
 		private $uuid_prefix;
-		private $toggle_field;
 		private $toggle_values;
 
 		/**
@@ -52,7 +56,6 @@ if (!class_exists('call_flows')) {
 				$this->list_page = 'call_flows.php';
 				$this->table = 'call_flows';
 				$this->uuid_prefix = 'call_flow_';
-				$this->toggle_field = 'call_flow_status';
 				$this->toggle_values = ['true','false'];
 
 		}
@@ -171,7 +174,6 @@ if (!class_exists('call_flows')) {
 		 */
 		public function toggle($records) {
 			if (permission_exists($this->permission_prefix.'edit')) {
-
 				//add multi-lingual support
 					$language = new text;
 					$text = $language->get();
@@ -215,8 +217,10 @@ if (!class_exists('call_flows')) {
 							foreach($call_flows as $uuid => $call_flow) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
-								$array['dialplans'][$x]['dialplan_enabled'] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								if ($this->toggle_field == 'call_flow_enabled') {
+									$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
+									$array['dialplans'][$x]['dialplan_enabled'] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+								}
 								$x++;
 							}
 

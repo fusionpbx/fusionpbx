@@ -17,29 +17,22 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018
+	Portions created by the Initial Developer are Copyright (C) 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
-	require_once "resources/require.php";
+//process this only one time
+if ($domains_processed == 1) {
 
-//check permisions
-	require_once "resources/check_auth.php";
-	if (permission_exists('call_recording_view') || permission_exists('conference_session_play')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+	//update the dialplan order
+		$database = new database;
+		$sql = "update v_call_flows set call_flow_enabled = 'true' where call_flow_enabled is null;\n";
+		$database->execute($sql);
+		unset($sql);
 
-//download
-	$obj = new conference_centers;
-	$obj->download();
+}
 
 ?>

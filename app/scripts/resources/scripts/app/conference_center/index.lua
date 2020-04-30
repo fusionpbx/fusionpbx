@@ -489,6 +489,8 @@
 						max_tries = 1;
 						digit_timeout = 5000;
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", prompt_audio_file, "", "\\d+");
+						--remove non numerics
+						pin_number = pin_number:gsub("%p","")
 					end
 				--use the pin_number to find the conference room
 					if (pin_number ~= "") then
@@ -784,8 +786,12 @@
 					end
 				--record the conference
 					if (record == "true") then
-						cmd="sched_api +5 none lua "..scripts_dir.."/app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext;
-						api:executeString(cmd);
+						if (wait_mod == "true" and member_type ~= "moderator") then
+							--don't start recording yet
+						else
+							cmd="sched_api +3 none lua "..scripts_dir.."/app/conference_center/resources/scripts/start_recording.lua "..meeting_uuid.." "..domain_name.." "..record_ext;
+							api:executeString(cmd);
+						end
 					end
 				--send the call to the conference
 					cmd = meeting_uuid.."@"..domain_name.."@"..profile.."+flags{".. flags .."}";

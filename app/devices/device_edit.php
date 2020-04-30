@@ -104,8 +104,6 @@
 				}
 				unset($sql, $parameters, $row);
 			}
-		//get assigned user
-			$device_user_uuid = $_POST["device_user_uuid"];
 		//devices
 			$domain_uuid = $_POST["domain_uuid"];
 			$device_uuid = $_POST["device_uuid"];
@@ -242,99 +240,146 @@
 				//prepare the array
 					$array['devices'][0]['domain_uuid'] = $domain_uuid;
 					$array['devices'][0]['device_uuid'] = $device_uuid;
-					$array['devices'][0]['device_mac_address'] = $device_mac_address;
+					if (permission_exists('device_mac_address')) {
+						$array['devices'][0]['device_mac_address'] = $device_mac_address;
+					}
 					//$array['devices'][0]['device_provisioned_ip'] = $device_provisioned_ip;
-					$array['devices'][0]['domain_uuid'] = $domain_uuid;
-					$array['devices'][0]['device_label'] = $device_label;
-					$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
-					$array['devices'][0]['device_username'] = $device_username;
-					$array['devices'][0]['device_password'] = $device_password;
-					$array['devices'][0]['device_vendor'] = $device_vendor;
-					$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
-					$array['devices'][0]['device_model'] = $device_model;
-					$array['devices'][0]['device_firmware_version'] = $device_firmware_version;
-					$array['devices'][0]['device_enabled'] = $device_enabled;
-					$array['devices'][0]['device_enabled_date'] = 'now()';
-					$array['devices'][0]['device_template'] = $device_template;
-					$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
-					$array['devices'][0]['device_description'] = $device_description;
+					if (permission_exists('device_label')) {
+						$array['devices'][0]['device_label'] = $device_label;
+					}
+					if (permission_exists('device_user') && is_uuid($device_user_uuid)) {
+						$array['devices'][0]['device_user_uuid'] = $device_user_uuid;
+					}
+					if (permission_exists('device_username_password')) {
+						$array['devices'][0]['device_username'] = $device_username;
+						$array['devices'][0]['device_password'] = $device_password;
+					}
+					if (permission_exists('device_vendor')) {
+						$array['devices'][0]['device_vendor'] = $device_vendor;
+					}
+					if (permission_exists('device_alternate') && is_uuid($device_uuid_alternate)) {
+						$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
+					}
+					if (permission_exists('device_model')) {
+						$array['devices'][0]['device_model'] = $device_model;
+					}
+					if (permission_exists('device_firmware')) {
+						$array['devices'][0]['device_firmware_version'] = $device_firmware_version;
+					}
+					if (permission_exists('device_enable')) {
+						$array['devices'][0]['device_enabled'] = $device_enabled;
+						$array['devices'][0]['device_enabled_date'] = 'now()';
+					}
+					if (permission_exists('device_template')) {
+						$array['devices'][0]['device_template'] = $device_template;
+					}
+					if (permission_exists('device_profile_edit') && is_uuid($device_profile_uuid)) {
+						$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
+					}
+					if (permission_exists('device_description')) {
+						$array['devices'][0]['device_description'] = $device_description;
+					}
 
-					$y = 0;
-					foreach ($device_lines as $row) {
-						if (strlen($row['line_number']) > 0) {
-							if (is_uuid($row["device_line_uuid"])) {
-								$device_line_uuid = $row["device_line_uuid"];
+					if (permission_exists('device_line_edit')) {
+						$y = 0;
+						foreach ($device_lines as $row) {
+							if (strlen($row['line_number']) > 0) {
+								if (is_uuid($row["device_line_uuid"])) {
+									$device_line_uuid = $row["device_line_uuid"];
+								}
+								else {
+									$device_line_uuid = uuid();
+								}
+								$array['devices'][0]['device_lines'][$y]['domain_uuid'] = $domain_uuid;
+								$array['devices'][0]['device_lines'][$y]['device_uuid'] = $device_uuid;
+								$array['devices'][0]['device_lines'][$y]['device_line_uuid'] = $device_line_uuid;
+								$array['devices'][0]['device_lines'][$y]['line_number'] = $row["line_number"];
+								$array['devices'][0]['device_lines'][$y]['server_address'] = $row["server_address"];
+								if (permission_exists('device_line_outbound_proxy_primary')) {
+									$array['devices'][0]['device_lines'][$y]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+								}
+								if (permission_exists('device_line_outbound_proxy_secondary')) {
+									$array['devices'][0]['device_lines'][$y]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
+								}
+								if (permission_exists('device_line_server_address_primary')) {
+									$array['devices'][0]['device_lines'][$y]['server_address_primary'] = $row["server_address_primary"];
+								}
+								if (permission_exists('device_line_server_address_secondary')) {
+									$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $row["server_address_secondary"];
+								}
+								$array['devices'][0]['device_lines'][$y]['display_name'] = $row["display_name"];
+								$array['devices'][0]['device_lines'][$y]['user_id'] = $row["user_id"];
+								if (permission_exists('device_line_auth_id')) {
+									$array['devices'][0]['device_lines'][$y]['auth_id'] = $row["auth_id"];
+								}
+								if (permission_exists('device_line_password')) {
+									$array['devices'][0]['device_lines'][$y]['password'] = $row["password"];
+								}
+								$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
+								$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
+								$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+								$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+								$y++;
 							}
-							else {
-								$device_line_uuid = uuid();
-							}
-							$array['devices'][0]['device_lines'][$y]['domain_uuid'] = $domain_uuid;
-							$array['devices'][0]['device_lines'][$y]['device_uuid'] = $device_uuid;
-							$array['devices'][0]['device_lines'][$y]['device_line_uuid'] = $device_line_uuid;
-							$array['devices'][0]['device_lines'][$y]['line_number'] = $row["line_number"];
-							$array['devices'][0]['device_lines'][$y]['server_address'] = $row["server_address"];
-							$array['devices'][0]['device_lines'][$y]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
-							$array['devices'][0]['device_lines'][$y]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
-							$array['devices'][0]['device_lines'][$y]['server_address_primary'] = $row["server_address_primary"];
-							$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $row["server_address_secondary"];
-							$array['devices'][0]['device_lines'][$y]['display_name'] = $row["display_name"];
-							$array['devices'][0]['device_lines'][$y]['user_id'] = $row["user_id"];
-							$array['devices'][0]['device_lines'][$y]['auth_id'] = $row["auth_id"];
-							$array['devices'][0]['device_lines'][$y]['password'] = $row["password"];
-							$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
-							$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
-							$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
-							$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
-							$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
-							$y++;
 						}
 					}
 
-					$y = 0;
-					foreach ($device_keys as $row) {
-						if (strlen($row['device_key_category']) > 0) {
-							if (is_uuid($row["device_key_uuid"])) {
-								$device_key_uuid = $row["device_key_uuid"];
+					if (permission_exists('device_key_edit')) {
+						$y = 0;
+						foreach ($device_keys as $row) {
+							if (strlen($row['device_key_category']) > 0) {
+								if (is_uuid($row["device_key_uuid"])) {
+									$device_key_uuid = $row["device_key_uuid"];
+								}
+								else {
+									$device_key_uuid = uuid();
+								}
+								$array['devices'][0]['device_keys'][$y]['domain_uuid'] = $domain_uuid;
+								$array['devices'][0]['device_keys'][$y]['device_uuid'] = $device_uuid;
+								$array['devices'][0]['device_keys'][$y]['device_key_uuid'] = $device_key_uuid;
+								$array['devices'][0]['device_keys'][$y]['device_key_category'] = $row["device_key_category"];
+								$array['devices'][0]['device_keys'][$y]['device_key_vendor'] = $row["device_key_vendor"];
+								if (permission_exists('device_key_id')) {
+									$array['devices'][0]['device_keys'][$y]['device_key_id'] = $row["device_key_id"];
+								}
+								$array['devices'][0]['device_keys'][$y]['device_key_type'] = $row["device_key_type"];
+								if (permission_exists('device_key_line')) {
+									$array['devices'][0]['device_keys'][$y]['device_key_line'] = $row["device_key_line"];
+								}
+								$array['devices'][0]['device_keys'][$y]['device_key_value'] = $row["device_key_value"];
+								if (permission_exists('device_key_extension')) {
+									$array['devices'][0]['device_keys'][$y]['device_key_extension'] = $row["device_key_extension"];
+								}
+								//$array['devices'][0]['device_keys'][$y]['device_key_protected'] = $row["device_key_protected"];
+								$array['devices'][0]['device_keys'][$y]['device_key_label'] = $row["device_key_label"];
+								$array['devices'][0]['device_keys'][$y]['device_key_icon'] = $row["device_key_icon"];
+								$y++;
 							}
-							else {
-								$device_key_uuid = uuid();
-							}
-							$array['devices'][0]['device_keys'][$y]['domain_uuid'] = $domain_uuid;
-							$array['devices'][0]['device_keys'][$y]['device_uuid'] = $device_uuid;
-							$array['devices'][0]['device_keys'][$y]['device_key_uuid'] = $device_key_uuid;
-							$array['devices'][0]['device_keys'][$y]['device_key_category'] = $row["device_key_category"];
-							$array['devices'][0]['device_keys'][$y]['device_key_vendor'] = $row["device_key_vendor"];
-							$array['devices'][0]['device_keys'][$y]['device_key_id'] = $row["device_key_id"];
-							$array['devices'][0]['device_keys'][$y]['device_key_type'] = $row["device_key_type"];
-							$array['devices'][0]['device_keys'][$y]['device_key_line'] = $row["device_key_line"];
-							$array['devices'][0]['device_keys'][$y]['device_key_value'] = $row["device_key_value"];
-							$array['devices'][0]['device_keys'][$y]['device_key_extension'] = $row["device_key_extension"];
-							//$array['devices'][0]['device_keys'][$y]['device_key_protected'] = $row["device_key_protected"];
-							$array['devices'][0]['device_keys'][$y]['device_key_label'] = $row["device_key_label"];
-							$array['devices'][0]['device_keys'][$y]['device_key_icon'] = $row["device_key_icon"];
-							$y++;
 						}
 					}
 
-					$y = 0;
-					foreach ($device_settings as $row) {
-						if (strlen($row['device_setting_subcategory']) > 0) {
-							if (is_uuid($row["device_setting_uuid"])) {
-								$device_setting_uuid = $row["device_setting_uuid"];
+					if (permission_exists('device_setting_edit')) {
+						$y = 0;
+						foreach ($device_settings as $row) {
+							if (strlen($row['device_setting_subcategory']) > 0) {
+								if (is_uuid($row["device_setting_uuid"])) {
+									$device_setting_uuid = $row["device_setting_uuid"];
+								}
+								else {
+									$device_setting_uuid = uuid();
+								}
+								$array['devices'][0]['device_settings'][$y]['domain_uuid'] = $domain_uuid;
+								$array['devices'][0]['device_settings'][$y]['device_uuid'] = $device_uuid;
+								$array['devices'][0]['device_settings'][$y]['device_setting_uuid'] = $device_setting_uuid;
+								$array['devices'][0]['device_settings'][$y]['device_setting_category'] = $row["device_setting_category"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_subcategory'] = $row["device_setting_subcategory"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"];
+								$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
+								$y++;
 							}
-							else {
-								$device_setting_uuid = uuid();
-							}
-							$array['devices'][0]['device_settings'][$y]['domain_uuid'] = $domain_uuid;
-							$array['devices'][0]['device_settings'][$y]['device_uuid'] = $device_uuid;
-							$array['devices'][0]['device_settings'][$y]['device_setting_uuid'] = $device_setting_uuid;
-							$array['devices'][0]['device_settings'][$y]['device_setting_category'] = $row["device_setting_category"];
-							$array['devices'][0]['device_settings'][$y]['device_setting_subcategory'] = $row["device_setting_subcategory"];
-							$array['devices'][0]['device_settings'][$y]['device_setting_name'] = $row["device_setting_name"];
-							$array['devices'][0]['device_settings'][$y]['device_setting_value'] = $row["device_setting_value"];
-							$array['devices'][0]['device_settings'][$y]['device_setting_enabled'] = $row["device_setting_enabled"];
-							$array['devices'][0]['device_settings'][$y]['device_setting_description'] = $row["device_setting_description"];
-							$y++;
 						}
 					}
 
@@ -906,7 +951,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('device_line_view')) {
+	if (permission_exists('device_line_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-lines']."</td>";
 		echo "		<td class='vtable' align='left'>";
@@ -1159,9 +1204,13 @@
 		if ($vendor_count == 0) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
-			echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+			if (permission_exists('device_key_id')) {
+				echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+			}
 			echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
-			echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+			if (permission_exists('device_key_line')) {
+				echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+			}
 			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 			if (permission_exists('device_key_extension')) {
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
@@ -1183,13 +1232,17 @@
 				if ($previous_device_key_vendor != $row['device_key_vendor']) {
 					echo "			<tr>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
-					echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+					if (permission_exists('device_key_id')) {
+						echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+					}
 					if ($vendor_count > 1 && strlen($row['device_key_vendor']) > 0) {
 						echo "				<td class='vtable'>".ucwords($row['device_key_vendor'])."</td>\n";
 					} else {
 						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 					}
-					echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+					if (permission_exists('device_key_line')) {
+						echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
+					}
 					echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 					if (permission_exists('device_key_extension')) {
 						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
@@ -1333,15 +1386,17 @@
 				echo "	</select>\n";
 				echo "</td>\n";
 
-				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
-				$selected = "selected='selected'";
-				echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
-				echo "	<option value=''></option>\n";
-				for ($i = 1; $i <= 255; $i++) {
-					echo "	<option value='$i' ".($row['device_key_id'] == $i ? "selected":null).">$i</option>\n";
+				if (permission_exists('device_key_id')) {
+					echo "<td valign='top' align='left' nowrap='nowrap'>\n";
+					$selected = "selected='selected'";
+					echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
+					echo "	<option value=''></option>\n";
+					for ($i = 1; $i <= 255; $i++) {
+						echo "	<option value='$i' ".($row['device_key_id'] == $i ? "selected":null).">$i</option>\n";
+					}
+					echo "	</select>\n";
+					echo "</td>\n";
 				}
-				echo "	</select>\n";
-				echo "</td>\n";
 
 				echo "<td align='left' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
@@ -1381,14 +1436,16 @@
 				}
 				echo "</select>\n";
 				echo "</td>\n";
-				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
-				echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
-				echo "		<option value=''></option>\n";
-				for ($l = 0; $l <= 12; $l++) {
-					echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
+				if (permission_exists('device_key_line')) {
+					echo "<td valign='top' align='left' nowrap='nowrap'>\n";
+					echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
+					echo "		<option value=''></option>\n";
+					for ($l = 0; $l <= 12; $l++) {
+						echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
+					}
+					echo "	</select>\n";
+					echo "</td>\n";
 				}
-				echo "	</select>\n";
-				echo "</td>\n";
 
 				echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_value'])."\"/>\n";

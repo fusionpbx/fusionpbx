@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -79,6 +79,7 @@ if (!class_exists('registrations')) {
 					$sql .= "and sip_profile_name = :sip_profile_name ";
 					$parameters['sip_profile_name'] = $profile;
 				}
+				$sql .= "and sip_profile_enabled = 'true' ";
 				$database = new database;
 				$sip_profiles = $database->select($sql, $parameters, 'all');
 				if (is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
@@ -87,6 +88,7 @@ if (!class_exists('registrations')) {
 						//get sofia status profile information including registrations
 							$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
 							$xml_response = trim(event_socket_request($fp, $cmd));
+							$xml_response = iconv("utf-8", "utf-8//ignore", $xml_response);
 							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 							$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
@@ -97,7 +99,9 @@ if (!class_exists('registrations')) {
 									$xml = new SimpleXMLElement($xml_response);
 								}
 								catch(Exception $e) {
-									echo $e->getMessage();
+									echo basename(__FILE__).'<br />';
+									echo 'line: '.__line__.'<br />';
+									echo 'error: '.$e->getMessage();
 									exit;
 								}
 								$array = json_decode(json_encode($xml), true);
@@ -149,15 +153,15 @@ if (!class_exists('registrations')) {
 													array('0','1','2','3','4','5','6','7','8','9'),
 													$lan_ip);
 											}
-																elseif(1 === preg_match('/\ACL750A/', $agent)) {
+											elseif (1 === preg_match('/\ACL750A/', $agent)) {
 												//required for GIGASET Sculpture CL750A puts _ in it's lan ip account
 												$lan_ip = preg_replace('/_/', '.', $lan_ip);
-																}
+											}
 											$registrations[$id]['lan-ip'] = $lan_ip;
 										}
 										else if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'], $ip_match)) {
-										    $lan_ip = preg_replace('/_/', '.', $ip_match[0]);
-										    $registrations[$id]['lan-ip'] = "$lan_ip";
+											$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
+											$registrations[$id]['lan-ip'] = "$lan_ip";
 										}
 										else {
 											$registrations[$id]['lan-ip'] = '';
@@ -179,6 +183,7 @@ if (!class_exists('registrations')) {
 								}
 								unset($array);
 							}
+
 					}
 				}
 

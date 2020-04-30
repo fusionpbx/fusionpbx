@@ -51,10 +51,10 @@
 		$apps[$x]['destinations'][$y]['sql'] = "select extension, number_alias, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
-		//$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
+		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['description'] = "description";
-		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}/\${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
@@ -230,7 +230,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "20";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the length for generated passwords for extensions.";
 		$y++;

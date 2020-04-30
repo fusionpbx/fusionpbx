@@ -57,6 +57,42 @@
 	$language = new text;
 	$text = $language->get();
 
+//process permission reload
+	if ($_GET['action'] == 'reload' && is_uuid($_GET['group_uuid'])) {
+		if (is_array($_SESSION["groups"]) && @sizeof($_SESSION["groups"]) != 0) {
+			//clear current permissions
+				unset($_SESSION['permissions'], $_SESSION['user']['permissions']);
+			//get the permissions assigned to the groups that the current user is a member of, set the permissions in session variables
+				$x = 0;
+				$sql = "select distinct(permission_name) from v_group_permissions ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				foreach ($_SESSION["groups"] as $field) {
+					if (strlen($field['group_name']) > 0) {
+						$sql_where_or[] = "group_name = :group_name_".$x;
+						$parameters['group_name_'.$x] = $field['group_name'];
+						$x++;
+					}
+				}
+				if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+					$sql .= "and (".implode(' or ', $sql_where_or).") ";
+				}
+				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+				$database = new database;
+				$result = $database->select($sql, $parameters, 'all');
+				if (is_array($result) && @sizeof($result) != 0) {
+					foreach ($result as $row) {
+						$_SESSION['permissions'][$row["permission_name"]] = true;
+						$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
+					}
+				}
+				unset($sql, $parameters, $result, $row);
+			//set message and redirect
+				message::add($text['message-permissions_reloaded'],'positive');
+				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']));
+				exit;
+		}
+	}
+
 //get the http post data
 	if (is_array($_POST['group_permissions'])) {
 		$action = $_POST['action'];
@@ -67,12 +103,15 @@
 //process the user data and save it to the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//get the list
-			$sql = "select * from v_group_permissions ";
-			$sql .= "where group_uuid = :group_uuid ";
-			$parameters['group_uuid'] = $group_uuid;
+			$sql = "select p.*, ";
+			$sql .= "exists(select from v_group_permissions where permission_name = p.permission_name and group_name = :group_name) as permission_assigned ";
+			$sql .= "from v_permissions as p ";
+			$parameters['group_name'] = $group_name;
+			//$sql = "select * from v_group_permissions ";
+			//$sql .= "where group_uuid = :group_uuid ";
+			//$parameters['group_uuid'] = $group_uuid;
 			$database = new database;
 			$group_permissions = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
 
 		//add or remove permissions from the group
 			$x = 0;
@@ -81,7 +120,7 @@
 					//check to see if the group has been assigned the permission
 					$in_database = false;
 					foreach($group_permissions as $field) {
-						if ($field['permission_name'] === $row['permission']) {
+						if ($field['permission_name'] === $row['permission_name'] && $field['permission_assigned'] === true) {
 							$in_database = true;
 							break;
 						}
@@ -90,9 +129,9 @@
 					//add - checked on html form and not in the database
 					if ($row['checked'] === 'true') {
 						if (!$in_database) {
-							if (isset($row['permission']) && strlen($row['permission']) > 0) {
+							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
 								$array['add']['group_permissions'][$x]['group_permission_uuid'] = uuid();
-								$array['add']['group_permissions'][$x]['permission_name'] = $row['permission'];
+								$array['add']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
 								$array['add']['group_permissions'][$x]['group_uuid'] = $group_uuid;
 								$array['add']['group_permissions'][$x]['group_name'] = $group_name;
 								//$array['add']['group_permissions'][$x]['permission_uuid'] = $row['uuid'];
@@ -104,10 +143,10 @@
 					//delete - unchecked on the form and in the database
 					if ($row['checked'] !== 'true') {
 						if ($in_database) {
-							if (isset($row['permission']) && strlen($row['permission']) > 0) {
-								$array['delete']['group_permissions'][$x]['permission_name'] = $row['permission'];
+							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
+								$array['delete']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
 								$array['delete']['group_permissions'][$x]['group_uuid'] = $group_uuid;
-								//$array['delete']['group_permissions'][$x]['group_name'] = $group_name;
+								$array['delete']['group_permissions'][$x]['group_name'] = $group_name;
 								//$array['delete'][$x]['permission_uuid'] = $row['uuid'];
 							}
 							$x++;
@@ -202,9 +241,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-group_permissions']." (".escape($group_name).")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-sm-dn','link'=>'groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-sm-dn','link'=>'groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>'key','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload']);
 	if (permission_exists('group_member_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>'margin-left: 15px;','link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
@@ -230,7 +270,6 @@
 	if (is_array($group_permissions) && @sizeof($group_permissions) != 0) {
 		$x = 0;
 		foreach ($group_permissions as $row) {
-
 			$checked = ($row['permission_assigned'] === true) ? " checked=\"checked\"" : $checked = '';
 			$application_name = strtolower($row['application_name']);
 			$label_application_name = ucwords(str_replace(['_','-'], " ", $row['application_name']));
@@ -261,8 +300,8 @@
 			if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='group_permissions[$x][checked]' id='checkbox_".$x."' class='checkbox_".$application_name."' value='true' ".$checked." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."').checked = false; }\">\n";
-				echo "		<input type='hidden' name='group_permissions[$x][uuid]' value='".escape($row['permission_uuid'])."' />\n";
-				echo "		<input type='hidden' name='group_permissions[$x][permission]' value='".escape($row['permission_name'])."' />\n";
+				echo "		<input type='hidden' name='group_permissions[$x][permission_uuid]' value='".escape($row['permission_uuid'])."' />\n";
+				echo "		<input type='hidden' name='group_permissions[$x][permission_name]' value='".escape($row['permission_name'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td  class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".escape($row['permission_name'])."</td>\n";

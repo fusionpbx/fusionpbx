@@ -457,7 +457,7 @@
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
 	if (strlen($accountcode) > 0) {
-		$sql .= "and accountcode = :accountcode ";
+		$sql .= "and c.accountcode = :accountcode ";
 		$parameters['accountcode'] = $accountcode;
 	}
 	if (strlen($read_codec) > 0) {

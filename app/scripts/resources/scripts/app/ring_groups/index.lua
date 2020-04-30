@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -232,6 +232,7 @@
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
 		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 		ring_group_cid_number_prefix = row["ring_group_cid_number_prefix"];
+		ring_group_call_forward_enabled = row["ring_group_call_forward_enabled"];
 		ring_group_follow_me_enabled = row["ring_group_follow_me_enabled"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
@@ -436,7 +437,7 @@
 					if (database["type"] == "mysql") then
 						sql_order = 'rand()'
 					else
-						sql_order = 'random()' --both postgresql and sqlite uses random() instead of rand()
+						sql_order = 'random() * 1000000' --both postgresql and sqlite uses random() instead of rand()
 					end
 				else
 					sql_order='d.destination_delay, d.destination_number asc'
@@ -480,7 +481,11 @@
 				end
 
 				--follow the forwards
-				count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
+				if (ring_group_call_forward_enabled == "true") then
+					count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
+				else
+					destination_number = row.destination_number;
+				end
 
 				--update values
 				row['destination_number'] = destination_number
@@ -669,7 +674,9 @@
 						user_exists = row.user_exists;
 
 					--follow the forwards
-						count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+						if (row.ring_group_call_forward_enabled == "true") then
+							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+						end
 
 					--check if the user exists
 						cmd = "user_exists id ".. destination_number .." "..domain_name;
@@ -734,7 +741,8 @@
 					--set confirm
 						if (ring_group_strategy == "simultaneous"
 							or ring_group_strategy == "sequence"
-							or ring_group_strategy == "rollover") then
+							or ring_group_strategy == "rollover"
+							or ring_group_strategy == "random") then
 								session:execute("set", "group_confirm_key=exec");
 								session:execute("set", "group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua");
 						end
@@ -896,6 +904,18 @@
 								user_exists = row.user_exists;
 								destination_number = row.destination_number;
 								domain_name = row.domain_name;
+								destination_prompt = row.destination_prompt;
+
+							--determine confirm prompt
+								if (destination_prompt == nil) then
+									group_confirm = "confirm=false,";
+								elseif (destination_prompt == "1") then
+									group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+								elseif (destination_prompt == "2") then
+									group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir:gsub('\\','/') .."/confirm.lua,confirm=true,";
+								else
+									group_confirm = "confirm=false,";
+								end
 
 							--if the timeout was reached exit the loop and go to the timeout action
 								if (tonumber(ring_group_call_timeout) == timeout) then

@@ -1,5 +1,5 @@
 <?php
-	
+
 	//application details
 		$apps[$x]['name'] = "Domains";
 		$apps[$x]['guid'] = "8b91605b-f6d2-42e6-a56d-5d1ded01bb44";

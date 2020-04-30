@@ -124,6 +124,12 @@
 
 	}
 
+//adjust color and initialize step counter
+	$step = 1;
+	$step_color = $_SESSION['theme']['upgrade_step_color']['text'] ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust(($_SESSION['theme']['form_table_label_background_color']['text'] != '' ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
+	$step_container_style = "width: 30px; height: 30px; border: 2px solid ".$step_color."; border-radius: 50%; float: left; text-align: center; vertical-align: middle;";
+	$step_number_style = "font-size: 150%; font-weight: 600; color: ".$step_color.";";
+
 //include the header and set the title
 	$document['title'] = $text['title-upgrade'];
 	require_once "resources/header.php";
@@ -146,6 +152,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_source'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -175,6 +182,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_schema'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -201,6 +209,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_apps'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -214,6 +223,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_menu'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -239,6 +249,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
 		echo "		".$text['label-upgrade_permissions'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";

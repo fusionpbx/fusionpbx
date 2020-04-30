@@ -250,11 +250,13 @@
 			$queue_timeout_data = implode($action_array);
 
 		//add the recording path if needed
-			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting)) {
-				$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting;
-			}
-			else {
-				$queue_greeting_path = $queue_greeting;
+			if ($queue_greeting != '') {
+				if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting)) {
+					$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$queue_greeting;
+				}
+				else {
+					$queue_greeting_path = trim($queue_greeting);
+				}
 			}
 
 		//prepare the array
@@ -314,7 +316,9 @@
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$queue_extension."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+			if ($queue_greeting_path != '') {
+				$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+			}
 			if (strlen($queue_cid_prefix) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$queue_cid_prefix."#\${caller_id_name}\"/>\n";
 			}
@@ -553,6 +557,39 @@
 //only allow a uuid
 	if (!is_uuid($call_center_queue_uuid)) {
 		$call_center_queue_uuid = null;
+	}
+
+//option to change select to text
+	if (if_group("superadmin")) {
+		echo "<script>\n";
+		echo "var Objs;\n";
+		echo "\n";
+		echo "function changeToInput(obj){\n";
+		echo "	tb=document.createElement('INPUT');\n";
+		echo "	tb.type='text';\n";
+		echo "	tb.name=obj.name;\n";
+		echo "	tb.setAttribute('class', 'formfld');\n";
+		//echo "	tb.setAttribute('style', 'width: 380px;');\n";
+		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "	tbb=document.createElement('INPUT');\n";
+		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		echo "	tbb.type='button';\n";
+		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		echo "	tbb.objs=[obj,tb,tbb];\n";
+		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+		echo "	obj.parentNode.insertBefore(tb,obj);\n";
+		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "}\n";
+		echo "\n";
+		echo "function Replace(obj){\n";
+		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "</script>\n";
+		echo "\n";
 	}
 
 //show the content

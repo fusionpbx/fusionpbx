@@ -266,7 +266,7 @@
 				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
-			echo "	<td>";
+			echo "	<td class='no-wrap'>";
 			if (permission_exists('destination_edit')) {
 				echo "<a href='".$list_row_url."'>".escape(format_phone($row['destination_number']))."</a>";
 			}
