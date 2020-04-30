@@ -660,17 +660,6 @@
 						--session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 					--end
 
-				--wait for moderator
-					if (wait_mod == "true") then
-						if (conference_exists) then
-							--continue
-						else
-							if (member_type == "participant") then
-								profile = "wait-mod";
-							end
-						end
-					end
-
 				--set the exit sound
 					if (sounds == "true") then
 						session:execute("set","conference_exit_sound="..exit_sound);
@@ -679,7 +668,7 @@
 						session:execute("set","conference_exit_sound=none");
 					end
 
-				--set flags and moderator controls
+				--set flags and conference controls
 					if (wait_mod == "true") then
 						if (member_type == "participant") then
 							flags = flags .. "wait-mod";
