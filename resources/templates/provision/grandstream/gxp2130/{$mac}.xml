@@ -5720,6 +5720,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     <!-- # P8 = 0 -->
+    <P8>{$grandstream_ip_address_mode}</P8>
 
     <!-- ########################################## -->
     <!-- # DHCP -->
@@ -8098,7 +8099,7 @@
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
     <!-- # Number: 0-4 -->
     <!-- # Mandatory -->
-    <P2916>{$grandstream_wallpaper_source}</P2916>
+
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
