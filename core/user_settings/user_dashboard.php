@@ -993,40 +993,6 @@
 				$hud[$n]['html'] .= "</tr>\n";
 				$c = ($c) ? 0 : 1;
 
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				//switch version
-					$switch_version = event_socket_request($fp, 'api version');
-					preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
-					$switch_version = $matches[1];
-					$switch_bits = $matches[2];
-					if ($switch_version != '' && $switch_bits != '') {
-						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$switch_version." (".$switch_bits.")</td>\n";
-						$hud[$n]['html'] .= "</tr>\n";
-						$c = ($c) ? 0 : 1;
-					}
-
-				//switch uptime
-					$tmp = event_socket_request($fp, 'api status');
-					$tmp = explode("\n", $tmp);
-					$tmp = $tmp[0];
-					$tmp = explode(' ', $tmp);
-					$uptime = (($tmp[1]) ? $tmp[1].'y ' : null);
-					$uptime .= (($tmp[3]) ? $tmp[3].'d ' : null);
-					$uptime .= (($tmp[5]) ? $tmp[5].'h ' : null);
-					$uptime .= (($tmp[7]) ? $tmp[7].'m ' : null);
-					$uptime .= (($tmp[9]) ? $tmp[9].'s' : null);
-					if ($uptime != '') {
-						$hud[$n]['html'] .= "<tr class='tr_link_void'>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
-						$hud[$n]['html'] .= "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$uptime."</td>\n";
-						$hud[$n]['html'] .= "</tr>\n";
-						$c = ($c) ? 0 : 1;
-					}
-			}
-
 			//os uptime
 				if (stristr(PHP_OS, 'Linux')) {
 					unset($tmp);
