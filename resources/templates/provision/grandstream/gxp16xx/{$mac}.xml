@@ -2161,7 +2161,11 @@
 <!--  gxp - Downloaded Language -->
 <!--  String -->
 <!--  Mandatory -->
+{if isset($grandstream_display_language) }
+<P1362>{$grandstream_display_language}</P1362>
+{else}
 <P1362>auto</P1362>
+{/if}
 <!--  Language File postfix (for Downloaded Language) -->
 <!--  String -->
 <P399></P399>
