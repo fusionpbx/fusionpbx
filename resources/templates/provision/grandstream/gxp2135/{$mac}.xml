@@ -5720,6 +5720,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     <!-- # P8 = 0 -->
+    <P8>{$grandstream_ip_address_mode}</P8>
 
     <!-- ########################################## -->
     <!-- # DHCP -->
@@ -6438,7 +6439,7 @@
     <!-- # gxp - Downloaded Language -->
     <!-- # String -->
     <!-- # Mandatory -->
-    <P1362>Auto</P1362>
+    <P1362>{$grandstream_display_language}</P1362>
 
     <!-- # Default Input Selection. Default is Multi-Tap. -->
     <!-- # 0 - Multi-Tap, 1 - Shiftable -->
