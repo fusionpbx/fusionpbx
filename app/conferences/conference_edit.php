@@ -309,7 +309,7 @@
 
 //get conference users
 	$sql = "select * from v_conference_users as e, v_users as u ";
-	$sql .= "whee e.user_uuid = u.user_uuid  ";
+	$sql .= "where e.user_uuid = u.user_uuid  ";
 	$sql .= "and u.user_enabled = 'true' ";
 	$sql .= "and e.domain_uuid = :domain_uuid ";
 	$sql .= "and e.conference_uuid = :conference_uuid ";
