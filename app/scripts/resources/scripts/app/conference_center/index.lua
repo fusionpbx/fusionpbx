@@ -568,6 +568,7 @@
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];
+					moderator_endconf = row["moderator_endconf"];
 					moderator_pin = row["moderator_pin"];
 					participant_pin = row["participant_pin"];
 					announce_name = row["announce_name"];
@@ -690,11 +691,14 @@
 							flags = flags .. "|mute";
 						end
 					end
+					
 					if (member_type == "moderator") then
 						--set as the moderator
 							flags = flags .. "|moderator";
 						--when the moderator leaves end the conference
-							--flags = flags .. "|endconf";
+							if (moderator_endconf == "true") then
+								flags = flags .. "|endconf";
+							end
 						--set the moderator controls
 							session:execute("set","conference_controls=moderator");
 					end
