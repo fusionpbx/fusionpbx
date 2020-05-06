@@ -339,8 +339,10 @@
 				$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
 				$array["ring_groups"][0]["ring_group_missed_call_data"] = $ring_group_missed_call_data;
 			}
-			$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
-			$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			if (permission_exists('ring_group_forward')) {
+				$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
+				$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			}
 			$array["ring_groups"][0]["ring_group_forward_toll_allow"] = $ring_group_forward_toll_allow;
 			if (isset($ring_group_context)) {
 				$array["ring_groups"][0]["ring_group_context"] = $ring_group_context;
@@ -439,15 +441,15 @@
 			if ($action == "add") {
 				//save the message to a session variable
 					message::add($text['message-add']);
-				//redirect the browser
-					header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-					exit;
 			}
 			if ($action == "update") {
 				//save the message to a session variable
 					message::add($text['message-update']);
 			}
 
+		//redirect the browser
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+			exit;
 	}
 
 //pre-populate the form
@@ -1015,20 +1017,22 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-ring_group_forward']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
-	echo "		<option value='false'>".$text['option-disabled']."</option>";
-	echo "		<option value='true' ".(($ring_group_forward_enabled == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
-	echo "	</select>";
-	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
-	echo "<br />\n";
-	echo $text['description-ring-group-forward']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_forward')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-ring_group_forward']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
+		echo "		<option value='false'>".$text['option-disabled']."</option>";
+		echo "		<option value='true' ".($ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+		echo "	</select>";
+		echo 	"<input class='formfld' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
+		echo "<br />\n";
+		echo $text['description-ring-group-forward']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('ring_group_forward_toll_allow')) {
 		echo "<tr>\n";
