@@ -1050,12 +1050,35 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "  ".$text['label-caller_announce_sound']."\n";
+		echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-caller_announce_sound']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='".escape($queue_announce_sound)."'>\n";
+
+        echo "<td class='vtable' align='left'>\n";
+	echo "<select name='queue_announce_sound' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<option value=''></option>\n";
+	foreach($sounds as $key => $value) {
+		echo "<optgroup label=".$text['label-'.$key].">\n";
+		$selected = false;
+		foreach($value as $row) {
+			if ($queue_announce_sound == $row["value"]) { 
+				$selected = true;
+				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
+			}
+			else {
+				echo "	<option value='".escape($row["value"])."'>".escape($row["name"])."</option>\n";
+			}
+		}
+		echo "</optgroup>\n";
+	}
+	if (if_group("superadmin")) {
+		if (!$selected && strlen($queue_announce_sound) > 0) {
+			echo "	<option value='".escape($queue_announce_sound)."' selected='selected'>".escape($queue_announce_sound)."</option>\n";
+		}
+		unset($selected);
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-caller_announce_sound']."\n";
 	echo "</td>\n";
