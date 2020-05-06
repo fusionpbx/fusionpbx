@@ -192,7 +192,7 @@
 						$array['phrases'][0]['phrase_description'] = $phrase_description;
 
 						if ($_POST['phrase_detail_function'] != '') {
-							if ($_POST['phrase_detail_function'] == 'execute' && !permission_exists("phrase_function_execute")) {
+							if ($_POST['phrase_detail_function'] == 'execute' && !permission_exists("phrase_detail_function_execute")) {
 								header("Location: phrase_edit.php?id=".$phrase_uuid);
 								exit;
 							}
