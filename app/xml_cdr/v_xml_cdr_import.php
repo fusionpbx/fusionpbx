@@ -278,6 +278,11 @@
 			$domain_name = urldecode($xml->variables->domain_name);
 			$domain_uuid = urldecode($xml->variables->domain_uuid);
 
+		//get the domain name from dialed_domain
+			if (strlen($domain_name) == 0) {
+				$domain_name = urldecode($xml->variables->dialed_domain);
+			}
+
 		//get the domain name from sip_req_host
 			if (strlen($domain_name) == 0) {
 				$domain_name = urldecode($xml->variables->sip_req_host);
