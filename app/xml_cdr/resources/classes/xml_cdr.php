@@ -284,19 +284,33 @@ if (!class_exists('xml_cdr')) {
 			//process data if the call detail record is not a duplicate
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
-					//get the destination number
-						if ($xml->variables->current_application == "bridge") {
-							$current_application_data = urldecode($xml->variables->current_application_data);
-							$bridge_array = explode("/", $current_application_data);
-							$destination_number = end($bridge_array);
-							if (strpos($destination_number,'@') !== FALSE) {
-								$destination_array = explode("@", $destination_number);
-								$destination_number = $destination_array[0];
+					//get the caller details
+						$caller_id_name = urldecode($xml->variables->caller_id_name);
+						$caller_id_number = urldecode($xml->variables->caller_id_number);
+						if (isset($xml->variables->effective_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
+						}
+						if (isset($xml->variables->effective_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
+
+					//get the values from the callflow.
+						$i = 0;
+						foreach ($xml->callflow as $row) {
+							if ($i == 0) {
+								$context = urldecode($row->caller_profile->context);
+								$destination_number = urldecode($row->caller_profile->destination_number);
+								$network_addr = urldecode($row->caller_profile->network_addr);
 							}
+							if (strlen($caller_id_name) == 0) {
+								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
+							}
+							if (strlen($caller_id_number) == 0) {
+								$caller_id_number = urldecode($row->caller_profile->caller_id_number);
+							}
+							$i++;
 						}
-						else {
-							$destination_number = urldecode($xml->variables->sip_to_user);
-						}
+						unset($i);
 
 					//if last_sent_callee_id_number is set use it for the destination_number
 						if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
@@ -320,25 +334,6 @@ if (!class_exists('xml_cdr')) {
 						}
 						if ($xml->variables->missed_call == 'true') {
 							$missed_call = 'true';
-						}
-
-					//get the caller details
-						$caller_id_name = urldecode($xml->variables->caller_id_name);
-						$caller_id_number = urldecode($xml->variables->caller_id_number);
-						if (isset($xml->variables->effective_caller_id_name)) {
-							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
-						}
-						if (isset($xml->variables->effective_caller_id_number)) {
-							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
-						}
-						$caller_id_destination = urldecode($xml->variables->caller_destination);
-						foreach ($xml->callflow as $row) {
-							$caller_id_number = urldecode($row->caller_profile->caller_id_number);
-						}
-						if (strlen($caller_id_name) == 0) {
-							foreach ($xml->callflow as $row) {
-								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
-							}
 						}
 
 					//misc
