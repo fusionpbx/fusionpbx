@@ -700,7 +700,7 @@
 								flags = flags .. "|endconf";
 							end
 						--set the moderator controls
-							session:execute("set","conference_controls=moderator");
+							--session:execute("set","conference_controls=moderator");
 					end
 
 				--get the conference xml_list
