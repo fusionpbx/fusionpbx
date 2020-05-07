@@ -360,9 +360,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_extensions";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "extension_uuid";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_extensions";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "extension_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
