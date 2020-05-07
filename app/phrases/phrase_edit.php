@@ -133,8 +133,8 @@
 						$array['phrases'][0]['phrase_description'] = $phrase_description;
 
 						if ($_POST['phrase_detail_function'] != '') {
-							if ($_POST['phrase_detail_function'] == 'execute' && substr($_POST['phrase_detail_data'], 0,5) != "sleep" && !permission_exists("phrase_detail_function_execute")) {
-								header("Location: phrase_edit.php?id=".$phrase_uuid);
+							if ($_POST['phrase_detail_function'] == 'execute' && substr($_POST['phrase_detail_data'], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
+								header("Location: phrase_edit.php);
 								exit;
 							}
 							$_POST['phrase_detail_tag'] = 'action'; // default, for now
@@ -192,7 +192,7 @@
 						$array['phrases'][0]['phrase_description'] = $phrase_description;
 
 						if ($_POST['phrase_detail_function'] != '') {
-							if ($_POST['phrase_detail_function'] == 'execute' && substr($_POST['phrase_detail_data'], 0,5) != "sleep" && !permission_exists("phrase_detail_function_execute")) {
+							if ($_POST['phrase_detail_function'] == 'execute' && substr($_POST['phrase_detail_data'], 0,5) != "sleep" && !permission_exists("phrase_execute")) {
 								header("Location: phrase_edit.php?id=".$phrase_uuid);
 								exit;
 							}
