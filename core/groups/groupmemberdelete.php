@@ -65,6 +65,6 @@
 
 //redirect the user
 	message::add($text['message-delete']);
-	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
+	header("Location: group_members.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>
