@@ -9,7 +9,7 @@
 
 		--log the cache error
 			if (debug["cache"]) then
-				freeswitch.consoleLog("warning", "[xml_handler] configuration:local_stream.conf can not be get from cache: " .. tostring(err) .. "\n");
+				freeswitch.consoleLog("warning", "[xml_handler] configuration:local_stream.conf not in cache: " .. tostring(err) .. "\n");
 			end
 
 		--set a default value
@@ -74,8 +74,9 @@
 					chime_list = "";
 					for k,v in pairs(chime_array) do
 						f = explode("/", v);
-						if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir.."/en/us/callie/"..f[1].."/"..rate.."/"..f[2])) then
-							chime_list = chime_list .. sounds_dir.."/en/us/callie/"..v;
+						voice_dir = "/${default_language}/${default_dialect}/${default_voice}/";
+						if (f[1] ~= nil and f[2] ~= nil and file_exists(sounds_dir..voice_dir..f[1].."/"..rate.."/"..f[2])) then
+							chime_list = chime_list .. sounds_dir..voice_dir..v;
 						else
 							chime_list = chime_list .. v;
 						end

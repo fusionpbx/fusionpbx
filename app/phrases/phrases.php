@@ -207,7 +207,10 @@
 				echo escape($row['phrase_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['phrase_language'])."&nbsp;</td>\n";
+			$formatted_language = preg_replace('/^([[:alnum:]]+)[[:punct:]]([[:alnum:]]+)[[:punct:]]([[:alnum:]]+)/',
+				'$1-$2 $3', $row['phrase_language']);
+			if (empty($formatted_language)) $formatted_language = $text['label-language-default'];
+			echo "	<td>".escape($formatted_language)."&nbsp;</td>\n";
 			if (permission_exists('phrase_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['phrase_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);

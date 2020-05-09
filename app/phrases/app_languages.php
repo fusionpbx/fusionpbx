@@ -232,6 +232,27 @@ $text['label-language']['ru-ru'] = "Язык";
 $text['label-language']['sv-se'] = "Språk";
 $text['label-language']['uk-ua'] = "Мова";
 
+$text['label-language-default']['en-us'] = "Default";
+$text['label-language-default']['en-gb'] = "Default";
+$text['label-language-default']['ar-eg'] = "";
+$text['label-language-default']['de-at'] = "Standard";
+$text['label-language-default']['de-ch'] = "Standard";
+$text['label-language-default']['de-de'] = "Standard";
+$text['label-language-default']['es-cl'] = "Defecto";
+$text['label-language-default']['es-mx'] = "Defecto";
+$text['label-language-default']['fr-ca'] = "Défaut";
+$text['label-language-default']['fr-fr'] = "Défaut";
+$text['label-language-default']['he-il'] = "";
+$text['label-language-default']['it-it'] = "";
+$text['label-language-default']['nl-nl'] = "";
+$text['label-language-default']['pl-pl'] = "";
+$text['label-language-default']['pt-br'] = "";
+$text['label-language-default']['pt-pt'] = "";
+$text['label-language-default']['ro-ro'] = "";
+$text['label-language-default']['ru-ru'] = "";
+$text['label-language-default']['sv-se'] = "";
+$text['label-language-default']['uk-ua'] = "";
+
 $text['label-function']['en-us'] = "Function";
 $text['label-function']['en-gb'] = "Function";
 $text['label-function']['ar-eg'] = "";

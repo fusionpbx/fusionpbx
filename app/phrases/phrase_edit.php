@@ -30,6 +30,12 @@
 	require_once "resources/check_auth.php";
 	require_once "resources/functions/save_phrases_xml.php";
 
+//local functions
+	function delete_cache($uuid) {
+		$cache = new cache;
+		$cache->delete("languages:phrase:$uuid");
+	}
+
 //check permissions
 	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
 		//access granted
@@ -89,7 +95,7 @@
 
 //process the changes from the http post
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$phrase_uuid = $_POST["phrase_uuid"];
@@ -106,7 +112,6 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($phrase_name) == 0) { $msg .= $text['message-required']." ".$text['label-name']."<br>\n"; }
-			if (strlen($phrase_language) == 0) { $msg .= $text['message-required']." ".$text['label-language']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -172,8 +177,7 @@
 						//save_phrases_xml();
 
 					//clear the cache
-						$cache = new cache;
-						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
+						delete_cache($phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-add']);
@@ -241,8 +245,7 @@
 						save_phrases_xml();
 
 					//clear the cache
-						$cache = new cache;
-						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
+						delete_cache($phrase_uuid);
 
 					//send a redirect
 						message::add($text['message-update']);
@@ -252,7 +255,7 @@
 				}
 
 			}
-	
+
 	}
 
 //pre-populate the form
@@ -288,6 +291,20 @@
 		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
+	}
+
+//get installed languages
+	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+	foreach ($language_paths as $key => $path) {
+		$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+		$path_array = explode('/', $path);
+		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
+			unset($language_paths[$key]);
+		}
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
+		if (strlen($language_paths[$key]) == 0) {
+			unset($language_paths[$key]);
+		}
 	}
 
 //get the recordings
@@ -349,7 +366,7 @@
 		unset($recordings, $row);
 	//sounds
 		$file = new file;
-		$sound_files = $file->sounds();
+		$sound_files = $file->sounds($phrase_language);
 		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
@@ -467,14 +484,33 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+// Language field
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_language' maxlength='255' value=\"".escape($phrase_language)."\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-language']."\n";
+	echo "  <select class='formfld' type='text' name='phrase_language'>\n";
+	echo "		<option value=''>".$text['label-language-default']."</option>\n";
+
+	if (!empty($phrase_language)) {
+		$language_array = explode ('/', $phrase_language);
+		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
+		echo "		<option value='".escape($phrase_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
+	}
+
+	foreach ($language_paths as $key => $language_variables) {
+		$language_variables = explode ('/',$language_paths[$key]);
+		$language = $language_variables[0];
+		$dialect = $language_variables[1];
+		$voice = $language_variables[2];
+		if ($language_formatted <> "$language-$dialect $voice") {
+			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
+		}
+	}
+	echo "  </select>\n";
+	echo "  <br />\n";
+	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

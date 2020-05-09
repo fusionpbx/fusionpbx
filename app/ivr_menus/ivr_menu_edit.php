@@ -312,6 +312,7 @@
 
 				//build the xml dialplan
 					$ivr_menu_language = explode("/",$_POST["ivr_menu_language"]);
+					$ivr_menu_language_name = $ivr_menu_language[0].'-'.$ivr_menu_language[1].'-'.$ivr_menu_language[2];
 
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
@@ -321,10 +322,11 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
-					if (isset($_POST["ivr_menu_language"])) {
+					if (!empty($_POST["ivr_menu_language"])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"language=".$ivr_menu_language_name."\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
@@ -616,7 +618,7 @@
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
@@ -635,7 +637,7 @@
 		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
 		echo "		<option value='".escape($ivr_menu_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
 	}
-	
+
 	foreach ($language_paths as $key => $language_variables) {
 		$language_variables = explode ('/',$language_paths[$key]);
 		$language = $language_variables[0];
@@ -645,7 +647,8 @@
 			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
 		}
 	}
-	echo "<br />\n";
+	echo "  </select>\n";
+	echo "  <br />\n";
 	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
