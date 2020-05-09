@@ -67,7 +67,7 @@
 				break;
 		}
 
-		header('Location: groupmembers.php?group_uuid='.urlencode($group_uuid));
+		header('Location: group_members.php?group_uuid='.urlencode($group_uuid));
 		exit;
 	}
 
