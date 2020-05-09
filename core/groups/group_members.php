@@ -145,7 +145,7 @@
 	}
 
 	if (permission_exists('group_member_add')) {
-		echo 	"<form class='inline' method='post' action=''>\n";
+		echo 	"<form class='inline' method='post' action='groupmemberadd.php'>\n";
 		echo "	<select name='user_uuid' class='formfld'>\n";
 		echo "		<option value=''>".$text['label-select']."...</option>\n";
 		foreach ($users as $row) {
