@@ -192,7 +192,7 @@
 		unset($button_margin);
 	}
 	if (permission_exists('group_member_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'groupmembers.php?group_uuid='.urlencode($group_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','style'=>$button_margin,'link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
 		unset($button_margin);
 	}
 	$button_margin = 'margin-left: 15px;';
