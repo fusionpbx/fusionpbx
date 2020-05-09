@@ -233,7 +233,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-link no-wrap pr-15'><a href='group_permissions.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_permissions']." (".$row['group_permissions'].")</a></td>\n";
-			echo "	<td class='no-link no-wrap'><a href='groupmembers.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_members']." (".$row['group_members'].")</a></td>\n";
+			echo "	<td class='no-link no-wrap'><a href='group_members.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_members']." (".$row['group_members'].")</a></td>\n";
 			echo "	<td class='center'>".escape($row['group_level'])."</td>\n";
 			if (permission_exists('group_edit')) {
 				echo "	<td class='no-link center'>\n";
