@@ -127,7 +127,7 @@ if (!class_exists('groups')) {
 			//assign the variables
 				$this->name = 'group_member';
 				$this->table = 'user_groups';
-				$this->location = 'groupmembers.php?group_uuid='.$this->group_uuid;
+				$this->location = 'group_members.php?group_uuid='.$this->group_uuid;
 
 			if (permission_exists($this->name.'_delete')) {
 
