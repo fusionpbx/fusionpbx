@@ -471,7 +471,9 @@
 				echo "	<td class='center'>0</td>\n";
 			}
 			echo "	<td class='no-link no-wrap'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['meeting_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
+			if (permission_exists('conference_active_view')) {
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['meeting_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
+			}
 			echo "		<a href='conference_sessions.php?id=".urlencode($row['meeting_uuid'])."'>".$text['label-sessions']."</a>\n";
 			echo "	</td>\n";
 
