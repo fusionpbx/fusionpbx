@@ -1151,7 +1151,7 @@
 				}
 				echo "	</tr>\n";
 
-				if (is_array($device_lines) && @sizeof($device_lines) != 0) { break; } //show one row when editing extension and no device assigned
+				break; //show one empty row whether adding or editing
 			}
 			echo "		</table>\n";
 			echo "		<br />\n";
