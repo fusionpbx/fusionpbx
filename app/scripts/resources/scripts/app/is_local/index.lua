@@ -108,7 +108,7 @@
 		--define the array/table and variables
 			local var = {}
 			local key = "";
-			local value = "";
+			local value = value;
 
 		--parse the cache
 			key_pairs = explode("&", value);
