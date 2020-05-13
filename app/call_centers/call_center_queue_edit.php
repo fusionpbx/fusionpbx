@@ -1055,7 +1055,7 @@
 	echo "	".$text['label-caller_announce_sound']."\n";
 	echo "</td>\n";
 
-        echo "<td class='vtable' align='left'>\n";
+	echo "<td class='vtable' align='left'>\n";
 	echo "<select name='queue_announce_sound' class='formfld' style='width: 200px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "	<option value=''></option>\n";
 	foreach($sounds as $key => $value) {
