@@ -1105,7 +1105,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dc570a6d-daa5-49e5-aacb-db51478883b8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_default_ssl_method";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_tls_cipher_list";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "AES:!ADH:!LOW:!EXPORT:!NULL";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
