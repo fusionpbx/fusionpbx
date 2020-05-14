@@ -1095,5 +1095,23 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = ON 0 = OFF.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "768c0f46-c9cf-44e2-87fc-4279f956d368";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_default_ssl_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configures the TLS version to use. 0-TLS 1.0 only, 3-SSL V23 automatic negotiation with the server, 4-TLS 1.1 only, 5-TLS 1.2 only, Default 3";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dc570a6d-daa5-49e5-aacb-db51478883b8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_default_ssl_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "AES:!ADH:!LOW:!EXPORT:!NULL";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "TLS cipher list Default";
+		$y++;
+
+
 
 ?>
