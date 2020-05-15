@@ -1023,6 +1023,7 @@ if (!class_exists('menu')) {
 									$mod_a_2 = '#';
 								}
 								$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
+								$menu_sub_icon = null;
 								if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 									if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
 										$menu_sub_icon = "<span class='fas ".escape($menu_sub['menu_item_icon'])."'></span>";
