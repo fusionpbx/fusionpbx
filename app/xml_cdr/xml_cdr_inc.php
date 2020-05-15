@@ -279,7 +279,7 @@
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (!permission_exists('xml_cdr_domain') && is_array($extension_uuids)) { //only show the user their calls
+	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
 		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
 	}
 	if ($missed == true) {
