@@ -77,7 +77,10 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	if ($num_rows > 0) {
 		$max_page = ceil($num_rows/$rows_per_page);
 	}
-
+	else {
+		$max_page = 1;
+	}
+	
 	//add multi-lingual support
 	$language = new text;
 	$text = $language->get();
