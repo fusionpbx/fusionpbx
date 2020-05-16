@@ -109,13 +109,14 @@ if (!class_exists('voicemail_greetings')) {
 
 						//get necessary greeting details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, greeting_filename from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, greeting_filename, greeting_id from v_".$this->table." ";
 								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$greeting_filenames[$row['uuid']] = $row['greeting_filename'];
+										$greeting_ids[$this->voicemail_id] = $row['greeting_id'];
 									}
 								}
 								unset($sql, $parameters, $rows, $row);
@@ -128,11 +129,8 @@ if (!class_exists('voicemail_greetings')) {
 							if (is_array($greeting_filenames) && @sizeof($greeting_filenames) != 0) {
 								$x = 0;
 								foreach ($greeting_filenames as $voicemail_greeting_uuid => $greeting_filename) {
-
 									//delete the recording file
 										@unlink($greeting_directory.'/'.$greeting_filename);
-
-
 									//build the delete array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $voicemail_greeting_uuid;
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -140,20 +138,39 @@ if (!class_exists('voicemail_greetings')) {
 								}
 							}
 
+						//reset voicemail box(es) to default (null) if deleted greeting(s) were assigned
+							if (is_array($array) && @sizeof($array) != 0 && is_array($greeting_ids) && @sizeof($greeting_ids)) {
+								foreach ($greeting_ids as $voicemail_id => $greeting_id) {
+									if (is_numeric($voicemail_id) && is_numeric($greeting_id)) {
+										$sql = "update v_voicemails set greeting_id = null ";
+										$sql .= "where domain_uuid = :domain_uuid ";
+										$sql .= "and voicemail_id = :voicemail_id ";
+										$sql .= "and greeting_id = :greeting_id ";
+										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+										$parameters['voicemail_id'] = $voicemail_id;
+										$parameters['greeting_id'] = $greeting_id;
+										$database = new database;
+										$database->app_name = $this->app_name;
+										$database->app_uuid = $this->app_uuid;
+										$database->execute($sql, $parameters);
+										unset($sql, $parameters);
+									}
+								}
+							}
+
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
-
 								//execute delete
 									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
-
 								//set message
 									message::add($text['message-delete']);
 							}
 							unset($records);
+
 					}
 			}
 		} //method
