@@ -15,12 +15,13 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2020
 --	the Initial Developer. All Rights Reserved.
 
 --includes
 	local Database = require "resources.functions.database";
 	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local Settings = require "resources.functions.lazy_settings"
 	require "resources.functions.trim";
 
 --get the variables
@@ -50,7 +51,7 @@
 	end
 
 --set the strategy
-	follow_me_strategy = 'enterprise'; --simultaneous, enterprise
+	local follow_me_strategy = settings:get('follow_me', 'strategy', 'text') or 'enterprise'; --simultaneous, enterprise
 
 --include json library
 	debug["sql"] = false;
