@@ -50,7 +50,11 @@
 		call_direction = "local";
 	end
 
+--connect to the database
+	local dbh = Database.new('system');
+
 --set the strategy
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
 	local follow_me_strategy = settings:get('follow_me', 'strategy', 'text') or 'enterprise'; --simultaneous, enterprise
 
 --include json library
@@ -89,9 +93,6 @@
 		end
 		return count, destination_number, toll_allow;
 	end
-
---connect to the database
-	local dbh = Database.new('system');
 
 --get the forward busy
 	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_enabled=";
