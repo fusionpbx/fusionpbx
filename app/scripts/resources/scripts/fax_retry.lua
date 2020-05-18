@@ -648,7 +648,7 @@
 				email_address,
 				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_success_default.."\n"..x_headers,
 				email_body_success_default,
-				fax_file
+				fax_file:gsub(".tif",".pdf",x)
 			);
 
 		if (settings['fax']['keep_local']['boolean'] ~= "nil") then
