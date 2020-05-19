@@ -234,6 +234,10 @@
 
 	if (!$password_reset) {
 
+		//create token
+			$object = new token;
+			$token = $object->create('login');
+
 		echo "<div id='login_form'>\n";
 		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
 		echo "<input type='text' class='txt login' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
@@ -262,6 +266,7 @@
 			) {
 			echo "<br><br><a class='login_link' onclick=\"toggle_password_reset('login_form','request_form','email');\">".$text['label-reset_password']."</a>";
 		}
+		echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo "</form>";
 		echo "<script>$('#username').trigger('focus');</script>";
 		echo "</div>";
