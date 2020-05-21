@@ -628,6 +628,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='right' ".(($user_setting_value == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "menu_side_state" && $user_setting_name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='contracted'>".$text['option-contracted']."</option>\n";
+		echo "    	<option value='expanded' ".($user_setting_value == "expanded" ? "selected='selected'" : null).">".$text['option-expanded']."</option>\n";
+		echo "    </select>\n";
+	}
 	else {
 		echo "	<input class='formfld' type='text' id='user_setting_value' name='user_setting_value' maxlength='255' value=\"".escape($user_setting_value)."\">\n";
 	}

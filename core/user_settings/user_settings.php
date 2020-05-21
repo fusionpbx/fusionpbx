@@ -280,14 +280,17 @@
 				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
-				echo "		".$text['option-button_icons_'.$row['domain_setting_value']]."\n";
+				echo "		".$text['option-button_icons_'.$row['user_setting_value']]."\n";
+			}
+			else if ($category == 'theme' && $subcategory == 'menu_side_state' && $name == 'text') {
+				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['user_setting_value'])."</span>\n";
 			}
 			else if ($category == 'recordings' && $subcategory == 'storage_type' && $name == 'text') {
-				echo "		".$text['label-'.$row['domain_setting_value']]."\n";
+				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
 			else {
 				echo "		".escape($row['user_setting_value'])."\n";
