@@ -457,7 +457,14 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: <?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60'; ?>px;
+		<?php
+		if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded') {
+			echo "width: ".(is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225')."px;\n";
+		}
+		else {
+			echo "width: ".(is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60')."px;\n";
+		}
+		?>
 		height: 100%;
 		overflow: auto;
 		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
@@ -538,9 +545,37 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		text-decoration: none;
 		}
 
+	/* menu side control container */
+	div#menu_side_control_container {
+		position: -webkit-sticky;
+		position: sticky;
+		z-index: 99901;
+		top: 0;
+		padding: 0;
+		min-height: 75px;
+		text-align: left;
+		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
+			background-image: url("<?php echo $_SESSION['theme']['menu_main_background_image']['text']; ?>");
+			background-position: 0px 0px;
+			background-repeat: repeat-y;
+		<?php } else {?>
+			background: <?php echo ($_SESSION['theme']['menu_main_background_color']['text'] != '') ? $_SESSION['theme']['menu_main_background_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
+		<?php } ?>
+		<?php
+		echo ($_SESSION['theme']['menu_main_border_color']['text'] == '' && $_SESSION['theme']['menu_main_border_size']['text'] == '') ? "border: 0;\n" : null;
+		echo ($_SESSION['theme']['menu_main_border_color']['text'] != '') ? 'border-color: '.$_SESSION['theme']['menu_main_border_color']['text'].";\n" : null;
+		echo ($_SESSION['theme']['menu_main_border_size']['text'] != '') ? 'border-width: '.$_SESSION['theme']['menu_main_border_size']['text'].";\n" : null;
+		?>
+		-moz-border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
+		-webkit-border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
+		-khtml-border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
+		border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
+		}
+
 	div#menu_side_container > a.menu_side_item_main,
 	div#menu_side_container > div > a.menu_side_item_main,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main {
+	div#menu_side_container > div#menu_side_brand_container a.menu_side_item_main,
+	div#menu_side_container > div#menu_side_control_container a.menu_side_item_main {
 		display: block;
 		width: 100%;
 		padding: 10px 20px;
@@ -552,14 +587,17 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 
 	div#menu_side_container > a.menu_side_item_main:hover,
-	div#menu_side_container a.menu_side_item_main:focus,
-	div#menu_side_container a.menu_side_item_main:active,
+	div#menu_side_container > a.menu_side_item_main:focus,
+	div#menu_side_container > a.menu_side_item_main:active,
 	div#menu_side_container > div > a.menu_side_item_main:hover,
 	div#menu_side_container > div > a.menu_side_item_main:focus,
 	div#menu_side_container > div > a.menu_side_item_main:active,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:hover,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:focus,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:active {
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:hover,
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:focus,
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:active,
+	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:hover,
+	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:focus,
+	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;

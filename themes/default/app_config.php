@@ -1703,6 +1703,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the expanded brand image path for the Side menu.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "66d37950-15db-4dd0-888a-17ded7b5c0dc";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_state";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "contracted";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default state of the Side Menu: expanded (pinned) or contracted (unpinned).";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "97a620e1-d7b2-4550-8648-726c3029143d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action_bar_border_top";
