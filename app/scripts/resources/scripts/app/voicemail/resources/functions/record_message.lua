@@ -221,6 +221,7 @@
                                         end
                                         local handle = io.popen(transcribe_cmd);
                                         local transcribe_result = handle:read("*a");
+                                        transcribe_result = transcribe_result:gsub('*HESITATION ', '');
                                         handle:close();
                                         if (debug["info"]) then
                                                 freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
