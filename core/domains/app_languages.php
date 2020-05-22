@@ -280,6 +280,27 @@ $text['message-delete_failed']['ru-ru'] = "Не выбрана настройк�
 $text['message-delete_failed']['sv-se'] = "Ingen Inställning Markerad";
 $text['message-delete_failed']['uk-ua'] = "Налаштування не вказано";
 
+$text['message-domain_exists']['en-us'] = "Domain Already Exists";
+$text['message-domain_exists']['en-gb'] = "Domain Already Exists";
+$text['message-domain_exists']['ar-eg'] = "Domain Already Exists";
+$text['message-domain_exists']['de-at'] = "Domain Already Exists";
+$text['message-domain_exists']['de-ch'] = "Domain Already Exists";
+$text['message-domain_exists']['de-de'] = "Domain Already Exists";
+$text['message-domain_exists']['es-cl'] = "Domain Already Exists";
+$text['message-domain_exists']['es-mx'] = "Domain Already Exists";
+$text['message-domain_exists']['fr-ca'] = "Domain Already Exists";
+$text['message-domain_exists']['fr-fr'] = "Domain Already Exists";
+$text['message-domain_exists']['he-il'] = "Domain Already Exists";
+$text['message-domain_exists']['it-it'] = "Domain Already Exists";
+$text['message-domain_exists']['nl-nl'] = "Domain Already Exists";
+$text['message-domain_exists']['pl-pl'] = "Domain Already Exists";
+$text['message-domain_exists']['pt-br'] = "Domain Already Exists";
+$text['message-domain_exists']['pt-pt'] = "Domain Already Exists";
+$text['message-domain_exists']['ro-ro'] = "Domain Already Exists";
+$text['message-domain_exists']['ru-ru'] = "Domain Already Exists";
+$text['message-domain_exists']['sv-se'] = "Domain Already Exists";
+$text['message-domain_exists']['uk-ua'] = "Domain Already Exists";
+
 $text['label-web_fonts']['en-us'] = "Web Fonts";
 $text['label-web_fonts']['en-gb'] = "Web Fonts";
 $text['label-web_fonts']['ar-eg'] = "الخطوط على شبكة الإنترنت";
