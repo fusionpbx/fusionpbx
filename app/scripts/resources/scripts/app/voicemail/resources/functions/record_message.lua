@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -209,7 +209,6 @@
 				end
 			end
 
-		--Watson
 			if (transcribe_provider == "watson") then
 				local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
 				local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
@@ -221,7 +220,7 @@
 					end
 					local handle = io.popen(transcribe_cmd);
 					local transcribe_result = handle:read("*a");
-					transcribe_result = transcribe_result:gsub('*HESITATION ', '');
+					transcribe_result = transcribe_result:gsub('%%HESITATION ', '');
 					handle:close();
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
@@ -318,13 +317,12 @@
 				freeswitch.consoleLog("notice", "[voicemail] message too short for transcription.\n");
 			end
 		end
-
 		return '';
 	end
 
 --save the recording
 	function record_message()
-		
+
 		--set the variables
 			local db = dbh or Database.new('system')
 			local settings = Settings.new(db, domain_name, domain_uuid)
@@ -333,7 +331,7 @@
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
-	
+
 		--debug information
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
