@@ -182,7 +182,8 @@
 		//build menu by style
 			switch ($_SESSION['theme']['menu_style']['text']) {
 				case 'side':
-					$container_open = "<div id='menu_side_container'>\n";
+					$menu_side_toggle = $_SESSION['theme']['menu_side_toggle']['text'] == 'hover' ? " onmouseenter=\"if ($('#menu_side_container').width() < 100) { menu_side_expand(); }\" onmouseleave=\"if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract(); }\"" : null;
+					$container_open = "<div id='menu_side_container' class='hide-xs' ".$menu_side_toggle." >\n";
 					$menu = new menu;
 					$menu->text = $text;
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);

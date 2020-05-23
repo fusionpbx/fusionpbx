@@ -516,12 +516,22 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 
 	/* menu side logo */
+	a.menu_brand_image {
+		display: inline-block;
+		text-align: center;
+		padding: 15px 20px;
+		}
+
+	a.menu_brand_image:hover {
+		text-decoration: none;
+		}
+
 	img#menu_brand_image_contracted {
 		border: none;
 		width: auto;
-		max-height: 30px;
-		max-width: 30px;
-		margin-right: 10px;
+		max-height: 20px;
+		max-width: 20px;
+		margin-left: -1px;
 		}
 
 	img#menu_brand_image_expanded {
@@ -529,18 +539,19 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		height: auto;
 		max-width: 145px;
 		max-height: 35px;
-		margin-top: -3px;
-		margin-left: -6px;
+		margin-left: -7px;
 		}
 
 	/* menu brand text */
-	.menu_brand_text {
+	a.menu_brand_text {
+		display: inline-block;
+		padding: 10px 20px;
 		color: <?php echo ($_SESSION['theme']['menu_brand_text_color']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color']['text'] : 'rgba(255,255,255,0.80)'; ?>;
 		font-weight: 600;
 		white-space: nowrap;
 		}
 
-	.menu_brand_text:hover {
+	a.menu_brand_text:hover {
 		color: <?php echo ($_SESSION['theme']['menu_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
 		text-decoration: none;
 		}
@@ -574,7 +585,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	div#menu_side_container > a.menu_side_item_main,
 	div#menu_side_container > div > a.menu_side_item_main,
-	div#menu_side_container > div#menu_side_brand_container a.menu_side_item_main,
 	div#menu_side_container > div#menu_side_control_container a.menu_side_item_main {
 		display: block;
 		width: 100%;
@@ -594,10 +604,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	div#menu_side_container > div > a.menu_side_item_main:active,
 	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:hover,
 	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:focus,
-	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:active,
-	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:hover,
-	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:focus,
-	div#menu_side_container > div#menu_side_brand_container > div a.menu_side_item_main:active {
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;
@@ -615,6 +622,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		cursor: pointer;
 		}
 
+	@media (max-width: 575.98px) {
+		a.menu_side_item_sub {
+			padding: 8px 20px 8px 45px;
+			}
+	}
+
 	a.menu_side_item_sub:hover,
 	a.menu_side_item_sub:focus,
 	a.menu_side_item_sub:active {
@@ -627,6 +640,32 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		padding: 10px;
 		cursor: pointer;
 		}
+
+	div#content_container {
+		padding: 0;
+		padding-top: 0px;
+		text-align: center;
+		}
+
+	@media (max-width: 575.98px) {
+		div#content_container {
+			width: 100%;
+			}
+	}
+	@media (min-width: 576px) {
+		div#content_container {
+			<?php
+			if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded') {
+				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225';
+			}
+			else {
+				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60';
+			}
+			?>
+			width: calc(100% - <?php echo $content_container_width; ?>px);
+			float: right;
+			}
+	}
 
 /* BUTTONS ********************************************************************/
 
