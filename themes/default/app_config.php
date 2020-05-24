@@ -415,6 +415,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color of the main menu items.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed6bee7c-7d07-4a06-a94e-75d57231d36f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_main_icon_color_hover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#69e5ff";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the icon hover color of the main menu items.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aaed6662-d441-4a34-9ac6-874af33e4fd1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_main_text_font";
