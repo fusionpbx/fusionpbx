@@ -369,4 +369,27 @@ $text['theme-message-menu_contracted']['sv-se'] = "Menu Unpinned";
 $text['theme-message-menu_contracted']['uk-ua'] = "Menu Unpinned";
 $text['theme-message-menu_contracted']['tr-tr'] = "Menu Unpinned";
 
+$text['theme-message-menu_reset']['en-us'] = "Menu State Reset";
+$text['theme-message-menu_reset']['en-gb'] = "Menu State Reset";
+$text['theme-message-menu_reset']['ar-eg'] = "Menu State Reset";
+$text['theme-message-menu_reset']['de-at'] = "Menu State Reset";
+$text['theme-message-menu_reset']['de-ch'] = "Menu State Reset";
+$text['theme-message-menu_reset']['de-de'] = "Menu State Reset";
+$text['theme-message-menu_reset']['el-gr'] = "Menu State Reset";
+$text['theme-message-menu_reset']['es-cl'] = "Menu State Reset";
+$text['theme-message-menu_reset']['es-mx'] = "Menu State Reset";
+$text['theme-message-menu_reset']['fr-ca'] = "Menu State Reset";
+$text['theme-message-menu_reset']['fr-fr'] = "Menu State Reset";
+$text['theme-message-menu_reset']['he-il'] = "Menu State Reset";
+$text['theme-message-menu_reset']['it-it'] = "Menu State Reset";
+$text['theme-message-menu_reset']['nl-nl'] = "Menu State Reset";
+$text['theme-message-menu_reset']['pl-pl'] = "Menu State Reset";
+$text['theme-message-menu_reset']['pt-br'] = "Menu State Reset";
+$text['theme-message-menu_reset']['pt-pt'] = "Menu State Reset";
+$text['theme-message-menu_reset']['ro-ro'] = "Menu State Reset";
+$text['theme-message-menu_reset']['ru-ru'] = "Menu State Reset";
+$text['theme-message-menu_reset']['sv-se'] = "Menu State Reset";
+$text['theme-message-menu_reset']['uk-ua'] = "Menu State Reset";
+$text['theme-message-menu_reset']['tr-tr'] = "Menu State Reset";
+
 ?>

@@ -122,39 +122,37 @@
 				}
 
 				function menu_side_expand() {
-					if (menu_side_state_current == 'contracted') {
+					{/literal}
+					{if $settings.theme.menu_brand_type == 'image_text'}
+						{literal}
+						$('#menu_brand_image_contracted').animate({ width: '30px', 'margin-left': '0' }, 250);
 						{/literal}
-						{if $settings.theme.menu_brand_type == 'image_text'}
+					{elseif $settings.theme.menu_brand_type == 'image' || $settings.theme.menu_brand_type == ''}
+						{literal}
+						$('#menu_brand_image_contracted').fadeOut(180);
+						{/literal}
+					{/if}
+					{literal}
+					$('.menu_side_expand').hide();
+					$('.menu_side_contract').show();
+					$('#menu_side_container').show();
+					var menu_side_container_width = $(window).width() < 576 ? $(window).width() : '{/literal}{$settings.theme.menu_side_width_expanded}{literal}px';
+					$('#menu_side_container').animate({ width: menu_side_container_width }, 180, function() {
+						{/literal}
+						{if $settings.theme.menu_brand_type == 'image' || $settings.theme.menu_brand_type == ''}
 							{literal}
-							$('#menu_brand_image_contracted').animate({ width: '30px', 'margin-left': '0' }, 250);
-							{/literal}
-						{elseif $settings.theme.menu_brand_type == 'image' || $settings.theme.menu_brand_type == ''}
-							{literal}
-							$('#menu_brand_image_contracted').fadeOut(180);
+							$('#menu_brand_image_expanded').fadeIn(180);
 							{/literal}
 						{/if}
 						{literal}
-						$('.menu_side_expand').hide();
-						$('.menu_side_contract').show();
-						$('#menu_side_container').show();
-						var menu_side_container_width = $(window).width() < 576 ? $(window).width() : '{/literal}{$settings.theme.menu_side_width_expanded}{literal}px';
-						$('#menu_side_container').animate({ width: menu_side_container_width }, 180, function() {
-							{/literal}
-							{if $settings.theme.menu_brand_type == 'image' || $settings.theme.menu_brand_type == ''}
-								{literal}
-								$('#menu_brand_image_expanded').fadeIn(180);
-								{/literal}
-							{/if}
-							{literal}
-							$('.menu_side_control_state').fadeIn(180);
-							$('.menu_brand_text').fadeIn(180);
-							$('.menu_side_item_title').fadeIn(180, function() {
-								menu_side_state_current = 'expanded';
-							});
+						$('.menu_side_control_state').fadeIn(180);
+						$('.menu_brand_text').fadeIn(180);
+						$('.menu_side_item_title').fadeIn(180, function() {
+							menu_side_state_current = 'expanded';
 						});
-						if ($(window).width() >= 576) {
-							$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_expanded}{literal} }, 250);
-						}
+					});
+					if ($(window).width() >= 576) {
+						$('#content_container').animate({ width: $(window).width() - {/literal}{$settings.theme.menu_side_width_expanded}{literal} }, 250);
 					}
 				}
 
@@ -179,6 +177,10 @@
 										document.getElementById('menu_side_state_current').value = 'contracted';
 										display_message("{/literal}{$text.theme_message_menu_contracted}{literal}", 'positive', 1000);
 									}
+								}
+								else if (setting_modified == 'deleted') {
+									display_message("{/literal}{$text.theme_message_menu_reset}{literal}", 'positive', 1000);
+									document.location.reload();
 								}
 							}
 						}

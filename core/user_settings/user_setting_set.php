@@ -48,7 +48,11 @@ Mark J Crane <markjcrane@fusionpbx.com>
 		case 'theme':
 			switch ($user_setting_subcategory) {
 				case 'menu_side_state':
-					if ($submitted_value == 'expanded' || $submitted_value == 'contracted') {
+					if ($submitted_value == 'delete') {
+						$user_setting_value = 'delete';
+						$user_setting_enabled = 'delete';
+					}
+					else if ($submitted_value == 'expanded' || $submitted_value == 'contracted') {
 						$user_setting_value = $submitted_value;
 						$user_setting_enabled = 'true';
 					}
@@ -84,38 +88,73 @@ Mark J Crane <markjcrane@fusionpbx.com>
 			$user_setting_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
-		//create data array
-			$array['user_settings'][0]['user_setting_uuid'] = is_uuid($user_setting_uuid) ? $user_setting_uuid : uuid();
-			$array['user_settings'][0]['user_uuid'] = $_SESSION['user_uuid'];
-			$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-			$array['user_settings'][0]['user_setting_category'] = $user_setting_category;
-			$array['user_settings'][0]['user_setting_subcategory'] = $user_setting_subcategory;
-			$array['user_settings'][0]['user_setting_name'] = $user_setting_name;
-			$array['user_settings'][0]['user_setting_value'] = $user_setting_value;
-			//$array['user_settings'][0]['user_setting_order'] = $user_setting_order;
-			$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
+		//delete user setting
+			if ($user_setting_value == 'delete' && $user_setting_enabled == 'delete') {
+				if (is_uuid($user_setting_uuid)) {
+					//create data array
+						$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuid;
+						$array['user_settings'][0]['user_uuid'] = $_SESSION['user_uuid'];
+						$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('user_setting_delete', 'temp');
+					//execute
+						$database = new database;
+						$database->app_name = 'user_settings';
+						$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+						$database->delete($array);
+						unset($array);
+					//revoke temporary permissions
+						$p->delete('user_setting_delete', 'temp');
+					//reset session variables to default
+						require "resources/classes/domains.php";
+						$domain = new domains();
+						$domain->db = $db;
+						$domain->set();
+				}
 
-		//grant temporary permissions
-			$p = new permissions;
-			$p->add('user_setting_add', 'temp');
-			$p->add('user_setting_edit', 'temp');
+				//set response
+					echo 'deleted';
 
-		//execute
-			$database = new database;
-			$database->app_name = 'user_settings';
-			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
-			$database->save($array);
-			unset($array);
+			}
 
-		//revoke temporary permissions
-			$p->delete('user_setting_add', 'temp');
-			$p->delete('user_setting_edit', 'temp');
+		//insert or update user setting
+			else {
 
-		//update session variable
-			$_SESSION[$user_setting_category][$user_setting_subcategory][$user_setting_name] = $user_setting_value;
+				//create data array
+					$array['user_settings'][0]['user_setting_uuid'] = is_uuid($user_setting_uuid) ? $user_setting_uuid : uuid();
+					$array['user_settings'][0]['user_uuid'] = $_SESSION['user_uuid'];
+					$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['user_settings'][0]['user_setting_category'] = $user_setting_category;
+					$array['user_settings'][0]['user_setting_subcategory'] = $user_setting_subcategory;
+					$array['user_settings'][0]['user_setting_name'] = $user_setting_name;
+					$array['user_settings'][0]['user_setting_value'] = $user_setting_value;
+					//$array['user_settings'][0]['user_setting_order'] = $user_setting_order;
+					$array['user_settings'][0]['user_setting_enabled'] = $user_setting_enabled;
 
-		//set response
-			echo 'true';
+				//grant temporary permissions
+					$p = new permissions;
+					$p->add('user_setting_add', 'temp');
+					$p->add('user_setting_edit', 'temp');
+
+				//execute
+					$database = new database;
+					$database->app_name = 'user_settings';
+					$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
+					$database->save($array);
+					unset($array);
+
+				//revoke temporary permissions
+					$p->delete('user_setting_add', 'temp');
+					$p->delete('user_setting_edit', 'temp');
+
+				//update session variable
+					$_SESSION[$user_setting_category][$user_setting_subcategory][$user_setting_name] = $user_setting_value;
+
+				//set response
+					echo 'true';
+
+			}
 	}
 
 ?>
