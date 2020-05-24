@@ -610,6 +610,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		text-decoration: none;
 		}
 
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon {
+		color: <?php echo ($_SESSION['theme']['menu_main_icon_color']['text'] != '') ? $_SESSION['theme']['menu_main_icon_color']['text'] : '#fd9c03'; ?>;
+	}
+
 	div#menu_side_container > a.menu_side_item_main:hover > i.menu_side_item_icon,
 	div#menu_side_container > a.menu_side_item_main:focus > i.menu_side_item_icon,
 	div#menu_side_container > a.menu_side_item_main:active > i.menu_side_item_icon {
