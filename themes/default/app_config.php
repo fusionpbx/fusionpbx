@@ -1711,13 +1711,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default state of the Side Menu: expanded (pinned) or contracted (unpinned).";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "05e0318f-4344-4d40-9690-fb5cbcf20a2d";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eaab943f-34d9-44f5-854a-c2288d88dfd0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_state_user";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_pin";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Side Menu toggle icon allowing users to choose their own state preference (contracted or expanded).";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Side Menu toggle icon allowing users to choose their own preferred menu state (contracted or expanded).";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8ee8012a-da8c-483a-996d-d81b30a8bbea";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
