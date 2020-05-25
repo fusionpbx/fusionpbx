@@ -156,6 +156,16 @@
 					}
 				}
 
+				function menu_side_item_toggle(item_id) {
+					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}']);
+					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}');
+					$('#sub_'+item_id).slideToggle(180, function() {
+						if (!$(this).is(':hidden')) {
+							$('.menu_side_sub').not($(this)).slideUp(180);
+						}
+					});
+				}
+
 				function menu_side_state_set(state) {
 					var user_setting_set_path = '{/literal}{$project_path}{literal}/core/user_settings/user_setting_set.php?category=theme&subcategory=menu_side_state&name=text&value='+state;
 					var xhr = new XMLHttpRequest();

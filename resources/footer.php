@@ -189,6 +189,8 @@
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);
 					unset($menu);
 					$view->assign('menu_side_state', (isset($_SESSION['theme']['menu_side_state']['text']) && $_SESSION['theme']['menu_side_state']['text'] != '' ? $_SESSION['theme']['menu_side_state']['text'] : 'contracted'));
+					$view->assign('menu_side_item_main_sub_icon_expand', (isset($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text']) && $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down'));
+					$view->assign('menu_side_item_main_sub_icon_contract', (isset($_SESSION['theme']['menu_side_item_main_sub_icon_contract']['text']) && $_SESSION['theme']['menu_side_item_main_sub_icon_contract']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_contract']['text'] : 'chevron-up'));
 					break;
 				case 'inline':
 					$container_open = "<div class='container-fluid' style='padding: 0;' align='".($_SESSION['theme']['logo_align']['text'] != '' ? $_SESSION['theme']['logo_align']['text'] : 'left')."'>\n";
