@@ -1113,7 +1113,7 @@ if (!class_exists('menu')) {
 						$menu_target = ($menu_item_main['menu_item_category'] == 'external') ? '_blank' : '';
 						$html .= "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('".$menu_item_main['menu_item_uuid']."');\"")." title=\"".$menu_item_main['menu_language_title']."\">";
 						if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0 && $_SESSION['theme']['menu_side_item_main_sub_icons']['boolean'] == 'true') {
-							$html .= "	<div style='float: right; margin-right: -1px;'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows fas fa-".($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down')." fa-xs'></i></div>\n";
+							$html .= "	<div class='menu_side_contract' style='float: right; margin-right: -1px;'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows fas fa-".($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down')." fa-xs'></i></div>\n";
 						}
 						if ($menu_item_main['menu_item_icon'] != '') {
 							$html .= "<i class='menu_side_item_icon fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
