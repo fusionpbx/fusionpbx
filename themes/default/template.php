@@ -107,6 +107,7 @@
 						{/if}
 						{literal}
 						$('.menu_side_control_state').hide();
+						$('.menu_side_item_main_sub_icons').hide();
 						$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 							menu_side_state_current = 'contracted';
 						});
@@ -147,6 +148,7 @@
 						{literal}
 						$('.menu_side_control_state').fadeIn(180);
 						$('.menu_brand_text').fadeIn(180);
+						$('.menu_side_item_main_sub_icons').fadeIn(180);
 						$('.menu_side_item_title').fadeIn(180, function() {
 							menu_side_state_current = 'expanded';
 						});
