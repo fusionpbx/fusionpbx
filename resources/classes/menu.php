@@ -1134,7 +1134,7 @@ if (!class_exists('menu')) {
 					$html .= "	<div style='height: 100px;'></div>\n";
 				}
 			$html .= "</div>\n";
-			$html .= "<div id='content_container' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "onclick=\"if ($(window).width() >= 576 && document.getElementById('menu_side_state_current').value != 'expanded') { menu_side_contract(); }\"" : null).">\n";
+			$html .= "<div id='content_container' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576 && document.getElementById('menu_side_state_current').value != 'expanded') { menu_side_contract(); }\"" : null).">\n";
 			$html .= "	<div id='content_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
