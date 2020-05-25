@@ -108,6 +108,7 @@
 						{literal}
 						$('.menu_side_control_state').hide();
 						$('.menu_side_item_main_sub_icons').hide();
+						$('.sub_arrows').removeClass('fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}');
 						$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 							menu_side_state_current = 'contracted';
 						});
