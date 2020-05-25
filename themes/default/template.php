@@ -82,8 +82,17 @@
 
 		{if $settings.theme.menu_style == 'side'}
 			//side menu visibility toggle
+				var menu_side_expand_timer;
+				var menu_side_contract_timer;
 				var menu_side_state_current = '{$menu_side_state}';
 				{literal}
+
+				function menu_side_contract_start() {
+					menu_side_contract_timer = setTimeout(function() {
+						menu_side_contract();
+						}, {/literal}{$settings.theme.menu_side_toggle_hover_delay_contract}{literal});
+				}
+
 				function menu_side_contract() {
 					if (menu_side_state_current == 'expanded') {
 						$('.menu_side_sub').slideUp(180);
@@ -108,7 +117,7 @@
 						{literal}
 						$('.menu_side_control_state').hide();
 						$('.menu_side_item_main_sub_icons').hide();
-						$('.sub_arrows').removeClass('fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}');
+						$('.sub_arrows').removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 						$('#menu_side_container').animate({ width: '{/literal}{$settings.theme.menu_side_width_contracted}{literal}px' }, 180, function() {
 							menu_side_state_current = 'contracted';
 						});
@@ -121,6 +130,12 @@
 							$('#menu_side_container').hide();
 						}
 					}
+				}
+
+				function menu_side_expand_start() {
+					menu_side_expand_timer = setTimeout(function() {
+						menu_side_expand();
+						}, {/literal}{$settings.theme.menu_side_toggle_hover_delay_expand}{literal});
 				}
 
 				function menu_side_expand() {
@@ -160,8 +175,8 @@
 				}
 
 				function menu_side_item_toggle(item_id) {
-					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}']);
-					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$menu_side_item_main_sub_icon_expand}{literal}');
+					$('#sub_arrow_'+item_id).toggleClass(['fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}','fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}']);
+					$('.sub_arrows').not('#sub_arrow_'+item_id).removeClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_contract}{literal}').addClass('fa-{/literal}{$settings.theme.menu_side_item_main_sub_icon_expand}{literal}');
 					$('#sub_'+item_id).slideToggle(180, function() {
 						if (!$(this).is(':hidden')) {
 							$('.menu_side_sub').not($(this)).slideUp(180);
