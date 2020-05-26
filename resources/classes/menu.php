@@ -1139,7 +1139,7 @@ if (!class_exists('menu')) {
 			//header: left
 				$html .= "<div class='float-left'>\n";
 				$html .= button::create(['type'=>'button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default hide-sm-up float-left','onclick'=>'menu_side_expand();']);
-				if (($_SESSION['theme']['menu_brand_type']['text'] == 'text' && $_SESSION['theme']['menu_side_state']['text'] != 'expanded') || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
+				if ($_SESSION['theme']['menu_brand_type']['text'] == 'text' || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
 					$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
 					$html .= "	<div id='body_header_brand_text'><a href='".PROJECT_PATH."/'>".$body_header_brand_text."</a></div>\n";
 				}
