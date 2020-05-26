@@ -215,7 +215,7 @@
 			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
-				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, calling_code) values ";
+				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, country_code) values ";
 				$sql .= "('".uuid()."', 'Afghanistan', 'AF', 'AFG', 4, '93'), ";
 				$sql .= "('".uuid()."', 'Albania', 'AL', 'ALB', 8, '355'), ";
 				$sql .= "('".uuid()."', 'Algeria', 'DZ', 'DZA', 12, '213'), ";
