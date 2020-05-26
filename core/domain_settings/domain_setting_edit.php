@@ -678,6 +678,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='click' ".($row['domain_setting_value'] == "click" ? "selected='selected'" : null).">".$text['option-click']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle_body_width" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
+		echo "    	<option value='fixed' ".($row['domain_setting_value'] == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='listen' ".(($row['domain_setting_value'] == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";

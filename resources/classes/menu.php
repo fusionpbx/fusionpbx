@@ -1091,13 +1091,13 @@ if (!class_exists('menu')) {
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
 					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($_SESSION['theme']['menu_side_pin']['boolean'] == 'true' ? "max-width: calc(100% - 50px);" : null)." ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
 				}
+				$menu_brand_text = $_SESSION['theme']['menu_brand_text']['text'] != '' ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-					$menu_brand_text = $_SESSION['theme']['menu_brand_text']['text'] != '' ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 					$html .= "		<a class='menu_brand_text' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 				}
-				if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-					$menu_brand_image_contracted =  $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
-					$menu_brand_image_expanded =  $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+				if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+					$menu_brand_image_contracted = $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
+					$menu_brand_image_expanded = $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
 					$html .= "		<a class='menu_brand_image' href='".PROJECT_PATH."/'>";
 					$html .= 			"<img id='menu_brand_image_contracted' style='".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "display: none;" : null)."' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
 					$html .= 			"<img id='menu_brand_image_expanded' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
@@ -1138,27 +1138,29 @@ if (!class_exists('menu')) {
 			$html .= "	<div id='content_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
-				$html .= button::create(['type'=>'button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default hide-sm-up','onclick'=>'menu_side_expand();']);
+				$html .= button::create(['type'=>'button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default hide-sm-up float-left','onclick'=>'menu_side_expand();']);
+				if (($_SESSION['theme']['menu_brand_type']['text'] == 'text' && $_SESSION['theme']['menu_side_state']['text'] != 'expanded') || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
+					$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
+					$html .= "	<div id='body_header_brand_text'><a href='".PROJECT_PATH."/'>".$body_header_brand_text."</a></div>\n";
+				}
 				$html .= "</div>\n";
 			//header: right
-				$html .= "<span class='float-right' style='white-space: nowrap;'>";
+				$html .= "<div class='float-right' style='white-space: nowrap;'>";
 				//current user
-					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 85%;'>\n";
-					$html .= "<strong>".$this->text['theme-label-user']."</strong>: ";
-					$html .= "<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION['username']."</a>";
+					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
+					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-user-circle fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
-						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 85%;'>\n";
-						$html .= "<strong>".$this->text['theme-label-domain']."</strong>: ";
-						$html .= "<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
+						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-globe fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "</span>\n";
 					}
 				//logout icon
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$html .= "<a id='header_logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
 					}
-				$html .= "</span>";
+				$html .= "</div>";
 			$html .= "	</div>\n";
 
 			//modal for logout icon (above)

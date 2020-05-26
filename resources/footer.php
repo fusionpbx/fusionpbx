@@ -118,7 +118,7 @@
 						//otherwise
 							default:
 								if (isset($setting['text']) && $setting['text'] != '') {
-									$settings['theme'][$subcategory] = escape($setting['text']);
+									$settings['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
 								}
 								else if (isset($setting['numeric']) && is_numeric($setting['numeric'])) {
 									$settings['theme'][$subcategory] = $setting['numeric'];
