@@ -1227,10 +1227,23 @@ include "root.php";
 									if ($prep_statement) {
 										//get the data
 											try {
-												$prep_statement->execute();
+												$res_exec = $prep_statement->execute();
+												if ($res_exec === false) {
+													$errInfo = $prep_statement->errorInfo();
+													if (isset($errInfo[2])) {
+														throw new RuntimeException($errInfo[2]);
+													} else {
+														throw new RuntimeException("Error executing SQL statement");
+													}
+												}
 												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
+												echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
+												echo $sql;
+												exit;
+											}
+											catch(RuntimeException $e) {
 												echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
 												echo $sql;
 												exit;
