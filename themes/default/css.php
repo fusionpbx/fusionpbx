@@ -529,23 +529,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		text-decoration: none;
 		}
 
-	div#body_header_brand_text {
-		display: inline-block;
-		margin: 3px 0 0 10px;
-		}
-
-	div#body_header_brand_text > a {
-		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
-		font-size: <?php echo ($_SESSION['theme']['body_header_brand_text_size']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_size']['text'] : '16px'; ?>;
-		font-weight: 600;
-		text-decoration: none;
-		}
-
-	div#body_header_brand_text > a:hover {
-		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
-		text-decoration: none;
-		}
-
 	/* menu side control container */
 	div#menu_side_control_container {
 		position: -webkit-sticky;
@@ -671,6 +654,56 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			float: right;
 			}
 	}
+
+/* BODY/HEADER BAR *****************************************************************/
+
+	<?php if ($_SESSION['theme']['menu_style']['text'] == 'side') { ?>
+		div#body_header {
+			padding: 10px 10px 15px 10px;
+			height: 50px;
+			<?php echo $_SESSION['theme']['body_header_background_color']['text'] != '' ? 'background-color: '.$_SESSION['theme']['body_header_background_color']['text'].';' : null; ?>
+			}
+	<?php } else { ?>
+		div#body_header {
+			padding: 10px;
+			margin-top: 5px;
+			height: 40px;
+			}
+	<?php } ?>
+
+	div#body_header_brand_image {
+		display: inline-block;
+		margin-left: 10px;
+		}
+
+	div#body_header_brand_image > a:hover {
+		text-decoration: none;
+		}
+
+	img#body_header_brand_image {
+		border: none;
+		margin-top: -4px;
+		height: auto;
+		max-width: 145px;
+		max-height: 35px;
+		}
+
+	div#body_header_brand_text {
+		display: inline-block;
+		margin: 3px 0 0 10px;
+		}
+
+	div#body_header_brand_text > a {
+		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_header_brand_text_size']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_size']['text'] : '16px'; ?>;
+		font-weight: 600;
+		text-decoration: none;
+		}
+
+	div#body_header_brand_text > a:hover {
+		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
+		text-decoration: none;
+		}
 
 /* BUTTONS ********************************************************************/
 
@@ -1217,20 +1250,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			padding: 8px;
 			}
 		}
-
-	<?php if ($_SESSION['theme']['menu_style']['text'] == 'side') { ?>
-		div#content_header {
-			padding: 10px 10px 15px 10px;
-			height: 50px;
-			<?php echo $_SESSION['theme']['body_header_background_color']['text'] != '' ? 'background-color: '.$_SESSION['theme']['body_header_background_color']['text'].';' : null; ?>
-		}
-	<?php } else { ?>
-		div#content_header {
-			padding: 10px;
-			margin-top: 5px;
-			height: 40px;
-		}
-	<?php } ?>
 
 /* GENERAL ELEMENTS *****************************************************************/
 

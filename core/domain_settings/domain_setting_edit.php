@@ -631,6 +631,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
@@ -683,6 +684,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
 		echo "    	<option value='fixed' ".($row['domain_setting_value'] == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
+		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
