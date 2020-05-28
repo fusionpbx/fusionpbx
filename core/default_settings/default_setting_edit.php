@@ -611,8 +611,9 @@
 	}
 	elseif ($category == "theme" && $subcategory == "menu_side_state" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
-		echo "    	<option value='contracted'>".$text['option-contracted']."</option>\n";
-		echo "    	<option value='expanded' ".($default_setting_value == "expanded" ? "selected='selected'" : null).">".$text['option-expanded']."</option>\n";
+		echo "    	<option value='expanded'>".$text['option-expanded']."</option>\n";
+		echo "    	<option value='contracted' ".($default_setting_value == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+		echo "    	<option value='hidden' ".($default_setting_value == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "menu_side_toggle" && $name == "text" ) {
