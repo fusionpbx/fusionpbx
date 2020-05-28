@@ -1103,9 +1103,9 @@ if (!class_exists('menu')) {
 					$html .= 			"<img id='menu_brand_image_expanded' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
 					$html .= 		"</a>\n";
 				}
-				else {
-					$html .= "		<a class='menu_side_item_main menu_side_expand' ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "style='display: none';" : null)." onclick='menu_side_expand();' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
-				}
+// 				else {
+// 					$html .= "		<a class='menu_side_item_main menu_side_expand' ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "style='display: none';" : null)." onclick='menu_side_expand();' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
+// 				}
 				$html .= "	</div>\n";
 			//main menu items
 				if (is_array($menu_array) && sizeof($menu_array) != 0) {
@@ -1138,13 +1138,19 @@ if (!class_exists('menu')) {
 				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
 			}
 			$html .= "<div id='content_container' ".$content_container_onclick.">\n";
-			$html .= "	<div id='content_header'>\n";
+			$html .= "	<div id='body_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
 				$html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
-				if ($_SESSION['theme']['menu_brand_type']['text'] == 'text' || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
-					$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
-					$html .= "	<div id='body_header_brand_text'><a href='".PROJECT_PATH."/'>".$body_header_brand_text."</a></div>\n";
+				$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
+				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'image' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
+					$body_header_brand_image = $_SESSION['theme']['body_header_brand_image']['text'] != '' ? $_SESSION['theme']['body_header_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+					$html .= 	"<div id='body_header_brand_image'>";
+					$html .= 		"<a href='".PROJECT_PATH."/'><img id='body_header_brand_image' src='".escape($body_header_brand_image)."' title=\"".escape($body_header_brand_text)."\"></a>";
+					$html .= 	"</div>";
+				}
+				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'text' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
+					$html .= 	"<div id='body_header_brand_text'><a href='".PROJECT_PATH."/'>".$body_header_brand_text."</a></div>";
 				}
 				$html .= "</div>\n";
 			//header: right
