@@ -458,7 +458,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		top: 0;
 		left: 0;
 		<?php
-		if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded') {
+		if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded' || $_SESSION['theme']['menu_side_state']['text'] == 'hidden') {
 			echo "width: ".(is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225')."px;\n";
 		}
 		else {
@@ -659,6 +659,9 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			<?php
 			if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded') {
 				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225';
+			}
+			else if ($_SESSION['theme']['menu_side_state']['text'] == 'hidden') {
+				$content_container_width = 0;
 			}
 			else {
 				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60';
