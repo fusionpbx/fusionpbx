@@ -132,7 +132,7 @@
 			if (!is_numeric($voicemail_id)) {
 				$voicemail_id = null;
 			}
-			
+
 		//change toll allow delimiter
 			$toll_allow = str_replace(',',':', $toll_allow);
 
@@ -142,8 +142,11 @@
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
 				foreach ($_POST["devices"] as $d => $device) {
+					$device_mac_address = strtolower($device["device_mac_address"]);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
 					$line_numbers[$d] = $device["line_number"];
-					$device_mac_addresses[$d] = format_mac($device["device_mac_address"],'');
+					$device_mac_addresses[$d] = $device_mac_address;
 					$device_templates[$d] = $device["device_template"];
 				}
 			}
@@ -151,16 +154,18 @@
 		//get or set the device_uuid
 			if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
 				foreach ($device_mac_addresses as $d => $device_mac_address) {
-					if (is_mac($device_mac_address)) {
-						$sql = "select device_uuid from v_devices ";
-						$sql .= "where device_mac_address = :device_mac_address ";
-						$sql .= "and domain_uuid = :domain_uuid ";
-						$parameters['device_mac_address'] = $device_mac_address;
-						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$device_uuid = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
-					}
+					$device_mac_address = strtolower($device_mac_address);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
+					$sql = "select device_uuid from v_devices ";
+					$sql .= "where device_mac_address = :device_mac_address ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['device_mac_address'] = $device_mac_address;
+					$parameters['domain_uuid'] = $domain_uuid;
+					$database = new database;
+					$device_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+
 					$device_uuids[$d] = is_uuid($device_uuid) ? $device_uuid : uuid();
 				}
 			}
