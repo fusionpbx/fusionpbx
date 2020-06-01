@@ -1378,7 +1378,7 @@
     <!-- # Mandatory -->
     <P401>0</P401>
     
-    <!-- ##  All other Profile 2 settings are ignored and removed for FusionPBX use  ## -->    
+    <!-- ##  All other Profile 2 settings are typically not used in FusionPBX   ## -->    
 
 
     <!-- ############################################################################## -->
@@ -1663,16 +1663,16 @@
     <!-- # Enable Port(0 - No, 1 - Yes, default is Yes) -->
     <!-- # Offhook Auto-dial(Set the destination for auto-dial after offhook) -->
     <!-- # String Max Length: 64   -->
-    <P4067>{$account.4.user_id}</P4067>
+    <P4067>{$account.8.user_id}</P4067>
 
     <!-- # String Max Length: 64   -->
-    <P4097>{$account.4.user_id}</P4097>
+    <P4097>{$account.8.user_id}</P4097>
 
     <!-- # String Max Length: 64   -->
-    <P4127>{$account.4.password}</P4127>
+    <P4127>{$account.8.password}</P4127>
 
     <!-- # String Max Length: 64   -->
-    <P4187>{$account.4.display_name}</P4187>
+    <P4187>{$account.8.display_name}</P4187>
 
     <!-- # Number: 0 to 1 -->
     <!-- # Mandatory -->
