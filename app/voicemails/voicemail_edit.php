@@ -620,7 +620,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('voicemail_sms_edit')) {
+	if (permission_exists('voicemail_sms_edit') && file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/sms/')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_sms_to']."\n";
