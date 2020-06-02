@@ -302,7 +302,7 @@
 					$(document).scrollTop(0);
 					$('#domains_container').show();
 					$('#domains_block').animate({marginRight: '+=300'}, 400, function() {
-						$('#domain_filter').trigger('focus');
+						$('#domains_filter').trigger('focus');
 					});
 				}
 
@@ -310,8 +310,8 @@
 					$('#domains_visible').val(0);
 					$(document).ready(function() {
 						$('#domains_block').animate({marginRight: '-=300'}, 400, function() {
-							$('#domain_filter').val('');
-							domain_search($('#domain_filter').val());
+							$('#domains_filter').val('');
+							domain_search($('#domains_filter').val());
 							$('.navbar').css('margin-right','0'); //restore navbar margin
 							$('#domains_container').css('right','0'); //domain container right position
 							$('#domains_container').hide();
@@ -972,9 +972,9 @@
 				<div id='domains_block'>
 					<div id='domains_header'>
 						<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-						<a href='{$domains_app_path}'><b style='color: #000;'>{$text.theme_title_domains}</b></a> ({$domain_count})
+						<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span style='font-size: 80%;'>({$domain_count})</span></a>
 						<br><br>
-						<input type='text' id='domain_filter' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup='domain_search(this.value)'>
+						<input type='text' id='domains_filter' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup='domain_search(this.value)'>
 					</div>
 					<div id='domains_list'>
 						{foreach $domains as $row}
