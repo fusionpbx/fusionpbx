@@ -788,7 +788,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
