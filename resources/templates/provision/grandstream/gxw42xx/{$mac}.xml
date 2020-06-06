@@ -4,19 +4,7 @@
 
 <!-- Configuration template for GXW42XX firmware version 1.0.4.7 -->
 
-<!-- Change Log -->
 
-<!-- P-value added since 1.0.4.4 -->
-<!-- Enable LLDP. 0 - Disable, 1 - Enable -->
-<!-- P1684=1 -->
-
-<!-- P-value added since 1.0.3.9 -->
-<!-- Display Language. en - English, zh - Chinese, fr - French, es - Spanish -->
-<!-- String -->
-<!-- Mandatory -->
-<!-- P1362=en -->
-
-<!-- Change Log End -->
 
 <!-- Maintenance-Network setting -->
 
@@ -528,7 +516,7 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress -->
@@ -541,7 +529,12 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress -->
-<P48></P48>
+
+{if isset($account.1.outbound_proxy_primary)}
+    <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+<P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}	
 
 
 <!-- Profile 1-Network Settings -->
@@ -550,7 +543,12 @@
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP . -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory -->
+
+{if isset($grandstream_dns_mode)}
+<P103>{$grandstream_dns_mode}</P103>
+{else}
 <P103>0</P103>
+{/if}
 
 <!-- Primary IP -->
 <!-- IP address -->
@@ -567,7 +565,12 @@
 <!-- NAT Traversal (STUN). 0 - No, 2 - No but send keep-alive, 1 - Yes -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
+
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
+{else}
 <P52>0</P52>
+{/if}
 
 <!-- Use NAT IP.  This will enable our SIP client to use this IP in the SIP message. Example 64.3.153.50. -->
 <!-- String: ipaddress -->
@@ -586,7 +589,13 @@
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
-<P130>0</P130>
+
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -596,7 +605,7 @@
 <!-- Unregister On Reboot. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
-<P81>0</P81>
+<P81>1</P81>
 
 <!-- Outgoing call without Registration. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -882,7 +891,12 @@
 <!-- 2=Enabled and forced -->
 <!-- Number: 0,1,2 -->
 <!-- Mandatory -->
+
+{if isset($grandstream_srtp)}
+<P183>{$grandstream_srtp}</P183>
+{else}
 <P183>0</P183>
+{/if}
 
 <!-- Silence Suppression (VAD). 0 - No, 1 - Yes -->
 <!-- Number: 0,1 -->
