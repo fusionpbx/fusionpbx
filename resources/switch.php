@@ -544,8 +544,8 @@ function extension_exists($extension) {
 	$parameters['extension'] = $extension;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 	return $num_rows > 0 ? true : false;
-	unset($sql, $parameters, $num_rows);
 }
 
 function extension_presence_id($extension, $number_alias = false) {
