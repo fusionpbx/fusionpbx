@@ -401,7 +401,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "</td>\n";
 	//echo "</tr>\n";
 
-	if permission_exists("call_broadcast_caller_id") {
+	if (permission_exists("call_broadcast_caller_id")) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-caller-id-name']."\n";
