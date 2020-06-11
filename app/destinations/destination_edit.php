@@ -84,6 +84,7 @@
 			$dialplan_uuid = trim($_POST["dialplan_uuid"]);
 			$domain_uuid = trim($_POST["domain_uuid"]);
 			$destination_type = trim($_POST["destination_type"]);
+			$destination_condition_field = trim($_POST["destination_condition_field"]);
 			$destination_number = trim($_POST["destination_number"]);
 			$destination_prefix = trim($_POST["destination_prefix"]);
 			$db_destination_number = trim($_POST["db_destination_number"]);
@@ -237,6 +238,9 @@
 								$destination_number = $row["destination_number"];
 								$destination_prefix = $row["destination_prefix"];
 							}
+							if (!permission_exists('destination_condition_field')) {
+								$destination_condition_field = $row["destination_condition_field"];
+							}
 							if (!permission_exists('destination_context')) {
 								$destination_context = $row["destination_context"];
 							}
@@ -274,7 +278,10 @@
 					$dialplan_detail_order = 10;
 
 				//set the dialplan detail type
-					if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+					if (strlen($destination_condition_field) > 0) {
+						$dialplan_detail_type = $destination_condition_field;
+					}
+					elseif (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
 						$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
 					}
 					else {
@@ -348,7 +355,10 @@
 						//check the destination number
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-							if (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
+							if (strlen($destination_condition_field) > 0) {
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $destination_condition_field;
+							}
+							elseif (strlen($_SESSION['dialplan']['destination']['text']) > 0) {
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
 							}
 							else {
@@ -593,6 +603,9 @@
 					$array['destinations'][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array['destinations'][0]["fax_uuid"] = $fax_uuid;
 					$array['destinations'][0]["destination_type"] = $destination_type;
+					if (permission_exists('destination_condition_field')) {
+						$array['destinations'][0]["destination_condition_field"] = $destination_condition_field;
+					}
 					if (permission_exists('destination_number')) {
 						$array['destinations'][0]["destination_number"] = $destination_number;
 						$array['destinations'][0]["destination_number_regex"] = $destination_number_regex;
@@ -617,7 +630,6 @@
 					}
 					$array['destinations'][0]["destination_enabled"] = $destination_enabled;
 					$array['destinations'][0]["destination_description"] = $destination_description;
-
 				//prepare the array
 					$array['dialplans'][] = $dialplan;
 					unset($dialplan);
@@ -713,6 +725,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$destination_type = $row["destination_type"];
 				$destination_number = $row["destination_number"];
+				$destination_condition_field = $row["destination_condition_field"];
 				$destination_prefix = $row["destination_prefix"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
@@ -943,6 +956,19 @@
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
+	
+	if (permission_exists('destination_condition_field')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_condition_field']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_condition_field' maxlength='32' value=\"".escape($destination_condition_field)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_condition_field']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('destination_caller_id_name')) {
 		echo "<tr id='tr_caller_id_name'>\n";

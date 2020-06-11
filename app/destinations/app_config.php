@@ -82,6 +82,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_condition_field";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_name";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -173,6 +176,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the prefix.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_condition_field";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the condition.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_number_regex";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
