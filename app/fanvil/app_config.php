@@ -1080,5 +1080,4 @@
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Set Fanvil LCD energy saving. 0=Sleep, 1=Normal, 2=Disable";
                 $y++;
 
-
 ?>
