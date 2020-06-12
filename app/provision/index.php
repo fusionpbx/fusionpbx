@@ -480,7 +480,7 @@
 
 //device logs
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/device_logs/app_config.php")){
-		require_once "app/domains/device_logs/resources/device_logs.php";
+		require_once "app/device_logs/resources/device_logs.php";
 	}
 
 ?>
