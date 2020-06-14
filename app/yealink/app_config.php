@@ -1081,7 +1081,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f6beec0-01d0-4015-b7f2-26a2b94a0b5d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_auto_dst.url = {$yealink_auto_dst_url}
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_auto_dst_url"
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/yealink/resources/AutoDST.xml";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
