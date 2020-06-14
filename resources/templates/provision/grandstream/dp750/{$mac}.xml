@@ -27,11 +27,16 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
-<P967></P967>
+
+{if isset($account.1.server_address_secondary)}
+<P967>{$account.1.server_address_secondary}:{$account.1.sip_port}</P967>
+{else}
+<P967>{$account.1.server_address_secondary}</P967>
+{/if}
 
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
@@ -40,7 +45,12 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P48>{$account.1.outbound_proxy}</P48>
+
+{if isset($account.1.outbound_proxy_primary)}
+<P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+<P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}	
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -570,7 +580,7 @@
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
-<P987></P987>
+<P987>{$account.2.server_address_secondary}</P987>
 
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
@@ -579,7 +589,12 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P748>{$account.2.outbound_proxy}</P748>
+
+{if isset($account.2.outbound_proxy_primary)}
+<P748>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P748>
+{else}
+<P748>{$account.2.outbound_proxy_primary}</P748>
+{/if}
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -1094,7 +1109,7 @@
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
-<P997></P997>
+<P997>{$account.3.server_address_secondary}</P997>
 
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
@@ -1103,7 +1118,12 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P548>{$account.3.outbound_proxy}</P548>
+
+{if isset($account.3.outbound_proxy_primary)}
+<P548>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P548>
+{else}
+<P548>{$account.3.outbound_proxy_primary}</P548>
+{/if}
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
@@ -1619,7 +1639,7 @@
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
-<P998></P998>
+<P998>{$account.4.server_address_secondary}</P998>
 
 <!-- Prefer Primary SIP Server. 0 - No, 1 - Yes. -->
 <!-- Number: 0,1 -->
@@ -1628,7 +1648,12 @@
 
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
-<P603>{$account.4.outbound_proxy}</P603>
+
+{if isset($account.4.outbound_proxy_primary)}
+<P603>{$account.4.outbound_proxy_primary}:{$account.4.sip_port}</P603>
+{else}
+<P603>{$account.4.outbound_proxy_primary}</P603>
+{/if}
 
 <!-- Voice Mail Access Number -->
 <!-- String -->

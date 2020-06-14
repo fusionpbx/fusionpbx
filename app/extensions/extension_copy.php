@@ -108,7 +108,7 @@
 	$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 	$array['extensions'][0]['extension_uuid'] = uuid();
 	$array['extensions'][0]['extension'] = $extension_new;
-	$array['extensions'][0]['number_alias'] = $number_alias;
+	$array['extensions'][0]['number_alias'] = $number_alias_new;
 	$array['extensions'][0]['password'] = generate_password();
 	$array['extensions'][0]['accountcode'] = $password;
 	$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;

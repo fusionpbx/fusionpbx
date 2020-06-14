@@ -138,23 +138,47 @@
 			$sql_search .= ") ";
 		}
 		else {
-			$sql_search .= "and contact_uuid in ( ";
-			$sql_search .= "	select contact_uuid from v_contacts ";
-			$sql_search .= "	where domain_uuid = :domain_uuid ";
-			$sql_search .= "	and ( ";
-			$sql_search .= "		lower(contact_organization) like :search or ";
-			$sql_search .= "		lower(contact_name_given) like :search or ";
-			$sql_search .= "		lower(contact_name_family) like :search or ";
-			$sql_search .= "		lower(contact_nickname) like :search or ";
-			$sql_search .= "		lower(contact_title) like :search or ";
-			$sql_search .= "		lower(contact_category) like :search or ";
-			$sql_search .= "		lower(contact_role) like :search or ";
-			$sql_search .= "		lower(contact_url) like :search or ";
-			$sql_search .= "		lower(contact_time_zone) like :search or ";
-			$sql_search .= "		lower(contact_note) like :search or ";
-			$sql_search .= "		lower(contact_type) like :search ";
-			$sql_search .= "	) ";
-			$sql_search .= ") ";
+			//open container
+				$sql_search .= "and ( ";
+			//search contact
+				$sql_search .= "contact_uuid in ( ";
+				$sql_search .= "	select contact_uuid from v_contacts ";
+				$sql_search .= "	where domain_uuid = :domain_uuid ";
+				$sql_search .= "	and ( ";
+				$sql_search .= "		lower(contact_organization) like :search or ";
+				$sql_search .= "		lower(contact_name_given) like :search or ";
+				$sql_search .= "		lower(contact_name_family) like :search or ";
+				$sql_search .= "		lower(contact_nickname) like :search or ";
+				$sql_search .= "		lower(contact_title) like :search or ";
+				$sql_search .= "		lower(contact_category) like :search or ";
+				$sql_search .= "		lower(contact_role) like :search or ";
+				$sql_search .= "		lower(contact_url) like :search or ";
+				$sql_search .= "		lower(contact_time_zone) like :search or ";
+				$sql_search .= "		lower(contact_note) like :search or ";
+				$sql_search .= "		lower(contact_type) like :search ";
+				$sql_search .= "	) ";
+				$sql_search .= ") ";
+			//search contact emails
+				if (permission_exists('contact_email_view')) {
+					$sql_search .= "or contact_uuid in ( ";
+					$sql_search .= "	select contact_uuid from v_contact_emails ";
+					$sql_search .= "	where domain_uuid = :domain_uuid ";
+					$sql_search .= "	and ( ";
+					$sql_search .= "		lower(email_address) like :search or ";
+					$sql_search .= "		lower(email_description) like :search ";
+					$sql_search .= "	) ";
+					$sql_search .= ") ";
+				}
+			//search contact notes
+				if (permission_exists('contact_note_view')) {
+					$sql_search .= "or contact_uuid in ( ";
+					$sql_search .= "	select contact_uuid from v_contact_notes ";
+					$sql_search .= "	where domain_uuid = :domain_uuid ";
+					$sql_search .= "	and lower(contact_note) like :search ";
+					$sql_search .= ") ";
+				}
+			//close container
+				$sql_search .= ") ";
 		}
 		$parameters['search'] = '%'.$search.'%';
 	}

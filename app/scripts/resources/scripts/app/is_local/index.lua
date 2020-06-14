@@ -105,10 +105,8 @@
 		--add the function
 			require "resources.functions.explode";
 
-		--define the array/table and variables
+		--define the array/table
 			local var = {}
-			local key = "";
-			local value = "";
 
 		--parse the cache
 			key_pairs = explode("&", value);

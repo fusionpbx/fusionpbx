@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2019 All Rights Reserved.
+	Copyright (C) 2008-2020 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -136,16 +136,21 @@
 			}
 	}
 
+//get the domain_uuid
+	$sql = "select device_uuid, domain_uuid from v_devices ";
+	$sql .= "where device_mac_address = :mac ";
+	$parameters['mac'] = $mac;
+	$database = new database;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row)) {
+		$domain_uuid = $row['domain_uuid'];
+		$device_uuid = $row['device_uuid'];
+		$_SESSION['domain_uuid'] = $domain_uuid;
+	}
+	unset($sql, $parameters);
+
 //get the domain_name and domain_uuid
 	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
-		//get the domain_uuid
-			$sql = "select domain_uuid from v_devices ";
-			$sql .= "where device_mac_address = :mac ";
-			$parameters['mac'] = $mac;
-			$database = new database;
-			$domain_uuid = $database->select($sql, $parameters, 'column');
-			$_SESSION['domain_uuid'] = $domain_uuid;
-			unset($sql, $parameters);
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
@@ -472,5 +477,10 @@
 	}
 	echo $file_contents;
 	closelog();
+
+//device logs
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/device_logs/app_config.php")){
+		require_once "app/device_logs/resources/device_logs.php";
+	}
 
 ?>

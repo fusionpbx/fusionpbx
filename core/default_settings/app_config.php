@@ -539,7 +539,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The numerical code.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "calling_code";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "country_code";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "calling_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The calling code.";
 

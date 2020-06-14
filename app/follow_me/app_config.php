@@ -102,6 +102,17 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_caller_id";
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ee68b6d6-a510-48c4-bb71-4e65fae8a5e5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "follow_me";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "strategy";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "enterprise";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: simultaneous, enterprise ";
+		$y++;
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_follow_me";

@@ -221,7 +221,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM, 6-Preference";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba0ebf59-6364-47b2-9a98-73430669a4c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -1087,5 +1087,37 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL to AutoDST.xml file. The time zone and corresponding DST pre-configurations exist in the AutoDST file. If the DST is set to Automatic, the IP phone obtains the DST configuration from the AutoDST file.";
 		$y++;
-		
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4351b29e-d12e-4887-bd60-3b4ae0c33784";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_inter_digit_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "#Configure the time (in seconds) the phone automatically dials out the dialed digits. It ranges from 1 to 14, the default value is 4.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c02d516f-c5db-4dd6-a756-083fa690a204";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dnd_allow";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set 1 = ON 0 = OFF.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "768c0f46-c9cf-44e2-87fc-4279f956d368";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_default_ssl_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configures the TLS version to use. 0-TLS 1.0 only, 3-SSL V23 automatic negotiation with the server, 4-TLS 1.1 only, 5-TLS 1.2 only, Default 3";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dc570a6d-daa5-49e5-aacb-db51478883b8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_security_tls_cipher_list";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "AES:!ADH:!LOW:!EXPORT:!NULL";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "TLS cipher list Default";
+		$y++;
+
 ?>

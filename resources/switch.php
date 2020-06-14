@@ -428,14 +428,24 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 
 	//get the hostname
 	$hostname = trim(event_socket_request_cmd('api switchname'));
+	if (strlen($hostname) == 0) {
+		$hostname = 'unknown';
+	}
 
 	$sql = "select * from v_dialplans ";
-	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	if (is_uuid($domain_uuid)) {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	}
+	else {
+		$sql .= "where (domain_uuid is null) ";
+	}
 	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
-	$parameters['domain_uuid'] = $domain_uuid;
+	if (is_uuid($domain_uuid)) {
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$parameters['hostname'] = $hostname;
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
@@ -534,8 +544,8 @@ function extension_exists($extension) {
 	$parameters['extension'] = $extension;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 	return $num_rows > 0 ? true : false;
-	unset($sql, $parameters, $num_rows);
 }
 
 function extension_presence_id($extension, $number_alias = false) {

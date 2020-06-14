@@ -630,5 +630,13 @@
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Blind Transfer to BLF Yes=1, No=0. Default=0";
                 $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "82b7076b-e596-49e8-b535-af86e21e0453";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ip_address_mode";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0";
+                $y++;
 
 ?>

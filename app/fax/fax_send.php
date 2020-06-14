@@ -267,7 +267,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$token = new token;
 				if (!$token->validate($_SERVER['PHP_SELF'])) {
 					message::add($text['message-invalid_token'],'negative');
-					header('Location: fax_send.php');
+					header('Location: fax_send.php'.(is_uuid($fax_uuid) ? '?id='.$fax_uuid : null));
 					exit;
 				}
 
@@ -456,38 +456,48 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//logo
 			$display_logo = false;
-			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] == '') {
-				$logo = PROJECT_PATH."/app/fax/resources/images/logo.jpg";
+			if (!is_array($_SESSION['fax']['cover_logo'])) {
+				$logo = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/resources/images/logo.jpg";
 				$display_logo = true;
 			}
-			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
-				$logo = '';
-				$display_logo = false;
+			else if (is_null($_SESSION['fax']['cover_logo']['text'])) {
+				$logo = ''; //explicitly empty
 			}
-			else if (isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
-				$logo = $_SESSION['fax']['cover_logo']['text'];
-				if (substr($logo, 0, 4) == 'http') {
-					$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
-					$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
-					if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
-						if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
-							$raw = file_get_contents($logo);
-							if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
-								$logo = $dir_fax_temp.'/'.$remote_filename;
-							}
-							else {
-								unset($logo);
-							}
+			else if ($_SESSION['fax']['cover_logo']['text'] != '') {
+				if (substr($_SESSION['fax']['cover_logo']['text'], 0, 4) == 'http') {
+					$logo = $_SESSION['fax']['cover_logo']['text'];
+				}
+				else if (substr($_SESSION['fax']['cover_logo']['text'], 0, 1) == '/') {
+					if (substr($_SESSION['fax']['cover_logo']['text'], 0, strlen($_SERVER['DOCUMENT_ROOT'])) != $_SERVER['DOCUMENT_ROOT']) {
+						$logo = $_SERVER['DOCUMENT_ROOT'].$_SESSION['fax']['cover_logo']['text'];
+					}
+					else {
+						$logo = $_SESSION['fax']['cover_logo']['text'];
+					}
+				}
+			}
+			if (isset($logo) && $logo) {
+				$logo_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
+				$logo_fileext = pathinfo($logo_filename, PATHINFO_EXTENSION);
+				if (in_array($logo_fileext, ['gif','jpg','jpeg','png','bmp'])) {
+					if (!file_exists($dir_fax_temp.'/'.$logo_filename)) {
+						$raw = file_get_contents($logo);
+						if (file_put_contents($dir_fax_temp.'/'.$logo_filename, $raw)) {
+							$logo = $dir_fax_temp.'/'.$logo_filename;
+							$display_logo = true;
 						}
 						else {
-							$logo = $dir_fax_temp.'/'.$remote_filename;
+							unset($logo);
 						}
 					}
 					else {
-						unset($logo);
+						$logo = $dir_fax_temp.'/'.$logo_filename;
+						$display_logo = true;
 					}
 				}
-				$display_logo = true;
+				else {
+					unset($logo);
+				}
 			}
 
 			if ($display_logo) {

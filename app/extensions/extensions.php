@@ -153,6 +153,9 @@
 //get the registrations
 	if (permission_exists('extension_registered')) {
 		$obj = new registrations;
+		if ($_GET['show'] == 'all') {
+			$obj->show = 'all';
+		}
 		$registrations = $obj->get('all');
 	}
 
@@ -300,10 +303,10 @@
 			}
 			if (permission_exists('extension_registered')) {
 				echo "	<td>";
-				$extension_number = $row['extension'].'@'.$_SESSION['domain_name'];
+				$extension_number = $row['extension'].'@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				$extension_number_alias = $row['number_alias'];
-				if(strlen($extension_number_alias) > 0) {
-					$extension_number_alias .= '@'.$_SESSION['domain_name'];
+				if (strlen($extension_number_alias) > 0) {
+					$extension_number_alias .= '@'.$_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 				}
 				$found_count = 0;
 				if (is_array($registrations)) {

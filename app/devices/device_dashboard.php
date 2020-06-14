@@ -17,16 +17,17 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2016 All Rights Reserved.
+	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	the Initial Developer. All Rights Reserved.
 
 */
 
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
 	if (permission_exists('device_key_add') || permission_exists('device_key_edit')) {
 		//access granted
 	}
@@ -38,9 +39,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/devices');
-
-//include the device class
-	//require_once "app/devices/resources/classes/device.php";
 
 //get the vendor functions
 	$sql = "select v.name as vendor_name, f.name, f.value ";
@@ -74,6 +72,14 @@
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate('/app/devices/device_dashboard.php') && !$token->validate('login')) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.PROJECT_PATH."/core/user_settings/user_dashboard.php");
+						exit;
+					}
 
 				//get device
 					$sql = "select device_uuid, device_profile_uuid from v_devices ";
@@ -274,7 +280,7 @@
 					}
 
 				//set the message
-					message::add($text["message-$action"]);
+					message::add($text["message-".$action]);
 
 				//redirect the browser
 					header("Location: /core/user_settings/user_dashboard.php");
@@ -419,53 +425,49 @@
 		}
 	}
 
-//show the header
-	//require_once "resources/header.php";
+//create token
+	$object = new token;
+	$token = $object->create('/app/devices/device_dashboard.php');
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action='/app/devices/device_dashboard.php'>\n";
-
-	echo "	<div style='float: left;'>";
-	echo "		<b>".$text['title-device_keys']."</b><br />";
-	if (!$is_included) {
-		echo "	".$text['description-device_keys']."<br />";
-	}
-	echo "	<br />";
+	echo "<div class='action_bar sub'>\n";
+	echo "	<div class='heading'><b>".$text['title-device_keys']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-apply'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_key_vendor."';"]);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"list_form_submit('form_list_device_keys');"]);
 	echo "	</div>\n";
-
-	echo "	<div style='float: right;'>";
-	echo "	</div>\n";
-
-	echo "<div style='float: right;'>\n";
-	echo "	<input type='button' class='btn' value='".$text['button-apply']."' onclick=\"document.location.href='".PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$user_id."@".$server_address."&domain=".$server_address."&agent=".$device_key_vendor."';\">&nbsp;\n";
-	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	if (!$is_included) {
+		echo $text['description-device_keys']."\n";
+		echo "<br /><br />\n";
+	}
+
+	echo "<form method='post' name='frm' id='form_list_device_keys' action='/app/devices/device_dashboard.php'>\n";
+
 	if (permission_exists('device_key_edit')) {
-		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table class='list'>\n";
 		$x = 0;
 		if (is_array($device_keys) && @sizeof($device_keys) != 0) {
-			foreach($device_keys as $row) {
+			foreach ($device_keys as $row) {
 				//set the variables
 					$device_key_vendor = $row['device_key_vendor'];
 					$device_vendor = $row['device_key_vendor'];
-
 				//set the column names
-					if ($previous_device_key_vendor != $row['device_key_vendor']) {
-						echo "			<tr>\n";
-						//echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
-						echo "				<th>".$text['label-device_key_id']."</th>\n";
+					if ($previous_device_key_vendor != $row['device_key_vendor'] || $row['device_key_vendor'] == '') {
+						echo "	<tr class='list-header'>\n";
+						echo "		<th class='shrink'>".$text['label-device_key_id']."</th>\n";
 						if (strlen($row['device_key_vendor']) > 0) {
-							echo "				<th>".ucwords($row['device_key_vendor'])."</th>\n";
-						} else {
-							echo "				<th>".$text['label-device_key_type']."</th>\n";
+							echo "		<th>".ucwords($row['device_key_vendor'])."</th>\n";
 						}
-						//echo "				<td class='row_style".$c."'>".$text['label-device_key_line']."</td>\n";
-						echo "				<th>".$text['label-device_key_value']."</th>\n";
-						//echo "				<td class='row_style".$c."'>".$text['label-device_key_extension']."</td>\n";
-						echo "				<th>".$text['label-device_key_label']."</th>\n";
-						echo "				<th>".$text['label-device_key_icon']."</th>\n";
-						echo "			</tr>\n";
+						else {
+							echo "		<th>".$text['label-device_key_type']."</th>\n";
+						}
+						echo "		<th>".$text['label-device_key_value']."</th>\n";
+						echo "		<th>".$text['label-device_key_label']."</th>\n";
+						echo "		<th class='shrink'>".$text['label-device_key_icon']."</th>\n";
+						echo "	</tr>\n";
 					}
 				//determine whether to hide the element
 					if (strlen($device_key_uuid) == 0) {
@@ -479,10 +481,7 @@
 				//add the primary key uuid
 					if (strlen($row['device_key_uuid']) > 0) {
 						echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
-	
-	
 					}
-
 				//show all the rows in the array
 					/*
 					echo "			<tr>\n";
@@ -538,113 +537,87 @@
 								echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
 							}
 						}
-	
+
 					}
 					echo "	</select>\n";
 					echo "</td>\n";
 					*/
-
-					echo "<td class='row_style".$c." row_style_slim' valign='top' nowrap='nowrap'>\n";
+				//output form rows
+					echo "	<tr class='list-row'>\n";
+					echo "		<td class='input'>\n";
 					if (permission_exists('device_key_id') || permission_exists('device_key_add')) {
 						$selected = "selected='selected'";
-						echo "	<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
-						echo "	<option value=''></option>\n";
+						echo "			<select class='formfld' name='device_keys[".$x."][device_key_id]'>\n";
+						echo "				<option value=''></option>\n";
 						$i = 1;
 						while ($i < 100) {
-							echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
+							echo "				<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
 							$i++;
 						}
-						echo "	</select>\n";
+						echo "			</select>\n";
 					}
 					else {
 						echo "&nbsp;&nbsp;".$row['device_key_id'];
 					}
-					echo "</td>\n";
+					echo "		</td>\n";
 
-					echo "<td class='row_style".$c." row_style_slim' nowrap='nowrap'>\n";
-					//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
-					?>
-					<input class='formfld' type='hidden' id='key_vendor_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_vendor]' value="<?php echo $device_key_vendor; ?>">
-					<input class='formfld' type='hidden' id='key_category_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_category]' value="<?php echo $device_key_category; ?>">
-					<input class='formfld' type='hidden' id='key_uuid_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_uuid]' value="<?php echo $device_uuid; ?>">
-					<input class='formfld' type='hidden' id='key_key_line_<?php echo $x; ?>' name='device_keys[<?php echo $x; ?>][device_key_line]' value="<?php echo $device_key_line; ?>">
-					<?php
-					echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
-					echo "	<option value=''></option>\n";
+					echo "		<td class='input'>\n";
+					echo "			<input class='formfld' type='hidden' id='key_vendor_".$x."' name='device_keys[".$x."][device_key_vendor]' value=\"".$device_key_vendor."\">\n";
+					echo "			<input class='formfld' type='hidden' id='key_category_".$x."' name='device_keys[".$x."][device_key_category]' value=\"".$device_key_category."\">\n";
+					echo "			<input class='formfld' type='hidden' id='key_uuid_".$x."' name='device_keys[".$x."][device_uuid]' value=\"".$device_uuid."\">\n";
+					echo "			<input class='formfld' type='hidden' id='key_key_line_".$x."' name='device_keys[".$x."][device_key_line]' value=\"".$device_key_line."\">\n";
+					echo "			<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."'>\n";
+					echo "				<option value=''></option>\n";
 					$previous_vendor = '';
-					$i=0;
+					$i = 0;
 					if (is_array($vendor_functions)) {
 						foreach ($vendor_functions as $function) {
 							if (strlen($row['device_key_vendor']) == 0 && $function['vendor_name'] != $previous_vendor) {
-								if ($i > 0) { echo "	</optgroup>\n"; }
-								echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
+								if ($i > 0) {
+									echo "				</optgroup>\n";
+								}
+								echo "				<optgroup label='".ucwords($function['vendor_name'])."'>\n";
 							}
 							$selected = '';
 							if ($row['device_key_vendor'] == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {
 								$selected = "selected='selected'";
 							}
 							if (strlen($row['device_key_vendor']) == 0) {
-								echo "		<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+								echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 							}
 							if (strlen($row['device_key_vendor']) > 0 && $row['device_key_vendor'] == $function['vendor_name']) {
-								echo "		<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
+								echo "					<option value='".$function['value']."' $selected >".$text['label-'.$function['name']]."</option>\n";
 							}
 							$previous_vendor = $function['vendor_name'];
 							$i++;
 						}
 					}
 					if (strlen($row['device_key_vendor']) == 0) {
-						echo "	</optgroup>\n";
+						echo "				</optgroup>\n";
 					}
-					echo "</select>\n";
-					echo "</td>\n";
-					//echo "<td valign='top' align='left' nowrap='nowrap'>\n";
-					//echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
-					//echo "		<option value=''></option>\n";
-					//for ($l = 0; $l <= 12; $l++) {
-						//echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
-					//}
-					//echo "	</select>\n";
-					//echo "</td>\n";
-
-					echo "<td class='row_style".$c." row_style_slim'>\n";
-					echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_value]' maxlength='255' value=\"".$row['device_key_value']."\">\n";
-					echo "</td>\n";
-
-					//echo "<td align='left'>\n";
-					//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
-					//echo "</td>\n";
-
-					echo "<td class='row_style".$c." row_style_slim'>\n";
-					echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
-					echo "	<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_icon]' maxlength='255' value=\"".$row['device_key_icon']."\">\n";
-					echo "	<input type='hidden' name='device_keys[".$x."][device_profile_uuid]' value=\"".$row['device_profile_uuid']."\">\n";
-					echo "</td>\n";
-
-					//echo "			<td align='left'>\n";
-					//echo "				<input type='button' class='btn' value='".$text['button-save']."' onclick='submit_form();'>\n";
-					//echo "			</td>\n";
-					//echo "				<td nowrap='nowrap'>\n";
-					//echo "				</td>\n";
-
-					echo "			</tr>\n";
+					echo "			</select>\n";
+					echo "		</td>\n";
+					echo "		<td class='input'>\n";
+					echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_value]' maxlength='255' value=\"".$row['device_key_value']."\">\n";
+					echo "		</td>\n";
+					echo "		<td class='input'>\n";
+					echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+					echo "		</td>\n";
+					echo "		<td class='input'>\n";
+					echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_icon]' maxlength='255' value=\"".$row['device_key_icon']."\">\n";
+					echo "			<input type='hidden' name='device_keys[".$x."][device_profile_uuid]' value=\"".$row['device_profile_uuid']."\">\n";
+					echo "		</td>\n";
+					echo "	</tr>\n";
 				//set the previous vendor
 					$previous_device_key_vendor = $row['device_key_vendor'];
 				//increment the array key
 					$x++;
-				//alternate the value
-					$c = ($c) ? 0 : 1;
 			}
 		}
-		echo "			</table>\n";
-		//if (strlen($text['description-keys']) > 0) {
-		//	echo "			<br>".$text['description-keys']."\n";
-		//}
+		echo "</table>\n";
 	}
 
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>";
-
-//show the footer
-	//require_once "resources/footer.php";
 
 ?>

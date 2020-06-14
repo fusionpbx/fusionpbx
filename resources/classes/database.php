@@ -1263,9 +1263,6 @@ include "root.php";
 											if (!$parent_key_exists) {
 												$sql .= $parent_key_name.", ";
 											}
-											//foreach ($parent_field_names as $field_name) {
-											//		$sql .= check_str($field_name).", ";
-											//}
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value)) {
@@ -1289,8 +1286,15 @@ include "root.php";
 														elseif ($array_value === "now()") {
 															$sql .= "now(), ";
 														}
+														elseif ($array_value === "user_uuid()") {
+															$sql .= ':'.$array_key.", ";
+															$params[$array_key] = $_SESSION['user_uuid'];
+														}
+														elseif ($array_value === "remote_address()") {
+															$sql .= ':'.$array_key.", ";
+															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
+														}
 														else {
-															//$sql .= "'".check_str($array_value)."', ";
 															$sql .= ':'.$array_key.", ";
 															$params[$array_key] = trim($array_value);
 														}
@@ -1370,8 +1374,15 @@ include "root.php";
 														elseif ($array_value === "now()") {
 															$sql .= $array_key." = now(), ";
 														}
+														elseif ($array_value === "user_uuid()") {
+															$sql .= $array_key." = :".$array_key.", ";
+															$params[$array_key] = $_SESSION['user_uuid'];
+														}
+														elseif ($array_value === "remote_address()") {
+															$sql .= $array_key." = :".$array_key.", ";
+															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
+														}
 														else {
-															//$sql .= $array_key." = '".check_str($array_value)."', ";
 															$sql .= $array_key." = :".$array_key.", ";
 															$params[$array_key] = trim($array_value);
 														}
@@ -1521,8 +1532,15 @@ include "root.php";
 																			elseif ($v === "now()") {
 																				$sql .= $k." = now(), ";
 																			}
+																			elseif ($v === "user_uuid()") {
+																				$sql .= $k." = :".$k.", ";
+																				$params[$k] = $_SESSION['user_uuid'];
+																			}
+																			elseif ($v === "remote_address()") {
+																				$sql .= $k." = :".$k.", ";
+																				$params[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
 																			else {
-																				//$sql .= "$k = '".check_str($v)."', ";
 																				$sql .= $k." = :".$k.", ";
 																				$params[$k] = trim($v);
 																			}
@@ -1639,9 +1657,16 @@ include "root.php";
 																		elseif ($v === "now()") {
 																			$sql .= "now(), ";
 																		}
+																		elseif ($v === "user_uuid()") {
+																			$sql .= ':'.$k.", ";
+																			$params[$k] = $_SESSION['user_uuid'];
+																		}
+																		elseif ($v === "remote_address()") {
+																			$sql .= ':'.$k.", ";
+																			$params[$k] = $_SERVER['REMOTE_ADDR'];
+																		}
 																		else {
 																			$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
-																			//$sql .= "'".check_str($v)."', ";
 																			$sql .= ':'.$k.", ";
 																			$params[$k] = trim($v);
 																		}
@@ -1652,7 +1677,6 @@ include "root.php";
 															$sql = str_replace(", )", ")", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 															try {
-																//$this->db->query(check_sql($sql));
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);
 																unset($prep_statement);

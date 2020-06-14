@@ -3,7 +3,7 @@
 	//application details
 		$apps[$x]['name'] = "Music on Hold";
 		$apps[$x]['uuid'] = "1dafe0f8-c08a-289b-0312-15baf4f20f81";
-		$apps[$x]['category'] = "Switch";;
+		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";

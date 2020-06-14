@@ -17,7 +17,8 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2019 All Rights Reserved.
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -25,7 +26,7 @@
 */
 
 //includes
-	include "root.php";
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -131,7 +132,7 @@
 			if (!is_numeric($voicemail_id)) {
 				$voicemail_id = null;
 			}
-			
+
 		//change toll allow delimiter
 			$toll_allow = str_replace(',',':', $toll_allow);
 
@@ -141,8 +142,11 @@
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
 				foreach ($_POST["devices"] as $d => $device) {
+					$device_mac_address = strtolower($device["device_mac_address"]);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
 					$line_numbers[$d] = $device["line_number"];
-					$device_mac_addresses[$d] = format_mac($device["device_mac_address"],'');
+					$device_mac_addresses[$d] = $device_mac_address;
 					$device_templates[$d] = $device["device_template"];
 				}
 			}
@@ -150,16 +154,18 @@
 		//get or set the device_uuid
 			if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
 				foreach ($device_mac_addresses as $d => $device_mac_address) {
-					if (is_mac($device_mac_address)) {
-						$sql = "select device_uuid from v_devices ";
-						$sql .= "where device_mac_address = :device_mac_address ";
-						$sql .= "and domain_uuid = :domain_uuid ";
-						$parameters['device_mac_address'] = $device_mac_address;
-						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$device_uuid = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
-					}
+					$device_mac_address = strtolower($device_mac_address);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
+					$sql = "select device_uuid from v_devices ";
+					$sql .= "where device_mac_address = :device_mac_address ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['device_mac_address'] = $device_mac_address;
+					$parameters['domain_uuid'] = $domain_uuid;
+					$database = new database;
+					$device_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+
 					$device_uuids[$d] = is_uuid($device_uuid) ? $device_uuid : uuid();
 				}
 			}
@@ -314,15 +320,18 @@
 							}
 							else {
 
+								//get the password length and strength
+									$password_length = $_SESSION["extension"]["password_length"]["numeric"];
+									$password_strength = $_SESSION["extension"]["password_strength"]["numeric"];
+
 								//extension does not exist add it
 									if ($action == "add" || $range > 1) {
 										$extension_uuid = uuid();
 										$voicemail_uuid = uuid();
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 
-								//prepare the values
-									//mwi account
+								//prepare the values for mwi account
 										if (strlen($mwi_account) > 0) {
 											if (strpos($mwi_account, '@') === false) {
 												if (count($_SESSION["domains"]) > 1) {
@@ -336,10 +345,10 @@
 
 								//generate a password
 									if ($action == "add" && strlen($password) == 0) {
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 
 								//create the data array
@@ -428,7 +437,7 @@
 								//assign the user to the extension
 									if (is_uuid($user_uuid)) {
 										$array["extension_users"][$i]["extension_user_uuid"] = uuid();
-										$array["extension_users"][$i]["domain_uuid"] = $_SESSION['domain_uuid'];
+										$array["extension_users"][$i]["domain_uuid"] = $domain_uuid;
 										$array["extension_users"][$i]["user_uuid"] = $user_uuid;
 										$array["extension_users"][$i]["extension_uuid"] = $extension_uuid;
 									}
@@ -968,17 +977,18 @@
 			echo "		</table>\n";
 			echo "		<br />\n";
 		}
-
-		echo "			<select name='extension_users[0][user_uuid]' id='user_uuid' class='formfld' style='width: auto;'>\n";
-		echo "			<option value=''></option>\n";
-		foreach($users as $field) {
-			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+		if (is_array($users) && @sizeof($users) != 0) {
+			echo "			<select name='extension_users[0][user_uuid]' id='user_uuid' class='formfld' style='width: auto;'>\n";
+			echo "			<option value=''></option>\n";
+			foreach($users as $field) {
+				echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
+			}
+			echo "			</select>";
+			if ($action == "update") {
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+			}
+			echo "			<br>\n";
 		}
-		echo "			</select>";
-		if ($action == "update") {
-			echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-		}
-		echo "			<br>\n";
 		echo "			".$text['description-user_list']."\n";
 		echo "			<br />\n";
 		echo "		</td>";
@@ -1146,7 +1156,7 @@
 				}
 				echo "	</tr>\n";
 
-				if (is_array($device_lines) && @sizeof($device_lines) != 0) { break; } //show one row when editing extension and no device assigned
+				break; //show one empty row whether adding or editing
 			}
 			echo "		</table>\n";
 			echo "		<br />\n";
@@ -1274,7 +1284,7 @@
 		if (permission_exists('outbound_caller_id_select')) {
 			if (count($destinations) > 0) {
 				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
-				echo "	<option value=''></option>\n";
+				echo "		<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
 					if(strlen($tmp) == 0){
@@ -1289,19 +1299,22 @@
 						}
 					}
 				}
-				echo "		</select>\n";
-				echo "<br />\n";
-				echo $text['description-outbound_caller_id_name-select']."\n";
+				echo "	</select>\n";
 			}
 			else {
 				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 			}
 		}
 		else {
-			echo "    <input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
+			echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"".escape($emergency_caller_id_name)."\">\n";
 		}
 		echo "<br />\n";
-		echo $text['description-emergency_caller_id_name']."\n";
+		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+			echo $text['description-emergency_caller_id_name-select']."\n";
+		}
+		else {
+			echo $text['description-emergency_caller_id_name']."\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -1331,8 +1344,6 @@
 					}
 				}
 				echo "		</select>\n";
-				echo "<br />\n";
-				echo $text['description-outbound_caller_id_name-select']."\n";
 			}
 			else {
 				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
@@ -1342,7 +1353,12 @@
 			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
 		}
 		echo "<br />\n";
-		echo $text['description-emergency_caller_id_number']."\n";
+		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+			echo $text['description-emergency_caller_id_number-select']."\n";
+		}
+		else {
+			echo $text['description-emergency_caller_id_number']."\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

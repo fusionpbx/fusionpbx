@@ -631,6 +631,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
@@ -664,6 +665,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='only' ".($row['domain_setting_value'] == "only" ? "selected='selected'" : null).">".$text['option-button_icons_only']."</option>\n";
 		echo "    	<option value='always' ".($row['domain_setting_value'] == "always" ? "selected='selected'" : null).">".$text['option-button_icons_always']."</option>\n";
 		echo "    	<option value='never' ".($row['domain_setting_value'] == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_state" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='expanded'>".$text['option-expanded']."</option>\n";
+		echo "    	<option value='contracted' ".($row['domain_setting_value'] == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+		echo "    	<option value='hidden' ".($row['domain_setting_value'] == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='hover'>".$text['option-hover']."</option>\n";
+		echo "    	<option value='click' ".($row['domain_setting_value'] == "click" ? "selected='selected'" : null).">".$text['option-click']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle_body_width" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
+		echo "    	<option value='fixed' ".($row['domain_setting_value'] == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
+		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
@@ -760,7 +788,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='domain_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

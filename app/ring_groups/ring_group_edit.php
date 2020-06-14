@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2019
+	Portions created by the Initial Developer are Copyright (C) 2010-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -173,6 +173,7 @@
 			$ring_group_cid_number_prefix = $_POST["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $_POST["ring_group_distinctive_ring"];
 			$ring_group_ringback = $_POST["ring_group_ringback"];
+			$ring_group_call_forward_enabled = $_POST["ring_group_call_forward_enabled"];
 			$ring_group_follow_me_enabled = $_POST["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $_POST["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $_POST["ring_group_missed_call_data"];
@@ -274,19 +275,15 @@
 						foreach ($ring_group_missed_call_data_array as $array_index => $email_address) {
 							if (!valid_email($email_address)) { unset($ring_group_missed_call_data_array[$array_index]); }
 						}
-						//echo "<pre>".print_r($ring_group_missed_call_data_array, true)."</pre><br><br>";
 						if (sizeof($ring_group_missed_call_data_array) > 0) {
 							$ring_group_missed_call_data = implode(',', $ring_group_missed_call_data_array);
 						}
 						else {
 							unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 						}
-						//echo "Multiple Emails = ".$ring_group_missed_call_data;
 					}
 					else {
-						//echo "Single Email = ".$ring_group_missed_call_data."<br>";
 						if (!valid_email($ring_group_missed_call_data)) {
-							//echo "Invalid Email<br><br>";
 							unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 						}
 					}
@@ -299,6 +296,8 @@
 					$ring_group_missed_call_data = str_replace(' ','',$ring_group_missed_call_data);
 					if (!is_numeric($ring_group_missed_call_data)) { unset($ring_group_missed_call_app, $ring_group_missed_call_data); }
 					break;
+				default:
+					unset($ring_group_missed_call_app, $ring_group_missed_call_data);
 			}
 
 		//set the app and data
@@ -334,13 +333,16 @@
 			}
 			$array["ring_groups"][0]["ring_group_distinctive_ring"] = $ring_group_distinctive_ring;
 			$array["ring_groups"][0]["ring_group_ringback"] = $ring_group_ringback;
+			$array["ring_groups"][0]["ring_group_call_forward_enabled"] = $ring_group_call_forward_enabled;
 			$array["ring_groups"][0]["ring_group_follow_me_enabled"] = $ring_group_follow_me_enabled;
-			if (permission_exists('ring_group_missed_call') && $destination->valid($ring_group_missed_call_app.':'.$ring_group_missed_call_data)) {
+			if (permission_exists('ring_group_missed_call')) {
 				$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
 				$array["ring_groups"][0]["ring_group_missed_call_data"] = $ring_group_missed_call_data;
 			}
-			$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
-			$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			if (permission_exists('ring_group_forward')) {
+				$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
+				$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			}
 			$array["ring_groups"][0]["ring_group_forward_toll_allow"] = $ring_group_forward_toll_allow;
 			if (isset($ring_group_context)) {
 				$array["ring_groups"][0]["ring_group_context"] = $ring_group_context;
@@ -439,15 +441,15 @@
 			if ($action == "add") {
 				//save the message to a session variable
 					message::add($text['message-add']);
-				//redirect the browser
-					header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-					exit;
 			}
 			if ($action == "update") {
 				//save the message to a session variable
 					message::add($text['message-update']);
 			}
 
+		//redirect the browser
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+			exit;
 	}
 
 //pre-populate the form
@@ -473,6 +475,7 @@
 			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_distinctive_ring = $row["ring_group_distinctive_ring"];
 			$ring_group_ringback = $row["ring_group_ringback"];
+			$ring_group_call_forward_enabled = $row["ring_group_call_forward_enabled"];
 			$ring_group_follow_me_enabled = $row["ring_group_follow_me_enabled"];
 			$ring_group_missed_call_app = $row["ring_group_missed_call_app"];
 			$ring_group_missed_call_data = $row["ring_group_missed_call_data"];
@@ -946,6 +949,31 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-ring_group_call_forward_enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='ring_group_call_forward_enabled'>\n";
+	echo "	<option value=''></option>\n";
+	if ($ring_group_call_forward_enabled == "true") {
+		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	}
+	if ($ring_group_call_forward_enabled == "false") {
+		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "	<option value='false'>".$text['option-false']."</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-ring_group_call_forward_enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring_group_follow_me_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -989,20 +1017,22 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-ring_group_forward']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
-	echo "		<option value='false'>".$text['option-disabled']."</option>";
-	echo "		<option value='true' ".(($ring_group_forward_enabled == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
-	echo "	</select>";
-	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
-	echo "<br />\n";
-	echo $text['description-ring-group-forward']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_forward')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-ring_group_forward']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
+		echo "		<option value='false'>".$text['option-disabled']."</option>";
+		echo "		<option value='true' ".($ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+		echo "	</select>";
+		echo 	"<input class='formfld' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
+		echo "<br />\n";
+		echo $text['description-ring-group-forward']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('ring_group_forward_toll_allow')) {
 		echo "<tr>\n";

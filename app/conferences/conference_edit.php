@@ -193,7 +193,7 @@
 					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@default".$pin_number."+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 

@@ -34,7 +34,7 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_name asc";
 		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
@@ -166,6 +166,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "call_flow_anti_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the alernate application data.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to enable or disable the call flow";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_flow_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

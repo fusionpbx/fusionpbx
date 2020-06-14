@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -123,163 +123,160 @@
 					return transcription;
 				end
 			end
-		
+
 			if (transcribe_provider == "azure") then
-			        local api_key1 = settings:get('voicemail', 'azure_key1', 'text') or '';
-			        local api_server_region = settings:get('voicemail', 'azure_server_region', 'text') or '';
-			        if (api_server_region ~= '') then
-			                api_server_region = api_server_region .. ".";
-			        else
-			                if (debug["info"]) then
-			                        freeswitch.consoleLog("notice", "[voicemail] azure_server_region default setting must be set\n");
-			                end
-			                return '';
-			        end
-			        if (api_key1 ~= '') then
-			                -- search in memcache first, azure documentation claims that the access token is valid for 10 minutes
-			                local cache = require "resources.functions.cache";
-			                local key = "app:voicemail:azure:access_token";
-			                local access_token_result = cache.get(key)
+				local api_key1 = settings:get('voicemail', 'azure_key1', 'text') or '';
+				local api_server_region = settings:get('voicemail', 'azure_server_region', 'text') or '';
+				if (api_server_region ~= '') then
+					api_server_region = api_server_region .. ".";
+				else
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] azure_server_region default setting must be set\n");
+					end
+					return '';
+				end
+				if (api_key1 ~= '') then
+					-- search in memcache first, azure documentation claims that the access token is valid for 10 minutes
+					local cache = require "resources.functions.cache";
+					local key = "app:voicemail:azure:access_token";
+					local access_token_result = cache.get(key)
 
-			                if access_token_result then
-			                        if (debug["info"]) then
-			                                freeswitch.consoleLog("notice", "[voicemail] Azure access_token recovered from memcached\n");
-			                        end
-			                else
-			                        access_token_cmd = "curl -X POST \"https://"..api_server_region.."api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: "..api_key1.."\"";
-			                        local handle = io.popen(access_token_cmd);
-			                        access_token_result = handle:read("*a");
-			                        handle:close();
-			                        if (debug["info"]) then
-			                                freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
-			                                freeswitch.consoleLog("notice", "[voicemail] ACCESS TOKEN: " .. access_token_result .. "\n");
-			                        end
-			                        --Access token request can fail
-			                        if (access_token_result == '') then
-			                                if (debug["info"]) then
-			                                        freeswitch.consoleLog("notice", "[voicemail] ACCESS TOKEN: (null) \n");
-			                                end
-			                                return ''
-			                        end
+					if access_token_result then
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] Azure access_token recovered from memcached\n");
+						end
+					else
+						access_token_cmd = "curl -X POST \"https://"..api_server_region.."api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: "..api_key1.."\"";
+						local handle = io.popen(access_token_cmd);
+						access_token_result = handle:read("*a");
+						handle:close();
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] CMD: " .. access_token_cmd .. "\n");
+							freeswitch.consoleLog("notice", "[voicemail] ACCESS TOKEN: " .. access_token_result .. "\n");
+						end
+						--Access token request can fail
+						if (access_token_result == '') then
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] ACCESS TOKEN: (null) \n");
+							end
+							return ''
+						end
 
-			                        --Azure returns JSON when it has to report an error
-			                        if (string.sub(access_token_result, 1, 1) == '{') then
-			                                if (debug["info"]) then
-			                                        freeswitch.consoleLog("notice", "[voicemail] ERROR STRING: ".. access_token_result .. "\n");
-			                                end
-			                                return ''
-			                        end
+						--Azure returns JSON when it has to report an error
+						if (string.sub(access_token_result, 1, 1) == '{') then
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] ERROR STRING: ".. access_token_result .. "\n");
+							end
+							return ''
+						end
 
-			                        cache.set(key, access_token_result, 120);
-			                        if (debug["info"]) then
-			                                freeswitch.consoleLog("notice", "[voicemail] Azure access_token saved into memcached: " .. access_token_result .. "\n");
-			                        end
-			                end
+						cache.set(key, access_token_result, 120);
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] Azure access_token saved into memcached: " .. access_token_result .. "\n");
+						end
+					end
 
-			                transcribe_cmd = "curl -X POST \"https://"..api_server_region.."stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=".. transcribe_language .."&format=detailed\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
-			                local handle = io.popen(transcribe_cmd);
-			                local transcribe_result = handle:read("*a");
-			                handle:close();
-			                if (debug["info"]) then
-			                        freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-			                        freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-			                end
-			                --Trancribe request can fail
-			                if (transcribe_result == '') then
-			                        freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-			                        return ''
-			                end
-			                local transcribe_json = JSON.decode(transcribe_result);
-			                if (debug["info"]) then
-			                        if (transcribe_json["NBest"][1]["Display"] == nil) then
-			                                freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-			                        else
-			                                freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["NBest"][1]["Display"] .. "\n");
-			                        end
-			                        if (transcribe_json["NBest"][1]["Confidence"] == nil) then
-			                                freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
-			                        else
-			                                freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["NBest"][1]["Confidence"] .. "\n");
-			                        end
-			                end
-                                                        
-			                transcription = transcribe_json["NBest"][1]["Display"];
-			                confidence = transcribe_json["NBest"][1]["Confidence"];
-			                return transcription;
-			        end
+					transcribe_cmd = "curl -X POST \"https://"..api_server_region.."stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=".. transcribe_language .."&format=detailed\" -H 'Authorization: Bearer " .. access_token_result .. "' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @"..file_path
+					local handle = io.popen(transcribe_cmd);
+					local transcribe_result = handle:read("*a");
+					handle:close();
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					end
+					--Trancribe request can fail
+					if (transcribe_result == '') then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						return ''
+					end
+					local transcribe_json = JSON.decode(transcribe_result);
+					if (debug["info"]) then
+						if (transcribe_json["NBest"][1]["Display"] == nil) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						else
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcribe_json["NBest"][1]["Display"] .. "\n");
+						end
+						if (transcribe_json["NBest"][1]["Confidence"] == nil) then
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+						else
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["NBest"][1]["Confidence"] .. "\n");
+						end
+					end
+
+					transcription = transcribe_json["NBest"][1]["Display"];
+					confidence = transcribe_json["NBest"][1]["Confidence"];
+					return transcription;
+				end
 			end
 
-		--Watson
-                        if (transcribe_provider == "watson") then
-                                local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
-                                local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
-                                if (api_key ~= '') then
+			if (transcribe_provider == "watson") then
+				local api_key = settings:get('voicemail', 'watson_key', 'text') or '';
+				local transcription_server = settings:get('voicemail', 'watson_url', 'text') or '';
+				if (api_key ~= '') then
 					if (vm_message_ext == "mp3") then
-                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/mp3" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
-                                        else
-                                        	transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
-                                        end
-                                        local handle = io.popen(transcribe_cmd);
-                                        local transcribe_result = handle:read("*a");
-                                        handle:close();
-                                        if (debug["info"]) then
-                                                freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-                                                freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-                                        end
+						transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/mp3" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+					else
+						transcribe_cmd = [[ curl -X POST -u "apikey:]]..api_key..[[" --header "Content-type: audio/wav" --data-binary @]]..file_path..[[ "]]..transcription_server..[[" ]]
+					end
+					local handle = io.popen(transcribe_cmd);
+					local transcribe_result = handle:read("*a");
+					transcribe_result = transcribe_result:gsub('%%HESITATION ', '');
+					handle:close();
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+					end
 
-									--Trancribe request can fail
-										if (transcribe_result == '') then
-											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-											return ''
-										else
-                                        	status, transcribe_json = pcall(JSON.decode, transcribe_result);
+					--Trancribe request can fail
+					if (transcribe_result == '') then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+						return ''
+					else
+						status, transcribe_json = pcall(JSON.decode, transcribe_result);
+						if not status then
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] error decoding watson json\n");
+							end
+							return '';
+						end 
+					end
 
-   											if not status then
-												if (debug["info"]) then
-													freeswitch.consoleLog("notice", "[voicemail] error decoding watson json\n");
-												end
-												return '';
-											end 
-										end
-
-
-									if (transcribe_json["results"] ~= nil) then
-										--Transcription	
-											if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
-												transcription = '';
-												for key, row in pairs(transcribe_json["results"]) do 
-													transcription = transcription .. row["alternatives"][1]["transcript"];
-												end
-												if (debug["info"]) then
-													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
-												end
-											else
-												if (debug["info"]) then
-													freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-												end
-												return '';
-											end
-										--Confidence
-											if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
-												if (debug["info"]) then
-													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
-												end											
-												confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
-											else
-												if (debug["info"]) then
-													freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
-												end
-											end
-
-	                                        return transcription;
-									else
-										if (debug["info"]) then
-											freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
-										end
-										return '';	
-									end
-                                end
-                        end
+					if (transcribe_json["results"] ~= nil) then
+						--Transcription	
+						if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
+							transcription = '';
+							for key, row in pairs(transcribe_json["results"]) do 
+								transcription = transcription .. row["alternatives"][1]["transcript"];
+							end
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
+							end
+						else
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+							end
+							return '';
+						end
+						--Confidence
+						if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
+							end
+							confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
+						else
+							if (debug["info"]) then
+								freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+							end
+						end
+						return transcription;
+					else
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
+						end
+						return '';
+					end
+				end
+			end
 
 			if (transcribe_provider == "custom") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
@@ -320,13 +317,12 @@
 				freeswitch.consoleLog("notice", "[voicemail] message too short for transcription.\n");
 			end
 		end
-
 		return '';
 	end
 
 --save the recording
 	function record_message()
-		
+
 		--set the variables
 			local db = dbh or Database.new('system')
 			local settings = Settings.new(db, domain_name, domain_uuid)
@@ -335,7 +331,7 @@
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
-	
+
 		--debug information
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] transcribe_enabled: " .. transcribe_enabled .. "\n");
