@@ -497,6 +497,9 @@
 	if (strlen($ring_group_ringback) == 0) {
 		$ring_group_ringback = '${us-ring}';
 	}
+	if (strlen($ring_group_call_timeout) == 0) {
+		$ring_group_call_timeout = '30';
+	}
 
 //get the ring group destination array
 	if ($action == "add") {
