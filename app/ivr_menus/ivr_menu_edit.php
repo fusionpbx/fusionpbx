@@ -105,6 +105,7 @@
 		//get ivr menu
 			$ivr_menu_name = $_POST["ivr_menu_name"];
 			$ivr_menu_extension = $_POST["ivr_menu_extension"];
+			$ivr_menu_parent_uuid = $_POST["ivr_menu_parent_uuid"];
 			$ivr_menu_greet_long = $_POST["ivr_menu_greet_long"];
 			$ivr_menu_greet_short = $_POST["ivr_menu_greet_short"];
 			$ivr_menu_language = $_POST["ivr_menu_language"];
@@ -253,6 +254,7 @@
 					$array['ivr_menus'][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array['ivr_menus'][0]["ivr_menu_name"] = $ivr_menu_name;
 					$array['ivr_menus'][0]["ivr_menu_extension"] = $ivr_menu_extension;
+					$array['ivr_menus'][0]["ivr_menu_parent_uuid"] = $ivr_menu_parent_uuid;
 					$array['ivr_menus'][0]["ivr_menu_language"] = $ivr_menu_language;
 					$array['ivr_menus'][0]["ivr_menu_greet_long"] = $ivr_menu_greet_long;
 					$array['ivr_menus'][0]["ivr_menu_greet_short"] = $ivr_menu_greet_short;
@@ -421,6 +423,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ivr_menu_name = $row["ivr_menu_name"];
 				$ivr_menu_extension = $row["ivr_menu_extension"];
+				$ivr_menu_parent_uuid = $row["ivr_menu_parent_uuid"];
 				$ivr_menu_language = $row["ivr_menu_language"];
 				$ivr_menu_dialect = $row["ivr_menu_dialect"];
 				$ivr_menu_voice = $row["ivr_menu_voice"];
@@ -467,6 +470,15 @@
 	$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 	$database = new database;
 	$ivr_menu_options = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+//get the ivr menus
+	$sql = "select * from v_ivr_menus ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by v_ivr_menus asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //add an empty row to the options array
@@ -616,7 +628,24 @@
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-ivr_menu_parent_uuid']."</td>";
+	echo "		<td class='vtable'>";
+	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
+	echo "<option value=\"\"></option>\n";
+	foreach($ivr_menus as $field) {
+			if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
+			}
+			else {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+			}
+	}
+	echo "</select>";
+	echo "		</td>";
+	echo "	</tr>";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";
