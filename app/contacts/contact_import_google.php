@@ -114,7 +114,7 @@ if ($_POST['a'] == 'import') {
 				//delete duplicate contact
 					$obj = new contacts;
 					$obj->delete($array);
-					unset($array)
+					unset($array);
 
 				//revoke temporary permissions
 					$p->delete('contact_delete', 'temp');
