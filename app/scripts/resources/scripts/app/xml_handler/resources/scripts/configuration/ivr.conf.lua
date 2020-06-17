@@ -274,7 +274,7 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			local ok, err = cache.set(ivr_menu_uuid, XML_STRING, expire["ivr"]);
+			local ok, err = cache.set("configuration:ivr.conf:" .. ivr_menu_uuid, XML_STRING, expire["ivr"]);
 			if debug["cache"] then
 				if ok then
 					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in the cache\n");
