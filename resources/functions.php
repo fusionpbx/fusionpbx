@@ -1708,6 +1708,7 @@ function number_pad($number,$n) {
 //converts a string to a regular expression
 	if (!function_exists('string_to_regex')) {
 		function string_to_regex($string, $prefix='') {
+			$original_string = $string;
 			//escape the plus
 				if (substr($string, 0, 1) == "+") {
 					$string = "^\\+(".substr($string, 1).")$";
@@ -1723,9 +1724,11 @@ function number_pad($number,$n) {
 					}
 				}
 			//convert N,X,Z syntax to regex
-				$string = str_ireplace("N", "[2-9]", $string);
-				$string = str_ireplace("X", "[0-9]", $string);
-				$string = str_ireplace("Z", "[1-9]", $string);
+				if (preg_match('/^[NnXxZz]+$/', $original_string)) {
+					$string = str_ireplace("N", "[2-9]", $string);
+					$string = str_ireplace("X", "[0-9]", $string);
+					$string = str_ireplace("Z", "[1-9]", $string);
+				}
 			//add ^ to the start of the string if missing
 				if (substr($string, 0, 1) != "^") {
 					$string = "^".$string;
