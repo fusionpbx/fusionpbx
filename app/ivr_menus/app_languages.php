@@ -421,6 +421,27 @@ $text['label-extension']['ru-ru'] = "Внутренний Номер";
 $text['label-extension']['sv-se'] = "Anknytning";
 $text['label-extension']['uk-ua'] = "";
 
+$text['label-ivr_menu_parent_uuid']['en-us'] = "Parent Menu";
+$text['label-ivr_menu_parent_uuid']['en-gb'] = "Parent Menu";
+$text['label-ivr_menu_parent_uuid']['ar-eg'] = "";
+$text['label-ivr_menu_parent_uuid']['de-at'] = "Übergeordnetes Menü"; //copied from de-de
+$text['label-ivr_menu_parent_uuid']['de-ch'] = "Übergeordnetes Menü"; //copied from de-de
+$text['label-ivr_menu_parent_uuid']['de-de'] = "Übergeordnetes Menü";
+$text['label-ivr_menu_parent_uuid']['es-cl'] = "Nivel Superior";
+$text['label-ivr_menu_parent_uuid']['es-mx'] = "Nivel Superior"; //copied from es-cl
+$text['label-ivr_menu_parent_uuid']['fr-ca'] = "Menu Parent"; //copied from fr-fr
+$text['label-ivr_menu_parent_uuid']['fr-fr'] = "Menu Parent";
+$text['label-ivr_menu_parent_uuid']['he-il'] = "";
+$text['label-ivr_menu_parent_uuid']['it-it'] = "Menu Padre";
+$text['label-ivr_menu_parent_uuid']['nl-nl'] = "";
+$text['label-ivr_menu_parent_uuid']['pl-pl'] = "Główne menu";
+$text['label-ivr_menu_parent_uuid']['pt-br'] = "Menu Pai";
+$text['label-ivr_menu_parent_uuid']['pt-pt'] = "Menu Pai";
+$text['label-ivr_menu_parent_uuid']['ro-ro'] = "";
+$text['label-ivr_menu_parent_uuid']['ru-ru'] = "Родительское меню";
+$text['label-ivr_menu_parent_uuid']['sv-se'] = "Överordnad Meny";
+$text['label-ivr_menu_parent_uuid']['uk-ua'] = "Батьківське меню";
+
 $text['label-exit_sound']['en-us'] = "Exit Sound";
 $text['label-exit_sound']['en-gb'] = "Exit Sound";
 $text['label-exit_sound']['ar-eg'] = "";
