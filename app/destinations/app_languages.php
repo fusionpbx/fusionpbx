@@ -1051,8 +1051,8 @@ $text['description-destination_condition_field']['ru-ru'] = "";
 $text['description-destination_condition_field']['sv-se'] = "";
 $text['description-destination_condition_field']['uk-ua'] = "";
 
-$text['description-destination_prefix']['en-us'] = "Enter the destination country code.";
-$text['description-destination_prefix']['en-gb'] = "Enter the destination country code.";
+$text['description-destination_prefix']['en-us'] = "Enter the country code.";
+$text['description-destination_prefix']['en-gb'] = "Enter the country code.";
 $text['description-destination_prefix']['ar-eg'] = "";
 $text['description-destination_prefix']['de-at'] = ""; //copied from de-de
 $text['description-destination_prefix']['de-ch'] = ""; //copied from de-de
