@@ -125,7 +125,7 @@ if (!class_exists('destinations')) {
 				if ($this->destinations !== null && is_array($this->destinations)) {
 					$x = 0;
 					foreach ($this->destinations as $row) {
-						if ($row['type'] = 'sql') {
+						if ($row['type'] === 'sql') {
 							$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 							if (isset($row['sql'])) {
 								if (is_array($row['sql'])) {
@@ -159,6 +159,9 @@ if (!class_exists('destinations')) {
 
 							$this->destinations[$x]['result']['sql'] = $sql;
 							$this->destinations[$x]['result']['data'] = $result;
+						}
+						if ($row['type'] === 'array') {
+							$this->destinations[$x] = $row;
 						}
 						$x++;
 					}
@@ -268,7 +271,7 @@ if (!class_exists('destinations')) {
 						$select_label = $row['select_label'];
 						foreach ($row['field'] as $key => $value) {
 							if ($key == 'destination' and is_array($value)){
-								if ($value['type'] == 'csv') {
+								if ($value['type'] === 'csv') {
 									$array = explode($value['delimiter'], $data[$key]);
 									$select_value = str_replace("\${destination}", $array[0], $select_value);
 									$select_label = str_replace("\${destination}", $array[0], $select_label);
@@ -384,7 +387,7 @@ if (!class_exists('destinations')) {
 				//add the sql and data to the array
 				$x = 0;
 				foreach ($this->destinations as $row) {
-					if ($row['type'] = 'sql') {
+					if ($row['type'] === 'sql') {
 						$table_name = preg_replace('#[^a-zA-Z0-9_]#', '', $row['name']);
 						if (isset($row['sql'])) {
 							if (is_array($row['sql'])) {
@@ -418,6 +421,9 @@ if (!class_exists('destinations')) {
 
 						$this->destinations[$x]['result']['sql'] = $sql;
 						$this->destinations[$x]['result']['data'] = $result;
+					}
+					if ($row['type'] === 'array') {
+						$this->destinations[$x] = $row;
 					}
 					$x++;
 				}
