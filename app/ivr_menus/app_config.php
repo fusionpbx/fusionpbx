@@ -42,21 +42,33 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		//if ($_SESSION['ivr_menu']['application']['text'] != "lua") {
-		//		$y++;
-		//		$apps[$x]['destinations'][$y]['type'] = "sql";
-		//		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
-		//		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
-		//		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		//		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
-		//		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
-		//		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
-		//	//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "ivr:\${ivr_menu_uuid}";
-		//		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
-		//		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
-		//}
-		//menu-top
-		//menu-exit
+
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
+		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = 'array';
+		$apps[$x]['destinations'][$y]['label'] = 'ivr_menus_other';
+		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus';
+		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
+		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['application'] = 'menu-top';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-exit';
 		//menu-say-phrase
 		//menu-play-sound
 
