@@ -427,6 +427,7 @@ if (!class_exists('destinations')) {
 					}
 					$x++;
 				}
+
 				$this->destinations[$x]['type'] = 'array';
 				$this->destinations[$x]['label'] = 'other';
 				$this->destinations[$x]['name'] = 'dialplans';
@@ -549,8 +550,8 @@ if (!class_exists('destinations')) {
 		/**
 		* valid destination
 		*/
-		public function valid($destination) {
-			$destinations = $this->all('dialplan');
+		public function valid($destination, $type = 'dialplan') {
+			$destinations = $this->all($type);
 			foreach($destinations as $category => $array) {
 				if (is_array($array)) {
 					foreach ($array as $key => $value) {
