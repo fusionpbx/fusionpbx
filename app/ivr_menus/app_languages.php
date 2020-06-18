@@ -169,6 +169,27 @@ $text['option-top']['ru-ru'] = "";
 $text['option-top']['sv-se'] = "";
 $text['option-top']['uk-ua'] = "";
 
+$text['option-back']['en-us'] = "Back";
+$text['option-back']['en-gb'] = "Back";
+$text['option-back']['ar-eg'] = "";
+$text['option-back']['de-at'] = ""; //copied from de-de
+$text['option-back']['de-ch'] = ""; //copied from de-de
+$text['option-back']['de-de'] = "";
+$text['option-back']['es-cl'] = "";
+$text['option-back']['es-mx'] = ""; //copied from es-cl
+$text['option-back']['fr-ca'] = ""; //copied from fr-fr
+$text['option-back']['fr-fr'] = "";
+$text['option-back']['he-il'] = "";
+$text['option-back']['it-it'] = "";
+$text['option-back']['nl-nl'] = "";
+$text['option-back']['pl-pl'] = "";
+$text['option-back']['pt-br'] = ""; //copied from pt-pt
+$text['option-back']['pt-pt'] = "";
+$text['option-back']['ro-ro'] = "";
+$text['option-back']['ru-ru'] = "";
+$text['option-back']['sv-se'] = "";
+$text['option-back']['uk-ua'] = "";
+
 $text['message-maximum_ivr_menus']['en-us'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['en-gb'] = "Maximum IVR Menus:";
 $text['message-maximum_ivr_menus']['ar-eg'] = "";
