@@ -635,12 +635,14 @@
 	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
 	echo "<option value=\"\"></option>\n";
 	foreach($ivr_menus as $field) {
+		if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
 			if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
 				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
 			}
 			else {
 				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
 			}
+		}
 	}
 	echo "</select>";
 	echo "		</td>";
