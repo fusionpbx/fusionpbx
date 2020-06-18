@@ -26,6 +26,7 @@
 
 --get the ivr name
 	ivr_menu_uuid = params:getHeader("Menu-Name");
+	original_ivr_menu_uuid = ivr_menu_uuid
 
 	local log = require "resources.functions.log".ivr_menu
 
@@ -80,6 +81,7 @@
 			dbh:query(sql, params, function(row)
 				--set the variables
 					domain_uuid = row["domain_uuid"];
+					ivr_menu_uuid = row["ivr_menu_uuid"];
 					ivr_menu_name = row["ivr_menu_name"];
 					ivr_menu_extension = row["ivr_menu_extension"];
 					ivr_menu_greet_long = row["ivr_menu_greet_long"];
@@ -288,7 +290,7 @@
 			--freeswitch.consoleLog("notice", "[xml_handler]"..api:execute("eval ${dsn}"));
 
 		--set the cache
-			local ok, err = cache.set("configuration:ivr.conf:" .. ivr_menu_uuid, XML_STRING, expire["ivr"]);
+			local ok, err = cache.set("configuration:ivr.conf:" .. original_ivr_menu_uuid, XML_STRING, expire["ivr"]);
 			if debug["cache"] then
 				if ok then
 					freeswitch.consoleLog("notice", "[xml_handler] " .. ivr_menu_uuid .. " stored in the cache\n");
