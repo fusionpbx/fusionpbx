@@ -225,6 +225,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
+	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
 	if (!$_GET['show'] == "all") {
 		echo  "<th>". $text['label-detail_action']."</th>";
@@ -266,14 +267,17 @@
 				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
-			echo "	<td class='no-wrap'>";
+			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
+
+			echo "	<td class='no-wrap'>\n";
 			if (permission_exists('destination_edit')) {
-				echo "<a href='".$list_row_url."'>".escape(format_phone($row['destination_number']))."</a>";
+				echo "		<a href='".$list_row_url."'>".escape(format_phone($row['destination_number']))."</a>\n";
 			}
 			else {
-				echo escape(format_phone($row['destination_number']));
+				echo "		".escape(format_phone($row['destination_number']));
 			}
 			echo "	</td>\n";
+
 			if (!$_GET['show'] == "all") {
 				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $row['destination_app'].':'.$row['destination_data'])."&nbsp;</td>\n";
 			}
