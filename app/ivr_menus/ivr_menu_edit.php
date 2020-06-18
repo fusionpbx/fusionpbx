@@ -393,6 +393,7 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
+					$cache->delete("configuration:ivr.conf:".$ivr_menu_parent_uuid);
 
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
