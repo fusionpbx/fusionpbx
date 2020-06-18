@@ -67,6 +67,10 @@
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-top';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['application'] = 'menu-top';
 		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-back';
+		$z++;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'exit';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-exit';
 		//menu-say-phrase
