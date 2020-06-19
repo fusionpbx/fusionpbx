@@ -99,7 +99,7 @@
 	$sql .= "when 'programmable' then 3 ";
 	$sql .= "when 'expansion' then 4 ";
 	$sql .= "else 100 END, ";
-	$sql .= "cast(device_key_id as numeric) asc ";
+	$sql .= "cast(device_key_id as int) asc ";
 	$parameters['device_uuid'] = $device_uuid;
 	$database = new database;
 	$device_keys = $database->select($sql, $parameters, 'all');
