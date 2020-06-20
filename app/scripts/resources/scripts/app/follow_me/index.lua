@@ -341,7 +341,7 @@
 					end
 
 				--get the destination caller id name and number
-					if (follow_me_caller_id_uuid ~= nil) then
+					if (follow_me_caller_id_uuid and follow_me_caller_id_uuid ~= '') then
 						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
 						sql = sql .. "from v_destinations ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
