@@ -227,9 +227,7 @@
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
 	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
-	if (!$_GET['show'] == "all") {
 		echo  "<th>". $text['label-detail_action']."</th>";
-	}
 	if (permission_exists("destination_context")) {
 		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	}
@@ -278,9 +276,7 @@
 			}
 			echo "	</td>\n";
 
-			if (!$_GET['show'] == "all") {
 				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $row['destination_app'].':'.$row['destination_data'])."&nbsp;</td>\n";
-			}
 			if (permission_exists("destination_context")) {
 				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
 			}
