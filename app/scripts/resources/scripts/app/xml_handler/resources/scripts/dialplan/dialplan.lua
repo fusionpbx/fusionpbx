@@ -124,7 +124,7 @@
 				if (context_name == "public" or string.match(context_name, "@")) then
 					sql = sql .. "where p.dialplan_context = :call_context ";
 				else
-					sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
+					sql = sql .. "where p.dialplan_context in (:call_context, '${domain_name}', 'global') ";
 				end
 				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
 				sql = sql .. "and p.dialplan_enabled = 'true' ";
