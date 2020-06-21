@@ -520,7 +520,7 @@
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
-	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = 'hangup'; }
+	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = 'hangup:'; }
 
 //get installed languages
 	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
