@@ -68,11 +68,20 @@
 			assert(dbh:connected());
 
 		--get the ivr menu from the database
-			local sql = [[SELECT * FROM v_ivr_menus
-				WHERE (ivr_menu_uuid = :ivr_menu_uuid or ivr_menu_parent_uuid = :ivr_menu_uuid)
-				AND ivr_menu_enabled = 'true' 
-				ORDER BY ivr_menu_parent_uuid desc
-				]];
+			local sql = [[
+				with recursive ivr_menus as (
+					select * 
+						from v_ivr_menus 
+						where ivr_menu_uuid = :ivr_menu_uuid
+						and ivr_menu_enabled = 'true'
+						union all 
+						select child.*
+						from v_ivr_menus as child, ivr_menus as parent 
+						where child.ivr_menu_parent_uuid = parent.ivr_menu_uuid
+						and child.ivr_menu_enabled = 'true'
+					)
+					select * from ivr_menus
+			]];
 			local params = {ivr_menu_uuid = ivr_menu_uuid};
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
