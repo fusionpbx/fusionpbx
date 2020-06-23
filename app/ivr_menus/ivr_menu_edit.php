@@ -400,8 +400,25 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
-					$cache->delete("configuration:ivr.conf:".$ivr_menu_parent_uuid);
-
+					//get all ivr parent menus
+					$sql = "with recursive ivr_menus as ( ";
+					$sql .="	select ivr_menu_parent_uuid ";
+					$sql .="	 from v_ivr_menus ";
+					$sql .="	 where ivr_menu_parent_uuid = :ivr_menu_parent_uuid ";
+					$sql .="	 and ivr_menu_enabled = 'true' ";
+					$sql .="	 union all ";
+					$sql .="	 select parent.ivr_menu_parent_uuid ";
+					$sql .="	 from v_ivr_menus as parent, ivr_menus as child ";
+					$sql .="	 where parent.ivr_menu_uuid = child.ivr_menu_parent_uuid ";
+					$sql .="	 and parent.ivr_menu_enabled = 'true' ";
+					$sql .="	) ";
+					$sql .="	select * from ivr_menus ";
+					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
+					$database = new database;
+					$parent_uuids = $database->select($sql, $parameters, "all");
+					foreach ($parent_uuids as $x => $row) {
+						$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
+					}
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
 						message::add($text['message-add']);
