@@ -6,7 +6,7 @@
 			<action application="sleep" data="1000"/>
 			<action application="set" data="record_append=false"/>
 			<action application="set" data="voicemail_action=check"/>
-			<action application="set" data="voicemail_id=${sip_from_user}"/>
+			<action application="set" data="voicemail_id=${user_name}"/>
 			<action application="set" data="voicemail_profile=default"/>
 			<action application="lua" data="app.lua voicemail"/>
 			<!--<action application="voicemail" data="check default ${domain_name} ${caller_id_number}"/>-->
