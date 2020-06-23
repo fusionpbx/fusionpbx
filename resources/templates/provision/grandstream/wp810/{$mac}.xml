@@ -1,0 +1,2994 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Grandstream XML Provisioning Configuration -->
+<gs_provision version="1">
+<mac>{$mac|replace:'-':''}</mac>
+  <config version="1">
+    <!-- ########################################################################################## -->
+    <!-- ## Configuration Template For WP810 Firmware Version 1.0.7.7                            ## -->
+    <!-- ########################################################################################## -->
+    <!-- #################################################################### -->
+    <!-- # Account Settings                                                ## -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- # Account 1                                                       ## -->
+    <!-- #################################################################### -->
+    <!-- ############################################################### -->
+    <!-- # Account 1/General Settings -->
+    <!-- ############################################################### -->
+    <!-- # Account Active. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P271>1</P271>
+
+    <!-- # Account Name -->
+    <!-- # String -->
+    <P270>{$account.1.display_name}</P270>
+
+    <!-- # SIP Server -->
+    <!-- # String -->
+    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+
+    <!-- # Secondary SIP Server -->
+    <!-- # String -->
+{if isset($account.1.server_address_secondary)}
+    <P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
+{else}
+    <P2312>{$account.1.server_address_secondary}</P2312>
+{/if}
+
+    <!-- # Outbound Proxy -->
+    <!-- # String -->
+{if isset($account.1.outbound_proxy_primary)}
+    <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+    <P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}
+
+    <!-- # Backup Outbound Proxy -->
+    <!-- # String -->
+{if isset($account.1.outbound_proxy_secondary)}
+    <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
+{else}
+    <P2333>{$account.1.outbound_proxy_secondary}</P2333>
+{/if}
+
+    <!-- # SIP User ID -->
+    <!-- # String -->
+    <P35>{$account.1.user_id}</P35>
+
+    <!-- # Authenticate ID -->
+    <!-- # String -->
+    <P36>{$account.1.auth_id}</P36>
+
+    <!-- # Authenticate Password -->
+    <!-- # String -->
+    <P34>{$account.1.password}</P34>
+
+    <!-- # Name -->
+    <!-- # String -->
+    <P3>{$account.1.display_name}</P3>
+
+    <!-- # Voice Mail Access Number -->
+    <!-- # String -->
+    <P33>*97</P33>
+
+    <!-- # Account Display -->
+    <!-- # Number: 0, 1. 0 - User Name, 1 - User ID. Default is 0 -->
+    <!-- # Mandatory -->
+    <P2380>0</P2380>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/Network Settings -->
+    <!-- ############################################################### -->
+    <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+    <P103>{$grandstream_dns_mode}</P103>
+{else}
+    <P103>0</P103>
+{/if}
+
+    <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
+    <!-- # Number: 0,1,2 -->
+    <!-- # Mandatory -->
+    <P26040>0</P26040>
+
+    <!-- # Primary IP. Maximum 15 characters -->
+    <!-- # String -->
+    <P2308></P2308>
+
+    <!-- # Backup IP 1 -->
+    <!-- # String -->
+    <P2309></P2309>
+
+    <!-- # Backup IP 2 -->
+    <!-- # String -->
+    <P2310></P2310>
+
+    <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 4. -->
+    <!-- # Number: 0, 1, 2, 3, 4, 5 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_nat_traversal)}
+    <P52>{$grandstream_nat_traversal}</P52>
+{else}
+    <P52>2</P52>
+{/if}
+
+    <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+    <!-- # String -->
+    <P197></P197>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/SIP Settings/Basic Settings -->
+    <!-- ############################################################### -->
+    <!-- # TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P63>0</P63>
+
+    <!-- # SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P31>1</P31>
+
+    <!-- # Unregister On Reboot. 0 - No, 1 - Yes, 2 - Instance. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P81>0</P81>
+
+    <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
+    <!-- # Number: 1 - 64800 -->
+    <!-- # Mandatory -->
+    <P32>{$account.1.register_expires}</P32>
+
+    <!-- # Subscribe Expiration (in minutes). Default is 60. Max about 45 days -->
+    <!-- # Number: 1 - 64800 -->
+    <!-- # Mandatory -->
+    <P26051>60</P26051>
+
+    <!-- # Reregister Before Expiration (in seconds). Default is 0 seconds -->
+    <!-- # Number: 0 - 64800 -->
+    <!-- # Mandatory -->
+    <P2330>0</P2330>
+
+    <!-- # Enable OPTIONS Keep Alive. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0,1 -->
+    <!-- # Mandatory -->
+    <P2397>0</P2397>
+
+    <!-- # OPTIONS Keep Alive Interval. Default is 30 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P2398>30</P2398>
+
+    <!-- # OPTIONS Keep Alive Max Lost. Default is 3 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P2399>3</P2399>
+
+    <!-- # Local SIP Port. Default is 5060 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P40>5060</P40>
+
+    <!-- # SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+    <!-- # Number: 1 - 3600 -->
+    <!-- # Mandatory -->
+    <P138>20</P138>
+
+    <!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+    <!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 50 -->
+    <!-- # Number: 50, 100, 200 -->
+    <!-- # Mandatory	 -->
+    <P209>50</P209>
+
+    <!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+    <!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+    <!-- # Number: 200, 400, 800 -->
+    <!-- # Mandatory -->
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+    <P250>{$tp}</P250>
+
+    <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P130>0</P130>
+
+    <!-- # SIP Listening Mode.  -->
+    <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
+    <!-- # Number: 0,1,2,3 -->
+    <!-- # Mandatory -->
+    <P26024>0</P26024>
+
+    <!-- # SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2329>1</P2329>
+
+    <!-- # Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2331>0</P2331>
+
+    <!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2305>0</P2305>
+
+    <!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P288>1</P288>
+
+    <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($subscribe_mwi)}
+    <P99>1</P99>
+{else}
+    <P99>0</P99>
+{/if}
+
+    <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2319>0</P2319>
+
+    <!-- # Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P272>0</P272>
+
+    <!-- # Callee ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P26025>0</P26025>
+
+    <!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 2 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2324>2</P2324>
+
+    <!-- # Add Auth Header On Initial REGISTER -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2359>0</P2359>
+
+    <!-- # Allow SIP Reset -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26015>0</P26015>
+
+    <!-- # Ignore Alert-Info header -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26018>0</P26018>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/SIP Settings/Custom SIP Headers -->
+    <!-- ############################################################### -->
+
+    <!-- # Use Privacy Header -->
+    <!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2338>0</P2338>
+
+    <!-- # Use P-Preferred-Identity Header -->
+    <!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2339>0</P2339>
+
+    <!-- # Use P-Access-Network-Info Header -->
+    <!-- # 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26058>1</P26058>
+
+    <!-- # Use P-Emergency-Info Header -->
+    <!-- # 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26059>1</P26059>
+
+    <!-- # Use MAC Header -->
+    <!-- # 0 - No, 1 - Only for REGISTER, 2 - Yes to all SIP. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P29090>0</P29090>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/SIP Settings/Advanced Features -->
+    <!-- ############################################################### -->
+    <!-- # PUBLISH for Presence. 0 - Disabled, 1 - Enabled. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P188>0</P188>
+
+    <!-- # Omit charset=UTF-8 in MESSAGE. 0 - Disabled, 1 - Enabled. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2355>0</P2355>
+
+    <!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+    <!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+    <!-- # Default is 100 -->
+    <!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+    <!-- # Mandatory -->
+    <P198>100</P198>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/SIP Settings/Session Timer -->
+    <!-- ############################################################### -->
+    <!-- # Enable Session Timer. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2395>0</P2395>
+
+    <!-- # Session Expiration (in seconds). Default is 180 -->
+    <!-- # Number: 90 - 64800 -->
+    <!-- # Mandatory -->
+    <P260>180</P260>
+
+    <!-- # Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P260 -->
+    <!-- # Number: 90 - 64800 -->
+    <!-- # Mandatory -->
+    <P261>90</P261>
+
+    <!-- # Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P262>0</P262>
+
+    <!-- # Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P263>0</P263>
+
+    <!-- # Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P264>0</P264>
+
+    <!-- # UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default is 1 -->
+    <!-- # Number: 0 - 2 -->
+    <!-- # Mandatory -->
+    <P266>1</P266>
+
+    <!-- # UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+    <!-- # Number: 1, 2 -->
+    <!-- # Mandatory -->
+    <P267>1</P267>
+
+    <!-- # Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE). -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P265>0</P265>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/SIP Settings/Security Settings -->
+    <!-- ############################################################### -->
+    <!-- # Check Domain Certificates. When set to Yes/Enabled, domain certificate will be checked as defined in RFC5922 -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2311>0</P2311>
+
+    <!-- # Validate Certification Chain. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2367>0</P2367>
+
+    <!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2306>0</P2306>
+
+    <!-- # Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P258>0</P258>
+
+    <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2347>0</P2347>
+
+    <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2346>0</P2346>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/Audio Settings -->
+    <!-- ############################################################### -->
+    <!-- # Preferred Vocoder -->
+    <!-- # 0 - PCMU, 2 - G.726-32, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC, 123 - OPUS -->
+    <!-- # choice 1. Default is 0 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P57>0</P57>
+
+    <!-- # choice 2. Default is 8 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P58>8</P58>
+
+    <!-- # choice 3. Default is 18 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P59>18</P59>
+
+    <!-- # choice 4. Default is 9 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P60>9</P60>
+
+    <!-- # choice 5. Default is 98 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P61>98</P61>
+
+    <!-- # choice 6. Default is 2 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P62>2</P62>
+
+    <!-- # choice 7. Default is 123 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123 -->
+    <!-- # Mandatory -->
+    <P46>123</P46>
+
+    <!-- # Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2348>0</P2348>
+
+    <!-- # Codec Negotiation Priority. 0 - Caller, 1 - Callee. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P29061>1</P29061>
+
+    <!-- # Disable Multiple m line in SDP -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P137>0</P137>
+
+    <!-- # SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+ {if isset($grandstream_srtp)}
+    <P183>{$grandstream_srtp}</P183>
+{else}
+    <P183>0</P183>
+{/if}
+
+    <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
+    <!-- # Default is 0 -->
+    <!-- # Number: 0,1 -->
+    <!-- # Mandatory -->
+    <P2383>0</P2383>
+
+    <!-- # Crypto Life Time -->
+    <!-- # 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2363>1</P2363>
+
+    <!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P291>0</P291>
+
+    <!-- # Silence Suppression. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P50>0</P50>
+
+    <!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P133>1</P133>
+
+    <!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms -->
+    <!-- # Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+    <!-- # Mandatory -->
+    <P132>2</P132>
+
+    <!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+    <!-- # Number: 1 - 64 -->
+    <!-- # Mandatory -->
+    <P37>2</P37>
+
+    <!-- # G.726-32 Packing Mode. 0 - ITU, 1 - IETF. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2323>0</P2323>
+
+    <!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P97>1</P97>
+
+    <!-- # iLBC Payload Type. Default is 97 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P96>97</P96>
+
+    <!-- # OPUS Payload Type. Default is 123 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P2385>123</P2385>
+
+    <!-- # DTMF Payload Type. Default is 101 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P79>101</P79>
+
+    <!-- # Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2301>0</P2301>
+
+    <!-- # Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2302>1</P2302>
+
+    <!-- # Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2303>0</P2303>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/Call Settings -->
+    <!-- ############################################################### -->
+    <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+{if isset($grandstream_dial_plan) }
+    <P290>{$grandstream_dial_plan}</P290>
+{else}
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
+
+    <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P182>0</P182>
+
+    <!-- # Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P65>0</P65>
+
+    <!-- # Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P129>0</P129>
+
+    <!-- # Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P90>0</P90>
+
+    <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P135>0</P135>
+
+    <!-- # Blind Transfer Wait Timeout. Default is 30 -->
+    <!-- # Number: 30 - 300 -->
+    <!-- # Mandatory -->
+    <P26070>30</P26070>
+
+    <!-- # Key as Send. 0 - Disabled, 1 - Pound (#), 2 - Star (*). Default is 1 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P72>1</P72>
+
+    <!-- # RFC2543 Hold. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26062>0</P26062>
+
+    <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P26063>{$grandstream_call_waiting}</P26063>
+
+    <!-- # Ring Timeout (in seconds). Default is 60 -->
+    <!-- # Number: 30 - 3600 -->
+    <!-- # Mandatory -->
+    <P1328>60</P1328>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/Intercom Settings -->
+    <!-- ############################################################### -->
+    <!-- # Allow Auto Answer by Call-Info/Alert-Info. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P298>1</P298>
+
+    <!-- # Allow Barging by Call-Info/Alert-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26019>0</P26019>
+
+    <!-- # Custom Alert-Info for Auto Answer. -->
+    <!-- # String -->
+    <P2356></P2356>
+
+    <!-- ############################################################### -->
+    <!-- # Account 1/Feature Codes -->
+    <!-- ############################################################### -->
+    <!-- # Enable Local Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P191>0</P191>
+
+    <!-- #################################################################### -->
+    <!-- # Account 2 -->
+    <!-- #################################################################### -->
+    <!-- ############################################################### -->
+    <!-- # Account 2/General Settings -->
+    <!-- ############################################################### -->
+    <!-- # Account Active. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($account.2.password)}
+    <P401>1</P401>
+{else}
+    <P401>0</P401>
+{/if}
+
+    <!-- # Account Name -->
+    <!-- # String -->
+    <P417>{$account.2.display_name}</P417>
+
+    <!-- # SIP Server -->
+    <!-- # String -->
+    <P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+
+    <!-- # Secondary SIP Server -->
+    <!-- # String -->
+{if isset($account.2.server_address_secondary)}
+    <P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
+{else}
+    <P2412>{$account.2.server_address_secondary}</P2412>
+{/if}
+
+    <!-- # Outbound Proxy -->
+    <!-- # String -->
+{if isset($account.2.outbound_proxy_primary)}
+    <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
+{else}
+    <P403>{$account.2.outbound_proxy_primary}</P403>
+{/if}
+
+    <!-- # Backup Outbound Proxy -->
+    <!-- # String -->
+    
+{if isset($account.2.outbound_proxy_secondary)}
+    <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
+{else}
+    <P2433>{$account.2.outbound_proxy_secondary}</P2433>
+{/if}
+
+    <!-- # SIP User ID -->
+    <!-- # String -->
+    <P404>{$account.2.user_id}</P404>
+
+    <!-- # Authenticate ID -->
+    <!-- # String -->
+    <P405>{$account.2.auth_id}</P405>
+
+    <!-- # Authenticate password -->
+    <!-- # String -->
+    <P406>{$account.2.password}</P406>
+
+    <!-- # Name -->
+    <!-- # String -->
+    <P407>{$account.2.display_name}</P407>
+
+    <!-- # Voice Mail UserID -->
+    <!-- # String -->
+    <P426>*97</P426>
+
+    <!-- # Account Display -->
+    <!-- # Number: 0, 1. 0 - User Name, 1 - User ID. Default is 0 -->
+    <!-- # Mandatory -->
+    <P2480>0</P2480>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/Network Settings -->
+    <!-- ############################################################### -->
+    <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+    <P408>{$grandstream_dns_mode}</P408>
+{else}
+    <P408>0</P408>
+{/if}
+
+    <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
+    <!-- # Number: 0,1,2 -->
+    <!-- # Mandatory -->
+    <P26140>0</P26140>
+
+    <!-- # Primary IP. Maximum 15 characters -->
+    <!-- # String -->
+    <P2408></P2408>
+
+    <!-- # Backup IP 1 -->
+    <!-- # String -->
+    <P2409></P2409>
+
+    <!-- # Backup IP 2 -->
+    <!-- # String -->
+    <P2410></P2410>
+
+    <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 4 -->
+    <!-- # Number: 0, 1, 2, 3, 4, 5 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_nat_traversal)}
+    <P414>{$grandstream_nat_traversal}</P414>
+{else}
+    <P414>2</P414>
+{/if}
+
+    <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
+    <!-- # String -->
+    <P418></P418>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/SIP Settings/Basic Settings -->
+    <!-- ############################################################### -->
+    <!-- # TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P409>0</P409>
+
+    <!-- # SIP Registration. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P410>1</P410>
+
+    <!-- # Unregister On Reboot. 0 - No, 1 - Yes, 2 - Instance. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P411>0</P411>
+
+    <!-- # Register Expiration (in minutes). Default is 60. Max is 45 days -->
+    <!-- # Number: 1 - 64800 -->
+    <!-- # Mandatory -->
+    <P412>{$account.2.register_expires}</P412>
+
+    <!-- # Subscribe Expiration. Default is 60. Max about 45 days -->
+    <!-- # Number: 1 - 64800 -->
+    <!-- # Mandatory -->
+    <P26151>60</P26151>
+
+    <!-- # Reregister before Expiration (in seconds). Default is 0 seconds -->
+    <!-- # Number: 0 - 64800 -->
+    <!-- # Mandatory -->
+    <P2430>0</P2430>
+
+    <!-- # Enable OPTIONS Keep Alive. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0,1 -->
+    <!-- # Mandatory -->
+    <P2497>0</P2497>
+
+    <!-- # OPTIONS Keep Alive Interval. Default is 30 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P2498>30</P2498>
+
+    <!-- # OPTIONS Keep Alive Max Lost. Default is 3 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P2499>3</P2499>
+
+    <!-- # Local SIP port. Default is 5062 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P413>5062</P413>
+
+    <!-- # SIP Registration Failure Retry Wait Time (in seconds). Default is 20 -->
+    <!-- # Number: 1 - 3600 -->
+    <!-- # Mandatory -->
+    <P471>20</P471>
+
+    <!-- # SIP T1 Timeout. RFC 3261 T1 value (RTT estimate) -->
+    <!-- # 50 - 0.5 sec, 100 - 1 sec, 200 - 2 sec. Default is 100 -->
+    <!-- # Number: 50, 100, 200 -->
+    <!-- # Mandatory -->
+    <P440>50</P440>
+
+    <!-- # SIP T2 Timeout. RFC 3261 T2 value. The maximum retransmit interval for non-INVITE requests and INVITE responses -->
+    <!-- # 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
+    <!-- # Number: 200, 400, 800 -->
+    <!-- # Mandatory -->
+    <P441>400</P441>
+
+    <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+ {$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+    <P448>{$tp}</P448>
+
+    <!-- # SIP Listening Mode.  -->
+    <!-- # 0 - Transport Only, 1 - Dual, 2 - Dual (BLF Enforced), 3 - Dual (Secured). Default is 0 -->
+    <!-- # Number: 0,1,2,3 -->
+    <!-- # Mandatory -->
+    <P26124>0</P26124>
+
+    <!-- # SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2429>1</P2429>
+
+    <!-- # Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1- Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2431>0</P2431>
+
+    <!-- # Outbound Proxy Mode. 0 - in route, 1 - not in route, 2 - always send to -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2405>0</P2405>
+
+    <!-- # Support SIP Instance ID. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P489>1</P489>
+
+    <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($subscribe_mwi)}
+    <P415>1</P415>
+{else}
+    <P415>0</P415>
+{/if}
+
+    <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2419>0</P2419>
+
+    <!-- # Enable 100rel. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P435>0</P435>
+
+    <!-- # Callee ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P26125>0</P26125>
+
+    <!-- # Caller ID Display. 0 - Auto, 1 - Disabled, 2 - From Header. Default is 2 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2424>2</P2424>
+
+    <!-- # Add Auth Header On Initial REGISTER -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2459>0</P2459>
+
+    <!-- #Allow SIP Reset -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- #Mandatory -->
+    <P26115>0 </P26115>
+
+    <!-- # Ignore Alert-Info header -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26118>0</P26118>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/SIP Settings/Custom SIP Headers -->
+    <!-- ############################################################### -->
+
+    <!-- # Use Privacy Header -->
+    <!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2438>0</P2438>
+
+    <!-- # Use P-Preferred-Identity Header -->
+    <!-- # 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P2439>0</P2439>
+
+    <!-- # Use P-Access-Network-Info Header -->
+    <!-- # 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26158>1</P26158>
+
+    <!-- # Use P-Emergency-Info Header -->
+    <!-- # 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26159>1</P26159>
+
+    <!-- # Use MAC Header -->
+    <!-- # 0 - No, 1 - Only for REGISTER, 2 - Yes to all SIP. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P29190>0</P29190>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/SIP Settings/Advanced Features -->
+    <!-- ############################################################### -->
+    <!-- # PUBLISH for Presence. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P488>0</P488>
+
+    <!-- # Omit charset=UTF-8 in MESSAGE. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2455>0</P2455>
+
+    <!-- # Special Feature. 100 - Standard, 101 - Nortel MCS, 102- Broadsoft, 108 - CBCOM,  -->
+    <!-- # 109 - RNK, 110 - Sylantro, 117 - Huawei IMS, 119 - Phonepower, 120 - UCM Call Center -->
+    <!-- # Default is 100 -->
+    <!-- # Number: 100, 101, 102, 108, 109, 110, 117, 119, 120 -->
+    <!-- # Mandatory -->
+    <P424>100</P424>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/SIP Settings/Session Timer -->
+    <!-- ############################################################### -->
+    <!-- # Enable Session Timer. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2495>0</P2495>
+
+    <!-- # Session Expiration (in seconds). Default is 180 -->
+    <!-- # Number: 90 - 64800 -->
+    <!-- # Mandatory -->
+    <P434>180</P434>
+
+    <!-- # Minimum SE (in seconds). Default is 90. This value must be lower than or equal to P434 -->
+    <!-- # Number: 90 - 64800 -->
+    <!-- # Mandatory -->
+    <P427>90</P427>
+
+    <!-- # Caller Request Timer (Request for timer when calling). 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P428>0</P428>
+
+    <!-- # Callee Request Timer (Request for timer when called. i.e. if remote party supports timer but did not request for one) -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory  -->
+    <P429>0</P429>
+
+    <!-- # Force Timer (Still use timer when remote party does not support timer). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P430>0	</P430>
+
+    <!-- # UAC Specify Refresher. 0 - Omit, 1 - UAC, 2 - UAS. Default is 1 -->
+    <!-- # Number: 0 - 2 -->
+    <!-- # Mandatory -->
+    <P432>1</P432>
+
+    <!-- # UAS Specify Refresher. 1 - UAC, 2 - UAS. Default is 1 -->
+    <!-- # Number: 1, 2 -->
+    <!-- # Mandatory -->
+    <P433>1</P433>
+
+    <!-- # Force INVITE (Always refresh with INVITE instead of UPDATE even when remote party supports UPDATE) -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P431>0</P431>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/SIP Settings/Security Settings -->
+    <!-- ############################################################### -->
+    <!-- # Check Domain Certificates. 0 - No, 1 - Yes. When set to Yes/Enabled, the domain certificate will be checked as defined in RFC5922 -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2411>0</P2411>
+
+    <!-- # Validate Certification Chain. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2467>0</P2467>
+
+    <!-- # Validate Incoming Messages. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2406>0</P2406>
+
+    <!-- # Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P449>0</P449>
+
+    <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2447>0</P2447>
+
+    <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2446>0</P2446>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/Audio Settings -->
+    <!-- ############################################################### -->
+    <!-- # Preferred Vocoder -->
+    <!-- # 0 - PCMU, 2 - G.726-32, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 98 - iLBC, 125 - OPUS -->
+    <!-- # choice 1. Default is 0 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P451>0</P451>
+
+    <!-- # choice 2. Default is 8 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P452>8</P452>
+
+    <!-- # choice 3. Default is 18 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P453>18</P453>
+
+    <!-- # choice 4. Default is 9 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P454>9</P454>
+
+    <!-- # choice 5. Default is 98 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P455>98</P455>
+
+    <!-- # choice 6. Default is 2 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P456>2</P456>
+
+    <!-- # choice 7. Default is 123 -->
+    <!-- # Number: 0, 2, 8, 9, 18, 98, 123  -->
+    <!-- # Mandatory -->
+    <P457>123</P457>
+
+    <!-- # Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2448>0</P2448>
+
+    <!-- # Codec Negotiation Priority. 0 - Caller, 1 - Callee. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P29161>1</P29161>
+
+    <!-- #Disable Multiple m line in SDP -->
+    <!-- #0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P487>0</P487>
+
+    <!-- # SRTP Mode -->
+    <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+    <P443>{$grandstream_srtp}</P443>
+{else}
+    <P443>0</P443>
+{/if}
+
+    <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
+    <!-- # Default is 0 -->
+    <!-- # Number: 0,1 -->
+    <!-- # Mandatory -->
+    <P2483>0</P2483>
+
+    <!-- #Crypto Life Time -->
+    <!-- #0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2463>0</P2463>
+
+    <!-- # Symmetric RTP. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P460>0</P460>
+
+    <!-- # Silence Suppression 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P485>0</P485>
+
+    <!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P498>1</P498>
+
+    <!-- # Jitter Buffer Length.  -->
+    <!-- # 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3, 4, 5, 6, 7 -->
+    <!-- # Mandatory -->
+    <P497>2</P497>
+
+    <!-- # Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively). Default is 2 -->
+    <!-- # Number: 1 - 64 -->
+    <!-- # Mandatory -->
+    <P486>2</P486>
+
+    <!-- # G.726-32 Packing Mode. 0 - ITU, 1 - IETF. default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2423>0</P2423>
+
+    <!-- # iLBC Frame Size. 0 - 20ms, 1 - 30ms. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P495>1</P495>
+
+    <!-- # iLBC Payload Type. Default is 97 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P494>97</P494>
+
+    <!-- # OPUS Payload Type. Default is 123 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P2485>123</P2485>
+
+    <!-- # DTMF Payload Type. Default is 101 -->
+    <!-- # Number: 96 - 127 -->
+    <!-- # Mandatory -->
+    <P496>101</P496>
+
+    <!-- # Send DTMF: In-audio. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2401>0</P2401>
+
+    <!-- # Send DTMF: Via RTP (RFC2833). 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2402>1</P2402>
+
+    <!-- # Send DTMF: Via SIP INFO. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2403>0</P2403>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/Call Settings -->
+    <!-- ############################################################### -->
+    <!-- # Dial Plan. Default is { x+ | \+x+ | *x+ | *xx*x+ } -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+{if isset($grandstream_dial_plan) }
+    <P459>{$grandstream_dial_plan}</P459>
+{else}
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+{/if}
+
+    <!-- # Call Log. 0 - Log All Calls, 1 - Log Incoming/Outgoing only (missed calls NOT recorded), 2 - Disable Call Log. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P442>0</P442>
+
+    <!-- # Send Anonymous (caller ID will be blocked if set to Yes). 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P421>0</P421>
+
+    <!-- # Anonymous Call Rejection. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P446>0</P446>
+
+    <!-- # Auto Answer. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P425>0</P425>
+
+    <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P469>0</P469>
+
+    <!-- # Blind Transfer Wait Timeout. Default is 30 -->
+    <!-- # Number: 30 - 300 -->
+    <!-- # Mandatory -->
+    <P26170>30</P26170>
+
+    <!-- # Key as Send. 0 - Disabled, 1 - Pound (#), 2 - Star (*). Default is 1 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P492>1</P492>
+
+    <!-- # RFC2543 Hold. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26162>0</P26162>
+
+    <!-- # Disable Call Waiting. 0 - Default, 1 - No, 2 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P26163>0</P26163>
+
+    <!-- # Ring Timeout (in seconds) Default is 60 -->
+    <!-- # Number: 30 - 3600 -->
+    <!-- # Mandatory -->
+    <P476>60</P476>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/Intercom Settings -->
+    <!-- ############################################################### -->
+    <!-- # Allow Auto Answer by Call-Info/Alert-Info. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P438>1</P438>
+
+    <!-- # Allow Barging by Call-Info/Alert-Info. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P26119>0</P26119>
+
+    <!-- # Custom Alert-Info for Auto Answer. -->
+    <!-- # String -->
+    <P2456></P2456>
+
+    <!-- ############################################################### -->
+    <!-- # Account 2/Feature Codes -->
+    <!-- ############################################################### -->
+    <!-- # Enable Local Call Features. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P420>0</P420>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/General Settings -->
+    <!-- ############################################################################## -->
+    <!-- # Local RTP Port. Default is 5004 -->
+    <!-- # Number: 1024 - 65400. Must be even number -->
+    <!-- # Mandatory -->
+    <P39>5004</P39>
+
+    <!-- # Local RTP Port Range. Default is 200 -->
+    <!-- # Number: 48 - 10000 -->
+    <!-- # Mandatory -->
+    <P29610>200</P29610>
+
+    <!-- # Use Random Port. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P78>1</P78>
+
+    <!-- # Keep-Alive Interval (in seconds). Default is 20 -->
+    <!-- # Number: 10 - 160 -->
+    <!-- # Mandatory -->
+    <P84>20</P84>
+
+    <!-- # Use NAT IP. This will enable our SIP client to use this IP in the SIP/SDP message. Example 64.3.153.50 -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":" -->
+    <P101></P101>
+
+    <!-- # STUN server -->
+    <!-- # String -->
+    <P76></P76>
+
+    <!-- # Delay Registration. Default is 0. -->
+    <!-- # Number: 0 - 90 -->
+    <!-- # Mandatory -->
+    <P8359>0</P8359>
+
+    <!-- # Test Password Strength. Default is 0. -->
+    <!-- # Number: 0, 1. 0 - No, 1 - Yes.  -->
+    <P8468>0</P8468>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Call Features -->
+    <!-- ############################################################################## -->
+    <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P91>{$grandstream_call_waiting}</P91>
+
+    <!-- # Disable Direct IP Call. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1310>0</P1310>
+
+    <!-- # Do not Escape '#' as 23% in SIP URL. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1406>0</P1406>
+
+    <!-- # Return Code When Refusing Incoming Call. Default is 0 -->
+    <!-- # Number: 0,1,2,3. 0 - Busy(486), 1 - Temporarily Unavailable(480), 2 - Not Found(404), 3 - Decline(603). -->
+    <!-- # Mandatory -->
+    <P8360>0</P8360>
+
+    <!-- # Return Code When Enable DND. Default is 1 -->
+    <!-- # Number: 0,1,2,3. 0 - Busy(486), 1 - Temporarily Unavailable(480), 2 - Not Found(404), 3 - Decline(603). -->
+    <!-- # Mandatory -->
+    <P8361>1</P8361>
+
+    <!-- # Allow Incoming Call Before Ringing.  0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P29609>0</P29609>
+
+    <!-- # User-Agent Prefix -->
+    <!-- # String -->
+    <P8358></P8358>
+
+    <!-- # Auto Answer Delay -->
+    <!-- # String -->
+    <P8486>0</P8486>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Multicast Paging -->
+    <!-- ############################################################################## -->
+    <!-- # Allowed in DND Mode. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8381>0</P8381>
+
+    <!-- # Paging Barge. 0 - Disable, 1 - priority 1, 2 - priority 2, 3 - priority 3,  -->
+    <!-- # 4 - priority 4, 5 - priority 5, 6 - priority 6, 7 - priority 7, 8 - priority 8, -->
+    <!-- # 9 - priority 9, 10 - priority 10. Default is 0. -->
+    <!-- # Number: 0 - 10 -->
+    <!-- # Mandatory -->
+    <P1566>0</P1566>
+
+    <!-- # Paging Priority Active. 0 - Disabled, 1 - Enabled -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1567>1</P1567>
+
+    <!-- # Multicast Sender ID -->
+    <!-- # String -->
+    <P8455></P8455>
+
+    <!-- # Multicast Listening Address (Priority 1 ~ 10) -->
+    <!-- # String -->
+    <P1569></P1569>
+    <P1571></P1571>
+    <P1573></P1573>
+    <P1575></P1575>
+    <P1577></P1577>
+    <P1579></P1579>
+    <P1581></P1581>
+    <P1583></P1583>
+    <P1585></P1585>
+    <P1587></P1587>
+
+    <!-- # Multicast Listening Address Label (Priority 1 ~ 10) -->
+    <P1570></P1570>
+    <P1572></P1572>
+    <P1574></P1574>
+    <P1576></P1576>
+    <P1580></P1580>
+    <P1582></P1582>
+    <P1584></P1584>
+    <P1586></P1586>
+    <P1588></P1588>
+    <P1560></P1560>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Preferences -->
+    <!-- ############################################################################## -->
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Preferences / Date and Time -->
+    <!-- ############################################################################## -->
+    <!-- # NTP Server -->
+    <!-- # String -->
+{if isset($ntp_server_primary)}
+    <P30>{$ntp_server_primary}</P30>
+{else}
+    <P30>pool.ntp.org</P30>
+{/if}
+
+    <!-- # Secondary NTP Server -->
+    <!-- # String -->
+{if isset($ntp_server_secondary)}
+    <P8333>{$ntp_server_secondary}</P8333>
+{else}
+    <P8333>2.us.pool.ntp.org</P8333>
+{/if}
+
+    <!-- # NTP Update Interval -->
+    <!-- # String -->
+    <!-- # Number: 5 - 1440. Default is 1440  -->
+    <P5005>1440</P5005>
+
+    <!-- # Allow DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # When set to Yes(1), it will override the configured NTP server -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P144>0</P144>
+
+    <!-- # Time Zone -->
+
+    <!-- # Web GUI Option										P Value -->
+    <!-- # Automatic												auto -->
+    <!-- # GMT-12:00 (International Date Line West)				TAZ+12 -->
+    <!-- # GMT-11:00 (Midway Island, Samoa) 						TAB+11 -->
+    <!-- # GMT-10:00 (US Hawaiian Time) 							HAW10 -->
+    <!-- # GMT-9:00 (US Alaska Time) 							AKST9AKDT -->
+    <!-- # GMT-8:00 (US Pacific Time, Los Angeles)				PST8PDT -->
+    <!-- # GMT-08:00 (Baja California)							PST8PDT,M3.2.0,M11.1.0 -->
+    <!-- # GMT-07:00 (US Mountain Time, Denver) 					MST7MDT -->
+    <!-- # GMT-07:00 (Mountain Time (Arizona, no DST)) 			MST7 -->
+    <!-- # GMT-07:00 (Chihuahua, La Paz, Mazatlan)				MST7MDT,M4.1.0,M10.5.0   -->
+    <!-- # GMT-06:00 (Central Time) 								CST6CDT -->
+    <!-- # GMT-06:00 (Central America) 							CST+6 -->
+    <!-- # GMT-06:00 (Guadalajara, Mexico City, Monterrey)		CST6CDT,M4.1.0,M10.5.0 -->
+    <!-- # GMT-05:00 (Eastern Time)								EST5EDT -->
+    <!-- # GMT-05:00 (Eastern Time without daylight saving) 		EST5 -->
+    <!-- # GMT-04:30 (Caracas) 									TZf+4:30 -->
+    <!-- # GMT-04:00 (Atlantic Time) 							AST4ADT -->
+    <!-- # GMT-04:00 (Atlantic Time (New Brunswick)) 			AST4ADT,M3.2.0,M11.1.0 -->
+    <!-- # GMT-04:00 (Santiago, Chile)							CLT4CLST,M9.1.6/24:00,M4.1.6/24:00 -->
+    <!-- # GMT-03:30 (Newfoundland Time)							NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00 -->
+    <!-- # GMT-03:00 (Greenland) 								TZK+3 -->
+    <!-- # GMT-03:00 (Brazil, Sao Paulo) 						BRST+3BRDT+2,M11.1.0,M2.3.0 -->
+    <!-- # GMT-02:00 (Argentina) 								UTC+3  -->
+    <!-- # GMT-02:00 (Mid-Atlantic) 								TZL+2 -->
+    <!-- # GMT-01:00 (Azores, Cape Verdi Is.) 					TZM+1 -->
+    <!-- # GMT (Edinburgh, Casablanca, Monrovia) 				TZN+0 -->
+    <!-- # GMT (London, Great Britain) 							GMT+0BST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+    <!-- # GMT (Lisbon, Portugal) 								WET-0WEST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+    <!-- # GMT (Dublin, Ireland) 								GMT+0IST-1,M3.5.0/01:00:00,M10.5.0/02:00:00 -->
+    <!-- # GMT+01:00 (Paris, Vienna, Warsaw, Roma, Madrid, Prague, Berlin, Budapest, Amsterdam, Belgium)   CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 -->
+    <!-- # GMT+02:00 (Israel, Cairo, Athens, Istanbul, Buchrest) TZP-2 -->
+    <!-- # GMT+02:00 (Helsinki, Athens, Tallinn) 				EET-2EEST-3,M3.5.0/03:00:00,M10.5.0/04:00:00 -->
+    <!-- # GMT+02:00 (Kyiv, Ukraine) 							EET-2EEST,M3.5.0/3,M10.5.0/4  -->
+    <!-- # GMT+03:00 (Kuwait, Baghdad, Tehran, Nairobi) 			TZQ-3 -->
+    <!-- # GMT+03:00 (Moscow, Russia) 							MSK-3 -->
+    <!-- # GMT+04:00 (Abu Dhabi, Baku) 							TZR-4 -->
+    <!-- # GMT+05:00 (Islamabad, Ekaterinburg, Karachi, Tashkent)TZS-5 -->
+    <!-- # GMT+05:30 (Chennai, New Delhi, Mumbai) 				TZT-5:30 -->
+    <!-- # GMT+05:45 (Kathmandu) 								TZU-5:45 -->
+    <!-- # GMT+06:00 (Almaty, Astana, Dhaka, Novosibirsk) 		TZV-6 -->
+    <!-- # GMT+06:30 (Rangoon) 									TZW-6:30 -->
+    <!-- # GMT+07:00 (Bankok, Hanoi, Krasnoyarsk) 				TZX-7 -->
+    <!-- # GMT+07:00 (Jakarta) 									WIB-7 -->
+    <!-- # GMT+08:00 (Beijing, Taipei, Kuala Lumpur, Irkutsk) 	TZY-8 -->
+    <!-- # GMT+08:00 (Singapore) 								SGT-8 -->
+    <!-- # GMT+08:00 (Ulaanbaatar, Mongolia) 					ULAT-8 -->
+    <!-- # GMT+08:00 (Perth) 									WST-8 -->
+    <!-- # GMT+09:00 (Japan, Korea, Yakutsk) 					TZZ-9 -->
+    <!-- # GMT+09:30 (Adelaide) 									CST-9:30CDT-10:30,M10.1.0/02:00:00,M4.1.0/03:00:00 -->
+    <!-- # GMT+09:30 (Darwin) 									CST-9:30  -->
+    <!-- # GMT+10:00 (Guam) 										TZb-10 -->
+    <!-- # GMT+10:00 (Hobart) 									EST-10EDT-11,M10.1.0/02:00:00,M4.1.0/03:00:00 -->
+    <!-- # GMT+10:00 (Sydney, Melbourne, Canberra) 				EST-10EDT-11,M10.1.0/02:00:00,M4.1.0/03:00:00 -->
+    <!-- # GMT+10:00 (Brisbane) 									EST-10 -->
+    <!-- # GMT+11:00 (Magadan, Solomon Is., New Caledonia) 		TZc-11 -->
+    <!-- # GMT+12:00 (Auckland, Wellington) 						NZST-12NZDT-13,M9.5.0/02:00:00,M4.1.0/03:00:00 -->
+    <!-- # GMT+12:00 (Fiji) 										TZd-12 -->
+    <!-- # GMT+13:00 (Nuku'alofa) 								TZe-13 -->
+    <!-- # Self-Defined Time Zone								customize -->
+
+    <!-- # String -->
+    <!-- # Mandatory -->
+{if isset($grandstream_timezone) }
+    <P64>{$grandstream_timezone}</P64>
+{elseif isset($grandstream_gxp_time_zone) }
+    <P64>{$grandstream_gxp_time_zone}</P64>
+{else}
+    <P64>auto</P64>
+{/if}
+
+    <!-- # Allow DHCP Option 2 to Override Time Zone Setting -->
+    <!-- # Number: 0, 1 -->
+    <P143>1</P143>
+
+    <!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P246>MTZ+6MDT+5,M4.1.0,M11.1.0</P246>
+
+    <!-- # Date Display Format -->
+    <!-- # 0: yyyy-mm-dd      eg. 2011-10-31 -->
+    <!-- # 1: mm-dd-yyyy      eg. 10-31-2011 -->
+    <!-- # 2: dd-mm-yyyy      eg. 31-10-2011 -->
+    <!-- # 3: dddd, MMMM dd   eg. Monday, October 31 -->
+    <!-- # 4: MMMM dd, dddd   eg. October 31, Monday -->
+    <!-- # Number: 0, 1, 2, 3, 4 -->
+    <!-- # Mandatory -->
+    <P102>0</P102>
+
+    <!-- # Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P122>0</P122>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Preferences / Language -->
+    <!-- ############################################################################## -->
+    <!-- # Display Language.  -->
+    <!-- # auto - Auto, de - German, en - English, es - Spanish, fr - French -->
+    <!-- # it - Italian, pt - Portuguese, ru - Russian, zh - Chinese -->
+    <P1362>auto</P1362>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Settings/Preferences / Ring Tone -->
+    <!-- ############################################################################## -->
+
+    <!-- ### Call Progress Tones ### -->
+    <!-- # Syntax: f1=val,f2=val[,c=on1/off1[-on2/off2[-on3/off3]]];  -->
+    <!-- # (Frequencies are in Hz and cadence on and off are in 10ms)  -->
+
+    <!-- # Dial Tone -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P343>f1=350,f2=440;</P343>
+
+    <!-- # Second Dial Tone -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P2909>f1=350,f2=440;</P2909>
+
+    <!-- # Message Waiting -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P344>f1=350,f2=440,c=100/100-100/100-100/100--1/0;</P344>
+
+    <!-- # Ring Back Tone -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P346>f1=440,f2=480,c=200/400;</P346>
+
+    <!-- # Call-Waiting Tone -->
+    <!-- # String -->
+    <!-- # Mandatory -->
+    <P347>f1=440,f2=440,c=25/525;</P347>
+
+    <!-- # Call-Waiting Tone Gain. 0 - Low, 1 - Medium, 2 - High. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P1555>0</P1555>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings                                        ## -->
+    <!-- ################################################################### -->
+    <!-- # Host name, DHCP option 12. Max length allowed is 64 characters -->
+    <!-- # String -->
+   <P146>phone-{$mac|replace:'-':''}</P146>
+
+    <!-- # Vendor Class ID, DHCP option 60. Max length allowed is 64 characters -->
+    <!-- # String -->
+    <P148>Grandstream WP810</P148>
+
+    <!-- ############################################################################## -->
+    <!-- ## Network/Advanced Settings                                                ## -->
+    <!-- ############################################################################## -->
+    <!-- # HTTP Proxy -->
+    <!-- # String -->
+    <P1552></P1552>
+
+    <!-- # HTTPS Proxy -->
+    <!-- # String -->
+    <P1553></P1553>
+
+    <!-- # Bypass Proxy For -->
+    <!-- # String -->
+    <P22011></P22011>
+
+    <!-- # Layer 3 QoS for SIP -->
+    <!-- # Number:0 - 63 -->
+    <!-- # Mandatory -->
+    <P1558>26 </P1558>
+
+    <!-- # Layer 3 QoS for RTP -->
+    <!-- # Number:0 - 63 -->
+    <!-- # Mandatory -->
+    <P1559>46 </P1559>
+
+    <!-- ############################################################################## -->
+    <!-- ## Network/Wi-Fi Settings                                                   ## -->
+    <!-- ############################################################################## -->
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 1                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+{if isset($grandstream_wifi_ssid_1)}
+    <P83000>{$grandstream_wifi_ssid_1}</P83000>
+{/if}
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83001>1</P83001>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83050>0</P83050>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+{if isset($grandstream_wifi_security_1)}
+    <P83002>{$grandstream_wifi_security_1}</P83002>
+{else}
+	<P83002>4</P83002>
+{/if}
+
+    <!-- # Password. -->
+{if isset($grandstream_wifi_password_1)}
+    <P83003>{$grandstream_wifi_password_1}</P83003>
+{/if}
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83051>1</P83051>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83052>0</P83052>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83053>0</P83053>
+    <P83054>0</P83054>
+    <P83055>0</P83055>
+    <P83056>0</P83056>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83057>0</P83057>
+    <P83058>0</P83058>
+    <P83059>0</P83059>
+    <P83060>0</P83060>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83061>0</P83061>
+    <P83062>0</P83062>
+    <P83063>0</P83063>
+    <P83064>0</P83064>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83065>0</P83065>
+    <P83066>0</P83066>
+    <P83067>0</P83067>
+    <P83068>0</P83068>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83069>0</P83069>
+    <P83070>0</P83070>
+    <P83071>0</P83071>
+    <P83072>0</P83072>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83073>0</P83073>
+    <P83074>0</P83074>
+    <P83075>0</P83075>
+    <P83076>0</P83076>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83077>0</P83077>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83078>0</P83078>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83079></P83079>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83080></P83080>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83081></P83081>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83082></P83082>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83083></P83083>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83084></P83084>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 2                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83100></P83100>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83101>0</P83101>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83150>0</P83150>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83102>0</P83102>
+
+    <!-- # Password. -->
+    <P83103></P83103>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83151>2</P83151>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83152>0</P83152>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83153>0</P83153>
+    <P83154>0</P83154>
+    <P83155>0</P83155>
+    <P83156>0</P83156>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83157>0</P83157>
+    <P83158>0</P83158>
+    <P83159>0</P83159>
+    <P83160>0</P83160>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83161>0</P83161>
+    <P83162>0</P83162>
+    <P83163>0</P83163>
+    <P83164>0</P83164>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83165>0</P83165>
+    <P83166>0</P83166>
+    <P83167>0</P83167>
+    <P83168>0</P83168>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83169>0</P83169>
+    <P83170>0</P83170>
+    <P83171>0</P83171>
+    <P83172>0</P83172>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83173>0</P83173>
+    <P83174>0</P83174>
+    <P83175>0</P83175>
+    <P83176>0</P83176>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83177>0</P83177>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83178>0</P83178>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83179></P83179>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83180></P83180>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83181></P83181>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83182></P83182>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83183></P83183>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83184></P83184>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 3                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83200></P83200>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83201>0</P83201>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83250>0</P83250>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83202>0</P83202>
+
+    <!-- # Password. -->
+    <P83203></P83203>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83251>2</P83251>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83252>0</P83252>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83253>0</P83253>
+    <P83254>0</P83254>
+    <P83255>0</P83255>
+    <P83256>0</P83256>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83257>0</P83257>
+    <P83258>0</P83258>
+    <P83259>0</P83259>
+    <P83260>0</P83260>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83261>0</P83261>
+    <P83262>0</P83262>
+    <P83263>0</P83263>
+    <P83264>0</P83264>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83265>0</P83265>
+    <P83266>0</P83266>
+    <P83267>0</P83267>
+    <P83268>0</P83268>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83269>0</P83269>
+    <P83270>0</P83270>
+    <P83271>0</P83271>
+    <P83272>0</P83272>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83273>0</P83273>
+    <P83274>0</P83274>
+    <P83275>0</P83275>
+    <P83276>0</P83276>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83277>0</P83277>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83278>0</P83278>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83279></P83279>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83280></P83280>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83281></P83281>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83282></P83282>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83283></P83283>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83284></P83284>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 4                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83300></P83300>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83301>0</P83301>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83350>0</P83350>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83302>0</P83302>
+
+    <!-- # Password. -->
+    <P83303></P83303>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83351>2</P83351>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83352>0</P83352>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83353>0</P83353>
+    <P83354>0</P83354>
+    <P83355>0</P83355>
+    <P83356>0</P83356>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83357>0</P83357>
+    <P83358>0</P83358>
+    <P83359>0</P83359>
+    <P83360>0</P83360>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83361>0</P83361>
+    <P83362>0</P83362>
+    <P83363>0</P83363>
+    <P83364>0</P83364>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83365>0</P83365>
+    <P83366>0</P83366>
+    <P83367>0</P83367>
+    <P83368>0</P83368>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83369>0</P83369>
+    <P83370>0</P83370>
+    <P83371>0</P83371>
+    <P83372>0</P83372>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83373>0</P83373>
+    <P83374>0</P83374>
+    <P83375>0</P83375>
+    <P83376>0</P83376>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83377>0</P83377>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83378>0</P83378>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83379></P83379>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83380></P83380>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83381></P83381>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83382></P83382>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83383></P83383>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83384></P83384>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 5                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83400></P83400>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83401>0</P83401>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83450>0</P83450>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83402>0</P83402>
+
+    <!-- # Password. -->
+    <P83403></P83403>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83451>2</P83451>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83452>0</P83452>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83453>0</P83453>
+    <P83454>0</P83454>
+    <P83455>0</P83455>
+    <P83456>0</P83456>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83457>0</P83457>
+    <P83458>0</P83458>
+    <P83459>0</P83459>
+    <P83460>0</P83460>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83461>0</P83461>
+    <P83462>0</P83462>
+    <P83463>0</P83463>
+    <P83464>0</P83464>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83465>0</P83465>
+    <P83466>0</P83466>
+    <P83467>0</P83467>
+    <P83468>0</P83468>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83469>0</P83469>
+    <P83470>0</P83470>
+    <P83471>0</P83471>
+    <P83472>0</P83472>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83473>0</P83473>
+    <P83474>0</P83474>
+    <P83475>0</P83475>
+    <P83476>0</P83476>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83477>0</P83477>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83478>0</P83478>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83479></P83479>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83480></P83480>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83481></P83481>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83482></P83482>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83483></P83483>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83484></P83484>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 6                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83500></P83500>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83501>0</P83501>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83550>0</P83550>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83502>0</P83502>
+
+    <!-- # Password. -->
+    <P83503></P83503>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83551>2</P83551>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83552>0</P83552>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83553>0</P83553>
+    <P83554>0</P83554>
+    <P83555>0</P83555>
+    <P83556>0</P83556>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83557>0</P83557>
+    <P83558>0</P83558>
+    <P83559>0</P83559>
+    <P83560>0</P83560>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83561>0</P83561>
+    <P83562>0</P83562>
+    <P83563>0</P83563>
+    <P83564>0</P83564>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83565>0</P83565>
+    <P83566>0</P83566>
+    <P83567>0</P83567>
+    <P83568>0</P83568>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83569>0</P83569>
+    <P83570>0</P83570>
+    <P83571>0</P83571>
+    <P83572>0</P83572>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83573>0</P83573>
+    <P83574>0</P83574>
+    <P83575>0</P83575>
+    <P83576>0</P83576>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83577>0</P83577>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83578>0</P83578>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83579></P83579>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83580></P83580>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83581></P83581>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83582></P83582>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83583></P83583>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83584></P83584>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 7                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83600></P83600>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83601>0</P83601>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83650>0</P83650>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83602>0</P83602>
+
+    <!-- # Password. -->
+    <P83603></P83603>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83651>2</P83651>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83652>0</P83652>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83653>0</P83653>
+    <P83654>0</P83654>
+    <P83655>0</P83655>
+    <P83656>0</P83656>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83657>0</P83657>
+    <P83658>0</P83658>
+    <P83659>0</P83659>
+    <P83660>0</P83660>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83661>0</P83661>
+    <P83662>0</P83662>
+    <P83663>0</P83663>
+    <P83664>0</P83664>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83665>0</P83665>
+    <P83666>0</P83666>
+    <P83667>0</P83667>
+    <P83668>0</P83668>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83669>0</P83669>
+    <P83670>0</P83670>
+    <P83671>0</P83671>
+    <P83672>0</P83672>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83673>0</P83673>
+    <P83674>0</P83674>
+    <P83675>0</P83675>
+    <P83676>0</P83676>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83677>0</P83677>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83678>0</P83678>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83679></P83679>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83680></P83680>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83681></P83681>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83682></P83682>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83683></P83683>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83684></P83684>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 8                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83700></P83700>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83701>0</P83701>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83750>0</P83750>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83702>0</P83702>
+
+    <!-- # Password. -->
+    <P83703></P83703>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83751>2</P83751>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83752>0</P83752>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83753>0</P83753>
+    <P83754>0</P83754>
+    <P83755>0</P83755>
+    <P83756>0</P83756>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83757>0</P83757>
+    <P83758>0</P83758>
+    <P83759>0</P83759>
+    <P83760>0</P83760>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83761>0</P83761>
+    <P83762>0</P83762>
+    <P83763>0</P83763>
+    <P83764>0</P83764>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83765>0</P83765>
+    <P83766>0</P83766>
+    <P83767>0</P83767>
+    <P83768>0</P83768>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83769>0</P83769>
+    <P83770>0</P83770>
+    <P83771>0</P83771>
+    <P83772>0</P83772>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83773>0</P83773>
+    <P83774>0</P83774>
+    <P83775>0</P83775>
+    <P83776>0</P83776>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83777>0</P83777>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83778>0</P83778>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83779></P83779>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83780></P83780>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83781></P83781>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83782></P83782>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83783></P83783>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83784></P83784>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 9                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83800></P83800>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83801>0</P83801>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83850>0</P83850>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83802>0</P83802>
+
+    <!-- # Password. -->
+    <P83803></P83803>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83851>2</P83851>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83852>0</P83852>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83853>0</P83853>
+    <P83854>0</P83854>
+    <P83855>0</P83855>
+    <P83856>0</P83856>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83857>0</P83857>
+    <P83858>0</P83858>
+    <P83859>0</P83859>
+    <P83860>0</P83860>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83861>0</P83861>
+    <P83862>0</P83862>
+    <P83863>0</P83863>
+    <P83864>0</P83864>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83865>0</P83865>
+    <P83866>0</P83866>
+    <P83867>0</P83867>
+    <P83868>0</P83868>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83869>0</P83869>
+    <P83870>0</P83870>
+    <P83871>0</P83871>
+    <P83872>0</P83872>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83873>0</P83873>
+    <P83874>0</P83874>
+    <P83875>0</P83875>
+    <P83876>0</P83876>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83877>0</P83877>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83878>0</P83878>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83879></P83879>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83880></P83880>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83881></P83881>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83882></P83882>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83883></P83883>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83884></P83884>
+
+    <!-- ################################################################### -->
+    <!-- ## Network/Basic Settings/SSID 10                                 ## -->
+    <!-- ################################################################### -->
+    <!-- # SSID -->
+    <!-- # String -->
+    <P83900></P83900>
+
+    <!-- # Enabled. 0 - Disabled, 1 - Enabled. -->
+    <!-- # Number: 0, 1 -->
+    <P83901>0</P83901>
+
+    <!-- # Hidden. 0 - No, 1 - Yes -->
+    <!-- # Number: 0, 1 -->
+    <P83950>0</P83950>
+
+    <!-- # Security Type. 0 - None, 1 - WEP, 4 - WPA PSK, 5 - WPA Enterprise -->
+    <!-- # Number: 0, 1, 4, 5 -->
+    <P83902>0</P83902>
+
+    <!-- # Password. -->
+    <P83903></P83903>
+
+    <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P83951>2</P83951>
+
+    <!-- # IPv4 Address Type. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P83952>0</P83952>
+
+    <!-- ### IPv4 Address Static -->
+    <!-- # IPv4 Address -->
+    <!-- # Number: 0 - 255 -->
+    <P83953>0</P83953>
+    <P83954>0</P83954>
+    <P83955>0</P83955>
+    <P83956>0</P83956>
+
+    <!-- # Subnet Mask -->
+    <!-- # Number: 0 - 255 -->
+    <P83957>0</P83957>
+    <P83958>0</P83958>
+    <P83959>0</P83959>
+    <P83960>0</P83960>
+
+    <!-- # Gateway -->
+    <!-- # Number: 0 - 255 -->
+    <P83961>0</P83961>
+    <P83962>0</P83962>
+    <P83963>0</P83963>
+    <P83964>0</P83964>
+
+    <!-- # DNS Server 1 -->
+    <!-- # Number: 0 - 255 -->
+    <P83965>0</P83965>
+    <P83966>0</P83966>
+    <P83967>0</P83967>
+    <P83968>0</P83968>
+
+    <!-- # DNS Server 2 -->
+    <!-- # Number: 0 - 255 -->
+    <P83969>0</P83969>
+    <P83970>0</P83970>
+    <P83971>0</P83971>
+    <P83972>0</P83972>
+
+    <!-- ### IPv4 Address DHCP -->
+    <!-- # Preferred DNS server.  (if specified). -->
+    <!-- # Number: 0 - 255 -->
+    <P83973>0</P83973>
+    <P83974>0</P83974>
+    <P83975>0</P83975>
+    <P83976>0</P83976>
+
+    <!-- ### IPv6 Address -->
+    <!-- # IPv6 Address Type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P83977>0</P83977>
+
+    <!-- # IPv6 Static Mode: Statically configured. 0 - Full Static, 1 - Prefix Static. Default is 0. -->
+    <!-- # Number: 0, 1 -->
+    <P83978>0</P83978>
+
+    <!-- # Full Static: Static IPv6 Address -->
+    <P83979></P83979>
+
+    <!-- # Full Static: IPv6 Prefix Length -->
+    <P83980></P83980>
+
+    <!-- # Prefix Static: IPv6 Prefix (64bits) -->
+    <P83981></P83981>
+
+    <!-- # DNS Server 1 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83982></P83982>
+
+    <!-- # DNS Server 2 for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83983></P83983>
+
+    <!-- # Preferred DNS Server for IPv6 Address -->
+    <!-- # String: a-z, A-Z, 0-9, ".", ":", "[", "]" -->
+    <P83984></P83984>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/ Web Access                                                 ## -->
+    <!-- ############################################################################## -->
+
+    <!-- # End User Password -->
+    <!-- # String: a-z, A-Z, 0-9 -->
+    <!-- # P196 = -->
+    <P196>{$user_password}</P196>
+
+    <!-- # Admin Password for web interface -->
+    <!-- # String: a-z, A-Z, 0-9 -->
+    <!-- # P2 =  -->
+{if isset($admin_password)}
+    <P2>{$admin_password}</P2>
+{else}
+    <P2>{$mac|replace:'-':''}</P2>
+{/if}
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/Upgrade and Provisioning                                    ## -->
+    <!-- ############################################################################## -->
+
+    <!-- # Firmware Upgrade and Provisioning -->
+    <!-- # 0 - Always Check For New Firmware -->
+    <!-- # 1 - Check New Firmware only when F/W pre/suffix changes -->
+    <!-- # 2 - Always Skip the Firmware Check -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P238>0</P238>
+
+    <!-- # Always Authenticate Before Challenge. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P20713>0</P20713>
+
+    <!-- # Validate Hostname in Certificate. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <P22030>0</P22030>
+
+    <!-- # Allow DHCP Option 43 and Option 66 to override server. 0 - No, 1 - Yes, 2 - Prefer, fallback when failed. Default is 1 -->
+    <!-- # When set to Yes(1), it will override the configured provision path and method -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P145>1</P145>
+
+    <!-- # Additional Override DHCP Option. 0 - None,  1 - Option 150,  2 - Option 160. Default is 0 -->
+    <!-- # Number: 0, 1, 2 -->
+    <!-- # Mandatory -->
+    <P8337>0</P8337>
+
+    <!-- # Allow DHCP Option 120 to Override SIP Server -->
+    <!-- # 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1411>0</P1411>
+
+    <!-- # Automatic Upgrade.  -->
+    <!-- # 0 - No,  -->
+    <!-- # 1 - Yes, check for upgrade based on minute(s) setting, -->
+    <!-- # 2 - Yes, check for upgrade based on Hour of Day setting, -->
+    <!-- # 3 - Yes, check for upgrade based on Day of Week setting, -->
+    <!-- # Default is No -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P194>0</P194>
+
+    <!-- # Check for new firmware every () minutes. Default is 7 days. -->
+    <!-- # Number: 60-86400 -->
+    <!-- # Mandatory -->
+    <P193>10080</P193>
+
+    <!-- # Randomized Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8458>0</P8458>
+
+    <!-- # Hour of the Day-Start (0-23). Default is 1 -->
+    <!-- # Number: 0 - 23 -->
+    <P285>1</P285>
+
+    <!-- # Hour of the Day-End (-1, 0-23). Default is 0 -->
+    <!-- # Number: -1, 0 - 23 -->
+    <P8459>0</P8459>
+
+    <!-- # Day of the Week (0-6). Default is 1 -->
+    <!-- # Number: 0-6 -->
+    <P286>1</P286>
+
+    <!-- # Disable SIP NOTIFY Authentication. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0,1 -->
+    <!-- # Mandatory -->
+    <P4428>0</P4428>
+
+    <!-- # Config -->
+    <!-- # Config Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 2 -->
+    <!-- # Number: 0, 1, 2, 3, 4 -->
+    <!-- # Mandatory -->
+    <P212>2</P212>
+
+    <!-- # Config Server Path -->
+    <!-- # String -->
+{if $grandstream_config_server_path=="none"}
+    <P237></P237>
+{elseif isset($grandstream_config_server_path)}
+    <P237>{$grandstream_config_server_path}</P237>
+{else}
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
+{/if}
+
+    <!-- # Config HTTP/HTTPS User Name -->
+    <!-- # String -->
+    <P1360>{$http_auth_username}</P1360>
+
+    <!-- # Config HTTP/HTTPS Password -->
+    <!-- # String -->
+    <P1361>{$http_auth_password}</P1361>
+
+    <!-- # Config File Prefix -->
+    <!-- # String -->
+    <P234></P234>
+
+    <!-- # Config File Postfix -->
+    <!-- # String -->
+    <P235></P235>
+
+    <!-- # XML Config File Password -->
+    <!-- # String -->
+    <P1359></P1359>
+
+    <!-- # Authenticate Conf File. 0 - No, 1 - Yes. Default is No -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P240>0</P240>
+
+    <!-- # Download and Process ALL Available Config Files. 0 - No, 1 - Yes. Default is No -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8467>0</P8467>
+
+    <!-- # Firmware -->
+    <!-- # Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1.  -->
+    <!-- # Number: 0, 1, 2, 3, 4 -->
+    <!-- # Mandatory -->
+    <P6767>1</P6767>
+
+    <!-- # Firmware Server Path -->
+    <!-- # String -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+    <P192>{$grandstream_firmware_path}/{$firmware_version}</P192>
+{elseif isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}</P192>
+{else}
+    <P192>{$domain_name}{$project_path}/app/provision/resources/firmware/</P192>
+{/if}
+
+    <!-- # Firmware HTTP/HTTPS Username -->
+    <!-- # String -->
+    <P6768></P6768>
+
+    <!-- # Firmware HTTP/HTTPS Password -->
+    <!-- # String -->
+    <P6769></P6769>
+
+    <!-- # Firmware File Prefix -->
+    <!-- # String -->
+    <P232></P232>
+
+    <!-- # Firmware File Postfix -->
+    <!-- # String -->
+    <P233></P233>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/Syslog -->
+    <!-- ############################################################################## -->
+    <!-- # Syslog Protocol. 0 - UDP, 1 - SSL/TLS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8402>0</P8402>
+
+    <!-- # Syslog Server (name of the server, max length is 64 characters) -->
+    <!-- # String -->
+    <P207>{$grandstream_syslog_server}</P207>
+
+    <!-- # Syslog Level. 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3, 4 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_syslog_level)}
+    <P208>{$grandstream_syslog_level}</P208>
+{else}
+    <P208>0</P208>
+{/if}
+
+    <!-- # Syslog Keyword Filtering -->
+    <!-- # String -->
+    <P22129></P22129>
+
+    <!-- # Send SIP Log. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_send_sip_log)}
+    <P1387>{$grandstream_send_sip_log}</P1387>
+{else}
+    <P1387>0</P1387>
+{/if}
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/Security Settings/Security                                  ## -->
+    <!-- ############################################################################## -->
+    <!-- # Validate Server Certificates. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8463>0</P8463>
+
+    <!-- # SIP TLS Certificate -->
+    <!-- # String: a-z, A-Z, 0-9 -->
+    <!-- # P280 = -->
+
+    <!-- # SIP TLS Private Key -->
+    <!-- # String: a-z, A-Z, 0-9 -->
+    <!-- # P279 = -->
+
+    <!-- # SIP TLS Private Key Password -->
+    <!-- # String: a-z, A-Z, 0-9 -->
+    <P281></P281>
+
+    <!-- # Web Access Mode. 0 - HTTPS, 1 - HTTP, 2 - Disabled, 3 - Both HTTP and HTTPS. Default is 0 -->
+    <!-- # Number: 0, 1, 2, 3 -->
+    <!-- # Mandatory -->
+    <P1650>0</P1650>
+
+    <!-- # Enable User Web Access. 0 - Disabled, 1 - Enabled. Default is 1 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P8469>1</P8469>
+
+    <!-- # HTTP Web Port. Default is 80 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P22120>80</P22120>
+
+    <!-- # HTTPS Web Port. Default is 443 -->
+    <!-- # Number -->
+    <!-- # Mandatory -->
+    <P22121>443</P22121>
+
+    <!-- # Disable SSH. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <P276>0</P276>
+
+    <!-- # Web Session Timeout(in minutes) -->
+    <!-- # Number: 2 - 60. Default is 10 -->
+    <P28116>10</P28116>
+
+    <!-- # Web Session Attempt Limit -->
+    <!-- # Number: 1 - 10. Default is 5 -->
+    <P28117>5</P28117>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/Security Settings/Trusted CA Certificates                   ## -->
+    <!-- ############################################################################## -->
+    <!-- # Load CA Certificates. 0 - Default Certificates, 1 - Custom Certificates, 2 - All Certificates -->
+    <!-- # Number: 0, 1, 2. Default is 0 -->
+    <P8502>0</P8502>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Maintenance/Packet Capture                                              ## -->
+    <!-- ############################################################################## -->
+
+    <!-- # Capture Location. 0 - Internal Storage, 1 - USB. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P2999>0</P2999>
+
+    <!-- # With RTP Packets. 0 - No, 1 - Yes. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P6007>0</P6007>
+
+    <!-- # USB Filename -->
+    <!-- # String -->
+    <P6008>0</P6008>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Directory/Phonebook Management -->
+    <!-- ############################################################################## -->
+    <!-- # Default search mode. 0 - Quick match, 1 - Exact match. Default is 0 -->
+    <!-- # Number: 0, 1. -->
+    <!-- # Mandatory -->
+    <P2970>0</P2970>
+
+  </config>
+</gs_provision>
