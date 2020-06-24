@@ -92,7 +92,7 @@
 	}
 
 //get record counts
-	if (if_group("superadmin") || if_group("admin")) {
+	if (permission_exists('fax_extension_view')) {
 		//show all fax extensions
 		$sql = "select count(*) from v_fax as f ";
 		$sql .= "where f.domain_uuid = :domain_uuid ";
