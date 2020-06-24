@@ -551,7 +551,7 @@ if (!class_exists('destinations')) {
 		* valid destination
 		*/
 		public function valid($destination, $type = 'dialplan') {
-			$destinations = $this->all('dialplan');
+			$destinations = $this->all($type);
 			foreach($destinations as $category => $array) {
 				if (is_array($array)) {
 					foreach ($array as $key => $value) {
