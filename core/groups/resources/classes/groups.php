@@ -445,6 +445,8 @@ if (!class_exists('groups')) {
 								$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
 								$array['group_permissions'][$x]['domain_uuid'] = null;
 								$array['group_permissions'][$x]['permission_name'] = $row['name'];
+								$array['group_permissions'][$x]['permission_protected'] = 'false';
+								$array['group_permissions'][$x]['permission_assigned'] = 'true';
 								$array['group_permissions'][$x]['group_name'] = $group;
 								$array['group_permissions'][$x]['group_uuid'] = $group_uuids[$group];
 							}

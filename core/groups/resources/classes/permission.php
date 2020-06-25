@@ -58,14 +58,15 @@
 					}
 					$group_names = "'".implode("','", $group_name_array)."'";
 
-				//delete unprotected system group permissions
+				//delete unprotected permissions
 					$sql = "delete from v_group_permissions as p ";
 					$sql .= "where group_name in ( ";
 					$sql .= "	select group_name ";
 					$sql .= "	from v_groups ";
 					$sql .= "	where group_protected <> 'true' ";
 					$sql .= "	and group_name in (".$group_names.") ";
-					$sql .= ");";
+					$sql .= ")";
+					$sql .= "and (permission_protected <> 'true' or permission_protected is null)";
 					$database = new database;
 					$result = $database->select($sql);
 
@@ -166,6 +167,8 @@
 												//build default permissions insert array
 												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
 												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
+												$array['group_permissions'][$x]['permission_protected'] = 'false';
+												$array['group_permissions'][$x]['permission_assigned'] = 'true';
 												$array['group_permissions'][$x]['group_name'] = $group_name;
 												$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
 												$x++;
