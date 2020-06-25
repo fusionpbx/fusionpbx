@@ -118,6 +118,26 @@
 		unset($sql, $parameters, $content_result, $content_row);
 	}
 
+//button css class and styles
+	$button_icon_class = '';
+	$button_icon_style = 'padding: 3px;';
+	$button_label_class = 'button-label';
+	$button_label_style = 'padding-left: 5px; padding-right: 3px;';
+	$button_icons = $_SESSION['theme']['button_icons']['text'];
+	switch ($button_icons) {
+		case 'auto':
+			$button_label_class .= ' hide-md-dn';
+			break;
+		case 'only':
+			$button_label_style .= ' display: none;';
+			break;
+		case 'never':
+			$button_icon_class .= ' display: none;';
+			break;
+		case 'always':
+			break;
+	}
+
 //start the output buffer
 	ob_start();
 
