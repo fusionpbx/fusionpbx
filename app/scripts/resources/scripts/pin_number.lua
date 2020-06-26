@@ -122,7 +122,7 @@
 						end
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);
-						session:setVariable("pin_number_description", description);
+						session:setVariable("pin_description", description);
 				end);
 			elseif (pin_number == "voicemail") then
 				local sql = [[SELECT * FROM v_voicemails
