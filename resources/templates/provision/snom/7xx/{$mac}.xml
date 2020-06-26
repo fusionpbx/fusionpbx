@@ -3,7 +3,7 @@
 <phone-settings e="2">
 <language perm="">English</language>
 <update_policy perm="">auto_update</update_policy>
-<setting_server perm="RW">https://{$domain_name}{$project_path}/app/provision/{mac}.xml</setting_server>
+<setting_server perm="RW">https://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
 <dhcp perm="R">on</dhcp>
 <ntp_server perm="">{$ntp_server_primary}</ntp_server>
 <ntp_refresh_timer perm="">3600</ntp_refresh_timer>
