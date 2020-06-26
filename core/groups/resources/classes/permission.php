@@ -125,7 +125,7 @@
 				//get the remaining group permissions
 					$sql = "select permission_name, group_name from v_group_permissions ";
 					$database = new database;
-					$remianing_group_permissions = $database->select($sql, null, 'all');
+					$database_group_permissions = $database->select($sql, null, 'all');
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -156,9 +156,9 @@
 											}
 										}
 										if (!$group_protected) {
-											// check if the item is not currently in the db
+											// check if the item is not currently in the database
 											$exists = false;
-											foreach ($remianing_group_permissions as $i => $group_permission) {
+											foreach ($database_group_permissions as $i => $group_permission) {
 												if ($group_permission['permission_name'] == $permission['name']) {
 													if ($group_permission['group_name'] == $group_name) {
 														$exists = true;
