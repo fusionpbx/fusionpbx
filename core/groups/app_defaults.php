@@ -124,6 +124,11 @@ if ($domains_processed == 1) {
 		$database->execute($sql, null);
 		unset($sql);
 
+	//group permissions 
+		$database = new database;
+		$database->execute("update v_group_permissions set permission_protected = 'false' where permission_protected is null;", null);
+		$database->execute("update v_group_permissions set permission_assigned = 'true' where permission_assigned is null;", null);
+
 }
 
 ?>
