@@ -159,7 +159,7 @@
 											// check if the item is not currently in the db
 											$exists = false;
 											foreach ($remianing_group_permissions as $i => $group_permission) {
-												if (in_array($permission['name'], $group_permission)) {
+												if ($group_permission['permission_name'] == $permission['name']) {
 													if ($group_permission['group_name'] == $group_name) {
 														$exists = true;
 														break;
