@@ -5,6 +5,8 @@
 <update_policy perm="">auto_update</update_policy>
 <setting_server perm="RW">https://{$domain_name}{$project_path}/app/provision/{mac}.xml</setting_server>
 <dhcp perm="R">on</dhcp>
+<ntp_server perm="">{$ntp_server_primary}</ntp_server>
+<ntp_refresh_timer perm="">3600</ntp_refresh_timer>
 <timezone perm="">{$snom_time_zone}</timezone>
 <firmware_status perm="R">https://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
 {if isset($admin_password) }
