@@ -106,22 +106,41 @@
 			$uuid = null;
 			if (PHP_OS === 'FreeBSD') {
 				$uuid = trim(shell_exec("uuid -v 4"));
-				if (!is_uuid($uuid)) {
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
 					echo "Please install the following package.\n";
 					echo "pkg install ossp-uuid\n";
 					exit;
 				}
 			}
-			if (PHP_OS === 'Linux' && !is_uuid($uuid)) {
+			if (PHP_OS === 'Linux') {
 				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					$uuid = trim(shell_exec("uuidgen"));
+					if (is_uuid($uuid)) {
+						return $uuid;
+					}
+					else {
+						echo "Please install the uuidgen.\n";
+						exit;
+					}
+				}
 			}
-			if (!is_uuid($uuid)) {
-				$uuid = trim(shell_exec("uuidgen"));
-			}
-			if (function_exists('com_create_guid') === true && PHP_OS === 'Windows') {
+			if (PHP_OS === 'Windows' && function_exists('com_create_guid')) {
 				$uuid = trim(com_create_guid(), '{}');
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					echo "The com_create_guid() function failed to create a uuid.\n";
+					exit;
+				}
 			}
-			return $uuid;
 		}
 	}
 
