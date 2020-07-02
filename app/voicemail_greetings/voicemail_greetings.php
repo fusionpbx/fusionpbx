@@ -159,7 +159,7 @@
 			$file_ext = substr($_FILES['file']['name'], -4);
 
 		//check file extension
-		if ($file_ext == '.wav' || $file_ext != '.mp3') {
+		if ($file_ext == '.wav' || $file_ext == '.mp3') {
 
 			//find the next available
 				for ($i = 1; $i < 10; $i++) {
