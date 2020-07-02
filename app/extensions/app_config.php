@@ -202,6 +202,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "extension_export";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_advanced";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
