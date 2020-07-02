@@ -160,6 +160,8 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "cc_agent_bridged";
 			$this->fields[] = "cc_queue_answered_epoch";
 			$this->fields[] = "cc_queue_terminated_epoch";
+			$this->fields[] = "cc_queue_canceled_epoch";
+			$this->fields[] = "cc_cancel_reason";
 			$this->fields[] = "cc_cause";
 			$this->fields[] = "waitsec";
 			$this->fields[] = "conference_name";
@@ -353,6 +355,7 @@ if (!class_exists('xml_cdr')) {
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
+
 					//time
 						$this->array[$key]['start_epoch'] = urldecode($xml->variables->start_epoch);
 						$start_stamp = urldecode($xml->variables->start_stamp);
@@ -365,6 +368,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
 						$this->array[$key]['billmsec'] = urldecode($xml->variables->billmsec);
+
 					//codecs
 						$this->array[$key]['read_codec'] = urldecode($xml->variables->read_codec);
 						$this->array[$key]['read_rate'] = urldecode($xml->variables->read_rate);
@@ -373,22 +377,33 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['remote_media_ip'] = urldecode($xml->variables->remote_media_ip);
 						$this->array[$key]['hangup_cause'] = urldecode($xml->variables->hangup_cause);
 						$this->array[$key]['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
+
 					//call center
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
 						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
 						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
+						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent_uuid);
 						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
 						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_bridged);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_answered_epoch);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_cancel_reason);
+						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_cause);
 						$this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
+
 					//app info
 						$this->array[$key]['last_app'] = urldecode($xml->variables->last_app);
 						$this->array[$key]['last_arg'] = urldecode($xml->variables->last_arg);
+
 					//conference
 						$this->array[$key]['conference_name'] = urldecode($xml->variables->conference_name);
 						$this->array[$key]['conference_uuid'] = urldecode($xml->variables->conference_uuid);
 						$this->array[$key]['conference_member_id'] = urldecode($xml->variables->conference_member_id);
+
 					//call quality
 						$rtp_audio_in_mos = urldecode($xml->variables->rtp_audio_in_mos);
 						if (strlen($rtp_audio_in_mos) > 0) {
