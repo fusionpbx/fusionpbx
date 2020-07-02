@@ -822,11 +822,13 @@
 	echo "	document.iform.range_to.disabled = endis;\n";
 	echo "}\n";
 	echo "\n";
-	echo "function show_advanced_config() {\n";
-	echo "	$('#show_advanced_box').slideToggle();\n";
-	echo "	$('#show_advanced').slideToggle();\n";
-	echo "}\n";
-	echo "\n";
+	if (permission_exists(extension_advanced)) {
+		echo "function show_advanced_config() {\n";
+		echo "	$('#show_advanced_box').slideToggle();\n";
+		echo "	$('#show_advanced').slideToggle();\n";
+		echo "}\n";
+		echo "\n";
+	}
 	echo "function copy_extension() {\n";
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
@@ -1695,212 +1697,214 @@
 
 	//--- begin: show_advanced -----------------------
 
-	echo "<tr>\n";
-	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
-
-	echo "	<div id=\"show_advanced_box\">\n";
-	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "		<tr>\n";
-	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
-	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
-	echo "		</td>\n";
-	echo "		</tr>\n";
-	echo "		</table>\n";
-	echo "	</div>\n";
-
-	echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-	echo "<tr>\n";
-	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-auth_acl']."\n";
-	echo "</td>\n";
-	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl)."\">\n";
-	echo "   <br />\n";
-	echo $text['description-auth_acl']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists("extension_cidr")) {
+	if (permission_exists(extension_advanced)) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-cidr']."\n";
+		echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
+
+		echo "	<div id=\"show_advanced_box\">\n";
+		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "		<tr>\n";
+		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
+		echo "		<td width=\"70%\" class=\"vtable\">\n";
+		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
+		echo "		</td>\n";
+		echo "		</tr>\n";
+		echo "		</table>\n";
+		echo "	</div>\n";
+
+		echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
+		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+
+		echo "<tr>\n";
+		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-auth_acl']."\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
-		echo "<br />\n";
-		echo $text['description-cidr']."\n";
+		echo "<td width=\"70%\" class='vtable' align='left'>\n";
+		echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl)."\">\n";
+		echo "   <br />\n";
+		echo $text['description-auth_acl']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_force_contact']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='sip_force_contact'>\n";
-	echo "    <option value=''></option>\n";
-	switch ($sip_force_contact) {
-		case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
-		case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
-		case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
-	}
-	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
-	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
-	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
-	unset($selected);
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-sip_force_contact']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		if (permission_exists("extension_cidr")) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-cidr']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
+			echo "<br />\n";
+			echo $text['description-cidr']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_force_expires']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires)."\">\n";
-	echo "<br />\n";
-	echo $text['description-sip_force_expires']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists('extension_nibble_account')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-nibble_account']."\n";
+		echo "    ".$text['label-sip_force_contact']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account)."\">\n";
-		echo "<br />\n";
-		echo $text['description-nibble_account']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-mwi_account']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account)."\">\n";
-	echo "<br />\n";
-	echo $text['description-mwi_account']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_bypass_media']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='sip_bypass_media'>\n";
-	echo "    <option value=''></option>\n";
-	switch ($sip_bypass_media) {
-		case "bypass-media" : 				$selected[1] = "selected='selected'"; 	break;
-		case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
-		case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
-	}
-	echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
-	echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
-	echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
-	unset($selected);
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-sip_bypass_media']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists('extension_absolute_codec_string')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-absolute_codec_string']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string)."\">\n";
-		echo "<br />\n";
-		echo $text['description-absolute_codec_string']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	if (permission_exists('extension_force_ping')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-force_ping']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='force_ping'>\n";
-		if ($force_ping == "") {
-			echo "    <option value='' selected='selected'></option>\n";
+		echo "    <select class='formfld' name='sip_force_contact'>\n";
+		echo "    <option value=''></option>\n";
+		switch ($sip_force_contact) {
+			case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
+			case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
+			case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
 		}
-		else {
-			echo "    <option value=''></option>\n";
-		}
-		if ($force_ping == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
-		}
-		if ($force_ping == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
+		echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
+		echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
+		echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
+		unset($selected);
 		echo "    </select>\n";
 		echo "<br />\n";
-		echo $text['description-force_ping']."\n";
+		echo $text['description-sip_force_contact']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	}
 
-	if (permission_exists('extension_domain')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-domain']."\n";
+		echo "    ".$text['label-sip_force_expires']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
-		foreach ($_SESSION['domains'] as $row) {
-			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+		echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires)."\">\n";
+		echo "<br />\n";
+		echo $text['description-sip_force_expires']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (permission_exists('extension_nibble_account')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-nibble_account']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account)."\">\n";
+			echo "<br />\n";
+			echo $text['description-nibble_account']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-mwi_account']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account)."\">\n";
+		echo "<br />\n";
+		echo $text['description-mwi_account']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-sip_bypass_media']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='sip_bypass_media'>\n";
+		echo "    <option value=''></option>\n";
+		switch ($sip_bypass_media) {
+			case "bypass-media" : 				$selected[1] = "selected='selected'"; 	break;
+			case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
+			case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
+		}
+		echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
+		echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
+		echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
+		unset($selected);
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-sip_bypass_media']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (permission_exists('extension_absolute_codec_string')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-absolute_codec_string']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string)."\">\n";
+			echo "<br />\n";
+			echo $text['description-absolute_codec_string']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if (permission_exists('extension_force_ping')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-force_ping']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='force_ping'>\n";
+			if ($force_ping == "") {
+				echo "    <option value='' selected='selected'></option>\n";
 			}
 			else {
-				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+				echo "    <option value=''></option>\n";
 			}
+			if ($force_ping == "true") {
+				echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+			}
+			else {
+				echo "    <option value='true'>".$text['label-true']."</option>\n";
+			}
+			if ($force_ping == "false") {
+				echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+			}
+			else {
+				echo "    <option value='false'>".$text['label-false']."</option>\n";
+			}
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-force_ping']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
 		}
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-domain_name']."\n";
+
+		if (permission_exists('extension_domain')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-domain']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='domain_uuid'>\n";
+			foreach ($_SESSION['domains'] as $row) {
+				if ($row['domain_uuid'] == $domain_uuid) {
+					echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				}
+				else {
+					echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+				}
+			}
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-domain_name']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if (permission_exists('extension_dial_string')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-dial_string']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string)."\">\n";
+			echo "<br />\n";
+			echo $text['description-dial_string']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "	</table>\n";
+		echo "	</div>";
+
 		echo "</td>\n";
 		echo "</tr>\n";
+
 	}
-
-	if (permission_exists('extension_dial_string')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-dial_string']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string)."\">\n";
-		echo "<br />\n";
-		echo $text['description-dial_string']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	echo "	</table>\n";
-	echo "	</div>";
-
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	//--- end: show_advanced -----------------------
 
 	if (permission_exists('extension_enabled')) {
