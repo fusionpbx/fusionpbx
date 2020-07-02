@@ -384,15 +384,15 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
 						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
 						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
-						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent_uuid);
+						$this->array[$key]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
 						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
 						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_type);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_agent_bridged);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_answered_epoch);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_terminated_epoch);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_queue_canceled_epoch);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_cancel_reason);
-						$this->array[$key]['cc_agent_type'] = urldecode($xml->variables->cc_cause);
+						$this->array[$key]['cc_agent_bridged'] = urldecode($xml->variables->cc_agent_bridged);
+						$this->array[$key]['cc_queue_answered_epoch'] = urldecode($xml->variables->cc_queue_answered_epoch);
+						$this->array[$key]['cc_queue_terminated_epoch'] = urldecode($xml->variables->cc_queue_terminated_epoch);
+						$this->array[$key]['cc_queue_canceled_epoch'] = urldecode($xml->variables->cc_queue_canceled_epoch);
+						$this->array[$key]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
+						$this->array[$key]['cc_cause'] = urldecode($xml->variables->cc_cause);
 						$this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
 
 					//app info
