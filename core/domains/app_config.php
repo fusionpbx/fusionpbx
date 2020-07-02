@@ -82,7 +82,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the domain name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the domain.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_description";
