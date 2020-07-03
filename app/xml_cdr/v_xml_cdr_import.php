@@ -171,6 +171,9 @@
 			$database->fields['hangup_cause'] = urldecode($xml->variables->hangup_cause);
 			$database->fields['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
 
+		//store the call direction
+			$database->fields['direction'] = urldecode($xml->variables->call_direction);
+
 		//call center
 			$database->fields['cc_side'] = urldecode($xml->variables->cc_side);
 			$database->fields['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -187,6 +190,9 @@
 			$database->fields['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
 			$database->fields['cc_cause'] = urldecode($xml->variables->cc_cause);
 			$database->fields['waitsec'] = urldecode($xml->variables->waitsec);
+			if (urldecode($xml->variables->cc_side) == 'agent') {
+				$database->fields['direction'] = 'inbound';
+			}
 
 		//app info
 			$database->fields['last_app'] = urldecode($xml->variables->last_app);
@@ -205,10 +211,8 @@
 
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
-			if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
-				if ($xml->variables->billsec == 0) {
-					$database->fields['missed_call'] = 'true';
-				}
+			if (strlen($xml->variables->answer_stamp) == 0) {
+				$database->fields['missed_call'] = 'true';
 			}
 			if ($xml->variables->missed_call == 'true') {
 				$database->fields['missed_call'] = 'true';
@@ -261,9 +265,6 @@
 
 		//store the call leg
 			$database->fields['leg'] = $leg;
-
-		//store the call direction
-			$database->fields['direction'] = urldecode($xml->variables->call_direction);
 
 		//store post dial delay, in milliseconds
 			$database->fields['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
