@@ -181,16 +181,20 @@
 			$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
 
+		//add temporary permission
 			$p = new permissions;
 			$p->add('extension_user_delete', 'temp');
 
+		//save the array
 			$database = new database;
 			$database->app_name = 'extensions';
 			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$database->delete($array);
 			unset($array);
 
+		//remove temporary permission
 			$p->delete('extension_user_delete', 'temp');
+
 		//redirect
 			header("Location: extension_edit.php?id=".$extension_uuid);
 			exit;
@@ -201,19 +205,24 @@
 		if ($_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 			//set the variables
 				$device_line_uuid = $_REQUEST["delete_uuid"];
+
 			//delete device_line
 				$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
 
+			//add temporary permission
 				$p = new permissions;
 				$p->add('device_line_delete', 'temp');
 
+			//save the array
 				$database = new database;
 				$database->app_name = 'extensions';
 				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 				$database->delete($array);
 				unset($array);
 
+			//remove temporary permission
 				$p->delete('device_line_delete', 'temp');
+
 			//redirect
 				header("Location: extension_edit.php?id=".$extension_uuid);
 				exit;
@@ -224,7 +233,12 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//set the domain_uuid
-			$domain_uuid = permission_exists('extension_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
+			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
+				$domain_uuid = $_POST["domain_uuid"];
+			}
+			else {
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}
 
 		//validate the token
 			$token = new token;
@@ -1682,6 +1696,28 @@
 		echo "</tr>\n";
 	}
 
+	if (permission_exists('extension_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+			}
+			else {
+				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+			}
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	if (permission_exists("extension_user_context")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1863,28 +1899,6 @@
 			echo "</tr>\n";
 		}
 
-		if (permission_exists('extension_domain')) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-domain']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='domain_uuid'>\n";
-			foreach ($_SESSION['domains'] as $row) {
-				if ($row['domain_uuid'] == $domain_uuid) {
-					echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
-				}
-				else {
-					echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
-				}
-			}
-			echo "    </select>\n";
-			echo "<br />\n";
-			echo $text['description-domain_name']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
-
 		if (permission_exists('extension_dial_string')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1962,8 +1976,8 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
-
 	echo "<script>\n";
+
 //hide password fields before submit
 	echo "	function submit_form() {\n";
 	echo "		hide_password_fields();\n";
