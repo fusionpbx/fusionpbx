@@ -329,10 +329,8 @@ if (!class_exists('xml_cdr')) {
 
 					//set missed calls
 						$missed_call = 'false';
-						if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
-							if ($xml->variables->billsec == 0) {
-								$missed_call = 'true';
-							}
+						if (strlen($xml->variables->answer_stamp) == 0) {
+							$missed_call = 'true';
 						}
 						if ($xml->variables->missed_call == 'true') {
 							$missed_call = 'true';
@@ -378,6 +376,9 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['hangup_cause'] = urldecode($xml->variables->hangup_cause);
 						$this->array[$key]['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
 
+					//store the call direction
+						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
+						  
 					//call center
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -394,6 +395,9 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
 						$this->array[$key]['cc_cause'] = urldecode($xml->variables->cc_cause);
 						$this->array[$key]['waitsec'] = urldecode($xml->variables->waitsec);
+						if (urldecode($xml->variables->cc_side) == 'agent') {
+							$this->array[$key]['direction'] = 'inbound';
+						}
 
 					//app info
 						$this->array[$key]['last_app'] = urldecode($xml->variables->last_app);
@@ -412,9 +416,6 @@ if (!class_exists('xml_cdr')) {
 
 					//store the call leg
 						$this->array[$key]['leg'] = $leg;
-
-					//store the call direction
-						$this->array[$key]['direction'] = urldecode($xml->variables->call_direction);
 
 					//store post dial delay, in milliseconds
 						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
