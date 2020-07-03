@@ -197,7 +197,7 @@
 										--add the call_timeout
 										pos = string.find(agent_contact, "}");
 										first = string.sub(agent_contact, 0, pos);
-										last = string.sub(agent_contact, tmp_pos);
+										last = string.sub(agent_contact, pos);
 										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
 								else
 										--the string has the call timeout
