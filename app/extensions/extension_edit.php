@@ -1733,7 +1733,7 @@
 
 	//--- begin: show_advanced -----------------------
 
-	if (permission_exists(extension_advanced)) {
+	if (permission_exists("extension_advanced")) {
 		echo "<tr>\n";
 		echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
 
