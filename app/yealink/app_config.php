@@ -971,8 +971,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_codec_opus_priority";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "13";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "13";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set to enable or disable the selected Yealink codec.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3b6685b3-0ca7-49f5-8863-f1b358b1c0e4";
