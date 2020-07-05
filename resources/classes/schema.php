@@ -704,6 +704,9 @@ if (!class_exists('schema')) {
 																			case 'timestamptz':
 																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::timestamp with time zone;\n";
 																				break;
+																			case 'boolean':
+																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::boolean;\n";
+																				break;
 																			default:
 																				//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
 																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
