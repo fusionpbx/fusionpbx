@@ -90,13 +90,16 @@
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //get the list
-	$sql = str_replace('count(domain_setting_uuid)', '*', $sql);
+	$sql = "select domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, domain_setting_value, cast(domain_setting_enabled as text), domain_setting_description ";
+	$sql .= "from v_domain_settings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	if ($order_by == '') {
-		$sql .= " order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
+		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
 	}
 	else {
 		$sql .= order_by($order_by, $order);
 	}
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$domain_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
