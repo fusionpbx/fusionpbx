@@ -317,11 +317,11 @@
 			echo "	</td>\n";
 			if (permission_exists('domain_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['domain_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>($row['domain_setting_enabled']) ? $text['label-true'] : $text['label-false'],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
-				echo $text['label-'.$row['domain_setting_enabled']];
+				echo ($row['domain_setting_enabled']) ? $text['label-true'] : $text['label-false'];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['domain_setting_description'])."\">".escape($row['domain_setting_description'])."&nbsp;</td>\n";
