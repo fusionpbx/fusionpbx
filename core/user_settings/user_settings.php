@@ -128,8 +128,10 @@
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
 	}
+
 //get the list
-	$sql = "select * from v_user_settings ";
+	$sql = "select user_setting_uuid, user_uuid, user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
+	$sql .= "from v_user_settings ";
 	$sql .= $sql_where;
 	if ($order_by == '') {
 		$sql .= "order by user_setting_category, user_setting_subcategory, user_setting_order asc ";
