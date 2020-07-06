@@ -129,7 +129,8 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_name, user_uuid, username, groups, contact_organization,contact_name, cast(user_enabled as text) ";
+	$sql = "select domain_name, domain_uuid, user_uuid, username, groups, ";
+	$sql .= "contact_organization,contact_name, cast(user_enabled as text) ";
 	$sql .= "from view_users ";
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		if (isset($sql_search)) {
