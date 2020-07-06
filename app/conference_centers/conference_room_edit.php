@@ -640,7 +640,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='".escape($moderator_pin)."'>\n";
+	echo "  		<input class='formfld' type='number' name='moderator_pin' maxlength='255' value='".escape($moderator_pin)."'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-moderator_pin']."\n";
 	echo "		</td>";
@@ -649,7 +649,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='".escape($participant_pin)."'>\n";
+	echo "  		<input class='formfld' type='number' name='participant_pin' maxlength='255' value='".escape($participant_pin)."'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-participant-pin']."\n";
 	echo "		</td>";
