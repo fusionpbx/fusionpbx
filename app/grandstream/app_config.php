@@ -278,6 +278,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Wallpaper Image JPEG 480x272 16-bit depth dithered";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7f352d2-a3f0-4ea3-b013-8856404b66a4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dial_plan";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{\+x+|x+|*x+|*++|\p\a\r\k\+*x+|\f\l\o\w\+*x+}';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the digits that are allowed to be called.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a004dee4-4621-4c6d-8c20-7f315f812d85";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_bluetooth_power";
