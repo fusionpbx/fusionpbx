@@ -320,7 +320,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (is_uuid($_GET["id"]) && count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$user_setting_uuid = $_GET["id"];
 		$sql = "select user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
-		$sql = "select * from v_user_settings ";
 		$sql .= "from v_user_settings ";
 		$sql .= "where user_setting_uuid = :user_setting_uuid ";
 		$sql .= "and user_uuid = :user_uuid ";
