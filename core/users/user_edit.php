@@ -569,7 +569,9 @@
 	else {
 		//populate the form with values from db
 			if ($action == 'edit') {
-				$sql = "select * from v_users where user_uuid = :user_uuid ";
+				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
+				$sql .= "from v_users ";
+				$sql .= "where user_uuid = :user_uuid ";
 				if (!permission_exists('user_all')) {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
