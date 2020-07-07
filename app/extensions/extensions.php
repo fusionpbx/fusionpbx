@@ -255,7 +255,9 @@
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('effective_caller_id_name', $text['label-effective_cid_name'], $order_by, $order, null, "class='hide-xs'");
-	echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
+	if (permission_exists("outbound_caller_id_name")) {
+		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
+	}
 	echo th_order_by('call_group', $text['label-call_group'], $order_by, $order);
 	if (permission_exists("extension_user_context")) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
@@ -296,7 +298,9 @@
 			echo "	</td>\n";
 
 			echo "	<td class='hide-xs'>".escape($row['effective_caller_id_name'])."&nbsp;</td>\n";
-			echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
+			if (permission_exists("outbound_caller_id_name")) {
+				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
+			}
 			echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
