@@ -202,7 +202,7 @@
 				session:execute("set", "outbound_caller_id_name="..disa_caller_id_name);
 				session:execute("set", "effective_caller_id_name="..disa_caller_id_name);
 			end
-			if (caller_id_number) then
+			if (disa_caller_id_number) then
 				session:execute("set", "outbound_caller_id_number="..disa_caller_id_number);
 				session:execute("set", "effective_caller_id_number="..disa_caller_id_number);
 			end
