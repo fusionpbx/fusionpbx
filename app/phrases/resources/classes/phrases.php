@@ -145,9 +145,6 @@ if (!class_exists('phrases')) {
 								//revoke temporary permissions
 									$p->delete('phrase_detail_delete', 'temp');
 
-								//save the xml
-									save_phrases_xml();
-
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
@@ -225,9 +222,6 @@ if (!class_exists('phrases')) {
 								//revoke temporary permissions
 									$p->delete('phrase_detail_delete', 'temp');
 
-								//save the xml
-									save_phrases_xml();
-
 								//clear the cache
 									if ($phrase_language != '') {
 										$cache = new cache;
@@ -300,9 +294,6 @@ if (!class_exists('phrases')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
-
-								//save the xml
-									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
@@ -415,9 +406,6 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_detail_add', 'temp');
-
-								//save the xml
-									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);

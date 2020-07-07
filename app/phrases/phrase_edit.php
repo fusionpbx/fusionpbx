@@ -28,7 +28,6 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/functions/save_phrases_xml.php";
 
 //check permissions
 	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
@@ -236,9 +235,6 @@
 							$obj->phrase_uuid = $phrase_uuid;
 							$obj->delete_details($phrase_details_delete);
 						}
-
-					//save the xml to the file system if the phrase directory is set
-						save_phrases_xml();
 
 					//clear the cache
 						$cache = new cache;
