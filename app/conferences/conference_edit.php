@@ -370,7 +370,7 @@
 	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
+	echo "	<input class='formfld' type='number' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
