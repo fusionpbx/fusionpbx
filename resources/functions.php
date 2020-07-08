@@ -103,45 +103,15 @@
 
 	if (!function_exists('uuid')) {
 		function uuid() {
-			$uuid = null;
-			if (PHP_OS === 'FreeBSD') {
-				$uuid = trim(shell_exec("uuid -v 4"));
-				if (is_uuid($uuid)) {
-					return $uuid;
-				}
-				else {
-					echo "Please install the following package.\n";
-					echo "pkg install ossp-uuid\n";
-					exit;
-				}
-			}
-			if (PHP_OS === 'Linux') {
-				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
-				if (is_uuid($uuid)) {
-					return $uuid;
-				}
-				else {
-					$uuid = trim(shell_exec("uuidgen"));
-					if (is_uuid($uuid)) {
-						return $uuid;
-					}
-					else {
-						echo "Please install the uuidgen.\n";
-						exit;
-					}
-				}
-			}
-			if (PHP_OS === 'Windows' && function_exists('com_create_guid')) {
-				$uuid = trim(com_create_guid(), '{}');
-				if (is_uuid($uuid)) {
-					return $uuid;
-				}
-				else {
-					echo "The com_create_guid() function failed to create a uuid.\n";
-					exit;
-				}
-			}
-		}
+	return sprintf('%s-%s-%04x-%04x-%s',
+    bin2hex(openssl_random_pseudo_bytes(4)),
+    bin2hex(openssl_random_pseudo_bytes(2)),
+    hexdec(bin2hex(openssl_random_pseudo_bytes(2))) & 0x0fff | 0x4000,
+    hexdec(bin2hex(openssl_random_pseudo_bytes(2))) & 0x3fff | 0x8000,
+    bin2hex(openssl_random_pseudo_bytes(6))
+    );
+	}
+		//echo uuid();
 	}
 
 	if (!function_exists('is_uuid')) {
