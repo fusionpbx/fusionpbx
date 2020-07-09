@@ -109,7 +109,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled;1-Optional;2-Compulsory";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Compulsory";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0704072-c3d9-48df-b89b-2aea6035b3c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
