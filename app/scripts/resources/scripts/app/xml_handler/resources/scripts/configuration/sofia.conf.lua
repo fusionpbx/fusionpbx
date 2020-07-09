@@ -55,22 +55,6 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
-		--get the domain_uuid
-			if (domain_uuid == nil) then
-				--get the domain_uuid
-					if (domain_name ~= nil) then
-						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = :domain_name";
-						local params = {domain_name = domain_name};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-						end
-						dbh:query(sql, params, function(row)
-							domain_uuid = row.domain_uuid;
-						end);
-					end
-			end
-
 		--get the variables
 			vars = trim(api:execute("global_getvar", ""));
 
@@ -126,11 +110,10 @@
 						--table.insert(xml, [[						<X-PRE-PROCESS cmd="include" data="]]..sip_profile_name..[[/*.xml"/>]]);
 
 						--get the gateways
-							sql = "select * from v_gateways as g, v_domains as d ";
-							sql = sql .. "where g.profile = :profile ";
-							sql = sql .. "and g.enabled = 'true' ";
-							sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
-							sql = sql .. "and (g.hostname = :hostname or g.hostname is null or g.hostname = '') ";
+							sql = "select * from v_gateways ";
+							sql = sql .. "where profile = :profile ";
+							sql = sql .. "and enabled = 'true' ";
+							sql = sql .. "and (hostname = :hostname or hostname is null or hostname = '') ";
 							local params = {profile = sip_profile_name, hostname = hostname};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
