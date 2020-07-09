@@ -208,6 +208,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to record the call.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_hold_music";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to set music on hold.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
