@@ -99,6 +99,7 @@
 			$currency = trim($_POST["currency"]);
 			$destination_buy = check_float($_POST["destination_buy"]);
 			$currency_buy = trim($_POST["currency_buy"]);
+			$destination_hold_music = trim($_POST["destination_hold_music"]);
 			$destination_record = trim($_POST["destination_record"]);
 			$destination_accountcode = trim($_POST["destination_accountcode"]);
 			$destination_type_voice = $_POST["destination_type_voice"];
@@ -308,6 +309,9 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"recording_follow_transfer=true\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
 						}
+						if (strlen($destination_hold_music) > 0) {
+							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
+						}
 						if (strlen($destination_accountcode) > 0) {
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
 						}
@@ -376,6 +380,7 @@
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
@@ -387,6 +392,7 @@
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
@@ -399,6 +405,7 @@
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
 
@@ -412,6 +419,7 @@
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
 
@@ -425,6 +433,7 @@
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "carrier=$destination_carrier";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
 
@@ -432,6 +441,17 @@
 								$dialplan_detail_order = $dialplan_detail_order + 10;
 							}
 
+						//set the hold music
+							if (strlen($destination_hold_music) > 0) {
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "hold_music=".$destination_hold_music;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+							}
+			
 						//add fax detection
 							if (is_uuid($fax_uuid)) {
 
@@ -440,6 +460,7 @@
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 									$y++;
 
@@ -451,6 +472,7 @@
 									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 									$y++;
 
@@ -615,6 +637,7 @@
 					$array['destinations'][0]["destination_caller_id_number"] = $destination_caller_id_number;
 					$array['destinations'][0]["destination_cid_name_prefix"] = $destination_cid_name_prefix;
 					$array['destinations'][0]["destination_context"] = $destination_context;
+					$array['destinations'][0]["destination_hold_music"] = $destination_hold_music;
 					$array['destinations'][0]["destination_record"] = $destination_record;
 					$array['destinations'][0]["destination_accountcode"] = $destination_accountcode;
 					$array['destinations'][0]["destination_type_voice"] = $destination_type_voice ? 1 : null;
@@ -730,6 +753,7 @@
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
+				$destination_hold_music = $row["destination_hold_music"];
 				$destination_record = $row["destination_record"];
 				$destination_accountcode = $row["destination_accountcode"];
 				$destination_type_voice = $row["destination_type_voice"];
@@ -1119,6 +1143,21 @@
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
+		echo "<tr>\n";
+		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_hold_music']."\n";
+		echo "</td>\n";
+		echo "<td width=\"70%\" class='vtable' align='left'>\n";
+		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+		$music_on_hold = new switch_music_on_hold;
+		echo $music_on_hold->select('destination_hold_music', $destination_hold_music, null);
+		echo "	<br />\n";
+		echo $text['description-destination_hold_music']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
