@@ -850,21 +850,21 @@ include "root.php";
 										}
 
 										//get the child data
-										$sql = "select * from ".$table_prefix.$child_table." ";
-										$sql .= "where ".$relation['field']." = :".$relation['field'];
-										$parameters[$relation['field']] = $row[$relation['field']];
-										$results = $this->execute($sql, $parameters, 'all');
-										unset($parameters);
-										if (is_array($results)) {
-											$old_array[$parent_name][$x][$child_table] = $results;
-										}
+										//$sql = "select * from ".$table_prefix.$child_table." ";
+										//$sql .= "where ".$relation['field']." = :".$relation['field'];
+										//$parameters[$relation['field']] = $row[$relation['field']];
+										//$results = $this->execute($sql, $parameters, 'all');
+										//unset($parameters);
+										//if (is_array($results)) {
+										//	$old_array[$parent_name][$x][$child_table] = $results;
+										//}
 
 										//delete the child data
-										$sql = "delete from ".$table_prefix.$child_table." ";
-										$sql .= "where ".$relation['field']." = :".$relation['field'];
-										$parameters[$relation['field']] = $row[$relation['field']];
+										//$sql = "delete from ".$table_prefix.$child_table." ";
+										//$sql .= "where ".$relation['field']." = :".$relation['field'];
+										//$parameters[$relation['field']] = $row[$relation['field']];
 										//$this->execute($sql, $parameters);
-										unset($parameters);
+										//unset($parameters);
 									}
 								}
 								$x++;
