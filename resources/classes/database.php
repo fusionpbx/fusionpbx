@@ -863,7 +863,7 @@ include "root.php";
 										$sql = "delete from ".$table_prefix.$child_table." ";
 										$sql .= "where ".$relation['field']." = :".$relation['field'];
 										$parameters[$relation['field']] = $row[$relation['field']];
-										$this->execute($sql, $parameters);
+										//$this->execute($sql, $parameters);
 										unset($parameters);
 									}
 								}
