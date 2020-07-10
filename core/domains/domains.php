@@ -164,7 +164,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_uuid, domain_name, domain_uuid, cast(domain_enabled as text), domain_description ";
+	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
 	$sql .= "from v_domains ";
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
