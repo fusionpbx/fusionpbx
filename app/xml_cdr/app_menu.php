@@ -50,7 +50,6 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/xml_cdr/xml_cdr_statistics.php";
-	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;

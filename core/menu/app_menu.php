@@ -142,7 +142,6 @@
 	$apps[$x]['menu'][$y]['icon'] = "fa-chart-bar";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "25";
-	$apps[$x]['menu'][$y]['groups'][] = "user";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
