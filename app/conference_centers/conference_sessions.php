@@ -208,16 +208,9 @@
 				echo "	<td>".$end_date."&nbsp;</td>\n";
 				echo "	<td>".$time_difference."&nbsp;</td>\n";
 				echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-				$tmp_name = '';
-				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
-					$tmp_name = $row['conference_session_uuid'].".mp3";
-				}
-				elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
-					$tmp_name = $row['conference_session_uuid'].".wav";
-				}
+				$recording_name = $row['recording'];
 				echo "	<td class='button no-link'>\n";
-				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+				if (strlen($recording_name) > 0 && file_exists($recording_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td>\n";
