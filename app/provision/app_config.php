@@ -277,7 +277,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "allow extensions to be provisioned as contacts as $extensions in provision templates";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "allow extensions to be provisioned as contacts in provision templates";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d157078e-b363-4f34-a6d4-8a86990a40b7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
