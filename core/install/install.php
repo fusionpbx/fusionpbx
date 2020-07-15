@@ -41,6 +41,9 @@
 
 //start the session
 	//ini_set("session.cookie_httponly", True);
+	if(version_compare(phpversion(), '7.3', '>=')) {
+		session_set_cookie_params(["samesite" => "strict"]);
+	}
 	session_start();
 
 //set the default domain_uuid
