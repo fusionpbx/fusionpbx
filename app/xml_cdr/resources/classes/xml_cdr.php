@@ -928,10 +928,14 @@ if (!class_exists('xml_cdr')) {
 						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
 					}
 					else {
-						if (strlen($this->start_stamp_begin) > 0) { $sql_date_range .= "and start_stamp >= :start_stamp_begin \n"; }
-						if (strlen($this->start_stamp_end) > 0) { $sql_date_range .= "and start_stamp <= :start_stamp_end \n"; }
-						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
-						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
+						if (strlen($this->start_stamp_begin) > 0) { 
+							$sql_date_range .= "and start_stamp >= :start_stamp_begin \n"; 
+							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
+						}
+						if (strlen($this->start_stamp_end) > 0) { 
+							$sql_date_range .= "and start_stamp <= :start_stamp_end \n"; 
+							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
+						}
 					}
 				}
 				else {
