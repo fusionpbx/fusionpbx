@@ -831,6 +831,9 @@ include "root.php";
 							}
 						}
 
+						//get relations array
+						$relations = $this->get_relations($parent_name);
+
 						//add child data to the old array
 						foreach($old_array as $parent_name => $rows) {
 							//get relations array
@@ -841,30 +844,34 @@ include "root.php";
 							foreach($rows as $row) {
 								if (is_array($relations)) {
 									foreach ($relations as $relation) {
-										//set the child table
-										$child_table = $relation['table'];
+										if ($relation['key']['action']['delete'] == 'cascade') {
+											//set the child table
+											$child_table = $relation['table'];
 
-										//remove the v_ prefix
-										if (substr($child_table, 0, 2) == "v_") {
-											$child_table = substr($child_table, 2);
+											//remove the v_ prefix
+											if (substr($child_table, 0, 2) == "v_") {
+												$child_table = substr($child_table, 2);
+											}
+
+											//get the child data
+											$sql = "select * from ".$table_prefix.$child_table." ";
+											$sql .= "where ".$relation['field']." = :".$relation['field'];
+											$parameters[$relation['field']] = $row[$relation['field']];
+											$results = $this->execute($sql, $parameters, 'all');
+											unset($parameters);
+											if (is_array($results) && $parent_name !== $child_table) {
+												$old_array[$parent_name][$x][$child_table] = $results;
+											}
+
+											//delete the child data
+											if (isset($row[$relation['field']]) && strlen($row[$relation['field']]) > 0) {
+												$sql = "delete from ".$table_prefix.$child_table." ";
+												$sql .= "where ".$relation['field']." = :".$relation['field'];
+												$parameters[$relation['field']] = $row[$relation['field']];
+//												$this->execute($sql, $parameters);
+											}
+											unset($parameters);
 										}
-
-										//get the child data
-										//$sql = "select * from ".$table_prefix.$child_table." ";
-										//$sql .= "where ".$relation['field']." = :".$relation['field'];
-										//$parameters[$relation['field']] = $row[$relation['field']];
-										//$results = $this->execute($sql, $parameters, 'all');
-										//unset($parameters);
-										//if (is_array($results)) {
-										//	$old_array[$parent_name][$x][$child_table] = $results;
-										//}
-
-										//delete the child data
-										//$sql = "delete from ".$table_prefix.$child_table." ";
-										//$sql .= "where ".$relation['field']." = :".$relation['field'];
-										//$parameters[$relation['field']] = $row[$relation['field']];
-										//$this->execute($sql, $parameters);
-										//unset($parameters);
 									}
 								}
 								$x++;
@@ -2432,7 +2439,7 @@ include "root.php";
 					return false;
 			}
 
-			private function get_relations($schema) {
+			public function get_relations($schema) {
 
 				//remove the v_ prefix
 					if (substr($schema, 0, 2) == "v_") {
@@ -2449,7 +2456,6 @@ include "root.php";
 					}
 
 				//search through all fields to find relations
-					$i = 0;
 					if (is_array($apps)) {
 						foreach ($apps as $x => &$app) {
 							foreach ($app['db'] as $y => &$row) {
@@ -2467,8 +2473,12 @@ include "root.php";
 												//build the array
 													$array[$i]['table'] = $row['table']['name'];
 													$array[$i]['field'] = $field_name;
-													$array[$i]['key']['table'] =  $field['key']['reference']['table'];
+													$array[$i]['key']['type'] = $field['key']['type'];
+													$array[$i]['key']['table'] = $field['key']['reference']['table'];
 													$array[$i]['key']['field'] = $field['key']['reference']['field'];
+													if (isset($field['key']['reference']['action'])) {
+														$array[$i]['key']['action'] = $field['key']['reference']['action'];
+													}
 												//increment the value
 													$i++;
 											}
