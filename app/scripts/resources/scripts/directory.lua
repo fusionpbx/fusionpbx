@@ -105,6 +105,9 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--directory recording prompt
+			directory_prompt = session:getVariable("directory_prompt");
+
 		--set ringback
 			directory_ringback = format_ringback(session:getVariable("ringback"));
 			session:setVariable("ringback", directory_ringback);
@@ -212,7 +215,8 @@
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
+		directory_prompt = directory_prompt or sounds_dir.."/directory/dir-enter_person_first_or_last.wav";
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", directory_prompt, "", "\\d+");
 		return dtmf_digits;
 	end
 
