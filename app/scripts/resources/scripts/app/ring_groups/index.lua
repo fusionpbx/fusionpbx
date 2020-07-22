@@ -553,7 +553,7 @@
 						--dbh:query(sql, params, function(row);
 
 						--get the follow me destinations
-						if (follow_me_uuid ~= nil) then
+						if (follow_me_uuid ~= nil and row.is_follow_me_destination ~= "true") then
 							sql = "select d.domain_uuid, d.domain_name, f.follow_me_destination as destination_number, ";
 							sql = sql .. "f.follow_me_delay as destination_delay, f.follow_me_timeout as destination_timeout, ";
 							sql = sql .. "f.follow_me_prompt as destination_prompt ";
@@ -607,6 +607,7 @@
 								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
 								destinations[new_key]['toll_allow'] = toll_allow;
 								destinations[new_key]['user_exists'] = user_exists;
+								destinations[new_key]['is_follow_me_destination'] = "true";
 
 								--increment x
 								x = x + 1;
