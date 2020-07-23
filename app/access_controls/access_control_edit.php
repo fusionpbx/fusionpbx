@@ -238,10 +238,8 @@
 	echo "		</button>\n";
 	if ($action == 'update') {
 		//if (permission_exists('access_control_node_add')) {
-		//	echo "		<button type='submit' id='btn_copy' alt='".$text['button-copy']."' title='Copy' name='action' value='copy' style='display: 
-none;' onclick=\"modal_open('modal-copy','btn_copy'); return false;\" class='btn btn-default'>\n";
-		//	echo "			<span class='".$_SESSION['theme']['button_icon_copy']['text']." $button_icon_class' 
-style='$button_icon_style'></span>\n";
+		//	echo "		<button type='submit' id='btn_copy' alt='".$text['button-copy']."' title='Copy' name='action' value='copy' style='display: none;' onclick=\"modal_open('modal-copy','btn_copy'); return false;\" class='btn btn-default'>\n";
+		//	echo "			<span class='".$_SESSION['theme']['button_icon_copy']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
 		//	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-copy']."</span>\n";
 		//	echo "		</button>\n";
 		//}
