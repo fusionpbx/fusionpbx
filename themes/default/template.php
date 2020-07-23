@@ -824,15 +824,30 @@
 					break;
 				}
 			}
+			btn_copy = document.getElementById("btn_copy");
+			btn_toggle = document.getElementById("btn_toggle");
+			btn_delete = document.getElementById("btn_delete");
 			if (checked == true) {
-				document.getElementById("btn_copy").style.display = "inline";
-				document.getElementById("btn_toggle").style.display = "inline";
-				document.getElementById("btn_delete").style.display = "inline";
+				if (btn_copy) {
+					btn_copy.style.display = "inline";
+				}
+				if (btn_toggle) {
+					btn_toggle.style.display = "inline";
+				}
+				if (btn_delete) {
+					btn_delete.style.display = "inline";
+				}
 			}
 		 	else {
-		 		document.getElementById("btn_copy").style.display = "none";
-		 		document.getElementById("btn_toggle").style.display = "none";
-		 		document.getElementById("btn_delete").style.display = "none";
+				if (btn_copy) {
+					btn_copy.style.display = "none";
+				}
+				if (btn_toggle) {
+					btn_toggle.style.display = "none";
+				}
+				if (btn_delete) {
+					btn_delete.style.display = "none";
+				}
 		 	}
 		}
 		{/literal}
