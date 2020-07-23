@@ -882,6 +882,17 @@
 			}
 		}
 
+		function checkbox_change(checkbox) {
+			if (checkbox.checked == true) {
+				document.getElementById("btn_copy").style.display = "inline";
+				document.getElementById("btn_delete").style.display = "inline";
+			}
+		 	else {
+		 		//document.getElementById("btn_copy").style.display = "none";
+		 		//document.getElementById("btn_delete").style.display = "none";
+		 	}
+		}
+
 		function edit_delete_action(modifier) {
 			var checkboxes = document.getElementsByClassName('chk_delete');
 			if (document.getElementById('btn_delete') && checkboxes.length > 0) {
