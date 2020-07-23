@@ -440,6 +440,6 @@ $text['description-access_control_default']['pt-pt'] = "Selecione o tipo de padr
 $text['description-access_control_default']['ro-ro'] = "Selectați tipul implicit.";
 $text['description-access_control_default']['ru-ru'] = "Выберите тип по умолчанию.";
 $text['description-access_control_default']['sv-se'] = "Välj standardtypen.";
-$text['description-access_control_default']['uk-ua'] = "Вибір типу за замовчуванням.";=
+$text['description-access_control_default']['uk-ua'] = "Вибір типу за замовчуванням.";
 
 ?>
