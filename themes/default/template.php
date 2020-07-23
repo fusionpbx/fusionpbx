@@ -813,6 +813,30 @@
 		}
 		{/literal}
 
+	//checkbox on change
+		{literal}
+		function checkbox_on_change(checkbox) {
+			checked = false;
+			var inputs = document.getElementsByTagName('input');
+			for (var i = 0, max = inputs.length; i < max; i++) {
+				if (inputs[i].type === 'checkbox' && inputs[i].checked == true) {
+					checked = true;
+					break;
+				}
+			}
+			if (checked == true) {
+				document.getElementById("btn_copy").style.display = "inline";
+				document.getElementById("btn_toggle").style.display = "inline";
+				document.getElementById("btn_delete").style.display = "inline";
+			}
+		 	else {
+		 		document.getElementById("btn_copy").style.display = "none";
+		 		document.getElementById("btn_toggle").style.display = "none";
+		 		document.getElementById("btn_delete").style.display = "none";
+		 	}
+		}
+		{/literal}
+
 	//list page functions
 		{literal}
 		function list_all_toggle(modifier) {
@@ -880,17 +904,6 @@
 					document.getElementById('btn_delete').value = checkbox_checked ? '' : 'delete';
 				}
 			}
-		}
-
-		function checkbox_change(checkbox) {
-			if (checkbox.checked == true) {
-				document.getElementById("btn_copy").style.display = "inline";
-				document.getElementById("btn_delete").style.display = "inline";
-			}
-		 	else {
-		 		//document.getElementById("btn_copy").style.display = "none";
-		 		//document.getElementById("btn_delete").style.display = "none";
-		 	}
 		}
 
 		function edit_delete_action(modifier) {
