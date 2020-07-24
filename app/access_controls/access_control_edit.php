@@ -247,7 +247,7 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input class='formfld' type='hidden' name='access_control_uuid' value='".escape($access_control_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -275,12 +275,12 @@
 	echo "			<span class='".$_SESSION['theme']['button_icon_save']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
 	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-save']."</span>\n";
 	echo "		</button>\n";
-	echo "	<div style='clear: both;'><br /></div>\n";
 	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "	<div style='clear: both;'>".$text['description-access_controls']."</div>\n";
-	echo "<br />\n";
+	echo $text['description-access_controls']."\n";
+	echo "<br /><br />\n";
 
 	if ($action == 'update') {
 		if (permission_exists('access_control_add')) {
@@ -291,7 +291,7 @@
 		}
 	}
 
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
