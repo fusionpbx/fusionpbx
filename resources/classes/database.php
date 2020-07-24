@@ -1314,36 +1314,36 @@ include "root.php";
 											$checked = true;
 
 											//copy the child data
-											$copy_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+											if (is_uuid($row[$parent_key_name])) {
+												$copy_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+											}
 
 											//remove the row from the main array
 											unset($array[$parent_name][$x]);
-										}
 
-									//loop through the fields
-										foreach($row as $field_name => $field_value) {
+											//loop through the fields
 
-											//find the child tables
-											$y = 0;
-											if (is_array($field_value)) {
-												//prepare the variables
-												$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
-												$child_key_name = $this->singular($child_name)."_uuid";
+											foreach($row as $field_name => $field_value) {
+												//find the child tables
+												if (is_array($field_value)) {
 
-												//loop through the child rows
-												foreach ($field_value as $sub_row) {
+													//prepare the variables
+													$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+													$child_key_name = $this->singular($child_name)."_uuid";
 
-													//build the delete array
-													if ($sub_row['checked'] == 'true') {
+													//loop through the child rows
+													$y = 0;
+													foreach ($field_value as $sub_row) {
+
 														//delete the child data
-														$copy_array[$child_name][$y][$child_key_name] = $sub_row[$child_key_name];
+														$copy_array[$child_name][][$child_key_name] = $sub_row[$child_key_name];
 
 														//remove the row from the main array
 														unset($array[$parent_name][$x][$child_name][$y]);
-													}
 
-													//increment the value
-													$y++;
+														//increment the value
+														$y++;
+													}
 												}
 											}
 										}
@@ -1358,6 +1358,7 @@ include "root.php";
 
 				//get the current data
 					if (is_array($copy_array) && count($copy_array) > 0) {
+
 						//build an array of tables, fields, and values
 						foreach($copy_array as $table_name => $rows) {
 							foreach($rows as $row) {
