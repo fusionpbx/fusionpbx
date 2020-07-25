@@ -147,9 +147,6 @@
 						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_regex'] = $row["number_translation_detail_regex"];
 						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_replace'] = $row["number_translation_detail_replace"];
 						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_order'] = $row["number_translation_detail_order"];
-						if (isset($row["checked"])) {
-							$array['number_translations'][0]['number_translation_details'][$y]['checked'] = $row["checked"];
-						}
 						$y++;
 					}
 				}
@@ -230,28 +227,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-number_translation']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo "		<button type='button' id='btn_back' alt='".$text['button-back']."' title='Back' class='btn btn-default' onclick=\"location.href='number_translations.php'\">\n";
-	echo "			<span class='".$_SESSION['theme']['button_icon_back']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-back']."</span>\n";
-	echo "		</button>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'number_translations.php']);
 	if ($action == 'update') {
 		if (permission_exists('number_translation_detail_add')) {
-			echo "		<button type='submit' id='btn_copy' alt='".$text['button-copy']."' title='Copy' name='action' value='copy' style='display: none;' onclick=\"modal_open('modal-copy','btn_copy'); return false;\" class='btn btn-default'>\n";
-			echo "			<span class='".$_SESSION['theme']['button_icon_copy']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-			echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-copy']."</span>\n";
-			echo "		</button>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('number_translation_detail_delete')) {
-			echo "		<button type='submit' id='btn_delete' alt='".$text['button-delete']."' title='Delete' name='action' value='delete' style='display: none;' onclick=\"modal_open('modal-delete','btn_delete'); return false;\" class='btn btn-default'>\n";
-			echo "			<span class='".$_SESSION['theme']['button_icon_delete']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-			echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-delete']."</span>\n";
-			echo "		</button>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo "		<button type='submit' id='btn_save' alt='".$text['button-save']."' title='Save' name='action' value='save' onclick='' class='btn btn-default'>\n";
-	echo "			<span class='".$_SESSION['theme']['button_icon_save']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-save']."</span>\n";
-	echo "		</button>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
