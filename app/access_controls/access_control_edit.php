@@ -159,9 +159,6 @@
 						$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $row["node_cidr"];
 						$array['access_controls'][0]['access_control_nodes'][$y]['node_domain'] = $row["node_domain"];
 						$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = $row["node_description"];
-						if (isset($row["checked"])) {
-							$array['access_controls'][0]['access_control_nodes'][$y]['checked'] = $row["checked"];
-						}
 						$y++;
 					}
 				}
