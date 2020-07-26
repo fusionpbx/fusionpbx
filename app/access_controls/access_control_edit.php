@@ -253,34 +253,31 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-access_control']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo "		<button type='button' id='btn_back' alt='".$text['button-back']."' title='Back' class='btn btn-default' onclick=\"location.href='access_controls.php'\">\n";
-	echo "			<span class='".$_SESSION['theme']['button_icon_back']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-back']."</span>\n";
-	echo "		</button>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php']);
 	if ($action == 'update') {
 		if (permission_exists('access_control_node_add')) {
-			echo "		<button type='submit' id='btn_copy' alt='".$text['button-copy']."' title='Copy' name='action' value='copy' style='display: none;' onclick=\"modal_open('modal-copy','btn_copy'); return false;\" class='btn btn-default'>\n";
-			echo "			<span class='".$_SESSION['theme']['button_icon_copy']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-			echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-copy']."</span>\n";
-			echo "		</button>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('access_control_node_delete')) {
-			echo "		<button type='submit' id='btn_delete' alt='".$text['button-delete']."' title='Delete' name='action' value='delete' style='display: none;' onclick=\"modal_open('modal-delete','btn_delete'); return false;\" class='btn btn-default'>\n";
-			echo "			<span class='".$_SESSION['theme']['button_icon_delete']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-			echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-delete']."</span>\n";
-			echo "		</button>\n";
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo "		<button type='submit' id='btn_save' alt='".$text['button-save']."' title='Save' name='action' value='save' onclick='' class='btn btn-default'>\n";
-	echo "			<span class='".$_SESSION['theme']['button_icon_save']['text']." $button_icon_class' style='$button_icon_style'></span>\n";
-	echo "			<span class='$button_label_class' style='$button_label_style'>".$text['button-save']."</span>\n";
-	echo "		</button>\n";
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo $text['description-access_controls']."\n";
+	echo $text['title_description-access_controls']."\n";
 	echo "<br /><br />\n";
+
+	if ($action == 'update') {
+		if (permission_exists('access_control_add')) {
+			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
+		}
+		if (permission_exists('access_control_delete')) {
+			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+		}
+	}
 
 	if ($action == 'update') {
 		if (permission_exists('access_control_add')) {
