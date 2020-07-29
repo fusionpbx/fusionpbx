@@ -309,7 +309,7 @@
 						--freeswitch.consoleLog("notice", "[conference center] <conference_start_epoch> sql: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 
 					--set the conference_recording
-						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
+						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid .. "." .. record_ext;
 						freeswitch.consoleLog("notice", "[conference center] conference_recording: "..conference_recording.."\n");
 					--conference has ended set the end_epoch
 						local sql = {}
