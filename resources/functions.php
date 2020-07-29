@@ -131,7 +131,7 @@
 					}
 				}
 			}
-			if (PHP_OS === 'Windows' && function_exists('com_create_guid')) {
+			if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && function_exists('com_create_guid')) {
 				$uuid = trim(com_create_guid(), '{}');
 				if (is_uuid($uuid)) {
 					return $uuid;
