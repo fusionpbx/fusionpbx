@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2020
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -36,6 +36,15 @@
 	else {
 		echo "access denied";
 		exit;
+	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//get the domain_uuid
+	if (is_uuid($_GET['id'])) {
+		$domain_uuid = $_GET['id'];
 	}
 
 //get the http post data
@@ -74,13 +83,20 @@
 			}
 
 		//redirect
-			header('Location: '.PROJECT_PATH.'/core/domains/domain_edit.php?id='.urlencode($_REQUEST['domain_uuid']));
+			header('Location: '.PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($_REQUEST['domain_uuid']));
 			exit;
 	}
 
 //get the variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
+
+//get the domain_name
+	$sql = "select domain_name from v_domains ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$domain_name = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$sql = "select count(domain_setting_uuid) from v_domain_settings ";
@@ -108,6 +124,10 @@
 //create token
 	$object = new token;
 	$token = $object->create('/core/domain_settings/domain_settings.php');
+
+//include the header
+	$document['title'] = $text['title-domain_settings'];
+	require_once "resources/header.php";
 
 //copy settings javascript
 	if (
@@ -140,9 +160,9 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['header-domain_settings']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b id='heading_sub'>".$domain_name." (".$num_rows.")</b></div>\n"; //$text['title-domain_settings']
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'action_bar_sub_button_back','style'=>'margin-right: 15px; display: none;','link'=>'domains.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
 	}
@@ -238,7 +258,7 @@
 				echo "</tr>\n";
 			}
 			if (permission_exists('domain_setting_edit')) {
-				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($row['domain_uuid'])."&id=".escape($row['domain_setting_uuid']);
+				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($domain_uuid)."&id=".escape($row['domain_setting_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
@@ -364,5 +384,8 @@
 	echo "	}\n";
 
 	echo "</script>\n";
+
+//include the footer
+	require_once "resources/footer.php";
 
 ?>
