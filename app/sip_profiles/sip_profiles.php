@@ -71,7 +71,12 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
+	if (isset($_GET["order_by"])) {
+		$order_by = $_GET["order_by"];
+	}
+	else {
+		$order_by = 'sip_profile_name';
+	}
 	$order = $_GET["order"];
 
 //add the search string
