@@ -166,13 +166,14 @@
 				echo "	<td class=\"row_style1\">$switch_git_info</td>\n";
 				echo "</tr>\n";
 			}
-			echo "<tr>\n";
-			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "	".$text['label-php']." ".$text['label-version']."\n";
-			echo "	</td>\n";
-			echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
-			echo "</tr>\n";
 		}
+
+		echo "<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+		echo "	".$text['label-php']." ".$text['label-version']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
+		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
@@ -306,6 +307,36 @@
 				echo "</tr>\n";
 				echo "</table>\n";
 				echo "<br /><br />";
+			}
+		}
+		
+		//Windows
+		if (stristr(PHP_OS, 'WIN')) {
+			echo "<!--\n";
+			// connect to WMI
+			$wmi = new COM('WinMgmts:root/cimv2');
+			// Query this Computer for Total Physical RAM
+			$res = $wmi->ExecQuery('Select TotalPhysicalMemory from Win32_ComputerSystem');
+			// Fetch the first item from the results
+			$system = $res->ItemIndex(0);
+			$shell_result = round($system->TotalPhysicalMemory / 1024 /1024, 0);
+			echo "-->\n";
+			if (strlen($shell_result) > 0) {
+				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+				echo "<tr>\n";
+				echo "	<th class='th' colspan='2' align='left'>".$text['Physical Memory']."</th>\n";
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+				echo "		".$text['label-mem']." \n";
+				echo "	</td>\n";
+				echo "	<td class=\"row_style1\">\n";
+				echo "		$shell_result mb\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
+				echo "</table>\n";
+				echo "<br /><br />";
+
 			}
 		}
 	}
