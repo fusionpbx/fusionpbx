@@ -317,7 +317,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".$domain_uuid);
+				header("Location: ".PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".$domain_uuid);
 				exit;
 		}
 }
