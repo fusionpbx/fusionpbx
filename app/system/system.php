@@ -167,13 +167,13 @@
 				echo "</tr>\n";
 			}
 		}
-			echo "<tr>\n";
-			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "	".$text['label-php']." ".$text['label-version']."\n";
-			echo "	</td>\n";
-			echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
-			echo "</tr>\n";
-		
+
+		echo "<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+		echo "	".$text['label-php']." ".$text['label-version']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
+		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
