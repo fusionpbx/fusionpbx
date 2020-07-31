@@ -25,6 +25,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
+--  Gill Abada <gill.abada@gmail.com>
 
 --include the log
 	log = require "resources.functions.log".ring_group
@@ -580,7 +581,7 @@
 
 								--Calculate the destination_timeout for follow-me destinations.
 								--The call should honor ring group timeouts with rg delays, follow-me timeouts and follow-me delays factored in.
-								--Destinations with a timeout of 0 or negative numbers should be ignored. 
+								--Destinations with a timeout of 0 or negative numbers should be ignored.
 								if (tonumber(field.destination_timeout) < (tonumber(row.destination_timeout) - tonumber(field.destination_delay))) then
 									new_destination_timeout = field.destination_timeout;
 								else
@@ -879,12 +880,14 @@
 					-- end
 
 				--set bind digit action
-					local bind_target = 'peer'
+					local bind_target = 'local'
 					if session:getVariable("sip_authorized") == "true" then
-						bind_target = 'both';
+						bind_target = 'peer';
 					end
 					local bindings = {
 						"local,*2,exec:record_session," .. record_path .. "/" .. record_name,
+						"local,*5,api:uuid_record," .. uuid .. " mask " .. record_path .. "/" .. record_name,
+						"local,*6,api:uuid_record," .. uuid .. " unmask " .. record_path .. "/" .. record_name,
 						-- "local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@" .. context
 					}
 					for _, str in ipairs(bindings) do
@@ -920,7 +923,7 @@
 
 							--if the timeout was reached exit the loop and go to the timeout action
 								if (tonumber(ring_group_call_timeout) == timeout) then
-									break;	
+									break;
 								end
 
 							--send the call to the destination
