@@ -1197,7 +1197,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	a.login_link:hover {
 		color: <?php echo ($_SESSION['theme']['login_link_text_color_hover']['text'] != '') ? $_SESSION['theme']['login_link_text_color_hover']['text'] : '#5082ca'; ?> !important;
 		cursor: pointer;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	<?php
@@ -1285,7 +1285,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	a:hover,
 	button.btn.btn-link:hover {
 		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	button.btn {
@@ -1675,7 +1675,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	th a:hover {
 		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	td {
