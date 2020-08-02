@@ -1949,6 +1949,21 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		background-color: #e5eaf5;
 		cursor: default;
 		}
+	div.off_ext {
+		float: left;
+		width: 235px;
+		margin: 0px 8px 8px 0px;
+		padding: 0px;
+		border-style: solid;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		border-width: 1px 3px;
+		border-color: #b9c5d8 #c5d1e5;
+		background-color: #e5eaf5;
+		cursor: not-allowed;
+		opacity: 0.6;
+		}
 
 	div.op_state_active {
 		background-color: #baf4bb;
