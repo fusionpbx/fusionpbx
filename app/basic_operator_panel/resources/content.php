@@ -69,6 +69,9 @@
 		$_SESSION['user']['extensions'] = array();
 	}
 
+//get registrations -- All SIP profiles
+$obj = new registrations;
+		$registrations = $obj->get("all");
 
 $onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
 
@@ -150,7 +153,13 @@ if (is_array($groups) && @sizeof($groups) > 0) {
 	}
 	echo "				</td>";
 }
-
+echo "				<td valign='top' nowrap='nowrap'>";
+echo "					<input type='hidden' id='extension_filter' value=\"".escape($_REQUEST['extension_filter'])."\">";
+echo "					<input type='hidden' id='name_filter' value=\"".strtolower($_REQUEST['name_filter'])."\">";
+echo "					<input type='text' class='formfld' placeholder='Filter Extension' value=\"".escape($_REQUEST['extension_filter'])."\" onkeyup=\"document.getElementById('extension_filter').value = this.value; refresh_start();\" onfocus='refresh_stop();'>\n";
+echo "					<input type='text' class='formfld' placeholder='Filter Name' value=\"".strtolower($_REQUEST['name_filter'])."\" onkeyup=\"document.getElementById('name_filter').value = this.value; refresh_start();\" onfocus='refresh_stop();'>\n";
+echo "					<input type='button' class='btn' title=\"Clear\" value=\"Clear\" onclick=\"document.getElementById('extension_filter').value = ''; document.getElementById('name_filter').value = '';\" ".$onhover_pause_refresh.">";
+echo "				</td>";
 echo "				</tr>";
 echo "			</table>";
 
@@ -164,6 +173,10 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	//filter by group, if defined
 	if ($_REQUEST['group'] != '' && substr_count($ext['call_group'], $_REQUEST['group']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
+
+	//filter by extension or name, if defined
+	if ($_REQUEST['extension_filter'] != '' && substr_count($ext['extension'], $_REQUEST['extension_filter']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
+	if ($_REQUEST['name_filter'] != '' && substr_count($ext['filter_name'], $_REQUEST['name_filter']) == 0 && !in_array($extension, $_SESSION['user']['extensions'])) { continue; }
 
 	//check if feature code being called
 	$format_number = (substr($ext['dest'], 0, 1) == '*') ? false : true;
@@ -223,7 +236,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 	}
 
 	//determine block style by state (if any)
-	$style = ($ext_state != '') ? "op_state_".$ext_state : null;
+	$style = ($ext_state != '') ? "op_ext op_state_".$ext_state : "op_ext";
 
 	//determine the call identifier passed on drop
 	if ($ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') { // transfer an outbound internal call
@@ -287,6 +300,17 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	//determine extension (user) status
 	$ext_status = (in_array($extension, $_SESSION['user']['extensions'])) ? $ext_user_status[$_SESSION['user_uuid']] : $ext_user_status[$ext['user_uuid']];
+	//determin extension register status
+	$extension_number = $extension.'@'.$_SESSION['domain_name'];
+		$found_count = 0;
+					if (is_array($registrations)) {
+					foreach ($registrations as $array) {
+						if ($extension_number == $array['user']) {
+							$found_count++;
+						}
+					}
+				}
+	if ($found_count > 0) {
 	switch ($ext_status) {
 		case "Available" :
 			$status_icon = "available";
@@ -307,10 +331,19 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		default :
 			$status_icon = "logged_out";
 			$status_hover = $text['label-status_logged_out_or_unknown'];
+		}
+	} else {
+		switch ($ext_status) {
+		default :
+			$status_icon = "logged_out";
+			$status_hover = $text['label-status_not_reg'];
+			$style = "off_ext";
+		}
 	}
+	unset($extension_number, $found_count, $array);
 
-	$block .= "<div id='".escape($extension)."' class='op_ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
-	$block .= "<table class='op_ext ".$style."'>";
+	$block .= "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+	$block .= "<table class='".$style."'>";
 	$block .= "	<tr>";
 	$block .= "		<td class='op_ext_icon'>";
 	$block .= "			<span name='".escape($extension)."'>"; // DRAG FROM
