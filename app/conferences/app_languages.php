@@ -43,8 +43,8 @@ $text['title-conference']['ru-ru'] = "Конференции";
 $text['title-conference']['sv-se'] = "Konferenser";
 $text['title-conference']['uk-ua'] = "";
 
-$text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
-$text['description']['en-gb'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
+$text['description']['en-us'] = "Conference is used to setup conference rooms with a name, description, and optional pin number.";
+$text['description']['en-gb'] = "Conference is used to setup conference rooms with a name, description, and optional pin number.";
 $text['description']['ar-eg'] = "";
 $text['description']['de-at'] = "Konferenzen wird verwendet, um Konferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
 $text['description']['de-ch'] = "Konferenzen wird verwendet, um Konferenzräume mit einem Namen, Beschreibung und optionaler PIN zu erstellen."; //copied from de-de
