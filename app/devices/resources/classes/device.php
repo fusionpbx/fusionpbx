@@ -175,6 +175,9 @@ include "root.php";
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
 					}
+					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
+                                                return "digium";
+                                        }
 					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
 						return "grandstream";
 					}
