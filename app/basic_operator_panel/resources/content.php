@@ -235,8 +235,23 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		unset($ext_state, $dir_icon, $call_name, $call_number);
 	}
 
-	//determine block style by state (if any)
+	//determin extension register status
+	$extension_number = $extension.'@'.$_SESSION['domain_name'];
+		$found_count = 0;
+					if (is_array($registrations)) {
+					foreach ($registrations as $array) {
+						if ($extension_number == $array['user']) {
+							$found_count++;
+						}
+					}
+				}
+	if ($found_count > 0) {	
+	//determine block style by state (if any) and register status
 	$style = ($ext_state != '') ? "op_ext op_state_".$ext_state : "op_ext";
+	} else {
+	$style = "off_ext";	
+	}
+	unset($extension_number, $found_count, $array);
 
 	//determine the call identifier passed on drop
 	if ($ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') { // transfer an outbound internal call
@@ -300,17 +315,6 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	//determine extension (user) status
 	$ext_status = (in_array($extension, $_SESSION['user']['extensions'])) ? $ext_user_status[$_SESSION['user_uuid']] : $ext_user_status[$ext['user_uuid']];
-	//determin extension register status
-	$extension_number = $extension.'@'.$_SESSION['domain_name'];
-		$found_count = 0;
-					if (is_array($registrations)) {
-					foreach ($registrations as $array) {
-						if ($extension_number == $array['user']) {
-							$found_count++;
-						}
-					}
-				}
-	if ($found_count > 0) {
 	switch ($ext_status) {
 		case "Available" :
 			$status_icon = "available";
@@ -332,15 +336,6 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			$status_icon = "logged_out";
 			$status_hover = $text['label-status_logged_out_or_unknown'];
 		}
-	} else {
-		switch ($ext_status) {
-		default :
-			$status_icon = "logged_out";
-			$status_hover = $text['label-status_not_reg'];
-			$style = "off_ext";
-		}
-	}
-	unset($extension_number, $found_count, $array);
 
 	$block .= "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 	$block .= "<table class='".$style."'>";
