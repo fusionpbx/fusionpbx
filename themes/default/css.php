@@ -1951,6 +1951,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 
 	div.off_ext {
+		position: relative;
 		float: left;
 		width: 235px;
 		margin: 0px 8px 8px 0px;
@@ -1959,11 +1960,28 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
+		-webkit-box-shadow: 0 0 3px #e5e9f0;
+		-moz-box-shadow: 0 0 3px #e5e9f0;
+		box-shadow: 0 0 3px #e5e9f0;
 		border-width: 1px 3px;
 		border-color: #b9c5d8 #c5d1e5;
 		background-color: #e5eaf5;
 		cursor: not-allowed;
-		opacity: 0.6;
+		}
+		
+		div.off_ext:after {
+			position: absolute;
+			content: "";
+			z-index: 10;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			border-radius: 5px;
+			display: block;
+			height: 100%;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(255, 255, 255, 0.5);
 		}
 
 	div.op_state_active {
@@ -1978,19 +1996,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-color: #41b9eb;
 		}
 
-	table.op_ext {
-		width: 100%;
-		height: 70px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		background-color: #e5eaf5;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		}
-	
-	table.off_ext {
+	table.op_ext, table.off_ext {
 		width: 100%;
 		height: 70px;
 		-moz-border-radius: 5px;
