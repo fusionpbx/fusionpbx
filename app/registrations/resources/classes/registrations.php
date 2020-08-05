@@ -170,13 +170,11 @@ if (!class_exists('registrations')) {
 										}
 
 									//remove unrelated domains
-										if (count($_SESSION["domains"]) > 1) {
-											if (!permission_exists('registration_all') || $this->show != 'all') {
-												if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
-												else if ($user_array[1] == $_SESSION['domain_name']) {}
-												else {
-													unset($registrations[$id]);
-												}
+										if (!permission_exists('registration_all') || $this->show != 'all') {
+											if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
+											else if ($user_array[1] == $_SESSION['domain_name']) {}
+											else {
+												unset($registrations[$id]);
 											}
 										}
 
