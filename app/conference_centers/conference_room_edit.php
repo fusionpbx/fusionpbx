@@ -130,6 +130,9 @@
 //record announcment
 	if ($record == "true") {
 		//prepare the values
+		/* NOTE: /ivr/ivr-recording_started.wav is not a common recording,
+		should be /conference/conf-recording_started.wav,
+		leaving callie as default */
 			$default_language = 'en';
 			$default_dialect = 'us';
 			$default_voice = 'callie';

@@ -141,6 +141,7 @@
 
    <!-- Sound -->
    <!-- Sets the sound directory. -->
-   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" category="Sound" enabled="true" uuid="693e0d9a-dde0-4d63-80e2-5255c2dc726e"/>
+   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/$${default_language}/$${default_dialect}/$${default_voice}" category="Sound" enabled="true" uuid="693e0d9a-dde0-4d63-80e2-5255c2dc726e"/>
+   <X-PRE-PROCESS cmd="set" data="sound_prefix_enforced=false" category="Sound" enabled="true" uuid="db004e07-c04c-421d-a525-a8e84efbe1af"/>
 
 </include>
