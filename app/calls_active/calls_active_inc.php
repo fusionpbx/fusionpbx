@@ -66,7 +66,7 @@
 	if (isset($results["rows"])) {
 		foreach ($results["rows"] as &$row) {
 			//get the domain
-				if (strlen($row['context']) > 0 and $row['context'] != "public") {
+				if (strlen($row['context']) > 0 && $row['context'] != "public" && $row['context'] != "default") {
 					if (substr_count($row['context'], '@') > 0) {
 						$context_array = explode('@', $row['context']);
 						$row['domain_name'] = $context_array[1];
@@ -77,7 +77,7 @@
 				}
 				else if (substr_count($row['presence_id'], '@') > 0) {
 					$presence_id_array = explode('@', $row['presence_id']);
-					$row['domain_name'] = $presence_id_array[1].' '.__line__.' '.$row['presence_id'];
+					$row['domain_name'] = $presence_id_array[1];
 				}
 			//add the row to the array
 				if (($show == 'all' && permission_exists('call_active_all'))) {
