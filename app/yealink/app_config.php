@@ -452,7 +452,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ip_address_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e731d65f-132b-49a1-9f20-39ecd1e70b54";
