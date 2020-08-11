@@ -421,10 +421,10 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
 					//get break down the date to year, month and day
-						$tmp_time = strtotime($start_stamp);
-						$tmp_year = date("Y", $tmp_time);
-						$tmp_month = date("M", $tmp_time);
-						$tmp_day = date("d", $tmp_time);
+						$start_time = strtotime($start_stamp);
+						$start_year = date("Y", $start_time);
+						$start_month = date("M", $start_time);
+						$start_day = date("d", $start_time);
 
 					//get the domain values from the xml
 						$domain_name = urldecode($xml->variables->domain_name);
@@ -721,11 +721,7 @@ if (!class_exists('xml_cdr')) {
 
 						if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
 							if (strlen($uuid) > 0) {
-								$tmp_time = strtotime($start_stamp);
-								$tmp_year = date("Y", $tmp_time);
-								$tmp_month = date("M", $tmp_time);
-								$tmp_day = date("d", $tmp_time);
-								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 								if(!file_exists($tmp_dir)) {
 									event_socket_mkdir($tmp_dir);
 								}
