@@ -82,7 +82,7 @@ if (is_array($_GET) && @sizeof($_GET) != 0) {
 		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (is_array($result) && @sizeof($result) != 0) {
-			$e = 0;
+			$e = 1;
 			foreach ($result as &$row) {
 				$vcard->data['email'.$e] = $row["email_address"];
 				if ($e++ == 2) { break; } //limit to 2 rows
