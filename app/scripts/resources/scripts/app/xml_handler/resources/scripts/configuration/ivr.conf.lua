@@ -103,8 +103,8 @@
 					ivr_menu_tts_voice = row["ivr_menu_tts_voice"];
 					ivr_menu_confirm_attempts = row["ivr_menu_confirm_attempts"];
 					ivr_menu_timeout = row["ivr_menu_timeout"];
-					--ivr_menu_exit_app = row["ivr_menu_exit_app"];
-					--ivr_menu_exit_data = row["ivr_menu_exit_data"];
+					ivr_menu_exit_app = row["ivr_menu_exit_app"];
+					ivr_menu_exit_data = row["ivr_menu_exit_data"];
 					ivr_menu_inter_digit_timeout = row["ivr_menu_inter_digit_timeout"];
 					ivr_menu_max_failures = row["ivr_menu_max_failures"];
 					ivr_menu_max_timeouts = row["ivr_menu_max_timeouts"];
@@ -252,6 +252,8 @@
 					table.insert(xml, [[				max-failures="]]..ivr_menu_max_failures..[[" ]]);
 					table.insert(xml, [[				max-timeouts="]]..ivr_menu_max_timeouts..[[" ]]);
 					table.insert(xml, [[				digit-len="]]..ivr_menu_digit_len..[[" ]]);
+					table.insert(xml, [[				ivr_menu_exit_app="]]..ivr_menu_exit_app..[[" ]]);
+					table.insert(xml, [[				ivr_menu_exit_data="]]..ivr_menu_exit_data..[[" ]]);
 					table.insert(xml, [[				>]]);
 
 				--get the ivr menu options
@@ -271,8 +273,10 @@
 				--direct dial
 					if (ivr_menu_direct_dial == "true") then
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="direct dial"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial"/>\n]]);
+						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
+						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
+						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${ivr_max_failures} == ]]..ivr_menu_max_failures..[[ ? ]]..ivr_menu_exit_data..[[)}" description="max fail transfer"/>\n]]);
+						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
 					end
 
 				--close the extension tag if it was left open
