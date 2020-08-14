@@ -428,9 +428,6 @@
 				$obj->delete_destinations($ring_group_destinations_delete);
 			}
 
-		//save the xml
-			save_dialplan_xml();
-
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
