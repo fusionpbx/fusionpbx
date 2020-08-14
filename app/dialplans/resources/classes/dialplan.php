@@ -23,11 +23,11 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the dialplan class
 	if (!class_exists('dialplan')) {
 		class dialplan {
+
 			//variables
 			public $result;
 			public $domain_uuid;
