@@ -136,9 +136,6 @@ if (!class_exists('conferences')) {
 									$p->delete('dialplan_detail_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -224,9 +221,6 @@ if (!class_exists('conferences')) {
 
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -362,9 +356,6 @@ if (!class_exists('conferences')) {
 								//revoke temporary permissions
 									$p->delete('conference_user_add', 'temp');
 									$p->delete('dialplan_add', 'temp');
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
