@@ -29,6 +29,8 @@
     <mwi_dialtone perm="">stutter</mwi_dialtone>
     <enable_rport_rfc3581 perm="RW">on</enable_rport_rfc3581>
     <privacy_in perm="">off</privacy_in>
+    <quick_transfer perm="">blind</quick_transfer>
+    <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">auto_update</update_policy>
     <setting_server perm="RW">https://{if isset($http_auth_enabled) && $http_auth_enabled == true}{$http_auth_username}:{$http_auth_password}@{/if}{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
