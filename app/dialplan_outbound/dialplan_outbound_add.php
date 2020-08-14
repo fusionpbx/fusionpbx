@@ -703,9 +703,6 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$dialplan_context);
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//redirect the browser
 			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
