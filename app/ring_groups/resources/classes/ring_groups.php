@@ -154,9 +154,6 @@ if (!class_exists('ring_groups')) {
 									$p->delete('dialplan_delete', 'temp');
 									$p->delete('dialplan_detail_delete', 'temp');
 
-								//save the xml
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -239,9 +236,6 @@ if (!class_exists('ring_groups')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
-
-								//save the xml
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -328,9 +322,6 @@ if (!class_exists('ring_groups')) {
 
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
-
-								//save the xml
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -497,9 +488,6 @@ if (!class_exists('ring_groups')) {
 									$p->delete('ring_group_user_add', 'temp');
 									$p->delete('ring_group_destination_add', 'temp');
 									$p->delete("dialplan_add", "temp");
-
-								//save the xml
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
