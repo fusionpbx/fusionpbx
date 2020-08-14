@@ -375,9 +375,6 @@ if (!class_exists('conference_centers')) {
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["context"]);
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -601,9 +598,6 @@ if (!class_exists('conference_centers')) {
 
 								//revoke temporary permissions
 									$p->delete("dialplan_edit", "temp");
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
