@@ -29,28 +29,28 @@
 			global $domain_uuid;
 
 			//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
-				if (count($_SESSION["domains"]) > 1) {
-					$v_needle = 'v_'.$_SESSION['domain_name'].'_';
-				}
-				else {
-					$v_needle = 'v_';
-				}
-				if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
-					$files = Array();
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($dir . "/" . $file)) {
-								//this is a directory
-							} else {
-								if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-									//echo "file: $file<br />\n";
-									unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
-								}
+			if (count($_SESSION["domains"]) > 1) {
+				$v_needle = 'v_'.$_SESSION['domain_name'].'_';
+			}
+			else {
+				$v_needle = 'v_';
+			}
+			if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
+				$files = Array();
+				while($file = readdir($dh)) {
+					if($file != "." && $file != ".." && $file[0] != '.') {
+						if(is_dir($dir . "/" . $file)) {
+							//this is a directory
+						} else {
+							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+								//echo "file: $file<br />\n";
+								unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
 							}
 						}
 					}
-					closedir($dh);
 				}
+				closedir($dh);
+			}
 
 			$sql = "select * from v_ivr_menus ";
 			$sql .= " where domain_uuid = :domain_uuid ";
@@ -181,10 +181,8 @@
 			}
 			unset($result, $row);
 
-			save_dialplan_xml();
-
 			//apply settings
-				$_SESSION["reload_xml"] = true;
+			$_SESSION["reload_xml"] = true;
 		}
 	}
 
