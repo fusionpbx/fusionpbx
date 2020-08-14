@@ -272,9 +272,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 	}
 
-	//synchronize the xml config
-		save_dialplan_xml();
-
 	//clear the cache
 		$cache = new cache;
 		$cache->delete("dialplan:".$_SESSION["context"]);
