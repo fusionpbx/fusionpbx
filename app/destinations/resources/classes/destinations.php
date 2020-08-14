@@ -629,9 +629,6 @@ if (!class_exists('destinations')) {
 									$p->delete('dialplan_delete', 'temp');
 									$p->delete('dialplan_detail_delete', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									if (is_array($destination_contexts) && @sizeof($destination_contexts) != 0) {
 										$destination_contexts = array_unique($destination_contexts);
