@@ -687,9 +687,6 @@
 					$dialplans->uuid = $dialplan_uuid;
 					$dialplans->xml();
 
-				//synchronize the xml config
-					save_dialplan_xml();
-
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$destination_context);
