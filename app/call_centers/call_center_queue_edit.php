@@ -364,9 +364,6 @@
 		//debug info
 			//echo "<pre>". print_r($message, true) ."</pre>"; exit;
 
-		//save the xml
-			save_dialplan_xml();
-
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
