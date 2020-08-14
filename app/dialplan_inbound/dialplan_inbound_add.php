@@ -426,9 +426,6 @@
 			$cache = new cache;
 			$cache->delete("dialplan:public");
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//redirect message
 			message::add($text['confirm-update-complete']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4");
