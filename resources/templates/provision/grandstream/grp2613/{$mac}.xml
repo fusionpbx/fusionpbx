@@ -5177,7 +5177,7 @@
     <!-- # Enable transfer via non-Transfer MPK. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P22162>0</P22162>
+    <P22162>{$grandstream_blind_xfer_blf}</P22162>
 
     <!-- # Show VPK Icon. 0 - No, 1 - Yes. Default is 0  -->
     <!-- # Number: 0, 1 -->
