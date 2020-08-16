@@ -3533,11 +3533,19 @@ Account 5 Codec Settings
 
 <!-- Headset TX Gain (dB). 0 - 0, 1 - -6, 2 - +6. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
 <P1301>0</P1301>
+{/if}
 
 <!-- Headset RX Gain (dB). 0 - 0, 1 - -6, 2 - +6. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
 <P1302>0</P1302>
+{/if}
 
 <!-- Headset Type. 0 - Normal Headset, 1 - Plantronics EHS. Default value is 0 -->
 <!-- Number: 0, 1 -->
