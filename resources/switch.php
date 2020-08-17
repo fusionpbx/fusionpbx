@@ -624,32 +624,6 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 		$p->delete('dialplan_add', 'temp');
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break = null, $dialplan_detail_inline = null) {
-	//build insert array
-		$dialplan_detail_uuid = uuid();
-		$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-		$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
-		$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
-		$array['dialplan_details'][0]['dialplan_detail_tag'] = $dialplan_detail_tag;
-		$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($dialplan_detail_group) != 0 ? $dialplan_detail_group : null;
-		$array['dialplan_details'][0]['dialplan_detail_order'] = $dialplan_detail_order;
-		$array['dialplan_details'][0]['dialplan_detail_type'] = $dialplan_detail_type;
-		$array['dialplan_details'][0]['dialplan_detail_data'] = $dialplan_detail_data;
-		$array['dialplan_details'][0]['dialplan_detail_break'] = strlen($dialplan_detail_break) != 0 ? $dialplan_detail_break : null;
-		$array['dialplan_details'][0]['dialplan_detail_inline'] = strlen($dialplan_detail_inline) != 0 ? $dialplan_detail_inline : null;
-	//grant temporary permissions
-		$p = new permissions;
-		$p->add('dialplan_detail_add', 'temp');
-	//execute insert
-		$database = new database;
-		$database->app_name = 'switch-function-dialplan_detail_add';
-		$database->app_uuid = '53ea51fc-a7ef-4726-9482-383984dc7747';
-		$database->save($array);
-		unset($array);
-	//revoke temporary permissions
-		$p->delete('dialplan_detail_add', 'temp');
-}
-
 if (!function_exists('phone_letter_to_number')) {
 	function phone_letter_to_number($tmp) {
 		$tmp = strtolower($tmp);
