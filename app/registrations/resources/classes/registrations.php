@@ -86,7 +86,7 @@ if (!class_exists('registrations')) {
 					foreach ($sip_profiles as $field) {
 
 						//get sofia status profile information including registrations
-							$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
+							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
 							$xml_response = trim(event_socket_request($fp, $cmd));
 							if (function_exists('iconv')) { $xml_response = iconv("utf-8", "utf-8//ignore", $xml_response); }
 							$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
