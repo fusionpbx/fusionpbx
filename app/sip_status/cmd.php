@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,43 +40,75 @@
 
 //set the variables
 	$profile = $_GET['profile'];
-	$command = $_GET['cmd'];
+	$action = $_GET['action'];
+	$gateway = $_GET['gateway'];
+
+//validate the sip profile name
+	$sql = "select sip_profile_name from v_sip_profiles ";
+	$sql .= "where sip_profile_name = :profile_name ";
+	$parameters['profile_name'] = $profile;
+	$database = new database;
+	$profile_name = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
+
+//validate the gateway
+	if (is_uuid($_GET['gateway'])) {
+		$gateway_name = $_GET['gateway'];
+	}
+
+//build the commands
+	switch ($action) {
+		case "killgw":
+			$command = "sofia profile '".$profile_name."' killgw ".$gateway_name;
+			break;
+		case "start":
+			$command = "sofia profile '".$profile_name."' start";
+			break;
+		case "stop":
+			$command = "sofia profile '".$profile_name."' stop";
+			break;
+		case "restart":
+			$command = "sofia profile '".$profile_name."' restart";
+			break;
+		case "flush_inbound_reg":
+			$command = "sofia profile '".$profile_name."' flush_inbound_reg";
+			break;
+		case "rescan":
+			$command = "sofia profile '".$profile_name."' rescan";
+			break;
+		case "cache-flush":
+			$cache = new cache;
+			$response = $cache->flush();
+			message::add($response, 'alert');
+			break;
+		case "reloadxml":
+			$command = "reloadxml";
+			break;
+		case "reloadacl":
+			$command = "reloadacl";
+			break;
+		default:
+			unset($action);
+	}
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
-			if ($command == "api reloadxml") {
-				//reloadxml
-					message::add(rtrim(event_socket_request($fp, $command)), 'alert');
-					unset($command);
-
+			if (isset($command)) {
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
-				//rescan the external profile to look for new or stopped gateways
-					$command = 'api sofia profile external rescan';
-					message::add(rtrim(event_socket_request($fp, $command)), 'alert');
-					unset($command);
-			}
-
-		//cache flush
-			if ($command == "api cache flush") {
-				$cache = new cache;
-				$response = $cache->flush();
-
-				message::add($response, 'alert');
-			}
-
-		//reloadacl
-			if ($command == "api reloadacl") {
-				message::add(rtrim(event_socket_request($fp, $command)), 'alert');
-				unset($command);
+				//run the command
+					$result = rtrim(event_socket_request($fp, 'api '.$command));
 			}
 
 		//sofia profile
-			if (substr($command, 0, 17) == "api sofia profile") {
-				message::add(($profile ? '<strong>'.$profile.'</strong>: ' : null).rtrim(event_socket_request($fp, $command)), 'alert', 3000);
+			if (isset($profile) && strlen($profile)) {
+				message::add('<strong>'.$profile.'</strong> '.$result, 'alert', 3000);
+			}
+			else {
+				message::add($result, 'alert');
 			}
 
 		//close the connection
