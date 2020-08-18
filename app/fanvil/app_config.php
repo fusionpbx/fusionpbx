@@ -166,7 +166,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "45";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Backlight inactivity timer in seconds to dim the display. (0 - 120)";
-
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a5194459-9f2d-4f3c-bdf1-d59b0989de84";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_default_ringtone";
