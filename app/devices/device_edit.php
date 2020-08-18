@@ -1063,7 +1063,7 @@
 
 				if (permission_exists('device_line_server_address_secondary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					if (is_uuid($_SESSION['provision']['server_address_secondary']['uuid'])) {
+					if (isset($_SESSION['provision']['server_address_secondary']['text'])) {
 						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
 					}
 					else {
@@ -1079,7 +1079,7 @@
 
 				if (permission_exists('device_line_outbound_proxy_primary')) {
 					echo "			<td align='left'>\n";
-					if (is_uuid($_SESSION['provision']['outbound_proxy_primary']['uuid'])) {
+					if (isset($_SESSION['provision']['outbound_proxy_primary']['text'])) {
 						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
 					}
 					else {
@@ -1095,7 +1095,7 @@
 				
 				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
-					if (is_uuid($_SESSION['provision']['outbound_proxy_secondary']['uuid'])) {
+					if (isset($_SESSION['provision']['outbound_proxy_secondary']['text'])) {
 						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					}
 					else {

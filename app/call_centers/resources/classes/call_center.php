@@ -265,9 +265,6 @@
 				//revoke temporary permissions
 					$p->delete('call_center_queue_edit', 'temp');
 
-				//synchronize the xml config
-					save_dialplan_xml();
-
 				//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION['context']);
@@ -373,7 +370,6 @@
 										remove_config_from_cache('configuration:callcenter.conf');
 
 									//synchronize configuration
-										save_dialplan_xml();
 										save_call_center_xml();
 
 									//apply settings reminder
@@ -590,9 +586,6 @@
 									//revoke temporary permissions
 										$p->delete('call_center_tier_add', 'temp');
 										$p->delete('dialplan_add', 'temp');
-
-									//save the xml
-										save_dialplan_xml();
 
 									//apply settings reminder
 										$_SESSION["reload_xml"] = true;

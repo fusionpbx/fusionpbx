@@ -769,11 +769,6 @@ if (!class_exists('domains')) {
 						$domains_processed++;
 				}
 
-			//synchronize the dialplan
-				if (function_exists('save_dialplan_xml')) {
-					save_dialplan_xml();
-				}
-
 			//update config.lua
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
 					$obj = new scripts;
