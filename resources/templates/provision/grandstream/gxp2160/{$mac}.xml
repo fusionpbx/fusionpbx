@@ -6440,7 +6440,7 @@
     <!-- # String -->
     <!-- # Mandatory -->
 {if isset($grandstream_display_language)}
-    <P1362>{$grandstream_display_languaje}</P1362>
+    <P1362>{$grandstream_display_language}</P1362>
 {else}
     <P1362>Auto</P1362>
 {/if}
