@@ -6439,7 +6439,11 @@
     <!-- # gxp - Downloaded Language -->
     <!-- # String -->
     <!-- # Mandatory -->
+{if isset($grandstream_display_language)}
+    <P1362>{$grandstream_display_language}</P1362>
+{else}
     <P1362>Auto</P1362>
+{/if}
 
     <!-- # Default Input Selection. Default is Multi-Tap. -->
     <!-- # 0 - Multi-Tap, 1 - Shiftable -->
