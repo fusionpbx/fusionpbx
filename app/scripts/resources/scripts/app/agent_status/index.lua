@@ -29,6 +29,7 @@
 --get the session variables
 	if (session:ready()) then
 		session:answer();
+		session:sleep('1000');
 	end
 
 --get the session variables
