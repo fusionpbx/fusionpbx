@@ -272,7 +272,7 @@
 						--answer the session
 							if (session ~= nil and session:ready()) then
 								session:answer();
-								session:execute("sleep", "1000");
+								session:sleep('1000');
 							end
 
 						--unset bind meta app
