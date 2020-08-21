@@ -171,6 +171,7 @@
 					if (is_array($gateways) && @sizeof($gateways) != 0) {
 						foreach($gateways as $field) {
 							if ($field["gateway_uuid"] == strtolower($row->name)) {
+								$gateway_uuid = $field["gateway_uuid"];
 								$gateway_name = $field["gateway"];
 								$gateway_domain_name = $field["domain_name"];
 								break;
@@ -197,7 +198,7 @@
 					echo "	<td class='hide-sm-dn'>".escape($row->to)."</td>\n";
 					echo "	<td class='no-wrap'>".escape($row->state)."</td>\n";
 					echo "	<td class='center no-link'>";
-					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode(($gateway_name ? $gateway_name : $row->name))."&action=killgw"]);
+					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode(($gateway_uuid ? $gateway_uuid : $row->name))."&action=killgw"]);
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
