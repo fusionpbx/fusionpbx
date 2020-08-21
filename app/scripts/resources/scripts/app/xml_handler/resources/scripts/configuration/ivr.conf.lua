@@ -118,6 +118,7 @@
 					local settings = Settings.new(dbh, domain_name, domain_uuid)
 					local storage_type = settings:get('recordings', 'storage_type', 'text')
 					local storage_path = settings:get('recordings', 'storage_path', 'text')
+					local direct_dial_app = settings:get('ivr_menu', 'direct_dial_app', 'text') or 'transfer';
 					if (storage_path ~= nil) then
 						storage_path = storage_path:gsub("${domain_name}", domain_name)
 						storage_path = storage_path:gsub("${domain_uuid}", domain_uuid)
@@ -276,7 +277,11 @@
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${ivr_max_failures} == ]]..ivr_menu_max_failures..[[ ? ]]..ivr_menu_exit_data..[[)}" description="max fail transfer"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
+						if (direct_dial_app == 'loopback') then
+							table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="bridge ${cond(${user_exists} == true ? loopback/$1/]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
+						else
+							table.insert(xml, [[					<entry action="menu-exec-app" digits="/^(\d{2,11})$/" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
+						end
 					end
 
 				--close the extension tag if it was left open
