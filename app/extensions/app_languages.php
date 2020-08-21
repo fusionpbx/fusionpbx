@@ -22,6 +22,27 @@ $text['title-extensions']['ru-ru'] = "";
 $text['title-extensions']['sv-se'] = "Anknytningar";
 $text['title-extensions']['uk-ua'] = "Розширення";
 
+$text['title-loopback']['en-us'] = "Extensions (loopback)";
+$text['title-loopback']['en-gb'] = "Extensions (loopback)";
+$text['title-loopback']['ar-eg'] = "الأرقام الداخلية";
+$text['title-loopback']['de-at'] = "Nebenstellen"; //copied from de-de
+$text['title-loopback']['de-ch'] = "Nebenstellen"; //copied from de-de
+$text['title-loopback']['de-de'] = "Nebenstellen";
+$text['title-loopback']['es-cl'] = "Extensiones";
+$text['title-loopback']['es-mx'] = "Extensiones"; //copied from es-cl
+$text['title-loopback']['fr-ca'] = "Extensions"; //copied from fr-fr
+$text['title-loopback']['fr-fr'] = "Extensions";
+$text['title-loopback']['he-il'] = "שלוחות";
+$text['title-loopback']['it-it'] = "Interni";
+$text['title-loopback']['nl-nl'] = "Toestellen";
+$text['title-loopback']['pl-pl'] = "Numery wewnętrzne";
+$text['title-loopback']['pt-br'] = "Ramais"; //copied from pt-pt
+$text['title-loopback']['pt-pt'] = "Extensões";
+$text['title-loopback']['ro-ro'] = "";
+$text['title-loopback']['ru-ru'] = "";
+$text['title-loopback']['sv-se'] = "Anknytningar";
+$text['title-loopback']['uk-ua'] = "Розширення";
+
 $text['title-extension_import']['en-us'] = "Extension Import";
 $text['title-extension_import']['en-gb'] = "Extension Import";
 $text['title-extension_import']['ar-eg'] = "";
