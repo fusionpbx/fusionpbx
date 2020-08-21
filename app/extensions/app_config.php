@@ -47,7 +47,7 @@
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "loopback";
-		$apps[$x]['destinations'][$y]['name'] = "extensions";
+		$apps[$x]['destinations'][$y]['name'] = "loopback_extensions";
 		$apps[$x]['destinations'][$y]['sql'] = "select extension, number_alias, user_context as context, description from v_extensions ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
@@ -55,7 +55,8 @@
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
 		$apps[$x]['destinations'][$y]['field']['description'] = "description";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}/\${context}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "loopback/\${destination}/\${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description} (loopback)";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_groups";
@@ -206,6 +207,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "loopback_extension_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
