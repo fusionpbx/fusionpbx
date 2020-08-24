@@ -34,17 +34,17 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
-		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_context as context, destination_description as description from v_destinations ";
+		$apps[$x]['destinations'][$y]['sql'] = "select destination_uuid, destination_number, destination_context, destination_description from v_destinations ";
 		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
-		$apps[$x]['destinations'][$y]['field']['uuid'] = "destination_uuid";
-		$apps[$x]['destinations'][$y]['field']['context'] = "destination_context";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "destination_number";
-		$apps[$x]['destinations'][$y]['field']['description'] = "destination_description";
-		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['field']['destination_uuid'] = "destination_uuid";
+		$apps[$x]['destinations'][$y]['field']['destination_number'] = "destination_number";
+		$apps[$x]['destinations'][$y]['field']['destination_context'] = "destination_context";
+		$apps[$x]['destinations'][$y]['field']['destination_description'] = "destination_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination_number} XML \${destination_context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination_number} XML \${destination_context}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination_number}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
 
 	//permission details
 		$y=0;
