@@ -135,7 +135,7 @@
 			end
 
 		--send a login or logout to mod_callcenter
-			cmd = "callcenter_config agent set status "..agent_uuid.." '"..status.."'";
+			cmd = "sched_api +5 none callcenter_config agent set status "..agent_uuid.." '"..status.."'";
 			freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
 			result = api:executeString(cmd);
 
