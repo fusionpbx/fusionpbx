@@ -37,7 +37,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "UTC-5";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone name example United States-Eastern Time";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time zone name example: UTC-5 for US Eastern time zone";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "54280025-2cc0-429a-b2f4-5e8e2426ed33";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
