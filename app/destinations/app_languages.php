@@ -463,6 +463,27 @@ $text['label-destination_country_code']['ru-ru'] = "";
 $text['label-destination_country_code']['sv-se'] = "";
 $text['label-destination_country_code']['uk-ua'] = "";
 
+$text['label-destination_prefix']['en-us'] = "Prefix";
+$text['label-destination_prefix']['en-gb'] = "Prefix";
+$text['label-destination_prefix']['ar-eg'] = "";
+$text['label-destination_prefix']['de-at'] = ""; //copied from de-de
+$text['label-destination_prefix']['de-ch'] = ""; //copied from de-de
+$text['label-destination_prefix']['de-de'] = "";
+$text['label-destination_prefix']['es-cl'] = "";
+$text['label-destination_prefix']['es-mx'] = ""; //copied from es-cl
+$text['label-destination_prefix']['fr-ca'] = "Préfixe"; //copied from fr-fr
+$text['label-destination_prefix']['fr-fr'] = "Préfixe";
+$text['label-destination_prefix']['he-il'] = "";
+$text['label-destination_prefix']['it-it'] = "";
+$text['label-destination_prefix']['nl-nl'] = "Voorloop";
+$text['label-destination_prefix']['pl-pl'] = "";
+$text['label-destination_prefix']['pt-br'] = "Prefixo"; //copied from pt-pt
+$text['label-destination_prefix']['pt-pt'] = "";
+$text['label-destination_prefix']['ro-ro'] = "";
+$text['label-destination_prefix']['ru-ru'] = "";
+$text['label-destination_prefix']['sv-se'] = "";
+$text['label-destination_prefix']['uk-ua'] = "";
+
 $text['label-destination_trunk_prefix']['en-us'] = "Trunk Prefix";
 $text['label-destination_trunk_prefix']['en-gb'] = "Trunk Prefix";
 $text['label-destination_trunk_prefix']['ar-eg'] = "";
