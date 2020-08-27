@@ -125,7 +125,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3141e4ad-a892-4a51-8789-aa27be54ee94";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_method";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "multiple";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
