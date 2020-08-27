@@ -120,9 +120,7 @@
 				
 				--direct dial regex
 					direct_dial_digits = settings:get('ivr_menu', 'direct_dial_digits', 'text')
-					if (direct_dial_digits == nil or direct_dial == '') then
-						direct_dial_digits = '/^(\d{2,11})$/'
-					end
+
 				--storage path
 					local storage_type = settings:get('recordings', 'storage_type', 'text')
 					local storage_path = settings:get('recordings', 'storage_path', 'text')
