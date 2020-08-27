@@ -37,6 +37,15 @@
 		call_context = "public";
 	end
 
+--get the dialplan method
+	sql = "select default_setting_value from v_default_settings "
+	sql = sql .. "where default_setting_category = 'destinations' ";
+	sql = sql .. "and default_setting_subcategory = 'dialplan_method' ";
+	local row = dbh:first_row(sql, nil);
+	if (row) then
+		dialplan_method = row.default_setting_value;
+	end
+
 --set the defaults
 	if (dialplan_method == nil or dialplan_method == '') then
 		dialplan_method = "multiple";
