@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "5ec89622-b19c-3559-64f0-afde802ab139";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
@@ -80,9 +80,8 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_trunk_prefix";
-		$y++;;
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_area_code";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -100,7 +99,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
