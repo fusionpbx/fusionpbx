@@ -87,6 +87,8 @@
 			$destination_condition_field = trim($_POST["destination_condition_field"]);
 			$destination_number = trim($_POST["destination_number"]);
 			$destination_prefix = trim($_POST["destination_prefix"]);
+			$destination_trunk_prefix = trim($_POST["destination_trunk_prefix"]);
+			$destination_area_code = trim($_POST["destination_area_code"]);
 			$db_destination_number = trim($_POST["db_destination_number"]);
 			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
 			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
@@ -235,6 +237,12 @@
 						$database = new database;
 						$row = $database->select($sql, $parameters, 'row');
 						if (is_array($row) && @sizeof($row) != 0) {
+							if (!permission_exists('destination_trunk_prefix')) {
+								$destination_trunk_prefix = $row["destination_trunk_prefix"];
+							}
+							if (!permission_exists('destination_area_code')) {
+								$destination_area_code = $row["destination_area_code"];
+							}
 							if (!permission_exists('destination_number')) {
 								$destination_number = $row["destination_number"];
 								$destination_prefix = $row["destination_prefix"];
@@ -250,7 +258,7 @@
 					}
 
 				//convert the number to a regular expression
-					$destination_number_regex = string_to_regex($destination_number, $destination_prefix);
+					$destination_number_regex = string_to_regex($destination_area_code.$destination_number, $destination_prefix);
 
 				//if empty then get new uuid
 					if (!is_uuid($dialplan_uuid)) {
@@ -269,8 +277,8 @@
 					}
 					$dialplan["dialplan_uuid"] = $dialplan_uuid;
 					$dialplan["domain_uuid"] = $domain_uuid;
-					$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
-					$dialplan["dialplan_number"] = $destination_number;
+					$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_area_code.$destination_number);
+					$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 					$dialplan["dialplan_context"] = $destination_context;
 					$dialplan["dialplan_continue"] = "false";
 					$dialplan["dialplan_order"] = "100";
@@ -633,6 +641,12 @@
 						$array['destinations'][0]["destination_number_regex"] = $destination_number_regex;
 						$array['destinations'][0]["destination_prefix"] = $destination_prefix;
 					}
+					if (permission_exists('destination_trunk_prefix')) {
+						$array['destinations'][0]["destination_trunk_prefix"] = $destination_trunk_prefix;
+					}
+					if (permission_exists('destination_area_code')) {
+						$array['destinations'][0]["destination_area_code"] = $destination_area_code;
+					}
 					$array['destinations'][0]["destination_caller_id_name"] = $destination_caller_id_name;
 					$array['destinations'][0]["destination_caller_id_number"] = $destination_caller_id_number;
 					$array['destinations'][0]["destination_cid_name_prefix"] = $destination_cid_name_prefix;
@@ -747,6 +761,8 @@
 				$destination_number = $row["destination_number"];
 				$destination_condition_field = $row["destination_condition_field"];
 				$destination_prefix = $row["destination_prefix"];
+				$destination_trunk_prefix = $row["destination_trunk_prefix"];
+				$destination_area_code = $row["destination_area_code"];
 				$destination_caller_id_name = $row["destination_caller_id_name"];
 				$destination_caller_id_number = $row["destination_caller_id_number"];
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
@@ -952,12 +968,38 @@
 	if (permission_exists('destination_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-destination_prefix']."\n";
+		echo "	".$text['label-destination_country_code']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='destination_prefix' maxlength='32' value=\"".escape($destination_prefix)."\">\n";
 		echo "<br />\n";
-		echo $text['description-destination_prefix']."\n";
+		echo $text['description-destination_country_code']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('destination_trunk_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_trunk_prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_trunk_prefix' maxlength='32' value=\"".escape($destination_trunk_prefix)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_trunk_prefix']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('destination_area_code')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_area_code']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_area_code' maxlength='32' value=\"".escape($destination_area_code)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_area_code']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
