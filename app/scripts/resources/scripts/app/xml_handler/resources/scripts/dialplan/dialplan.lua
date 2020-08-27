@@ -32,16 +32,12 @@
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
 
---create a new settings object
-	local settings = Settings.new(dbh, domain_name, domain_uuid);
-
 --needed for cli-command xml_locate dialplan
 	if (call_context == nil) then
 		call_context = "public";
 	end
 
 --set the defaults
-	dialplan_method = settings:get('destinations', 'dialplan_method', 'text');
 	if (dialplan_method == nil or dialplan_method == '') then
 		dialplan_method = "multiple";
 	end
