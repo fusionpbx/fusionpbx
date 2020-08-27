@@ -59,8 +59,11 @@
 		local sql = "SELECT destination_number, destination_context ";
 		sql = sql .. "FROM v_destinations ";
 		sql = sql .. "WHERE ( ";
-		sql = sql .. "	destination_number = :destination_number ";
+		sql = sql .. "	destination_prefix || destination_area_code || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
 		sql = sql .. "	OR destination_prefix || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_area_code || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_number = :destination_number ";
 		sql = sql .. ") ";
 		sql = sql .. "AND destination_type = 'inbound' ";
 		sql = sql .. "AND destination_enabled = 'true' ";
