@@ -28,14 +28,22 @@
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
+--connect to the database
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
+--create a new settings object
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
+
 --needed for cli-command xml_locate dialplan
 	if (call_context == nil) then
 		call_context = "public";
 	end
 
 --set the defaults
-	if (context_type == nil) then
-		context_type = "multiple";
+	dialplan_method = settings:get('destinations', 'dialplan_method', 'text');
+	if (dialplan_method == nil or dialplan_method == '') then
+		dialplan_method = "multiple";
 	end
 	domain_name = 'global';
 
@@ -44,11 +52,11 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. context_type .. " key:" .. dialplan_cache_key .. "\n");
+	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_method .. " key:" .. dialplan_cache_key .. "\n");
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
-	if (context_name == 'public' and context_type == "single") then
+	if (context_name == 'public' and dialplan_method == "single") then
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
@@ -64,10 +72,6 @@
 
 --set the cache
 	if (not XML_STRING) then
-
-		--connect to the database
-			local Database = require "resources.functions.database";
-			dbh = Database.new('system');
 
 		--include json library
 			local json
@@ -89,16 +93,25 @@
 			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
 
 		--get the dialplan xml
-			if (context_name == 'public' and context_type == 'single') then
-				sql = "select d.domain_name, dialplan_xml from v_dialplans as p, v_domains as d ";
-				sql = sql .. "where ( ";
-				sql = sql .. "	p.dialplan_uuid in (select dialplan_uuid from v_destinations where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number)) ";
-				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid is null) ";
+			if (context_name == 'public' and dialplan_method == 'single') then
+				sql = "SELECT d.domain_name, dialplan_xml FROM v_dialplans AS p, v_domains AS d ";
+				sql = sql .. "WHERE ( ";
+				sql = sql .. "	p.dialplan_uuid IN ( ";
+				sql = sql .. "		SELECT dialplan_uuid FROM v_destinations "
+				sql = sql .. "		WHERE ( ";
+				sql = sql .. "			destination_prefix || destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_prefix || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_number = :destination_number ";
+				sql = sql .. "		) ";
+				sql = sql .. "	) ";
+				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid IS NULL) ";
 				sql = sql .. ") ";
-				sql = sql .. "and p.domain_uuid = d.domain_uuid ";
-				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
-				sql = sql .. "and p.dialplan_enabled = 'true' ";
-				sql = sql .. "order by p.dialplan_order asc ";
+				sql = sql .. "AND p.domain_uuid = d.domain_uuid ";
+				sql = sql .. "AND (p.hostname = :hostname OR p.hostname IS NULL) ";
+				sql = sql .. "AND p.dialplan_enabled = 'true' ";
+				sql = sql .. "ORDER BY p.dialplan_order ASC ";
 				local params = {destination_number = destination_number, hostname = hostname};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
