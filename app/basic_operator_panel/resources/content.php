@@ -189,11 +189,17 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		else if ($ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'outbound') {
 			$ext_state = 'active';
 		}
+		else if ($ext['callstate'] == 'HELD' && $ext['direction'] == 'outbound') {
+			$ext_state = 'held';
+		}
 		else if ($ext['callstate'] == 'RING_WAIT' && $ext['direction'] == 'outbound') {
 			$ext_state = 'ringing';
 		}
 		else if ($ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'inbound') {
 			$ext_state = 'active';
+		}
+		else if ($ext['callstate'] == 'HELD' && $ext['direction'] == 'inbound') {
+			$ext_state = 'held';
 		}
 		if (!$format_number) {
 			$call_name = 'System';
@@ -226,6 +232,12 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		}
 		else if ($ext['state'] == 'CS_EXCHANGE_MEDIA' && $ext['callstate'] == 'ACTIVE' && $ext['direction'] == 'outbound') {
 			$ext_state = 'active';
+		}
+		else if ($ext['state'] == 'CS_CONSUME_MEDIA' && $ext['callstate'] == 'HELD' && $ext['direction'] == 'outbound') {
+			$ext_state = 'held';
+		}
+		else if ($ext['state'] == 'CS_EXCHANGE_MEDIA' && $ext['callstate'] == 'HELD' && $ext['direction'] == 'outbound') {
+			$ext_state = 'held';
 		}
 		$dir_icon = 'inbound';
 		$call_name = $activity[$ext['cid_num']]['effective_caller_id_name'];
