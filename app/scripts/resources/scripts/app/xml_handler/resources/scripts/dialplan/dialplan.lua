@@ -98,7 +98,7 @@
 			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
 
 		--get the dialplan xml
-			if (context_name == 'public' and dialplan_method == 'single') then
+			if (context_name == 'public' and dialplan_mode == 'single') then
 				sql = "SELECT d.domain_name, dialplan_xml FROM v_dialplans AS p, v_domains AS d ";
 				sql = sql .. "WHERE ( ";
 				sql = sql .. "	p.dialplan_uuid IN ( ";
