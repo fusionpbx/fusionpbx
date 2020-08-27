@@ -37,13 +37,28 @@
 		call_context = "public";
 	end
 
---get the dialplan method
-	sql = "select default_setting_value from v_default_settings "
-	sql = sql .. "where default_setting_category = 'destinations' ";
-	sql = sql .. "and default_setting_subcategory = 'dialplan_mode' ";
-	local row = dbh:first_row(sql, nil);
-	if (row) then
-		dialplan_mode = row.default_setting_value;
+--get the dialplan mode from the cache
+	dialplan_mode_key = "dialplan:mode";
+	dialplan_mode, err = cache.get(dialplan_mode_key);
+
+--if not found in the cache then get it from the database
+	if (err == 'NOT FOUND') then
+		--get the mode from default settings
+		sql = "select default_setting_value from v_default_settings "
+		sql = sql .. "where default_setting_category = 'destinations' ";
+		sql = sql .. "and default_setting_subcategory = 'dialplan_mode' ";
+		local dialplan_mode = dbh:first_value(sql, nil);
+		local ok, err = cache.set(dialplan_mode_key, dialplan_mode, expire["dialplan"]);
+		
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_mode_key.." source: database mode: "..dialplan_mode);
+		end
+	else
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_mode_key.." source: cache mode: "..dialplan_mode);
+		end
 	end
 
 --set the defaults
@@ -71,7 +86,7 @@
 		if XML_STRING then
 			log.notice(dialplan_cache_key.." source: cache");
 		elseif err ~= 'NOT FOUND' then
-			log.notice("error get element from cache: " .. err);
+			log.notice("get element from the cache: " .. err);
 		end
 	end
 
