@@ -117,7 +117,7 @@
 
 				--set variables from settings
 					local settings = Settings.new(dbh, domain_name, domain_uuid)
-				
+
 				--direct dial regex
 					direct_dial_digits = settings:get('ivr_menu', 'direct_dial_digits', 'text')
 
