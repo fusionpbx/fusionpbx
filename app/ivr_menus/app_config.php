@@ -145,7 +145,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "direct_dial_digits";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/^(\d{2,11})$/";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "26984efd-2445-4ac9-b459-bb7bda4217c6";
