@@ -88,6 +88,7 @@
 			end
 
 			dbh:query(sql, params, function(row)
+
 				--set the variables
 					domain_uuid = row["domain_uuid"];
 					ivr_menu_uuid = row["ivr_menu_uuid"];
@@ -113,7 +114,6 @@
 					ivr_menu_ringback = row["ivr_menu_ringback"];
 					ivr_menu_cid_prefix = row["ivr_menu_cid_prefix"];
 					ivr_menu_description = row["ivr_menu_description"];
-
 
 				--set variables from settings
 					local settings = Settings.new(dbh, domain_name, domain_uuid)
