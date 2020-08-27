@@ -40,15 +40,15 @@
 --get the dialplan method
 	sql = "select default_setting_value from v_default_settings "
 	sql = sql .. "where default_setting_category = 'destinations' ";
-	sql = sql .. "and default_setting_subcategory = 'dialplan_method' ";
+	sql = sql .. "and default_setting_subcategory = 'dialplan_mode' ";
 	local row = dbh:first_row(sql, nil);
 	if (row) then
-		dialplan_method = row.default_setting_value;
+		dialplan_mode = row.default_setting_value;
 	end
 
 --set the defaults
-	if (dialplan_method == nil or dialplan_method == '') then
-		dialplan_method = "multiple";
+	if (dialplan_mode == nil or dialplan_mode == '') then
+		dialplan_mode = "multiple";
 	end
 	domain_name = 'global';
 
@@ -57,11 +57,11 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_method .. " key:" .. dialplan_cache_key .. "\n");
+	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
-	if (context_name == 'public' and dialplan_method == "single") then
+	if (context_name == 'public' and dialplan_mode == "single") then
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
