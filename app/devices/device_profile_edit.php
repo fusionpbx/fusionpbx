@@ -503,7 +503,7 @@
 				echo "					<option value='expansion-6' ".($row['profile_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 			}
 			elseif (strtolower($row['profile_key_vendor']) == "grandstream") {
-					echo "	<option value='expansion' ".($row['profile_key_category'] == "expansion" || $row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
+				echo "	<option value='expansion' ".($row['profile_key_category'] == "expansion" || $row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
 			}
 			else {
 				if (strtolower($row['profile_key_vendor']) == "cisco" || strtolower($row['profile_key_vendor']) == "yealink") {
