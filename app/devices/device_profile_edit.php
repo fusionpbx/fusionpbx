@@ -495,7 +495,8 @@
 		echo "					<option value='programmable' ".($row['profile_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
 		if ($row['profile_key_vendor'] !== "polycom") { 
 			if (strlen($row['profile_key_vendor']) == 0) {
-				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
+				echo "					<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
 				echo "					<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
 				echo "					<option value='expansion-3' ".($row['profile_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
 				echo "					<option value='expansion-4' ".($row['profile_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
