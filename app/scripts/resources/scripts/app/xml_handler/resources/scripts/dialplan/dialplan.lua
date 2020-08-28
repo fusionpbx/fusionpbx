@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -47,9 +47,11 @@
 		sql = "select default_setting_value from v_default_settings "
 		sql = sql .. "where default_setting_category = 'destinations' ";
 		sql = sql .. "and default_setting_subcategory = 'dialplan_mode' ";
-		local dialplan_mode = dbh:first_value(sql, nil);
-		local ok, err = cache.set(dialplan_mode_key, dialplan_mode, expire["dialplan"]);
-		
+		dialplan_mode = dbh:first_value(sql, nil);
+		if (dialplan_mode) then
+			local ok, err = cache.set(dialplan_mode_key, dialplan_mode, expire["dialplan"]);
+		end
+
 		--send a message to the log
 		if (debug['cache']) then
 			log.notice(dialplan_mode_key.." source: database mode: "..dialplan_mode);
@@ -122,6 +124,8 @@
 				sql = sql .. "			destination_prefix || destination_area_code || destination_number = :destination_number ";
 				sql = sql .. "			OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
 				sql = sql .. "			OR destination_prefix || destination_number = :destination_number ";
+				sql = sql .. "			OR '+' || destination_prefix || destination_number = :destination_number ";
+				sql = sql .. "			OR '+' || destination_prefix || destination_area_code || destination_number = :destination_number ";
 				sql = sql .. "			OR destination_area_code || destination_number = :destination_number ";
 				sql = sql .. "			OR destination_number = :destination_number ";
 				sql = sql .. "		) ";
