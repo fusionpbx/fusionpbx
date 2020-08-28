@@ -170,6 +170,11 @@
 						$cache = new cache;
 						$cache->delete("dialplan:".$domain_name);
 				}
+				elseif ($default_setting_category == "destinations" && $default_setting_subcategory == "dialplan_mode" ) {
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("dialplan:mode");
+				}
 
 				//build the array of data
 				$x = 0;
