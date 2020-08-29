@@ -233,6 +233,8 @@
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+		url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
+		url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 		if (document.getElementById('sort1'))
 			if (document.getElementById('sort1').value == '1') url += '&sort';
@@ -320,6 +322,8 @@
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+			url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
+			url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			if (document.getElementById('sort1'))
 				if (document.getElementById('sort1').value == '1') url += '&sort';
