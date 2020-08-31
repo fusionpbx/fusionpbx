@@ -7447,7 +7447,11 @@
     <!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($dnd)}
+    <P8446>{$dnd}</P8446>
+{else}
     <P8446>1</P8446>
+{/if}
 
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
@@ -7925,12 +7929,20 @@
     <!-- # Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_tx_gain)}
+    <P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
     <P1301>0</P1301>
+{/if}
 
     <!-- # Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_rx_gain)}
+    <P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
     <P1302>0</P1302>
+{/if}
 
     <!-- # Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->

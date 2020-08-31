@@ -315,10 +315,18 @@
 <P1300>0</P1300>
 
 <!--  Headset TX gain (dB). 0 - 0 dB, 1 - -6 dB, 2 - +6 dB. -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
 <P1301>0</P1301>
+{/if}
 
 <!--  Headset RX gain (dB). 0 - 0 dB, 1 - -6 dB, 2 - +6 dB. -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
 <P1302>0</P1302>
+{/if}
 
 <!--  Display Language. 0 - English, 3 - Secondary Language, 2 - Chinese -->
 <P342>0</P342>
