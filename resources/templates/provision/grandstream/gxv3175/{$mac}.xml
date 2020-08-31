@@ -1389,10 +1389,18 @@
 
 
 <!-- Headset TX Gain (dB), Allowed value: -6, 0, 6 -->
-<P1301>0</P1301>
+{if isset($grandstream_headset_tx_gain)}
+    <P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
+    <P1301>0</P1301>
+{/if}
 
 <!-- Headset RX Gain (dB), Allowed value: -6, 0, 6 -->
-<P1302>0</P1302>
+{if isset($grandstream_headset_rx_gain)}
+    <P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
+    <P1302>0</P1302>
+{/if}
 
 <!-- Camera Zoom Mode -->
 <!-- value = 0   1.0:1 (wide and default) -->
