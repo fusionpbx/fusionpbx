@@ -50,6 +50,7 @@ if (email_method == 'queue') then
 		end
 		local email_subject = email_message[1];
 		local email_body = email_message[2] or '';
+		local email_status = 'waiting';
 
 		api = freeswitch.API();
 		local email_queue_uuid = api:executeString("create_uuid");
@@ -75,13 +76,13 @@ if (email_method == 'queue') then
 		sql = sql .. "	:email_status ";
 		sql = sql .. ") ";
 		local params = {
-			email_queue_uuid  = email_queue_uuid;
+			email_queue_uuid = email_queue_uuid;
 			domain_uuid = domain_uuid;
-			email_from  = email_from;
-			email_to  = email_address;
-			email_subject  = email_subject;
-			email_body  = email_body;
-			email_status  = email_type;
+			email_from = email_from;
+			email_to = email_address;
+			email_subject = email_subject;
+			email_body = email_body;
+			email_status = email_status;
 		}
 		db:query(sql, params);
 
