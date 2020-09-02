@@ -32,7 +32,7 @@
 	function send_email(id, uuid)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
-
+		local email_method = settings:get('email', 'method', 'text');
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid
@@ -149,6 +149,7 @@
 						["X-FusionPBX-Domain-Name"] = domain_name;
 						["X-FusionPBX-Call-UUID"]   = uuid;
 						["X-FusionPBX-Email-Type"]  = 'voicemail';
+						["X-FusionPBX-local_after_email"]  = voicemail_local_after_email;
 					}
 
 				--prepare the voicemail_name_formatted
@@ -215,7 +216,7 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (string.len(voicemail_mail_to) > 2) then
+			if (string.len(voicemail_mail_to) > 2 and email_method ~= 'queue') then
 				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages
