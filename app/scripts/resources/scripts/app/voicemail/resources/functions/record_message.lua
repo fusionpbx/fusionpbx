@@ -331,6 +331,7 @@
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
+			local email_method = settings:get('email', 'method', 'text') or "smtp";
 
 		--debug information
 			if (debug["info"]) then
@@ -458,6 +459,11 @@
 
 		--start epoch
 			start_epoch = os.time();
+
+		--if using the email queue disable inline transcription
+			if (email_method == 'queue') then
+				transcribe_enabled = 'false';
+			end
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
