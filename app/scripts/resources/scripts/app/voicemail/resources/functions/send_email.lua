@@ -33,6 +33,8 @@
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 		local email_method = settings:get('email', 'method', 'text');
+		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid
@@ -124,10 +126,10 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcription == nil) then
-						sql = sql .. "AND template_subcategory = 'default' "
-					else
+					if (transcribe_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
+					else
+						sql = sql .. "AND template_subcategory = 'default' "
 					end
 					sql = sql .. "AND template_enabled = 'true' "
 					sql = sql .. "ORDER BY domain_uuid DESC "
