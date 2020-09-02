@@ -54,10 +54,12 @@ if (email_method == 'queue') then
 
 		api = freeswitch.API();
 		local email_queue_uuid = api:executeString("create_uuid");
+		local hostname = api:executeString("hostname");
 
 		local sql = "insert into v_email_queue ( ";
 		sql = sql .. "	email_queue_uuid, ";
 		sql = sql .. "	domain_uuid, ";
+		sql = sql .. "	hostname, ";
 		sql = sql .. "	email_date, ";
 		sql = sql .. "	email_from, ";
 		sql = sql .. "	email_to, ";
@@ -68,6 +70,7 @@ if (email_method == 'queue') then
 		sql = sql .. "values ( ";
 		sql = sql .. "	:email_queue_uuid, ";
 		sql = sql .. "	:domain_uuid, ";
+		sql = sql .. "	:hostname, ";
 		sql = sql .. "	now(), ";
 		sql = sql .. "	:email_from, ";
 		sql = sql .. "	:email_to, ";
@@ -78,6 +81,7 @@ if (email_method == 'queue') then
 		local params = {
 			email_queue_uuid = email_queue_uuid;
 			domain_uuid = domain_uuid;
+			hostname = hostname;
 			email_from = email_from;
 			email_to = email_address;
 			email_subject = email_subject;
