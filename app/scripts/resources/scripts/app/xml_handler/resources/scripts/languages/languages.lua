@@ -95,37 +95,40 @@
 
 				-- if macro_name is a uuid get from the phrase details
 					if (is_uuid(macro_name)) then
-						--define the xml table
-							local xml = {}
-
-						--get the xml
-							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-							table.insert(xml, [[<document type="freeswitch/xml">]]);
-							table.insert(xml, [[	<section name="languages">]]);
-							table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sounds_dir..[[/]]..language..[[/us/callie" tts-engine="cepstral" tts-voice="callie">]]);
-							table.insert(xml, [[			<phrases>]]);
-							table.insert(xml, [[				<macros>]]);
-
+						
 							local sql = "SELECT * FROM v_phrases as p, v_phrase_details as d ";
 							sql = sql .. "WHERE d.domain_uuid = :domain_uuid ";
 							sql = sql .. "AND p.phrase_uuid = :macro_name ";
-							sql = sql .. "AND p.phrase_language = :language ";
+							sql = sql .. "AND p.phrase_language like :language ";
 							sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
 							sql = sql .. "AND p.phrase_enabled = 'true' ";
 							sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
-							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = language};
+							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = language.."/%"};
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
 							previous_phrase_uuid = "";
 							match_tag = "open";
 							x = 0;
+							--define the xml table
+							local xml = {}
 							dbh:query(sql, params, function(row)
 								--phrase_uuid,domain_uuid,phrase_name,phrase_language
 								--phrase_description,phrase_enabled,phrase_detail_uuid
 								--phrase_detail_group,phrase_detail_tag,phrase_detail_pattern
 								--phrase_detail_function,phrase_detail_data,phrase_detail_method
 								--phrase_detail_type,phrase_detail_order
+
+								--get the xml
+								if (x == 0) then
+									table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+									table.insert(xml, [[<document type="freeswitch/xml">]]);
+									table.insert(xml, [[	<section name="languages">]]);
+									table.insert(xml, [[		<language name="]]..language..[[" say-module="]]..language..[[" sound-prefix="]]..sounds_dir..[[/]]..row.phrase_language..[[" tts-engine="cepstral" tts-voice="callie">]]);
+									table.insert(xml, [[			<phrases>]]);
+									table.insert(xml, [[				<macros>]]);
+								end
+
 								if (previous_phrase_uuid ~= row.phrase_uuid) then
 									if (x > 0) then
 										table.insert(xml, [[							</match>]]);
