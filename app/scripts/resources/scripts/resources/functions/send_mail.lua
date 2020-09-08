@@ -18,7 +18,7 @@ if (err == 'NOT FOUND') then
 	sql = "select default_setting_value from v_default_settings "
 	sql = sql .. "where default_setting_category = 'email' ";
 	sql = sql .. "and default_setting_subcategory = 'method' ";
-	email_method = dbh:first_value(sql, nil);
+	email_method = db:first_value(sql, nil);
 	if (email_method) then
 		local ok, err = cache.set(email_method_key, email_method, expire["dialplan"]);
 	end
