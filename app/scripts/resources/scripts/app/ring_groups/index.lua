@@ -354,7 +354,7 @@
 					body = body:gsub("'", "&#39;");
 					body = body:gsub([["]], "&#34;");
 					body = trim(body);
-					
+
 				--send the email
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[missed call]: "..mail_to.." '"..subject.."' '"..body.."'\n");
