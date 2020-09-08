@@ -2959,7 +2959,11 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P101></P101>
     <!-- STUN Server -->
     <!-- String -->
+    {if isset($grandstream_stun_server)}
+    <P76>{$grandstream_stun_server}</P76>
+    {else}
     <P76></P76>
+    {/if}
     <!-- Public Mode. 0 - No. 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
