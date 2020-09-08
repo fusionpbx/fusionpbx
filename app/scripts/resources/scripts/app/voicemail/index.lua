@@ -76,6 +76,7 @@
 			caller_id_number = session:getVariable("caller_id_number");
 			current_time_zone = session:getVariable("timezone");
 			effective_caller_id_number = session:getVariable("effective_caller_id_number");
+			effective_caller_id_name = session:getVariable("effective_caller_id_name");
 			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
@@ -93,7 +94,11 @@
 			if (effective_caller_id_number ~= nil) then
 				caller_id_number = effective_caller_id_number;
 			end
-
+		--modify caller_id_name if effective_caller_id_name is set
+			if (effective_caller_id_name ~= nil) then
+				caller_id_name = effective_caller_id_name;
+			end
+	
 		--set default values
 			if (string.sub(caller_id_number, 1, 1) == "/") then
 				caller_id_number = string.sub(caller_id_number, 2, -1);
