@@ -245,10 +245,19 @@
 
 --set the recording file name
 	if (session:ready()) then
-		record_name = session:getVariable("record_name");
-		if (not record_name) then
+		--record_name = session:getVariable("record_name");
+		--sip_from_user = session:getVariable("sip_from_user");
+		--sip_to_user = session:getVariable("sip_to_user");
+
+		--record_name = record_name:gsub("${caller_id_name}", caller_id_name);
+		--record_name = record_name:gsub("${caller_id_number}", caller_id_number);
+		--record_name = record_name:gsub("${sip_from_user}", sip_from_user);
+		--record_name = record_name:gsub("${sip_to_user}", sip_to_user);
+		--record_name = record_name:gsub("${dialed_user}", ring_group_extension);
+
+		--if (not record_name) then
 			record_name = uuid .. "." .. record_ext;
-		end
+		--end
 	end
 
 ---set the call_timeout to a higher value to prevent the early timeout of the ring group
