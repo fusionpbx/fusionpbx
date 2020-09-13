@@ -160,18 +160,12 @@
 			unset($array["callflow"]);
 			$array["callflow"][0] = $tmp;
 		}
-		$x = 0;
-		if (is_array($array["callflow"])) foreach ($array["callflow"] as $row) {
-			if ($x == 0) {
-				$destination_number = urldecode($row["caller_profile"]["destination_number"]);
-				$context = urldecode($row["caller_profile"]["context"]);
-				$network_addr = urldecode($row["caller_profile"]["network_addr"]);
-			}
-			$caller_id_name = urldecode($row["caller_profile"]["caller_id_name"]);
-			$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
-			$x++;
+
+		if (is_array($array["callflow"][0])) {
+			$destination_number = urldecode($array["callflow"][0]["caller_profile"]["destination_number"]);
+			$caller_id_name = urldecode($array["callflow"][0]["caller_profile"]["caller_id_name"]);
+			$caller_id_number = urldecode($array["callflow"][0]["caller_profile"]["caller_id_number"]);
 		}
-		unset($x);
 
 	$tmp_year = date("Y", strtotime($start_stamp));
 	$tmp_month = date("M", strtotime($start_stamp));
