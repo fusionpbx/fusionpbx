@@ -10,3 +10,4 @@ secure/*.sqlite
 *.php~
 
 app/yealink/resources/firmware/*
+nbproject/*
