@@ -140,7 +140,10 @@
 		$sql .= "where true ";
 	}
 	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "where (domain_uuid = :domain_uuid) ";
+		if (if_group("superadmin")) {
+			$sql .= " or (domain_uuid is null)";
+		}
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
