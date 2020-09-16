@@ -263,7 +263,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+				if (is_array($row['result']['data']) && count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
 					$response .= "		<optgroup label='".$text2['title-'.$label]."'>\n";
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
