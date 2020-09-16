@@ -146,7 +146,7 @@
 	}
 
 //use the http post array to change the status
-	if (count($_POST['agents']) > 0) {
+	if (is_array($_POST['agents'])) {
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
@@ -302,7 +302,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (count($_POST['agents']) > 0 && !$per_queue_login) {
+	if (is_array($_POST['agents']) && !$per_queue_login) {
 		echo $text['description-call_center_agent_status']."\n";
 		echo "<br /><br />\n";
 	}
