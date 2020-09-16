@@ -242,8 +242,8 @@
 	$sql .= "c.source_number, \n";
 	$sql .= "c.destination_number, \n";
 	$sql .= "c.leg, \n";
-	$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
-	$sql .= "c.json, \n";
+	//$sql .= "(c.xml is not null or c.json is not null) as raw_data_exists, \n";
+	//$sql .= "c.json, \n";
 	if (is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
