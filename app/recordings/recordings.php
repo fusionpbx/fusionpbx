@@ -104,11 +104,6 @@
 					ob_clean();
 					fpassthru($fd);
 				}
-
-			//if base64, remove temp recording file
-				if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && $row['recording_base64'] != '') {
-					@unlink($full_recording_path);
-				}
 		}
 		exit;
 	}
@@ -245,11 +240,6 @@
 								}
 							}
 					}
-
-					//if base64, remove local file
-						if ($_SESSION['recordings']['storage_type']['text'] == 'base64' && file_exists($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename)) {
-							@unlink($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
-						}
 
 				}
 			}
