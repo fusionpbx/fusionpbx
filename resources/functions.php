@@ -1923,7 +1923,7 @@ function number_pad($number,$n) {
 		//send the mkdir command to freeswitch
 			if ($fp) {
 				//build and send the mkdir command to freeswitch
-					$switch_cmd = "lua mkdir.lua '".addslashes($dir)."'";
+					$switch_cmd = "lua mkdir.lua ".escapeshellarg($dir);
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					fclose($fp);
 				//check result
