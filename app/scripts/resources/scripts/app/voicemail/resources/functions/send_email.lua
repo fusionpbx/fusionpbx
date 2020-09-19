@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -73,11 +73,18 @@
 						dbh = Database.new('system', 'base64/read')
 					end
 
+				--get the time zone
+					local time_zone = settings:get('domain', 'time_zone', 'name');
+					if (time_zone == nil) then
+						time_zone = 'UTC';
+					end
+
 				--get voicemail message details
-					local sql = [[SELECT * FROM v_voicemail_messages
+					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MM:SS PM') as message_date, * 
+						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_message_uuid = :uuid]]
-					local params = {domain_uuid = domain_uuid, uuid = uuid};
+					local params = {domain_uuid = domain_uuid, uuid = uuid, time_zone = time_zone};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
@@ -87,6 +94,7 @@
 							created_epoch = row["created_epoch"];
 							caller_id_name = row["caller_id_name"];
 							caller_id_number = row["caller_id_number"];
+							message_date = row["message_date"];
 							message_length = row["message_length"];
 							--message_status = row["message_status"];
 							--message_priority = row["message_priority"];
@@ -114,9 +122,10 @@
 				--format the message length and date
 					message_length_formatted = format_seconds(message_length);
 					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] message date: " .. message_date .. "\n");
 						freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
 					end
-					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch);
+					--local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch);
 
 				--connect to the database
 					local dbh = Database.new('system');
