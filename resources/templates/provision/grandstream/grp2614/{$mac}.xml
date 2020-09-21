@@ -4285,7 +4285,7 @@
     <!-- ############################################################################## -->
     <!-- # Enable/Disable WiFi -->
     <!-- # Number: 0 - No, 2 - Off & Hide Menu From LCD, 1 - Yes. Default is 0 -->
-         {if isset($grandstream_wifi_enable)
+         {if isset($grandstream_wifi_enable)}
 	 <P7800>{$grandstream_wifi_enable}</P7800>
          {/if}
 
