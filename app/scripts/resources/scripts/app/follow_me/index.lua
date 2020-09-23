@@ -364,7 +364,8 @@
 					end
 
 				--set the outbound caller id
-					if (session:ready() and caller_is_local) then
+					ignore_outbound_caller_id = session:getVariable("follow_me_ignore_outbound_caller_id");
+					if (session:ready() and caller_is_local and ignore_outbound_caller_id ~= "true") then
 						if (outbound_caller_id_name ~= nil) then
 							caller_id_name = outbound_caller_id_name;
 						end
