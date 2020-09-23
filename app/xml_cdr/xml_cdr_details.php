@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions 
-	if (permission_exists('xml_cdr_view')) {
+	if (permission_exists('xml_cdr_details')) {
 		//access granted
 	}
 	else {
