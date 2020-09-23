@@ -134,7 +134,7 @@
 //detail summary
 	//get the variables
 		$xml_cdr_uuid = urldecode($array["variables"]["uuid"]);
-		$direction = urldecode($array["channel_data"]["direction"]);
+		$direction = urldecode($array["variables"]["call_direction"]);
 		$language = urldecode($array["variables"]["language"]);
 		$start_epoch = urldecode($array["variables"]["start_epoch"]);
 		$start_stamp = urldecode($array["variables"]["start_stamp"]);
