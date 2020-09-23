@@ -169,6 +169,18 @@
 			}
 			$caller_id_name = urldecode($row["caller_profile"]["caller_id_name"]);
 			$caller_id_number = urldecode($row["caller_profile"]["caller_id_number"]);
+
+			$call_flow_summary[$x]["destination_number"] = urldecode($row["caller_profile"]["destination_number"]);
+			$tmp_start_stamp = urldecode($row["times"]["profile_created_time"]) / 1000000;
+			if ($x == 0) {
+				$tmp_end_stamp = urldecode($row["times"]["hangup_time"]) / 1000000; 
+			}
+			else {
+				$tmp_end_stamp = urldecode($row["times"]["transfer_time"]) / 1000000;
+			}
+			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d H:i:s", $tmp_start_stamp);
+			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d H:i:s", $tmp_end_stamp);
+			$call_flow_summary[$x]["duration"] =  gmdate("G:i:s", $tmp_end_stamp - $tmp_start_stamp);
 			$x++;
 		}
 		unset($x);
@@ -235,6 +247,34 @@
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($end_stamp)."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", $duration))."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
+	echo "</table>";
+	echo "<br /><br />\n";
+
+	echo "</table>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left'><b>".$text['label-call_flow_summary']."</b>&nbsp;</td>\n";
+	echo "<td></td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<th>".$text['label-destination']."</th>\n";
+	echo "<th>".$text['label-start']."</th>\n";
+	echo "<th>".$text['table-end']."</th>\n";
+	echo "<th>".$text['label-duration']."</th>\n";
+	echo "</tr>\n";
+	
+	foreach (array_reverse($call_flow_summary) as $row) {
+		echo "<tr >\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["destination_number"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row["duration"])."</td>\n";
+		echo "</tr>\n";
+		$c = $c ? 0 : 1;
+	}
 	echo "</table>";
 	echo "<br /><br />\n";
 
