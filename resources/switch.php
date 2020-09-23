@@ -482,6 +482,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 									else {
 										$condition_match[] = 'true';
 										$regex_match_1 = $matches[1][0];
+										$regex_match_2 = $matches[2][0];
 										$regex_match_3 = $matches[3][0];
 										$regex_match_4 = $matches[4][0];
 										$regex_match_5 = $matches[5][0];
