@@ -89,6 +89,7 @@
 			sip_from_user = session:getVariable("sip_from_user");
 			user_name = session:getVariable("user_name");
 			sip_number_alias = session:getVariable("sip_number_alias");
+			origination_callee_id_name = session:getVariable("origination_callee_id_name");
 
 		--modify caller_id_number if effective_caller_id_number is set
 			if (effective_caller_id_number ~= nil) then
