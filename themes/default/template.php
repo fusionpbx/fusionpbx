@@ -507,11 +507,27 @@
 					{if $settings.theme.keyboard_shortcut_copy_enabled}
 						{if $browser_name_short == 'Safari'} //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 							{literal}
-							if ((e.which == 99 || e.which == 67) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
+							if (
+								(e.which == 99 || e.which == 67) &&
+								!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+								!(e.target.tagName == 'INPUT' && e.target.type == 'password') &&
+								e.target.tagName != 'TEXTAREA'
+								) {
 							{/literal}
 						{else}
 							{literal}
-							if ((((e.which == 99 || e.which == 67) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || (e.which == 19)) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
+							if (
+								(
+									(
+										(e.which == 99 || e.which == 67) &&
+										(e.ctrlKey || e.metaKey) &&
+										!e.shiftKey
+									) ||
+									e.which == 19
+								) &&
+								!(e.target.tagName == 'INPUT' && e.target.type == 'text') &&
+								e.target.tagName != 'TEXTAREA'
+								) {
 							{/literal}
 						{/if}
 						{literal}
