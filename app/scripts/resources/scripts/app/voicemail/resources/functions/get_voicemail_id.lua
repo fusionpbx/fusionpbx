@@ -27,14 +27,14 @@
 	function get_voicemail_id()
 		session:flushDigits();
 		dtmf_digits = '';
-		voicemail_id = macro(session, "voicemail_id", 20, 5000, '');
+		voicemail_id = session:playAndGetDigits(1, 20, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
 		if (string.len(voicemail_id) == 0) then
 			if (session:ready()) then
 				timeouts = timeouts + 1;
 				if (timeouts < max_timeouts) then
 					voicemail_id = get_voicemail_id();
 				else
-					macro(session, "goodbye", 1, 1000, '');
+					session:execute("playback", "phrase:voicemail_goodbye");
 					session:hangup();
 				end
 			end

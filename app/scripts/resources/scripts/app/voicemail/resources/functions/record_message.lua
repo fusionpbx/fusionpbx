@@ -344,10 +344,10 @@
 				--skip the instructions
 			else
 				if (dtmf_digits and string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "record_message", 1, 100);
+					dtmf_digits = session:playAndGetDigits(0, 1, 1, 500, "#", "phrase:voicemail_record_message", "", "\\d+");
 				end
 			end
-
+		
 		--voicemail ivr options
 			if (session:ready()) then
 				if (dtmf_digits == nil) then
@@ -455,7 +455,7 @@
 
 		--play the beep
 			dtmf_digits = '';
-			result = macro(session, "record_beep", 1, 100);
+			session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 
 		--start epoch
 			start_epoch = os.time();
@@ -526,7 +526,8 @@
 				if (session:ready()) then
 					--your recording is below the minimal acceptable length, please try again
 						dtmf_digits = '';
-						macro(session, "too_small", 1, 100);
+						session:execute("playback", "phrase:voicemail_ack:too-small");
+						session:execute("sleep", "500");
 					--record your message at the tone
 						timeouts = timeouts + 1;
 						if (timeouts < max_timeouts) then
@@ -543,8 +544,9 @@
 				if (skip_instructions == "true") then
 					--save the message
 						dtmf_digits = '';
-						macro(session, "message_saved", 1, 100, '');
-						macro(session, "goodbye", 1, 100, '');
+						session:execute("playback", "phrase:voicemail_ack:saved");
+						session:execute("sleep", "300");
+						session:execute("playback", "phrase:voicemail_goodbye");
 					--hangup the call
 						session:hangup();
 				else

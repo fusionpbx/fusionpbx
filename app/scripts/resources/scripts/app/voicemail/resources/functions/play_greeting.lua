@@ -102,7 +102,15 @@
 					else
 						--default greeting
 						session:execute("playback","silence_stream://200");
-						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
+						--determine the voicemail_id to say
+						if (voicemail_alternate_greet_id and string.len(voicemail_alternate_greet_id) > 0) then
+							voicemail_id_say = voicemail_alternate_greet_id;
+						elseif (voicemail_greet_id and string.len(voicemail_greet_id) > 0) then
+							voicemail_id_say = voicemail_greet_id;
+						else
+							voicemail_id_say = voicemail_id;
+						end
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", "\\d+");
 					end
 			end
 		end
