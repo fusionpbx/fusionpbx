@@ -30,22 +30,10 @@
 				dtmf_digits = '';
 			--flush dtmf digits from the input buffer
 				session:flushDigits();
-			--to listen to the recording press 1
+			--to listen to the recording press 1, to save the recording press 2, to re-record press 3
 				if (session:ready()) then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = macro(session, "to_listen_to_recording", 1, 100, '');
-					end
-				end
-			--to save the recording press 2
-				if (session:ready()) then
-					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = macro(session, "to_save_recording", 1, 100, '');
-					end
-				end
-			--to re-record press 3
-				if (session:ready()) then
-					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = macro(session, "to_rerecord", 1, 3000, '');
+						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:voicemail_record_file_options:1:2:3", "", "\\d+");
 					end
 				end
 			--process the dtmf
@@ -59,10 +47,11 @@
 					elseif (dtmf_digits == "2") then
 						--save the message
 							dtmf_digits = '';
-							macro(session, "message_saved", 1, 100, '');
+							session:execute("playback", "phrase:voicemail_ack:saved");
+							session:execute("sleep", "500");
 							if (type == "message") then
 								--goodbye
-									macro(session, "goodbye", 1, 100, '');
+									session:execute("playback", "phrase:voicemail_goodbye");
 								--hangup the call
 									session:hangup();
 							end
@@ -204,7 +193,7 @@
 						--hangup
 							if (session:ready()) then
 								dtmf_digits = '';
-								macro(session, "goodbye", 1, 100, '');
+								session:execute("playback", "phrase:voicemail_goodbye");
 								session:hangup();
 							end
 					else
@@ -215,8 +204,9 @@
 							else
 								if (type == "message") then
 									dtmf_digits = '';
-									macro(session, "message_saved", 1, 100, '');
-									macro(session, "goodbye", 1, 1000, '');
+									session:execute("playback", "phrase:voicemail_ack:saved");
+									session:execute("sleep", "300");
+									session:execute("playback", "phrase:voicemail_goodbye");
 									session:hangup();
 								end
 								if (type == "greeting") then

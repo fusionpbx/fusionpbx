@@ -80,13 +80,13 @@
 				if (voicemail_password ~= password) then
 					--incorrect password
 					dtmf_digits = '';
-					macro(session, "password_not_valid", 1, 1000, '');
+					session:execute("playback", "phrase:voicemail_fail_auth");
 					if (session:ready()) then
 						password_tries = password_tries + 1;
 						if (password_tries < max_tries) then
 							check_password(voicemail_id, password_tries);
 						else
-							macro(session, "goodbye", 1, 1000, '');
+							session:execute("playback", "phrase:voicemail_goodbye");
 							session:hangup();
 						end
 					end
