@@ -42,10 +42,10 @@ if ($domains_processed == 1) {
 					@file_put_contents($language_xml_path, $language_xml_content);
 				}
 				// copy voicemail.xml to language/xx/vm folders
-				$voicemail_xml_source = $_SERVER['PROJECT_ROOT'].'/app/voicemail/resources/switch/languages/'.$language_abbreviation.'/vm/voicemail.xml';
+				$voicemail_xml_source = $_SERVER['PROJECT_ROOT'].'/app/voicemails/resources/switch/languages/'.$language_abbreviation.'/vm/voicemail.xml';
 				$voicemail_xml_target = $languages_path.'/'.$language_abbreviation.'/vm/voicemail.xml';
 				if (!file_exists($voicemail_xml_target)) {
-					@copy($voicemail_xml_source, $voicemail_xml_target);
+					copy($voicemail_xml_source, $voicemail_xml_target);
 				}
 			}
 		}
