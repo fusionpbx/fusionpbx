@@ -29,7 +29,7 @@ if ($domains_processed == 1) {
 
 	// process change from using macros to phrases
 	$languages_path = $_SESSION['switch']['phrases']['dir'];
-	if ($languages_path && file_exists($languages_path)) {
+	if ($languages_path != '' && file_exists($languages_path)) {
 		$folder_contents = scandir($languages_path);
 		if (is_array($folder_contents) && @sizeof($folder_contents) != 0) {
 			foreach ($folder_contents as $language_abbreviation) {
