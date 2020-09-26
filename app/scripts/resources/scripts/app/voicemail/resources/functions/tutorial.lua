@@ -35,7 +35,7 @@
 					--play the tutorial press 1, to skip 2
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:tutorial_intro", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:tutorial_intro", "", "\\d+");
 							end
 						end
 					--process the dtmf
@@ -68,13 +68,13 @@
 					--play the record name press 1
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 200, "#", "phrase:tutorial_record_name:1", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:tutorial_record_name:1", "", "\\d+");
 							end
 						end
 					--skip the name and go to password press 2
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
 							end
 						end
 					--process the dtmf
@@ -96,7 +96,7 @@
 								end
 							end
 						end
-				end				
+				end
 			--change password menu
 				if (menu == "change_password") then 
 					--clear the value
@@ -106,13 +106,13 @@
 					--to change your password press 1
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 200, "#", "phrase:tutorial_change_password:1", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:tutorial_change_password:1", "", "\\d+");
 							end
 						end
 					--skip the password and go to greeting press 2
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
 							end
 						end
 					--process the dtmf
@@ -144,13 +144,13 @@
 					--to record a greeting press 1
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 200, "#", "phrase:tutorial_record_greeting:1", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:tutorial_record_greeting:1", "", "\\d+");
 							end
 						end
 					--skip the record greeting press 2. finishes the tutorial and routes to main menu
 						if (session:ready()) then
 							if (string.len(dtmf_digits) == 0) then
-								dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
+								dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:tutorial_skip:2", "", "\\d+");
 							end
 						end
 					--process the dtmf

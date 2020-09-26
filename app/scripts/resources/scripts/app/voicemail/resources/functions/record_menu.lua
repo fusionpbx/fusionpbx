@@ -33,12 +33,14 @@
 			--to listen to the recording press 1, to save the recording press 2, to re-record press 3
 				if (session:ready()) then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:voicemail_record_file_options:1:2:3", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:voicemail_record_file_options:1:2:3", "", "\\d+");
 					end
 				end
 			--process the dtmf
 				if (session:ready()) then
 					if (dtmf_digits == "1") then
+						--use sleep for a small pause
+							session:sleep('1000');
 						--listen to the recording
 							session:streamFile(tmp_file);
 							--session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
@@ -226,8 +228,8 @@
 										advanced();
 									end
 									if (menu == "tutorial") then
-										tutorial("change_password")	
-									end									
+										tutorial("change_password");
+									end
 								end
 							end
 						end
