@@ -37,7 +37,7 @@
 					session:answer();
 					session:execute("sleep", "1000");
 				end
-				
+
 			--new voicemail count
 				if (session:ready()) then
 					local sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
@@ -51,7 +51,7 @@
 					dbh:query(sql, params, function(row)
 						new_messages = row["new_messages"];
 					end);
-					dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 300, "#", "phrase:voicemail_message_count:" .. new_messages .. ":new", "", "\\d+");
+					dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_message_count:" .. new_messages .. ":new", "", "\\d+");
 				end
 			--saved voicemail count
 				if (session:ready()) then
@@ -67,26 +67,26 @@
 						dbh:query(sql, params, function(row)
 							saved_messages = row["saved_messages"];
 						end);
-						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 300, "#", "phrase:voicemail_message_count:" .. saved_messages .. ":saved", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 300, "#", "phrase:voicemail_message_count:" .. saved_messages .. ":saved", "", "\\d+");
 					end
 				end
 
 			--to listen to new message
 				if (session:ready() and new_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 100, "#", "phrase:voicemail_main_menu:new:1", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 100, "#", "phrase:voicemail_main_menu:new:1", "", "\\d+");
 					end
 				end
 			--to listen to saved message
 				if (session:ready() and saved_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 100, "#", "phrase:voicemail_main_menu:saved:2", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 100, "#", "phrase:voicemail_main_menu:saved:2", "", "\\d+");
 					end
 				end
 			--for advanced options
 				if (session:ready()) then
 					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:playAndGetDigits(0, 1, max_tries, 3000, "#", "phrase:voicemail_main_menu:advanced:5", "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 3000, "#", "phrase:voicemail_main_menu:advanced:5", "", "\\d+");
 					end
 				end
 			--to exit press #
