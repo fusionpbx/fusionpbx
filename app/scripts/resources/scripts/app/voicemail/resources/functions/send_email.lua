@@ -194,6 +194,7 @@
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
 					body = body:gsub("${dialed_user}", id);
+					body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
 					elseif (voicemail_file == "link") then
