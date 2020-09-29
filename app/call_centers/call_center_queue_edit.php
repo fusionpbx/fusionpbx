@@ -1070,7 +1070,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('queue_outbound_caller_id_number')) {
+	if (permission_exists('call_center_outbound_caller_id_number')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-outbound_caller_id_number']."\n";
