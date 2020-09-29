@@ -120,7 +120,6 @@
 			$device_firmware_version = $_POST["device_firmware_version"];
 			$device_enabled = $_POST["device_enabled"];
 			$device_template = $_POST["device_template"];
-			$device_profile_uuid = $_POST["device_profile_uuid"];
 			$device_description = $_POST["device_description"];
 		//lines
 			$device_lines = $_POST["device_lines"];
@@ -273,8 +272,8 @@
 					if (permission_exists('device_template')) {
 						$array['devices'][0]['device_template'] = $device_template;
 					}
-					if (permission_exists('device_profile_edit') && is_uuid($device_profile_uuid)) {
-						$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
+					if (permission_exists('device_profile_edit')) {
+						$array['devices'][0]['device_profile_uuid'] = is_uuid($device_profile_uuid) ? $device_profile_uuid : null;
 					}
 					if (permission_exists('device_description')) {
 						$array['devices'][0]['device_description'] = $device_description;
@@ -1174,16 +1173,11 @@
 				echo "				</select>\n";
 				echo "			</td>\n";
 
-				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
-					if (is_uuid($row['device_line_uuid'])) {
-						echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
-						echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
-					}
-					else {
-						echo "			<td>\n";
-					}
-					echo "			</td>\n";
+				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete') && is_uuid($row['device_line_uuid'])) {
+					echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
+					echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
+					echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
+					echo "			<td>\n";
 				}
 
 				echo "</tr>\n";
