@@ -122,11 +122,13 @@
 	$sql .= "	v_group_permissions as g \n"; 
 	$sql .= "	on p.permission_name = g.permission_name \n"; 
 	$sql .= "	and group_name = :group_name \n"; 
+	$sql .= " 	and g.group_uuid = :group_uuid \n";
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
 	$sql .= "	order by p.application_name, p.permission_name asc "; 
 	$parameters['group_name'] = $group_name;
+	$parameters['group_uuid'] = $group_uuid;
 	$database = new database;
 	$group_permissions = $database->select($sql, $parameters, 'all');
 
@@ -321,21 +323,20 @@
 				echo "		<tr>";
 				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($label_application_name)."</b></td>\n";
 				echo "		</tr>";
-				echo "<tr class='list-header'>\n";
+				echo "		<tr class='list-header'>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "	<th class='checkbox'>\n";
-					echo "		<input type='checkbox' id='checkbox_all_".$application_name."' name='checkbox_all' onclick=\"list_all_toggle('".$application_name."');\">\n";
-					echo "	</th>\n";
+					echo "		<th class='checkbox'>\n";
+					echo "			<input type='checkbox' id='checkbox_all_".$application_name."' name='checkbox_all' onclick=\"list_all_toggle('".$application_name."');\">\n";
+					echo "		</th>\n";
 				}
 				echo th_order_by('group_name', $text['label-group_name'], $order_by, $order);
-				if (permission_exists('group_permission_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-					echo "	<td class='action-button'>&nbsp;</td>\n";
+				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
+					echo th_order_by('group_permission_protected', $text['label-group_protected'], $order_by, $order, null, "style='text-align: right;'");
+					echo "		<th class='checkbox'>\n";
+					echo "			<input type='checkbox' id='checkbox_all_".$application_name."_protected' name='checkbox_protected_all' onclick=\"list_all_toggle('".$application_name."_protected');\">\n";
+					echo "		</th>\n";
 				}
-				echo "	<th class='checkbox'>\n";
-				echo "		<input type='checkbox' id='checkbox_all_".$application_name."_protected' name='checkbox_protected_all' onclick=\"list_all_toggle('".$application_name."_protected');\">\n";
-				echo "	</th>\n";
-				echo th_order_by('group_permission_protected', $text['label-group_protected'], $order_by, $order, null, "class=''");
-				echo "</tr>\n";
+				echo "		</tr>\n";
 
 			}
 			echo "<tr class='list-row'>\n";
@@ -346,15 +347,15 @@
 				echo "		<input type='hidden' name='group_permissions[$x][permission_name]' value='".escape($row['permission_name'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td  class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".escape($row['permission_name'])."</td>\n";
+			echo "	<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">";
+			echo "		".escape($row['permission_name']);
+			echo "	</td>\n";
 			if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
+				echo "	<td>&nbsp;</td>\n";
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='group_permissions[$x][permission_protected]' id='checkbox_protected_".$x."' class='checkbox_".$application_name."_protected' value='true' ".$protected." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."_protected').checked = false; }\">\n";
 				echo "	</td>\n";
 			}
-			echo "	</td>\n";
-			echo "	<td>";
-			echo "	</td>\n";
 			echo "</tr>\n";
 
 			//set the previous category
