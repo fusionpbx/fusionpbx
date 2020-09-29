@@ -644,10 +644,12 @@ if (!class_exists('destinations')) {
 				$y = 0;
 				$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
 				$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
+				$this->destinations[$x]['result']['data'][$y]['extension'] = '*98';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
 				$y++;
 				$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
 				$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
+				$this->destinations[$x]['result']['data'][$y]['extension'] = '*411';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 				$y++;
 				$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
@@ -657,6 +659,7 @@ if (!class_exists('destinations')) {
 				$y++;
 				$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
 				$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
+				$this->destinations[$x]['result']['data'][$y]['extension'] = '*732';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
 				$y++;
 			}
@@ -744,6 +747,7 @@ if (!class_exists('destinations')) {
 						//$array[$name][$i]['select_value'] = $select_value;
 						//$array[$name][$i]['selected'] = $selected;
 						$array[$name][$i]['destination'] = $select_value;
+						$array[$name][$i]["extension"] = $data["extension"];
 						
 						$i++;
 					}

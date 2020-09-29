@@ -35,11 +35,12 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_centers";
 		$apps[$x]['destinations'][$y]['name'] = "call_centers";
-		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_description as  description from v_call_center_queues";
+		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_extension as extension, queue_description as  description from v_call_center_queues";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "queue_name asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "queue_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "queue_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
