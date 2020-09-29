@@ -280,7 +280,12 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
-		$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
+		if (is_array($extension_uuids) && @sizeof($extension_uuids)) {
+			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
+		}
+		else {
+			$sql .= "and false ";
+		}
 	}
 	if ($missed == true) {
 		$sql .= "and missed_call = 1 \n";
