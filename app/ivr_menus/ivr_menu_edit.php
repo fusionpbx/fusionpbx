@@ -538,8 +538,22 @@
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
 	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
 	if (strlen($ivr_menu_inter_digit_timeout) == 0) { $ivr_menu_inter_digit_timeout = '2000'; }
-	if (strlen($ivr_menu_max_failures) == 0) { $ivr_menu_max_failures = '1'; }
-	if (strlen($ivr_menu_max_timeouts) == 0) { $ivr_menu_max_timeouts = '1'; }
+	if (strlen($ivr_menu_max_failures) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['max_failures']['numeric']) > 0) {
+			$ivr_menu_max_failures = $_SESSION['ivr_menu']['max_failures']['numeric'];
+		}
+		else {
+			$ivr_menu_max_failures = '1'; 
+		}
+	}
+	if (strlen($ivr_menu_max_timeouts) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['ivr_menu_max_timeouts']['numeric']) > 0) {
+			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['ivr_menu_max_timeouts']['numeric'];
+		}
+		else {
+			$ivr_menu_max_timeouts = '1'; 
+		}
+	}
 	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
