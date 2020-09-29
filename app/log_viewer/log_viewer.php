@@ -82,7 +82,7 @@
 	echo "	<div class='heading'><b>".$text['title-log_viewer']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
-	echo "			".$text['label-log_file']."<select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
+	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
 	$files = scandir($_SESSION['switch']['log']['dir']);
 	foreach($files as $file) if (substr($file,0,14) == "freeswitch.log") {
 			$selected = ($file == $_POST['log_file']) ? "selected='selected'" : "";
