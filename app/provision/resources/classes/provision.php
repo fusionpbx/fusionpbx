@@ -1024,6 +1024,7 @@ include "root.php";
 												case "monitored call park": $device_key_type  = "26"; break;
 												case "intercom": $device_key_type  = "20"; break;
 												case "ldap search": $device_key_type  = "21"; break;
+												case "phonebook": $device_key_type = "30"; break;
 											}
 										}
 										if ($device_key_category == "memory" || $device_key_category == "expansion") {
