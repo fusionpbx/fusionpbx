@@ -3238,6 +3238,27 @@ $text['label-button']['ru-ru'] = "Кнопка";
 $text['label-button']['sv-se'] = "Knapp";
 $text['label-button']['uk-ua'] = "Кнопка";
 
+$text['label-phonebook']['en-us'] = "Phonebook";
+$text['label-phonebook']['en-gb'] = "Phonebook";
+$text['label-phonebook']['ar-eg'] = "";
+$text['label-phonebook']['de-at'] = "Telefonbuch"; //copied from de-de
+$text['label-phonebook']['de-ch'] = "Telefonbuch"; //copied from de-de
+$text['label-phonebook']['de-de'] = "Telefonbuch";
+$text['label-phonebook']['es-cl'] = "agenda telefónica";
+$text['label-phonebook']['es-mx'] = "agenda telefónica"; //copied from es-cl
+$text['label-phonebook']['fr-ca'] = "Annuaire"; //copied from fr-fr
+$text['label-phonebook']['fr-fr'] = "Annuaire";
+$text['label-phonebook']['he-il'] = "";
+$text['label-phonebook']['it-it'] = "Rubrica";
+$text['label-phonebook']['nl-nl'] = "telefoonboek";
+$text['label-phonebook']['pl-pl'] = "Ksiażka telefoniczna";
+$text['label-phonebook']['pt-br'] = "Lista Telefonica";
+$text['label-phonebook']['pt-pt'] = "Lista Telefónica";
+$text['label-phonebook']['ro-ro'] = "";
+$text['label-phonebook']['ru-ru'] = "Телефонная книга";
+$text['label-phonebook']['sv-se'] = "Telefonbok";
+$text['label-phonebook']['uk-ua'] = "";
+
 $text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
 $text['label-broadsoft_phonebook']['en-gb'] = "Broadsoft Phonebook";
 $text['label-broadsoft_phonebook']['ar-eg'] = "";
