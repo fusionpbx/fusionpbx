@@ -39,6 +39,7 @@
 		$apps[$x]['destinations'][$y]['field']['call_flow_uuid'] = "call_flow_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "call_flow_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "call_flow_extension";
 		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
