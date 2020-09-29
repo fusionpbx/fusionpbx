@@ -50,7 +50,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && is_uuid($number_translation_uuid)) {
+	if (is_array($_POST) && @sizeof($_POST) != 0) {
 		$number_translation_name = $_POST["number_translation_name"];
 		$number_translation_details = $_POST["number_translation_details"];
 		$number_translation_enabled = $_POST["number_translation_enabled"];
@@ -181,7 +181,6 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$number_translation_name = $row["number_translation_name"];
-			$number_translation_details = $row["number_translation_details"];
 			$number_translation_enabled = $row["number_translation_enabled"];
 			$number_translation_description = $row["number_translation_description"];
 		}
@@ -205,7 +204,13 @@
 	}
 
 //add an empty row
-	$x = is_array($number_translation_details) ? count($number_translation_details) : 0;
+	if (is_array($number_translation_details) && @sizeof($number_translation_details) != 0) {
+		$x = count($number_translation_details);
+	}
+	else {
+		$number_translation_details = array();
+		$x = 0;
+	}
 	$number_translation_details[$x]['number_translation_uuid'] = $number_translation_uuid;
 	$number_translation_details[$x]['number_translation_detail_uuid'] = uuid();
 	$number_translation_details[$x]['number_translation_detail_regex'] = '';
