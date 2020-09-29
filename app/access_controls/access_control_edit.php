@@ -50,7 +50,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && is_uuid($access_control_uuid)) {
+	if (is_array($_POST) && @sizeof($_POST) != 0) {
 		$access_control_name = $_POST["access_control_name"];
 		$access_control_default = $_POST["access_control_default"];
 		$access_control_nodes = $_POST["access_control_nodes"];
@@ -204,7 +204,6 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$access_control_name = $row["access_control_name"];
 			$access_control_default = $row["access_control_default"];
-			$access_control_nodes = $row["access_control_nodes"];
 			$access_control_description = $row["access_control_description"];
 		}
 		unset($sql, $parameters, $row);
@@ -227,7 +226,13 @@
 	}
 
 //add an empty row
-	$x = is_array($access_control_nodes) ? count($access_control_nodes) : 0;
+	if (is_array($access_control_nodes) && @sizeof($access_control_nodes) != 0) {
+		$x = count($access_control_nodes);
+	}
+	else {
+		$access_control_nodes = array();
+		$x = 0;
+	}
 	$access_control_nodes[$x]['access_control_uuid'] = $access_control_uuid;
 	$access_control_nodes[$x]['access_control_node_uuid'] = uuid();
 	$access_control_nodes[$x]['node_type'] = '';
