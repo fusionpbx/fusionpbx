@@ -536,8 +536,22 @@
 	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = 'callie'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
-	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
-	if (strlen($ivr_menu_inter_digit_timeout) == 0) { $ivr_menu_inter_digit_timeout = '2000'; }
+	if (strlen($ivr_menu_confirm_attempts) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['confirm_attempts']['numeric']) > 0) {
+			$ivr_menu_confirm_attempts = $_SESSION['ivr_menu']['confirm_attempts']['numeric'];
+		}
+		else {
+			$ivr_menu_confirm_attempts = '1';
+		}
+	}
+	if (strlen($ivr_menu_inter_digit_timeout) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['inter_digit_timeout']['numeric']) > 0) {
+			$ivr_menu_inter_digit_timeout = $_SESSION['ivr_menu']['inter_digit_timeout']['numeric'];
+		}
+		else {
+			$ivr_menu_inter_digit_timeout = '2000'; 
+		}
+	}
 	if (strlen($ivr_menu_max_failures) == 0) { 
 		if (strlen($_SESSION['ivr_menu']['max_failures']['numeric']) > 0) {
 			$ivr_menu_max_failures = $_SESSION['ivr_menu']['max_failures']['numeric'];
@@ -547,8 +561,8 @@
 		}
 	}
 	if (strlen($ivr_menu_max_timeouts) == 0) { 
-		if (strlen($_SESSION['ivr_menu']['ivr_menu_max_timeouts']['numeric']) > 0) {
-			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['ivr_menu_max_timeouts']['numeric'];
+		if (strlen($_SESSION['ivr_menu']['max_timeouts']['numeric']) > 0) {
+			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['max_timeouts']['numeric'];
 		}
 		else {
 			$ivr_menu_max_timeouts = '1'; 
