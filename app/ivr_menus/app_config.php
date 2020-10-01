@@ -163,7 +163,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2000";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit timeout in milliseconds";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5829fb7-8bd6-4c42-af16-565882fad7ca";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
@@ -293,7 +293,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_timeout";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Timeout in milliseconds";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_exit_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
