@@ -768,16 +768,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-		$dial_string  = "for_fax=1,";
-		$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-		$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-		$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$dial_string .= "fax_file='"                     . $fax_file                . "',";
+		$tmp_dial_string  = "for_fax=1,";
+		$tmp_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+		$tmp_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$tmp_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$tmp_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$tmp_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "fax_file='"                     . $fax_file                . "',";
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
@@ -803,6 +803,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			if ($fax_send_mode != 'queue') {
+				$dial_string = $tmp_dial_string;
 				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
@@ -827,6 +828,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else { // enqueue
 				$wav_file = ''; //! @todo add custom message
+				$dial_string = $tmp_dial_string;
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
 		}
