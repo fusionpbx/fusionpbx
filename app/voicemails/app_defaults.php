@@ -27,30 +27,60 @@
 //process this only one time
 if ($domains_processed == 1) {
 
-	// process change from using macros to phrases
-	$languages_path = $_SESSION['switch']['phrases']['dir'];
-	if ($languages_path != '' && file_exists($languages_path)) {
-		$folder_contents = scandir($languages_path);
+	// define initial, get current, define correct languages folder paths
+	$switch_phrases_dir_initial = '/etc/freeswitch/lang';
+	$switch_phrases_dir_current = $_SESSION['switch']['phrases']['dir'];
+	$switch_phrases_dir_correct = '/etc/freeswitch/languages';
+
+	// ensure switch using languages (not lang) folder
+	if ($switch_phrases_dir_current == $switch_phrases_dir_initial) {
+		// rename languages folder, if necessary
+		if (file_exists($switch_phrases_dir_current) && !file_exists($switch_phrases_dir_correct)) {
+			rename($switch_phrases_dir_current, $switch_phrases_dir_correct);
+		}
+		// update default setting value
+		if (file_exists($switch_phrases_dir_correct)) {
+			// session
+			$_SESSION['switch']['phrases']['dir'] = $switch_phrases_dir_correct;
+			// database
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_value = '".$switch_phrases_dir_correct."', ";
+			$sql .= "default_setting_enabled = true ";
+			$sql .= "where default_setting_category = 'switch' ";
+			$sql .= "and default_setting_subcategory = 'phrases' ";
+			$sql .= "and default_setting_name = 'dir' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+		}
+	}
+
+	// update language xml files to use switch phrases
+	if (file_exists($switch_phrases_dir_correct)) {
+		$folder_contents = scandir($switch_phrases_dir_correct);
 		if (is_array($folder_contents) && @sizeof($folder_contents) != 0) {
 			foreach ($folder_contents as $language_abbreviation) {
 				if ($language_abbreviation == '.' || $language_abbreviation == '..') { continue; }
-				// adjust language xml to include all xml phrase files in the vm folder
-				$language_xml_path = $languages_path.'/'.$language_abbreviation.'/'.$language_abbreviation.'.xml';
+				// adjust language xml file to include all xml phrase files in the vm folder
+				$language_xml_path = $switch_phrases_dir_correct.'/'.$language_abbreviation.'/'.$language_abbreviation.'.xml';
 				if (file_exists($language_xml_path)) {
 					$language_xml_content = file_get_contents($language_xml_path);
 					$language_xml_content = str_replace('data="vm/sounds.xml"', 'data="vm/*.xml"', $language_xml_content);
 					@file_put_contents($language_xml_path, $language_xml_content);
 				}
-				// copy voicemail.xml to language/xx/vm folders
+				// copy voicemail.xml to languages/xx/vm folders
 				$voicemail_xml_source = $_SERVER['PROJECT_ROOT'].'/app/voicemails/resources/switch/languages/'.$language_abbreviation.'/vm/voicemail.xml';
-				$voicemail_xml_target = $languages_path.'/'.$language_abbreviation.'/vm/voicemail.xml';
+				$voicemail_xml_target = $switch_phrases_dir_correct.'/'.$language_abbreviation.'/vm/voicemail.xml';
 				if (!file_exists($voicemail_xml_target)) {
 					copy($voicemail_xml_source, $voicemail_xml_target);
 				}
 			}
 		}
 	}
-	unset($languages_path, $folder_contents, $language_abbreviation, $language_xml_path, $language_xml_content, $voicemail_xml_source, $voicemail_xml_target);
+
+	// clear variables
+	unset($switch_phrases_dir_initial, $switch_phrases_dir_current, $switch_phrases_dir_correct);
+	unset($folder_contents, $language_abbreviation, $language_xml_path, $language_xml_content, $voicemail_xml_source, $voicemail_xml_target);
 
 }
 
