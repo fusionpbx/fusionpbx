@@ -6683,7 +6683,11 @@
     <!-- # Sort Phonebook by. 0 - Last Name, 1 - First Name. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($grandstream_sort_phonebook_by)}
+    <P2914>{$grandstream_sort_phonebook_by}</P2914>
+{else}
     <P2914>0</P2914>
+{/if}
 
     <!-- # Phonebook Key Function. 0 - Default, 1 - LDAP Search, 2 - Local Phonebook, 3 - Local Group, 4 - Broadsoft Phonebook -->
     <!-- # Number: 0, 1, 2, 3, 4. -->
@@ -6697,7 +6701,11 @@
     <!-- # Default search mode. 0 - Quick match, 1 - Exact match. Default is 0 -->
     <!-- # Number: 0, 1. -->
     <!-- # Mandatory -->
+{if isset($grandstream_phonebook_search_mode)}
+    <P2970>{$grandstream_phonebook_search_mode}</P2970>
+{else}
     <P2970>0</P2970>
+{/if}
 
     <!-- ############################################################################## -->
     <!-- ##  Phonebook/LDAP -->
