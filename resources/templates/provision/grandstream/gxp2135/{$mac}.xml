@@ -6249,7 +6249,7 @@
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1414>1</P1414>
+    <P1414>0</P1414>
 
     <!-- # Automatic Upgrade.  -->
     <!-- # 0 - No,  -->
@@ -6259,7 +6259,7 @@
     <!-- # Default is No -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P194>0</P194>
+    <P194>2</P194>
 
     <!-- # Check for new firmware every () minutes. Default is 7 days. -->
     <!-- # Number: 60-86400 -->
@@ -6291,7 +6291,7 @@
     <!-- # Firmware Upgrade Confirmation. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0,1 -->
     <!-- # Mandatory -->
-    <P8375>1</P8375>
+    <P8375>0</P8375>
 
     <!-- #Config -->
     <!-- # Config Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1. Default is 2 -->
