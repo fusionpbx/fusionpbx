@@ -219,6 +219,13 @@
 					end
 				end
 
+				not_found_extension = '';
+				if (settings['voicemail']['not_found_extension'] ~= nil) then
+					if (settings['voicemail']['not_found_extension']['text'] ~= nil) then
+						not_found_extension = settings['voicemail']['not_found_extension']['text'];
+					end
+				end
+
 			end
 
 			if (settings['voicemail']) then
@@ -645,6 +652,10 @@
 								session:answer();
 								session:execute("sleep", "1000");
 								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-no_answer_no_vm.wav");
+							end
+							if (not_found_extension ~= "") then
+								session:transfer(not_found_extension, "XML", context);
+							else
 								session:hangup();
 							end
 						end
