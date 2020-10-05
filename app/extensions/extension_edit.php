@@ -836,7 +836,7 @@
 	echo "	document.iform.range_to.disabled = endis;\n";
 	echo "}\n";
 	echo "\n";
-	if (permission_exists(extension_advanced)) {
+	if (permission_exists('extension_advanced')) {
 		echo "function show_advanced_config() {\n";
 		echo "	$('#show_advanced_box').slideToggle();\n";
 		echo "	$('#show_advanced').slideToggle();\n";
