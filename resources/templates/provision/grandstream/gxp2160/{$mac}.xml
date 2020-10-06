@@ -686,7 +686,7 @@
 
     <!-- # Dial Plan Prefix -->
     <!-- # String  -->
-    <P66></P66>
+    <P66>{$grandstream_dial_prefix}</P66>
 
     <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
