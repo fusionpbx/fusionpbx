@@ -186,7 +186,6 @@ if (!class_exists('xml_cdr')) {
 
 			$this->fields();
 			$field_count = sizeof($this->fields);
-			$row_count = sizeof($this->array);
 			//$field_count = sizeof($this->fields);
 			$i = 0;
 			if (isset($this->array)) {
