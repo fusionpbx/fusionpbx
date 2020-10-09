@@ -110,7 +110,7 @@
 						else
 							voicemail_id_say = voicemail_id;
 						end
-						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", ".*");
 					end
 			end
 		end
