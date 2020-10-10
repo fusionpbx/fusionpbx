@@ -79,6 +79,83 @@ if (!class_exists('destinations')) {
 		}
 
 		/**
+		* Convert destination number to a regular expression
+		* @var string $array destination_prefix, destination_trunk_prefix, destination_area_code, destination_number
+		*/
+		public function to_regex($array) {
+
+				if (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_number']."\$)";
+				}
+				elseif (isset($array['destination_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_number']."\$)";
+				}
+				elseif ((isset($array['destination_prefix']) && isset($array['destination_number'])) || isset($array['destination_number'])) {
+
+					//set the variables
+						$destination_prefix = $array['destination_prefix'];
+						$destination_number = $array['destination_number'];
+						$destination_regex = $array['destination_number'];
+
+					//escape the plus
+						if (substr($destination_number, 0, 1) == "+") {
+							$destination_regex = "^\\+(".substr($destination_number, 1).")$";
+						}
+
+					//add prefix
+						if (strlen($destination_prefix) > 0) {
+							if (strlen($destination_prefix) > 0 && strlen($destination_prefix) < 4) {
+								$plus = (substr($destination_prefix, 0, 1) == "+") ? '' : '\+?';
+								$destination_prefix = $plus.$destination_prefix.'?';
+							}
+							else {
+								$destination_prefix = '(?:'.$destination_prefix.')?';
+							}
+						}
+
+					//convert N,X,Z syntax to regex
+						$destination_regex = str_ireplace("N", "[2-9]", $destination_regex);
+						$destination_regex = str_ireplace("X", "[0-9]", $destination_regex);
+						$destination_regex = str_ireplace("Z", "[1-9]", $destination_regex);
+
+					//add ^ to the start of the string if missing
+						if (substr($destination_regex, 0, 1) != "^") {
+							$destination_regex = "^".$destination_regex;
+						}
+
+					//add $ to the end of the string if missing
+						if (substr($destination_regex, -1) != "$") {
+							$destination_regex = $destination_regex."$";
+						}
+
+					//add the round brackets
+						if (!strstr($destination_regex, '(')) {
+							if (strstr($destination_regex, '^')) {
+								$destination_regex = str_replace("^", "^".$destination_prefix."(", $destination_regex);
+							}
+							else {
+								$destination_regex = '^('.$destination_regex;
+							}
+							if (strstr($destination_regex, '$')) {
+								$destination_regex = str_replace("$", ")$", $destination_regex);
+							}
+							else {
+								$destination_regex = $destination_regex.')$';
+							}
+						}
+
+				}
+
+				return $destination_regex;
+
+		}
+
+		/**
 		* Build the destination select list
 		* @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
 		* @var string $destination_name - current name
