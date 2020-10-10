@@ -305,7 +305,7 @@
 			if (missed_call_app == "email") then
 				--prepare the email address
 					mail_to = missed_call_data;
-			
+
 				--set the sounds path for the language, dialect and voice
 					default_language = session:getVariable("default_language");
 					default_dialect = session:getVariable("default_dialect");
