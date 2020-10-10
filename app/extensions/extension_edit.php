@@ -132,7 +132,7 @@
 			if (!is_numeric($voicemail_id)) {
 				$voicemail_id = null;
 			}
-			
+
 		//change toll allow delimiter
 			$toll_allow = str_replace(',',':', $toll_allow);
 
@@ -142,8 +142,11 @@
 		//device provisioning variables
 			if (is_array($_POST["devices"]) && @sizeof($_POST["devices"]) != 0) {
 				foreach ($_POST["devices"] as $d => $device) {
+					$device_mac_address = strtolower($device["device_mac_address"]);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
 					$line_numbers[$d] = $device["line_number"];
-					$device_mac_addresses[$d] = format_mac($device["device_mac_address"],'');
+					$device_mac_addresses[$d] = $device_mac_address;
 					$device_templates[$d] = $device["device_template"];
 				}
 			}
@@ -151,16 +154,18 @@
 		//get or set the device_uuid
 			if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
 				foreach ($device_mac_addresses as $d => $device_mac_address) {
-					if (is_mac($device_mac_address)) {
-						$sql = "select device_uuid from v_devices ";
-						$sql .= "where device_mac_address = :device_mac_address ";
-						$sql .= "and domain_uuid = :domain_uuid ";
-						$parameters['device_mac_address'] = $device_mac_address;
-						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$device_uuid = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
-					}
+					$device_mac_address = strtolower($device_mac_address);
+					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
+					$sql = "select device_uuid from v_devices ";
+					$sql .= "where device_mac_address = :device_mac_address ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$parameters['device_mac_address'] = $device_mac_address;
+					$parameters['domain_uuid'] = $domain_uuid;
+					$database = new database;
+					$device_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+
 					$device_uuids[$d] = is_uuid($device_uuid) ? $device_uuid : uuid();
 				}
 			}
@@ -176,16 +181,20 @@
 			$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
 
+		//add temporary permission
 			$p = new permissions;
 			$p->add('extension_user_delete', 'temp');
 
+		//save the array
 			$database = new database;
 			$database->app_name = 'extensions';
 			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$database->delete($array);
 			unset($array);
 
+		//remove temporary permission
 			$p->delete('extension_user_delete', 'temp');
+
 		//redirect
 			header("Location: extension_edit.php?id=".$extension_uuid);
 			exit;
@@ -196,19 +205,24 @@
 		if ($_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
 			//set the variables
 				$device_line_uuid = $_REQUEST["delete_uuid"];
+
 			//delete device_line
 				$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
 
+			//add temporary permission
 				$p = new permissions;
 				$p->add('device_line_delete', 'temp');
 
+			//save the array
 				$database = new database;
 				$database->app_name = 'extensions';
 				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 				$database->delete($array);
 				unset($array);
 
+			//remove temporary permission
 				$p->delete('device_line_delete', 'temp');
+
 			//redirect
 				header("Location: extension_edit.php?id=".$extension_uuid);
 				exit;
@@ -219,7 +233,12 @@
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//set the domain_uuid
-			$domain_uuid = permission_exists('extension_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
+			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
+				$domain_uuid = $_POST["domain_uuid"];
+			}
+			else {
+				$domain_uuid = $_SESSION['domain_uuid'];
+			}
 
 		//validate the token
 			$token = new token;
@@ -315,15 +334,18 @@
 							}
 							else {
 
+								//get the password length and strength
+									$password_length = $_SESSION["extension"]["password_length"]["numeric"];
+									$password_strength = $_SESSION["extension"]["password_strength"]["numeric"];
+
 								//extension does not exist add it
 									if ($action == "add" || $range > 1) {
 										$extension_uuid = uuid();
 										$voicemail_uuid = uuid();
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 
-								//prepare the values
-									//mwi account
+								//prepare the values for mwi account
 										if (strlen($mwi_account) > 0) {
 											if (strpos($mwi_account, '@') === false) {
 												if (count($_SESSION["domains"]) > 1) {
@@ -337,10 +359,10 @@
 
 								//generate a password
 									if ($action == "add" && strlen($password) == 0) {
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 									if ($action == "update" && permission_exists('extension_password') && strlen($password) == 0) {
-										$password = generate_password();
+										$password = generate_password($password_length, $password_strength);
 									}
 
 								//create the data array
@@ -814,11 +836,13 @@
 	echo "	document.iform.range_to.disabled = endis;\n";
 	echo "}\n";
 	echo "\n";
-	echo "function show_advanced_config() {\n";
-	echo "	$('#show_advanced_box').slideToggle();\n";
-	echo "	$('#show_advanced').slideToggle();\n";
-	echo "}\n";
-	echo "\n";
+	if (permission_exists('extension_advanced')) {
+		echo "function show_advanced_config() {\n";
+		echo "	$('#show_advanced_box').slideToggle();\n";
+		echo "	$('#show_advanced').slideToggle();\n";
+		echo "}\n";
+		echo "\n";
+	}
 	echo "function copy_extension() {\n";
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
@@ -857,11 +881,14 @@
 			unset($button_margin);
 		}
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-			echo button::create(['type'=>'button','label'=>$text['button-call_routing'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
 			unset($button_margin);
 		}
 		if (permission_exists('extension_copy')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"copy_extension();"]);
+		}
+		if (permission_exists('domain_setting_view') && file_exists(PROJECT_PATH.'/app/extension_settings/app_config.php')) {
+			echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_settings'],'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/app/extension_settings/extension_settings.php?id='.urlencode($extension_uuid)]);
 		}
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
@@ -1148,7 +1175,7 @@
 				}
 				echo "	</tr>\n";
 
-				if (is_array($device_lines) && @sizeof($device_lines) != 0) { break; } //show one row when editing extension and no device assigned
+				break; //show one empty row whether adding or editing
 			}
 			echo "		</table>\n";
 			echo "		<br />\n";
@@ -1672,186 +1699,6 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists("extension_user_context")) {
-		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-user_context']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"".escape($user_context)."\" required='required'>\n";
-		echo "<br />\n";
-		echo $text['description-user_context']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	//--- begin: show_advanced -----------------------
-
-	echo "<tr>\n";
-	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
-
-	echo "	<div id=\"show_advanced_box\">\n";
-	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "		<tr>\n";
-	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
-	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
-	echo "		</td>\n";
-	echo "		</tr>\n";
-	echo "		</table>\n";
-	echo "	</div>\n";
-
-	echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-	echo "<tr>\n";
-	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-auth_acl']."\n";
-	echo "</td>\n";
-	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl)."\">\n";
-	echo "   <br />\n";
-	echo $text['description-auth_acl']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists("extension_cidr")) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-cidr']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
-		echo "<br />\n";
-		echo $text['description-cidr']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_force_contact']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='sip_force_contact'>\n";
-	echo "    <option value=''></option>\n";
-	switch ($sip_force_contact) {
-		case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
-		case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
-		case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
-	}
-	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
-	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
-	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
-	unset($selected);
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-sip_force_contact']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_force_expires']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires)."\">\n";
-	echo "<br />\n";
-	echo $text['description-sip_force_expires']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists('extension_nibble_account')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-nibble_account']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account)."\">\n";
-		echo "<br />\n";
-		echo $text['description-nibble_account']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-mwi_account']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account)."\">\n";
-	echo "<br />\n";
-	echo $text['description-mwi_account']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-sip_bypass_media']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='sip_bypass_media'>\n";
-	echo "    <option value=''></option>\n";
-	switch ($sip_bypass_media) {
-		case "bypass-media" : 				$selected[1] = "selected='selected'"; 	break;
-		case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
-		case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
-	}
-	echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
-	echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
-	echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
-	unset($selected);
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-sip_bypass_media']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	if (permission_exists('extension_absolute_codec_string')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-absolute_codec_string']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string)."\">\n";
-		echo "<br />\n";
-		echo $text['description-absolute_codec_string']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
-	if (permission_exists('extension_force_ping')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-force_ping']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='force_ping'>\n";
-		if ($force_ping == "") {
-			echo "    <option value='' selected='selected'></option>\n";
-		}
-		else {
-			echo "    <option value=''></option>\n";
-		}
-		if ($force_ping == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
-		}
-		if ($force_ping == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-force_ping']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
 	if (permission_exists('extension_domain')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1874,25 +1721,207 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('extension_dial_string')) {
+	if (permission_exists("extension_user_context")) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-dial_string']."\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-user_context']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string)."\">\n";
+		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"".escape($user_context)."\" required='required'>\n";
 		echo "<br />\n";
-		echo $text['description-dial_string']."\n";
+		echo $text['description-user_context']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
-	echo "	</table>\n";
-	echo "	</div>";
+	//--- begin: show_advanced -----------------------
 
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists("extension_advanced")) {
+		echo "<tr>\n";
+		echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
 
+		echo "	<div id=\"show_advanced_box\">\n";
+		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "		<tr>\n";
+		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
+		echo "		<td width=\"70%\" class=\"vtable\">\n";
+		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
+		echo "		</td>\n";
+		echo "		</tr>\n";
+		echo "		</table>\n";
+		echo "	</div>\n";
+
+		echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
+		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+
+		echo "<tr>\n";
+		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-auth_acl']."\n";
+		echo "</td>\n";
+		echo "<td width=\"70%\" class='vtable' align='left'>\n";
+		echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl)."\">\n";
+		echo "   <br />\n";
+		echo $text['description-auth_acl']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (permission_exists("extension_cidr")) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-cidr']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr)."\">\n";
+			echo "<br />\n";
+			echo $text['description-cidr']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-sip_force_contact']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='sip_force_contact'>\n";
+		echo "    <option value=''></option>\n";
+		switch ($sip_force_contact) {
+			case "NDLB-connectile-dysfunction": 		$selected[1] = "selected='selected'"; 	break;
+			case "NDLB-connectile-dysfunction-2.0": 	$selected[2] = "selected='selected'"; 	break;
+			case "NDLB-tls-connectile-dysfunction": 	$selected[3] = "selected='selected'"; 	break;
+		}
+		echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
+		echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
+		echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
+		unset($selected);
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-sip_force_contact']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-sip_force_expires']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"".escape($sip_force_expires)."\">\n";
+		echo "<br />\n";
+		echo $text['description-sip_force_expires']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (permission_exists('extension_nibble_account')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-nibble_account']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"".escape($nibble_account)."\">\n";
+			echo "<br />\n";
+			echo $text['description-nibble_account']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-mwi_account']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"".escape($mwi_account)."\">\n";
+		echo "<br />\n";
+		echo $text['description-mwi_account']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-sip_bypass_media']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='sip_bypass_media'>\n";
+		echo "    <option value=''></option>\n";
+		switch ($sip_bypass_media) {
+			case "bypass-media" : 				$selected[1] = "selected='selected'"; 	break;
+			case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
+			case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
+		}
+		echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
+		echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
+		echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
+		unset($selected);
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-sip_bypass_media']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (permission_exists('extension_absolute_codec_string')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-absolute_codec_string']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='absolute_codec_string' maxlength='255' value=\"".escape($absolute_codec_string)."\">\n";
+			echo "<br />\n";
+			echo $text['description-absolute_codec_string']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if (permission_exists('extension_force_ping')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-force_ping']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='force_ping'>\n";
+			if ($force_ping == "") {
+				echo "    <option value='' selected='selected'></option>\n";
+			}
+			else {
+				echo "    <option value=''></option>\n";
+			}
+			if ($force_ping == "true") {
+				echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+			}
+			else {
+				echo "    <option value='true'>".$text['label-true']."</option>\n";
+			}
+			if ($force_ping == "false") {
+				echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+			}
+			else {
+				echo "    <option value='false'>".$text['label-false']."</option>\n";
+			}
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-force_ping']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if (permission_exists('extension_dial_string')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-dial_string']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"".escape($dial_string)."\">\n";
+			echo "<br />\n";
+			echo $text['description-dial_string']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "	</table>\n";
+		echo "	</div>";
+
+		echo "</td>\n";
+		echo "</tr>\n";
+
+	}
 	//--- end: show_advanced -----------------------
 
 	if (permission_exists('extension_enabled')) {
@@ -1950,8 +1979,8 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
-
 	echo "<script>\n";
+
 //hide password fields before submit
 	echo "	function submit_form() {\n";
 	echo "		hide_password_fields();\n";

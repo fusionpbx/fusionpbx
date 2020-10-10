@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AddressBook>
+<version>1</version>
+{foreach $contacts as $contact}
+{if $contact.contact_type == "group"}
+<pbgroup>
+<id>{$contact.id}</id>
+<name>{$contact.group_description|truncate:10}</name>
+</pbgroup>
+{/if}
+{/foreach}
+{$i=0}
+{foreach $contacts as $contact}
+{if $contact.contact_name_given != "" && $contact.contact_type == "contact"}
+<Contact>
+<FirstName>{$contact.contact_name_given}</FirstName>
+<LastName>{$contact.contact_name_family}</LastName>
+{if $contact.contact_role != "" }
+<JobTitle>{$contact.contact_role}</JobTitle>
+{/if}
+{if $contact.contact_category != "" }
+<Department>{$contact.contact_category}</Department>
+{/if}
+<Phone type="Work">
+<phonenumber>{$contact.contact_work}</phonenumber>
+<accountindex>1</accountindex>
+</Phone>
+{if $contact.contact_home != "" }
+<Phone type="Home">
+<phonenumber>{$contact.contact_home}</phonenumber>
+<accountindex>1</accountindex>
+</Phone>
+{/if}
+{if $contact.contact_cell != "" }
+<Phone type="Cell">
+<phonenumber>{$contact.contact_cell}</phonenumber>
+<accountindex>1</accountindex>
+</Phone>
+{/if}
+{if $contact.contact_organization != "" }
+<Company>{$contact.contact_organization}</Company>
+{/if}
+{foreach $contact.groups as $group}
+<Group>{$group}</Group>
+{/foreach}
+</Contact>
+{/if}
+{/foreach}
+</AddressBook>

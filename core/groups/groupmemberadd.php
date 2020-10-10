@@ -52,7 +52,7 @@
 
 //validate the token
 	$token = new token;
-	if (!$token->validate('/core/groups/groupmembers.php')) {
+	if (!$token->validate('/core/groups/group_members.php')) {
 		message::add($text['message-invalid_token'],'negative');
 		header('Location: groups.php');
 		exit;
@@ -81,6 +81,6 @@
 	}
 
 //redirect the user
-	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
+	header("Location: group_members.php?group_uuid=".urlencode($group_uuid)."&group_name=".urlencode($group_name));
 
 ?>

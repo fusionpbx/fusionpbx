@@ -57,9 +57,9 @@ if (!class_exists('modal')) {
 				//prefix cancel button to action
 					$array['actions'] = button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'collapse'=>'never','onclick'=>'modal_close(); '.$array['onclose']]).$array['actions'];
 			}
-			$modal .= $array['title'] ? "<span class='modal-title'>".$array['title']."</span>\n" : null;
-			$modal .= $array['message'] ? "<span class='modal-message'>".$array['message']."</span>\n" : null;
-			$modal .= $array['actions'] ? "<span class='modal-actions'>".$array['actions']."</span>\n" : null;
+			$modal .= $array['title'] ? "		<span class='modal-title'>".$array['title']."</span>\n" : null;
+			$modal .= $array['message'] ? "		<span class='modal-message'>".$array['message']."</span>\n" : null;
+			$modal .= $array['actions'] ? "		<span class='modal-actions'>".$array['actions']."</span>\n" : null;
 			$modal .= "	</div>\n";
 			$modal .= "</div>";
 

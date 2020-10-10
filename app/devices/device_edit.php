@@ -120,7 +120,6 @@
 			$device_firmware_version = $_POST["device_firmware_version"];
 			$device_enabled = $_POST["device_enabled"];
 			$device_template = $_POST["device_template"];
-			$device_profile_uuid = $_POST["device_profile_uuid"];
 			$device_description = $_POST["device_description"];
 		//lines
 			$device_lines = $_POST["device_lines"];
@@ -273,8 +272,8 @@
 					if (permission_exists('device_template')) {
 						$array['devices'][0]['device_template'] = $device_template;
 					}
-					if (permission_exists('device_profile_edit') && is_uuid($device_profile_uuid)) {
-						$array['devices'][0]['device_profile_uuid'] = $device_profile_uuid;
+					if (permission_exists('device_profile_edit')) {
+						$array['devices'][0]['device_profile_uuid'] = is_uuid($device_profile_uuid) ? $device_profile_uuid : null;
 					}
 					if (permission_exists('device_description')) {
 						$array['devices'][0]['device_description'] = $device_description;
@@ -1047,28 +1046,65 @@
 
 				if (permission_exists('device_line_server_address_primary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					if (is_uuid($_SESSION['provision']['server_address_primary']['uuid'])) {
+						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					}
+					else {
+						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_primary]'>\n";
+						echo "					<option value=''></option>\n";
+						foreach($_SESSION['provision']['server_address_primary'] as $field) {
+							echo "					<option value='".$field."' ".(($row['server_address_primary'] == $field) ? "selected" : null).">".$field."</option>\n";
+						}
+						echo "				</select>\n";
+					}
 					echo "			</td>\n";
 				}
+
 				if (permission_exists('device_line_server_address_secondary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					if (isset($_SESSION['provision']['server_address_secondary']['text'])) {
+						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					}
+					else {
+						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_secondary]'>\n";
+						echo "					<option value=''></option>\n";
+						foreach($_SESSION['provision']['server_address_secondary'] as $field) {
+							echo "					<option value='".$field."' ".(($row['server_address_secondary'] == $field) ? "selected" : null).">".$field."</option>\n";
+						}
+						echo "				</select>\n";
+					}
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_outbound_proxy_primary')) {
-					if (permission_exists('device_line_outbound_proxy_secondary')) {
-						$placeholder_label = $text['label-primary'];
-					}
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($placeholder_label)."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
+					if (isset($_SESSION['provision']['outbound_proxy_primary']['text'])) {
+						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
+					}
+					else {
+						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][outbound_proxy_primary]'>\n";
+						echo "					<option value=''></option>\n";
+						foreach($_SESSION['provision']['outbound_proxy_primary'] as $field) {
+							echo "					<option value='".$field."' ".(($row['outbound_proxy_primary'] == $field) ? "selected" : null).">".$field."</option>\n";
+						}
+						echo "				</select>\n";	
+					}
 					echo "			</td>\n";
-					unset($placeholder_label);
 				}
 				
 				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
-					echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".$text['label-secondary']."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
+					if (isset($_SESSION['provision']['outbound_proxy_secondary']['text'])) {
+						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
+					}
+					else {
+						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][outbound_proxy_secondary]'>\n";
+						echo "					<option value=''></option>\n";
+						foreach($_SESSION['provision']['outbound_proxy_secondary'] as $field) {
+							echo "					<option value='".$field."' ".(($row['outbound_proxy_secondary'] == $field) ? "selected" : null).">".$field."</option>\n";
+						}
+						echo "				</select>\n";	
+					}
 					echo "			</td>\n";
 				}
 
@@ -1137,16 +1173,11 @@
 				echo "				</select>\n";
 				echo "			</td>\n";
 
-				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete')) {
-					if (is_uuid($row['device_line_uuid'])) {
-						echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-						echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
-						echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
-					}
-					else {
-						echo "			<td>\n";
-					}
-					echo "			</td>\n";
+				if (is_array($device_lines) && @sizeof($device_lines) > 1 && permission_exists('device_line_delete') && is_uuid($row['device_line_uuid'])) {
+					echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
+					echo "				<input type='checkbox' name='device_lines_delete[".$x."][checked]' value='true' class='chk_delete checkbox_lines' onclick=\"edit_delete_action('lines');\">\n";
+					echo "				<input type='hidden' name='device_lines_delete[".$x."][uuid]' value='".escape($row['device_line_uuid'])."' />\n";
+					echo "			<td>\n";
 				}
 
 				echo "</tr>\n";

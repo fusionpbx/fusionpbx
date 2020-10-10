@@ -24,41 +24,23 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-	//session handling
-		//start the session
-			if (function_exists('session_start')) { 
-				if (!isset($_SESSION)) {
-					session_start();
-				}
+//session handling
+	//start the session
+		if (function_exists('session_start')) { 
+			if (!isset($_SESSION)) {
+				session_start();
 			}
-		//regenerate sessions to avoid session id attacks such as session fixation
-			if (array_key_exists('security',$_SESSION) && $_SESSION['security']['session_rotate']['boolean'] == "true") {
-				$_SESSION['session']['last_activity'] = time();
-				if (!isset($_SESSION['session']['created'])) {
-					$_SESSION['session']['created'] = time();
-				} else if (time() - $_SESSION['session']['created'] > 28800) {
-					// session started more than 8 hours ago
-					session_regenerate_id(true);    // rotate the session id
-					$_SESSION['session']['created'] = time();  // update creation time
-				}
+		}
+	//regenerate sessions to avoid session id attacks such as session fixation
+		if (array_key_exists('security',$_SESSION) && $_SESSION['security']['session_rotate']['boolean'] == "true") {
+			$_SESSION['session']['last_activity'] = time();
+			if (!isset($_SESSION['session']['created'])) {
+				$_SESSION['session']['created'] = time();
+			} else if (time() - $_SESSION['session']['created'] > 28800) {
+				// session started more than 8 hours ago
+				session_regenerate_id(true);    // rotate the session id
+				$_SESSION['session']['created'] = time();  // update creation time
 			}
-
-	//get the document_root parent directory
-		$document_root_parent = join(array_slice(explode("\\",realpath($_SERVER["DOCUMENT_ROOT"])),0,-1), '/');
-
-	//if magic quotes is enabled remove the slashes
-		if (get_magic_quotes_gpc()) {
-			$in = array(&$_GET, &$_POST, &$_REQUEST, &$_COOKIE);
-			while (list($k,$v) = each($in)) {
-				foreach ($v as $key => $val) {
-					if (!is_array($val)) {
-							$in[$k][$key] = stripslashes($val);
-							continue;
-					}
-					$in[] =& $in[$k][$key];
-				}
-			}
-			unset($in);
 		}
 
 ?>

@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="user_hold_music" number="" continue="true" app_uuid="3ace0990-ef23-45b2-a81d-a5857a671e74" order="80">
+		<condition field="${hold_music}" expression="^$" break="never"/>
+		<condition field="${user_exists}" expression="true">
+			<action application="set" data="hold_music=${user_data ${destination_number}@${domain_name} var hold_music}" inline="true"/>
+		</condition>
+	</extension>
+</context>

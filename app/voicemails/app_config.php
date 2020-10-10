@@ -34,9 +34,11 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "voicemails";
 		$apps[$x]['destinations'][$y]['name'] = "voicemails";
+		$apps[$x]['destinations'][$y]['sql'] = "select voicemail_id as destination, '*99' || voicemail_id as extension, voicemail_description as description from v_voicemails";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and voicemail_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "voicemail_id asc ";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "voicemail_id";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "voicemail_id";
 		$apps[$x]['destinations'][$y]['field']['description'] = "voicemail_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:*99\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer *99\${destination} XML \${context}";
@@ -60,6 +62,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "voicemail_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;

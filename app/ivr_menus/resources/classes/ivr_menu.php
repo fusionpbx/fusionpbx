@@ -161,9 +161,6 @@ if (!class_exists('ivr_menu')) {
 									$p->delete('ivr_menu_option_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
 										$ivr_menu_contexts = array_unique($ivr_menu_contexts);
@@ -325,9 +322,6 @@ if (!class_exists('ivr_menu')) {
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["context"]);
@@ -470,9 +464,6 @@ if (!class_exists('ivr_menu')) {
 									$p = new permissions;
 									$p->delete('ivr_menu_option_add', 'temp');
 									$p->delete('dialplan_add', 'temp');
-
-								//synchronize the xml config
-									save_dialplan_xml();
 
 								//clear the cache
 									$cache = new cache;

@@ -105,6 +105,7 @@
 		//get ivr menu
 			$ivr_menu_name = $_POST["ivr_menu_name"];
 			$ivr_menu_extension = $_POST["ivr_menu_extension"];
+			$ivr_menu_parent_uuid = $_POST["ivr_menu_parent_uuid"];
 			$ivr_menu_greet_long = $_POST["ivr_menu_greet_long"];
 			$ivr_menu_greet_short = $_POST["ivr_menu_greet_short"];
 			$ivr_menu_language = $_POST["ivr_menu_language"];
@@ -253,6 +254,7 @@
 					$array['ivr_menus'][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array['ivr_menus'][0]["ivr_menu_name"] = $ivr_menu_name;
 					$array['ivr_menus'][0]["ivr_menu_extension"] = $ivr_menu_extension;
+					$array['ivr_menus'][0]["ivr_menu_parent_uuid"] = $ivr_menu_parent_uuid;
 					$array['ivr_menus'][0]["ivr_menu_language"] = $ivr_menu_language;
 					$array['ivr_menus'][0]["ivr_menu_greet_long"] = $ivr_menu_greet_long;
 					$array['ivr_menus'][0]["ivr_menu_greet_short"] = $ivr_menu_greet_short;
@@ -264,8 +266,13 @@
 					$array['ivr_menus'][0]["ivr_menu_tts_voice"] = $ivr_menu_tts_voice;
 					$array['ivr_menus'][0]["ivr_menu_confirm_attempts"] = $ivr_menu_confirm_attempts;
 					$array['ivr_menus'][0]["ivr_menu_timeout"] = $ivr_menu_timeout;
-					$array['ivr_menus'][0]["ivr_menu_exit_app"] = $ivr_menu_exit_app;
-					$array['ivr_menus'][0]["ivr_menu_exit_data"] = $ivr_menu_exit_data;
+					if ($destination->valid($ivr_menu_exit_app.":".$ivr_menu_exit_data)) {
+						$array['ivr_menus'][0]["ivr_menu_exit_app"] = $ivr_menu_exit_app;
+						$array['ivr_menus'][0]["ivr_menu_exit_data"] = $ivr_menu_exit_data;
+					}
+					else {
+						$ivr_menu_exit_app = "";
+					}
 					$array['ivr_menus'][0]["ivr_menu_inter_digit_timeout"] = $ivr_menu_inter_digit_timeout;
 					$array['ivr_menus'][0]["ivr_menu_max_failures"] = $ivr_menu_max_failures;
 					$array['ivr_menus'][0]["ivr_menu_max_timeouts"] = $ivr_menu_max_timeouts;
@@ -301,7 +308,7 @@
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_uuid"] = $ivr_menu_option_uuid;
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_digits"] = $row["ivr_menu_option_digits"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_action"] = $ivr_menu_option_action;
-							if ($destination->valid(preg_replace('/\s/', ':', $ivr_menu_option_param, 1))) {
+							if ($destination->valid($ivr_menu_option_action.":".$ivr_menu_option_param, 'ivr')) {
 								$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_param"] = $ivr_menu_option_param;
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
@@ -336,7 +343,9 @@
 						$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
 					}
 
-					$dialplan_xml .= "		<action application=\"".$ivr_menu_exit_app."\" data=\"".$ivr_menu_exit_data."\"/>\n";
+					if (strlen($ivr_menu_exit_app) > 0) {
+						$dialplan_xml .= "		<action application=\"".$ivr_menu_exit_app."\" data=\"".$ivr_menu_exit_data."\"/>\n";
+					}
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -391,7 +400,25 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["context"]);
 					$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
-
+					//get all ivr parent menus
+					$sql = "with recursive ivr_menus as ( ";
+					$sql .="	select ivr_menu_parent_uuid ";
+					$sql .="	 from v_ivr_menus ";
+					$sql .="	 where ivr_menu_parent_uuid = :ivr_menu_parent_uuid ";
+					$sql .="	 and ivr_menu_enabled = 'true' ";
+					$sql .="	 union all ";
+					$sql .="	 select parent.ivr_menu_parent_uuid ";
+					$sql .="	 from v_ivr_menus as parent, ivr_menus as child ";
+					$sql .="	 where parent.ivr_menu_uuid = child.ivr_menu_parent_uuid ";
+					$sql .="	 and parent.ivr_menu_enabled = 'true' ";
+					$sql .="	) ";
+					$sql .="	select * from ivr_menus ";
+					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
+					$database = new database;
+					$parent_uuids = $database->select($sql, $parameters, "all");
+					foreach ($parent_uuids as $x => $row) {
+						$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
+					}
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
 						message::add($text['message-add']);
@@ -421,6 +448,7 @@
 				$dialplan_uuid = $row["dialplan_uuid"];
 				$ivr_menu_name = $row["ivr_menu_name"];
 				$ivr_menu_extension = $row["ivr_menu_extension"];
+				$ivr_menu_parent_uuid = $row["ivr_menu_parent_uuid"];
 				$ivr_menu_language = $row["ivr_menu_language"];
 				$ivr_menu_dialect = $row["ivr_menu_dialect"];
 				$ivr_menu_voice = $row["ivr_menu_voice"];
@@ -469,6 +497,15 @@
 	$ivr_menu_options = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get the ivr menus
+	$sql = "select * from v_ivr_menus ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by v_ivr_menus asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$ivr_menus = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //add an empty row to the options array
 	if (count($ivr_menu_options) == 0) {
 		$rows = $_SESSION['ivr_menu']['option_add_rows']['numeric'];
@@ -499,10 +536,38 @@
 	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = 'callie'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
-	if (strlen($ivr_menu_confirm_attempts) == 0) { $ivr_menu_confirm_attempts = '1'; }
-	if (strlen($ivr_menu_inter_digit_timeout) == 0) { $ivr_menu_inter_digit_timeout = '2000'; }
-	if (strlen($ivr_menu_max_failures) == 0) { $ivr_menu_max_failures = '1'; }
-	if (strlen($ivr_menu_max_timeouts) == 0) { $ivr_menu_max_timeouts = '1'; }
+	if (strlen($ivr_menu_confirm_attempts) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['confirm_attempts']['numeric']) > 0) {
+			$ivr_menu_confirm_attempts = $_SESSION['ivr_menu']['confirm_attempts']['numeric'];
+		}
+		else {
+			$ivr_menu_confirm_attempts = '1';
+		}
+	}
+	if (strlen($ivr_menu_inter_digit_timeout) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['inter_digit_timeout']['numeric']) > 0) {
+			$ivr_menu_inter_digit_timeout = $_SESSION['ivr_menu']['inter_digit_timeout']['numeric'];
+		}
+		else {
+			$ivr_menu_inter_digit_timeout = '2000'; 
+		}
+	}
+	if (strlen($ivr_menu_max_failures) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['max_failures']['numeric']) > 0) {
+			$ivr_menu_max_failures = $_SESSION['ivr_menu']['max_failures']['numeric'];
+		}
+		else {
+			$ivr_menu_max_failures = '1'; 
+		}
+	}
+	if (strlen($ivr_menu_max_timeouts) == 0) { 
+		if (strlen($_SESSION['ivr_menu']['max_timeouts']['numeric']) > 0) {
+			$ivr_menu_max_timeouts = $_SESSION['ivr_menu']['max_timeouts']['numeric'];
+		}
+		else {
+			$ivr_menu_max_timeouts = '1'; 
+		}
+	}
 	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
@@ -616,7 +681,26 @@
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
+	echo "	<tr>";
+	echo "		<td class='vncell'>".$text['label-ivr_menu_parent_uuid']."</td>";
+	echo "		<td class='vtable'>";
+	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
+	echo "<option value=\"\"></option>\n";
+	foreach($ivr_menus as $field) {
+		if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
+			if ($ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
+			}
+			else {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
+			}
+		}
+	}
+	echo "</select>";
+	echo "		</td>";
+	echo "	</tr>";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-language']."\n";

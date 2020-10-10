@@ -24,7 +24,7 @@
     <!-- #802.1Q/VLAN Tag (VLAN classification for RTP) -->
     <!-- # Number: 0 to 4094 -->
     <!-- # Mandatory -->
-    <P51>0</P51>
+    <P51>{$grandstream_lan_port_vlan}</P51>
 
     <!-- # Layer 2 QoS.  -->
     <!-- # SIP 802.1p priority value (0 - 7) -->

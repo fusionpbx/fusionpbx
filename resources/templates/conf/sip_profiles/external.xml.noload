@@ -26,7 +26,7 @@
 		<param name="rfc2833-pt" value="101"/>
 		<!-- RFC 5626 : Send reg-id and sip.instance -->
 		<param name="enable-rfc-5626" value="true" enabled="false"/>
-		<param name="sip-port" value="$${external_sip_port}"/>
+		<param name="sip-port" value="5080"/>
 		<param name="dialplan" value="XML"/>
 		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
@@ -84,7 +84,7 @@
 		<!-- additional bind parameters for TLS -->
 		<param name="tls-bind-params" value="transport=tls"/>
 		<!-- Port to listen on for TLS requests. (5081 will be used if unspecified) -->
-		<param name="tls-sip-port" value="$${external_tls_port}"/>
+		<param name="tls-sip-port" value="5081"/>
 		<!-- Location of the agent.pem and cafile.pem ssl certificates (needed for TLS server) -->
 		<param name="tls-cert-dir" value="$${external_ssl_dir}"/>
 		<!-- Optionally set the passphrase password used by openSSL to encrypt/decrypt TLS private key files -->

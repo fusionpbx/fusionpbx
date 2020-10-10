@@ -171,6 +171,9 @@
 			$database->fields['hangup_cause'] = urldecode($xml->variables->hangup_cause);
 			$database->fields['hangup_cause_q850'] = urldecode($xml->variables->hangup_cause_q850);
 
+		//store the call direction
+			$database->fields['direction'] = urldecode($xml->variables->call_direction);
+
 		//call center
 			$database->fields['cc_side'] = urldecode($xml->variables->cc_side);
 			$database->fields['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
@@ -187,6 +190,9 @@
 			$database->fields['cc_cancel_reason'] = urldecode($xml->variables->cc_cancel_reason);
 			$database->fields['cc_cause'] = urldecode($xml->variables->cc_cause);
 			$database->fields['waitsec'] = urldecode($xml->variables->waitsec);
+			if (urldecode($xml->variables->cc_side) == 'agent') {
+				$database->fields['direction'] = 'inbound';
+			}
 
 		//app info
 			$database->fields['last_app'] = urldecode($xml->variables->last_app);
@@ -205,10 +211,8 @@
 
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
-			if ($xml->variables->call_direction == 'local' || $xml->variables->call_direction == 'inbound') {
-				if ($xml->variables->billsec == 0) {
-					$database->fields['missed_call'] = 'true';
-				}
+			if (strlen($xml->variables->answer_stamp) == 0) {
+				$database->fields['missed_call'] = 'true';
 			}
 			if ($xml->variables->missed_call == 'true') {
 				$database->fields['missed_call'] = 'true';
@@ -262,9 +266,6 @@
 		//store the call leg
 			$database->fields['leg'] = $leg;
 
-		//store the call direction
-			$database->fields['direction'] = urldecode($xml->variables->call_direction);
-
 		//store post dial delay, in milliseconds
 			$database->fields['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
@@ -278,9 +279,22 @@
 			$domain_name = urldecode($xml->variables->domain_name);
 			$domain_uuid = urldecode($xml->variables->domain_uuid);
 
-		//get the domain name from sip_req_host
+		//get the domain name
+			if (strlen($domain_name) == 0) {
+				$domain_name = urldecode($xml->variables->dialed_domain);
+			}
+			if (strlen($domain_name) == 0) {
+				$domain_name = urldecode($xml->variables->sip_invite_domain);
+			}
 			if (strlen($domain_name) == 0) {
 				$domain_name = urldecode($xml->variables->sip_req_host);
+			}
+			if (strlen($domain_name) == 0) {
+				$presence_id = urldecode($xml->variables->presence_id);
+				if (strlen($presence_id) > 0) {
+					$presence_array = explode($presence_id);
+					$domain_name = $presence_array[1];
+				}
 			}
 
 		//send the domain name to the cdr log
@@ -661,7 +675,8 @@
 	$x = 0;
 	while($file = readdir($dir_handle)) {
 		if ($file != '.' && $file != '..') {
-			if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
+			//import the call detail files are less than 3 mb - 3 million bytes
+			if (!is_dir($xml_cdr_dir . '/' . $file) && filesize($xml_cdr_dir.'/'.$file) < 3000000) {
 				//get the leg of the call
 					if (substr($file, 0, 2) == "a_") {
 						$leg = "a";

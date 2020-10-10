@@ -819,6 +819,27 @@ $text['label-summary']['ru-ru'] = "Сводка";
 $text['label-summary']['sv-se'] = "Summa";
 $text['label-summary']['uk-ua'] = "";
 
+$text['label-call_flow_summary']['en-us'] = "Call Flow Summary";
+$text['label-call_flow_summary']['en-gb'] = "";
+$text['label-call_flow_summary']['ar-eg'] = "";
+$text['label-call_flow_summary']['de-at'] = ""; //copied from de-de
+$text['label-call_flow_summary']['de-ch'] = ""; //copied from de-de
+$text['label-call_flow_summary']['de-de'] = "";
+$text['label-call_flow_summary']['es-cl'] = "";
+$text['label-call_flow_summary']['es-mx'] = ""; //copied from es-cl
+$text['label-call_flow_summary']['fr-ca'] = ""; //copied from fr-fr
+$text['label-call_flow_summary']['fr-fr'] = "";
+$text['label-call_flow_summary']['he-il'] = "";
+$text['label-call_flow_summary']['it-it'] = "";
+$text['label-call_flow_summary']['nl-nl'] = "";
+$text['label-call_flow_summary']['pl-pl'] = "";
+$text['label-call_flow_summary']['pt-br'] = ""; //copied from pt-pt
+$text['label-call_flow_summary']['pt-pt'] = "";
+$text['label-call_flow_summary']['ro-ro'] = "";
+$text['label-call_flow_summary']['ru-ru'] = "";
+$text['label-call_flow_summary']['sv-se'] = "";
+$text['label-call_flow_summary']['uk-ua'] = "";
+
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
 $text['label-status']['ar-eg'] = "";

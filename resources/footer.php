@@ -118,7 +118,10 @@
 						//otherwise
 							default:
 								if (isset($setting['text']) && $setting['text'] != '') {
-									$settings['theme'][$subcategory] = escape($setting['text']);
+									$settings['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
+								}
+								else if (isset($setting['numeric']) && is_numeric($setting['numeric'])) {
+									$settings['theme'][$subcategory] = $setting['numeric'];
 								}
 								else if (isset($setting['boolean'])) {
 									$settings['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
@@ -134,6 +137,8 @@
 				$settings['theme']['message_delay'] = is_numeric($settings['theme']['message_delay']) ? 1000 * (float) $settings['theme']['message_delay'] : 3000;
 				$settings['theme']['menu_side_width_contracted'] = is_numeric($settings['theme']['menu_side_width_contracted']) ? $settings['theme']['menu_side_width_contracted'] : '60';
 				$settings['theme']['menu_side_width_expanded'] = is_numeric($settings['theme']['menu_side_width_expanded']) ? $settings['theme']['menu_side_width_expanded'] : '225';
+				$settings['theme']['menu_side_toggle_hover_delay_expand'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_expand']) ? $settings['theme']['menu_side_toggle_hover_delay_expand'] : '300';
+				$settings['theme']['menu_side_toggle_hover_delay_contract'] = is_numeric($settings['theme']['menu_side_toggle_hover_delay_contract']) ? $settings['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
 				$settings['theme']['menu_style'] = $settings['theme']['menu_style'] != '' ? $settings['theme']['menu_style'] : 'fixed';
 				$settings['theme']['menu_position'] = $settings['theme']['menu_position'] != '' ? $settings['theme']['menu_position'] : 'top';
 				$settings['theme']['footer'] = $settings['theme']['footer'] != '' ? $settings['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
@@ -182,7 +187,11 @@
 		//build menu by style
 			switch ($_SESSION['theme']['menu_style']['text']) {
 				case 'side':
-					$container_open = "<div id='menu_side_container'>\n";
+					$view->assign('menu_side_state', (isset($_SESSION['theme']['menu_side_state']['text']) && $_SESSION['theme']['menu_side_state']['text'] != '' ? $_SESSION['theme']['menu_side_state']['text'] : 'expanded'));
+					if ($_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
+						$menu_side_toggle = $_SESSION['theme']['menu_side_toggle']['text'] == 'hover' ? " onmouseenter=\"clearTimeout(menu_side_contract_timer); if ($('#menu_side_container').width() < 100) { menu_side_expand_start(); }\" onmouseleave=\"clearTimeout(menu_side_expand_timer); if ($('#menu_side_container').width() > 100 && $('#menu_side_state_current').val() != 'expanded') { menu_side_contract_start(); }\"" : null;
+					}
+					$container_open = "<div id='menu_side_container' ".($_SESSION['theme']['menu_side_state']['text'] == 'hidden' ? "style='display: none;'" : "class='hide-xs'").$menu_side_toggle." >\n";
 					$menu = new menu;
 					$menu->text = $text;
 					$menu_html = $menu->menu_vertical($_SESSION['menu']['array']);

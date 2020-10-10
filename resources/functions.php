@@ -106,22 +106,41 @@
 			$uuid = null;
 			if (PHP_OS === 'FreeBSD') {
 				$uuid = trim(shell_exec("uuid -v 4"));
-				if (!is_uuid($uuid)) {
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
 					echo "Please install the following package.\n";
 					echo "pkg install ossp-uuid\n";
 					exit;
 				}
 			}
-			if (PHP_OS === 'Linux' && !is_uuid($uuid)) {
+			if (PHP_OS === 'Linux') {
 				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					$uuid = trim(shell_exec("uuidgen"));
+					if (is_uuid($uuid)) {
+						return $uuid;
+					}
+					else {
+						echo "Please install the uuidgen.\n";
+						exit;
+					}
+				}
 			}
-			if (!is_uuid($uuid)) {
-				$uuid = trim(shell_exec("uuidgen"));
-			}
-			if (function_exists('com_create_guid') === true && PHP_OS === 'Windows') {
+			if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && function_exists('com_create_guid')) {
 				$uuid = trim(com_create_guid(), '{}');
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					echo "The com_create_guid() function failed to create a uuid.\n";
+					exit;
+				}
 			}
-			return $uuid;
 		}
 	}
 
@@ -1029,24 +1048,6 @@ function number_pad($number,$n) {
 		}
 	}
 
-// ellipsis nicely truncate long text
-	if(!function_exists('ellipsis')) {
-		function ellipsis($string, $max_characters, $preserve_word = true) {
-			if ($max_characters+$x >= strlen($string)) { return $string; }
-			if ($preserve_word) {
-				for ($x = 0; $x < strlen($string); $x++) {
-					if ($string{$max_characters+$x} == " ") {
-						return substr($string,0,$max_characters+$x)." ...";
-					}
-					else { continue; }
-				}
-			}
-			else {
-				return substr($string,0,$max_characters)." ...";
-			}
-		}
-	}
-
 //function to convert hexidecimal color value to rgb string/array value
 	if (!function_exists('hex_to_rgb')) {
 		function hex_to_rgb($hex, $delim = '') {
@@ -1708,6 +1709,7 @@ function number_pad($number,$n) {
 //converts a string to a regular expression
 	if (!function_exists('string_to_regex')) {
 		function string_to_regex($string, $prefix='') {
+			$original_string = $string;
 			//escape the plus
 				if (substr($string, 0, 1) == "+") {
 					$string = "^\\+(".substr($string, 1).")$";
@@ -1723,9 +1725,11 @@ function number_pad($number,$n) {
 					}
 				}
 			//convert N,X,Z syntax to regex
-				$string = str_ireplace("N", "[2-9]", $string);
-				$string = str_ireplace("X", "[0-9]", $string);
-				$string = str_ireplace("Z", "[1-9]", $string);
+				if (preg_match('/^[NnXxZz]+$/', $original_string)) {
+					$string = str_ireplace("N", "[2-9]", $string);
+					$string = str_ireplace("X", "[0-9]", $string);
+					$string = str_ireplace("Z", "[1-9]", $string);
+				}
 			//add ^ to the start of the string if missing
 				if (substr($string, 0, 1) != "^") {
 					$string = "^".$string;
@@ -1919,7 +1923,7 @@ function number_pad($number,$n) {
 		//send the mkdir command to freeswitch
 			if ($fp) {
 				//build and send the mkdir command to freeswitch
-					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_cmd = "lua mkdir.lua ".escapeshellarg($dir);
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					fclose($fp);
 				//check result

@@ -238,13 +238,14 @@ if (!class_exists('scripts')) {
 						}
 						elseif ($this->db_type == "pgsql") {
 							if ($this->db_host == "localhost") { $this->db_host = "127.0.0.1"; }
+							$host = filter_var($this->db_host, FILTER_VALIDATE_IP) ? "hostaddr" : "host";
 							if ($this->db_secure == true) {
-								$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." sslmode=verify-ca sslrootcert=".$this->db_cert_authority." options=''\";\n";
-								$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." sslmode=verify-ca sslrootcert=".$this->db_cert_authority." options=''\";\n";
+								$tmp .= "	database.system = \"pgsql://".$host."=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." sslmode=verify-ca sslrootcert=".$this->db_cert_authority." options=''\";\n";
+								$tmp .= "	database.switch = \"pgsql://".$host."=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." sslmode=verify-ca sslrootcert=".$this->db_cert_authority." options=''\";\n";
 							}
 							else {
-								$tmp .= "	database.system = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options=''\";\n";
-								$tmp .= "	database.switch = \"pgsql://hostaddr=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options=''\";\n";
+								$tmp .= "	database.system = \"pgsql://".$host."=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password." options=''\";\n";
+								$tmp .= "	database.switch = \"pgsql://".$host."=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password." options=''\";\n";
 							}
 						}
 						elseif ($this->db_type == "sqlite") {

@@ -269,9 +269,6 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$dialplan_context);
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//set the message
 			if ($action == "add") {
 				message::add($text['message-add']);

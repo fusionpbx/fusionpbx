@@ -52,7 +52,7 @@ if ($domains_processed == 1) {
 			$sql .= "'login', ";
 			$sql .= "'message', ";
 			$sql .= "'text', ";
-			$sql .= "':default_setting_value, ";
+			$sql .= ":default_setting_value, ";
 			$sql .= "'true', ";
 			$sql .= "'' ";
 			$sql .= ")";

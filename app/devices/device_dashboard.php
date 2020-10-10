@@ -75,7 +75,7 @@
 
 				//validate the token
 					$token = new token;
-					if (!$token->validate('/app/devices/device_dashboard.php')) {
+					if (!$token->validate('/app/devices/device_dashboard.php') && !$token->validate('login')) {
 						message::add($text['message-invalid_token'],'negative');
 						header('Location: '.PROJECT_PATH."/core/user_settings/user_dashboard.php");
 						exit;

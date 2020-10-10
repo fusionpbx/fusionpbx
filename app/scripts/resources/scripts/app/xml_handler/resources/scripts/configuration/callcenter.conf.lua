@@ -154,8 +154,12 @@
 
 		--get the agents
 			table.insert(xml, [[                    <agents>]]);
-			sql = "select * from v_call_center_agents as a, v_domains as d ";
+			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
+			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1)) as extension_uuid, a.*, d.domain_name  ";
+			sql = sql .. "from v_call_center_agents as a, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
+			--sql = "select * from v_call_center_agents as a, v_domains as d ";
+			--sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
@@ -165,6 +169,7 @@
 					agent_uuid = row.call_center_agent_uuid;
 					domain_uuid = row.domain_uuid;
 					domain_name = row.domain_name;
+					extension_uuid = row.extension_uuid;
 					agent_name = row.agent_name;
 					agent_type = row.agent_type;
 					agent_call_timeout = row.agent_call_timeout;
@@ -184,7 +189,7 @@
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
@@ -197,7 +202,7 @@
 										--add the call_timeout
 										pos = string.find(agent_contact, "}");
 										first = string.sub(agent_contact, 0, pos);
-										last = string.sub(agent_contact, tmp_pos);
+										last = string.sub(agent_contact, pos);
 										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
 								else
 										--the string has the call timeout
@@ -210,7 +215,7 @@
 								last = string.sub(agent_contact, pos);
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
-									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination}call_timeout='..agent_call_timeout..last;
+									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
 								else
 									--add confirm
 									agent_contact = tmp_first..',sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;

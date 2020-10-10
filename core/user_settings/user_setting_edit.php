@@ -317,13 +317,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 }
 
 //pre-populate the form
-	if (is_uuid($_GET["id"]) && count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (is_uuid($_GET["id"]) && count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$user_setting_uuid = $_GET["id"];
-		$sql = "select * from v_user_settings ";
-		$sql .= "where user_uuid = :user_uuid ";
-		$sql .= "and user_setting_uuid = :user_setting_uuid ";
-		$parameters['user_uuid'] = $user_uuid;
+		$sql = "select user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
+		$sql .= "from v_user_settings ";
+		$sql .= "where user_setting_uuid = :user_setting_uuid ";
+		$sql .= "and user_uuid = :user_uuid ";
 		$parameters['user_setting_uuid'] = $user_setting_uuid;
+		$parameters['user_uuid'] = $user_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
@@ -605,6 +606,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='image' ".(($user_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($user_setting_value == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($user_setting_value == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
 		echo "    	<option value='none' ".(($user_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
@@ -626,6 +628,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='left' ".(($user_setting_value == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
 		echo "    	<option value='center' ".(($user_setting_value == "center") ? "selected='selected'" : null).">".$text['label-center']."</option>\n";
 		echo "    	<option value='right' ".(($user_setting_value == "right") ? "selected='selected'" : null).">".$text['label-right']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "menu_side_state" && $user_setting_name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='expanded'>".$text['option-expanded']."</option>\n";
+		echo "    	<option value='contracted' ".($user_setting_value == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+		echo "    	<option value='hidden' ".($user_setting_value == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "menu_side_toggle" && $user_setting_name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='hover'>".$text['option-hover']."</option>\n";
+		echo "    	<option value='click' ".($user_setting_value == "click" ? "selected='selected'" : null).">".$text['option-click']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($user_setting_category == "theme" && $user_setting_subcategory == "menu_side_toggle_body_width" && $user_setting_name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
+		echo "    	<option value='fixed' ".($user_setting_value == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	else if ($user_setting_category == "theme" && $user_setting_subcategory == "body_header_brand_type" && $user_setting_name == "text" ) {
+		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
+		echo "    	<option value='image' ".(($user_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($user_setting_value == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($user_setting_value == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
+		echo "    	<option value='none' ".(($user_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
 	else {
@@ -700,7 +729,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='user_setting_description' maxlength='255' value=\"".escape($user_setting_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='user_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".escape($user_setting_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

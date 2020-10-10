@@ -457,7 +457,14 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: <?php echo is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60'; ?>px;
+		<?php
+		if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded' || $_SESSION['theme']['menu_side_state']['text'] == 'hidden') {
+			echo "width: ".(is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225')."px;\n";
+		}
+		else {
+			echo "width: ".(is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60')."px;\n";
+		}
+		?>
 		height: 100%;
 		overflow: auto;
 		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
@@ -481,13 +488,54 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
 		}
 
-	/* menu side brand container */
-	div#menu_side_brand_container {
+	/* menu side logo */
+	a.menu_brand_image {
+		display: inline-block;
+		text-align: center;
+		padding: 15px 20px;
+		}
+
+	a.menu_brand_image:hover {
+		text-decoration: none;
+		}
+
+	img#menu_brand_image_contracted {
+		border: none;
+		width: auto;
+		max-height: 20px;
+		max-width: 20px;
+		margin-left: -1px;
+		}
+
+	img#menu_brand_image_expanded {
+		border: none;
+		height: auto;
+		max-width: 145px;
+		max-height: 35px;
+		margin-left: -7px;
+		}
+
+	/* menu brand text */
+	a.menu_brand_text {
+		display: inline-block;
+		padding: 10px 20px;
+		color: <?php echo ($_SESSION['theme']['menu_brand_text_color']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color']['text'] : 'rgba(255,255,255,0.90)'; ?>;
+		font-weight: 600;
+		white-space: nowrap;
+		}
+
+	a.menu_brand_text:hover {
+		color: <?php echo ($_SESSION['theme']['menu_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		text-decoration: none;
+		}
+
+	/* menu side control container */
+	div#menu_side_control_container {
 		position: -webkit-sticky;
 		position: sticky;
 		z-index: 99901;
 		top: 0;
-		padding: 20px;
+		padding: 0;
 		min-height: 75px;
 		text-align: left;
 		<?php if ($_SESSION['theme']['menu_main_background_image']['text'] != '') { ?>
@@ -508,39 +556,9 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-radius: <?php echo ($_SESSION['theme']['menu_main_border_radius']['text'] != '') ? $_SESSION['theme']['menu_main_border_radius']['text'] : '0'; ?>;
 		}
 
-	/* menu side logo */
-	img#menu_brand_image_contracted {
-		border: none;
-		width: auto;
-		max-height: 30px;
-		max-width: 30px;
-		margin-right: 10px;
-		}
-
-	img#menu_brand_image_expanded {
-		border: none;
-		height: auto;
-		max-width: 145px;
-		max-height: 35px;
-		margin-top: -3px;
-		margin-left: -6px;
-		}
-
-	/* menu brand text */
-	.menu_brand_text {
-		color: <?php echo ($_SESSION['theme']['menu_brand_text_color']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color']['text'] : 'rgba(255,255,255,0.80)'; ?>;
-		font-weight: 600;
-		white-space: nowrap;
-		}
-
-	.menu_brand_text:hover {
-		color: <?php echo ($_SESSION['theme']['menu_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_brand_text_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
-		text-decoration: none;
-		}
-
 	div#menu_side_container > a.menu_side_item_main,
 	div#menu_side_container > div > a.menu_side_item_main,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main {
+	div#menu_side_container > div#menu_side_control_container a.menu_side_item_main {
 		display: block;
 		width: 100%;
 		padding: 10px 20px;
@@ -552,18 +570,30 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 
 	div#menu_side_container > a.menu_side_item_main:hover,
-	div#menu_side_container a.menu_side_item_main:focus,
-	div#menu_side_container a.menu_side_item_main:active,
+	div#menu_side_container > a.menu_side_item_main:focus,
+	div#menu_side_container > a.menu_side_item_main:active,
 	div#menu_side_container > div > a.menu_side_item_main:hover,
 	div#menu_side_container > div > a.menu_side_item_main:focus,
 	div#menu_side_container > div > a.menu_side_item_main:active,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:hover,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:focus,
-	div#menu_side_container > div#menu_side_brand_container > div > a.menu_side_item_main:active {
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:hover,
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:focus,
+	div#menu_side_container > div#menu_side_control_container > div a.menu_side_item_main:active {
 		color: <?php echo ($_SESSION['theme']['menu_main_text_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_text_color_hover']['text'] : '#fd9c03'; ?>;
 		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
 		text-decoration: none;
 		}
+
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main > i.menu_side_item_icon {
+		color: <?php echo ($_SESSION['theme']['menu_main_icon_color']['text'] != '') ? $_SESSION['theme']['menu_main_icon_color']['text'] : '#fd9c03'; ?>;
+	}
+
+	div#menu_side_container > a.menu_side_item_main:hover > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main:focus > i.menu_side_item_icon,
+	div#menu_side_container > a.menu_side_item_main:active > i.menu_side_item_icon {
+		color: <?php echo ($_SESSION['theme']['menu_main_icon_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_icon_color_hover']['text'] : '#fd9c03'; ?>;
+	}
 
 	a.menu_side_item_sub {
 		display: block;
@@ -577,6 +607,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		cursor: pointer;
 		}
 
+	@media (max-width: 575.98px) {
+		a.menu_side_item_sub {
+			padding: 8px 20px 8px 45px;
+			}
+	}
+
 	a.menu_side_item_sub:hover,
 	a.menu_side_item_sub:focus,
 	a.menu_side_item_sub:active {
@@ -588,6 +624,85 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	a.menu_side_toggle {
 		padding: 10px;
 		cursor: pointer;
+		}
+
+	div#content_container {
+		padding: 0;
+		padding-top: 0px;
+		text-align: center;
+		}
+
+	@media (max-width: 575.98px) {
+		div#content_container {
+			width: 100%;
+			}
+	}
+	@media (min-width: 576px) {
+		div#content_container {
+			<?php
+			if ($_SESSION['theme']['menu_side_state']['text'] == 'expanded') {
+				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_expanded']['text']) ? $_SESSION['theme']['menu_side_width_expanded']['text'] : '225';
+			}
+			else if ($_SESSION['theme']['menu_side_state']['text'] == 'hidden') {
+				$content_container_width = 0;
+			}
+			else {
+				$content_container_width = is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '60';
+			}
+			?>
+			width: calc(100% - <?php echo $content_container_width; ?>px);
+			float: right;
+			}
+	}
+
+/* BODY/HEADER BAR *****************************************************************/
+
+	<?php if ($_SESSION['theme']['menu_style']['text'] == 'side') { ?>
+		div#body_header {
+			padding: 10px 10px 15px 10px;
+			height: 50px;
+			<?php echo $_SESSION['theme']['body_header_background_color']['text'] != '' ? 'background-color: '.$_SESSION['theme']['body_header_background_color']['text'].';' : null; ?>
+			}
+	<?php } else { ?>
+		div#body_header {
+			padding: 10px;
+			margin-top: 5px;
+			height: 40px;
+			}
+	<?php } ?>
+
+	div#body_header_brand_image {
+		display: inline-block;
+		margin-left: 10px;
+		}
+
+	div#body_header_brand_image > a:hover {
+		text-decoration: none;
+		}
+
+	img#body_header_brand_image {
+		border: none;
+		margin-top: -4px;
+		height: auto;
+		max-width: 145px;
+		max-height: 35px;
+		}
+
+	div#body_header_brand_text {
+		display: inline-block;
+		margin: 3px 0 0 10px;
+		}
+
+	div#body_header_brand_text > a {
+		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color']['text'] : 'rgba(0,0,0,0.90)'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['body_header_brand_text_size']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_size']['text'] : '16px'; ?>;
+		font-weight: 600;
+		text-decoration: none;
+		}
+
+	div#body_header_brand_text > a:hover {
+		color: <?php echo ($_SESSION['theme']['body_header_brand_text_color_hover']['text'] != '') ? $_SESSION['theme']['body_header_brand_text_color_hover']['text'] : 'rgba(0,0,0,1.0)'; ?>;
+		text-decoration: none;
 		}
 
 /* BUTTONS ********************************************************************/
@@ -951,7 +1066,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		font-family: arial, san-serif;
 		font-size: 10pt;
 		overflow: hidden;
-		background-color: #fff;
+		background: <?php echo ($_SESSION['theme']['domain_selector_background_color']['text'] != '') ? $_SESSION['theme']['domain_selector_background_color']['text'] : '#fff'; ?>;
 		-webkit-box-shadow: <?php echo ($_SESSION['theme']['domain_selector_shadow_color']['text'] != '') ? '0 0 10px '.$_SESSION['theme']['domain_selector_shadow_color']['text'] : 'none'; ?>;
 		-moz-box-shadow: <?php echo ($_SESSION['theme']['domain_selector_shadow_color']['text'] != '') ? '0 0 10px '.$_SESSION['theme']['domain_selector_shadow_color']['text'] : 'none'; ?>;
 		box-shadow: <?php echo ($_SESSION['theme']['domain_selector_shadow_color']['text'] != '') ? '0 0 10px '.$_SESSION['theme']['domain_selector_shadow_color']['text'] : 'none'; ?>;
@@ -965,19 +1080,31 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		text-align: left;
 		}
 
+	#domains_header > a#domains_title {
+		font-weight: 600;
+		font-size: <?php echo ($_SESSION['theme']['heading_text_size']['text'] != '') ? $_SESSION['theme']['heading_text_size']['text'] : '15px'; ?>;
+		font-family: <?php echo ($_SESSION['theme']['heading_text_font']['text'] != '') ? $_SESSION['theme']['heading_text_font']['text'] : 'arial'; ?>;
+		color: <?php echo ($_SESSION['theme']['domain_selector_title_color']['text'] != '') ? $_SESSION['theme']['domain_selector_title_color']['text'] : '#000'; ?>;
+		}
+
+	#domains_header > a#domains_title:hover {
+		text-decoration: none;
+		color: <?php echo ($_SESSION['theme']['domain_selector_title_color_hover']['text'] != '') ? $_SESSION['theme']['domain_selector_title_color_hover']['text'] : '#5082ca'; ?>;
+		}
+
 	#domains_list {
 		position: relative;
 		overflow: auto;
 		width: 300px;
 		height: 100%;
 		padding: 1px;
-		background-color: #fff;
-		border: 1px solid #a4aebf;
+		background: <?php echo ($_SESSION['theme']['domain_selector_list_background_color']['text'] != '') ? $_SESSION['theme']['domain_selector_list_background_color']['text'] : '#fff'; ?>;
+		border: 1px solid <?php echo ($_SESSION['theme']['domain_selector_list_border_color']['text'] != '') ? $_SESSION['theme']['domain_selector_list_border_color']['text'] : '#a4aebf'; ?>;
 		}
 
 	div.domains_list_item, div.domains_list_item_active, div.domains_list_item_inactive {
 		text-align: left;
-		border-bottom: 1px solid #c5d1e5;
+		border-bottom: 1px solid <?php echo ($_SESSION['theme']['domain_selector_list_divider_color']['text'] != '') ? $_SESSION['theme']['domain_selector_list_divider_color']['text'] : '#c5d1e5'; ?>;
 		padding: 5px 8px 8px 8px;
 		overflow: hidden;
 		white-space: nowrap;
@@ -1070,7 +1197,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	a.login_link:hover {
 		color: <?php echo ($_SESSION['theme']['login_link_text_color_hover']['text'] != '') ? $_SESSION['theme']['login_link_text_color_hover']['text'] : '#5082ca'; ?> !important;
 		cursor: pointer;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	<?php
@@ -1136,12 +1263,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			}
 		}
 
-	div#content_header {
-		padding: 10px;
-		margin-top: 5px;
-		height: 40px;
-	}
-
 /* GENERAL ELEMENTS *****************************************************************/
 
 	img {
@@ -1164,7 +1285,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	a:hover,
 	button.btn.btn-link:hover {
 		color: <?php echo ($_SESSION['theme']['text_link_color_hover']['text'] != '') ? $_SESSION['theme']['text_link_color_hover']['text'] : '#5082ca'; ?>;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	button.btn {
@@ -1554,7 +1675,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	th a:hover {
 		color: <?php echo ($_SESSION['theme']['table_heading_text_color']['text'] != '') ? $_SESSION['theme']['table_heading_text_color']['text'] : '#3164ad'; ?>;
-		text-decoration: underline;
+		text-decoration: none;
 		}
 
 	td {
@@ -1829,6 +1950,40 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		cursor: default;
 		}
 
+	div.off_ext {
+		position: relative;
+		float: left;
+		width: 235px;
+		margin: 0px 8px 8px 0px;
+		padding: 0px;
+		border-style: solid;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		-webkit-box-shadow: 0 0 3px #e5e9f0;
+		-moz-box-shadow: 0 0 3px #e5e9f0;
+		box-shadow: 0 0 3px #e5e9f0;
+		border-width: 1px 3px;
+		border-color: #b9c5d8 #c5d1e5;
+		background-color: #e5eaf5;
+		cursor: not-allowed;
+		}
+		
+		div.off_ext:after {
+			position: absolute;
+			content: "";
+			z-index: 10;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			border-radius: 5px;
+			display: block;
+			height: 100%;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: rgba(255, 255, 255, 0.5);
+		}
+
 	div.op_state_active {
 		background-color: #baf4bb;
 		border-width: 1px 3px;
@@ -1841,7 +1996,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-color: #41b9eb;
 		}
 
-	table.op_ext {
+	table.op_ext, table.off_ext {
 		width: 100%;
 		height: 70px;
 		-moz-border-radius: 5px;

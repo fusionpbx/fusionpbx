@@ -100,7 +100,7 @@
 //prepare to page the results
 	$sql = "select count(voicemail_uuid) from v_voicemails ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('voicemail_delete')) {
+	if (!permission_exists('voicemail_domain')) {
 		if (is_array($voicemail_uuids) && @sizeof($voicemail_uuids) != 0) {
 			$sql .= "and (";
 			foreach ($voicemail_uuids as $x => $row) {

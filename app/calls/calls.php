@@ -81,19 +81,25 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//handle search term
+//get the search
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and ( ";
-		$sql_search .= "extension like :search ";
-		$sql_search .= "or lower(description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //define select count query
 	$sql = "select count(*) from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and ( ";
+		$sql .= "extension like :search ";
+		$sql .= "or lower(description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
 		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
@@ -112,18 +118,26 @@
 		}
 	}
 	$sql .= $sql_search;
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
-//prepare to page the results
+//prepare the paging
 	if ($is_included) {
 		$rows_per_page = 10;
 	}
 	else {
 		$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	}
-	$param = "&search=".$search;
+	$params[] = "app_uuid=".$app_uuid;
+	if ($search) { $params[] = "search=".$search; }
+	if ($order_by) { $params[] = "order_by=".$order_by; }
+	if ($order) { $params[] = "order=".$order; }
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$params[] .= "show=all";
+	}
+	$param = $params ? implode('&', $params) : null;
+	unset($params);
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -132,7 +146,20 @@
 
 //get the list
 	$sql = "select * from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and ( ";
+		$sql .= "extension like :search ";
+		$sql .= "or lower(description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
 		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
@@ -163,7 +190,7 @@
 
 //include header
 	if (!$is_included) {
-		$document['title'] = $text['title-call_routing'];
+		$document['title'] = $text['title-call_forward'];
 	}
 	require_once "resources/header.php";
 
@@ -180,7 +207,7 @@
 //show the content
 	if ($is_included) {
 		echo "<div class='action_bar sub'>\n";
-		echo "	<div class='heading'><b>".$text['header-call_routing']."</b></div>\n";
+		echo "	<div class='heading'><b>".$text['header-call_forward']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		if ($num_rows > 10) {
 			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'project-diagram','collapse'=>false,'link'=>PROJECT_PATH.'/app/calls/calls.php']);
@@ -191,24 +218,31 @@
 	}
 	else {
 		echo "<div class='action_bar' id='action_bar'>\n";
-		echo "	<div class='heading'><b>".$text['header-call_routing']." (".$num_rows.")</b></div>\n";
+		echo "	<div class='heading'><b>".$text['header-call_forward']." (".$num_rows.")</b></div>\n";
 		echo "	<div class='actions'>\n";
+
 		if ($extensions) {
 			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
 		}
 		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_control_feature' onchange=\"if (this.selectedIndex != 0) { modal_open('modal-toggle','btn_toggle'); }\">";
 		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";
 		if (permission_exists('call_forward')) {
-			echo "		<option value='call_forward'>".$text['label-call-forward']."</option>";
+			echo "		<option value='call_forward'>".$text['label-call_forward']."</option>";
 		}
 		if (permission_exists('follow_me')) {
-			echo "		<option value='follow_me'>".$text['label-follow-me']."</option>";
+			echo "		<option value='follow_me'>".$text['label-follow_me']."</option>";
 		}
 		if (permission_exists('do_not_disturb')) {
 			echo "		<option value='do_not_disturb'>".$text['label-dnd']."</option>";
 		}
 		echo "		</select>";
+		if ($_GET['show'] !== 'all' && permission_exists('call_forward_all')) {	
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
+		}
 		echo 		"<form id='form_search' class='inline' method='get'>\n";
+		if ($_GET['show'] == 'all' && permission_exists('call_forward_all')) {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
 		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'calls.php','style'=>($search == '' ? 'display: none;' : null)]);
@@ -228,6 +262,9 @@
 		echo "<br /><br />\n";
 
 		echo "<form id='form_list' method='post'>\n";
+		if ($_GET['show'] == 'all' && permission_exists('call_forward_all')) {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
 		echo "<input type='hidden' id='action' name='action' value=''>\n";
 		echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 	}
@@ -238,13 +275,16 @@
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($extensions ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
+		if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+			echo "<th>".$text['label-domain']."</th>\n";
+		}
 	}
 	echo "	<th>".$text['label-extension']."</th>\n";
 	if (permission_exists('call_forward')) {
-		echo "	<th>".$text['label-call-forward']."</th>\n";
+		echo "	<th>".$text['label-call_forward']."</th>\n";
 	}
 	if (permission_exists('follow_me')) {
-		echo "	<th>".$text['label-follow-me']."</th>\n";
+		echo "	<th>".$text['label-follow_me']."</th>\n";
 	}
 	if (permission_exists('do_not_disturb')) {
 		echo "	<th>".$text['label-dnd']."</th>\n";
@@ -265,6 +305,16 @@
 				echo "		<input type='checkbox' name='extensions[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='extensions[$x][uuid]' value='".escape($row['extension_uuid'])."' />\n";
 				echo "	</td>\n";
+
+				if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+					if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+						$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+					}
+					else {
+						$domain = $text['label-global'];
+					}
+					echo "	<td>".escape($domain)."</td>\n";
+				}
 			}
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['extension'])."</a></td>\n";
 			if (permission_exists('call_forward')) {

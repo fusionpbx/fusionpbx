@@ -23,11 +23,11 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the dialplan class
 	if (!class_exists('dialplan')) {
 		class dialplan {
+
 			//variables
 			public $result;
 			public $domain_uuid;
@@ -144,61 +144,6 @@ include "root.php";
 					unset($array);
 				//revoke temporary permissions
 					$p->delete('dialplan_edit', 'temp');
-			}
-
-			public function dialplan_detail_add() {
-				//build insert array
-					$dialplan_detail_uuid = uuid();
-					$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-					$array['dialplan_details'][0]['domain_uuid'] = !$this->dialplan_global ? $this->domain_uuid : null;
-					$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-					$array['dialplan_details'][0]['dialplan_detail_tag'] = $this->dialplan_detail_tag;
-					$array['dialplan_details'][0]['dialplan_detail_order'] = $this->dialplan_detail_order;
-					$array['dialplan_details'][0]['dialplan_detail_type'] = $this->dialplan_detail_type;
-					$array['dialplan_details'][0]['dialplan_detail_data'] = $this->dialplan_detail_data;
-					$array['dialplan_details'][0]['dialplan_detail_break'] = strlen($this->dialplan_detail_break) != 0 ? $this->dialplan_detail_break : null;
-					$array['dialplan_details'][0]['dialplan_detail_inline'] = strlen($this->dialplan_detail_inline) != 0 ? $this->dialplan_detail_inline : null;
-					$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($this->dialplan_detail_group) != 0 ? $this->dialplan_detail_group : null;
-				//grant temporary permissions
-					$p = new permissions;
-					$p->add('dialplan_detail_add', 'temp');
-				//execute insert
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-					$database->save($array);
-					unset($array);
-				//revoke temporary permissions
-					$p->delete('dialplan_detail_add', 'temp');
-			}
-
-			public function dialplan_detail_update() {
-				//build update array
-					$array['dialplan_details'][0]['dialplan_detail_uuid'] = $this->dialplan_detail_uuid;
-					$array['dialplan_details'][0]['dialplan_detail_tag'] = $this->dialplan_detail_tag;
-					$array['dialplan_details'][0]['dialplan_detail_order'] = $this->dialplan_detail_order;
-					$array['dialplan_details'][0]['dialplan_detail_type'] = $this->dialplan_detail_type;
-					$array['dialplan_details'][0]['dialplan_detail_data'] = $this->dialplan_detail_data;
-					if (strlen($this->dialplan_detail_break) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_break'] = $this->dialplan_detail_break;
-					}
-					if (strlen($this->dialplan_detail_inline) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_inline'] = $this->dialplan_detail_inline;
-					}
-					if (strlen($this->dialplan_detail_group) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_group'] = $this->dialplan_detail_group;
-					}
-				//grant temporary permissions
-					$p = new permissions;
-					$p->add('dialplan_detail_edit', 'temp');
-				//execute update
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-					$database->save($array);
-					unset($array);
-				//revoke temporary permissions
-					$p->delete('dialplan_detail_edit', 'temp');
 			}
 
 			public function restore_advanced_xml() {
@@ -1100,9 +1045,6 @@ include "root.php";
 										$p->delete('dialplan_delete', 'temp');
 										$p->delete('dialplan_detail_delete', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -1199,9 +1141,6 @@ include "root.php";
 
 									//revoke temporary permissions
 										$p->delete('dialplan_detail_delete', 'temp');
-
-									//synchronize the xml config
-										save_dialplan_xml();
 
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
@@ -1308,9 +1247,6 @@ include "root.php";
 
 									//revoke temporary permissions
 										$p->delete('dialplan_edit', 'temp');
-
-									//synchronize the xml config
-										save_dialplan_xml();
 
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
@@ -1445,9 +1381,6 @@ include "root.php";
 
 									//revoke temporary permissions
 										$p->delete('dialplan_detail_add', 'temp');
-
-									//synchronize the xml config
-										save_dialplan_xml();
 
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {

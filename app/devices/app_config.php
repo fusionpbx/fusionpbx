@@ -2755,6 +2755,13 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "298ea214-4773-42e8-ac9b-b72c10be6a75";
+		$vendors[$y]['functions'][$z]['label'] = "label-na";
+		$vendors[$y]['functions'][$z]['name'] = "na";
+		$vendors[$y]['functions'][$z]['value'] = "0";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "f2b3069f-02f6-4035-bccc-2c8c9a37f3fa";
 		$vendors[$y]['functions'][$z]['label'] = "label-speed_dial";
 		$vendors[$y]['functions'][$z]['name'] = "speed_dial";

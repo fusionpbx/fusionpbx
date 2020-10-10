@@ -29,7 +29,6 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	require_once "resources/functions/save_phrases_xml.php";
 
 //check the permission
 	if (!permission_exists('phrase_view')) {

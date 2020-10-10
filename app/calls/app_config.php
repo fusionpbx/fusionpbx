@@ -1,7 +1,7 @@
 <?php
 
 	//application details
-		$apps[$x]['name'] = "Calls";
+		$apps[$x]['name'] = "Call Forward";
 		$apps[$x]['uuid'] = "19806921-e8ed-dcff-b325-dd3e5da4959d";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
@@ -48,6 +48,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_forward_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_forward_caller_id";
 

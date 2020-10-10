@@ -729,6 +729,5 @@
 <Speaker_Volume group="User/Audio_Volume">8</Speaker_Volume>
 <Handset_Volume group="User/Audio_Volume">12</Handset_Volume>
 <Headset_Volume group="User/Audio_Volume">10</Headset_Volume>
-<LCD_Contrast group="User/Audio_Volume">8</LCD_Contrast>
-<Back_Light_Timer group="User/Audio_Volume">10 s</Back_Light_Timer>
+<Lcd_Contrast group="User/Audio_Volume">0</Lcd_Contrast>
 </flat-profile>

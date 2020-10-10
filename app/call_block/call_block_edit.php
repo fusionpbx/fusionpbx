@@ -253,7 +253,7 @@
 	}
 
 //get the extensions
-	if (permission_exists('call_block_all')) {
+	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
 		$sql = "select extension_uuid, extension, number_alias, user_context, description from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and enabled = 'true' ";
@@ -263,7 +263,7 @@
 		$extensions = $database->select($sql, $parameters);
 	}
 
-//get the extensions
+//get the voicemails
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
 	$sql .= "from v_voicemails ";
 	$sql .= "where domain_uuid = :domain_uuid ";

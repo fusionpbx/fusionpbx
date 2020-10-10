@@ -184,9 +184,6 @@
 			$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 			$database->save($array);
 			unset($array);
-
-		//synchronize the xml config
-			save_dialplan_xml();
 	
 		//clear the cache
 			$cache = new cache;

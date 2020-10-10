@@ -154,9 +154,6 @@
 			$p->delete("dialplan_add", "temp");
 			$p->delete("dialplan_edit", "temp");
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$_SESSION["context"]);
@@ -167,6 +164,5 @@
 
 //redirect the user
 	header("Location: ivr_menus.php");
-	exit;
 
 ?>

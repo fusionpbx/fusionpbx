@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013-2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,14 +28,44 @@
 	local cache = require"resources.functions.cache"
 	local log = require"resources.functions.log"["xml_handler"]
 
+--connect to the database
+	local Database = require "resources.functions.database";
+	dbh = Database.new('system');
+
 --needed for cli-command xml_locate dialplan
 	if (call_context == nil) then
 		call_context = "public";
 	end
 
+--get the dialplan mode from the cache
+	dialplan_mode_key = "dialplan:mode";
+	dialplan_mode, err = cache.get(dialplan_mode_key);
+
+--if not found in the cache then get it from the database
+	if (err == 'NOT FOUND') then
+		--get the mode from default settings
+		sql = "select default_setting_value from v_default_settings "
+		sql = sql .. "where default_setting_category = 'destinations' ";
+		sql = sql .. "and default_setting_subcategory = 'dialplan_mode' ";
+		dialplan_mode = dbh:first_value(sql, nil);
+		if (dialplan_mode) then
+			local ok, err = cache.set(dialplan_mode_key, dialplan_mode, expire["dialplan"]);
+		end
+
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_mode_key.." source: database mode: "..dialplan_mode);
+		end
+	else
+		--send a message to the log
+		if (debug['cache']) then
+			log.notice(dialplan_mode_key.." source: cache mode: "..dialplan_mode);
+		end
+	end
+
 --set the defaults
-	if (context_type == nil) then
-		context_type = "multiple";
+	if (dialplan_mode == nil or dialplan_mode == '') then
+		dialplan_mode = "multiple";
 	end
 	domain_name = 'global';
 
@@ -44,11 +74,11 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. context_type .. " key:" .. dialplan_cache_key .. "\n");
+	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
-	if (context_name == 'public' and context_type == "single") then
+	if (context_name == 'public' and dialplan_mode == "single") then
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
@@ -58,16 +88,12 @@
 		if XML_STRING then
 			log.notice(dialplan_cache_key.." source: cache");
 		elseif err ~= 'NOT FOUND' then
-			log.notice("error get element from cache: " .. err);
+			log.notice("get element from the cache: " .. err);
 		end
 	end
 
 --set the cache
 	if (not XML_STRING) then
-
-		--connect to the database
-			local Database = require "resources.functions.database";
-			dbh = Database.new('system');
 
 		--include json library
 			local json
@@ -89,16 +115,27 @@
 			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
 
 		--get the dialplan xml
-			if (context_name == 'public' and context_type == 'single') then
-				sql = "select d.domain_name, dialplan_xml from v_dialplans as p, v_domains as d ";
-				sql = sql .. "where ( ";
-				sql = sql .. "	p.dialplan_uuid in (select dialplan_uuid from v_destinations where (destination_number = :destination_number or destination_prefix || destination_number = :destination_number)) ";
-				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid is null) ";
+			if (context_name == 'public' and dialplan_mode == 'single') then
+				sql = "SELECT d.domain_name, dialplan_xml FROM v_dialplans AS p, v_domains AS d ";
+				sql = sql .. "WHERE ( ";
+				sql = sql .. "	p.dialplan_uuid IN ( ";
+				sql = sql .. "		SELECT dialplan_uuid FROM v_destinations "
+				sql = sql .. "		WHERE ( ";
+				sql = sql .. "			destination_prefix || destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_prefix || destination_number = :destination_number ";
+				sql = sql .. "			OR '+' || destination_prefix || destination_number = :destination_number ";
+				sql = sql .. "			OR '+' || destination_prefix || destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			OR destination_number = :destination_number ";
+				sql = sql .. "		) ";
+				sql = sql .. "	) ";
+				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid IS NULL) ";
 				sql = sql .. ") ";
-				sql = sql .. "and p.domain_uuid = d.domain_uuid ";
-				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
-				sql = sql .. "and p.dialplan_enabled = 'true' ";
-				sql = sql .. "order by p.dialplan_order asc ";
+				sql = sql .. "AND p.domain_uuid = d.domain_uuid ";
+				sql = sql .. "AND (p.hostname = :hostname OR p.hostname IS NULL) ";
+				sql = sql .. "AND p.dialplan_enabled = 'true' ";
+				sql = sql .. "ORDER BY p.dialplan_order ASC ";
 				local params = {destination_number = destination_number, hostname = hostname};
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -124,7 +161,7 @@
 				if (context_name == "public" or string.match(context_name, "@")) then
 					sql = sql .. "where p.dialplan_context = :call_context ";
 				else
-					sql = sql .. "where (p.dialplan_context = :call_context or p.dialplan_context = '${domain_name}') ";
+					sql = sql .. "where p.dialplan_context in (:call_context, '${domain_name}', 'global') ";
 				end
 				sql = sql .. "and (p.hostname = :hostname or p.hostname is null) ";
 				sql = sql .. "and p.dialplan_enabled = 'true' ";

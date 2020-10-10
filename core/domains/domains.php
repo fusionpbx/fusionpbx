@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -61,7 +61,7 @@
 
 			//update the domain session variables
 				$domain_uuid = $_GET["domain_uuid"];
-			        $_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
@@ -164,7 +164,11 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(domain_uuid)', '*', $sql);
+	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
+	$sql .= "from v_domains ";
+	if (isset($sql_search)) {
+		$sql .= "where ".$sql_search;
+	}
 	$sql .= order_by($order_by, $order, 'domain_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;

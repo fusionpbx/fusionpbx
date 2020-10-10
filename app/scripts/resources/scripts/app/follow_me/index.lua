@@ -15,12 +15,13 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2020
 --	the Initial Developer. All Rights Reserved.
 
 --includes
 	local Database = require "resources.functions.database";
 	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local Settings = require "resources.functions.lazy_settings"
 	require "resources.functions.trim";
 
 --get the variables
@@ -49,8 +50,12 @@
 		call_direction = "local";
 	end
 
+--connect to the database
+	local dbh = Database.new('system');
+
 --set the strategy
-	follow_me_strategy = 'enterprise'; --simultaneous, enterprise
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
+	local follow_me_strategy = settings:get('follow_me', 'strategy', 'text') or 'enterprise'; --simultaneous, enterprise
 
 --include json library
 	debug["sql"] = false;
@@ -88,9 +93,6 @@
 		end
 		return count, destination_number, toll_allow;
 	end
-
---connect to the database
-	local dbh = Database.new('system');
 
 --get the forward busy
 	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_enabled=";
@@ -339,7 +341,7 @@
 					end
 
 				--get the destination caller id name and number
-					if (follow_me_caller_id_uuid ~= nil) then
+					if (follow_me_caller_id_uuid and follow_me_caller_id_uuid ~= '') then
 						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
 						sql = sql .. "from v_destinations ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -362,7 +364,8 @@
 					end
 
 				--set the outbound caller id
-					if (session:ready() and caller_is_local) then
+					ignore_outbound_caller_id = session:getVariable("follow_me_ignore_outbound_caller_id");
+					if (session:ready() and caller_is_local and ignore_outbound_caller_id ~= "true") then
 						if (outbound_caller_id_name ~= nil) then
 							caller_id_name = outbound_caller_id_name;
 						end
@@ -382,7 +385,9 @@
 					end
 
 				--set the destination dial string
-					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
+					destination_delay = destination_delay * 2;
+					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations

@@ -51,7 +51,7 @@
 			if (greeting_id == nil) then
 				if (session:ready()) then
 					dtmf_digits = '';
-					greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+					greeting_id = session:playAndGetDigits(1, 1, max_tries, 5000, "#", "phrase:voicemail_choose_greeting", "", "\\d+");
 					freeswitch.consoleLog("notice", "[voicemail] greeting_id: " .. greeting_id .. "\n");
 				end
 			end
@@ -69,7 +69,9 @@
 				--record your greeting at the tone press any key or stop talking to end the recording
 					if (session:ready()) then
 						dtmf_digits = '';
-						macro(session, "record_greeting", 1, 100, '');
+						session:execute("playback", "phrase:voicemail_record_greeting");
+						session:execute("sleep", "1000");
+						session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 					end
 
 				--store the voicemail greeting
@@ -104,7 +106,8 @@
 				--invalid greeting_id
 					if (session:ready()) then
 						dtmf_digits = '';
-						macro(session, "choose_greeting_fail", 1, 100, '');
+						session:execute("playback", "phrase:voicemail_choose_greeting_fail");
+						session:execute("sleep", "500");
 					end
 
 				--send back to choose the greeting

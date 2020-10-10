@@ -3,7 +3,7 @@
 <phone-settings e="2">
 <language perm="">English</language>
 <update_policy perm="">auto_update</update_policy>
-<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
 <dhcp perm="R">on</dhcp>
 <timezone perm="">{$snom_time_zone}</timezone>
 <firmware_status perm="R">http://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>

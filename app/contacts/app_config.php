@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "04481e0e-a478-c559-adad-52bd4174574c";
 		$apps[$x]['category'] = "CRM";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['contact_url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Provides a place to store contact information for individuals and organizations.";

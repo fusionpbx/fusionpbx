@@ -67,6 +67,7 @@ if (!class_exists('basic_operator_panel')) {
 				$sql .= "e.extension, ";
 				$sql .= "e.number_alias, ";
 				$sql .= "e.effective_caller_id_name, ";
+				$sql .= "lower(e.effective_caller_id_name) as filter_name, ";
 				$sql .= "e.effective_caller_id_number, ";
 				$sql .= "e.call_group, ";
 				$sql .= "e.description, ";

@@ -36,27 +36,45 @@
 		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['field']['ivr_menu_uuid'] = "ivr_menu_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "ivr_menu_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "ivr_menu_extension";
 		$apps[$x]['destinations'][$y]['field']['context'] = "ivr_menu_context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
-		//if ($_SESSION['ivr_menu']['application']['text'] != "lua") {
-		//		$y++;
-		//		$apps[$x]['destinations'][$y]['type'] = "sql";
-		//		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
-		//		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
-		//		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
-		//		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
-		//		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
-		//		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
-		//	//$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "ivr:\${ivr_menu_uuid}";
-		//		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
-		//		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
-		//}
-		//menu-top
-		//menu-exit
+
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
+		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
+		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "ivr_menu_uuid";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-sub:\${uuid}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = 'array';
+		$apps[$x]['destinations'][$y]['label'] = 'ivr_menus_other';
+		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus';
+		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
+		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['application'] = 'menu-top';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-back';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-exit';
 		//menu-say-phrase
 		//menu-play-sound
 
@@ -123,6 +141,46 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ac4ff01d-51a2-433f-9243-be9b6dd8ba9c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "direct_dial_digits";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/^(\d{2,11})$/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1012fd92-acf9-4ce9-89da-f02d4cd0e794";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "confirm_attempts";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "028bab4e-60e3-48d0-8892-4f678c8b72af";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "inter_digit_timeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2000";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit timeout in milliseconds";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5829fb7-8bd6-4c42-af16-565882fad7ca";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_failures";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "46dc3c7b-8a8d-4957-b4bd-27708c933af9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_timeouts";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "26984efd-2445-4ac9-b459-bb7bda4217c6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "limit";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "ivr_menus";
@@ -185,6 +243,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_extension";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_parent_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_language";

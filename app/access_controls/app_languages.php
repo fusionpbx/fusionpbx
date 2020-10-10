@@ -85,6 +85,27 @@ $text['title-access_control']['ru-ru'] = "Управление доступом"
 $text['title-access_control']['sv-se'] = "Åtkomstkontroll";
 $text['title-access_control']['uk-ua'] = "Управління доступом";
 
+$text['title_description-access_controls']['en-us'] = "Access control list can allow or deny ranges of IP addresses.";
+$text['title_description-access_controls']['en-gb'] = "Access control list can allow or deny ranges of IP addresses.";
+$text['title_description-access_controls']['ar-eg'] = "قائمة التحكم بالوصول يمكن السماح أو الرفض نطاقات العناوين.";
+$text['title_description-access_controls']['de-at'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen."; //copied from de-de
+$text['title_description-access_controls']['de-ch'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen."; //copied from de-de
+$text['title_description-access_controls']['de-de'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen.";
+$text['title_description-access_controls']['es-cl'] = " Lista de control de acceso puede permitir o denegar los rangos de direcciones IP.";
+$text['title_description-access_controls']['es-mx'] = " Lista de control de acceso puede permitir o denegar los rangos de direcciones IP."; //copied from es-cl
+$text['title_description-access_controls']['fr-ca'] = " Liste de contrôle d'accès peut autoriser ou refuser des plages d'adresses IP."; //copied from fr-fr
+$text['title_description-access_controls']['fr-fr'] = " Liste de contrôle d'accès peut autoriser ou refuser des plages d'adresses IP.";
+$text['title_description-access_controls']['he-il'] = " רשימת בקרת גישה יכולה לאפשר או למנוע טווחים של כתובות IP.";
+$text['title_description-access_controls']['it-it'] = "Le liste per il controllo di accesso permettono o negano l'accesso a range di IP.";
+$text['title_description-access_controls']['nl-nl'] = "Toegang Controle lijst kan IP adres reeks toestaan of verbieden.";
+$text['title_description-access_controls']['pl-pl'] = "Lista kontroli dostępu może umożliwić lub zablokować zakresy adresów IP.";
+$text['title_description-access_controls']['pt-br'] = "Lista de controle de acesso pode permitir ou negar intervalos de endereços IP."; //copied from pt-pt
+$text['title_description-access_controls']['pt-pt'] = "Lista de controle de acesso pode permitir ou negar intervalos de endereços IP.";
+$text['title_description-access_controls']['ro-ro'] = "Lista de control al accesului poate permite sau refuza intervale de adrese IP.";
+$text['title_description-access_controls']['ru-ru'] = "Контроль доступа может разрешить или запретить диапазоны IP адресов.";
+$text['title_description-access_controls']['sv-se'] = "Åtkomstkontrollista kan tillåta eller neka intervall av IP-adresser.";
+$text['title_description-access_controls']['uk-ua'] = "Список контролю доступу може дозволити або заборонити діапазони IP-адрес.";
+
 $text['label-node_type']['en-us'] = "Type";
 $text['label-node_type']['en-gb'] = "Type";
 $text['label-node_type']['ar-eg'] = "اكتب";
@@ -420,26 +441,5 @@ $text['description-access_control_default']['ro-ro'] = "Selectați tipul implici
 $text['description-access_control_default']['ru-ru'] = "Выберите тип по умолчанию.";
 $text['description-access_control_default']['sv-se'] = "Välj standardtypen.";
 $text['description-access_control_default']['uk-ua'] = "Вибір типу за замовчуванням.";
-
-$text['description-access_control']['en-us'] = "Access control list can allow or deny ranges of IP addresses.";
-$text['description-access_control']['en-gb'] = "Access control list can allow or deny ranges of IP addresses.";
-$text['description-access_control']['ar-eg'] = "قائمة التحكم بالوصول يمكن السماح أو الرفض نطاقات العناوين.";
-$text['description-access_control']['de-at'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen."; //copied from de-de
-$text['description-access_control']['de-ch'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen."; //copied from de-de
-$text['description-access_control']['de-de'] = " Die Zugriffskontrollliste kann Bereiche von IP Adressen zulassen oder ablehnen.";
-$text['description-access_control']['es-cl'] = " Lista de control de acceso puede permitir o denegar los rangos de direcciones IP.";
-$text['description-access_control']['es-mx'] = " Lista de control de acceso puede permitir o denegar los rangos de direcciones IP."; //copied from es-cl
-$text['description-access_control']['fr-ca'] = " Liste de contrôle d'accès peut autoriser ou refuser des plages d'adresses IP."; //copied from fr-fr
-$text['description-access_control']['fr-fr'] = " Liste de contrôle d'accès peut autoriser ou refuser des plages d'adresses IP.";
-$text['description-access_control']['he-il'] = " רשימת בקרת גישה יכולה לאפשר או למנוע טווחים של כתובות IP.";
-$text['description-access_control']['it-it'] = "Le liste per il controllo di accesso permettono o negano l'accesso a range di IP.";
-$text['description-access_control']['nl-nl'] = "Toegang Controle lijst kan IP adres reeks toestaan of verbieden.";
-$text['description-access_control']['pl-pl'] = "Lista kontroli dostępu może umożliwić lub zablokować zakresy adresów IP.";
-$text['description-access_control']['pt-br'] = "Lista de controle de acesso pode permitir ou negar intervalos de endereços IP."; //copied from pt-pt
-$text['description-access_control']['pt-pt'] = "Lista de controle de acesso pode permitir ou negar intervalos de endereços IP.";
-$text['description-access_control']['ro-ro'] = "Lista de control al accesului poate permite sau refuza intervale de adrese IP.";
-$text['description-access_control']['ru-ru'] = "Контроль доступа может разрешить или запретить диапазоны IP адресов.";
-$text['description-access_control']['sv-se'] = "Åtkomstkontrollista kan tillåta eller neka intervall av IP-adresser.";
-$text['description-access_control']['uk-ua'] = "Список контролю доступу може дозволити або заборонити діапазони IP-адрес.";
 
 ?>
