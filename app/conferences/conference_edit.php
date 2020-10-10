@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -321,17 +321,18 @@
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
-	if ($action == "add") {
-		echo "<b>".$text['label-conference-add']."</b>";
-	}
-	if ($action == "update") {
-		echo "<b>".$text['label-conference-edit']."</b>";
-	}
+	echo "		<b>".$text['title-conference']."</b>";
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
+
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
-	if ($action == 'update' && permission_exists('conference_active_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-right: 15px;','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+	if ($action == 'update') {
+		if (permission_exists('conference_cdr_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
+		}
+		if (permission_exists('conference_active_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
@@ -370,7 +371,7 @@
 	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
+	echo "	<input class='formfld' type='number' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";

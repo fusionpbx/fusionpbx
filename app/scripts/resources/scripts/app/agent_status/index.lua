@@ -29,6 +29,7 @@
 --get the session variables
 	if (session:ready()) then
 		session:answer();
+		session:sleep('1000');
 	end
 
 --get the session variables
@@ -39,6 +40,7 @@
 			context = session:getVariable("context");
 			uuid = session:get_uuid();
 			agent_authorized = session:getVariable("agent_authorized");
+			agent_action = session:getVariable("agent_action");
 			agent_id = session:getVariable("agent_id");
 			agent_password = session:getVariable("agent_password");
 
@@ -116,16 +118,24 @@
 			user_status = trim(api:executeString(cmd));
 
 		--get the user info
-			if (user_status == "Available") then
-				action = "logout";
-				status = 'Logged Out';
-			else
-				action = "login";
-				status = 'Available';
+			if (agent_action == nil) then
+				if (user_status == "Available") then
+					action = "logout";
+					status = 'Logged Out';
+				else
+					action = "login";
+					status = 'Available';
+				end
+			elseif (agent_action == "login") then
+					action = "login";
+					status = 'Available';
+			elseif (agent_action == "logout") then
+					action = "logout";
+					status = 'Logged Out';
 			end
 
 		--send a login or logout to mod_callcenter
-			cmd = "callcenter_config agent set status "..agent_uuid.." '"..status.."'";
+			cmd = "sched_api +5 none callcenter_config agent set status "..agent_uuid.." '"..status.."'";
 			freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
 			result = api:executeString(cmd);
 

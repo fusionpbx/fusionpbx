@@ -221,7 +221,7 @@ if (!class_exists('conference_centers')) {
 		 * download the recordings
 		 */
 		public function download() {
-			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+			if (permission_exists('conference_session_play') || permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
 				//cache limiter
 					session_cache_limiter('public');
@@ -374,9 +374,6 @@ if (!class_exists('conference_centers')) {
 								//clear the cache
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["context"]);
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -601,9 +598,6 @@ if (!class_exists('conference_centers')) {
 
 								//revoke temporary permissions
 									$p->delete("dialplan_edit", "temp");
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;

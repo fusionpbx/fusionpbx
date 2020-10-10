@@ -69,7 +69,7 @@
 
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_imports')) {
+	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
 		if ($_POST['type'] == 'csv') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -393,7 +393,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='from_row'>\n";
-	$i=1;
+	$i=2;
 	while($i<=99) {
 		$selected = ($i == $from_row) ? "selected" : null;
 		echo "			<option value='$i' ".$selected.">$i</option>\n";

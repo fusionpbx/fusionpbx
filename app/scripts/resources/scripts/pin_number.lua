@@ -113,6 +113,7 @@
 				dbh:query(sql, params, function(row)
 					--get the values from the database
 						accountcode = row["accountcode"];
+						description = row["description"];
 					--set the variable to true
 						auth = true;
 					--set the accountcode
@@ -121,6 +122,7 @@
 						end
 					--set the authorized pin number that was used
 						session:setVariable("pin_number", digits);
+						session:setVariable("pin_description", description);
 				end);
 			elseif (pin_number == "voicemail") then
 				local sql = [[SELECT * FROM v_voicemails

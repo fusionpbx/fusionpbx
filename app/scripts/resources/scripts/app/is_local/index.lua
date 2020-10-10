@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2014-2019
+--	Portions created by the Initial Developer are Copyright (C) 2014-2020
 --	the Initial Developer. All Rights Reserved.
 
 
@@ -59,8 +59,13 @@
 		local sql = "SELECT destination_number, destination_context ";
 		sql = sql .. "FROM v_destinations ";
 		sql = sql .. "WHERE ( ";
-		sql = sql .. "	destination_number = :destination_number ";
+		sql = sql .. "	destination_prefix || destination_area_code || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
 		sql = sql .. "	OR destination_prefix || destination_number = :destination_number ";
+		sql = sql .. "	OR '+' || destination_prefix || destination_number = :destination_number ";
+		sql = sql .. "	OR '+' || destination_prefix || destination_area_code || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_area_code || destination_number = :destination_number ";
+		sql = sql .. "	OR destination_number = :destination_number ";
 		sql = sql .. ") ";
 		sql = sql .. "AND destination_type = 'inbound' ";
 		sql = sql .. "AND destination_enabled = 'true' ";
@@ -105,10 +110,8 @@
 		--add the function
 			require "resources.functions.explode";
 
-		--define the array/table and variables
+		--define the array/table
 			local var = {}
-			local key = "";
-			local value = "";
 
 		--parse the cache
 			key_pairs = explode("&", value);

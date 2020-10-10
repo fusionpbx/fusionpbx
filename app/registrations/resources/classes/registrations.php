@@ -86,9 +86,10 @@ if (!class_exists('registrations')) {
 					foreach ($sip_profiles as $field) {
 
 						//get sofia status profile information including registrations
-							$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
+							$cmd = "api sofia xmlstatus profile '".$field['sip_profile_name']."' reg";
 							$xml_response = trim(event_socket_request($fp, $cmd));
-							$xml_response = iconv("utf-8", "utf-8//ignore", $xml_response);
+							if (function_exists('iconv')) { $xml_response = iconv("utf-8", "utf-8//ignore", $xml_response); }
+							$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
 							if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
 							$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 							$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
@@ -99,9 +100,10 @@ if (!class_exists('registrations')) {
 									$xml = new SimpleXMLElement($xml_response);
 								}
 								catch(Exception $e) {
-									echo basename(__FILE__).'<br />';
-									echo 'line: '.__line__.'<br />';
-									echo 'error: '.$e->getMessage();
+									echo basename(__FILE__)."<br />\n";
+									echo "line: ".__line__."<br />\n";
+									echo "error: ".$e->getMessage()."<br />\n";
+									//echo $xml_response;
 									exit;
 								}
 								$array = json_decode(json_encode($xml), true);
@@ -168,13 +170,11 @@ if (!class_exists('registrations')) {
 										}
 
 									//remove unrelated domains
-										if (count($_SESSION["domains"]) > 1) {
-											if (!permission_exists('registration_all') || $this->show != 'all') {
-												if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
-												else if ($user_array[1] == $_SESSION['domain_name']) {}
-												else {
-													unset($registrations[$id]);
-												}
+										if (!permission_exists('registration_all') || $this->show != 'all') {
+											if ($registrations[$id]['sip-auth-realm'] == $_SESSION['domain_name']) {}
+											else if ($user_array[1] == $_SESSION['domain_name']) {}
+											else {
+												unset($registrations[$id]);
 											}
 										}
 

@@ -703,9 +703,6 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$dialplan_context);
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//redirect the browser
 			message::add($text['message-update']);
 			header("Location: ".PROJECT_PATH."/app/dialplans/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
@@ -723,7 +720,7 @@
 	$sql = "select * from v_gateways ";
 	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid ";
+		$sql .= "order by domain_uuid, gateway ";
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";

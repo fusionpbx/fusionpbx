@@ -127,7 +127,7 @@ if (!class_exists('groups')) {
 			//assign the variables
 				$this->name = 'group_member';
 				$this->table = 'user_groups';
-				$this->location = 'groupmembers.php?group_uuid='.$this->group_uuid;
+				$this->location = 'group_members.php?group_uuid='.$this->group_uuid;
 
 			if (permission_exists($this->name.'_delete')) {
 
@@ -445,6 +445,8 @@ if (!class_exists('groups')) {
 								$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
 								$array['group_permissions'][$x]['domain_uuid'] = null;
 								$array['group_permissions'][$x]['permission_name'] = $row['name'];
+								$array['group_permissions'][$x]['permission_protected'] = 'false';
+								$array['group_permissions'][$x]['permission_assigned'] = 'true';
 								$array['group_permissions'][$x]['group_name'] = $group;
 								$array['group_permissions'][$x]['group_uuid'] = $group_uuids[$group];
 							}

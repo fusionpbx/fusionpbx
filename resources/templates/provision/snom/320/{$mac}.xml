@@ -9,7 +9,7 @@
 <transfer_on_hangup_with_starcode perm="">on</transfer_on_hangup_with_starcode>
 <update_policy perm="">auto_update</update_policy>
 <firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$mac}&amp;filename_firmware-{$mac}.xml</firmware_status>
-<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
 <date_us_format>off</date_us_format>
 <time_24_format>on</time_24_format>
 <challenge_response>off</challenge_response>

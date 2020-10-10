@@ -55,10 +55,18 @@
 		$recording_name = $_POST["recording_name"];
 		$recording_description = $_POST["recording_description"];
 
-		//clean the recording filename and name
-		$recording_filename = str_replace(" ", "_", $recording_filename);
-		$recording_filename = str_replace("'", "", $recording_filename);
-		$recording_name = str_replace("'", "", $recording_name);
+		//sanitize recording filename and name
+		$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
+		if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
+			$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
+			$recording_filename = str_replace('.', '', $recording_filename);
+		}
+		$recording_filename = str_replace("\\", '', $recording_filename);
+		$recording_filename = str_replace('/', '', $recording_filename);
+		$recording_filename = str_replace('..', '', $recording_filename);
+		$recording_filename = str_replace(' ', '_', $recording_filename);
+		$recording_filename = str_replace("'", '', $recording_filename);
+		$recording_name = str_replace("'", '', $recording_name);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {

@@ -48,12 +48,12 @@ if (!class_exists('switch_music_on_hold')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'music_on_hold';
-				$this->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
-				$this->permission_prefix = 'music_on_hold_';
-				$this->list_page = 'music_on_hold.php';
-				$this->table = 'music_on_hold';
-				$this->uuid_prefix = 'music_on_hold_';
+			$this->app_name = 'music_on_hold';
+			$this->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+			$this->permission_prefix = 'music_on_hold_';
+			$this->list_page = 'music_on_hold.php';
+			$this->table = 'music_on_hold';
+			$this->uuid_prefix = 'music_on_hold_';
 
 		}
 
@@ -239,6 +239,92 @@ if (!class_exists('switch_music_on_hold')) {
 		}
 
 		/**
+		 * read the music files to add the music on hold into the database
+		 */
+		public function import() {
+			//get the domains
+				$sql = "select * from v_domains ";
+				$database = new database;
+				$domains = $database->select($sql, null, 'all');
+				unset($sql);
+
+			//get the music_on_hold array
+				$sql = "select * from v_music_on_hold ";
+				$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
+				$database = new database;
+				$music_on_hold = $database->select($sql, null, 'all');
+				unset($sql);
+
+			//build an array of the sound files
+				$music_directory =  $_SESSION['switch']['sounds']['dir'].'/music';
+				if (file_exists($music_directory)) {
+					$files = array_merge(glob($music_directory.'/*/*/*.wav'), glob($music_directory.'/*/*/*/*.wav'), glob($stream_path.'/*/*/*/*.mp3'), glob($stream_path.'/*/*/*/*.ogg'));
+				}
+
+			//build a new file array
+				foreach($files as $file) {
+					$path = substr($file, strlen($music_directory.'/'));
+					$path = str_replace("\\", "/", $path);
+					$path_array = explode("/", $path);
+					$file_array[$path_array[0]][$path_array[1]][$path_array[2]] = dirname($file);
+					//echo "domain_name ".$path_array[0]."<br />\n";
+					//echo "category_name ".$path_array[1]."<br />\n";
+				}
+				//view_array($file_array);
+
+			//prepare the data
+				$i = 0;
+				foreach($file_array as $domain_name => $a1) {
+					foreach($a1 as $category_name => $a2) {
+						foreach($a2 as $sample_rate => $file_path) {
+							//echo "domain_name ".$domain_name."<br />\n";
+							//echo "category_name ".$category_name."<br />\n";
+							foreach($domains as $domain) {
+								//view_array($field, false);
+								if ($field['domain_name'] === $domain_name) {
+									$domain_uuid = $domain['domain_uuid'];
+									//echo "domain_uuid ".$domain_uuid."<br />\n";
+								}
+							}
+
+							if ($domain_name == 'global' || $domain_name == 'default') {
+								$domain_uuid = null;
+							}
+							//view_array($row, false);
+
+							$array['music_on_hold'][$i]['music_on_hold_uuid'] = uuid();
+							$array['music_on_hold'][$i]['domain_uuid'] = $domain_uuid;
+							$array['music_on_hold'][$i]['music_on_hold_name'] = $category_name;
+							$array['music_on_hold'][$i]['music_on_hold_path'] = $file_path;
+							$array['music_on_hold'][$i]['music_on_hold_rate'] = strlen($sample_rate) != 0 ? $sample_rate : null;
+							$array['music_on_hold'][$i]['music_on_hold_shuffle'] = 'false';
+							$array['music_on_hold'][$i]['music_on_hold_channels'] = 1;
+							$array['music_on_hold'][$i]['music_on_hold_interval'] = 20;
+							$array['music_on_hold'][$i]['music_on_hold_timer_name'] = 'soft';
+							$array['music_on_hold'][$i]['music_on_hold_chime_list'] = null;
+							$array['music_on_hold'][$i]['music_on_hold_chime_freq'] = null;
+							$array['music_on_hold'][$i]['music_on_hold_chime_max'] = null;
+							$i++;
+						}
+					}
+				}
+				//view_array($array, false);
+
+			//save the data
+				$p = new permissions;
+				$p->add('music_on_hold_add', 'temp');
+
+				$database = new database;
+				$database->app_name = 'music_on_hold';
+				$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+				$database->save($array);
+				//echo $database->message;
+				unset($array);
+
+				$p->delete('music_on_hold_add', 'temp');	
+		}
+
+		/**
 		 * delete records/files
 		 */
 		public function delete($records) {
@@ -280,7 +366,7 @@ if (!class_exists('switch_music_on_hold')) {
 
 								//get music on hold details
 									$sql = "select * from v_music_on_hold ";
-									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ?: "or domain_uuid is null ").") ";
+									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ? "": "or domain_uuid is null ").") ";
 									$sql .= "and music_on_hold_uuid in ('".implode("','", array_keys($moh))."') ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 									$database = new database;

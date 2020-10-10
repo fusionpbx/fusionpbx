@@ -35,11 +35,12 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_centers";
 		$apps[$x]['destinations'][$y]['name'] = "call_centers";
-		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_description as  description from v_call_center_queues";
+		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_extension as extension, queue_description as  description from v_call_center_queues";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "queue_name asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "queue_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "queue_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
@@ -119,6 +120,15 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_center_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_outbound_caller_id_name";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_outbound_caller_id_number";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 
 	//default settings
@@ -357,6 +367,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_cid_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_outbound_caller_id_name";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_outbound_caller_id_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

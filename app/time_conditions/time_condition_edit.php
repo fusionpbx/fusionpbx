@@ -503,9 +503,6 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$_SESSION["context"]);
 
-		//synchronize the xml config
-			save_dialplan_xml();
-
 		//set the message
 			if ($action == "add") {
 				message::add($text['message-add']);
@@ -526,7 +523,9 @@
 		//get main dialplan entry
 			$sql = "select * from v_dialplans ";
 			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
@@ -549,6 +548,7 @@
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data ";
 			$sql .= "from v_dialplan_details ";
 			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$sql .= "and ";
 			$sql .= "( ";
 			$sql .= "	( ";
@@ -562,6 +562,7 @@
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$dialplan_details = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);

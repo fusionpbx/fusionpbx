@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "5ec89622-b19c-3559-64f0-afde802ab139";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
@@ -34,17 +34,17 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
-		$apps[$x]['destinations'][$y]['sql'] = "select destination_number as destination, destination_context as context, destination_description as description from v_destinations ";
+		$apps[$x]['destinations'][$y]['sql'] = "select destination_uuid, destination_number, destination_context, destination_description from v_destinations ";
 		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
-		$apps[$x]['destinations'][$y]['field']['uuid'] = "destination_uuid";
-		$apps[$x]['destinations'][$y]['field']['context'] = "destination_context";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "destination_number";
-		$apps[$x]['destinations'][$y]['field']['description'] = "destination_description";
-		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['field']['destination_uuid'] = "destination_uuid";
+		$apps[$x]['destinations'][$y]['field']['destination_number'] = "destination_number";
+		$apps[$x]['destinations'][$y]['field']['destination_context'] = "destination_context";
+		$apps[$x]['destinations'][$y]['field']['destination_description'] = "destination_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination_number} XML \${destination_context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination_number} XML \${destination_context}";
+		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination_number}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
 
 	//permission details
 		$y=0;
@@ -79,8 +79,14 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_record";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_trunk_prefix";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_area_code";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_condition_field";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_caller_id_name";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -93,7 +99,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -115,6 +120,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_details";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3141e4ad-a892-4a51-8789-aa27be54ee94";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "multiple";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
@@ -170,9 +183,21 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_trunk_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the trunk prefix.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_area_code";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the area code.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the prefix.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_condition_field";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the condition.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_number_regex";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -200,6 +225,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to record the call.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_hold_music";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to set music on hold.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

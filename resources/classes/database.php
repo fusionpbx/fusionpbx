@@ -66,7 +66,7 @@ include "root.php";
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 			}
-		
+
 			/**
 			 * Called when there are no references to a particular object
 			 * unset the variables used in the class
@@ -76,7 +76,7 @@ include "root.php";
 					unset($this->$key);
 				}
 			}
-		
+
 			/**
 			 * Connect to the database
 			 */
@@ -683,7 +683,10 @@ include "root.php";
 					unset($sql);
 			}
 
-			public function delete($delete_array) {
+			public function delete($array) {
+
+				//return the array
+					if (!is_array($array)) { echo "not an array"; return false; }
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -710,38 +713,178 @@ include "root.php";
 					//echo "</pre>\n";
 					//exit;
 
-				//get the current data
-					if (is_array($delete_array)) {
-						foreach($delete_array as $table_name => $rows) {
-							foreach($rows as $row) {
-								$i = 0;
-								$sql = "select * from ".$table_prefix.$table_name." ";
-								foreach($row as $field_name => $field_value) {
-									if ($i == 0) { $sql .= "where "; } else { $sql .= "and "; }
-									$sql .= $field_name." = :".$field_name." ";
-									$parameters[$field_name] = $field_value;
-									$i++;
+				//set the message id
+					$m = 0;
+
+				//loop through the array
+					$checked = false;
+					if (is_array($array)) {
+
+						$x = 0;
+						foreach ($array as $parent_name => $tables) {
+							if (is_array($tables)) {
+								foreach ($tables as $id => $row) {
+
+									//prepare the variables
+										$parent_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $parent_name);
+										$parent_key_name = $this->singular($parent_name)."_uuid";
+
+									//build the delete array
+										if ($row['checked'] == 'true') {
+											//set checked to true
+											$checked = true;
+
+											//delete the child data
+											if (isset($row[$parent_key_name])) {
+												$new_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+											}
+
+											//remove the row from the main array
+											unset($array[$parent_name][$x]);
+										}
+
+									//loop through the fields
+										foreach($row as $field_name => $field_value) {
+
+											//find the child tables
+											$y = 0;
+											if (is_array($field_value)) {
+												//prepare the variables
+												$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+												$child_key_name = $this->singular($child_name)."_uuid";
+
+												//loop through the child rows
+												foreach ($field_value as $sub_row) {
+
+													//build the delete array
+													if ($row['checked'] == 'true') {
+														//set checked to true
+														$checked = true;
+
+														//delete the child data
+														$new_array[$child_name][][$child_key_name] = $sub_row[$child_key_name];
+
+														//remove the row from the main array
+														unset($array[$parent_name][$x][$child_name][$y]);
+													}
+
+													//increment the value
+													$y++;
+												}
+											}
+										}
+
+									//increment the value
+										$x++;
+
 								}
-								if (strlen($field_value) > 0) {
-									$results = $this->execute($sql, $parameters, 'all');
-									if (is_array($results)) {
-										$array[$table_name] = $results;
-									}
-								}
-								unset($parameters);
 							}
 						}
 					}
 
-				//save the array
-					$old_array = &$array;
+				//if not checked then copy the array to delete array
+					if (!$checked) {
+						$new_array = $array;
+					}
+
+				//get the current data
+					if (is_array($new_array) && count($new_array) > 0) {
+						//build an array of tables, fields, and values
+						foreach($new_array as $table_name => $rows) {
+							foreach($rows as $row) {
+								foreach($row as $field_name => $field_value) {
+									$keys[$table_name][$field_name][] = $field_value;
+								}
+							}
+						}
+
+						//use the array to get a copy of the parent data before deleting it
+						foreach($new_array as $table_name => $rows) {
+							foreach($rows as $row) {
+								$table_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $table_name);
+								$sql = "select * from ".$table_prefix.$table_name." ";
+								$i = 0;
+								foreach($row as $field_name => $field_value) {
+									if ($i == 0) { $sql .= "where "; } else { $sql .= "and "; }
+									$sql .= $field_name." in ( ";
+									$i = 0;
+									foreach($keys[$table_name][$field_name] as $field_value) {
+										$field_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+										if ($i > 0) { $sql .= " ,"; }
+										$sql .= " :".$field_name."_".$i." ";
+										$i++;
+									}
+									$sql .= ") ";
+									$i = 0;
+									foreach($keys[$table_name][$field_name] as $field_value) {
+										$parameters[$field_name.'_'.$i] = $field_value;
+										$i++;
+									}
+								}
+							}
+							if (strlen($field_value) > 0) {
+								$results = $this->execute($sql, $parameters, 'all');
+								unset($parameters);
+								if (is_array($results)) {
+									$old_array[$table_name] = $results;
+								}
+							}
+						}
+
+						//get relations array
+						$relations = $this->get_relations($parent_name);
+
+						//add child data to the old array
+						foreach($old_array as $parent_name => $rows) {
+							//get relations array
+							$relations = $this->get_relations($parent_name);
+
+							//loop through the rows
+							$x = 0;
+							foreach($rows as $row) {
+								if (is_array($relations)) {
+									foreach ($relations as $relation) {
+										if ($relation['key']['action']['delete'] == 'cascade') {
+											//set the child table
+											$child_table = $relation['table'];
+
+											//remove the v_ prefix
+											if (substr($child_table, 0, 2) == "v_") {
+												$child_table = substr($child_table, 2);
+											}
+
+											//get the child data
+											$sql = "select * from ".$table_prefix.$child_table." ";
+											$sql .= "where ".$relation['field']." = :".$relation['field'];
+											$parameters[$relation['field']] = $row[$relation['field']];
+											$results = $this->execute($sql, $parameters, 'all');
+											unset($parameters);
+											if (is_array($results) && $parent_name !== $child_table) {
+												$old_array[$parent_name][$x][$child_table] = $results;
+											}
+
+											//delete the child data
+											if (isset($row[$relation['field']]) && strlen($row[$relation['field']]) > 0) {
+												$sql = "delete from ".$table_prefix.$child_table." ";
+												$sql .= "where ".$relation['field']." = :".$relation['field'];
+												$parameters[$relation['field']] = $row[$relation['field']];
+//												$this->execute($sql, $parameters);
+											}
+											unset($parameters);
+										}
+									}
+								}
+								$x++;
+							}
+						}
+					}
 
 				//start the atomic transaction
 					$this->db->beginTransaction();
 
 				//delete the current data
-					if (is_array($delete_array)) {
-						foreach($delete_array as $table_name => $rows) {
+					if (is_array($new_array)) {
+						foreach($new_array as $table_name => $rows) {
 							//echo "table: ".$table_name."\n";
 							foreach($rows as $row) {
 								if (permission_exists($this->singular($table_name).'_delete')) {
@@ -1143,6 +1286,339 @@ include "root.php";
 				return $this;
 			}
 
+			public function copy($array) {
+
+				//return the array
+					if (!is_array($array)) { echo "not an array"; return false; }
+
+				//set the table prefix
+					$table_prefix = 'v_';
+
+				//set the message id
+					$m = 0;
+
+				//loop through the array
+					if (is_array($array)) {
+						$x = 0;
+						foreach ($array as $parent_name => $tables) {
+							if (is_array($tables)) {
+								foreach ($tables as $id => $row) {
+
+									//prepare the variables
+										$parent_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $parent_name);
+										$parent_key_name = $this->singular($parent_name)."_uuid";
+
+									//build the copy array
+										if ($row['checked'] == 'true') {
+											//set checked to true
+											$checked = true;
+
+											//copy the child data
+											if (is_uuid($row[$parent_key_name])) {
+												$copy_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+											}
+
+											//remove the row from the main array
+											unset($array[$parent_name][$x]);
+
+											//loop through the fields
+
+											foreach($row as $field_name => $field_value) {
+												//find the child tables
+												if (is_array($field_value)) {
+
+													//prepare the variables
+													$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+													$child_key_name = $this->singular($child_name)."_uuid";
+
+													//loop through the child rows
+													$y = 0;
+													foreach ($field_value as $sub_row) {
+
+														//delete the child data
+														$copy_array[$child_name][][$child_key_name] = $sub_row[$child_key_name];
+
+														//remove the row from the main array
+														unset($array[$parent_name][$x][$child_name][$y]);
+
+														//increment the value
+														$y++;
+													}
+												}
+											}
+										}
+
+									//increment the value
+										$x++;
+
+								}
+							}
+						}
+					}
+
+				//get the current data
+					if (is_array($copy_array) && count($copy_array) > 0) {
+
+						//build an array of tables, fields, and values
+						foreach($copy_array as $table_name => $rows) {
+							foreach($rows as $row) {
+								foreach($row as $field_name => $field_value) {
+									$keys[$table_name][$field_name][] = $field_value;
+								}
+							}
+						}
+
+						//unset the array
+						unset($array);
+
+						//use the array to get a copy of the paent data before deleting it
+						foreach($copy_array as $table_name => $rows) {
+							foreach($rows as $row) {
+								$table_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $table_name);
+								$sql = "select * from ".$table_prefix.$table_name." ";
+								$i = 0;
+								foreach($row as $field_name => $field_value) {
+									if ($i == 0) { $sql .= "where "; } else { $sql .= "and "; }
+									$sql .= $field_name." in ( ";
+									$i = 0;
+									foreach($keys[$table_name][$field_name] as $field_value) {
+										$field_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+										if ($i > 0) { $sql .= " ,"; }
+										$sql .= " :".$field_name."_".$i." ";
+										$i++;
+									}
+									$sql .= ") ";
+									$i = 0;
+									foreach($keys[$table_name][$field_name] as $field_value) {
+										$parameters[$field_name.'_'.$i] = $field_value;
+										$i++;
+									}
+								}
+							}
+
+							$results = $this->execute($sql, $parameters, 'all');
+							unset($parameters);
+							if (is_array($results)) {
+								$array[$table_name] = $results;
+							}
+						}
+
+						//add child data to the old array
+						foreach($copy_array as $parent_name => $rows) {
+							//get relations array
+							$relations = $this->get_relations($parent_name);
+
+							//loop through the rows
+							$x = 0;
+							foreach($rows as $row) {
+								if (is_array($relations)) {
+									foreach ($relations as $relation) {
+										//set the child table
+										$child_table = $relation['table'];
+
+										//remove the v_ prefix
+										if (substr($child_table, 0, 2) == "v_") {
+											$child_table = substr($child_table, 2);
+										}
+
+										//get the child data
+										$sql = "select * from ".$table_prefix.$child_table." ";
+										$sql .= "where ".$relation['field']." = :".$relation['field'];
+										$parameters[$relation['field']] = $row[$relation['field']];
+										$results = $this->execute($sql, $parameters, 'all');
+										unset($parameters);
+										if (is_array($results)) {
+											$array[$parent_name][$x][$child_table] = $results;
+										}
+									}
+								}
+								$x++;
+							}
+						}
+					}
+
+				//update the parent and child keys
+					$checked = false;
+					if (is_array($array)) {
+						$x = 0;
+						foreach ($array as $parent_name => $tables) {
+							if (is_array($tables)) {
+								foreach ($tables as $id => $row) {
+
+									//prepare the variables
+										$parent_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $parent_name);
+										$parent_key_name = $this->singular($parent_name)."_uuid";
+										$parent_key_value = uuid();
+
+									//update the parent key id
+										$array[$parent_name][$x][$parent_key_name] = $parent_key_value;
+
+									//add copy to the description 
+										if (isset($array[$parent_name][$x][$this->singular($parent_name).'_description'])) {
+											$array[$parent_name][$x][$this->singular($parent_name).'_description'] = '(Copy) '.$array[$parent_name][$x][$this->singular($parent_name).'_description'];
+										}
+
+									//loop through the fields
+										foreach($row as $field_name => $field_value) {
+
+											//find the child tables
+											$y = 0;
+											if (is_array($field_value)) {
+												//prepare the variables
+												$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+												$child_key_name = $this->singular($child_name)."_uuid";
+
+												//loop through the child rows
+												foreach ($field_value as $sub_row) {
+													//update the parent key id
+													$array[$parent_name][$x][$child_name][$y][$parent_key_name] = $parent_key_value;
+
+													//udpate the child key id
+													$array[$parent_name][$x][$child_name][$y][$child_key_name] = uuid();
+
+													//increment the value
+													$y++;
+												}
+											}
+										}
+
+									//increment the value
+										$x++;
+
+								}
+							}
+						}
+					}
+
+				//save the copy of the data
+					if (is_array($array) && count($array) > 0) {
+						$this->save($array);
+						unset($array);
+					}
+
+			} //end function copy
+
+
+			public function toggle($array) {
+
+				//return the array
+					if (!is_array($array)) { echo "not an array"; return false; }
+
+				//set the message id
+					$m = 0;
+
+				//loop through the array
+					if (is_array($array)) {
+						$x = 0;
+						foreach ($array as $parent_name => $tables) {
+							if (is_array($tables)) {
+								foreach ($tables as $id => $row) {
+
+									//prepare the variables
+										$parent_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $parent_name);
+										$parent_key_name = $this->singular($parent_name)."_uuid";
+
+									//build the toggle array
+										if ($row['checked'] == 'true') {
+											//toggle the field value
+											//$toggle_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+											$toggle_array[$parent_name][$x] = $row;
+
+											//remove the row from the main array
+											unset($array[$parent_name][$x]);
+										}
+
+									//loop through the fields
+										foreach($row as $field_name => $field_value) {
+
+											//find the child tables
+											$y = 0;
+											if (is_array($field_value)) {
+												//prepare the variables
+												$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field_name);
+												$child_key_name = $this->singular($child_name)."_uuid";
+
+												//loop through the child rows
+												foreach ($field_value as $sub_row) {
+
+													//build the delete array
+													if ($action == 'delete' && $sub_row['checked'] == 'true') {
+														//delete the child data
+														$delete_array[$child_name][$y][$child_key_name] = $sub_row[$child_key_name];
+
+														//remove the row from the main array
+														unset($array[$parent_name][$x][$child_name][$y]);
+													}
+
+													//increment the value
+													$y++;
+												}
+											}
+										}
+
+									//increment the value
+										$x++;
+
+								}
+							}
+						}
+					}
+
+					//unset the original array
+					unset($array);
+
+					//get the $apps array from the installed apps from the core and mod directories
+					if (!is_array($_SESSION['apps'])) {
+						$this->get_apps();
+					}
+
+					//search through all fields to see if toggle field exists
+					if (is_array($_SESSION['apps'])) {
+						foreach ($_SESSION['apps'] as $x => $app) {
+							if (is_array($app['db'])) {
+								foreach ($app['db'] as $y => $row) {
+									if (is_array($row['table']['name'])) {
+										$table_name = $row['table']['name']['text'];
+									}
+									else {
+										$table_name = $row['table']['name'];
+									}
+									if ($table_name === 'v_'.$parent_name) {
+										if (is_array($row['fields'])) {
+											foreach ($row['fields'] as $field) {
+												if (isset($field['toggle'])) {
+													$toggle_field = $field['name'];
+													$toggle_values = $field['toggle'];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					//get the current values from the database
+					foreach ($toggle_array as $table_name => $table) {
+						$x = 0;
+						foreach($table as $row) {
+							$child_name = preg_replace('#[^a-zA-Z0-9_\-]#', '', $table_name);
+							$child_key_name = $this->singular($child_name)."_uuid";
+
+							$array[$table_name][$x][$child_key_name] = $row[$child_key_name];
+							$array[$table_name][$x][$toggle_field] = ($row[$toggle_field] === $toggle_values[0]) ? $toggle_values[1] : $toggle_values[0];
+							$x++;
+						}
+					}
+					unset($toggle_array);
+
+					//save the array
+					$this->save($array);
+					//view_array($this->message);
+
+			} //end function toggle
+
+
 			public function save($array) {
 
 				//return the array
@@ -1156,18 +1632,18 @@ include "root.php";
 						$this->app_name = $this->name;
 					}
 
-				//normalize the array structure
-					//$new_array = $this->normalize_array($array, $this->name);
-					//unset($array);
-					$new_array = $array;
+				//debug sql
+					$this->debug["sql"] = true;
 
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
 					}
 
-				//debug sql
-					$this->debug["sql"] = true;
+				//normalize the array structure
+					//$new_array = $this->normalize_array($array, $this->name);
+					//unset($array);
+					$new_array = $array;
 
 				//start the atomic transaction
 					$this->db->beginTransaction();
@@ -1263,9 +1739,6 @@ include "root.php";
 											if (!$parent_key_exists) {
 												$sql .= $parent_key_name.", ";
 											}
-											//foreach ($parent_field_names as $field_name) {
-											//		$sql .= check_str($field_name).", ";
-											//}
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value)) {
@@ -1289,8 +1762,15 @@ include "root.php";
 														elseif ($array_value === "now()") {
 															$sql .= "now(), ";
 														}
+														elseif ($array_value === "user_uuid()") {
+															$sql .= ':'.$array_key.", ";
+															$params[$array_key] = $_SESSION['user_uuid'];
+														}
+														elseif ($array_value === "remote_address()") {
+															$sql .= ':'.$array_key.", ";
+															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
+														}
 														else {
-															//$sql .= "'".check_str($array_value)."', ";
 															$sql .= ':'.$array_key.", ";
 															$params[$array_key] = trim($array_value);
 														}
@@ -1370,8 +1850,15 @@ include "root.php";
 														elseif ($array_value === "now()") {
 															$sql .= $array_key." = now(), ";
 														}
+														elseif ($array_value === "user_uuid()") {
+															$sql .= $array_key." = :".$array_key.", ";
+															$params[$array_key] = $_SESSION['user_uuid'];
+														}
+														elseif ($array_value === "remote_address()") {
+															$sql .= $array_key." = :".$array_key.", ";
+															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
+														}
 														else {
-															//$sql .= $array_key." = '".check_str($array_value)."', ";
 															$sql .= $array_key." = :".$array_key.", ";
 															$params[$array_key] = trim($array_value);
 														}
@@ -1474,7 +1961,7 @@ include "root.php";
 														$child_field_names = array();
 														if (is_array($row)) {
 															foreach ($row as $k => $v) {
-																if (!is_array($v)) {
+																if (!is_array($v) && $k !== 'checked') {
 																	$child_field_names[] = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
 																}
 															}
@@ -1489,6 +1976,7 @@ include "root.php";
 																//get the data
 																	$prep_statement->execute();
 																	$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
+
 																//set the action
 																	if (is_array($child_array)) {
 																		$action = "update";
@@ -1496,6 +1984,7 @@ include "root.php";
 																	else {
 																		$action = "add";
 																	}
+
 																//add to the parent array
 																	if (is_array($child_array)) {
 																		$old_array[$schema_name][$schema_id][$key][] = $child_array;
@@ -1521,8 +2010,15 @@ include "root.php";
 																			elseif ($v === "now()") {
 																				$sql .= $k." = now(), ";
 																			}
+																			elseif ($v === "user_uuid()") {
+																				$sql .= $k." = :".$k.", ";
+																				$params[$k] = $_SESSION['user_uuid'];
+																			}
+																			elseif ($v === "remote_address()") {
+																				$sql .= $k." = :".$k.", ";
+																				$params[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
 																			else {
-																				//$sql .= "$k = '".check_str($v)."', ";
 																				$sql .= $k." = :".$k.", ";
 																				$params[$k] = trim($v);
 																			}
@@ -1639,9 +2135,16 @@ include "root.php";
 																		elseif ($v === "now()") {
 																			$sql .= "now(), ";
 																		}
+																		elseif ($v === "user_uuid()") {
+																			$sql .= ':'.$k.", ";
+																			$params[$k] = $_SESSION['user_uuid'];
+																		}
+																		elseif ($v === "remote_address()") {
+																			$sql .= ':'.$k.", ";
+																			$params[$k] = $_SERVER['REMOTE_ADDR'];
+																		}
 																		else {
 																			$k = preg_replace('#[^a-zA-Z0-9_\-]#', '', $k);
-																			//$sql .= "'".check_str($v)."', ";
 																			$sql .= ':'.$k.", ";
 																			$params[$k] = trim($v);
 																		}
@@ -1652,7 +2155,6 @@ include "root.php";
 															$sql = str_replace(", )", ")", $sql);
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 															try {
-																//$this->db->query(check_sql($sql));
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);
 																unset($prep_statement);
@@ -1907,15 +2409,22 @@ include "root.php";
 					if (!is_array($_SESSION['apps'])) {
 						$this->get_apps();
 					}
+
 				//search through all fields to see if domain_uuid exists
 					$apps = $_SESSION['apps'];
 					if (is_array($apps)) {
 						foreach ($apps as $x => &$app) {
 							if (is_array($app['db'])) {
 								foreach ($app['db'] as $y => &$row) {
-									if ($row['table'] == $name) {
+									if (is_array($row['table']['name'])) {
+										$table_name = $row['table']['name']['text'];
+									}
+									else {
+										$table_name = $row['table']['name'];
+									}
+									if ($table_name === 'v_'.$name) {
 										if (is_array($row['fields'])) {
-											foreach ($row['fields'] as $z => $field) {
+											foreach ($row['fields'] as $field) {
 												if ($field['name'] == "domain_uuid") {
 													return true;
 												}
@@ -1926,8 +2435,68 @@ include "root.php";
 							} //is array
 						} //foreach
 					} //is array
+
 				//not found
 					return false;
+			}
+
+			public function get_relations($schema) {
+
+				//remove the v_ prefix
+					if (substr($schema, 0, 2) == "v_") {
+						$schema = substr($schema, 2);
+					}
+
+				//sanitize the values
+					$schema = preg_replace('#[^a-zA-Z0-9_\-]#', '', $schema);
+
+				//get the apps array
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/{core,app}/{".$schema.",".$this->singular($schema)."}/app_config.php", GLOB_BRACE);
+					foreach ($config_list as &$config_path) {
+						include($config_path);
+					}
+
+				//search through all fields to find relations
+					if (is_array($apps)) {
+						foreach ($apps as $x => &$app) {
+							foreach ($app['db'] as $y => &$row) {
+								foreach ($row['fields'] as $z => $field) {
+									if ($field['deprecated'] != "true") {
+										if ($field['key']['type'] == "foreign") {
+											if ($row['table']['name'] == "v_".$schema || $field['key']['reference']['table'] == "v_".$schema) {
+												//get the field name
+													if (is_array($field['name'])) {
+														$field_name = trim($field['name']['text']);
+													}
+													else {
+														$field_name = trim($field['name']);
+													}
+												//build the array
+													$array[$i]['table'] = $row['table']['name'];
+													$array[$i]['field'] = $field_name;
+													$array[$i]['key']['type'] = $field['key']['type'];
+													$array[$i]['key']['table'] = $field['key']['reference']['table'];
+													$array[$i]['key']['field'] = $field['key']['reference']['field'];
+													if (isset($field['key']['reference']['action'])) {
+														$array[$i]['key']['action'] = $field['key']['reference']['action'];
+													}
+												//increment the value
+													$i++;
+											}
+										}
+									}
+									unset($field_name);
+								}
+							}
+						}
+					}
+
+				//return the array
+					if (is_array($array)) {
+						return $array;
+					} else {
+						return false;
+					}
 			}
 
 		} //class database

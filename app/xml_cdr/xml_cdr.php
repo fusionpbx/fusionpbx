@@ -183,12 +183,15 @@
 	if ($_GET['call_result'] != 'missed') {
 		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?call_result=missed']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
-	echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
-	echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
-	echo "			<option value='csv'>CSV</option>";
-	echo "			<option value='pdf'>PDF</option>";
-	echo "		</select>";
+
+	if (permission_exists('xml_cdr_export')) {
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
+		echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
+		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
+		echo "			<option value='csv'>CSV</option>";
+		echo "			<option value='pdf'>PDF</option>";
+		echo "		</select>";
+	}
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -818,6 +821,9 @@
 					$content .= "</tr>\n";
 
 				//show the leg b only to those with the permission
+					if (!permission_exists('xml_cdr_lose_race') && $row['hangup_cause'] == 'LOSE_RACE') {
+						$content = '';
+					}
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}

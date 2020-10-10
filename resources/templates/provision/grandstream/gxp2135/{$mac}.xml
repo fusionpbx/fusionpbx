@@ -686,7 +686,7 @@
 
     <!-- # Dial Plan Prefix -->
     <!-- # String  -->
-    <P66></P66>
+    <P66>{$grandstream_dial_prefix}</P66>
 
     <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
@@ -5720,6 +5720,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     <!-- # P8 = 0 -->
+    <P8>{$grandstream_ip_address_mode}</P8>
 
     <!-- ########################################## -->
     <!-- # DHCP -->
@@ -6438,7 +6439,7 @@
     <!-- # gxp - Downloaded Language -->
     <!-- # String -->
     <!-- # Mandatory -->
-    <P1362>Auto</P1362>
+    <P1362>{$grandstream_display_language}</P1362>
 
     <!-- # Default Input Selection. Default is Multi-Tap. -->
     <!-- # 0 - Multi-Tap, 1 - Shiftable -->
@@ -7329,7 +7330,9 @@
     <!-- # Onhook Dial Barging. 0 - Disabled, 1 - Enabled. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8397>1</P8397>
+    {if isset($grandstream_onhook_dial_barging)}
+      <P8397>{$grandstream_onhook_dial_barging}</P8397>
+    {/if}
 
     <!-- # Off-hook Auto Dial -->
     <!-- # String -->
@@ -7372,7 +7375,9 @@
     <!-- # Bypass Dial Plan Through Call History and Directories. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6758>0</P6758>
+    {if isset($grandstream_history_dialplan_bypass)}
+      <P6758>{$grandstream_history_dialplan_bypass}</P6758>
+    {/if}
 
     <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7446,7 +7451,11 @@
     <!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($dnd)}
+    <P8446>{$dnd}</P8446>
+{else}
     <P8446>1</P8446>
+{/if}
 
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
@@ -7924,12 +7933,20 @@
     <!-- # Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_tx_gain)}
+    <P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
     <P1301>0</P1301>
+{/if}
 
     <!-- # Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_rx_gain)}
+    <P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
     <P1302>0</P1302>
+{/if}
 
     <!-- # Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
@@ -8098,7 +8115,8 @@
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
     <!-- # Number: 0-4 -->
     <!-- # Mandatory -->
-    <P2916>0</P2916>
+    <!-- # This is defined in if/else statement below. Commented out here to avoid duplicate declaration -->
+    <!-- <P2916>0</P2916> -->
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->

@@ -39,8 +39,7 @@
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
 			foreach($extensions as $row) {
 				$sql = "update v_destinations ";
-				$sql .= "set destination_app = :destination_app ";
-				$sql .= "destination_data = :destination_data ";
+				$sql .= "set destination_app = :destination_app, destination_data = :destination_data ";
 				$sql .= "where dialplan_uuid = :dialplan_uuid ";
 				$parameters['destination_app'] = $row['destination_app'];
 				$parameters['destination_data'] = $row['destination_data'];

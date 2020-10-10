@@ -170,6 +170,11 @@
 						$cache = new cache;
 						$cache->delete("dialplan:".$domain_name);
 				}
+				elseif ($default_setting_category == "destinations" && $default_setting_subcategory == "dialplan_mode" ) {
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("dialplan:mode");
+				}
 
 				//build the array of data
 				$x = 0;
@@ -206,7 +211,8 @@
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$default_setting_uuid = $_GET["id"];
-		$sql = "select * from v_default_settings ";
+		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+		$sql .= "from v_default_settings ";
 		$sql .= "where default_setting_uuid = :default_setting_uuid ";
 		$parameters['default_setting_uuid'] = $default_setting_uuid;
 		$database = new database;
@@ -609,6 +615,33 @@
 		echo "    	<option value='never' ".($default_setting_value == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_side_state" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='expanded'>".$text['option-expanded']."</option>\n";
+		echo "    	<option value='contracted' ".($default_setting_value == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+		echo "    	<option value='hidden' ".($default_setting_value == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='hover'>".$text['option-hover']."</option>\n";
+		echo "    	<option value='click' ".($default_setting_value == "click" ? "selected='selected'" : null).">".$text['option-click']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle_body_width" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
+		echo "    	<option value='fixed' ".($default_setting_value == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='image' ".(($default_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($default_setting_value == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($default_setting_value == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
+		echo "    	<option value='none' ".(($default_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+		echo "    </select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='listen' ".(($default_setting_value == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
@@ -701,7 +734,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_description' maxlength='255' value=\"".$default_setting_description."\">\n";
+	echo "	<input class='formfld' type='text' name='default_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".$default_setting_description."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

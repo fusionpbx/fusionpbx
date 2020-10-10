@@ -246,7 +246,8 @@
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
 			//if (strlen($ring_group_greeting) == 0) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
-			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
+			if (strlen($ring_group_call_timeout) == 0) { $msg .= $text['message-call_timeout']."<br>\n"; }
+			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout_action']."<br>\n"; }
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
 			//if (strlen($ring_group_cid_number_prefix) == 0) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
 			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
@@ -339,8 +340,10 @@
 				$array["ring_groups"][0]["ring_group_missed_call_app"] = $ring_group_missed_call_app;
 				$array["ring_groups"][0]["ring_group_missed_call_data"] = $ring_group_missed_call_data;
 			}
-			$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
-			$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			if (permission_exists('ring_group_forward')) {
+				$array["ring_groups"][0]["ring_group_forward_enabled"] = $ring_group_forward_enabled;
+				$array["ring_groups"][0]["ring_group_forward_destination"] = $ring_group_forward_destination;
+			}
 			$array["ring_groups"][0]["ring_group_forward_toll_allow"] = $ring_group_forward_toll_allow;
 			if (isset($ring_group_context)) {
 				$array["ring_groups"][0]["ring_group_context"] = $ring_group_context;
@@ -425,9 +428,6 @@
 				$obj->delete_destinations($ring_group_destinations_delete);
 			}
 
-		//save the xml
-			save_dialplan_xml();
-
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
@@ -439,15 +439,15 @@
 			if ($action == "add") {
 				//save the message to a session variable
 					message::add($text['message-add']);
-				//redirect the browser
-					header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
-					exit;
 			}
 			if ($action == "update") {
 				//save the message to a session variable
 					message::add($text['message-update']);
 			}
 
+		//redirect the browser
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+			exit;
 	}
 
 //pre-populate the form
@@ -493,6 +493,9 @@
 //set the default
 	if (strlen($ring_group_ringback) == 0) {
 		$ring_group_ringback = '${us-ring}';
+	}
+	if (strlen($ring_group_call_timeout) == 0) {
+		$ring_group_call_timeout = '30';
 	}
 
 //get the ring group destination array
@@ -827,7 +830,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -1015,20 +1018,22 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-ring_group_forward']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
-	echo "		<option value='false'>".$text['option-disabled']."</option>";
-	echo "		<option value='true' ".(($ring_group_forward_enabled == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
-	echo "	</select>";
-	echo 	"<input class='formfld' style='min-width: 95px;' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
-	echo "<br />\n";
-	echo $text['description-ring-group-forward']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_forward')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-ring_group_forward']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='ring_group_forward_enabled' id='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">";
+		echo "		<option value='false'>".$text['option-disabled']."</option>";
+		echo "		<option value='true' ".($ring_group_forward_enabled == 'true' ? "selected='selected'" : null).">".$text['option-enabled']."</option>";
+		echo "	</select>";
+		echo 	"<input class='formfld' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
+		echo "<br />\n";
+		echo $text['description-ring-group-forward']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('ring_group_forward_toll_allow')) {
 		echo "<tr>\n";

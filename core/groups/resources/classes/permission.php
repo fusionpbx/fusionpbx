@@ -58,14 +58,15 @@
 					}
 					$group_names = "'".implode("','", $group_name_array)."'";
 
-				//delete unprotected system group permissions
+				//delete unprotected permissions
 					$sql = "delete from v_group_permissions as p ";
 					$sql .= "where group_name in ( ";
 					$sql .= "	select group_name ";
 					$sql .= "	from v_groups ";
 					$sql .= "	where group_protected <> 'true' ";
 					$sql .= "	and group_name in (".$group_names.") ";
-					$sql .= ");";
+					$sql .= ")";
+					$sql .= "and (permission_protected <> 'true' or permission_protected is null)";
 					$database = new database;
 					$result = $database->select($sql);
 
@@ -120,6 +121,11 @@
 
 				//delete the group permissions
 					$this->delete();
+					
+				//get the remaining group permissions
+					$sql = "select permission_name, group_name from v_group_permissions ";
+					$database = new database;
+					$database_group_permissions = $database->select($sql, null, 'all');
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
@@ -149,23 +155,23 @@
 												}
 											}
 										}
-
 										if (!$group_protected) {
-											//if the item uuid is not currently in the db then add it
-											$sql = "select count(*) from v_group_permissions ";
-											$sql .= "where permission_name = :permission_name ";
-											$sql .= "and group_name = :group_name ";
-											$parameters['permission_name'] = $permission['name'];
-											$parameters['group_name'] = $group_name;
-
-											$database = new database;
-											$num_rows = $database->select($sql, $parameters, 'column');
-											unset($sql, $parameters);
-
-											if ($num_rows == 0) {
+											// check if the item is not currently in the database
+											$exists = false;
+											foreach ($database_group_permissions as $i => $group_permission) {
+												if ($group_permission['permission_name'] == $permission['name']) {
+													if ($group_permission['group_name'] == $group_name) {
+														$exists = true;
+														break;
+													}
+												}
+											}
+											if (!$exists) {
 												//build default permissions insert array
 												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
 												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
+												$array['group_permissions'][$x]['permission_protected'] = 'false';
+												$array['group_permissions'][$x]['permission_assigned'] = 'true';
 												$array['group_permissions'][$x]['group_name'] = $group_name;
 												$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
 												$x++;
