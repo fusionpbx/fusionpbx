@@ -258,7 +258,21 @@
 					}
 
 				//convert the number to a regular expression
-					$destination_number_regex = string_to_regex($destination_area_code.$destination_number, $destination_prefix);
+					if (isset($destination_prefix) && strlen($destination_prefix) > 0) {
+						$destination_numbers['destination_prefix'] = $destination_prefix;
+					}
+					if (isset($destination_trunk_prefix) && strlen($destination_trunk_prefix) > 0) {
+						$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
+					}
+					if (isset($destination_area_code) && strlen($destination_area_code) > 0) {
+						$destination_numbers['destination_area_code'] = $destination_area_code;
+					}
+					if (isset($destination_number) && strlen($destination_number) > 0) {
+						$destination_numbers['destination_number'] = $destination_number;
+					}
+					$destination = new destinations;
+					$destination_number_regex = $destination->to_regex($destination_numbers);
+					unset($destination_numbers);
 
 				//if empty then get new uuid
 					if (!is_uuid($dialplan_uuid)) {
