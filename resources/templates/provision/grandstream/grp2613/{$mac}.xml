@@ -5102,7 +5102,9 @@
     <!-- # Speaker Ring Volume -->
     <!-- # Number: 0-7. Default is 5. -->
     <!-- # Mandatory -->
-    <P8352>5</P8352>
+{if isset($grandstream_speaker_ring_volume)}
+    <P8352>{$grandstream_speaker_ring_volume}</P8352>
+{/if} 
 
     <!-- # Notification Tone Volume -->
     <!-- # Number: 0-7. Default is 5. -->
