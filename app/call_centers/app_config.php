@@ -121,7 +121,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_outbound_caller_id_name";
 		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
