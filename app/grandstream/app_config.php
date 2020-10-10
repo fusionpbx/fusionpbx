@@ -646,5 +646,13 @@
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0";
                 $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ab26457-fcc8-414e-8ac5-ae681f114974";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_speaker_ring_volume";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Number: 0-7. Default is 5.";
+                $y++;
 
 ?>
