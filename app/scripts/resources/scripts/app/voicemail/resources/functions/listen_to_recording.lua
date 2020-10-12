@@ -46,27 +46,27 @@
 					session:execute("playback", "phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
 				end
 			end
-		--say the caller id number
-			if (session:ready() and caller_id_number ~= nil) then
-				if (vm_say_caller_id_number ~= nil) then
-					if (vm_say_caller_id_number == "true") then
-						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
-						session:say(caller_id_number, default_language, "name_spelled", "iterated");
-					end
-				end
+		--say the caller id number first (default)
+			if (
+				session:ready() and
+				caller_id_number ~= nil and (
+					vm_say_caller_id_number == nil or
+					vm_say_caller_id_number == "true"
+				)) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
+				session:say(caller_id_number, default_language, "name_spelled", "iterated");
 			end
-		--say the message date
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					if (vm_say_date_time ~= nil) then
-						if (vm_say_date_time == "true") then
-							if (current_time_zone ~= nil) then
-								session:execute("set", "timezone="..current_time_zone.."");
-							end
-							session:say(created_epoch, default_language, "current_date_time", "pronounced");
-						end
-					end
+		--say the message date first (default)
+			if (
+				session:ready() and
+				string.len(dtmf_digits) == 0 and (
+					vm_say_date_time == nil or
+					vm_say_date_time == "true"
+				)) then
+				if (current_time_zone ~= nil) then
+					session:execute("set", "timezone="..current_time_zone.."");
 				end
+				session:say(created_epoch, default_language, "current_date_time", "pronounced");
 			end
 		--get the recordings from the database
 			if (storage_type == "base64") then
@@ -156,10 +156,31 @@
 				os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 			end
-		
+		--say the caller id number last (optional)
+			if (
+				session:ready() and
+				caller_id_number ~= nil and
+				vm_say_caller_id_number ~= nil and
+				vm_say_caller_id_number == "last"
+				) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
+				session:say(caller_id_number, default_language, "name_spelled", "iterated");
+			end
+		--say the message date last (optional)
+			if (
+				session:ready() and
+				string.len(dtmf_digits) == 0 and
+				vm_say_date_time ~= nil and
+				vm_say_date_time == "last"
+				) then
+				if (current_time_zone ~= nil) then
+					session:execute("set", "timezone="..current_time_zone.."");
+				end
+				session:say(created_epoch, default_language, "current_date_time", "pronounced");
+			end
 		--post listen options
-			if (session:ready()) then 
-				if (string.len(dtmf_digits) == 0) then 
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
 					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:5:7:8:9:0", "", "\\d+");
 				end
 			end
