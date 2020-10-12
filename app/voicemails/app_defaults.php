@@ -86,8 +86,8 @@ if ($domains_processed == 1) {
 	}
 
 	// clear variables
-	unset($switch_phrases_dir_initial, $switch_phrases_dir_current, $switch_phrases_dir_correct);
-	unset($folder_contents, $language_abbreviation, $language_xml_path, $language_xml_content, $voicemail_xml_source, $voicemail_xml_target);
+	unset($switch_configuration_dir, $switch_phrases_dir_initial, $switch_phrases_dir_current, $switch_phrases_dir_correct);
+	unset($switch_xml_content, $folder_contents, $language_abbreviation, $language_xml_path, $language_xml_content, $voicemail_xml_source, $voicemail_xml_target);
 
 }
 
