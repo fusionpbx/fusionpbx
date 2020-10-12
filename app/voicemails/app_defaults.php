@@ -28,9 +28,10 @@
 if ($domains_processed == 1) {
 
 	// define initial, get current, define correct languages folder paths
-	$switch_phrases_dir_initial = '/etc/freeswitch/lang';
+	$switch_configuration_dir = $_SESSION['switch']['conf']['dir'] != '' ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
+	$switch_phrases_dir_initial = $switch_configuration_dir.'/lang';
 	$switch_phrases_dir_current = $_SESSION['switch']['phrases']['dir'];
-	$switch_phrases_dir_correct = '/etc/freeswitch/languages';
+	$switch_phrases_dir_correct = $switch_configuration_dir.'/languages';
 
 	// ensure switch using languages (not lang) folder
 	if ($switch_phrases_dir_current == $switch_phrases_dir_initial) {
@@ -53,10 +54,16 @@ if ($domains_processed == 1) {
 			$database->execute($sql);
 			unset($sql);
 		}
+
 	}
 
-	// update language xml files to use switch phrases
 	if (file_exists($switch_phrases_dir_correct)) {
+		// update language path in main switch xml file
+		if (file_exists($switch_configuration_dir.'/freeswitch.xml')) {
+			$switch_xml_content = file_get_contents($switch_configuration_dir.'/freeswitch.xml');
+			$switch_xml_content = str_replace('data="lang/', 'data="languages/', $switch_xml_content);
+			@file_put_contents($switch_configuration_dir.'/freeswitch.xml', $switch_xml_content);
+		}
 		$folder_contents = scandir($switch_phrases_dir_correct);
 		if (is_array($folder_contents) && @sizeof($folder_contents) != 0) {
 			foreach ($folder_contents as $language_abbreviation) {
