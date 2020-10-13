@@ -91,7 +91,18 @@
 
 							//generate reset link email and body variables
 								$domain_uuid = $result['domain_uuid'];
-								$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+								if ($_SESSION['login']['password_reset_domain']['text'] != '') {
+									$domain_name = $_SESSION['login']['password_reset_domain']['text'];
+								}
+								else {
+									foreach ($_SESSION['domains'] as $uuid => $domain) {
+										if (strtolower($domain['domain_name']) == strtolower($_SERVER['HTTP_HOST'])) {
+											$domain_name = $_SERVER['HTTP_HOST'];
+											break;
+										}
+									}
+									$domain_name = $domain_name ? $domain_name : $_SESSION['domains'][$domain_uuid]['domain_name'];
+								}
 								$key = encrypt($_SESSION['login']['password_reset_key']['text'], $result['username'].'|'.$result['domain_uuid'].'|'.$result['password']);
 								$reset_link = "https://".$domain_name.PROJECT_PATH."/login.php?action=define&key=".urlencode($key);
 								$reset_button = email_button(strtoupper($text['label-reset_password']), $reset_link, '#2e82d0', '#fff');
@@ -159,6 +170,9 @@
 		$username = trim($_REQUEST['username']);
 		$password_new = trim($_REQUEST['password_new']);
 		$password_repeat = trim($_REQUEST['password_repeat']);
+
+		//strip off @domain if submitted with username, as the valid domain for the reset is already being provided in the where clause below
+		$username = substr_count($username, '@') != 0 ? explode('@', $username)[0] : $username;
 
 		if ($username !== '' &&
 			$username === $_SESSION['valid_username'] &&
