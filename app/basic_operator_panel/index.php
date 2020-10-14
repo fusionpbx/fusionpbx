@@ -185,8 +185,24 @@
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
+<?php
+//determine refresh rate
+$refresh_default = 1500; //milliseconds
+$refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
+if ($refresh <= 120) { //convert seconds to milliseconds
+	$refresh = $refresh * 1000;
+}
+else if ($refresh > 120 && $refresh < 500) {
+	$refresh = $refresh_default; //use default
+}
+else {
+	//>= 500, must be milliseconds
+}
+unset($refresh_default);
+?>
+
 //ajax refresh
-	var refresh = 1500;
+	var refresh = <?php echo $refresh; ?>;
 	var source_url = 'resources/content.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 

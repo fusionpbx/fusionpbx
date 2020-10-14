@@ -57,4 +57,15 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "operator_panel_on_demand";
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "569280f2-a433-4eaf-9c08-945efdc6cf8f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "refresh";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1500";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the refresh rate in seconds (<=120) or milliseconds (>=500).";
+		$y++;
+
 ?>
