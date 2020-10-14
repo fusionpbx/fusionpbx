@@ -189,10 +189,10 @@
 //determine refresh rate
 $refresh_default = 1500; //milliseconds
 $refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
-if ($refresh <= 120) { //convert seconds to milliseconds
+if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 	$refresh = $refresh * 1000;
 }
-else if ($refresh > 120 && $refresh < 500) {
+else if ($refresh < 0.5 || ($refresh > 120 && $refresh < 500)) {
 	$refresh = $refresh_default; //use default
 }
 else {
