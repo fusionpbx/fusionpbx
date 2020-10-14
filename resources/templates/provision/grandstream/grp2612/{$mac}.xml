@@ -4408,7 +4408,7 @@
 
 <!-- Detected {$template} with {$fixed_keys} fixed keys -->
 {$start_id=1363}
-{assign var=key_types value=["none"=>-1,"line"=>31,"shared line"=>32,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
+{assign var=key_types value=["none"=>-1,"phonebook"=>30,"line"=>31,"shared line"=>32,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 
 {for $line=1 to 6}
 {$pid=$line*2-2}
