@@ -658,7 +658,7 @@
                 $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
                 $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_feature_key_sync";
                 $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-                $apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Enabled: 1, Disabled: 0  Defaults to 0. Valid for firmware higher than 1.0.9.202 for the GXP series and all firmwares GRP phones.";
                 $y++;
