@@ -695,6 +695,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='any' ".($row['domain_setting_value'] == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
+		echo "    	<option value='email' ".($row['domain_setting_value'] == 'email' ? "selected='selected'" : null).">".$text['option-username_format_email']."</option>\n";
+		echo "    	<option value='no_email' ".($row['domain_setting_value'] == 'no_email' ? "selected='selected'" : null).">".$text['option-username_format_no_email']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='listen' ".(($row['domain_setting_value'] == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
