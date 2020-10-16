@@ -653,8 +653,8 @@
                 $apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
                 $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
                 $apps[$x]['default_settings'][$y]['default_setting_description'] = "Number: 0-7. Default is 5.";
-				$y++;
-				$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fd0e54fe-1008-11eb-adc1-0242ac120002";
+                $y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fd0e54fe-1008-11eb-adc1-0242ac120002";
                 $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
                 $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_feature_key_sync";
                 $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
