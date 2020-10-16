@@ -222,7 +222,9 @@
     <!-- SPecial Feature.  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
     <P198>100</P198>
     <!-- Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
     <!-- Enable Call Features. 0 - No, 1 - Yes. -->
     <P191>1</P191>
     <!-- Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
