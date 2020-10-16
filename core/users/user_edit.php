@@ -152,6 +152,14 @@
 			if ($username == '') {
 				$invalid[] = $text['label-username'];
 			}
+			if ($_SESSION['users']['username_format']['text'] != '' && $_SESSION['users']['username_format']['text'] != 'any') {
+				if (
+					($_SESSION['users']['username_format']['text'] == 'email' && !valid_email($username)) ||
+					($_SESSION['users']['username_format']['text'] == 'no_email' && valid_email($username))
+					) {
+					message::add($text['message-username_format_invalid'], 'negative', 7500);
+				}
+			}
 			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
 				(permission_exists('user_add') && $action == 'add' && $username != '')) {
 				$sql = "select count(*) from v_users where username = :username ";
