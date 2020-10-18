@@ -98,6 +98,7 @@
 					ivr_menu_greet_short = row["ivr_menu_greet_short"];
 					ivr_menu_invalid_sound = row["ivr_menu_invalid_sound"];
 					ivr_menu_exit_sound = row["ivr_menu_exit_sound"];
+					ivr_menu_pin_number = row["ivr_menu_pin_number"];
 					ivr_menu_confirm_macro = row["ivr_menu_confirm_macro"];
 					ivr_menu_confirm_key = row["ivr_menu_confirm_key"];
 					ivr_menu_tts_engine = row["ivr_menu_tts_engine"];
@@ -248,6 +249,7 @@
 					table.insert(xml, [[				greet-short="]]..ivr_menu_greet_short..[[" ]]);
 					table.insert(xml, [[				invalid-sound="]]..ivr_menu_invalid_sound..[[" ]]);
 					table.insert(xml, [[				exit-sound="]]..ivr_menu_exit_sound..[[" ]]);
+					table.insert(xml, [[				pin="]]..ivr_menu_pin_number..[[" ]]);
 					table.insert(xml, [[				confirm-macro="]]..ivr_menu_confirm_macro..[[" ]]);
 					table.insert(xml, [[				confirm-key="]]..ivr_menu_confirm_key..[[" ]]);
 					table.insert(xml, [[				tts-engine="]]..ivr_menu_tts_engine..[[" ]]);
