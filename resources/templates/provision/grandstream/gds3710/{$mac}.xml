@@ -743,7 +743,7 @@ E0Fw0O5Kx31JPa+aSBLDMZAG1+SZ/zfxRYQe7VH8p1g=
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
     <!-- Config HTTP/HTTPS User Name -->
