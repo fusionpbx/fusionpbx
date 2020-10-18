@@ -154,7 +154,11 @@
 
 		//get the domain name
 			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
-
+		//previous value only set if the device exists in the database already. Backup method to get the domain name
+			if (strlen($domain_name) == 0) {
+				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+				$domain_name = $domain_array[0];
+			}
 		//get the default settings
 			$sql = "select * from v_default_settings ";
 			$sql .= "where default_setting_enabled = 'true' ";
