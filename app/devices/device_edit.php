@@ -1019,10 +1019,12 @@
 					$element['hidden'] = true;
 					$element['visibility'] = "visibility:hidden;";
 				}
+
 			//add the primary key uuid
 				if (is_uuid($row['device_line_uuid'])) {
 					echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".escape($row['device_line_uuid'])."\"/>\n";
 				}
+
 			//show each row in the array
 				echo "			<tr>\n";
 				echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
@@ -1046,10 +1048,7 @@
 
 				if (permission_exists('device_line_server_address_primary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					if (is_uuid($_SESSION['provision']['server_address_primary']['uuid'])) {
-						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
-					}
-					else {
+					if (isset($_SESSION['provision']['server_address_primary']) && !isset($_SESSION['provision']['server_address_primary']['text'])) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_primary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($_SESSION['provision']['server_address_primary'] as $field) {
@@ -1057,15 +1056,15 @@
 						}
 						echo "				</select>\n";
 					}
+					else {
+						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_primary]' maxlength='255' value=\"".escape($row['server_address_primary'])."\"/>\n";
+					}
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_server_address_secondary')) {
 					echo "			<td valign='top' align='left' nowrap='nowrap'>\n";
-					if (isset($_SESSION['provision']['server_address_secondary']['text'])) {
-						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
-					}
-					else {
+					if (isset($_SESSION['provision']['server_address_secondary']) && !isset($_SESSION['provision']['server_address_secondary']['text'])) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][server_address_secondary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($_SESSION['provision']['server_address_secondary'] as $field) {
@@ -1073,15 +1072,15 @@
 						}
 						echo "				</select>\n";
 					}
+					else {
+						echo "				<input class='formfld' style='width: 100px; width: 100%;' type='text' name='device_lines[".$x."][server_address_secondary]' maxlength='255' value=\"".escape($row['server_address_secondary'])."\"/>\n";
+					}
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_outbound_proxy_primary')) {
 					echo "			<td align='left'>\n";
-					if (isset($_SESSION['provision']['outbound_proxy_primary']['text'])) {
-						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
-					}
-					else {
+					if (isset($_SESSION['provision']['outbound_proxy_primary']) && !isset($_SESSION['provision']['outbound_proxy_primary']['text'])) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][outbound_proxy_primary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($_SESSION['provision']['outbound_proxy_primary'] as $field) {
@@ -1089,21 +1088,24 @@
 						}
 						echo "				</select>\n";	
 					}
+					else {
+						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_primary]' placeholder=\"".escape($text['label-primary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_primary'])."\"/>\n";
+					}
 					echo "			</td>\n";
 				}
-				
+
 				if (permission_exists('device_line_outbound_proxy_secondary')) {
 					echo "			<td align='left'>\n";
-					if (isset($_SESSION['provision']['outbound_proxy_secondary']['text'])) {
-						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
-					}
-					else {
+					if (isset($_SESSION['provision']['outbound_proxy_secondary']) && !isset($_SESSION['provision']['outbound_proxy_secondary']['text'])) {
 						echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][outbound_proxy_secondary]'>\n";
 						echo "					<option value=''></option>\n";
 						foreach($_SESSION['provision']['outbound_proxy_secondary'] as $field) {
 							echo "					<option value='".$field."' ".(($row['outbound_proxy_secondary'] == $field) ? "selected" : null).">".$field."</option>\n";
 						}
 						echo "				</select>\n";	
+					}
+					else {
+						echo "				<input class='formfld' style='width: 65px;' type='text' name='device_lines[".$x."][outbound_proxy_secondary]' placeholder=\"".escape($text['label-secondary'])."\" maxlength='255' value=\"".escape($row['outbound_proxy_secondary'])."\"/>\n";
 					}
 					echo "			</td>\n";
 				}
