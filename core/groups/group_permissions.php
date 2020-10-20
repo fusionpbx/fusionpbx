@@ -94,6 +94,9 @@
 		}
 	}
 
+//get the view preference
+	$view = $_REQUEST['view'];
+
 //get the http post data
 	if (is_array($_POST['group_permissions'])) {
 		$action = $_POST['action'];
@@ -233,7 +236,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).'&search='.urlencode($search));
+				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
 				exit;
 			}
 
@@ -264,10 +267,6 @@
 			exit;
 	}
 
-//get order and order by
-	//$order_by = $_GET["order_by"];
-	//$order = $_GET["order"];
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -287,7 +286,12 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo 		"<select class='txt' style='margin-left: 15px; margin-right: 0;' id='view' name='view' onchange=\"document.getElementById('form_search').submit();\">\n";
+	echo 		"	<option value=''>".$text['label-all']."</option>\n";
+	echo 		"	<option value='assigned' ".($view == 'assigned' ? "selected='selected'" : null).">".$text['label-assigned']."</option>\n";
+	echo 		"	<option value='unassigned' ".($view == 'unassigned' ? "selected='selected'" : null).">".$text['label-unassigned']."</option>\n";
+	echo 		"</select>\n";
+	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
 	if (permission_exists('group_permission_edit')) {
@@ -304,6 +308,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
+	echo "<input type='hidden' name='view' value=\"".escape($view)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 	echo "<table class='list' style='margin-bottom: 25px;'>\n";
 	if (is_array($group_permissions) && @sizeof($group_permissions) != 0) {
@@ -311,19 +316,18 @@
 		foreach ($group_permissions as $row) {
 			$checked = ($row['permission_assigned'] === 'true') ? " checked=\"checked\"" : $checked = '';
 			$protected = ($row['permission_protected'] === 'true') ? " checked=\"checked\"" : '';
-			$application_name = strtolower($row['application_name']);
-			$label_application_name = ucwords(str_replace(['_','-'], " ", $row['application_name']));
+			$application_name = strtolower(str_replace([' ','-'], '_', $row['application_name']));
+			$application_name_label = ucwords(str_replace(['_','-'], " ", $row['application_name']));
 
-			$label_application_name = ucwords($label_application_name);
-
+			//application heading
 			if ($previous_application_name !== $row['application_name']) {
-				echo "		<tr>";
+				echo "		<tr class='heading_".$application_name."'>";
 				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
 				echo "		</tr>";
-				echo "		<tr>";
-				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($label_application_name)."</b></td>\n";
+				echo "		<tr class='heading_".$application_name."'>";
+				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($application_name_label)."</b></td>\n";
 				echo "		</tr>";
-				echo "		<tr class='list-header'>\n";
+				echo "		<tr class='list-header heading_".$application_name."'>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
 					echo "		<th class='checkbox'>\n";
 					echo "			<input type='checkbox' id='checkbox_all_".$application_name."' name='checkbox_all' onclick=\"list_all_toggle('".$application_name."');\">\n";
@@ -337,32 +341,50 @@
 					echo "		</th>\n";
 				}
 				echo "		</tr>\n";
+				$displayed_permissions[$application_name] = 0;
+			}
 
-			}
-			echo "<tr class='list-row'>\n";
-			if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='group_permissions[$x][checked]' id='checkbox_".$x."' class='checkbox_".$application_name."' value='true' ".$checked." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."').checked = false; }\">\n";
-				echo "		<input type='hidden' name='group_permissions[$x][permission_uuid]' value='".escape($row['permission_uuid'])."' />\n";
-				echo "		<input type='hidden' name='group_permissions[$x][permission_name]' value='".escape($row['permission_name'])."' />\n";
+			//application permission
+			if (!$view || ($view == 'assigned' && $checked) || ($view == 'unassigned' && !$checked)) {
+				echo "<tr class='list-row'>\n";
+				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
+					echo "	<td class='checkbox'>\n";
+					echo "		<input type='checkbox' name='group_permissions[$x][checked]' id='checkbox_".$x."' class='checkbox_".$application_name."' value='true' ".$checked." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."').checked = false; }\">\n";
+					echo "		<input type='hidden' name='group_permissions[$x][permission_uuid]' value='".escape($row['permission_uuid'])."' />\n";
+					echo "		<input type='hidden' name='group_permissions[$x][permission_name]' value='".escape($row['permission_name'])."' />\n";
+					echo "	</td>\n";
+				}
+				echo "	<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">";
+				echo "		".escape($row['permission_name']);
 				echo "	</td>\n";
+				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
+					echo "	<td>&nbsp;</td>\n";
+					echo "	<td class='checkbox'>\n";
+					echo "		<input type='checkbox' name='group_permissions[$x][permission_protected]' id='checkbox_protected_".$x."' class='checkbox_".$application_name."_protected' value='true' ".$protected." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."_protected').checked = false; }\">\n";
+					echo "	</td>\n";
+				}
+				echo "</tr>\n";
+				$displayed_permissions[$application_name]++;
 			}
-			echo "	<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">";
-			echo "		".escape($row['permission_name']);
-			echo "	</td>\n";
-			if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-				echo "	<td>&nbsp;</td>\n";
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='group_permissions[$x][permission_protected]' id='checkbox_protected_".$x."' class='checkbox_".$application_name."_protected' value='true' ".$protected." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."_protected').checked = false; }\">\n";
-				echo "	</td>\n";
-			}
-			echo "</tr>\n";
 
-			//set the previous category
+			//set the previous application name
 			$previous_application_name = $row['application_name'];
 			$x++;
+
 		}
 		unset($group_permissions);
+
+		//hide application heading if no permissions displayed
+		if (is_array($displayed_permissions) && @sizeof($displayed_permissions) != 0) {
+			echo "<script>\n";
+			foreach ($displayed_permissions as $application_name => $permission_count) {
+				if (!$permission_count) {
+					echo "$('.heading_".$application_name."').hide();\n";
+				}
+			}
+			echo "</script>\n";
+		}
+
 	}
 
 	echo "</table>\n";
