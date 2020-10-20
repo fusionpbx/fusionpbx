@@ -2746,8 +2746,8 @@ $text['description-dial_string']['ru-ru'] = "Местоположение кон
 $text['description-dial_string']['sv-se'] = "Plats för enheten.";
 $text['description-dial_string']['uk-ua'] = "";
 
-$text['description-cidr']['en-us'] = "Enter the CIDR here.";
-$text['description-cidr']['en-gb'] = "Enter the CIDR here.";
+$text['description-cidr']['en-us'] = "Enter allowed address/ranges in CIDR notation (comma separated).";
+$text['description-cidr']['en-gb'] = "Enter allowed address/ranges in CIDR notation (comma separated).";
 $text['description-cidr']['ar-eg'] = "";
 $text['description-cidr']['de-at'] = "Geben Sie hier die Beschränkung der IP Adresse an (z.B. 1.2.3.4/32)"; //copied from de-de
 $text['description-cidr']['de-ch'] = "Geben Sie hier die Beschränkung der IP Adresse an (z.B. 1.2.3.4/32)"; //copied from de-de
