@@ -72,7 +72,7 @@
 	$view = new template();
 	$view->engine = 'smarty';
 	$view->template_dir = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/themes/'.$_SESSION['domain']['template']['name'].'/';
-	$view->cache_dir = $_SESSION['server']['temp']['dir'];
+	$view->cache_dir = $_SESSION['server']['temp']['dir'] ?: sys_get_temp_dir();
 	$view->init();
 
 //add multi-lingual support
