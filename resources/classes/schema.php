@@ -381,7 +381,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= ");\n\n";
+							$sql .= ");\n";
 							return $sql;
 						}
 					}
@@ -452,7 +452,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= " FROM tmp_".$table.";\n\n";
+							$sql .= " FROM tmp_".$table.";\n";
 							return $sql;
 						}
 					}
@@ -896,11 +896,11 @@ if (!class_exists('schema')) {
 									try {
 										$this->db->query(trim($sql));
 										if ($format == "text") {
-											$response .= "	$sql\n";
+											$response .= "	$sql;\n";
 										}
 									}
 									catch (PDOException $error) {
-										$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
+										$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 									}
 								}
 							}
