@@ -74,7 +74,7 @@
 	$obj = new schema;
 	echo $obj->schema($format);
 
-//formatting for hmtl
+//formatting for html
 	if (!$included && $format == 'html') {
 		echo "<br />\n";
 		echo "<br />\n";
