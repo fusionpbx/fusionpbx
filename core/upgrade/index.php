@@ -86,9 +86,11 @@
 
 		// load an array of the database schema and compare it with the active database
 		if ($do["schema"] && permission_exists("upgrade_schema")) {
-			$upgrade_data_types = check_str($do["data_types"]);
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
+			if (isset($do["data_types"]) && $do["data_types"] == 'true') {
+				$obj->data_types = true;
+			}
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
