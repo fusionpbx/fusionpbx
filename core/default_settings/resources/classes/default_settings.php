@@ -269,7 +269,7 @@ if (!class_exists('default_settings')) {
 									$array['domain_settings'][$x]['domain_setting_name'] = $default_setting_name;
 									$array['domain_settings'][$x]['domain_setting_value'] = $default_setting_value;
 									$array['domain_settings'][$x]['domain_setting_order'] = $default_setting_order;
-									$array['domain_settings'][$x]['domain_setting_enabled'] = $default_setting_enabled;
+									$array['domain_settings'][$x]['domain_setting_enabled'] = $default_setting_enabled ?: 0;
 									$array['domain_settings'][$x]['domain_setting_description'] = $default_setting_description;
 
 									//insert
