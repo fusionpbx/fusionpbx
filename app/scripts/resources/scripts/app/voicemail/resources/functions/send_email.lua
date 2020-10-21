@@ -202,7 +202,9 @@
 					body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
-					body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+					if (origination_callee_id_name ~= nil) then
+						body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+					end
 					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
