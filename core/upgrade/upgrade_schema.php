@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,6 +42,14 @@
 		//add multi-lingual support
 		$language = new text;
 		$text = $language->get();
+		
+		//set the application_name
+		if (isset($argv[0])) {
+			$application_name = $argv[0];
+		}
+		if (isset($argv[1]) && $argv[1] == 'data_types') {
+			$upgrade_data_types = 'true';
+		}
 	}
 	else if (!$included) {
 		include "root.php";
@@ -66,10 +74,11 @@
 	$obj = new schema;
 	echo $obj->schema($format);
 
-if (!$included && $format == 'html') {
-	echo "<br />\n";
-	echo "<br />\n";
-	require_once "resources/footer.php";
-}
+//formatting for hmtl
+	if (!$included && $format == 'html') {
+		echo "<br />\n";
+		echo "<br />\n";
+		require_once "resources/footer.php";
+	}
 
 ?>
