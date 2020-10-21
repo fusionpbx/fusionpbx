@@ -34,6 +34,7 @@ if (!class_exists('schema')) {
 			public $apps;
 			public $db_type;
 			public $result;
+			public $data_types;
 
 		//class constructor
 			public function __construct() {
@@ -463,8 +464,9 @@ if (!class_exists('schema')) {
 			public function schema ($format = '') {
  
  				//set the global variable
-					global $db, $upgrade_data_types, $text,$output_format;
-					if ($format=='') $format = $output_format;
+					global $db, $text, $output_format;
+
+					if ($format == '') $format = $output_format;
 
 				//get the db variables
 					require_once "resources/classes/config.php";
@@ -665,7 +667,7 @@ if (!class_exists('schema')) {
 
 												//change the data type if it has been changed
 													//if the data type in the app db array is different than the type in the database then change the data type
-													if ($upgrade_data_types) {
+													if ($this->data_types) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
