@@ -62,7 +62,7 @@ include "root.php";
 			 * Called when the object is created
 			 */
 			public function __construct() {
-				if (!isset($this->domain_uuid)) {
+				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 			}
