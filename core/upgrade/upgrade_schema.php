@@ -42,14 +42,6 @@
 		//add multi-lingual support
 		$language = new text;
 		$text = $language->get();
-		
-		//set the application_name
-		if (isset($argv[0])) {
-			$application_name = $argv[0];
-		}
-		if (isset($argv[1]) && $argv[1] == 'data_types') {
-			$upgrade_data_types = 'true';
-		}
 	}
 	else if (!$included) {
 		include "root.php";
@@ -72,6 +64,9 @@
 //get the database schema put it into an array then compare and update the database as needed.
 	require_once "resources/classes/schema.php";
 	$obj = new schema;
+	if (isset($argv[1]) && $argv[1] == 'data_types') {
+		$obj->data_types = true;
+	}
 	echo $obj->schema($format);
 
 //formatting for html
