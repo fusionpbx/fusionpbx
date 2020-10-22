@@ -82,6 +82,7 @@
 					$ivr_menu_max_timeouts = $row["ivr_menu_max_timeouts"];
 					$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 					$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
+					$ivr_menu_context = $row["ivr_menu_context"];
 					$ivr_menu_enabled = $row["ivr_menu_enabled"];
 					$ivr_menu_description = $row["ivr_menu_description"];
 
@@ -159,7 +160,7 @@
 						unset($sub_sql, $sub_result, $sub_row);
 
 						if ($ivr_menu_direct_dial == "true") {
-							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$_SESSION["context"]."\"/>\n";
+							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$ivr_menu_context."\"/>\n";
 						}
 						$tmp .= "	</menu>\n";
 						$tmp .= "</include>\n";
