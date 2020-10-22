@@ -306,7 +306,6 @@ if ($db_type == "pgsql") {
 
 			if (is_array($domains)) { 
 				foreach($domains as $row) {
-					/*
 					if (count($domains) == 1) {
 						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 						$_SESSION["domain_name"] = $row['domain_name'];
@@ -317,7 +316,6 @@ if ($db_type == "pgsql") {
 							$_SESSION["domain_name"] = $row["domain_name"];
 						}
 					}
-					*/
 					$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
 				unset($domains, $prep_statement);
