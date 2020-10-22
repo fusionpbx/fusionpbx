@@ -324,7 +324,7 @@ if (!class_exists('ivr_menu')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$ivr_menu_context);
+									$cache->delete("dialplan:".$_SESSION['domain_name']);
 									foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
 										$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
 									}
@@ -467,7 +467,7 @@ if (!class_exists('ivr_menu')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$ivr_menu_context);
+									$cache->delete("dialplan:".$_SESSION['domain_name']);
 
 								//set message
 									message::add($text['message-copy']);
