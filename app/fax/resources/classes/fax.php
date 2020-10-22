@@ -162,7 +162,7 @@ if (!class_exists('fax')) {
 				$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
 				$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
 				$dialplan["dialplan_number"] = $this->fax_extension;
-				$dialplan["dialplan_context"] = $_SESSION['context'];
+				$dialplan["dialplan_context"] = $_SESSION['domain_name'];
 				$dialplan["dialplan_continue"] = "false";
 				$dialplan["dialplan_xml"] = $dialplan_xml;
 				$dialplan["dialplan_order"] = "310";
@@ -195,7 +195,7 @@ if (!class_exists('fax')) {
 
 			//clear the cache
 				$cache = new cache;
-				$cache->delete("dialplan:".$_SESSION['context']);
+				$cache->delete("dialplan:".$_SESSION['domain_name']);
 
 			//return the dialplan_uuid
 				return $dialplan_response;
@@ -346,7 +346,7 @@ if (!class_exists('fax')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//set message
 									message::add($text['message-delete']);
@@ -646,7 +646,7 @@ if (!class_exists('fax')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//set message
 									message::add($text['message-copy']);
