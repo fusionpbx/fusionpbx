@@ -392,7 +392,7 @@
 						if (strlen($dialplan_order) == 0) {
 							$dialplan_order ='333';
 						}
-						$dialplan_context = $_SESSION['context'];
+						$dialplan_context = $_SESSION['domain_name'];
 						$dialplan_continue = 'false';
 						$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
