@@ -74,7 +74,7 @@
 			if ($result["authorized"] === "true") {
 				//set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
-					$_SESSION["domain_name"] = $result["domain_name"];
+					//$_SESSION["domain_name"] = $result["domain_name"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 
 				//user session array
@@ -250,7 +250,6 @@
 								//set the context
 								$_SESSION['user']['user_context'] = $row["user_context"];
 								$_SESSION['user_context'] = $row["user_context"];
-								$_SESSION['context'] = $_SESSION["domain_name"];
 							}
 						}
 						unset($sql, $parameters, $result, $row);
