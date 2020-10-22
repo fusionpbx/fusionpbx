@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,6 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('device_export')) {
@@ -75,14 +74,40 @@
 		header("Content-Transfer-Encoding: binary");
 	}
 
-
 //define possible columns in the array
-	$available_columns[] = 'device_uuid';
-	$available_columns[] = 'domain_uuid';
-	$available_columns[] = 'device_mac_address';
-	$available_columns[] = 'device_label';
-	$available_columns[] = 'device_template';
-	$available_columns[] = 'device_description';
+	$available_columns['devices'][] = 'device_uuid';
+	$available_columns['devices'][] = 'device_profile_uuid';
+	$available_columns['devices'][] = 'device_mac_address';
+	$available_columns['devices'][] = 'device_label';
+	$available_columns['devices'][] = 'device_vendor';
+	$available_columns['devices'][] = 'device_template';
+	$available_columns['devices'][] = 'device_enabled_date';
+	$available_columns['devices'][] = 'device_username';
+	$available_columns['devices'][] = 'device_password';
+	$available_columns['devices'][] = 'device_uuid_alternate';
+	$available_columns['devices'][] = 'device_provisioned_date';
+	$available_columns['devices'][] = 'device_provisioned_method';
+	$available_columns['devices'][] = 'device_provisioned_ip';
+	$available_columns['devices'][] = 'device_enabled';
+	$available_columns['devices'][] = 'device_description';
+
+	$available_columns['device_lines'][] = 'device_line_uuid';
+	$available_columns['device_lines'][] = 'device_uuid';
+	$available_columns['device_lines'][] = 'line_number';
+	$available_columns['device_lines'][] = 'server_address';
+	$available_columns['device_lines'][] = 'server_address_primary';
+	$available_columns['device_lines'][] = 'server_address_secondary';
+	$available_columns['device_lines'][] = 'outbound_proxy_primary';
+	$available_columns['device_lines'][] = 'outbound_proxy_secondary';
+	$available_columns['device_lines'][] = 'display_name';
+	$available_columns['device_lines'][] = 'user_id';
+	$available_columns['device_lines'][] = 'auth_id';
+	$available_columns['device_lines'][] = 'password';
+	$available_columns['device_lines'][] = 'sip_port';
+	$available_columns['device_lines'][] = 'sip_transport';
+	$available_columns['device_lines'][] = 'register_expires';
+	$available_columns['device_lines'][] = 'shared_line';
+	$available_columns['device_lines'][] = 'enabled';
 
 //get the devices and send them as output
 	$column_group = $_REQUEST["column_group"];
@@ -96,16 +121,26 @@
 				exit;
 			}
 
+		//validate table names
+			foreach($column_group as $table_name => $columns) {
+				if (!isset($available_columns[$table_name])) {
+					unset($column_group[$table_name]);
+				}
+			}
+
 		//validate columns
-			foreach ($column_group as $index => $column_name) {
-				if (!in_array($column_name, $available_columns)) {
-					unset($column_group[$index]);
+			foreach($column_group as $table_name => $columns) {
+				foreach ($columns as $column_name) {
+					if (!in_array($column_name, $available_columns[$table_name])) {
+						unset($column_group[$table_name][$column_name]);
+					}
 				}
 			}
 
 		//iterate columns
 			if (is_array($column_group) && @sizeof($column_group) != 0) {
-				$column_names = implode(", ", $column_group);
+
+				$column_names = implode(", ", $column_group['devices']);
 				$sql = "select ".$column_names." from v_devices ";
 				$sql .= " where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
@@ -113,6 +148,30 @@
 				$devices = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters, $column_names);
 				//print_r($extensions);
+
+				foreach($column_group as $table_name => $columns) {
+					if ($table_name !== 'devices') {
+						$column_names = implode(", ", $columns);
+						$sql = "select ".$column_names." from v_".$table_name." ";
+						$sql .= " where domain_uuid = :domain_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$database = new database;
+						$$table_name = $database->select($sql, $parameters, 'all');
+						$x = 0;
+						foreach($devices as $device) {
+							foreach($$table_name as $row) {
+								if ($device['device_uuid'] == $row['device_uuid']) {
+									foreach($row as $key => $value) {
+										$devices[$x][$key] = $value;
+									}
+									break;
+								}
+							}
+							$x++;
+						}
+						unset($sql, $parameters, $column_names);
+					}
+				}
 
 				if (is_array($devices) && @sizeof($devices) != 0) {
 					download_send_headers("device_export_".date("Y-m-d").".csv");
@@ -153,17 +212,24 @@
 
 	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
 		$x = 0;
-		foreach ($available_columns as $column_name) {
-			$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
-			echo "	</td>\n";
-			echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
-			echo "</tr>";
-			$x++;
+		foreach ($available_columns as $table_name => $columns) {
+			foreach ($columns as $column_name) {
+				$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
+				echo "<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
+				echo "	</td>\n";
+				echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
+				echo "</tr>";
+				$x++;
+			}
 		}
 	}
+	
+	//test the validation
+	//echo "		<input type='hidden' name='column_group[devices][xxx]'  value=\"xxx\">\n";
+	//echo "		<input type='hidden' name='column_group[device_lines][yyy]' value=\"yyy\">\n";
+	//echo "		<input type='hidden' name='column_group[device_zzz][zzz]' value=\"zzz\">\n";
 
 	echo "</table>\n";
 	echo "<br />\n";
