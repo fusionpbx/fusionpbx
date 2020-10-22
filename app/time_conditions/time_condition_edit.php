@@ -501,7 +501,7 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("dialplan:".$_SESSION["context"]);
+			$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 		//set the message
 			if ($action == "add") {
