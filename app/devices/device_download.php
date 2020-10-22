@@ -147,7 +147,6 @@
 				$database = new database;
 				$devices = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters, $column_names);
-				//print_r($extensions);
 
 				foreach($column_group as $table_name => $columns) {
 					if ($table_name !== 'devices') {
@@ -202,27 +201,36 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
-	echo "	</th>\n";
-	echo "	<th>".$text['label-column_name']."</th>\n";
-	echo "</tr>\n";
+	echo $text['description-device_export'];
+	echo "<br /><br />\n";
 
 	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
 		$x = 0;
 		foreach ($available_columns as $table_name => $columns) {
+			$table_name_label = ucwords(str_replace(['-','_',],' ', $table_name));
+			echo "<div class='category'>\n";
+			echo "<b>".$table_name_label."</b>\n";
+			echo "<br>\n";
+			echo "<table class='list'>\n";
+			echo "<tr class='list-header'>\n";
+			echo "	<th class='checkbox'>\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$table_name."' name='checkbox_all' onclick=\"list_all_toggle('".$table_name."');\" ".($available_columns ?: "style='visibility: hidden;'").">\n";
+			echo "	</th>\n";
+			echo "	<th>".$text['label-column_name']."</th>\n";
+			echo "</tr>\n";
 			foreach ($columns as $column_name) {
 				$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
 				echo "<tr class='list-row' href='".$list_row_url."'>\n";
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
+				echo "		<input type='checkbox' class='checkbox_".$table_name."' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
 				echo "	</td>\n";
 				echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
 				echo "</tr>";
 				$x++;
 			}
+			echo "</table>\n";
+			echo "<br>\n";
+			echo "</div>\n";
 		}
 	}
 	
@@ -231,8 +239,6 @@
 	//echo "		<input type='hidden' name='column_group[device_lines][yyy]' value=\"yyy\">\n";
 	//echo "		<input type='hidden' name='column_group[device_zzz][zzz]' value=\"zzz\">\n";
 
-	echo "</table>\n";
-	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
