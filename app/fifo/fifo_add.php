@@ -103,7 +103,7 @@
 			$queue_name = $extension_name."@\${domain_name}";
 			$app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$dialplan_uuid = uuid();
-			$dialplan_context = $_SESSION['context'];
+			$dialplan_context = $_SESSION['domain_name'];
 			$domain_uuid = $_SESSION['domain_uuid'];
 			$dialplan_detail_order = 0;
 
@@ -406,7 +406,7 @@
 
 		//clear the cache
 		$cache = new cache;
-		$cache->delete("dialplan:".$_SESSION["context"]);
+		$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 		//redirect the user
 		message::add($text['message-add']);
