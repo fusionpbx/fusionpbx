@@ -75,12 +75,14 @@
 				$channels = $row["channels"];
 				$caller_id_in_from = $row["caller_id_in_from"];
 				$supress_cng = $row["supress_cng"];
+				$sip_cid_type = $row["sip_cid_type"];
 				$extension_in_contact = $row["extension_in_contact"];
 				$effective_caller_id_name = $row["effective_caller_id_name"];
 				$effective_caller_id_number = $row["effective_caller_id_number"];
 				$outbound_caller_id_name = $row["outbound_caller_id_name"];
 				$outbound_caller_id_number = $row["outbound_caller_id_number"];
 				$context = $row["context"];
+				$profile = $row["profile"];
 				$enabled = $row["enabled"];
 				$description = $row["description"]." (".$text['label-copy'].")";
 			}
@@ -118,8 +120,10 @@
 			//$array['gateways'][0]['channels'] = $channels;
 			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
 			$array['gateways'][0]['supress_cng'] = $supress_cng;
+         		$array['gateways'][0]['sip_cid_type'] = $sip_cid_type;
 			$array['gateways'][0]['extension_in_contact'] = $extension_in_contact;
 			$array['gateways'][0]['context'] = $context;
+			$array['gateways'][0]['profile'] = $profile;
 			$array['gateways'][0]['enabled'] = $enabled;
 			$array['gateways'][0]['description'] = $description;
 
