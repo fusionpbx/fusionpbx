@@ -37,6 +37,13 @@ if (email_method == 'queue') then
 		local domain_name = headers["X-FusionPBX-Domain-Name"];
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info';
 		local call_uuid = headers["X-FusionPBX-Email-Call-UUID"];
+		local local_after_email = headers["X-FusionPBX-local_after_email"] or '';
+
+		if (local_after_email == 'false') then
+			email_action_after = 'delete';
+		else
+			email_action_after = '';
+		end
 
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
@@ -65,7 +72,8 @@ if (email_method == 'queue') then
 		sql = sql .. "	email_to, ";
 		sql = sql .. "	email_subject, ";
 		sql = sql .. "	email_body, ";
-		sql = sql .. "	email_status ";
+		sql = sql .. "	email_status, ";
+		sql = sql .. "	email_action_after ";
 		sql = sql .. ") ";
 		sql = sql .. "values ( ";
 		sql = sql .. "	:email_queue_uuid, ";
@@ -76,7 +84,8 @@ if (email_method == 'queue') then
 		sql = sql .. "	:email_to, ";
 		sql = sql .. "	:email_subject, ";
 		sql = sql .. "	:email_body, ";
-		sql = sql .. "	:email_status ";
+		sql = sql .. "	:email_status, ";
+		sql = sql .. "	:email_action_after ";
 		sql = sql .. ") ";
 		local params = {
 			email_queue_uuid = email_queue_uuid;
@@ -87,6 +96,7 @@ if (email_method == 'queue') then
 			email_subject = email_subject;
 			email_body = email_body;
 			email_status = email_status;
+			email_action_after = email_action_after;
 		}
 		db:query(sql, params);
 
