@@ -30,7 +30,7 @@ class plugin_database {
 			$user_authorized = false;
 
 		//check the username and password if they don't match then redirect to the login
-			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, u.salt, u.api_key, d.domain_name ";
+			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
 			$sql .= "from v_users as u, v_domains as d ";
 			$sql .= "where u.domain_uuid = d.domain_uuid ";
 			if (strlen($this->key) > 30) {
