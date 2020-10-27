@@ -318,6 +318,9 @@ if (!class_exists('call_block')) {
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								foreach ($rows as $x => $row) {
 
+									//trim plus and any spaces
+										$row["caller_id_number"] = trim($row["caller_id_number"], '+ ');
+
 									//build insert array
 										if (permission_exists('call_block_all')) {
 											$array['call_block'][$x]['call_block_uuid'] = uuid();
@@ -326,7 +329,7 @@ if (!class_exists('call_block')) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
 											}
 											$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-											$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+											$array['call_block'][$x]['call_block_number'] = $row["caller_id_number"];
 											$array['call_block'][$x]['call_block_count'] = 0;
 											$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 											$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
@@ -342,7 +345,7 @@ if (!class_exists('call_block')) {
 														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-														$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+														$array['call_block'][$x]['call_block_number'] = $row["caller_id_number"];
 														$array['call_block'][$x]['call_block_count'] = 0;
 														$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 														$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
