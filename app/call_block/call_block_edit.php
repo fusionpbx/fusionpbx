@@ -54,6 +54,7 @@
 	if (count($_POST) > 0) {
 		$extension_uuid = $_POST["extension_uuid"];
 		$call_block_name = $_POST["call_block_name"];
+		$call_block_country_code = $_POST["call_block_country_code"];
 		$call_block_number = $_POST["call_block_number"];
 		$call_block_enabled = $_POST["call_block_enabled"];
 		$call_block_description = $_POST["call_block_description"];
@@ -164,6 +165,7 @@
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						}
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
 						$array['call_block'][0]['call_block_count'] = 0;
 						$array['call_block'][0]['call_block_app'] = $call_block_app;
@@ -184,7 +186,7 @@
 						return;
 					}
 					if ($action == "update") {
-						$sql = "select c.call_block_number, d.domain_name ";
+						$sql = "select c.call_block_country_code, c.call_block_number, d.domain_name ";
 						$sql .= "from v_call_block as c ";
 						$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
 						$sql .= "where c.domain_uuid = :domain_uuid ";
@@ -199,7 +201,7 @@
 
 							//clear the cache
 							$cache = new cache;
-							$cache->delete("app:call_block:".$domain_name.":".$call_block_number);
+							$cache->delete("app:call_block:".$domain_name.":".$call_block_country_code.$call_block_number);
 						}
 						unset($sql, $parameters);
 
@@ -209,6 +211,7 @@
 							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						}
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
+						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
 						$array['call_block'][0]['call_block_app'] = $call_block_app;
 						$array['call_block'][0]['call_block_data'] = $call_block_data;
@@ -243,6 +246,7 @@
 		if (is_array($row) && sizeof($row) != 0) {
 			$extension_uuid = $row["extension_uuid"];
 			$call_block_name = $row["call_block_name"];
+			$call_block_country_code = $row["call_block_country_code"];
 			$call_block_number = $row["call_block_number"];
 			$call_block_app = $row["call_block_app"];
 			$call_block_data = $row["call_block_data"];
@@ -348,6 +352,17 @@
 	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_block_name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-country_code']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_country_code' maxlength='6' value=\"".escape($call_block_country_code)."\">\n";
+	echo "<br />\n";
+	echo $text['description-country_code']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

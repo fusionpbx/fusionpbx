@@ -113,11 +113,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_block_country_code";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the country code.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_number";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_caller_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the full phone number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the phone number.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_count";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "blocked_call_count";

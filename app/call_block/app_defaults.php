@@ -30,7 +30,7 @@ if ($domains_processed == 1) {
 		$database = new database;
 		$database->execute("DROP VIEW view_call_block;", null);
 		$sql = "CREATE VIEW view_call_block AS ( \n";
-		$sql .= "	select c.domain_uuid, call_block_uuid, c.extension_uuid, call_block_name, \n";
+		$sql .= "	select c.domain_uuid, call_block_uuid, c.extension_uuid, call_block_name, call_block_country_code, \n";
 		$sql .= "	call_block_number, extension, number_alias, call_block_count, call_block_app, call_block_data, date_added, call_block_enabled, call_block_description \n";
 		$sql .= "	from v_call_block as c \n";
 		$sql .= " left join v_extensions as e \n";
