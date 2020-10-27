@@ -304,18 +304,20 @@ if ($db_type == "pgsql") {
 				unset($result);
 			}
 
-			if (is_array($domains)) { 
+			if (is_array($domains)) {
 				foreach($domains as $row) {
-					if (count($domains) == 1) {
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
-						$_SESSION["domain_name"] = $row['domain_name'];
-					}
-					else {
-						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+					if (!isset($_SESSION['username'])) {
+						if (count($domains) == 1) {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row["domain_name"];
+							$_SESSION["domain_name"] = $row['domain_name'];
 						}
-					}
+						else {
+							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row["domain_name"];
+							}
+						}
+					}	
 					$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
 				unset($domains, $prep_statement);
