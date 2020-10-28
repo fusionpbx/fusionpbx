@@ -32,8 +32,8 @@
 	function send_email(id, uuid)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
-		local email_method = settings:get('email', 'method', 'text');
 		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 		
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
@@ -230,7 +230,7 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (string.len(voicemail_mail_to) > 2 and email_method ~= 'queue') then
+			if (string.len(voicemail_mail_to) > 2 and email_queue_enabled == 'false') then
 				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages
