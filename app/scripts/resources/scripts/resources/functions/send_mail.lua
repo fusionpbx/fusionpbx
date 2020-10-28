@@ -3,28 +3,11 @@ local Database = require "resources.functions.database";
 local cache = require"resources.functions.cache";
 local log = require "resources.functions.log".send_mail
 
-
 local db = dbh or Database.new('system');
---local settings = Settings.new(db, nil, nil);
---local email_method = settings:get('email', 'method', 'text');
+local settings = Settings.new(db, domain_name, domain_uuid)
+local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 
---get the dialplan mode from the cache
-email_method_key = "settings:email:email_mode";
-email_method, err = cache.get(email_method_key);
-
---if not found in the cache then get it from the database
-if (err == 'NOT FOUND') then
-	--get the mode from default settings
-	sql = "select default_setting_value from v_default_settings "
-	sql = sql .. "where default_setting_category = 'email' ";
-	sql = sql .. "and default_setting_subcategory = 'method' ";
-	email_method = db:first_value(sql, nil);
-	if (email_method) then
-		local ok, err = cache.set(email_method_key, email_method, expire["dialplan"]);
-	end
-end
-
-if (email_method == 'queue') then
+if (email_queue_enabled == 'true') then
 	function send_mail(headers, email_address, email_message, email_file)
 
 		--include json library
@@ -110,7 +93,8 @@ if (email_method == 'queue') then
 			local email_table = split(email_file, '/', true)
 			email_attachment_name = email_table[#email_table]
 
-			email_attachment_path = email_file.sub(email_file, 0, (string.len(email_file) - string.len(email_attachment_name)) - 1); 
+			email_attachment_path = email_file.sub(email_file, 0, (string.len(email_file) - string.len(email_attachment_name)) - 1);
+			--freeswitch.consoleLog("notice", "[send_email] voicemail path: " .. email_attachment_path .. "/" .. email_attachment_name .. "\n");
 
 			--base64 encode the file
 			--local file = require "resources.functions.file"
@@ -146,7 +130,7 @@ if (email_method == 'queue') then
 				email_attachment_base64  = email_attachment_base64;
 			}
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				freeswitch.consoleLog("notice", "[send_email] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 			end
 			db:query(sql, params);
 		end
