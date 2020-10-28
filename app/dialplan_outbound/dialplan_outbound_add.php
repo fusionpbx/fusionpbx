@@ -729,7 +729,7 @@
 	$sql = "select * from v_gateways ";
 	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid, gateway ";
+		$sql .= "order by domain_uuid = '$domain_uuid' DESC, gateway ";
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
