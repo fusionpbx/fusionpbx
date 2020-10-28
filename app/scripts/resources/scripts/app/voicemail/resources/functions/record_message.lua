@@ -277,73 +277,71 @@
 					end
 				end
 			end
-		
-		                        if (transcribe_provider == "google") then
-                                local api_key = settings:get('voicemail', 'google_key', 'text') or '';
-                                local transcription_server = settings:get('voicemail', 'google_url', 'text') or '';
-                                if (api_key ~= '') then
-     transcribe_cmd = [[sox ]]..file_path..[[ ]]..file_path..[[.flac && echo "{ 'config': { 'languageCode': 'en-US', 'enableWordTimeOffsets': false }, 'audio': { 'content': '`base64 -w 0 ]]..file_path..[[.flac`' } }" | curl -X POST -H "Content-Type: application/json" -d @- "]]..transcription_server..[[:recognize?key=]]..api_key..[[" && rm -f ]]..file_path..[[.flac]]
 
-end
+			if (transcribe_provider == "google") then
+				local api_key = settings:get('voicemail', 'google_key', 'text') or '';
+				local transcription_server = settings:get('voicemail', 'google_url', 'text') or '';
+				if (api_key ~= '') then
+					transcribe_cmd = [[sox ]]..file_path..[[ ]]..file_path..[[.flac && echo "{ 'config': { 'languageCode': 'en-US', 'enableWordTimeOffsets': false }, 'audio': { 'content': '`base64 -w 0 ]]..file_path..[[.flac`' } }" | curl -X POST -H "Content-Type: application/json" -d @- "]]..transcription_server..[[:recognize?key=]]..api_key..[[" && rm -f ]]..file_path..[[.flac]]
+				end
 
-					local handle = io.popen(transcribe_cmd);
-					local transcribe_result = handle:read("*a");
-					transcribe_result = transcribe_result:gsub('%%HESITATION ', '');
-					handle:close();
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
-						freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
-					end
+				local handle = io.popen(transcribe_cmd);
+				local transcribe_result = handle:read("*a");
+				transcribe_result = transcribe_result:gsub('%%HESITATION ', '');
+				handle:close();
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] CMD: " .. transcribe_cmd .. "\n");
+					freeswitch.consoleLog("notice", "[voicemail] RESULT: " .. transcribe_result .. "\n");
+				end
 
-					--Trancribe request can fail
-					if (transcribe_result == '') then
-						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-						return ''
-					else
-						status, transcribe_json = pcall(JSON.decode, transcribe_result);
-						if not status then
-							if (debug["info"]) then
-								freeswitch.consoleLog("notice", "[voicemail] error decoding google json\n");
-							end
-							return '';
-						end 
-					end
-					
-										if (transcribe_json["results"] ~= nil) then
-						--Transcription	
-						if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
-							transcription = '';
-							for key, row in pairs(transcribe_json["results"]) do 
-								transcription = transcription .. row["alternatives"][1]["transcript"];
-							end
-							if (debug["info"]) then
-								freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
-							end
-						else
-							if (debug["info"]) then
-								freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
-							end
-							return '';
+				--Trancribe request can fail
+				if (transcribe_result == '') then
+					freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
+					return ''
+				else
+					status, transcribe_json = pcall(JSON.decode, transcribe_result);
+					if not status then
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] error decoding google json\n");
 						end
-						--Confidence
-						if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
-							if (debug["info"]) then
-								freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
-							end
-							confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
-						else
-							if (debug["info"]) then
-								freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
-							end
+						return '';
+					end 
+				end
+				if (transcribe_json["results"] ~= nil) then
+					--Transcription	
+					if (transcribe_json["results"][1]["alternatives"][1]["transcript"] ~= nil) then
+						transcription = '';
+						for key, row in pairs(transcribe_json["results"]) do 
+							transcription = transcription .. row["alternatives"][1]["transcript"];
 						end
-						return transcription;
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: " .. transcription .. "\n");
+						end
 					else
 						if (debug["info"]) then
-							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
+							freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: (null) \n");
 						end
 						return '';
 					end
+					--Confidence
+					if (transcribe_json["results"][1]["alternatives"][1]["confidence"]) then
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: " .. transcribe_json["results"][1]["alternatives"][1]["confidence"] .. "\n");
+						end
+						confidence = transcribe_json["results"][1]["alternatives"][1]["confidence"];
+					else
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail] CONFIDENCE: (null) \n");
+						end
+					end
+					return transcription;
+				else
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] TRANSCRIPTION: json error \n");
+					end
+					return '';
 				end
+			end
 
 			if (transcribe_provider == "custom") then
 				local transcription_server = settings:get('voicemail', 'transcription_server', 'text') or '';
@@ -396,9 +394,9 @@ end
 			local message_max_length = settings:get('voicemail', 'message_max_length', 'numeric') or 300;
 			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
-			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
+			local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 			local transcribe_provider = settings:get('voicemail', 'transcribe_provider', 'text') or '';
-			local email_method = settings:get('email', 'method', 'text') or "smtp";
+			transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean') or "false";
 
 		--debug information
 			if (debug["info"]) then
@@ -528,7 +526,7 @@ end
 			start_epoch = os.time();
 
 		--if using the email queue disable inline transcription
-			if (email_method == 'queue') then
+			if (email_queue_enabled == 'true') then
 				transcribe_enabled = 'false';
 			end
 
