@@ -171,8 +171,10 @@
 		$password_new = trim($_REQUEST['password_new']);
 		$password_repeat = trim($_REQUEST['password_repeat']);
 
-		//strip off @domain if submitted with username, as the valid domain for the reset is already being provided in the where clause below
-		$username = substr_count($username, '@') != 0 ? explode('@', $username)[0] : $username;
+		//if not requiring usernames to be of email format, strip off @domain as the valid domain for the reset is already being provided in the where clause below
+		if ($_SESSION['users']['username_format']['text'] != 'email') {
+			$username = substr_count($username, '@') != 0 ? explode('@', $username)[0] : $username;
+		}
 
 		if ($username !== '' &&
 			$username === $_SESSION['valid_username'] &&
