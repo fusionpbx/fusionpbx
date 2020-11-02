@@ -357,20 +357,10 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-country_code']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_country_code' maxlength='6' value=\"".escape($call_block_country_code)."\">\n";
-	echo "<br />\n";
-	echo $text['description-country_code']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_block_country_code' maxlength='6' style='width: 60px;' value=\"".escape($call_block_country_code)."\">\n";
 	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"".escape($call_block_number)."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_block_number']."\n";

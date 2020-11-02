@@ -637,8 +637,8 @@ $text['description-country_code']['ru-ru'] = "";
 $text['description-country_code']['sv-se'] = "";
 $text['description-country_code']['uk-ua'] = "";
 
-$text['description-call_block_number']['en-us'] = "Enter the Caller ID Number to block.";
-$text['description-call_block_number']['en-gb'] = "Enter the Caller ID Number to block.";
+$text['description-call_block_number']['en-us'] = "Enter the Country Code and Caller ID Number to block.";
+$text['description-call_block_number']['en-gb'] = "Enter the Country Code and Caller ID Number to block.";
 $text['description-call_block_number']['ar-eg'] = "";
 $text['description-call_block_number']['de-at'] = "";
 $text['description-call_block_number']['de-ch'] = "";
