@@ -262,8 +262,6 @@ if (!class_exists('domains')) {
 
 										//clear the domains session array to update it
 											unset($_SESSION["domains"]);
-											unset($_SESSION["domain_uuid"]);
-											unset($_SESSION["domain_name"]);
 											unset($_SESSION['domain']);
 											unset($_SESSION['switch']);
 
