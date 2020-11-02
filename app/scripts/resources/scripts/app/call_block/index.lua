@@ -90,14 +90,28 @@
 				assert(dbh:connected());
 
 			--check to see if the call should be blocked
-				sql = "select * from v_call_block ";
-				sql = sql .. "where domain_uuid = :domain_uuid ";
-				sql = sql .. "and call_block_enabled = 'true' ";
-				sql = sql .. "and ( ";
-				sql = sql .. "	(call_block_name = :call_block_name and call_block_number = :call_block_number) ";
-				sql = sql .. "	or (call_block_name is null and call_block_number = :call_block_number) ";
-				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) ";
-				sql = sql .. ") ";
+				sql = "select * from v_call_block\n";
+				sql = sql .. "where domain_uuid = :domain_uuid \n";
+				sql = sql .. "and call_block_enabled = 'true' \n";
+				sql = sql .. "and ( \n";
+				sql = sql .. "	(\n";
+				sql = sql .. "		call_block_name = :call_block_name \n";
+				sql = sql .. "		and ( \n";
+				sql = sql .. "			'+' || call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			or call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			or call_block_number = :call_block_number \n";
+				sql = sql .. "		) \n";
+				sql = sql .. "	) \n";
+				sql = sql .. "	or (\n";
+				sql = sql .. "		call_block_name is null \n";
+				sql = sql .. "		and ( \n";
+				sql = sql .. "			'+' || call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			or call_block_country_code || call_block_number = :call_block_number \n";
+				sql = sql .. "			or call_block_number = :call_block_number \n";
+				sql = sql .. "		) \n";
+				sql = sql .. "	) \n";
+				sql = sql .. "	or (call_block_name = :call_block_name and call_block_number is null) \n";
+				sql = sql .. ") \n";
 				if (extension_uuid == nil) then
 					sql = sql .. "and extension_uuid is null ";
 				else
