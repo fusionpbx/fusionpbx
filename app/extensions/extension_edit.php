@@ -398,7 +398,7 @@
 									}
 									else {
 										if ($action == "add") {
-											$user_context = $_SESSION['domain_name'];
+											$array["extensions"][$i]["user_context"] = $_SESSION['domain_name'];
 										}
 									}
 									if (permission_exists('extension_missed_call')) {
