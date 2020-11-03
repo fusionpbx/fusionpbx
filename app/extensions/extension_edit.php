@@ -267,15 +267,6 @@
 				return;
 			}
 
-		//set the default user context
-			if (permission_exists("extension_user_context")) {
-				//allow a user assigned to super admin to change the user_context
-			}
-			else {
-				//if the user_context was not set then set the default value
-				$user_context = $_SESSION['domain_name'];
-			}
-
 		//prevent users from bypassing extension limit by using range
 			if ($_SESSION['limit']['extensions']['numeric'] != '') {
 				if ($total_extensions + $range > $_SESSION['limit']['extensions']['numeric']){
@@ -402,7 +393,14 @@
 									$array["extensions"][$i]["directory_exten_visible"] = $directory_exten_visible;
 									$array["extensions"][$i]["limit_max"] = $limit_max;
 									$array["extensions"][$i]["limit_destination"] = $limit_destination;
-									$array["extensions"][$i]["user_context"] = $user_context;
+									if (permission_exists("extension_user_context")) {
+										$array["extensions"][$i]["user_context"] = $user_context;
+									}
+									else {
+										if ($action == "add") {
+											$user_context = $_SESSION['domain_name'];
+										}
+									}
 									if (permission_exists('extension_missed_call')) {
 										$array["extensions"][$i]["missed_call_app"] = $missed_call_app;
 										$array["extensions"][$i]["missed_call_data"] = $missed_call_data;
