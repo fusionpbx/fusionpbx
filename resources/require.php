@@ -72,7 +72,9 @@
 	require_once "resources/functions.php";
 	if ($config_exists) {
 		require "resources/pdo.php";
-		require_once "resources/switch.php";
+		if (file_exists("resources/switch.php")) {
+			require_once "resources/switch.php";
+		}
 	}
 
 //change language on the fly - for translate tool (if available)
