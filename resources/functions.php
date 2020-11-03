@@ -2178,4 +2178,18 @@ function number_pad($number,$n) {
 		}
 	}
 
+	if (!function_exists('get_accountcode')) {
+		function get_accountcode() {
+			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text']) > 0) {
+				if ($accountcode == "none") {
+					return;
+				}
+			}
+			else {
+				$accountcode = $_SESSION['domain_name'];
+			}
+			return $accountcode;
+		}
+	}
+
 ?>
