@@ -1140,54 +1140,6 @@
 		<!-- Show Display Name from Server -->
 		<!-- Yes, No -->
 		<item name="pks.mpk.showNamefromServer.enable">No</item>
-
-		<item name="account.2.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.3.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.4.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.5.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.6.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.7.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.8.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.9.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.10.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.11.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.12.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.13.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.14.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.15.sip.blf.callPickup.forcePrefix">No</item>
-		<item name="account.16.sip.blf.callPickup.forcePrefix">No</item>
-
-		<item name="account.2.sip.blf.eventlist.uri"></item>
-		<item name="account.3.sip.blf.eventlist.uri"></item>
-		<item name="account.4.sip.blf.eventlist.uri"></item>
-		<item name="account.5.sip.blf.eventlist.uri"></item>
-		<item name="account.6.sip.blf.eventlist.uri"></item>
-		<item name="account.7.sip.blf.eventlist.uri"></item>
-		<item name="account.8.sip.blf.eventlist.uri"></item>
-		<item name="account.9.sip.blf.eventlist.uri"></item>
-		<item name="account.10.sip.blf.eventlist.uri"></item>
-		<item name="account.11.sip.blf.eventlist.uri"></item>
-		<item name="account.12.sip.blf.eventlist.uri"></item>
-		<item name="account.13.sip.blf.eventlist.uri"></item>
-		<item name="account.14.sip.blf.eventlist.uri"></item>
-		<item name="account.15.sip.blf.eventlist.uri"></item>
-		<item name="account.16.sip.blf.eventlist.uri"></item>
-
-		<item name="account.2.sip.blf.callPickup.prefix">**</item>
-		<item name="account.3.sip.blf.callPickup.prefix">**</item>
-		<item name="account.4.sip.blf.callPickup.prefix">**</item>
-		<item name="account.5.sip.blf.callPickup.prefix">**</item>
-		<item name="account.6.sip.blf.callPickup.prefix">**</item>
-		<item name="account.7.sip.blf.callPickup.prefix">**</item>
-		<item name="account.8.sip.blf.callPickup.prefix">**</item>
-		<item name="account.9.sip.blf.callPickup.prefix">**</item>
-		<item name="account.10.sip.blf.callPickup.prefix">**</item>
-		<item name="account.11.sip.blf.callPickup.prefix">**</item>
-		<item name="account.12.sip.blf.callPickup.prefix">**</item>
-		<item name="account.13.sip.blf.callPickup.prefix">**</item>
-		<item name="account.14.sip.blf.callPickup.prefix">**</item>
-		<item name="account.15.sip.blf.callPickup.prefix">**</item>
-		<item name="account.16.sip.blf.callPickup.prefix">**</item>
 		<!-- Applications - Contacts - General settings -->
 		<!-- Sort Phonebook by -->
 		<!-- LastName, FirstName -->
@@ -1268,23 +1220,26 @@
 		<!--# 160 MPKs can be configured via MPK APP    #-->
 		<!--#############################################-->
 		<!-- [Note] MPK provision needs reboot to take effect -->
+		{$keyIndex=1}
 		<!-- MPK Key Mode -->
 		<!-- SpeedDial, BLF, SpeedDialViaActiveAccount, DialDTMF, Intercom, Transfer, CallPark, MulticastPaging, Conference, DialPrefix -->
-		<item name="pks.mpk.1.mode">SpeedDial</item>
+		{$key_types=["none"=>"","speed dial"=>"SpeedDial","blf"=>"BLF","speed dial active"=>"SpeedDialViaActiveAccount","dial dtmf"=>"DialDTMF","intercom"=>"Intercom","transfer"=>"Transfer","call park"=>"CallPark","multicast paging"=>"MulticastPaging","conference"=>"Conference"]}
+		{foreach $keys as $category => $rows}
+		{foreach $rows as $row}
+		{if isset($row.device_key_type)}
+		<item name="pks.mpk.{$keyIndex}.mode">{$key_types[$row.device_key_type]}</item>
 		<!-- MPK Account -->
 		<!-- Account1, Account2, ... , Account16 -->
-		<item name="pks.mpk.1.account">Account1</item>
+		<item name="pks.mpk.{$keyIndex}.account">Account{$row.device_key_line}</item>
 		<!-- MPK Display Name -->
-		<item name="pks.mpk.1.description"></item>
+		<item name="pks.mpk.{$keyIndex}.description">{$row.device_key_label}</item>
 		<!-- MPK User ID -->
 		<!-- extendValue may be used based on MPK mode -->
-		<item name="pks.mpk.1.value"></item>
-		<item name="pks.mpk.1.extendValue"></item>
-
-		<item name="pks.mpk.2.mode">SpeedDial</item>
-		<item name="pks.mpk.2.account">Account1</item>
-		<item name="pks.mpk.2.description"></item>
-		<item name="pks.mpk.2.value"></item>
-		<item name="pks.mpk.2.extendValue"></item>
+		<item name="pks.mpk.{$keyIndex}.value">{$row.device_key_value}</item>
+		<item name="pks.mpk.{$keyIndex}.extendValue">device_key_extension</item>
+		{$keyIndex=$keyIndex+1}
+		{/if}
+		{/foreach}
+		{/foreach}
 	</config>
 </gs_provision>
