@@ -72,7 +72,7 @@
 	require_once "resources/functions.php";
 	if ($config_exists) {
 		require "resources/pdo.php";
-		if (file_exists("resources/switch.php")) {
+		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
 	}
@@ -81,4 +81,5 @@
 	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
 	}
+
 ?>
