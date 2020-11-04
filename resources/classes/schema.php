@@ -50,7 +50,12 @@ if (!class_exists('schema')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
-					include($config_path);
+					try {
+					    include($config_path);
+					}
+					catch (Exception $e) {
+					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					$x++;
 				}
 				$this->apps = $apps;
@@ -521,7 +526,12 @@ if (!class_exists('schema')) {
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 					$x=0;
 					foreach ($config_list as &$config_path) {
-						include($config_path);
+						try {
+							include($config_path);
+						}
+						catch (Exception $e) {
+						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						}
 						$x++;
 					}
 
