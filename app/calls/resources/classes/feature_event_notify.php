@@ -43,38 +43,40 @@ include "root.php";
 
 	//feature_event method		
 		public function send_notify() {
-
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					//get the sip profile name
-						$command = "sofia_contact */".$this->extension."@".$this->domain_name;
-						$contact_string = event_socket_request($fp, "api ".$command);
-						if (substr($contact_string, 0, 5) == "sofia") {
-							$contact_array = explode("/", $contact_string);
-							$sip_profile_name = $contact_array[1];
-						}
-						else {
-							$sip_profile_name = 'internal';
-						}
-					//send the event
-						$event = "sendevent SWITCH_EVENT_PHONE_FEATURE\n";
-						$event .= "profile: ".$sip_profile_name."\n";
-						$event .= "user: ".$this->extension."\n";
-						$event .= "host: ".$this->domain_name."\n";
-						$event .= "device: \n";
-						$event .= "Feature-Event: init\n";
-						$event .= "forward_immediate_enabled: ".$this->forward_all_enabled."\n";
-						$event .= "forward_immediate: ".$this->forward_all_destination."\n";
-						$event .= "forward_busy_enabled: ".$this->forward_busy_enabled."\n";
-						$event .= "forward_busy: ".$this->forward_busy_destination."\n";
-						$event .= "forward_no_answer_enabled: ".$this->forward_no_answer_enabled."\n";
-						$event .= "forward_no_answer: ".$this->forward_no_answer_destination."\n";
-						$event .= "doNotDisturbOn: ".$this->do_not_disturb."\n";
-						$event .= "ringCount: ".$this->ring_count."\n";
-						event_socket_request($fp, $event);
-	
-					fclose($fp);	
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				// Get the SIP profiles for the extension
+				$command = "sofia_contact */{$this->extension}@{$this->domain_name}";
+				$contact_string = event_socket_request($fp, "api ".$command);
+				// The first value in the array will be full matching text, the second one will be the array of profile matches
+				preg_match_all('/sofia\/([^,]+)\/(?:[^,]+)/', $contact_string, $matches);
+				if (sizeof($matches) != 2 || sizeof($matches[1]) < 1) {
+					$profiles = array("internal");
+				} else {
+					// We have at least one profile, get all of the unique profiles
+					$profiles = array_unique($matches[1]);
 				}
+
+				foreach ($profiles as $profile) {
+					//send the event
+					$event = "sendevent SWITCH_EVENT_PHONE_FEATURE\n";
+					$event .= "profile: " . $profile . "\n";
+					$event .= "user: " . $this->extension . "\n";
+					$event .= "host: " . $this->domain_name . "\n";
+					$event .= "device: \n";
+					$event .= "Feature-Event: init\n";
+					$event .= "forward_immediate_enabled: " . $this->forward_all_enabled . "\n";
+					$event .= "forward_immediate: " . $this->forward_all_destination . "\n";
+					$event .= "forward_busy_enabled: " . $this->forward_busy_enabled . "\n";
+					$event .= "forward_busy: " . $this->forward_busy_destination . "\n";
+					$event .= "forward_no_answer_enabled: " . $this->forward_no_answer_enabled . "\n";
+					$event .= "forward_no_answer: " . $this->forward_no_answer_destination . "\n";
+					$event .= "doNotDisturbOn: " . $this->do_not_disturb . "\n";
+					$event .= "ringCount: " . $this->ring_count . "\n";
+					event_socket_request($fp, $event);
+				}
+				fclose($fp);
+			}
 		} //function
 	
 	} //class
