@@ -457,7 +457,7 @@
 		<!-- Value-added Service - Broadsoft Settings - Braodsoft Call Features -->
 		<!-- Feature Key Synchronization -->
 		<!-- No - Disable, Yes - Broadsoft -->
-		<item name="account.{$row.line_number}.broadsoft.syncFeatureKey">{if isset($grandstream_feature_key_sync)}Yes{else}No{/if}</item>
+		<item name="account.{$row.line_number}.broadsoft.syncFeatureKey">{if filter_var($grandstream_feature_key_sync, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
 		<!-- Enable BroadSoft Call Park -->
 		<!-- Yes, No -->
 		<item name="account.{$row.line_number}.broadsoft.callPark">No</item>
@@ -733,17 +733,21 @@
 		<item name="network.md5Password"></item>
 		<!-- Wi-Fi Settings -->
 		<!-- Wi-Fi Function -->
+		{if isset($grandstream_wifi_enable)}
 		<!-- No, Yes -->
-		<item name="wifi.enable">No</item>
+		<item name="wifi.enable">{if filter_var($grandstream_wifi_enable, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
 		<!-- ESSID -->
-		<item name="wifi.essidname"></item>
+		{if isset($grandstream_wifi_essid)}
+		<item name="wifi.essidname">{$grandstream_wifi_essid}</item>
 		<!-- Password -->
-		<item name="wifi.essidpassword"></item>
+		<item name="wifi.essidpassword">{$grandstream_wifi_password}</item>
 		<!-- Security Mode for Hidden SSID -->
 		<!-- None, WEP, WPA/WPA2_PSK, 802.1X_EAP -->
-		<item name="wifi.hiddenessid.securitymode">None</item>
+		<item name="wifi.hiddenessid.securitymode">{$grandstream_wifi_hidden_security}</item>
+		{/if}
 		<!-- Layer 2 QoS 802.1p Priority Value (Wi-Fi) -->
 		<item name="wifi.layer2qos.priority">0</item>
+		{/if}
 		<!-- OpenVPN Settings -->
 		<!-- Enable OpenVPN -->
 		<!-- Yes, No -->
