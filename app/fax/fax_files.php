@@ -115,7 +115,6 @@
 
 //download the fax
 	if ($_GET['a'] == "download") {
-		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
 			if (file_exists($fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'])) {
@@ -349,19 +348,12 @@
 						$page_height = 11.7;
 						$page_size = 'a4';
 					}
-				//generate pdf (a work around, as tiff2pdf improperly inverts the colors)
-					$cmd_tif2pdf = "tiff2pdf -i -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
-					//echo $cmd_tif2pdf."<br>";
+				//generate pdf from tif
+					$cmd_tif2pdf = "tiff2pdf -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
 					exec($cmd_tif2pdf);
-					chdir($dir_fax_temp);
-					$cmd_pdf2tif = "gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$file_name."_temp.tif -- ".$file_name.".pdf -c quit";
-					//echo $cmd_pdf2tif."<br>";
-					exec($cmd_pdf2tif); //convert pdf to tif
-					@unlink($dir_fax_temp.'/'.$file_name.".pdf");
-					$cmd_tif2pdf = "tiff2pdf -i -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax_temp.'/'.$file_name."_temp.tif";
-					//echo $cmd_tif2pdf."<br>";
-					exec($cmd_tif2pdf);
-					@unlink($dir_fax_temp.'/'.$file_name."_temp.tif");
+				//clean up temporary files, if any
+					if (file_exists($dir_fax_temp.'/'.$file_name.'.pdf')) { @unlink($dir_fax_temp.'/'.$file_name.'.pdf'); }
+					if (file_exists($dir_fax_temp.'/'.$file_name.'.tif')) { @unlink($dir_fax_temp.'/'.$file_name.'.tif'); }
 			}
 
 			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {

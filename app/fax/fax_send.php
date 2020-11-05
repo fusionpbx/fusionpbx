@@ -369,7 +369,9 @@ if (!function_exists('fax_split_dtmf')) {
 				$fax_name = str_replace("=", "_", $fax_name);
 
 				$attachment_file_name = $_files['name'][$index];
-				rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				if ($attachment_file_name != $fax_name.'.'.$fax_file_extension) {
+					rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				}
 				unset($attachment_file_name);
 
 				if (!$included) {
@@ -660,41 +662,14 @@ if (!function_exists('fax_split_dtmf')) {
 				@unlink($tif_file);
 			}
 
-			//generate pdf (a work around, as tiff2pdf was improperly inverting the colors)
+			//generate pdf from tif
 			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
-			// echo($cmd . "<br/>\n");
 			exec($cmd);
-
-			chdir($dir_fax_temp);
-
-			//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_instance_uuid).".pdf -- ".correct_path($fax_instance_uuid).".pdf -c quit");
-			// echo($cmd . "<br/>\n");
-			//exec($cmd);
-
-			//convert pdf to tif
-			$cmd = gs_cmd('-q -sDEVICE=tiffg32d -r'.$gs_r.' -g'.$gs_g.' -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile='.
-				correct_path($fax_instance_uuid.'_temp.tif').
-				' -- '.$fax_instance_uuid.'.pdf -c quit');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
-
-			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
-				' -w '.$page_width.
-				' -l '.$page_height.
-				' -f -o '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'_temp.tif');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
 		}
 		else {
 			if (!$included) {
