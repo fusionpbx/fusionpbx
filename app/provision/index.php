@@ -42,6 +42,7 @@
 	$mac = $_REQUEST['mac'];
 	$file = $_REQUEST['file'];
 	$ext = $_REQUEST['ext'];
+	$pretty = $_REQUEST['pretty'];
 	//if (strlen($_REQUEST['template']) > 0) {
 	//	$device_template = $_REQUEST['template'];
 	//}
@@ -426,6 +427,21 @@
 	$prov->mac = $mac;
 	$prov->file = $file;
 	$file_contents = $prov->render();
+
+	// Remove all comments and whitespace if valid XML and if $pretty is empty
+	if (empty($pretty)) {
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = false;
+		if ($dom->loadXML($file_contents) === true) {
+			$xpath = new DOMXPath($dom);
+			// Iterate backwards over the XML file
+			for ($els = $xpath->query('//comment()'), $i = $els->length - 1; $i >= 0; $i--) {
+				$els->item($i)->parentNode->removeChild($els->item($i));
+			}
+			$file_contents = $dom->saveXML();
+		}
+	}
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
