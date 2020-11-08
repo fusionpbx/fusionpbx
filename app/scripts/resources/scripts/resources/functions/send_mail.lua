@@ -19,7 +19,7 @@ if (email_queue_enabled == 'true') then
 		local domain_uuid = headers["X-FusionPBX-Domain-UUID"];
 		local domain_name = headers["X-FusionPBX-Domain-Name"];
 		local email_type = headers["X-FusionPBX-Email-Type"] or 'info';
-		local call_uuid = headers["X-FusionPBX-Email-Call-UUID"];
+		local call_uuid = headers["X-FusionPBX-Call-UUID"];
 		local local_after_email = headers["X-FusionPBX-local_after_email"] or '';
 
 		if (local_after_email == 'false') then
@@ -56,7 +56,9 @@ if (email_queue_enabled == 'true') then
 		sql = sql .. "	email_subject, ";
 		sql = sql .. "	email_body, ";
 		sql = sql .. "	email_status, ";
+		sql = sql .. "	email_uuid, ";
 		sql = sql .. "	email_action_after ";
+		
 		sql = sql .. ") ";
 		sql = sql .. "values ( ";
 		sql = sql .. "	:email_queue_uuid, ";
@@ -68,6 +70,7 @@ if (email_queue_enabled == 'true') then
 		sql = sql .. "	:email_subject, ";
 		sql = sql .. "	:email_body, ";
 		sql = sql .. "	:email_status, ";
+		sql = sql .. "	:email_uuid, ";
 		sql = sql .. "	:email_action_after ";
 		sql = sql .. ") ";
 		local params = {
@@ -79,6 +82,7 @@ if (email_queue_enabled == 'true') then
 			email_subject = email_subject;
 			email_body = email_body;
 			email_status = email_status;
+			email_uuid = call_uuid;
 			email_action_after = email_action_after;
 		}
 		db:query(sql, params);
@@ -156,7 +160,7 @@ else
 			local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 			local domain_name = headers["X-FusionPBX-Domain-Name"]
 			local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
-			local call_uuid = headers["X-FusionPBX-Email-Call-UUID"]
+			local call_uuid = headers["X-FusionPBX-Call-UUID"]
 			local db = dbh or Database.new('system')
 			local settings = Settings.new(db, domain_name, domain_uuid)
 
