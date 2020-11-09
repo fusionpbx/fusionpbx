@@ -428,19 +428,18 @@
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
+	$dom = new DOMDocument;
+	$dom->preserveWhiteSpace = false;
+	$dom->formatOutput = false;
+	$isXML = $dom->loadXML($file_contents, LIBXML_NOERROR|LIBXML_ERR_FATAL|LIBXML_ERR_NONE);
 	// Remove all comments and whitespace if valid XML and if $pretty is empty
-	if (empty($pretty)) {
-		$dom = new DOMDocument;
-		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput = false;
-		if ($dom->loadXML($file_contents) === true) {
-			$xpath = new DOMXPath($dom);
-			// Iterate backwards over the XML file
-			for ($els = $xpath->query('//comment()'), $i = $els->length - 1; $i >= 0; $i--) {
-				$els->item($i)->parentNode->removeChild($els->item($i));
-			}
-			$file_contents = $dom->saveXML();
+	if ($isXML === true && empty($pretty)) {
+		$xpath = new DOMXPath($dom);
+		// Iterate backwards over the XML file
+		for ($els = $xpath->query('//comment()'), $i = $els->length - 1; $i >= 0; $i--) {
+			$els->item($i)->parentNode->removeChild($els->item($i));
 		}
+		$file_contents = $dom->saveXML();
 	}
 
 //deliver the customized config over HTTP/HTTPS
@@ -478,14 +477,12 @@
 			header("Content-Length: ".strlen($file_contents));
 		}
 		else {
-			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result){
-				header("Content-Type: text/plain");
-				header("Content-Length: ".strval(strlen($file_contents)));
-			}
-			else {
+			if ($isXML === true) {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
+			} else {
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
 			}
 		}
 	}
