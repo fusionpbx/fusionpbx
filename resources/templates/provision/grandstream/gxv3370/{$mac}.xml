@@ -27,336 +27,336 @@
 		<!-- Web/SSH Access SSH Port has no alias yet -->
 
 		<!-- Account General Settings -->
-		{foreach $lines as $row}
-		{if $row.line_number neq ""}
+		{for $line=1 to 16}
+		{$row=$lines.$line}
 		<!-- Account Active -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.enable">{if $row.enabled}Yes{else}No{/if}</item>
+		<item name="account.{$line}.enable">{if filter_var($row.enabled, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
 
 		<!-- Account Name -->
-		<item name="account.{$row.line_number}.name">{$row.display_name}</item>
+		<item name="account.{$line}.name">{$row.display_name}</item>
 
 		<!-- SIP Server -->
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$line}.sip.server.1.address">{$row.server_address}</item>
 
 		<!-- SIP User ID -->
-		<item name="account.{$row.line_number}.sip.userid">{$row.user_id}</item>
+		<item name="account.{$line}.sip.userid">{$row.user_id}</item>
 
 		<!-- SIP Authentication ID -->
-		<item name="account.{$row.line_number}.sip.subscriber.userId">{$row.auth_id}</item>
+		<item name="account.{$line}.sip.subscriber.userId">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
-		<item name="account.{$row.line_number}.sip.subscriber.password">{$row.password}</item>
+		<item name="account.{$line}.sip.subscriber.password">{$row.password}</item>
 		<!-- Voice Mail Access Number -->
-		<item name="account.{$row.line_number}.sip.voicemail.number">*97</item>
+		<item name="account.{$line}.sip.voicemail.number">*97</item>
 		<!-- Display Name -->
-		<item name="account.{$row.line_number}.sip.subscriber.name">{$row.display_name}</item>
+		<item name="account.{$line}.sip.subscriber.name">{$row.display_name}</item>
 		<!-- Tel URI -->
 		<!-- Disabled, UserIsPhone, Enabled -->
-		<item name="account.{$row.line_number}.sip.telUri">Disabled</item>
+		<item name="account.{$line}.sip.telUri">Disabled</item>
 		<!-- Account 1 Network Settings -->
 		<!-- Outbound Proxy -->
-		<item name="account.{$row.line_number}.sip.outboundProxy.1.address">{$row.outbound_proxy_primary}</item>
+		<item name="account.{$line}.sip.outboundProxy.1.address">{$row.outbound_proxy_primary}</item>
 		<!-- Secondary Outbound Proxy -->
-		<item name="account.{$row.line_number}.sip.outboundProxy.2.address">{$row.outbound_proxy_secondary}</item>
+		<item name="account.{$line}.sip.outboundProxy.2.address">{$row.outbound_proxy_secondary}</item>
 		<!-- DNS Mode -->
 		<!-- ARecord, SRV, NaptrOrSrv -->
-		<item name="account.{$row.line_number}.network.dnsMode">ARecord</item>
+		<item name="account.{$line}.network.dnsMode">ARecord</item>
 		<!-- DNS SRV Fail-over Mode -->
 		<!-- Default, SavedOneUntilDNSTTL, SavedOneUntilNoResponse -->
-		<item name="account.{$row.line_number}.network.dnsSRVFailoverMode">Default</item>
+		<item name="account.{$line}.network.dnsSRVFailoverMode">Default</item>
 		<!-- NAT Traversal -->
 		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
-		<item name="account.{$row.line_number}.network.natTraversal">Auto</item>
+		<item name="account.{$line}.network.natTraversal">Auto</item>
 		<!-- Proxy-Require -->
-		<item name="account.{$row.line_number}.network.proxyRequire"></item>
+		<item name="account.{$line}.network.proxyRequire"></item>
 		<!-- SIP Registration -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.registration">Yes</item>
+		<item name="account.{$line}.sip.registration">Yes</item>
 		<!-- Unregister Before New Registration -->
 		<!-- No, Yes - All, Instance -->
-		<item name="account.{$row.line_number}.sip.unregisterOnReboot">Instance</item>
+		<item name="account.{$line}.sip.unregisterOnReboot">Instance</item>
 		<!-- Register Expiration (m) -->
-		<item name="account.{$row.line_number}.sip.registerExpiration">{$row.register_expires}</item>
+		<item name="account.{$line}.sip.registerExpiration">{$row.register_expires}</item>
 		<!-- Re-register before Expiration (s)  -->
-		<item name="account.{$row.line_number}.sip.registerBeforeExpiration">0</item>
+		<item name="account.{$line}.sip.registerBeforeExpiration">0</item>
 		<!-- Registration Retry Wait Time (s) -->
-		<item name="account.{$row.line_number}.sip.registrationFailureRetryWaitTime">20</item>
+		<item name="account.{$line}.sip.registrationFailureRetryWaitTime">20</item>
 		<!-- Add Auth Header On RE-REGISTER tobetested -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.header.authOnInitialRegister">Yes</item>
+		<item name="account.{$line}.sip.header.authOnInitialRegister">Yes</item>
 		<!-- Enable SIP OPTIONS Keep Alive -->
-		<item name="account.{$row.line_number}.sip.keepAlive.enable">No</item>
+		<item name="account.{$line}.sip.keepAlive.enable">No</item>
 		<!-- SIP OPTIONS Keep Alive Interval (s)  -->
-		<item name="account.{$row.line_number}.sip.keepAlive.interval">30</item>
+		<item name="account.{$line}.sip.keepAlive.interval">30</item>
 		<!-- SIP OPTIONS Keep Alive Maximum Tries -->
-		<item name="account.{$row.line_number}.sip.keepAlive.maxLost">3</item>
+		<item name="account.{$line}.sip.keepAlive.maxLost">3</item>
 		<!-- Subscribe for MWI -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.subscribe.forMwi">No</item>
+		<item name="account.{$line}.sip.subscribe.forMwi">No</item>
 		<!-- Use Privacy Header -->
 		<!-- Default, No, Yes -->
-		<item name="account.{$row.line_number}.sip.header.privacy">Default</item>
+		<item name="account.{$line}.sip.header.privacy">Default</item>
 		<!-- Use P-Preferred-Identity Header  -->
 		<!-- Default, No, Yes -->
-		<item name="account.{$row.line_number}.sip.header.ppi">Default</item>
+		<item name="account.{$line}.sip.header.ppi">Default</item>
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, TlsOrTcp -->
-		<item name="account.{$row.line_number}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}TlsOrTcp{else}UDP{/if}</item>
+		<item name="account.{$line}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}TlsOrTcp{else}UDP{/if}</item>
 		<!-- Local SIP Port -->
-		<item name="account.{$row.line_number}.sip.localPort">{$row.sip_port}</item>
+		<item name="account.{$line}.sip.localPort">{$row.sip_port}</item>
 		<!-- SIP URI Scheme When Using TLS -->
 		<!-- sip, sips -->
-		<item name="account.{$row.line_number}.sip.uriSchemeWhenUsingTls">sip</item>
+		<item name="account.{$line}.sip.uriSchemeWhenUsingTls">sip</item>
 		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
+		<item name="account.{$line}.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
 		<!-- Support SIP Instance ID -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.supportInstanceId">Yes</item>
+		<item name="account.{$line}.sip.supportInstanceId">Yes</item>
 		<!-- SIP T1 Timeout -->
 		<!-- 0.5 sec - 0_5sec, 1 sec - 1sec, 2 sec - 2sec -->
-		<item name="account.{$row.line_number}.sip.timer.t1">0_5sec</item>
+		<item name="account.{$line}.sip.timer.t1">0_5sec</item>
 		<!-- SIP T2 Interval -->
 		<!-- 2 sec - 2sec, 4 sec - 4sec, 8 sec - 8sec -->
-		<item name="account.{$row.line_number}.sip.timer.t2">4sec</item>
+		<item name="account.{$line}.sip.timer.t2">4sec</item>
 		<!-- SIP Timer D Interval (Seconds) -->
-		<item name="account.{$row.line_number}.sip.timerd.interval">0</item>
+		<item name="account.{$line}.sip.timerd.interval">0</item>
 		<!-- Remove OBP from Route -->
 		<!-- Disable - InRoute, Enable - NotInRoute, Always - AlwaysSentTo -->
-		<item name="account.{$row.line_number}.sip.outboundProxy.mode">InRoute</item>
+		<item name="account.{$line}.sip.outboundProxy.mode">InRoute</item>
 		<!-- Enable 100rel -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.header.100rel">No</item>
+		<item name="account.{$line}.sip.header.100rel">No</item>
 		<!-- Enable Session Timer/Session Expiration (s) -->
 		<!-- Session Timer is disabled if the value is 0 -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.expiration">180</item>
+		<item name="account.{$line}.sip.sessionTimer.expiration">180</item>
 		<!-- Min-SE(s) -->
-		<item name="account.{$row.line_number}.sip.minimumSE">90</item>
+		<item name="account.{$line}.sip.minimumSE">90</item>
 		<!-- UAC Specify Refresher -->
 		<!-- Omit, UAC, UAS -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.refresher.uacSpecify">Omit</item>
+		<item name="account.{$line}.sip.sessionTimer.refresher.uacSpecify">Omit</item>
 		<!-- UAS Specify Refresher -->
 		<!--UAC, UAS -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.refresher.uasSpecify">UAC</item>
+		<item name="account.{$line}.sip.sessionTimer.refresher.uasSpecify">UAC</item>
 		<!-- Caller Request Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.requestTimer.caller">No</item>
+		<item name="account.{$line}.sip.sessionTimer.requestTimer.caller">No</item>
 		<!-- Callee Request Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.requestTimer.callee">No</item>
+		<item name="account.{$line}.sip.sessionTimer.requestTimer.callee">No</item>
 		<!-- Force Timer -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.force">No</item>
+		<item name="account.{$line}.sip.sessionTimer.force">No</item>
 		<!-- Force INVITE -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.sip.sessionTimer.forceInvite">No</item>
+		<item name="account.{$line}.sip.sessionTimer.forceInvite">No</item>
 		<!-- Codec Settings -->
 		<!-- Preferred Vocoder -->
 		<!-- PCMU, PCMA, G_726_32, G_722, G_729AOrB, iLBC, OPUS -->
-		<item name="account.{$row.line_number}.codec.choice.1">PCMU</item>
-		<item name="account.{$row.line_number}.codec.choice.2">PCMA</item>
-		<item name="account.{$row.line_number}.codec.choice.3">G_726_32</item>
-		<item name="account.{$row.line_number}.codec.choice.4">G_722</item>
-		<item name="account.{$row.line_number}.codec.choice.5">G_729AOrB</item>
-		<item name="account.{$row.line_number}.codec.choice.6">iLBC</item>
-		<item name="account.{$row.line_number}.codec.choice.7">OPUS</item>
+		<item name="account.{$line}.codec.choice.1">PCMU</item>
+		<item name="account.{$line}.codec.choice.2">PCMA</item>
+		<item name="account.{$line}.codec.choice.3">G_726_32</item>
+		<item name="account.{$line}.codec.choice.4">G_722</item>
+		<item name="account.{$line}.codec.choice.5">G_729AOrB</item>
+		<item name="account.{$line}.codec.choice.6">iLBC</item>
+		<item name="account.{$line}.codec.choice.7">OPUS</item>
 		<!-- Codec Negotiation Priority -->
 		<!-- Caller, Callee -->
-		<item name="account.{$row.line_number}.codec.negotiatePriority">Callee</item>
+		<item name="account.{$line}.codec.negotiatePriority">Callee</item>
 		<!-- Use First Matching Vocoder in 200OK SDP -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.codec.useFirstMatch">No</item>
+		<item name="account.{$line}.codec.useFirstMatch">No</item>
 		<!-- iLBC Frame Size -->
 		<!-- 20ms, 30ms -->
-		<item name="account.{$row.line_number}.codec.iLBC.frameSize">30ms</item>
+		<item name="account.{$line}.codec.iLBC.frameSize">30ms</item>
 		<!-- G726-32 ITU Payload -->
 		<!-- 2 - 0, Dynamic - 1 -->
-		<item name="account.{$row.line_number}.codec.payloadType.g72632.ITU">1</item>
+		<item name="account.{$line}.codec.payloadType.g72632.ITU">1</item>
 		<!-- G726-32 Dynamic PT -->
 		<!-- Range: 96-126, default: 126 -->
-		<item name="account.{$row.line_number}.codec.payloadType.g72632">126</item>
+		<item name="account.{$line}.codec.payloadType.g72632">126</item>
 		<!-- Opus Payload Type -->
-		<item name="account.{$row.line_number}.codec.payloadType.opus">123</item>
+		<item name="account.{$line}.codec.payloadType.opus">123</item>
 		<!-- DTMF -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.dtmf.sendInAudio">No</item>
-		<item name="account.{$row.line_number}.dtmf.sendInRtp">Yes</item>
-		<item name="account.{$row.line_number}.dtmf.sendInSip">No</item>
+		<item name="account.{$line}.dtmf.sendInAudio">No</item>
+		<item name="account.{$line}.dtmf.sendInRtp">Yes</item>
+		<item name="account.{$line}.dtmf.sendInSip">No</item>
 		<!-- DTMF Payload Type -->
-		<item name="account.{$row.line_number}.codec.payoadType.dtmf">101</item>
+		<item name="account.{$line}.codec.payoadType.dtmf">101</item>
 		<!-- Jitter Buffer Type -->
 		<!-- Fixed, Adaptive -->
-		<item name="account.{$row.line_number}.audio.jitterBufferType">Adaptive</item>
+		<item name="account.{$line}.audio.jitterBufferType">Adaptive</item>
 		<!-- Enable Audio RED with FEC -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.audio.fec.enable">No</item>
+		<item name="account.{$line}.audio.fec.enable">No</item>
 		<!-- Audio FEC Payload Type -->
 		<!-- Range: 96-126, default: 121 -->
-		<item name="account.{$row.line_number}.codec.payloadType.fec.audio">121</item>
+		<item name="account.{$line}.codec.payloadType.fec.audio">121</item>
 		<!-- Audio RED Payload Type -->
 		<!-- Range: 96-126, default: 124 -->
-		<item name="account.{$row.line_number}.codec.payloadType.red">124</item>
+		<item name="account.{$line}.codec.payloadType.red">124</item>
 		<!-- Silence Suppression -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.audio.silenceSuppression">No</item>
+		<item name="account.{$line}.audio.silenceSuppression">No</item>
 		<!-- Voice Frames Per TX -->
-		<item name="account.{$row.line_number}.audio.voiceFramePerTX">2</item>
+		<item name="account.{$line}.audio.voiceFramePerTX">2</item>
 		<!-- Enable Video FEC -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.video.fec.enable">Yes</item>
+		<item name="account.{$line}.video.fec.enable">Yes</item>
 		<!-- Enable RFC5168 Support -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.codec.rfc5168.enable">No</item>
+		<item name="account.{$line}.codec.rfc5168.enable">No</item>
 		<!-- Video FEC Mode  -->
 		<!-- 0 , 1 -->
-		<item name="account.{$row.line_number}.video.fec.mode">0</item>
+		<item name="account.{$line}.video.fec.mode">0</item>
 		<!-- FEC Payload Type -->
 		<!-- Range: 96-126, default: 120 -->
-		<item name="account.{$row.line_number}.codec.payloadType.fec.video">120</item>
+		<item name="account.{$line}.codec.payloadType.fec.video">120</item>
 		<!-- Packetization mode -->
 		<!-- SingleNALUnit, Non-Interleaved -->
 		<!-- [Note] Prefer Non-Interleaved Mode is not supported yet -->
-		<item name="account.{$row.line_number}.codec.packetizationMode">Non-Interleaved</item>
+		<item name="account.{$line}.codec.packetizationMode">Non-Interleaved</item>
 		<!-- H.264 Image Size -->
 		<!-- 720P, 4CIF, VGA, CIF, QVGA, QCIF -->
-		<item name="account.{$row.line_number}.video.h264.imagesize">720P</item>
+		<item name="account.{$line}.video.h264.imagesize">720P</item>
 		<!-- Use H.264 Constrained Profiles -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.codec.h264.CBP.enable">No</item>
+		<item name="account.{$line}.codec.h264.CBP.enable">No</item>
 		<!-- H.264 Profile Type -->
 		<!-- Baseline, Main, High, BP&amp;MP&amp;HP -->
-		<item name="account.{$row.line_number}.codec.H264ProfileType">BP&amp;MP&amp;HP</item>
+		<item name="account.{$line}.codec.H264ProfileType">BP&amp;MP&amp;HP</item>
 		<!-- Video Bit Rate -->
 		<!-- 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
 		<!-- # 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
 		<!-- # 1024 - 1024 kbps, 1280 - 1280 kbps, 1536 - 1536 kbps, 2048 - 2048 kbps. -->
-		<item name="account.{$row.line_number}.video.bitRate">2048</item>
+		<item name="account.{$line}.video.bitRate">2048</item>
 		<!-- SDP Bandwidth Attribute -->
 		<!-- Standard, MediaLevel, SessionLevel, None -->
-		<item name="account.{$row.line_number}.codec.SDPBandwidthAttr">MediaLevel</item>
+		<item name="account.{$line}.codec.SDPBandwidthAttr">MediaLevel</item>
 		<!-- H.264 Payload Type -->
 		<!-- Range: 96-126, default: 99 -->
-		<item name="account.{$row.line_number}.codec.payloadType.h264">99</item>
+		<item name="account.{$line}.codec.payloadType.h264">99</item>
 		<!-- Disable BFCP -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.presentation.BFCP.enable">Yes</item>
+		<item name="account.{$line}.presentation.BFCP.enable">Yes</item>
 		<!-- Presentation H.264 Image Size -->
 		<!-- 1080P, 720P -->
-		<item name="account.{$row.line_number}.presentation.h264.imagesize">1080P</item>
+		<item name="account.{$line}.presentation.h264.imagesize">1080P</item>
 		<!-- Presentation H.264 Profile Type -->
 		<!-- Baseline, Main, High, BP&amp;MP&amp;HP -->
-		<item name="account.{$row.line_number}.presentation.H264ProfileType">BP&amp;MP&amp;HP</item>
+		<item name="account.{$line}.presentation.H264ProfileType">BP&amp;MP&amp;HP</item>
 		<!-- Presentation Video Bit Rate -->
 		<!-- 32 - 32 kbps, 64 - 64 kbps, 96 - 96 kbps, 128 - 128 kbps, 160 - 160 kbps, 192 - 192 kbps -->
 		<!-- # 210 - 210 kbps, 256 - 256 kbps, 384 - 384 kbps, 512 - 512 kbps, 640 - 640 kbps, 768 - 768 kbps -->
 		<!-- # 1024 - 1024 kbps, 1280 - 1280 kbps, 1536 - 1536 kbps, 2048 - 2048 kbps. -->
-		<item name="account.{$row.line_number}.presentation.bitRate">1024</item>
+		<item name="account.{$line}.presentation.bitRate">1024</item>
 		<!-- Presentation Video Frame Rate -->
 		<!-- 5, 10, 15 -->
-		<item name="account.{$row.line_number}.presentation.frameRate">15</item>
+		<item name="account.{$line}.presentation.frameRate">15</item>
 		<!-- BFCP Transport Protocol -->
 		<!-- Automatic, UDP, TCP -->
-		<item name="account.{$row.line_number}.presentation.BFCP.transportProtocol">UDP</item>
+		<item name="account.{$line}.presentation.BFCP.transportProtocol">UDP</item>
 		<!-- SRTP Mode -->
 		<!-- Disabled, EnabledButNotForced, EnabledAndForced -->
-		<item name="account.{$row.line_number}.audio.srtpMode">Disabled</item>
+		<item name="account.{$line}.audio.srtpMode">Disabled</item>
 		<!-- SRTP Key Length -->
 		<!-- AES128And256Bit, AES128Bit, AES256Bit -->
-		<item name="account.{$row.line_number}.audio.srtpKeyLength">AES128And256Bit</item>
+		<item name="account.{$line}.audio.srtpKeyLength">AES128And256Bit</item>
 		<!-- Enable SRTP Key Life Time -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.audio.cryptoLifeTime">Yes</item>
+		<item name="account.{$line}.audio.cryptoLifeTime">Yes</item>
 		<!-- RTCP Destination -->
-		<item name="account.{$row.line_number}.rtcp.destination"></item>
+		<item name="account.{$line}.rtcp.destination"></item>
 		<!-- Symmetric RTP -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.audio.symmetricRTP">No</item>
+		<item name="account.{$line}.audio.symmetricRTP">No</item>
 		<!-- RTP IP Filter -->
 		<!-- Disable, IPOnly, IPandPort -->
-		<item name="account.{$row.line_number}.rtp.filter">Disable</item>
+		<item name="account.{$line}.rtp.filter">Disable</item>
 		<!-- Call Settings -->
 		<!-- Start Video Automatically -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.video.startAuto.enable">Yes</item>
+		<item name="account.{$line}.video.startAuto.enable">Yes</item>
 		<!-- Remote Video Request -->
 		<!-- Prompt, Accept, Deny -->
-		<item name="account.{$row.line_number}.video.request">Prompt</item>
+		<item name="account.{$line}.video.request">Prompt</item>
 		<!-- Auto Answer -->
 		<!-- No, Yes, EnableIntercom/Paging -->
-		<item name="account.{$row.line_number}.call.autoAnswer">EnableIntercom/Paging</item>
+		<item name="account.{$line}.call.autoAnswer">EnableIntercom/Paging</item>
 		<!-- Play Warning Tone for Auto Answer Intercom  -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.intercom.playWarningToneForAutoAnswer">Yes</item>
+		<item name="account.{$line}.intercom.playWarningToneForAutoAnswer">Yes</item>
 		<!-- Intercom Barging -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.intercom.allowBargingByCallInfo">No</item>
+		<item name="account.{$line}.intercom.allowBargingByCallInfo">No</item>
 		<!-- Auto Preview -->
 		<!-- No, Yes, YeswithRinging -->
-		<item name="account.{$row.line_number}.call.autoPreview">Yes</item>
+		<item name="account.{$line}.call.autoPreview">Yes</item>
 		<!-- Send Anonymous -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.call.sendAnonymous">No</item>
+		<item name="account.{$line}.call.sendAnonymous">No</item>
 		<!-- Anonymous Call Rejection -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.call.rejectAnonymousCall">No</item>
+		<item name="account.{$line}.call.rejectAnonymousCall">No</item>
 		<!-- Call Log -->
 		<!-- All, IncomingAndOutgoing, Disable, DonotPromptMissedCall -->
-		<item name="account.{$row.line_number}.call.callLog">All</item>
+		<item name="account.{$line}.call.callLog">All</item>
 		<!-- Enable Call Features -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.featureCodes.callFeatures">No</item>
+		<item name="account.{$line}.featureCodes.callFeatures">No</item>
 		<!-- Transfer on 3 Way Conference Hangup -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.call.transferOnConferenceHangup">No</item>
+		<item name="account.{$line}.call.transferOnConferenceHangup">No</item>
 		<!-- Use # as Dial Key  -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.keyAsSend">Yes</item>
+		<item name="account.{$line}.call.keyAsSend">Yes</item>
 		<!-- DND Call Feature On -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn"></item>
+		<item name="account.{$line}.featureCodes.dndOn"></item>
 		<!-- DND Call Feature Off  -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff"></item>
+		<item name="account.{$line}.featureCodes.dndOff"></item>
 		<!-- No Key Entry Timeout (s) -->
 		<!-- Number: 4 - 15 -->
-		<item name="account.{$row.line_number}.call.noKeyEntryTimeout">4</item>
+		<item name="account.{$line}.call.noKeyEntryTimeout">4</item>
 		<!-- Ring Timeout -->
 		<!-- Number: 10 - 300 -->
-		<item name="account.{$row.line_number}.ring.timeout">60</item>
+		<item name="account.{$line}.ring.timeout">60</item>
 		<!-- Refer-To Use Target Contact -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.call.referToUseTargetContact">No</item>
+		<item name="account.{$line}.call.referToUseTargetContact">No</item>
 		<!-- RFC2543 Hold -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.rfc2543Hold">Yes</item>
+		<item name="account.{$line}.sip.rfc2543Hold">Yes</item>
 		<!-- Dial Plan Prefix -->
-		<item name="account.{$row.line_number}.call.dialplanPrefix"></item>
+		<item name="account.{$line}.call.dialplanPrefix"></item>
 		<!-- Disable DialPlan -->
 		<!-- # Disable DialPlan. 0 - No Selection, 1 - Dial Page, 2 - Contact, 4 - Incoming Call History, 8 -  Outgoing Call History, 16 - MPK & Click2Dial.  -->
 		<!-- # If need to check multiple selections, add the specific values for each selections together. Default value is 0 -->
-		<item name="account.{$row.line_number}.call.dialplan.disableMode">0</item>
+		<item name="account.{$line}.call.dialplan.disableMode">0</item>
 		<!-- DialPlan -->
-		<item name="account.{$row.line_number}.call.dialplan">{$grandstream_dial_plan}</item>
+		<item name="account.{$line}.call.dialplan">{$grandstream_dial_plan}</item>
 		<!-- Caller ID Display -->
 		<!-- Auto, Disabled, Header, PAIHeader -->
 		<!-- [Note] PAI Header is not supported yet -->
-		<item name="account.{$row.line_number}.sip.callerIdDisplay">Auto</item>
+		<item name="account.{$line}.sip.callerIdDisplay">Auto</item>
 		<!-- Account Ring Tone -->
-		<item name="account.{$row.line_number}.ring.ringtone">content://settings/system/ringtone</item>
+		<item name="account.{$line}.ring.ringtone">content://settings/system/ringtone</item>
 		<!-- Ignore Alert-Info Header -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.ring.ignoreSipAlertInfo">No</item>
+		<item name="account.{$line}.ring.ignoreSipAlertInfo">No</item>
 		<!-- Match Incoming Caller ID -->
-		<item name="account.{$row.line_number}.ring.match.1.callerId"></item>
+		<item name="account.{$line}.ring.match.1.callerId"></item>
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.1.ringtone">content://settings/system/ringtone</item>
+		<item name="account.{$line}.ring.match.1.ringtone">content://settings/system/ringtone</item>
 		<!-- Match Incoming Caller ID -->
-		<item name="account.{$row.line_number}.ring.match.2.callerId"></item>
+		<item name="account.{$line}.ring.match.2.callerId"></item>
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.2.ringtone">content://settings/system/ringtone</item>
+		<item name="account.{$line}.ring.match.2.ringtone">content://settings/system/ringtone</item>
 		<!-- Match Incoming Caller ID -->
-		<item name="account.{$row.line_number}.ring.match.3.callerId"></item>
+		<item name="account.{$line}.ring.match.3.callerId"></item>
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$row.line_number}.ring.match.3.ringtone">content://settings/system/ringtone</item>
+		<item name="account.{$line}.ring.match.3.ringtone">content://settings/system/ringtone</item>
 		<!-- ############Ring Tone Value Table###############
                 # Web GUI Option                            Value
                 # Use System Ring tone                      content://settings/system/ringtone
@@ -417,82 +417,81 @@
 		<!-- Account Advanced Settings -->
 		<!-- Check Domain Certificates		 -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.validate.domainCertificates">No</item>
+		<item name="account.{$line}.sip.validate.domainCertificates">No</item>
 		<!-- Validate Certification Chain 	 -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.validate.certificationChain">No</item>
+		<item name="account.{$line}.sip.validate.certificationChain">No</item>
 		<!-- Validate Incoming SIP Messages -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.validate.incomingMessage">No</item>
+		<item name="account.{$line}.sip.validate.incomingMessage">No</item>
 		<!-- Allow Unsolicited REFER -->
 		<!-- Disabled, Enabled, EnabledOrForceAuth -->
-		<item name="account.{$row.line_number}.sip.allowUnsolicitedRefer">Disabled</item>
+		<item name="account.{$line}.sip.allowUnsolicitedRefer">Disabled</item>
 		<!-- Only Accept SIP Requests from Known Servers -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.validate.incomingServer">No</item>
+		<item name="account.{$line}.sip.validate.incomingServer">No</item>
 		<!-- Check SIP User ID for Incoming INVITE  -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.validate.userIdforInvite">No</item>
+		<item name="account.{$line}.sip.validate.userIdforInvite">No</item>
 		<!-- Allow SIP Reset  -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.allowSipReset">No</item>
+		<item name="account.{$line}.sip.allowSipReset">No</item>
 		<!-- Authenticate Incoming INVITE -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.authenticateIncomingInvite">No</item>
+		<item name="account.{$line}.sip.authenticateIncomingInvite">No</item>
 		<!-- SIP Realm Used for Challenge INVITE & NOTIFY -->
-		<item name="account.{$row.line_number}.sipRealmForChallengeINVITE"></item>
+		<item name="account.{$line}.sipRealmForChallengeINVITE"></item>
 		<!-- Virtual Account Group -->
 		<!-- -1 - Default, 0 - 15 - Virtual Account Group 1 - 16 -->
-		<item name="account.{$row.line_number}.virtualGroup">-1</item>
+		<item name="account.{$line}.virtualGroup">-1</item>
 		<!-- Special Feature -->
 		<!-- 100 - Standard, 102 - Broadsoft, 113 - China Mobile, 114 - ZTE IMS, 115 - Mobotix, 116 - ZTE NGN, 117 - Huawei IMS, 123 - NEC, 125 - Worldstone -->
-		<item name="account.{$row.line_number}.sip.specialFeature">100</item>
+		<item name="account.{$line}.sip.specialFeature">100</item>
 		<!-- BLF Call-pickup Prefix  -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">No</item>
+		<item name="account.{$line}.sip.blf.callPickup.forcePrefix">No</item>
 		<!-- EventList BLF URI -->
-		<item name="account.{$row.line_number}.sip.blf.eventlist.uri"></item>
+		<item name="account.{$line}.sip.blf.eventlist.uri"></item>
 		<!-- Force BLF Call-pickup by Prefix -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.prefix">**</item>
+		<item name="account.{$line}.sip.blf.callPickup.prefix">**</item>
 		<!-- Value-added Service - Broadsoft Settings - Braodsoft Call Features -->
 		<!-- Feature Key Synchronization -->
 		<!-- No - Disable, Yes - Broadsoft -->
-		<item name="account.{$row.line_number}.broadsoft.syncFeatureKey">{if filter_var($grandstream_feature_key_sync, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
+		<item name="account.{$line}.broadsoft.syncFeatureKey">{if filter_var($grandstream_feature_key_sync, FILTER_VALIDATE_BOOLEAN)}Yes{else}No{/if}</item>
 		<!-- Enable BroadSoft Call Park -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.broadsoft.callPark">No</item>
+		<item name="account.{$line}.broadsoft.callPark">No</item>
 		<!-- Conference URI -->
-		<item name="account.{$row.line_number}.sip.conferenceUri"></item>
+		<item name="account.{$line}.sip.conferenceUri"></item>
 		<!-- BroadSoft Call Center -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.broadsoft.callCenter">No</item>
+		<item name="account.{$line}.broadsoft.callCenter">No</item>
 
 		<!-- Hoteling Event -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.broadsoft.hoteling">No</item>
+		<item name="account.{$line}.broadsoft.hoteling">No</item>
 
 		<!-- Call Center Status -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.broadsoft.callCenterStatus">No</item>
+		<item name="account.{$line}.broadsoft.callCenterStatus">No</item>
 
 		<!-- Value-added Service - Broadsoft Settings - SCA -->
 		<!-- Enable SCA (Shared Call Appearance) -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sca.enable">{if isset($row.shared_line)}Yes{else}No{/if}</item>
+		<item name="account.{$line}.sca.enable">{if isset($row.shared_line)}Yes{else}No{/if}</item>
 
 		<!-- Enable BargeIn -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sca.bargein.enable">{if isset($row.shared_line)}Yes{else}No{/if}</item>
+		<item name="account.{$line}.sca.bargein.enable">{if isset($row.shared_line)}Yes{else}No{/if}</item>
 		<!-- Auto-filling Pickup Feature Code -->
 		<!-- Yes, No -->
-		<item name="account.{$row.line_number}.sca.autoPickup.enable">Yes</item>
+		<item name="account.{$line}.sca.autoPickup.enable">Yes</item>
 		<!-- Pickup Feature Code -->
-		<item name="account.{$row.line_number}.sca.pickupFeatureCode"></item>
+		<item name="account.{$line}.sca.pickupFeatureCode"></item>
 		<!-- Line-seize Timeout -->
 		<!-- Range: 15 - 60. Default: 15 -->
-		<item name="account.{$row.line_number}.sip.lineSeizeTimeout">15</item>
-		{/if}
-		{/foreach}
+		<item name="account.{$line}.sip.lineSeizeTimeout">15</item>
+		{/for}
 		<!-- Phone Settings - General Settings -->
 		<!-- Local RTP Port -->
 		<!-- Number: 50040 - 65535 -->
