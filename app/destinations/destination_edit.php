@@ -760,7 +760,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) > 0 && $_POST["persistformvar"] != "true") {
 	 	if (is_uuid($_GET["id"])) {
 	 		$destination_uuid = $_GET["id"];
 			$sql = "select * from v_destinations ";
@@ -816,7 +816,7 @@
 	unset($sql, $parameters);
 
 //add an empty row to the array
-	$x = count($dialplan_details);
+	$x = (is_array($dialplan_details)) ? count($dialplan_details) : $x = 0;
 	$limit = $x + 1;
 	while($x < $limit) {
 		$dialplan_details[$x]['domain_uuid'] = $domain_uuid;
