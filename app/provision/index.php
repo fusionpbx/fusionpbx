@@ -432,8 +432,8 @@
 	$dom->preserveWhiteSpace = false;
 	$dom->formatOutput = false;
 	$isXML = $dom->loadXML($file_contents, LIBXML_NOERROR|LIBXML_ERR_FATAL|LIBXML_ERR_NONE);
-	// Remove all comments and whitespace if valid XML and if $pretty is empty
-	if ($isXML === true && empty($pretty)) {
+	// Remove all comments and whitespace if valid XML, $pretty is empty, and enabled in settings
+	if ($isXML === true && empty($pretty) && $provision["minify_xml"] == "true") {
 		$xpath = new DOMXPath($dom);
 		// Iterate backwards over the XML file
 		for ($els = $xpath->query('//comment()'), $i = $els->length - 1; $i >= 0; $i--) {

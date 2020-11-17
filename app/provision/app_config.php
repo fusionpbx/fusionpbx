@@ -487,5 +487,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA upgrade firmware enable Yes or No Default No.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0e9edca0-51ed-43ca-96b4-b0af9055e497";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "minify_xml";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Strip whitespace and comments from well formatted XML configuration files. Default true.";
+		$y++;
 
 ?>
