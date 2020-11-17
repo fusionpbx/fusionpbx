@@ -2913,7 +2913,7 @@
 <!-- Provisioning via. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0 to 2 -->
 <!-- Mandatory -->
-<P212>1</P212>
+<P212>2</P212>
 
 <!-- Config Server Path -->
 <!-- String: serveraddress  -->
