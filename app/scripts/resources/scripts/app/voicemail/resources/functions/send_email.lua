@@ -184,6 +184,7 @@
 					subject = subject:gsub("${voicemail_description}", voicemail_description);
 					subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					subject = subject:gsub("${domain_name}", domain_name);
+					subject = subject:gsub("${new_messages}", new_messages);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
