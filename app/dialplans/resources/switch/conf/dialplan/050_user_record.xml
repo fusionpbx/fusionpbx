@@ -41,7 +41,8 @@
 		<condition field="${from_user_record}" expression="^local$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
-		<condition field="${record_session}" expression="^true$">
+		<condition field="${record_session}" expression="^true$"/>
+		<condition field="destination_number" expression="^(?:(?!\*).)+$">
 			<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true"/>
 			<action application="set" data="record_name=${uuid}.${record_ext}" inline="true"/>
 			<!--<action application="set" data="record_name=${destination_number}-${caller_id_number}_${strftime(%Y-%m-%d %H:%M)}.${record_ext}" inline="true"/>-->
