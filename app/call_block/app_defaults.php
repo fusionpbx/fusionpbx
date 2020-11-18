@@ -26,7 +26,7 @@
 
 if ($domains_processed == 1) {
 
-	  //create a view for call block
+	//create a view for call block
 		$database = new database;
 		$database->execute("DROP VIEW view_call_block;", null);
 		$sql = "CREATE VIEW view_call_block AS ( \n";
@@ -36,6 +36,12 @@ if ($domains_processed == 1) {
 		$sql .= " left join v_extensions as e \n";
 		$sql .= "	on c.extension_uuid = e.extension_uuid \n";
 		$sql .= "); \n";
+		$database = new database;
+		$database->execute($sql, null);
+		unset($sql);
+
+	//set call blocks to inbound if no direction defined
+		$sql = "update v_call_block set call_block_direction = 'inbound' where call_block_direction is null ";
 		$database = new database;
 		$database->execute($sql, null);
 		unset($sql);
