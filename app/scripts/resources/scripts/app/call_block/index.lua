@@ -44,8 +44,10 @@
 	if (session:ready()) then
 		--session:setAutoHangup(false);
 		domain_uuid = session:getVariable("domain_uuid");
+		call_direction = session:getVariable("call_direction");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
+		destination_number = session:getVariable("destination_number");
 		context = session:getVariable("context");
 		call_block = session:getVariable("call_block");
 		extension_uuid = session:getVariable("extension_uuid");
@@ -93,6 +95,7 @@
 				sql = "select * from v_call_block\n";
 				sql = sql .. "where domain_uuid = :domain_uuid \n";
 				sql = sql .. "and call_block_enabled = 'true' \n";
+				sql = sql .. "and call_block_direction = :call_block_direction \n";
 				sql = sql .. "and ( \n";
 				sql = sql .. "	(\n";
 				sql = sql .. "		call_block_name = :call_block_name \n";
@@ -118,9 +121,19 @@
 					sql = sql .. "and (extension_uuid is null or extension_uuid = :extension_uuid) ";
 				end
 				if (extension_uuid ~= nil) then
-					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
+					if (call_direction == 'inbound') then
+						params = {domain_uuid = domain_uuid, call_block_direction = call_direction, call_block_name = caller_id_name, call_block_number = caller_id_number, extension_uuid = extension_uuid};
+					end
+					if (call_direction == 'outbound') then
+						params = {domain_uuid = domain_uuid, call_block_direction = call_direction, call_block_name = caller_id_name, call_block_number = destination_number, extension_uuid = extension_uuid};
+					end
 				else
-					params = {domain_uuid = domain_uuid, call_block_name = caller_id_name, call_block_number = caller_id_number};
+					if (call_direction == 'inbound') then
+						params = {domain_uuid = domain_uuid, call_block_direction = call_direction, call_block_name = caller_id_name, call_block_number = caller_id_number};
+					end
+					if (call_direction == 'outbound') then
+						params = {domain_uuid = domain_uuid, call_block_direction = call_direction, call_block_name = caller_id_name, call_block_number = destination_number};
+					end
 				end
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[dialplan] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
