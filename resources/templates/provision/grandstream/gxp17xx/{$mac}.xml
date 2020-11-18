@@ -773,7 +773,7 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -781,11 +781,19 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
+{if isset($account.1.outbound_proxy_primary)}
+<P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
 <P48></P48>
+{/if}	 
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
+{if isset($account.1.outbound_proxy_secondary)}
+<P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
+{else}
 <P2333></P2333>
+{/if}	
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -816,7 +824,11 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+<P103>{$grandstream_dns_mode}</P103>
+{else}
 <P103>0</P103>
+{/if}
 
 <!-- # Primary IP. Maximum 15 characters -->
 <!-- # String -->
@@ -833,7 +845,11 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
+{if isset($grandstream_nat_traversal)}
+<P52>{$grandstream_nat_traversal}</P52>
+{else}
 <P52>0</P52>
+{/if}
 
 <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
 <!-- # String -->
@@ -911,7 +927,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-<P130>0</P130>
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- # SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- # Number: 0, 1 -->
@@ -936,7 +957,12 @@
 <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($subscribe_mwi)}
+<P99>1</P99>
+{else}
 <P99>0</P99>
+{/if}
+
 
 <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -1017,7 +1043,9 @@
 <!-- # Force BLF Call-pickup by prefix. 0 - Disable, 1 - Enable. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P6752>0</P6752>
+{if isset($grandstream_blf_call_pickup)}
+<P6752>{$grandstream_blf_call_pickup}</P6752>
+{/if}
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -1146,7 +1174,7 @@
 <!-- # Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2347>0</P2347>
+<P2347>1</P2347>
 
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -1217,7 +1245,11 @@
 <!-- # SRTP Mode. 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P183>{$grandstream_srtp}</P183>
+{else}
 <P183>0</P183>
+{/if}
 
 <!-- # Crypto Life Time -->
 <!-- # 0 - No, 1 - Yes. Default is 0 -->
@@ -1448,11 +1480,11 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P417>{$display_name_2}</P417>
+<P417>{$account.2.display_name}</P417>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P402>{$server_address_2}</P402>
+<P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -1460,11 +1492,19 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
+{if isset($account.2.outbound_proxy_primary)}
+<P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
+{else}
 <P403></P403>
+{/if}  
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
+{if isset($account.2.outbound_proxy_secondary)}
+<P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
+{else}
 <P2433></P2433>
+{/if}
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -1472,7 +1512,7 @@
 
 <!-- # SIP User ID -->
 <!-- # String -->
-<P404>{$account.2.user_id}</P404>
+<P404></P404>
 
 <!-- # Authenticate ID -->
 <!-- # String -->
@@ -1495,7 +1535,11 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+<P408>{$grandstream_dns_mode}</P408>
+{else}
 <P408>0</P408>
+{/if}
 
 <!-- # Primary IP. Maximum 15 characters -->
 <!-- # String -->
@@ -1512,7 +1556,11 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
+{if isset($grandstream_nat_traversal)}
+<P414>{$grandstream_nat_traversal}</P414>
+{else}
 <P414>0</P414>
+{/if}
 
 <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
 <!-- # String -->
@@ -1590,7 +1638,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-<P448>0</P448>
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
 
 <!-- # SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- # Number: 0, 1 -->
@@ -1615,7 +1668,12 @@
 <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($subscribe_mwi)}
+<P415>1</P415>
+{else}
 <P415>0</P415>
+{/if}
+
 
 <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -1696,7 +1754,9 @@
 <!-- # Force BLF Call-pickup by prefix. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P6753>0</P6753>
+{if isset($grandstream_blf_call_pickup)}
+<P6753>{$grandstream_blf_call_pickup}</P6753>
+{/if}
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -1895,7 +1955,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P443>{$grandstream_srtp}</P443>
+{else}
 <P443>0</P443>
+{/if}
 
 <!-- #Crypto Life Time -->
 <!-- #0 - No, 1 - Yes. Default is 0 -->
@@ -2120,7 +2184,7 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P502>{$account.3.server_address}</P502>
+<P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -2128,11 +2192,19 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
+{if isset($account.3.outbound_proxy_primary)}
+<P503>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P503>
+{else}
 <P503></P503>
+{/if}  
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
+{if isset($account.3.outbound_proxy_secondary)}
+<P2533>{$account.3.outbound_proxy_secondary}:{$account.3.sip_port}</P2533>
+{else}
 <P2533></P2533>
+{/if}
 
 <!-- # BLF Server -->
 <!-- # String -->
@@ -2163,7 +2235,11 @@
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0  -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+<P508>{$grandstream_dns_mode}</P508>
+{else}
 <P508>0</P508>
+{/if}
 
 <!-- # Primary IP. Maximum 15 characters -->
 <!-- # String -->
@@ -2180,7 +2256,11 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
+{if isset($grandstream_nat_traversal)}
+<P514>{$grandstream_nat_traversal}</P514>
+{else}
 <P514>0</P514>
+{/if}
 
 <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
 <!-- # String -->
@@ -2258,7 +2338,12 @@
 <!-- # SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
 <!-- # Mandatory -->
-<P548>0</P548>
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548>
 
 <!-- # SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 -->
 <!-- # Number: 0, 1 -->
@@ -2283,7 +2368,12 @@
 <!-- # SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication). 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
+{if isset($subscribe_mwi)}
+<P515>1</P515>
+{else}
 <P515>0</P515>
+{/if}
+
 
 <!-- # SUBSCRIBE for Registration. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
@@ -2364,7 +2454,9 @@
 <!-- # Force BLF Call-pickup by prefix. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P6754>0</P6754>
+{if isset($grandstream_blf_call_pickup)}
+<P6754>{$grandstream_blf_call_pickup}</P6754>
+{/if}
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -2562,7 +2654,11 @@
 <!-- # 0 - Disabled, 1 - Enabled but not forced, 2 - Enabled and forced, 3 - Optional. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
+{if isset($grandstream_srtp)}
+<P543>{$grandstream_srtp}</P543>
+{else}
 <P543>0</P543>
+{/if}
 
 <!-- # Crypto Life Time -->
 <!-- # 0 - No, 1 - Yes. Default is 0 -->
