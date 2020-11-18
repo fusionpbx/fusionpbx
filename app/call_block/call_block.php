@@ -203,7 +203,8 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('call_block_country_code', $text['label-country_code'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
@@ -230,7 +231,13 @@
 				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>";
+			echo "	<td class='center'>";
+			switch ($row['call_block_direction']) {
+				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+			}
+			echo "	</td>\n";
+			echo "	<td class='center'>";
 			if (strlen($row['extension']) == 0) {
 				echo $text['label-all'];
 			}
