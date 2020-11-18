@@ -416,7 +416,9 @@
     <!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
 
     <!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
