@@ -109,7 +109,7 @@
 					$dialplan["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
 					$dialplan["dialplan_number"] = $this->destination_number;
-					$dialplan["dialplan_context"] = $_SESSION['context'];
+					$dialplan["dialplan_context"] = $_SESSION['domain_name'];
 					$dialplan["dialplan_continue"] = "false";
 					$dialplan["dialplan_order"] = "210";
 					$dialplan["dialplan_enabled"] = "true";
@@ -267,7 +267,7 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$_SESSION['context']);
+					$cache->delete("dialplan:".$_SESSION['domain_name']);
 
 				//return the dialplan_uuid
 					return $dialplan_response;
@@ -366,7 +366,7 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["context"]);
+										$cache->delete("dialplan:".$_SESSION["domain_name"]);
 										remove_config_from_cache('configuration:callcenter.conf');
 
 									//synchronize configuration
@@ -592,7 +592,7 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["context"]);
+										$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 									//set message
 										message::add($text['message-copy']);

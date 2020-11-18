@@ -64,6 +64,27 @@ $text['description-database_transactions']['ru-ru'] = "Изменения в б�
 $text['description-database_transactions']['sv-se'] = "Databas Transaktioner";
 $text['description-database_transactions']['uk-ua'] = "";
 
+$text['label-user']['en-us'] = "User";
+$text['label-user']['en-gb'] = "User";
+$text['label-user']['ar-eg'] = "";
+$text['label-user']['de-at'] = "Benutzer"; //copied from de-de
+$text['label-user']['de-ch'] = "Benutzer"; //copied from de-de
+$text['label-user']['de-de'] = "Benutzer";
+$text['label-user']['es-cl'] = "";
+$text['label-user']['es-mx'] = "";
+$text['label-user']['fr-ca'] = "Utilisateur";
+$text['label-user']['fr-fr'] = "Utilisateur";
+$text['label-user']['he-il'] = "";
+$text['label-user']['it-it'] = "";
+$text['label-user']['nl-nl'] = "Gebruiker";
+$text['label-user']['pl-pl'] = "";
+$text['label-user']['pt-br'] = "";
+$text['label-user']['pt-pt'] = "";
+$text['label-user']['ro-ro'] = "";
+$text['label-user']['ru-ru'] = "Пользователь";
+$text['label-user']['sv-se'] = "Användare";
+$text['label-user']['uk-ua'] = "";
+
 $text['label-user_uuid']['en-us'] = "User";
 $text['label-user_uuid']['en-gb'] = "User";
 $text['label-user_uuid']['ar-eg'] = "";

@@ -57,7 +57,7 @@
 			$database = new database;
 			$ivr_menus = $database->select($sql, $parameters, 'all');
 			if (!is_array($ivr_menus)) {
-				echo "access denied 63";
+				echo "access denied";
 				exit;
 			}
 			unset($sql, $parameters);
@@ -84,6 +84,7 @@
 			$ivr_menu_name = $ivr_menus[$x]['ivr_menu_name'];
 			$ivr_menu_extension = $ivr_menus[$x]['ivr_menu_extension'];
 			$ivr_menu_ringback = $ivr_menus[$x]['ivr_menu_ringback'];
+			$ivr_menu_context = $ivr_menus[$x]['ivr_menu_context'];
 			$ivr_menu_description = $ivr_menus[$x]['ivr_menu_description'].' ('.$text['label-copy'].')';
 
 		//prepare the ivr menu array
@@ -123,7 +124,7 @@
 			$dialplan[$x]["dialplan_uuid"] = $dialplan_uuid;
 			$dialplan[$x]["dialplan_name"] = $ivr_menu_name;
 			$dialplan[$x]["dialplan_number"] = $ivr_menu_extension;
-			$dialplan[$x]["dialplan_context"] = $_SESSION["context"];
+			$dialplan[$x]["dialplan_context"] = $ivr_menu_context;
 			$dialplan[$x]["dialplan_continue"] = "false";
 			$dialplan[$x]["dialplan_xml"] = $dialplan_xml;
 			$dialplan[$x]["dialplan_order"] = "101";
@@ -156,7 +157,7 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("dialplan:".$_SESSION["context"]);
+			$cache->delete("dialplan:".$ivr_menu_context);
 
 		//set message
 			message::add($text['message-copy']);

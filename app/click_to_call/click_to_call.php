@@ -66,7 +66,7 @@
 			$auto_answer = check_str($_GET['auto_answer']); //true,false
 			$rec = check_str($_GET['rec']); //true,false
 			$ringback = check_str($_GET['ringback']);
-			$context = $_SESSION['context'];
+			$context = $_SESSION['domain_name'];
 
 		//clean up variable values
 			$src = str_replace(array('.','(',')','-',' '), '', $src);

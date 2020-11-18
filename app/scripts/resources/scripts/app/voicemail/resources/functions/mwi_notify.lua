@@ -12,6 +12,11 @@
 		array = explode("/", sofia_contact);
 		sip_profile = array[2];
 
+		--debug info
+		--freeswitch.consoleLog("NOTICE", "sofia_contact */"..account.."\n");
+		--freeswitch.consoleLog("NOTICE", "sip_profile="..sip_profile.."\n");
+		--freeswitch.consoleLog("NOTICE", "sofia_contact="..sofia_contact.."\n");
+
 		--set the variables
 		new_messages   = tonumber(new_messages)   or 0
 		saved_messages = tonumber(saved_messages) or 0
