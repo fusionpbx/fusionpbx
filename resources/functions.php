@@ -438,12 +438,18 @@
 			if (strlen($order_by) == 0) {
 				$order = 'asc';
 			}
-			if ($order == "asc") {
-				$description .= $text['label-order'].': '.$text['label-ascending'];
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+			if ($order_by == $field_name) {
+				if ($order == "asc") {
+					$description .= $text['label-order'].' '.$text['label-descending'];
+					$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+				}
+				else {
+					$description .= $text['label-order'].' '.$text['label-ascending'];
+					$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+				}
 			}
 			else {
-				$description .= $text['label-order'].': '.$text['label-descending'];
+				$description .= $text['label-order'].' '.$text['label-ascending'];
 				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			$html .= "</th>";
