@@ -45,7 +45,7 @@
 			}
 
 	//get the document_root parent directory
-		$document_root_parent = join(array_slice(explode("\\",realpath($_SERVER["DOCUMENT_ROOT"])),0,-1), '/');
+		$document_root_parent = join('/', array_slice(explode("\\",realpath($_SERVER["DOCUMENT_ROOT"])),0,-1));
 
 	//if magic quotes is enabled remove the slashes
 		if (get_magic_quotes_gpc()) {
