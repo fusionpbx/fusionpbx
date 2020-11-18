@@ -567,6 +567,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable phone to query the contact names from the remote phonebook when receiving incoming calls. 0-Disabled (default), 1-Enabled;";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1a703585-bee8-4b77-8e5b-7f1fb29958ff";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_local_directory_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable the Local Directory.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "765e18d9-9440-42be-a858-2c0ef90ee50f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_text_1";
