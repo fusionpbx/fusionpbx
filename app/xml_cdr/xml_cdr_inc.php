@@ -103,7 +103,7 @@
 		$leg = check_str($_REQUEST["leg"]);
 	}
 
-	if(!permission_exists(xml_cdr_b_leg)){
+	if(!permission_exists('xml_cdr_b_leg')){
 		$leg = 'a';
 	}
 
@@ -253,7 +253,7 @@
 			}
 
 			// concatenate the 'or's array, then add to the 'and's array
-			if (sizeof($sql_where_ors) > 0) {
+			if ((is_array($sql_where_ors)) && (sizeof($sql_where_ors) > 0)) {
 				$sql_where_ands[] = "( ".implode(" or ", $sql_where_ors)." )";
 			}
 		}
@@ -263,7 +263,7 @@
 	}
 
 	// concatenate the 'ands's array, add to where clause
-	if (sizeof($sql_where_ands) > 0) {
+	if ((is_array($sql_where_ands)) && (sizeof($sql_where_ands) > 0)) {
 		$sql_where = " and ".implode(" and ", $sql_where_ands);
 	}
 
