@@ -335,7 +335,7 @@
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
 						}
 						if (strlen($destination_accountcode) > 0) {
-							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
 						}
 						if (strlen($destination_carrier) > 0) {
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
@@ -439,7 +439,7 @@
 							if (strlen($destination_accountcode) > 0) {
 								$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "export";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
@@ -1112,7 +1112,7 @@
 		if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
 			foreach($dialplan_details as $row) {
 				if ($row["dialplan_detail_tag"] != "condition") {
-					if ($row["dialplan_detail_tag"] == "action" && $row["dialplan_detail_type"] == "set" && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
+					if ($row["dialplan_detail_tag"] == "action" && ($row["dialplan_detail_type"] == "set" || $row["dialplan_detail_type"] == "export") && strpos($row["dialplan_detail_data"], "accountcode") == 0) { continue; } //exclude set:accountcode actions
 					if (strlen($row['dialplan_detail_uuid']) > 0) {
 						echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".escape($row['dialplan_detail_uuid'])."\">\n";
 					}
