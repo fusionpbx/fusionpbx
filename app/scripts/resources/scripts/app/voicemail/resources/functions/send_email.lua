@@ -48,6 +48,7 @@
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
+				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 				voicemail_description = row["voicemail_description"];
@@ -135,7 +136,7 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcribe_enabled == 'true') then
+					if (transcribe_enabled == 'true' and voicemail_transcription_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					else
 						sql = sql .. "AND template_subcategory = 'default' "
