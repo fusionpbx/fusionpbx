@@ -345,7 +345,7 @@
 			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
-			$array['dialplans'][0]["dialplan_context"] = $_SESSION['context'];
+			$array['dialplans'][0]["dialplan_context"] = $_SESSION['domain_name'];
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
@@ -377,7 +377,7 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("dialplan:".$_SESSION["context"]);
+			$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 		//redirect the user
 			if (isset($action)) {

@@ -2913,7 +2913,7 @@
 <!-- Provisioning via. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0 to 2 -->
 <!-- Mandatory -->
-<P212>1</P212>
+<P212>2</P212>
 
 <!-- Config Server Path -->
 <!-- String: serveraddress  -->
@@ -2921,7 +2921,7 @@
 <P237></P237>
 {elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 

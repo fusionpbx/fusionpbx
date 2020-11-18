@@ -925,4 +925,25 @@ $text['button-move_down']['ru-ru'] = "Переместить вниз";
 $text['button-move_down']['sv-se'] = "Flytta Ned";
 $text['button-move_down']['uk-ua'] = "Перемістити вниз";
 
+$text['confirm-restore']['en-us'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['en-gb'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['ar-eg'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['de-at'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['de-ch'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['de-de'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['es-cl'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['es-mx'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['fr-ca'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['fr-fr'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['he-il'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['it-it'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['nl-nl'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['pl-pl'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['pt-br'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['pt-pt'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['ro-ro'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['ru-ru'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['sv-se'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+$text['confirm-restore']['uk-ua'] = "You are about to restore all <i>unprotected</i> items on this menu.";
+
 ?>

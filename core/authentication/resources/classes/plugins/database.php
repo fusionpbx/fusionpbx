@@ -30,13 +30,15 @@ class plugin_database {
 			$user_authorized = false;
 
 		//check the username and password if they don't match then redirect to the login
-			$sql = "select * from v_users ";
+			$sql = "select u.user_uuid, u.contact_uuid, u.username, u.password, u.salt, u.api_key, u.domain_uuid, d.domain_name ";
+			$sql .= "from v_users as u, v_domains as d ";
+			$sql .= "where u.domain_uuid = d.domain_uuid ";
 			if (strlen($this->key) > 30) {
-				$sql .= "where api_key = :api_key ";
+				$sql .= "and u.api_key = :api_key ";
 				$parameters['api_key'] = $this->key;
 			}
 			else {
-				$sql .= "where lower(username) = lower(:username) ";
+				$sql .= "and lower(u.username) = lower(:username) ";
 				$parameters['username'] = $this->username;
 			}
 			if ($_SESSION["users"]["unique"]["text"] === "global") {
@@ -44,7 +46,7 @@ class plugin_database {
 			}
 			else {
 				//unique username - per domain
-				$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
@@ -56,7 +58,7 @@ class plugin_database {
 					if ($_SESSION["users"]["unique"]["text"] === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
 						//set the domain_uuid
 							$this->domain_uuid = $row["domain_uuid"];
-							$this->domain_name = $_SESSION['domains'][$this->domain_uuid]['domain_name'];
+							$this->domain_name = $row["domain_name"];
 
 						//set the domain session variables
 							$_SESSION["domain_uuid"] = $this->domain_uuid;

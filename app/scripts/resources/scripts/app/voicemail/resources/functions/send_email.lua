@@ -32,8 +32,8 @@
 	function send_email(id, uuid)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
-		local email_method = settings:get('email', 'method', 'text');
 		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 		
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
@@ -48,6 +48,7 @@
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
+				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 				voicemail_description = row["voicemail_description"];
@@ -135,7 +136,7 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcribe_enabled == 'true') then
+					if (transcribe_enabled == 'true' and voicemail_transcription_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
 					else
 						sql = sql .. "AND template_subcategory = 'default' "
@@ -184,6 +185,7 @@
 					subject = subject:gsub("${voicemail_description}", voicemail_description);
 					subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					subject = subject:gsub("${domain_name}", domain_name);
+					subject = subject:gsub("${new_messages}", new_messages);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -202,7 +204,9 @@
 					body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
-					body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+					if (origination_callee_id_name ~= nil) then
+						body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+					end
 					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
@@ -228,7 +232,7 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (string.len(voicemail_mail_to) > 2 and email_method ~= 'queue') then
+			if (string.len(voicemail_mail_to) > 2 and email_queue_enabled == 'false') then
 				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages

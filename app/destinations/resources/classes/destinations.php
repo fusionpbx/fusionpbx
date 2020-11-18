@@ -180,7 +180,12 @@ if (!class_exists('destinations')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x = 0;
 				foreach ($config_list as &$config_path) {
-					include($config_path);
+					try {
+					    include($config_path);
+					}
+					catch (Exception $e) {
+					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					$x++;
 				}
 				$i = 0;
@@ -443,7 +448,12 @@ if (!class_exists('destinations')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x = 0;
 				foreach ($config_list as &$config_path) {
-					include($config_path);
+					try {
+					    include($config_path);
+					}
+					catch (Exception $e) {
+					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					$x++;
 				}
 				$i = 0;
@@ -647,7 +657,12 @@ if (!class_exists('destinations')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x = 0;
 				foreach ($config_list as &$config_path) {
-					include($config_path);
+					try {
+					    include($config_path);
+					}
+					catch (Exception $e) {
+					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					$x++;
 				}
 				$i = 0;
@@ -761,7 +776,7 @@ if (!class_exists('destinations')) {
 					$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$name);
 				}
 
-				if (count($row['result']['data']) > 0 and strlen($row['select_value'][$destination_type]) > 0) {
+				if (is_array($row['result']['data']) && strlen($row['select_value'][$destination_type]) > 0) {
 					$label2 = $label;
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];

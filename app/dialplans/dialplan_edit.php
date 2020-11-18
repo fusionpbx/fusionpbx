@@ -267,6 +267,9 @@
 
 		//clear the cache
 			$cache = new cache;
+			if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
+				$dialplan_context = "*";
+			}
 			$cache->delete("dialplan:".$dialplan_context);
 
 		//set the message

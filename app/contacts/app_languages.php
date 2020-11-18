@@ -4753,8 +4753,8 @@ $text['description-contacts_import_google']['ru-ru'] = "Выберите нуж�
 $text['description-contacts_import_google']['sv-se'] = "Välj de kontakter som skall importeras.";
 $text['description-contacts_import_google']['uk-ua'] = "";
 
-$text['description-contacts_import']['en-us'] = "Export your contacts from outlook to a comma delimitted csv file. Then use this tool to upload and add the contacts from that file.";
-$text['description-contacts_import']['en-gb'] = "Export your contacts from outlook to a comma delimitted csv file. Then use this tool to upload and add the contacts from that file.";
+$text['description-contacts_import']['en-us'] = "Submit or upload delimited data to add multiple records.";
+$text['description-contacts_import']['en-gb'] = "Submit or upload delimited data to add multiple records.";
 $text['description-contacts_import']['ar-eg'] = "";
 $text['description-contacts_import']['de-at'] = "Exportieren Sie Ihre Kontakte aus Outlook in eine CSV Datei und benützen Sie diese Funktion um Ihre Kontakte zu importieren."; //copied from de-de
 $text['description-contacts_import']['de-ch'] = "Exportieren Sie Ihre Kontakte aus Outlook in eine CSV Datei und benützen Sie diese Funktion um Ihre Kontakte zu importieren."; //copied from de-de

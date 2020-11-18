@@ -143,7 +143,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: extension_imports.php');
+				header('Location: contact_import.php');
 				exit;
 			}
 
@@ -209,6 +209,7 @@
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
 						if ($field == 'phone_label') { continue; }
+ 						if ($field == 'contact_url') { continue; } // can remove this after field is removed from the table
 						$selected = '';
 						if ($field == $line_field) {
 							$selected = "selected='selected'";
@@ -270,7 +271,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: extension_imports.php');
+				header('Location: contact_import.php');
 				exit;
 			}
 

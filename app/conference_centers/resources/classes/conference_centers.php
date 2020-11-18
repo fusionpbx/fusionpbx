@@ -89,7 +89,7 @@ if (!class_exists('conference_centers')) {
 				}
 				$sql = "select count(*) from v_conference_rooms as r, v_meetings as p ";
 				if ($not_admin) {
-					$sql .= "v_meeting_users as u, ";
+					$sql .= ",v_meeting_users as u ";
 				}
 				$sql .= "where r.domain_uuid = :domain_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
@@ -373,7 +373,7 @@ if (!class_exists('conference_centers')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -604,7 +604,7 @@ if (!class_exists('conference_centers')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//set message
 									message::add($text['message-toggle']);

@@ -83,6 +83,7 @@
 	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= "lower(call_block_name) like :search ";
+		$sql_search .= "or call_block_country_code like :search ";
 		$sql_search .= "or lower(call_block_number) like :search ";
 		$sql_search .= "or lower(call_block_description) like :search ";
 		$sql_search .= ") ";
@@ -136,7 +137,7 @@
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
-	$sql .= order_by($order_by, $order, 'call_block_number');
+	$sql .= order_by($order_by, $order, ['call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
@@ -202,8 +203,10 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_country_code', $text['label-country_code'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
@@ -228,7 +231,13 @@
 				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>";
+			echo "	<td class='center'>";
+			switch ($row['call_block_direction']) {
+				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+			}
+			echo "	</td>\n";
+			echo "	<td class='center'>";
 			if (strlen($row['extension']) == 0) {
 				echo $text['label-all'];
 			}
@@ -237,6 +246,14 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['call_block_name'])."</td>\n";
+			echo "	<td>";
+			if (permission_exists('call_block_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['call_block_country_code'])."</a>";
+			}
+			else {
+				echo escape($row['call_block_country_code']);
+			}
+			echo "	</td>\n";
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='".$list_row_url."'>".escape(format_phone($row['call_block_number']))."</a>";
