@@ -13,18 +13,18 @@ local vm_message_count do
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
-WHERE v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
+WHERE v.voicemail_enabled = 'true' and v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
 
 local vm_messages_sql = [[SELECT
 ( SELECT count(*)
 	FROM v_voicemail_messages
-	WHERE voicemail_uuid = %s
+	WHERE voicemail_uuid = :voicemail_uuid
 	AND (message_status is null or message_status = '')
 ) as new_messages,
 
 ( SELECT count(*)
 	FROM v_voicemail_messages
-	WHERE voicemail_uuid = %s
+	WHERE voicemail_uuid = :voicemail_uuid
 	AND message_status = 'saved'
 ) as saved_messages
 ]]
@@ -42,38 +42,32 @@ function vm_message_count(account, use_cache)
 	local dbh = Database.new('system')
 	if not dbh then return end
 
+	-- Get the UUID from the cache if enabled/supported
 	local uuid
 	if use_cache and cache.support() then
-		local uuid = cache.get('voicemail_uuid:' .. account)
-		if not uuid then
-			uuid = dbh:first_value(vm_to_uuid_sql, {
-				voicemail_id = id, domain_name = domain_name
-			})
+		uuid = cache.get('voicemail_uuid:' .. account)
+	end
 
-			if uuid and #uuid > 0 then
-				cache.set('voicemail_uuid:' .. account, uuid, 3600)
-			end
+	-- If no UUID cached or if cache is not enabled/supported get the UUID from the database
+	if not uuid then
+		uuid = dbh:first_value(vm_to_uuid_sql, {
+			voicemail_id = id, domain_name = domain_name
+		})
+
+		if uuid and #uuid > 0 and use_cache and cache.support() then
+			cache.set('voicemail_uuid:' .. account, uuid, 3600)
 		end
 	end
 
+	-- Get the count of unread and read messages from the database if there is a valid voicemail account
 	local row
 	if uuid and #uuid > 0 then
-		local sql = string.format(vm_messages_sql, ":voicemail_uuid", ":voicemail_uuid")
-		row = dbh:first_row(sql, {voicemail_uuid = uuid})
-	else
-		local uuid_sql = '(' .. vm_to_uuid_sql .. ')'
-
-		local sql = string.format(vm_messages_sql,
-			uuid_sql, uuid_sql
-		)
-
-		row = dbh:first_row(sql, {
-			voicemail_id = id, domain_name = domain_name
-		})
+		row = dbh:first_row(vm_messages_sql, {voicemail_uuid = uuid})
 	end
 
 	dbh:release()
 
+	-- This condition can be hit if the voicemail box is either disabled or non-existent
 	if not row then return end
 
 	return row.new_messages, row.saved_messages
