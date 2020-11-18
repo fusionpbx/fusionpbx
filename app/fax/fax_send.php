@@ -25,6 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Errol Samuels <voiptology@gmail.com>
+	Corey Moullas <cmoullas@emak.tech>
 */
 
 if (!isset($included)) { $included = false; }
@@ -396,12 +397,8 @@ if (!function_exists('fax_split_dtmf')) {
 				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
 					chdir($dir_fax_temp);
 
-					//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_name).".pdf -- ".correct_path($fax_name).".pdf -c quit");
-					// echo($cmd . "<br/>\n");
-					//exec($cmd);
-
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
+					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
