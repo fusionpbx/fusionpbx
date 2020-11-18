@@ -283,11 +283,13 @@
 						$y = 0;
 						foreach ($device_lines as $row) {
 							if (strlen($row['line_number']) > 0) {
+								$new_line = false;
 								if (is_uuid($row["device_line_uuid"])) {
 									$device_line_uuid = $row["device_line_uuid"];
 								}
 								else {
 									$device_line_uuid = uuid();
+									$new_line = true;
 								}
 								$array['devices'][0]['device_lines'][$y]['domain_uuid'] = $domain_uuid;
 								$array['devices'][0]['device_lines'][$y]['device_uuid'] = $device_uuid;
@@ -296,15 +298,23 @@
 								$array['devices'][0]['device_lines'][$y]['server_address'] = $row["server_address"];
 								if (permission_exists('device_line_outbound_proxy_primary')) {
 									$array['devices'][0]['device_lines'][$y]['outbound_proxy_primary'] = $row["outbound_proxy_primary"];
+								} else if ($new_line && isset($_SESSION['provision']['outbound_proxy_primary'])) {
+									$array['devices'][0]['device_lines'][$y]['outbound_proxy_primary'] = $_SESSION['provision']['outbound_proxy_primary']['text'];
 								}
 								if (permission_exists('device_line_outbound_proxy_secondary')) {
 									$array['devices'][0]['device_lines'][$y]['outbound_proxy_secondary'] = $row["outbound_proxy_secondary"];
+								} else if ($new_line && isset($_SESSION['provision']['outbound_proxy_secondary'])) {
+									$array['devices'][0]['device_lines'][$y]['outbound_proxy_secondary'] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 								}
 								if (permission_exists('device_line_server_address_primary')) {
 									$array['devices'][0]['device_lines'][$y]['server_address_primary'] = $row["server_address_primary"];
+								} else if ($new_line && isset($_SESSION['provision']['server_address_primary'])) {
+									$array['devices'][0]['device_lines'][$y]['server_address_primary'] = $_SESSION['provision']['server_address_primary']['text'];
 								}
 								if (permission_exists('device_line_server_address_secondary')) {
 									$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $row["server_address_secondary"];
+								} else if ($new_line && isset($_SESSION['provision']['server_address_secondary'])) {
+									$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $_SESSION['provision']['server_address_secondary']['text'];
 								}
 								$array['devices'][0]['device_lines'][$y]['display_name'] = $row["display_name"];
 								$array['devices'][0]['device_lines'][$y]['user_id'] = $row["user_id"];
