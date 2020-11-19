@@ -129,7 +129,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "multiple";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: multiple, single";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b132ff5a-da8d-4846-b46d-2f0bfa9ae96b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
@@ -138,6 +138,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require destinations to be unique true or false.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d6cf39aa-edc0-4682-9868-5f8198b3383c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "select_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "default";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: default, dynamic";
+		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
