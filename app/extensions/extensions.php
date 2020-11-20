@@ -79,6 +79,16 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//get total extension count for domain
+if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
+	$sql = "select count(*) from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$total_extensions = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
+}
+
 //add the search term
 	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
@@ -101,15 +111,7 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//get total extension count for domain
-	if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
-		$sql = "select count(*) from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$total_extensions = $database->select($sql, $parameters, 'column');
-		unset($sql, $parameters);
-	}
+
 
 //get total extension count
 	$sql = "select count(*) from v_extensions where true ";
