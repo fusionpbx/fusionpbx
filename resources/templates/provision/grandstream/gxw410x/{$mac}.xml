@@ -567,7 +567,7 @@
     {if isset($grandstream_dial_plan) }
     <P3331>{$grandstream_dial_plan}</P3331>
     {else}
-    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P3331>
+    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P3331>
     {/if}
     
     <!--  Hookflash Duration (X10ms). Default 60. -->
