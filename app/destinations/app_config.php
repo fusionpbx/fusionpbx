@@ -45,6 +45,29 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination_number} XML \${destination_context}";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination_number}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
+		/*
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = 'array';
+		$apps[$x]['destinations'][$y]['label'] = 'other';
+		$apps[$x]['destinations'][$y]['name'] = 'dialplans';
+		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
+		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*411 XML ${context}';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'hangup';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'hangup';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
+		*/
 
 	//permission details
 		$y=0;
@@ -101,6 +124,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "other_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
