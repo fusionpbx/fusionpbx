@@ -43,7 +43,7 @@
 					$select_value = str_replace("\${context}", $_SESSION['domain_name'], $select_value);
 					$select_label = str_replace("\${domain_name}", $_SESSION['domain_name'], $select_label);
 					$select_label = str_replace("\${context}", $_SESSION['domain_name'], $select_label);
-					
+
 					$select_label = str_replace('&low_bar;', '_', $select_label);
 					$select_label = str_replace("&#9993", 'email-icon', $select_label);
 					//$select_label = escape(trim($select_label));
