@@ -48,7 +48,8 @@
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
-		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		$apps[$x]['destinations'][$y]['name'] = "ivr_menus_sub";
+		$apps[$x]['destinations'][$y]['sql'] = "select ivr_menu_name as name, ivr_menu_uuid as uuid from v_ivr_menus ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
@@ -59,24 +60,21 @@
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = 'array';
 		$apps[$x]['destinations'][$y]['label'] = 'ivr_menus_other';
-		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus';
+		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus_other';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 		$z=0;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'top';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-top';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['application'] = 'menu-top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-top';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-back';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'exit';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-exit';
 		//menu-say-phrase
-		//menu-play-sound
 
 	//permission details
 		$y=0;
@@ -120,6 +118,14 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menus_sub_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menus_other_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
