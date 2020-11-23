@@ -206,6 +206,7 @@ if (!class_exists('destinations')) {
 						}
 						array_multisort($option_groups, SORT_ASC, $this->destinations);
 					}
+
 					//add the sql and data to the array
 					if ($this->destinations !== null && is_array($this->destinations)) {
 						$x = 0;
@@ -453,14 +454,14 @@ if (!class_exists('destinations')) {
 					}
 				</script>
 				<?php
-	
+
 				//get the destinations
 				$destination = new destinations;
 				if (!isset($_SESSION['destinations'][$destination_type])) {
 					unset($_SESSION['destinations'][$destination_type]);
 					$_SESSION['destinations'][$destination_type] = $destination->get($destination_type);
 				}
-	
+
 				//get the destination label
 				foreach($_SESSION['destinations'][$destination_type] as $key => $value) {
 					foreach($value as $k => $row) {
@@ -471,10 +472,10 @@ if (!class_exists('destinations')) {
 						}
 					}
 				}
-	
+
 				//add the language object
 				$language2 = new text;
-	
+
 				//build the destination select list in html
 				$response .= "	<select class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
@@ -482,14 +483,18 @@ if (!class_exists('destinations')) {
 					if (permission_exists($destination->singular($key)."_destinations")) {
 						//determine if selected
 						$selected = ($key == $destination_key) ? "selected='selected'" : ''; 
-	
+
 						//add multi-lingual support
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
+							$language2 = new text;
 							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$key);
+							$found = 'true';
 						}
-	
+						if ($key == 'other') {
+							$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+						}
 						//add the application to the select list
-						$response .= "		<option value='".$key."' $selected>".$text2['title-'.$key]." </option>\n";
+						$response .= "		<option value='".$key."' $selected>".$text2['title-'.$key]."</option>\n";
 					}
 				}
 				$response .= "	</select>\n";
@@ -618,21 +623,17 @@ if (!class_exists('destinations')) {
 				$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 				$this->destinations[$x]['select_label'] = "\${name}";
 				$y=0;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'check_voicemail';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'company_directory';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'record';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
 				$y++;
 			}
@@ -814,40 +815,39 @@ if (!class_exists('destinations')) {
 						$this->destinations[$x]['result']['data'] = $result;
 					}
 					if ($row['type'] === 'array') {
-						$this->destinations[$x] = $row['result']['data'];
+						$this->destinations[$x] = $row;
 					}
 					$x++;
 				}
 
 				$this->destinations[$x]['type'] = 'array';
 				$this->destinations[$x]['label'] = 'other';
-				$this->destinations[$x]['name'] = 'dialplans';
+				$this->destinations[$x]['name'] = 'other';
+				$this->destinations[$x]['field']['label'] = "label";
 				$this->destinations[$x]['field']['name'] = "name";
+				$this->destinations[$x]['field']['extension'] = "extension";
 				$this->destinations[$x]['field']['destination'] = "destination";
 				$this->destinations[$x]['select_value']['dialplan'] = "transfer:\${destination}";
 				$this->destinations[$x]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 				$this->destinations[$x]['select_label'] = "\${name}";
 				$y = 0;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'check_voicemail';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*98';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'check_voicemail';
 				$this->destinations[$x]['result']['data'][$y]['extension'] = '*98';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*98 XML ${context}';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'company_directory';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*411';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'company_directory';
 				$this->destinations[$x]['result']['data'][$y]['extension'] = '*411';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*411 XML ${context}';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['name'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['application'] = 'hangup';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '';
 				$y++;
-				$this->destinations[$x]['result']['data'][$y]['label'] = 'record';
-				$this->destinations[$x]['result']['data'][$y]['name'] = '*732';
+				$this->destinations[$x]['result']['data'][$y]['name'] = 'record';
 				$this->destinations[$x]['result']['data'][$y]['extension'] = '*732';
 				$this->destinations[$x]['result']['data'][$y]['destination'] = '*732 XML ${context}';
 				$y++;
+
 			}
 
 			//remove special characters from the name
@@ -875,6 +875,7 @@ if (!class_exists('destinations')) {
 					foreach ($row['result']['data'] as $data) {
 						$select_value = $row['select_value'][$destination_type];
 						$select_label = $row['select_label'];
+						//echo $select_label." ".__line__." ".$name."<br />\n";
 						foreach ($row['field'] as $key => $value) {
 							if ($key == 'destination' and is_array($value)) {
 								if ($value['type'] == 'csv') {
@@ -916,6 +917,12 @@ if (!class_exists('destinations')) {
 							}
 						}
 
+						//view_array($data, false);
+						//echo "name ".$name."\n";
+						//echo "select_value ".$select_value."\n";
+						//echo "select_label ".$select_label."\n";
+						//echo "\n";
+
 						$select_value = str_replace("\${domain_name}", $this->domain_name, $select_value);
 						$select_value = str_replace("\${context}", $this->domain_name, $select_value);
 						$select_label = str_replace("\${domain_name}", $this->domain_name, $select_label);
@@ -942,6 +949,7 @@ if (!class_exists('destinations')) {
 					unset($text);
 				}
 			}
+
 			if (!$selected) {
 				$destination_label = str_replace(":", " ", $destination_value);
 				$destination_label = str_replace("menu-exec-app", "", $destination_label);
@@ -954,7 +962,7 @@ if (!class_exists('destinations')) {
 				//$array[$name][$i]['select_name'] = $select_name;
 				//$array[$name][$i]['select_value'] = $select_value;
 				$array[$name][$i]['destination'] = $destination_value;
-				
+
 				$i++;
 			}
 
