@@ -123,6 +123,10 @@
 	if (strlen($caller_extension_uuid) > 0 && is_uuid($caller_extension_uuid)) {
 		$sql_where_ands[] = "e.extension_uuid = '".$caller_extension_uuid."'";
 	}
+	if (strlen($caller_id_number) > 0) {
+                $mod_caller_id_number = str_replace("*", "%", $caller_id_number);
+                $sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
+        }
 	if (strlen($caller_destination) > 0) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
 		$sql_where_ands[] = "caller_destination like '".$mod_caller_destination."'";
