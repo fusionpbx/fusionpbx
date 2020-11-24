@@ -286,6 +286,21 @@
 		unset($sql, $parameters);
 	}
 
+//get installed languages
+	$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+	foreach ($language_paths as $key => $path) {
+		$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+		$path_array = explode('/', $path);
+		if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
+			unset($language_paths[$key]);
+		}
+		$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key]);
+		if (strlen($language_paths[$key]) == 0) {
+			unset($language_paths[$key]);
+		}
+	}
+
+
 //get the recordings
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -468,14 +483,36 @@
 	echo "	".$text['label-language']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phrase_language' maxlength='255' value=\"".escape($phrase_language)."\">\n";
-	echo "	<br />\n";
-	echo "	".$text['description-language']."\n";
+	echo "  <select class='formfld' type='text' name='phrase_language'>\n";
+	echo "		<option></option>\n";
+
+	if (empty($phrase_language)) {
+		$phrase_language = "$phrase_language_code/$phrase_dialect/$phrase_voice";
+		$language_formatted = "$phrase_language_code-$phrase_dialect $phrase_voice";
+		echo "		<option value='".escape($phrase_language)."'>".escape($language_formatted)."</option>\n";
+	}
+	else {
+		$language_array = explode ('/', $phrase_language);
+		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
+		echo "		<option value='".escape($phrase_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
+	}
+	
+	foreach ($language_paths as $key => $language_variables) {
+		$language_variables = explode ('/',$language_paths[$key]);
+		$language = $language_variables[0];
+		$dialect = $language_variables[1];
+		$voice = $language_variables[2];
+		if ($language_formatted <> "$language-$dialect $voice") {
+			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
+		}
+	}
+	echo "<br />\n";
+	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>";
-	echo "<td class='vncell' valign='top'>".$text['label-structure']."</td>";
+	echo "<td class='vncell' valign='top'>".$text['label-macro']."</td>";
 	echo "<td class='vtable' align='left'>";
 	echo "	<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "		<tr>\n";
@@ -557,7 +594,7 @@
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "	".$text['description-structure']."\n";
+	echo "	".$text['description-macro']."\n";
 	echo "	<br />\n";
 	echo "</td>";
 	echo "</tr>";
