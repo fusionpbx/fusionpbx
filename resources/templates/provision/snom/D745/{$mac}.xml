@@ -59,6 +59,11 @@
     <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
     <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
     <user_mailbox idx="{$row.line_number}" perm="R">{if isset($voicemail_number)}{$voicemail_number}{else}*97{/if}</user_mailbox>
+	{if isset($account.{$row.line_number}.shared_line) }
+	<user_shared_line idx="{$row.line_number}" perm="RW">{$account.{$row.line_number}.shared_line}</user_shared_line>
+	{else}
+	<user_shared_line idx="{$row.line_number}" perm="RW">off</user_shared_line>
+	{/if}
     <user_symmetrical_rtp idx="{$row.line_number}" perm="">on</user_symmetrical_rtp>
     <user_ice idx="{$row.line_number}" perm="">off</user_ice>
     <stun_server idx="{$row.line_number}" perm="R">{$stun_server}{if isset($stun_port)}:{$stun_port}{/if}</stun_server>
