@@ -282,7 +282,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dial_plan";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{\+x+|x+|*x+|*++||\p\a\r\k\+*x+|\f\l\o\w\+*x+|**x+}';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{\+x+|x+|*x+|*++||\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+|**x+}';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the digits that are allowed to be called.";
 		$y++;

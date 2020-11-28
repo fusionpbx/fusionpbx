@@ -208,7 +208,7 @@
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P66></P66>
     <!-- Dial Plan Maxlength = unlimited, default is allow all  -->
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P29>0</P29>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
