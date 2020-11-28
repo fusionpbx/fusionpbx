@@ -410,7 +410,7 @@
 	{if isset($grandstream_dial_plan) }
 	<P290>{$grandstream_dial_plan}</P290>
 	{else}
-	<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+	<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
 	{/if}
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
     <!-- # Number: 0, 1 -->
@@ -981,7 +981,7 @@
     {if isset($grandstream_dial_plan) }
     <P459>{$grandstream_dial_plan}</P459>
     {else}
-    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
     {/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
@@ -1549,7 +1549,7 @@
     {if isset($grandstream_dial_plan) }
     <P559>{$grandstream_dial_plan}</P559>
     {else}
-    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P559>
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P559>
     {/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
@@ -2118,7 +2118,7 @@
     {if isset($grandstream_dial_plan) }
     <P659>{$grandstream_dial_plan}</P659>
     {else}
-    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P659>
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P659>
     {/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
@@ -2689,7 +2689,7 @@
     {if isset($grandstream_dial_plan) }
     <P1759>{$grandstream_dial_plan}</P1759>
     {else}
-    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1759>
+    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1759>
     {/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
@@ -3260,7 +3260,7 @@
     {if isset($grandstream_dial_plan) }
     <P1859>{$grandstream_dial_plan}</P1859>
     {else}
-    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1859>
+    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1859>
     {/if}
 
     <!-- # Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
