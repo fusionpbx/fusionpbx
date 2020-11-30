@@ -1063,6 +1063,11 @@ if (!class_exists('destinations')) {
 										}
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 

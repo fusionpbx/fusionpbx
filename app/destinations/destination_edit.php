@@ -745,6 +745,12 @@
 					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
 					$dialplan_response = $database->message;
+
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
 			}
 
 		//redirect the user
