@@ -625,12 +625,12 @@ if (!class_exists('extension')) {
 										$this->delete_voicemail
 										&& permission_exists('voicemail_delete')
 										&& is_array($voicemail_ids)
-										&& @sizeof($voicemail_ids)
+										&& @sizeof($voicemail_ids) != 0
 										) {
 										//retrieve voicemail uuids
 											$sql = "select voicemail_uuid as uuid from v_voicemails ";
 											$sql .= "where domain_uuid = :domain_uuid ";
-											$sql .= "and voicemail_id in (".implode(',', $voicemail_ids).") ";
+											$sql .= "and voicemail_id in ('".implode("','", $voicemail_ids)."') ";
 											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 											$database = new database;
 											$rows = $database->select($sql, $parameters, 'all');
