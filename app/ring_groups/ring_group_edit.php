@@ -435,6 +435,11 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$ring_group_context);
 
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
+
 		//set the message
 			if ($action == "add") {
 				//save the message to a session variable

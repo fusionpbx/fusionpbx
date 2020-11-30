@@ -243,6 +243,11 @@
 					$cache = new cache;
 					$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
 				//redirect the browser
 					header("Location: conferences.php");
 					exit;

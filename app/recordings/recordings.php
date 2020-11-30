@@ -128,6 +128,11 @@
 		//move the uploaded files
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$recording_filename);
 
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
+
 		//set the message
 			message::add($text['message-uploaded'].": ".htmlentities($recording_filename));
 

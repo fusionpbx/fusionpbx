@@ -425,6 +425,12 @@
 					foreach ($parent_uuids as $x => $row) {
 						$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
 					}
+
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
 						message::add($text['message-add']);

@@ -158,6 +158,11 @@ if (!class_exists('call_flows')) {
 										}
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -248,6 +253,11 @@ if (!class_exists('call_flows')) {
 										foreach ($call_flow_contexts as $call_flow_context) {
 											$cache->delete("dialplan:".$call_flow_context);
 										}
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message

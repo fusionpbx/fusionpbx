@@ -118,6 +118,10 @@
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
 				//revoke temporary permissions
 					$p->delete('dialplan_add', 'temp');
 			}
@@ -1054,6 +1058,11 @@
 											}
 										}
 
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
+										}
+
 									//set message
 										message::add($text['message-delete'].': '.@sizeof($array[$this->table]));
 
@@ -1255,6 +1264,11 @@
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message

@@ -152,6 +152,11 @@ if (!class_exists('phrases')) {
 										$cache->delete("languages:".$phrase_language);
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -300,6 +305,11 @@ if (!class_exists('phrases')) {
 									$cache = new cache;
 									foreach ($phrase_languages as $phrase_language) {
 										$cache->delete("languages:".$phrase_language);
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message

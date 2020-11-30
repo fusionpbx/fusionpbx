@@ -348,6 +348,11 @@ if (!class_exists('fax')) {
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}

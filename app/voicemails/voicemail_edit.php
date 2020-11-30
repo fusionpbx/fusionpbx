@@ -244,6 +244,11 @@
 						$obj->voicemail_destinations_delete($voicemail_destinations_delete);
 					}
 
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
 				//set message
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						message::add($text['message-add']);

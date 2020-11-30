@@ -683,6 +683,11 @@ if (!class_exists('extension')) {
 										$this->xml();
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 
@@ -786,6 +791,11 @@ if (!class_exists('extension')) {
 										}
 									}
 									unset($extensions);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);

@@ -356,6 +356,12 @@
 					//revoke temp permissions
 						$p->delete('fax_add', 'temp');
 						$p->delete('fax_edit', 'temp');
+
+					//clear the destinations session array
+						if (isset($_SESSION['destinations']['array'])) {
+							unset($_SESSION['destinations']['array']);
+						}
+
 				}
 
 				//get the dialplan_uuid
