@@ -369,6 +369,11 @@
 										$cache->delete("dialplan:".$_SESSION["domain_name"]);
 										remove_config_from_cache('configuration:callcenter.conf');
 
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
+										}
+
 									//synchronize configuration
 										save_call_center_xml();
 

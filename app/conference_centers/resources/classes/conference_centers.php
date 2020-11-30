@@ -375,6 +375,11 @@ if (!class_exists('conference_centers')) {
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -605,6 +610,11 @@ if (!class_exists('conference_centers')) {
 								//clear the cache
 									$cache = new cache;
 									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);

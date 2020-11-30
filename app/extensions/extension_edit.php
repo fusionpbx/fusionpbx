@@ -625,6 +625,12 @@
 							if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 								$cache->delete("directory:".$number_alias."@".$user_context);
 							}
+
+						//clear the destinations session array
+							if (isset($_SESSION['destinations']['array'])) {
+								unset($_SESSION['destinations']['array']);
+							}
+
 					}
 
 				//set the message and redirect

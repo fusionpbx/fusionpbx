@@ -457,13 +457,12 @@ if (!class_exists('destinations')) {
 
 				//get the destinations
 				$destination = new destinations;
-				if (!isset($_SESSION['destinations'][$destination_type])) {
-					unset($_SESSION['destinations'][$destination_type]);
-					$_SESSION['destinations'][$destination_type] = $destination->get($destination_type);
+				if (!isset($_SESSION['destinations']['array'][$destination_type])) {
+					$_SESSION['destinations']['array'][$destination_type] = $destination->get($destination_type);
 				}
 
 				//get the destination label
-				foreach($_SESSION['destinations'][$destination_type] as $key => $value) {
+				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
 					foreach($value as $k => $row) {
 						if ($destination_value == $row['destination']) {
 							$destination_key = $key;
@@ -479,7 +478,7 @@ if (!class_exists('destinations')) {
 				//build the destination select list in html
 				$response .= "	<select class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
-				foreach($_SESSION['destinations'][$destination_type] as $key => $value) {
+				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
 					if (permission_exists($destination->singular($key)."_destinations")) {
 						//determine if selected
 						$selected = ($key == $destination_key) ? "selected='selected'" : ''; 
@@ -499,7 +498,7 @@ if (!class_exists('destinations')) {
 				}
 				$response .= "	</select>\n";
 				$response .= "	<select id='".$destination_id."' name='".$destination_name."' class='formfld' style='".$select_style."'>\n";
-				foreach($_SESSION['destinations'][$destination_type] as $key => $value) {
+				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
 					if ($key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : ''; 

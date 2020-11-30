@@ -170,6 +170,11 @@ if (!class_exists('ivr_menu')) {
 										}
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -327,6 +332,11 @@ if (!class_exists('ivr_menu')) {
 									$cache->delete("dialplan:".$_SESSION['domain_name']);
 									foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
 										$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
