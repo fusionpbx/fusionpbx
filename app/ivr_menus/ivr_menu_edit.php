@@ -249,6 +249,12 @@
 						$dialplan_uuid = uuid();
 					}
 
+				//seperate the language components into language, dialect and voice
+					$language_array = explode("/",$ivr_menu_language);
+					$ivr_menu_language = $language_array[0];
+					$ivr_menu_dialect = $language_array[1];
+					$ivr_menu_voice = $language_array[2];
+
 				//prepare the array
 					$array['ivr_menus'][0]["ivr_menu_uuid"] = $ivr_menu_uuid;
 					$array['ivr_menus'][0]["domain_uuid"] = $domain_uuid;
@@ -257,6 +263,8 @@
 					$array['ivr_menus'][0]["ivr_menu_extension"] = $ivr_menu_extension;
 					$array['ivr_menus'][0]["ivr_menu_parent_uuid"] = $ivr_menu_parent_uuid;
 					$array['ivr_menus'][0]["ivr_menu_language"] = $ivr_menu_language;
+					$array['ivr_menus'][0]["ivr_menu_dialect"] = $ivr_menu_dialect;
+					$array['ivr_menus'][0]["ivr_menu_voice"] = $ivr_menu_voice;
 					$array['ivr_menus'][0]["ivr_menu_greet_long"] = $ivr_menu_greet_long;
 					$array['ivr_menus'][0]["ivr_menu_greet_short"] = $ivr_menu_greet_short;
 					$array['ivr_menus'][0]["ivr_menu_invalid_sound"] = $ivr_menu_invalid_sound;
@@ -320,8 +328,6 @@
 					}
 
 				//build the xml dialplan
-					$ivr_menu_language = explode("/",$_POST["ivr_menu_language"]);
-
 					$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\$\">\n";
 					$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
@@ -330,10 +336,10 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
-					if (isset($_POST["ivr_menu_language"])) {
-						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language[0]."\"/>\n";
-						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_language[1]."\"/>\n";
-						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_language[2]."\"/>\n";
+					if (strlen($ivr_menu_language) > 0) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\" inline=\"true\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_dialect."\" inline=\"true\"/>\n";
+						$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_voice ."\" inline=\"true\"/>\n";
 					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
@@ -425,12 +431,6 @@
 					foreach ($parent_uuids as $x => $row) {
 						$cache->delete("configuration:ivr.conf:".$row['ivr_menu_parent_uuid']);
 					}
-
-				//clear the destinations session array
-					if (isset($_SESSION['destinations']['array'])) {
-						unset($_SESSION['destinations']['array']);
-					}
-
 				//set the add message
 					if ($action == "add" && permission_exists('ivr_menu_add')) {
 						message::add($text['message-add']);
@@ -544,9 +544,6 @@
 	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'local_stream://default'; }
 	if (strlen($ivr_menu_invalid_sound) == 0) { $ivr_menu_invalid_sound = 'ivr/ivr-that_was_an_invalid_entry.wav'; }
 	//if (strlen($ivr_menu_confirm_key) == 0) { $ivr_menu_confirm_key = '#'; }
-	if (strlen($ivr_menu_language_code) == 0) { $ivr_menu_language_code = 'en'; }
-	if (strlen($ivr_menu_dialect) == 0) { $ivr_menu_dialect = 'us'; }
-	if (strlen($ivr_menu_voice) == 0) { $ivr_menu_voice = 'callie'; }
 	if (strlen($ivr_menu_tts_engine) == 0) { $ivr_menu_tts_engine = 'flite'; }
 	if (strlen($ivr_menu_tts_voice) == 0) { $ivr_menu_tts_voice = 'rms'; }
 	if (strlen($ivr_menu_confirm_attempts) == 0) { 
@@ -620,7 +617,7 @@
 
 //get the sound files
 	$file = new file;
-	$sound_files = $file->sounds();
+	$sound_files = $file->sounds($ivr_menu_language, $ivr_menu_dialect, $ivr_menu_voice);
 
 //create token
 	$object = new token;
@@ -721,25 +718,17 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <select class='formfld' type='text' name='ivr_menu_language'>\n";
 	echo "		<option></option>\n";
-
-	if (empty($ivr_menu_language)) {
-		$ivr_menu_language = "$ivr_menu_language_code/$ivr_menu_dialect/$ivr_menu_voice";
-		$language_formatted = "$ivr_menu_language_code-$ivr_menu_dialect $ivr_menu_voice";
-		echo "		<option value='".escape($ivr_menu_language)."'>".escape($language_formatted)."</option>\n";
+	if (strlen($ivr_menu_language) > 0) {
+		$language_formatted = $ivr_menu_language."-".$ivr_menu_dialect." ".$ivr_menu_voice;
+		echo "		<option value='".escape($ivr_menu_language.'/'.$ivr_menu_dialect.'/'.$ivr_menu_voice)."' selected='selected'>".escape($language_formatted)."</option>\n";
 	}
-	else {
-		$language_array = explode ('/', $ivr_menu_language);
-		$language_formatted = $language_array[0]."-".$language_array[1]." ".$language_array[2];
-		echo "		<option value='".escape($ivr_menu_language)."' selected='selected'>".escape($language_formatted)."</option>\n";
-	}
-	
 	foreach ($language_paths as $key => $language_variables) {
 		$language_variables = explode ('/',$language_paths[$key]);
 		$language = $language_variables[0];
 		$dialect = $language_variables[1];
 		$voice = $language_variables[2];
-		if ($language_formatted <> "$language-$dialect $voice") {
-			echo "		<option value='$language/$dialect/$voice'>$language-$dialect $voice</option>\n";
+		if ($language_formatted <> $language.'-'.$dialect.' '.$voice) {
+			echo "		<option value='".$language."/".$dialect."/".$voice."'>".$language."-".$dialect." ".$voice."</option>\n";
 		}
 	}
 	echo "<br />\n";
