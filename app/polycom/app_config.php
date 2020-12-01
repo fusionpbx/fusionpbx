@@ -357,6 +357,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Portuguese_Portugal, French_Canada, DTGerman_Germany, Null (default) - Sets the phone language to US English.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "French_Canada, Portuguese_Portugal, DTGerman_Germany, Null (default) to US English.";
 
 ?>
