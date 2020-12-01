@@ -46,7 +46,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "[*]xxxx|[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[1-9]xxT|**x.T";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit Timeouts";
-        $y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6f7cd49-23a6-42c5-8e77-d1ebbd274884";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_digitmap_timeout";
@@ -350,5 +350,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require Provisioning Cert Validation 0=Disabled - 1=Enabled ";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5f80d126-eae1-41af-8c47-5d118ef7be50";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_display_language";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "French_Canada";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Portuguese_Portugal, French_Canada, DTGerman_Germany, Null (default) - Sets the phone language to US English.";
 
 ?>
