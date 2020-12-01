@@ -52,13 +52,29 @@ if ($domains_processed == 1) {
 			}
 		}
 		if (is_array($array) && @sizeof($array) != 0) {
+
+			$p = new permissions;
+			$p->add('ivr_menu_edit', 'temp');
+
 			$database = new database;
 			$database->app_name = 'ivr_menus';
 			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 			$database->save($array);
 			unset($array);
+	
+			$p->delete('ivr_menu_edit', 'temp');
 		}
 	}
+
+	//use the ivr_menu_language to update the language dialect and voice
+	$sql = "update v_ivr_menus set ";
+	$sql .= "ivr_menu_language = split_part(ivr_menu_language, '/', 1), ";
+	$sql .= "ivr_menu_dialect = split_part(ivr_menu_language, '/', 2),  ";
+	$sql .= "ivr_menu_voice = split_part(ivr_menu_language, '/', 3) ";
+	$sql .= "where ivr_menu_language like '%/%/%'; ";
+	$database = new database;
+	$ivr_menus = $database->select($sql, null, 'all');
+	unset($sql);
 
 }
 
