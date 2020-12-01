@@ -84,6 +84,10 @@
 			$ivr_menu_name = $ivr_menus[$x]['ivr_menu_name'];
 			$ivr_menu_extension = $ivr_menus[$x]['ivr_menu_extension'];
 			$ivr_menu_ringback = $ivr_menus[$x]['ivr_menu_ringback'];
+			$ivr_menu_language = $ivr_menus[$x]['ivr_menu_language'];
+			$ivr_menu_dialect = $ivr_menus[$x]['ivr_menu_dialect'];
+			$ivr_menu_voice = $ivr_menus[$x]['ivr_menu_voice'];
+			$ivr_menu_cid_prefix = $ivr_menus[$x]['ivr_menu_cid_prefix'];
 			$ivr_menu_context = $ivr_menus[$x]['ivr_menu_context'];
 			$ivr_menu_description = $ivr_menus[$x]['ivr_menu_description'].' ('.$text['label-copy'].')';
 
@@ -108,12 +112,23 @@
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$ivr_menu_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ivr_menu_extension."\">\n";
+			$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"transfer_ringback=".$ivr_menu_ringback."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
+			if (strlen($ivr_menu_language) > 0) {
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_dialect."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"default_voice=".$ivr_menu_voice ."\" inline=\"true\"/>\n";
+			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"ivr_menu_uuid=".$ivr_menu_uuid."\"/>\n";
+			if (strlen($ivr_menu_cid_prefix) > 0) {
+				$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".$ivr_menu_cid_prefix."#\${caller_id_name}\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=\${caller_id_name}\"/>\n";
+			}
 			$dialplan_xml .= "		<action application=\"ivr\" data=\"".$ivr_menu_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
