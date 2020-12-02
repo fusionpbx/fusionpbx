@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -151,6 +151,12 @@
 			$database = new database;
 			$users = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
+
+		//change the contact string to loopback - Not recommended added for backwards comptability causes multiple problems
+			if ($_SESSION['call_center']['agent_contact_method']['text'] == 'loopback') {
+				$agent_contact = str_replace("user/", "loopback/", $agent_contact);
+				$agent_contact = str_replace("@", "/", $agent_contact);
+			}
 
 		//prepare the array
 			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
