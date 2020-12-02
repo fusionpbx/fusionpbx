@@ -65,7 +65,7 @@ class file {
 	/**
 	 * Get the sounds list of search as a relative path without the rate
 	 */
-	public function sounds($language, $dialect, $voice) {
+	public function sounds($language = 'en', $dialect = 'us', $voice = 'callie') {
 		//set default values
 		if (!isset($language)) { $language = 'en'; }
 		if (!isset($dialect)) { $dialect = 'us'; }
