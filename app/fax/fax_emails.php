@@ -170,9 +170,9 @@ if (is_array($result) && @sizeof($result) != 0) {
 				$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
 
 				//check sender
-				$sender_authorized = false;
-				if (in_array($metadata[0]['from'],$authorized_senders)) { $sender_authorized = true; }
-
+				$sender_email = $metadata[0]['from'];
+				$sender_domain = explode('@', $sender_email)[1];
+				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
 				if ($sender_authorized) {
 
 					//add multi-lingual support

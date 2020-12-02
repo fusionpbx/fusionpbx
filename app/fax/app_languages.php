@@ -3214,8 +3214,8 @@ $text['description-email_outbound_subject_tag']['ru-ru'] = "Установите
 $text['description-email_outbound_subject_tag']['sv-se'] = "Ange E-post ämne för utgående fax.";
 $text['description-email_outbound_subject_tag']['uk-ua'] = "";
 
-$text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
-$text['description-email_outbound_authorized_senders']['en-gb'] = "Define the email address(es) allowed to send faxes through this server.";
+$text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) and/or domains allowed to send faxes through this server.";
+$text['description-email_outbound_authorized_senders']['en-gb'] = "Define the email address(es) and/or domains allowed to send faxes through this server.";
 $text['description-email_outbound_authorized_senders']['ar-eg'] = "";
 $text['description-email_outbound_authorized_senders']['de-at'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen."; //copied from de-de
 $text['description-email_outbound_authorized_senders']['de-ch'] = "Geben Sie die Email Addresse(n) an, von welchen Faxe gesendet werden dürfen."; //copied from de-de
