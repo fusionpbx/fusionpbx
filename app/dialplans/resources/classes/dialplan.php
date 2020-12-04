@@ -1218,9 +1218,11 @@
 								}
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_context from v_".$this->table." ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									if (!permission_exists('dialplan_all')) {
+										$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									}
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
