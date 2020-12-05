@@ -359,7 +359,12 @@
 <!-- SIP Transport -->
 <!-- 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P130>0</P130>
+{$tp=0}
+{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P130>{$tp}</P130>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
