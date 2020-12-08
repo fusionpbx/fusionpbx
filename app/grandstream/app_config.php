@@ -694,5 +694,28 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the security to use when connecting to a hidden SSID. Valid values: None, WEP, WPA/WPA2_PSK, 802.1X_EAP";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "032e7e44-2f61-4d62-ba64-00199a51b4f6";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_override";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP Option 43 and Option 66 to override server. 0 - No, 1 - Yes, 2 - Prefer, fallback when failed. Default is 1. option 2 not on all phones";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b91d347a-4705-4798-92d4-a3a98916f330";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_additional_override";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Additional Override DHCP Option. 0 - None,  1 - Option 150,  2 - Option 160. Default is 0. option will be effective only when grandstream_dhcp_option_override is enabled";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "12d023f4-9fdf-4f4b-830b-f311fcaa2503";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_dhcp_option_override_sip_server";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP Option 120 to Override SIP Server. 0 - No, 1 - Yes. Default is 0";
+		$y++;
 ?>
