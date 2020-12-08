@@ -1082,7 +1082,7 @@ if ($action == 'update') {
 						echo "		</tr>";
 						echo "		<tr>";
 						echo "			<td colspan='4' style='padding-top: 10px;'>";
-						echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_action);
+						echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_actions[$preset_group_id]);
 						echo "			</td>";
 						echo "		</tr>";
 						echo "	</table>";
@@ -1122,7 +1122,6 @@ if ($action == 'update') {
 										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$cond_val_start."\"]').prop('selected', true);\n";
 										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$cond_val_stop."\"]').prop('selected', true);\n";
 									}
-									echo "	$('#dialplan_action_".$preset_group_id." option[value=\"".$dialplan_actions[$preset_group_id]."\"]').prop('selected', true);\n\n";
 									echo "</script>";
 								}
 							}
@@ -1157,7 +1156,7 @@ if ($action == 'update') {
 		echo "		<tr>";
 		echo "			<td>";
 		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });"]);
-		echo "				<span id='default_preset_destination' style=' display: none;'>";
+		echo "				<span id='default_preset_destination' style='display: none;'>";
 		echo 				$destination->select('dialplan', 'default_preset_action', $dialplan_action);
 		echo "				</span>";
 		echo "			</td>";
