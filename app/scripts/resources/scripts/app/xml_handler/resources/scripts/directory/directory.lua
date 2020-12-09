@@ -644,7 +644,7 @@
 							end
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
-							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
+							table.insert(xml, [[								<variable name="export_vars" value="domain_name,accountcode"/>]]);
 							table.insert(xml, [[							</variables>]]);
 							table.insert(xml, [[						</user>]]);
 							table.insert(xml, [[					</users>]]);
