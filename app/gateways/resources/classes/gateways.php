@@ -553,7 +553,7 @@ if (!class_exists('gateways')) {
 
 								//add new gateways to session variables
 									if (is_array($gateways) && @sizeof($gateways) != 0) {
-										foreach ($gateways as $gateway_uuid -> $gateway) {
+										foreach ($gateways as $gateway_uuid => $gateway) {
 											$_SESSION['gateways'][$gateway_uuid] = $gateway['name'];
 										}
 									}
