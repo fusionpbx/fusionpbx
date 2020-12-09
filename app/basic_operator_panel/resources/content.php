@@ -377,7 +377,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 		//record
 		if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 			$call_identifier_record = $ext['call_uuid'];
-			$rec_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
+			$rec_file = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
 			if (file_exists($rec_file)) {
 				$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">";
 			}
