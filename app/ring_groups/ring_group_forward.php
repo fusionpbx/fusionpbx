@@ -24,6 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
@@ -42,6 +43,15 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
+
+//get the list
+	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
+		$domain_uuid = $_SESSION['domain_uuid'];
+	}
+	else {
+		//show only assigned ring groups
+		$domain_uuid = $_SESSION['user']['domain_uuid'];
+	}
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -75,7 +85,6 @@
 			//build array
 				if (is_uuid($row['ring_group_uuid'])) {
 					$array['ring_groups'][$x]['ring_group_uuid'] = $row['ring_group_uuid'];
-					$array['ring_groups'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $row['ring_group_forward_enabled'] == 'true' && $row['ring_group_forward_destination'] != '' ? 'true' : 'false';
 					$array['ring_groups'][$x]['ring_group_forward_destination'] = $row['ring_group_forward_destination'];
 				}
@@ -118,7 +127,7 @@
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
 		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	}
 	$database = new database;
@@ -144,7 +153,8 @@
 	}
 	else {
 		//show only assigned ring groups
-		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
+		$sql = "select r.ring_group_name, r.ring_group_uuid, r.ring_group_extension, r.ring_group_forward_destination, ";
+		$sql .= "r.ring_group_forward_enabled, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
 		$sql .= "and r.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
