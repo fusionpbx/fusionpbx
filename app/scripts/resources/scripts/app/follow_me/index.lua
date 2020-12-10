@@ -80,18 +80,23 @@
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
 						toll_allow = api:executeString(cmd);
 						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+					
+					--get the extensions accountcode
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var accountcode";
+						accountcode = api:executeString(cmd);
 
 					--get the new destination 
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
 						destination_number = api:executeString(cmd);
+
 						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 						count = count + 1;
 						if (count < 5) then
-							count, destination_number = get_forward_all(count, destination_number, domain_name);
+							count, destination_number, toll_allow, accountcode = get_forward_all(count, destination_number, domain_name);
 						end
 				end
 		end
-		return count, destination_number, toll_allow;
+		return count, destination_number, toll_allow, accountcode;
 	end
 
 --get the forward busy
@@ -116,7 +121,7 @@
 	end
 
 --select data from the database
-	local sql = "select follow_me_uuid, toll_allow ";
+	local sql = "select follow_me_uuid, toll_allow, accountcode ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and ( ";
@@ -130,6 +135,7 @@
 	status = dbh:query(sql, params, function(row)
 		follow_me_uuid = row["follow_me_uuid"];
 		extension_toll_allow = row["toll_allow"];
+		accountcode = row["accountcode"];
 	end);
 	--dbh:query(sql, params, function(row);
 
@@ -176,7 +182,7 @@
 			end
 
 			--follow the forwards
-			count, destination_number, toll_allow = get_forward_all(0, row.destination_number, domain_name);
+			count, destination_number, toll_allow, accountcode = get_forward_all(0, row.destination_number, domain_name);
 
 			--update values
 			row['destination_number'] = destination_number
@@ -200,6 +206,7 @@
 				--set the values
 					external = "true";
 					row['user_exists'] = "false";
+					row['accountcode'] = accountcode;
 				--add the row to the destinations array
 					destinations[x] = row;
 			end
@@ -262,6 +269,7 @@
 			group_confirm_key = row.group_confirm_key;
 			group_confirm_file = row.group_confirm_file;
 			toll_allow = row.toll_allow;
+			accountcode = row.accountcode;
 			user_exists = row.user_exists;
 
 		--follow the forwards
@@ -387,7 +395,7 @@
 				--set the destination dial string
 					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
 					destination_delay = destination_delay * 2;
-					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations
