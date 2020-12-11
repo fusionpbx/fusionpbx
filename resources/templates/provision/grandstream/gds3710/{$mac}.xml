@@ -759,7 +759,7 @@ E0Fw0O5Kx31JPa+aSBLDMZAG1+SZ/zfxRYQe7VH8p1g=
     <!-- Automatic Upgrade Interval(m) (value:60~525600) -->
     <P193>10080</P193>
     <!-- DHCP Option 66 Override Server (0:Disable  1:Enable) -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!-- Zero Config (0:Disable  1:Enable) -->
     <P1414>0</P1414>
     <!-- Automatic Upgrade (0:Disable  1:Enable) -->
