@@ -1400,13 +1400,13 @@
 <!-- When set to Yes(1), it will override the configured provision path and method -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- Allow DHCP Option 120 to Override SIP Server -->
 <!-- 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1411>0</P1411>
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
 <!-- Number: 0, 1 -->
