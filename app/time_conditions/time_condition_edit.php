@@ -562,7 +562,11 @@
 			$sql .= "	) ";
 			$sql .= "	or ( ";
 			$sql .= "		dialplan_detail_tag = 'action' ";
-			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
+			$sql .= "		and ";
+			$sql .= "		( ";
+			$sql .= "			dialplan_detail_data not like 'preset=%' ";
+			$sql .= "			or dialplan_detail_data is null ";
+			$sql .= "		) ";
 			$sql .= "	) ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
@@ -578,10 +582,10 @@
 				foreach ($dialplan_details as $row) {
 					if ($row['dialplan_detail_tag'] == 'action') {
 						if ($row['dialplan_detail_group'] == '999') {
-							$dialplan_anti_action = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
+							$dialplan_anti_action = $row['dialplan_detail_type'].($row['dialplan_detail_data'] != '' || $row['dialplan_detail_type'] == 'hangup' ? ':'.$row['dialplan_detail_data'] : null);
 						}
 						else {
-							$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
+							$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].($row['dialplan_detail_data'] != '' || $row['dialplan_detail_type'] == 'hangup' ? ':'.$row['dialplan_detail_data'] : null);
 						}
 					}
 					else if ($row['dialplan_detail_tag'] == 'condition') {
