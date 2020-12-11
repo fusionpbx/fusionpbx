@@ -1619,7 +1619,7 @@ include "root.php";
 			} //end function toggle
 
 
-			public function save($array) {
+			public function save($array, $transaction_save = true) {
 
 				//return the array
 					if (!is_array($array)) { echo "not an array"; return false; }
@@ -2248,7 +2248,7 @@ include "root.php";
 					$user_uuid = $_SESSION['user_uuid'];
 
 				//log the transaction results
-					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
+					if ($transaction_save && file_exists($_SERVER["PROJECT_ROOT"]."/app/database_transactions/app_config.php")) {
 						try {
 							$sql = "insert into v_database_transactions ";
 							$sql .= "(";
