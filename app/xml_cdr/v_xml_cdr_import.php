@@ -509,11 +509,12 @@
 						$p->add("call_recording_add", "temp");
 						$p->add("call_recording_edit", "temp");
 
+						//save the call recording to the database
 						$recording_database = new database;
 						$recording_database->app_name = 'call_recordings';
 						$recording_database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 						$recording_database->domain_uuid = $domain_uuid;
-						$recording_database->save($recordings);
+						$recording_database->save($recordings, false);
 						//$message = $recording_database->message;
 						unset($recordings, $i);
 
