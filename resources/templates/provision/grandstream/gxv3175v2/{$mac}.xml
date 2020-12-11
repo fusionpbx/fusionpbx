@@ -789,9 +789,9 @@
     <P235></P235>
     <!-- DHCP OPtion 66 Override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- When set to Yes(1), it will override the configured Provision Path and method. -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!-- DHCP OPtion 120 Override SIP Server. 0 - No, 1 - Yes. Default is Yes. -->
-    <P1411>1</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
     <!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default is No. -->
     <P1414>0</P1414>
     <!-- Automatic UPgrade. 0 - No, 1 - Check every day, 2 - Check every week, 3 - Check at a Period Time. Default is 0. -->
