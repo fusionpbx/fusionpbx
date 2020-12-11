@@ -187,48 +187,36 @@ if (!class_exists('xml_cdr')) {
 			$this->fields();
 			$field_count = sizeof($this->fields);
 			//$field_count = sizeof($this->fields);
-			$i = 0;
 			if (isset($this->array)) {
 				foreach ($this->array as $row) {
-					$sql = "insert into v_xml_cdr (";
-					$f = 1;
-					if (isset($this->fields)) {
-						foreach ($this->fields as $field) {
-							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
-							if ($field_count == $f) {
-								$sql .= "$field ";
-							}
-							else {
-								$sql .= "$field, ";
-							}
-							$f++;
-						}
-					}
-					$sql .= ")\n";
-					$sql .= "values \n";
-					$sql .= "(";
-					$f = 1;
+					//build the array
 					if (isset($this->fields)) {
 						foreach ($this->fields as $field) {
 							$field = preg_replace('#[^a-zA-Z0-9_\-]#', '', $field);
 							if (isset($row[$field]) && strlen($row[$field]) > 0) {
-								$sql .= ":".$field." \n";
-								$parameters[$field] = $row[$field];
+								$array['xml_cdr'][0][$field] = $row[$field];
 							}
-							else {
-								$sql .= "null\n";
-							}
-							if ($field_count != $f) {
-								$sql .= ",";
-							}
-							$f++;
 						}
 					}
-					$sql .= ")";
+
+					//add the temporary permission
+					$p = new permissions;
+					$p->add("xml_cdr_add", "temp");
+					$p->add("xml_cdr_edit", "temp");
+
+					//save the call details record to the database
 					$database = new database;
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
-					$i++;
+					$database->app_name = 'xml_cdr';
+					$database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+					$database->domain_uuid = $domain_uuid;
+					$database->save($array, false);
+					//$message = $database->message;
+					//print_r($message);
+
+					//remove the temporary permission
+					$p->delete("xml_cdr_add", "temp");
+					$p->delete("xml_cdr_edit", "temp");
+					unset($array);
 				}
 			}
 
@@ -509,7 +497,12 @@ if (!class_exists('xml_cdr')) {
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
 						elseif (strlen($xml->variables->record_name) > 0) {
-							$record_path = urldecode($xml->variables->record_path);
+							if (isset($xml->variables->record_path)) {
+								$record_path = urldecode($xml->variables->record_path);
+							}
+							else {
+								$record_path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
+							}
 							$record_name = urldecode($xml->variables->record_name);
 							$record_length = urldecode($xml->variables->duration);
 						}
@@ -576,7 +569,7 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 
-					// Last check
+					//last check
 						 if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
 							$bridge_uuid = urldecode($xml->variables->bridge_uuid);
 							$path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
@@ -598,6 +591,13 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
+
+					//debug information
+						//echo "line: ".__line__;
+						//echo "record_path: ".$record_path."\n";
+						//echo "record_name: ".$record_name."\n";
+						//echo "record_length: ".$record_length."\n";
+						//exit;
 
 					//add the call recording
 						if (isset($record_path) && isset($record_name) && file_exists($record_path.'/'.$record_name) && $record_length > 0) {
@@ -627,8 +627,8 @@ if (!class_exists('xml_cdr')) {
 									$database->app_name = 'call_recordings';
 									$database->app_uuid = '56165644-598d-4ed8-be01-d960bcb8ffed';
 									$database->domain_uuid = $domain_uuid;
-									$database->save($array);
-									$message = $database->message;
+									$database->save($array, false);
+									//$message = $database->message;
 
 									//remove the temporary permission
 									$p->delete("call_recording_add", "temp");
