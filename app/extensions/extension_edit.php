@@ -800,6 +800,19 @@
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get the emergency destinations
+	if (permission_exists('emergency_caller_id_select')) {
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "and destination_type_emergency = 1 ";
+		$sql .= "order by destination_number asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$emergency_destinations = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
+
 //change toll allow delimiter
 	$toll_allow = str_replace(':',',', $toll_allow);
 
@@ -1298,7 +1311,31 @@
 		echo "    ".$text['label-emergency_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (permission_exists('outbound_caller_id_select')) {
+		if (permission_exists('emergency_caller_id_select')) {
+			if (count($emergency_destinations) > 0) {
+				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($emergency_destinations as &$row) {
+					$tmp = $row["destination_caller_id_name"];
+					if(strlen($tmp) == 0){
+						$tmp = $row["destination_description"];
+					}
+					if(strlen($tmp) > 0){
+						if ($emergency_caller_id_name == $tmp) {
+							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+						}
+						else {
+							echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+						}
+					}
+				}
+				echo "	</select>\n";
+			}
+			else {
+				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			}
+		}
+		elseif (permission_exists('outbound_caller_id_select')) {
 			if (count($destinations) > 0) {
 				echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
 				echo "		<option value=''></option>\n";
@@ -1342,14 +1379,38 @@
 		echo "    ".$text['label-emergency_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (permission_exists('outbound_caller_id_select')) {
+		if (permission_exists('emergency_caller_id_select')) {
+			if (count($emergency_destinations) > 0) {
+				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
+				//echo "	<option value=''></option>\n"; Don't allow no selection when validating emergency numbers this way
+				foreach ($emergency_destinations as &$row) {
+					$tmp = $row["destination_caller_id_number"];
+					if(strlen($tmp) == 0){
+						$tmp = $row["destination_number"];
+					}
+					if(strlen($tmp) > 0){
+						if ($emergency_caller_id_number == $tmp) {
+							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
+						}
+						else {
+							echo "		<option value='".escape($tmp)."'>".escape($tmp)."</option>\n";
+						}
+					}
+				}
+				echo "		</select>\n";
+			}
+			else {
+				echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			}
+		}
+		elseif (permission_exists('outbound_caller_id_select')) {
 			if (count($destinations) > 0) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
 				echo "	<option value=''></option>\n";
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(strlen($tmp) == 0){
-						$tmp = $row["destination_description"];
+						$tmp = $row["destination_number"];
 					}
 					if(strlen($tmp) > 0){
 						if ($emergency_caller_id_number == $tmp) {
@@ -1370,7 +1431,10 @@
 			echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($emergency_caller_id_number)."\">\n";
 		}
 		echo "<br />\n";
-		if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
+		if (permission_exists('emergency_caller_id_select') && count($emergency_destinations) > 0){
+			echo $text['description-emergency_caller_id_number-select']."\n";
+		}
+		elseif (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
 			echo $text['description-emergency_caller_id_number-select']."\n";
 		}
 		else {
