@@ -112,7 +112,7 @@
 <!-- When set to Yes(1), it will override the configured provision path and method. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0, 1, 2, 3 -->
@@ -300,7 +300,7 @@
 <!-- Allow DHCP Option 120( override SIP server )  0 - No, 1 - Yes. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1411>0</P1411>
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
 <!-- SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
 <!-- Number: 0, 1, 2 -->
