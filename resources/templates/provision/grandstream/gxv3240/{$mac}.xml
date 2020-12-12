@@ -4883,11 +4883,11 @@
 <!-- Allow DHCP Option 43 and Option 66 to Override Server. 0 - No, 1 - Yes. Default value is 1 -->
 <!-- When set to Yes(1), it will override the configured provision path and method -->
 <!-- Number: 0, 1 -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- DHCP Option 120 Override SIP Server.  0 - No, 1 - Yes. Default value is 1 -->
 <!-- Number: 0, 1 -->
-<P1411>1</P1411>
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
 
 <!-- Allow DHCP Option 242 (Avaya IP Phones). 0 - No, 1 - Yes. Default value is 1 -->
 <!-- Number: 0, 1 -->
