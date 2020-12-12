@@ -196,7 +196,7 @@
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0,1,2,3 -->
