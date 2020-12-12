@@ -123,6 +123,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_emergency";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -286,6 +289,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_fax";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for fax calls.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_emergency";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used to place emergency calls.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_text";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
