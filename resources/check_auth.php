@@ -65,12 +65,12 @@
 
 		//validate the username and password
 			$auth = new authentication;
-			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
-				$auth->username = $_REQUEST["username"];
-				$auth->password = $_REQUEST["password"];
-			}
 			if (isset($_REQUEST["key"])) {
 				$auth->key = $_REQUEST["key"];
+			}
+			elseif (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+				$auth->username = $_REQUEST["username"];
+				$auth->password = $_REQUEST["password"];
 			}
 			$auth->debug = false;
 			$result = $auth->validate();
