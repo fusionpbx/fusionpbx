@@ -441,6 +441,8 @@
 			$parameters['follow_me_uuid'] = $follow_me_uuid;
 			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
+
+			unset($destinations);
 			foreach ($result as $x => &$row) {
 				$destinations[$x]['uuid'] = $row["follow_me_destination_uuid"];
 				$destinations[$x]['destination'] = $row["follow_me_destination"];
@@ -493,6 +495,7 @@
 	echo "});\n";
 	echo "</script>\n";
 	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
