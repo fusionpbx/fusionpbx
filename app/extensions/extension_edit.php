@@ -131,6 +131,24 @@
 			if (!is_numeric($voicemail_id)) {
 				$voicemail_id = NULL;
 			}
+		
+			$cidrs = preg_split("/[\s,]+/", $cidr);
+			$ips = array();
+			foreach ($cidrs as $ipaddr){
+                                $cx = strpos($ipaddr, '/');
+                                if ($cx){
+                                        $subnet = (int)(substr($ipaddr, $cx+1));
+                                        $ipaddr = substr($ipaddr, 0, $cx);
+                                }
+                                else{
+                                        $subnet = 32;
+                                }
+
+                                if(($addr = inet_pton($ipaddr)) !== false){
+                                        $ips[] = $ipaddr.'/'.$subnet;
+                                }
+                        }
+                        $cidr = implode(',',$ips);
 	}
 
 //delete the user from the v_extension_users
