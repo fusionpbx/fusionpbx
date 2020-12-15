@@ -1,3 +1,4 @@
+ 
 <?php
 /*
 	FusionPBX
@@ -418,6 +419,14 @@
 							$p->delete('dialplan_edit', 'temp');
 							$p->delete('dialplan_detail_add', 'temp');
 							$p->delete('dialplan_detail_edit', 'temp');
+
+						//add dialplan xml when the dialplan_xml is null
+							$this->source = 'details';
+							$this->destination = 'database';
+							$this->context = $domain['domain_name'];
+							$this->is_empty = 'dialplan_xml';
+							$this->xml();
+
 					} //foreach domains
 			}
 
