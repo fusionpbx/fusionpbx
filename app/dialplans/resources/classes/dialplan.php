@@ -579,7 +579,7 @@
 							$sql .= "dialplan_order asc ";
 							$database = new database;
 							$results = $database->select($sql, $parameters, 'all');
-							if (is_array($result) && @sizeof($result) != 0) {
+							if (is_array($results) && @sizeof($results) != 0) {
 								foreach ($results as $row) {
 									$dialplans[$row["dialplan_uuid"]] = $row["dialplan_xml"];
 								}
