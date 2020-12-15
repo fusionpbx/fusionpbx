@@ -133,6 +133,24 @@
 				$voicemail_id = null;
 			}
 
+			$cidrs = preg_split("/[\s,]+/", $cidr);
+                        $ips = array();
+                        foreach ($cidrs as $ipaddr){
+                                $cx = strpos($ipaddr, '/');
+                                if ($cx){
+                                        $subnet = (int)(substr($ipaddr, $cx+1));
+                                        $ipaddr = substr($ipaddr, 0, $cx);
+                                }
+                                else{
+                                        $subnet = 32;
+                                }
+
+                                if(($addr = inet_pton($ipaddr)) !== false){
+                                        $ips[] = $ipaddr.'/'.$subnet;
+                                }
+                        }
+                        $cidr = implode(',',$ips);
+		
 		//change toll allow delimiter
 			$toll_allow = str_replace(',',':', $toll_allow);
 
