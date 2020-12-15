@@ -92,7 +92,7 @@
     <P235></P235>
     <!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- When set to Yes(1), it will override the configured provision path and method. -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!-- Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
     <P194>0</P194>
     <!-- Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
