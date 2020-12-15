@@ -680,6 +680,7 @@ if (!class_exists('xml_cdr')) {
 								$sql .= "and (extension = :callee_id_number or number_alias = :last_sent_callee_id_number) ";
 								$parameters['domain_uuid'] = $domain_uuid;
 								$parameters['callee_id_number'] = $xml->variables->callee_id_number;
+								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
 								$database = new database;
 								$extension_uuid = $database->select($sql, $parameters, 'column');
 								$this->array[$key]['extension_uuid'] = $extension_uuid;
