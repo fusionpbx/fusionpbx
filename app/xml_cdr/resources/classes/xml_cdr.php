@@ -648,11 +648,11 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//get the extension_uuid and then add it to the database fields array
-						if (strlen($xml->variables->extension_uuid) > 0) {
+						if (isset($xml->variables->extension_uuid)) {
 							$this->array[$key]['extension_uuid'] = urldecode($xml->variables->extension_uuid);
 						}
 						else {
-							if (strlen($xml->variables->dialed_user) > 0) {
+							if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
 								$sql = "select extension_uuid from v_extensions ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and (extension = :dialed_user or number_alias = :dialed_user) ";
@@ -663,7 +663,7 @@ if (!class_exists('xml_cdr')) {
 								$this->array[$key]['extension_uuid'] = $extension_uuid;
 								unset($parameters);
 							}
-							if (strlen($xml->variables->referred_by_user) > 0) {
+							if (isset($domain_uuid) && isset($xml->variables->referred_by_user)) {
 								$sql = "select extension_uuid from v_extensions ";
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and (extension = :referred_by_user or number_alias = :referred_by_user) ";
@@ -674,12 +674,11 @@ if (!class_exists('xml_cdr')) {
 								$this->array[$key]['extension_uuid'] = $extension_uuid;
 								unset($parameters);
 							}
-							if (strlen($xml->variables->last_sent_callee_id_number) > 0) {
+							if (isset($domain_uuid) && isset($xml->variables->last_sent_callee_id_number)) {
 								$sql = "select extension_uuid from v_extensions ";
 								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and (extension = :callee_id_number or number_alias = :last_sent_callee_id_number) ";
+								$sql .= "and (extension = :last_sent_callee_id_number or number_alias = :last_sent_callee_id_number) ";
 								$parameters['domain_uuid'] = $domain_uuid;
-								$parameters['callee_id_number'] = $xml->variables->callee_id_number;
 								$parameters['last_sent_callee_id_number'] = $xml->variables->last_sent_callee_id_number;
 								$database = new database;
 								$extension_uuid = $database->select($sql, $parameters, 'column');
