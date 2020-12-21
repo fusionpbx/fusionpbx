@@ -46,4 +46,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Path to web server error log file.";
 		$y++;
+
 ?>
