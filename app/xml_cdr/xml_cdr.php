@@ -444,7 +444,7 @@
 				echo "			<option value='destination_number' ".($order_by == 'destination_number' ? "selected='selected'" : null).">".$text['label-destination']."</option>\n";
 			}
 			if (permission_exists('xml_cdr_start')) {
-				echo "			<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
+				echo "			<option value='start_epoch' ".($order_by == 'start_epoch' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
 			}
 			if (permission_exists('xml_cdr_tta')) {
 				echo "			<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
