@@ -107,6 +107,7 @@
 			$destination_type_voice = $_POST["destination_type_voice"];
 			$destination_type_fax = $_POST["destination_type_fax"];
 			$destination_type_text = $_POST["destination_type_text"];
+			$destination_type_emergency = $_POST["destination_type_emergency"];
 			$destination_carrier = trim($_POST["destination_carrier"]);
 
 		//get the destination app and data
@@ -671,6 +672,9 @@
 					$array['destinations'][0]["destination_type_voice"] = $destination_type_voice ? 1 : null;
 					$array['destinations'][0]["destination_type_fax"] = $destination_type_fax ? 1 : null;
 					$array['destinations'][0]["destination_type_text"] = $destination_type_text ? 1 : null;
+					if (permission_exists('destination_emergency')){
+						$array['destinations'][0]["destination_type_emergency"] = $destination_type_emergency ? 1 : null;
+					}
 					if ($destination->valid($destination_app.':'.$destination_data)) {
 						$array['destinations'][0]["destination_app"] = $destination_app;
 						$array['destinations'][0]["destination_data"] = $destination_data;
@@ -792,6 +796,7 @@
 				$destination_type_voice = $row["destination_type_voice"];
 				$destination_type_fax = $row["destination_type_fax"];
 				$destination_type_text = $row["destination_type_text"];
+				$destination_type_emergency = $row["destination_type_emergency"];
 				$destination_context = $row["destination_context"];
 				$destination_app = $row["destination_app"];
 				$destination_data = $row["destination_data"];
@@ -1239,6 +1244,9 @@
 	echo "	<label><input type='checkbox' name='destination_type_voice' id='destination_type_voice' value='1' ".($destination_type_voice ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
 	echo "	<label><input type='checkbox' name='destination_type_fax' id='destination_type_fax' value='1' ".($destination_type_fax ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
 	echo "	<label><input type='checkbox' name='destination_type_text' id='destination_type_text' value='1' ".($destination_type_text ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
+	if (permission_exists('destination_emergency')){
+		echo "	<label><input type='checkbox' name='destination_type_emergency' id='destination_type_emergency' value='1' ".($destination_type_emergency ? "checked='checked'" : null)."> ".$text['label-emergency']."</label>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-usage']."\n";
 	echo "</td>\n";

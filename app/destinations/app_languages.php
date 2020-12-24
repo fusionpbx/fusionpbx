@@ -883,6 +883,27 @@ $text['label-text']['ru-ru'] = "Текст";
 $text['label-text']['sv-se'] = "Text";
 $text['label-text']['uk-ua'] = "Текст";
 
+$text['label-emergency']['en-us'] = "Emergency";
+$text['label-emergency']['en-gb'] = "Emergency";
+$text['label-emergency']['ar-eg'] = "";
+$text['label-emergency']['de-at'] = "Anruferkennung"; //copied from de-de
+$text['label-emergency']['de-ch'] = "Anruferkennung";
+$text['label-emergency']['de-de'] = "Notruf Anruferkennung";
+$text['label-emergency']['es-cl'] = "Emergencia";
+$text['label-emergency']['es-mx'] = "Emergencia"; //copied from es-cl
+$text['label-emergency']['fr-ca'] = "Urgence"; //copied from fr-fr
+$text['label-emergency']['fr-fr'] = "Urgence";
+$text['label-emergency']['he-il'] = "";
+$text['label-emergency']['it-it'] = "Emergenze";
+$text['label-emergency']['nl-nl'] = "Noodnummer";
+$text['label-emergency']['pl-pl'] = "Prezentacja nazwy dzwoniącego (emergency)";
+$text['label-emergency']['pt-br'] = "Emergência";
+$text['label-emergency']['pt-pt'] = "Emergência";
+$text['label-emergency']['ro-ro'] = "";
+$text['label-emergency']['ru-ru'] = "Идентификатор (Caller ID) имени экстренного вызова";
+$text['label-emergency']['sv-se'] = "Nöd Namnpresentation";
+$text['label-emergency']['uk-ua'] = "";
+
 $text['header-destinations']['en-us'] = "Destinations";
 $text['header-destinations']['en-gb'] = "Destinations";
 $text['header-destinations']['ar-eg'] = "جهات الأتصال";
