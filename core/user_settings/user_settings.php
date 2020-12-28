@@ -304,6 +304,12 @@
 			else if ($category == 'recordings' && $subcategory == 'storage_type' && $name == 'text') {
 				echo "		".$text['label-'.$row['user_setting_value']]."\n";
 			}
+			else if ($category == 'destinations' && $subcategory == 'dialplan_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['user_setting_value']]."\n";
+			}
+			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['user_setting_value']]."\n";
+			}
 			else {
 				echo "		".escape($row['user_setting_value'])."\n";
 			}
