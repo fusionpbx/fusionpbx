@@ -526,7 +526,7 @@
 		$sql = "select ";
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
-		$sql .= "cast(domain_enabled as text), ";
+		$sql .= "".($db_type == 'mysql'?"domain_enabled":"cast(domain_enabled as text)").", ";
 		$sql .= "domain_description ";
 		$sql .= "from v_domains ";
 		$sql .= "where domain_uuid = :domain_uuid ";
