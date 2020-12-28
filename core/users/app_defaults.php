@@ -41,7 +41,12 @@ if ($domains_processed == 1) {
 		}
 		$sql .= "	( \n";
 		$sql .= "		select \n";
-		$sql .= "		string_agg(g.group_name, ', ') \n";
+		if ($db_type == 'pgsql'){
+			$sql .= "               string_agg(g.group_name, ', ') \n";
+		}
+		else{
+			$sql .= "               group_concat(g.group_name) \n";
+		}
 		$sql .= "		from \n";
 		$sql .= "		v_user_groups as ug, \n";
 		$sql .= "		v_groups as g \n";
