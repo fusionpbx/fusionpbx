@@ -120,6 +120,9 @@
 								if (isset($setting['text']) && $setting['text'] != '') {
 									$settings['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
 								}
+								if (isset($setting['unescapedtext']) && $setting['unescapedtext'] != '') {
+									$settings['theme'][$subcategory] = str_replace('&lowbar;','_',($setting['unescapedtext']));
+								}
 								else if (isset($setting['numeric']) && is_numeric($setting['numeric'])) {
 									$settings['theme'][$subcategory] = $setting['numeric'];
 								}
