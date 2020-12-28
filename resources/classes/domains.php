@@ -871,6 +871,9 @@ if (!class_exists('domains')) {
 						$sql .= "default_setting_subcategory, ";
 						$sql .= "default_setting_name, ";
 						$sql .= "default_setting_value, ";
+						if ($row['default_setting_order']) {
+							$sql .= "default_setting_order, ";
+						}
 						$sql .= "default_setting_enabled, ";
 						$sql .= "default_setting_description ";
 						$sql .= ") values \n";
@@ -880,6 +883,9 @@ if (!class_exists('domains')) {
 						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
 						$sql .= "'".check_str($row['default_setting_name'])."', ";
 						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						if ($row['default_setting_order']) {
+							$sql .= "'".check_str($row['default_setting_order'])."', ";
+						}
 						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
 						$sql .= "'".check_str($row['default_setting_description'])."' ";
 						$sql .= ");";
