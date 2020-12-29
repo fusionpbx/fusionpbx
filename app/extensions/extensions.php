@@ -82,7 +82,14 @@
 //get total extension count for domain
 if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 	$sql = "select count(*) from v_extensions ";
+	if (!permission_exists('extension_domain_view')) {
+		$sql .= ' inner join v_extension_users using(extension_uuid) ';
+	}
 	$sql .= "where domain_uuid = :domain_uuid ";
+	if (!permission_exists('extension_domain_view')) {
+		$sql .= " and user_uuid = :user_uuid "; 
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$total_extensions = $database->select($sql, $parameters, 'column');
