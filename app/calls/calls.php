@@ -212,9 +212,9 @@
 		echo "	<div class='actions'>\n";
 
 		if ($extensions) {
-			echo button::create(['type'=>'button','label'=>$text['label-call_forward'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle_cfwd','onclick'=>"list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
-			echo button::create(['type'=>'button','label'=>$text['label-follow_me'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle_follow','onclick'=>"list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
-			echo button::create(['type'=>'button','label'=>$text['label-dnd'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle_dnd','onclick'=>"list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
+			echo button::create(['type'=>'button','label'=>$text['label-call_forward'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'collapse'=>false,'name'=>'btn_toggle_cfwd','onclick'=>"list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
+			echo button::create(['type'=>'button','label'=>$text['label-follow_me'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'collapse'=>false,'name'=>'btn_toggle_follow','onclick'=>"list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
+			echo button::create(['type'=>'button','label'=>$text['label-dnd'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'collapse'=>false,'name'=>'btn_toggle_dnd','onclick'=>"list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
 		}
 		if ($_GET['show'] !== 'all' && permission_exists('call_forward_all')) {	
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
