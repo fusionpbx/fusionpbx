@@ -64,7 +64,12 @@
 			}
 
 		//update the status
-			if (permission_exists("user_account_setting_edit")) {
+			if (permission_exists("user_setting_edit")) {
+				//add the user_edit permission
+				$p = new permissions;
+				$p->add("user_edit", "temp");
+
+				//update the database user_status
 				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
 				$array['users'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 				$array['users'][0]['user_status'] = $user_status;
@@ -72,6 +77,10 @@
 				$database->app_name = 'operator_panel';
 				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
 				$database->save($array);
+
+				//remove the temporary permission
+				$p->delete("user_edit", "temp");
+
 				unset($array);
 			}
 
