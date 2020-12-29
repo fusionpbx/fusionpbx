@@ -194,16 +194,6 @@
 	}
 	require_once "resources/header.php";
 
-//javascript for toggle select box
-	echo "<script language='javascript' type='text/javascript'>\n";
-	echo "	function toggle_select() {\n";
-	echo "		$('#call_control_feature').fadeToggle(400, function() {\n";
-	echo "			document.getElementById('call_control_feature').selectedIndex = 0;\n";
-	echo "			document.getElementById('call_control_feature').focus();\n";
-	echo "		});\n";
-	echo "	}\n";
-	echo "</script>\n";
-
 //show the content
 	if ($is_included) {
 		echo "<div class='action_bar sub'>\n";
@@ -222,21 +212,17 @@
 		echo "	<div class='actions'>\n";
 
 		if ($extensions) {
-			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"toggle_select(); this.blur();"]);
+			if (permission_exists('call_forward')) {
+				echo button::create(['type' => 'button', 'label' => $text['label-call_forward'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_cfwd', 'onclick' => "list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
+			}
+			if (permission_exists('follow_me')) {
+				echo button::create(['type' => 'button', 'label' => $text['label-follow_me'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_follow', 'onclick' => "list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
+			}
+			if (permission_exists('do_not_disturb')) {
+				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
+			}
 		}
-		echo 		"<select class='formfld' style='display: none; width: auto;' id='call_control_feature' onchange=\"if (this.selectedIndex != 0) { modal_open('modal-toggle','btn_toggle'); }\">";
-		echo "			<option value='' selected='selected'>".$text['label-select']."</option>";
-		if (permission_exists('call_forward')) {
-			echo "		<option value='call_forward'>".$text['label-call_forward']."</option>";
-		}
-		if (permission_exists('follow_me')) {
-			echo "		<option value='follow_me'>".$text['label-follow_me']."</option>";
-		}
-		if (permission_exists('do_not_disturb')) {
-			echo "		<option value='do_not_disturb'>".$text['label-dnd']."</option>";
-		}
-		echo "		</select>";
-		if ($_GET['show'] !== 'all' && permission_exists('call_forward_all')) {	
+		if ($_GET['show'] !== 'all' && permission_exists('call_forward_all')) {
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
 		}
 		echo 		"<form id='form_search' class='inline' method='get'>\n";
@@ -255,7 +241,7 @@
 		echo "</div>\n";
 
 		if ($extensions) {
-			echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle_' + document.getElementById('call_control_feature').options[document.getElementById('call_control_feature').selectedIndex].value); list_form_submit('form_list');"])]);
+			echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_form_submit('form_list');"])]);
 		}
 
 		echo $text['description-call_routing']."\n";
