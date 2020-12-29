@@ -202,6 +202,26 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_directory";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_limit";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_call_group";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_hold_music";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user"; 
 
 
 	//default settings
