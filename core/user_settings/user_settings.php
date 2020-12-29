@@ -130,7 +130,7 @@
 	}
 
 //get the list
-	$sql = "select user_setting_uuid, user_uuid, user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
+	$sql = "select user_setting_uuid, user_uuid, user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, ".($db_type=='pgsql'?"cast(user_setting_enabled as text)":"user_setting_enabled").", user_setting_description ";
 	$sql .= "from v_user_settings ";
 	$sql .= $sql_where;
 	if ($order_by == '') {
