@@ -130,7 +130,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "preset_england";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"christmas_eve":{"mday":"24","mon":"12"}}';
-       		$apps[$x]['default_settings'][$y]['default_setting_order'] = "359";
+		$apps[$x]['default_settings'][$y]['default_setting_order'] = "359";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "England Holiday";
 		$y++;
@@ -305,7 +305,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'preset_canada';
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '{"victoria_day":{"wday":"2","mon":"5","mday":"18-24"}}';
-       		$apps[$x]['default_settings'][$y]['default_setting_order'] = "139";
+		$apps[$x]['default_settings'][$y]['default_setting_order'] = "139";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'Canada Holiday';
 		$y++;
