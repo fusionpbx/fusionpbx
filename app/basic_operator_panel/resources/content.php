@@ -82,7 +82,7 @@ echo "			<b>".$text['title-operator_panel']."</b>";
 echo "		</td>";
 echo "		<td valign='top' align='center' nowrap>";
 
-if (sizeof($_SESSION['user']['extensions']) > 0) {
+if (permission_exists("user_setting_edit") && sizeof($_SESSION['user']['extensions']) > 0) {
 	$status_options[1]['status'] = "Available";
 	$status_options[1]['label'] = $text['label-status_available'];
 	$status_options[1]['style'] = "op_btn_status_available";
