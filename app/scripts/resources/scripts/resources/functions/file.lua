@@ -1,5 +1,6 @@
 -- load base64 if exists
 	pcall(require, "resources.functions.base64")
+	require "resources.functions.split";
 
 -- load logger for file library
 	local log = log or require "resources.functions.log"[app_name or 'file']
@@ -58,7 +59,17 @@ local function remove_file(fname)
 	else
 		os.execute("rm " .. fname);
 	end
-	
+end
+
+local function find_file(cmd, raw)
+	local f = assert(io.popen(cmd, 'r'));
+	local s = assert(f:read('*a'));
+	f:close();
+	if raw then return s end
+	s = string.gsub(s, '^%s+', '');
+	s = string.gsub(s, '%s+$', '');
+	s = string.gsub(s, '[\n\r]+', ' ');
+	return s
 end
 
 return {
@@ -70,4 +81,5 @@ return {
 	remove       = remove_file;
 	rename       = os.rename;
 	pathinfo     = pathinfo;
+	find	     = find_file;
 }
