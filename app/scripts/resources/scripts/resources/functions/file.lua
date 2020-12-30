@@ -47,6 +47,11 @@ local function file_exists(name)
 	return name
 end
 
+function pathinfo(strFilename)
+  -- Returns the Path, Filename, and Extension as 3 values
+  return string.match(strFilename, "(.-)([^\\]-([^\\%.]+))$");
+end
+
 return {
 	read         = read_file;
 	read_base64  = read_base64;
@@ -55,4 +60,5 @@ return {
 	exists       = file_exists;
 	remove       = os.remove;
 	rename       = os.rename;
+	pathinfo     = pathinfo;
 }
