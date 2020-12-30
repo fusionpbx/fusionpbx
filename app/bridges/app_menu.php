@@ -3,8 +3,8 @@
 $apps[$x]['menu'][0]['title']['en-us'] = 'Bridges';
 $apps[$x]['menu'][0]['title']['en-gb'] = 'Bridges';
 $apps[$x]['menu'][0]['title']['es-cl'] = '';
-$apps[$x]['menu'][0]['title']['fr-fr'] = '';
-$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+$apps[$x]['menu'][0]['title']['fr-fr'] = 'Ponts';
+$apps[$x]['menu'][0]['title']['fr-ca'] = 'Bridges'; //fr-ca translation
 $apps[$x]['menu'][0]['title']['nl-nl'] = 'Bruggen';
 $apps[$x]['menu'][0]['title']['pl'] = '';
 $apps[$x]['menu'][0]['title']['sv-se'] = '';
