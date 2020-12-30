@@ -8,7 +8,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Bedienfeld";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Panneau d'opérateur"; //fr-ca translation
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Panneau Operateur";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "לוח מפעיל";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Pannello Operatore";
