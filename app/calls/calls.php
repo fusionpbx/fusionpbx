@@ -52,27 +52,39 @@
 
 //process the http post data by action
 	if ($action != '' && is_array($extensions) && @sizeof($extensions) != 0) {
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: calls.php');
+			exit;
+		}
 		switch ($action) {
 			case 'toggle_call_forward':
 				if (permission_exists('call_forward')) {
 					$obj = new call_forward;
 					$obj->toggle($extensions);
+					//set message
+					message::add($text['message-toggle']);
 				}
 				break;
 			case 'toggle_follow_me':
 				if (permission_exists('follow_me')) {
 					$obj = new follow_me;
 					$obj->toggle($extensions);
+					//set message
+					message::add($text['message-toggle']);
 				}
 				break;
 			case 'toggle_do_not_disturb':
 				if (permission_exists('do_not_disturb')) {
 					$obj = new do_not_disturb;
 					$obj->toggle($extensions);
+					//set message
+					message::add($text['message-toggle']);
 				}
 				break;
 		}
-
 		header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
@@ -288,8 +300,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (!$is_included && $extensions) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='extensions[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='extensions[$x][uuid]' value='".escape($row['extension_uuid'])."' />\n";
+				echo "		<input type='checkbox' name='extensions[]' id='checkbox_{$x}' value='".escape($row['extension_uuid'])."' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "	</td>\n";
 
 				if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
