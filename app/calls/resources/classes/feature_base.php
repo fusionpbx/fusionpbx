@@ -12,7 +12,7 @@ abstract class feature_base {
 		$this->cache = new cache;
 	}
 
-	protected function getExistingState(array $uuids) : array {
+	protected function get_existing_state(array $uuids) : array {
 		if (is_array($uuids) && @sizeof($uuids) != 0) {
 			$sql  = "select extension_uuid, extension, number_alias, call_timeout, ";
 			$sql .= "do_not_disturb, forward_all_enabled, forward_all_destination, ";
