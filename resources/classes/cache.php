@@ -70,7 +70,7 @@ class cache {
 					}
 
 				//run the memcache
-					$command = "memcache set ".$key." ".$value;
+					$command = "memcache set ".$key." '".$value."' ".$time;
 					$result = event_socket_request($fp, 'api '.$command);
 
 				//close event socket
@@ -78,9 +78,13 @@ class cache {
 				}
 			}
 			elseif ($_SESSION['cache']['method']['text'] == "file") {	//save to the file cache
-				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
-					$result = file_put_contents($_SESSION['cache']['location']['text'] . "/" . $key, $value);
+				foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key . ".*") as $file) {
+					if (file_exists($file)) {
+						unlink($file);
+					}
 				}
+				$last = time() + $time;
+				$result = file_put_contents($_SESSION['cache']['location']['text'] . "/" . $key.'.'.$last, $value);
 			}
 
 		//return result
@@ -96,7 +100,7 @@ class cache {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				if ($this-> instanceof Memcached) {
-					$this->m->get($key);
+					$result = $this->m->get($key);
 				}
 				else{
 				// connect to event socket
@@ -116,8 +120,15 @@ class cache {
 				}
 			}
 			elseif ($_SESSION['cache']['method']['text'] == "file") {	//get the file cache
-				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
-					$result = file_get_contents($_SESSION['cache']['location']['text'] . "/" . $key);
+				$last = 0;
+				foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key . '.*') as $file) {
+					$path_parts = pathinfo($file);
+					$last = max($last, $path_parts['extension']);
+				}
+				if (($last > 0) && (time() <= $last)){
+					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . '.' . $last)) {
+						$result = file_get_contents($_SESSION['cache']['location']['text'] . "/" . $key . '.' . $last);
+					}
 				}
 			}
 
@@ -179,7 +190,7 @@ class cache {
 					event_socket_request($fp, $event);
 
 				//remove the local files
-					foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key) as $file) {
+					foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key . ".*") as $file) {
 						if (file_exists($file)) {
 							unlink($file);
 						}
