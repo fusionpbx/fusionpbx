@@ -84,7 +84,22 @@
 				unset($array);
 			}
 
-		//if call center app is installed then update the user_status
+			// Check if we have access to the do_not_disturb class
+			if (class_exists('do_not_disturb')) {
+				$uuids = array();
+				foreach ($_SESSION['user']['extension'] as $x => $ext) {
+					$uuids[] = $ext["extension_uuid"];
+				}
+
+				$obj = new do_not_disturb;
+				if ($user_status === "Do Not Disturb") {
+					$obj->enable($uuids);
+				} else {
+					$obj->disable($uuids);
+				}
+			}
+
+			//if call center app is installed then update the user_status
 			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
@@ -96,78 +111,17 @@
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
-				//update the user_status
 					if (is_uuid($call_center_agent_uuid)) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-						$switch_cmd .= "callcenter_config agent set status ".$call_center_agent_uuid." '".$user_status."'";
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					}
+						if ($fp) {
+							//update the user_status
+							$cmd = "api callcenter_config agent set status " . $call_center_agent_uuid . " '" . $user_status . "'";
+							$response = event_socket_request($fp, $cmd);
 
-				//update the user state
-					if (is_uuid($call_center_agent_uuid)) {
-						$cmd = "api callcenter_config agent set state ".$call_center_agent_uuid." Waiting";
-						$response = event_socket_request($fp, $cmd);
-					}
-
-				//update do not disturb
-					if ($user_status == "Do Not Disturb") {
-						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
-							//build the array
-							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
-							$array['extensions'][$x]['dial_string'] = 'error/user_busy';
-							$array['extensions'][$x]['do_not_disturb'] = 'true';
-
-							//delete extension from the cache
-							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
-							}
-
-							//incrment
-							$x++;
+							//update the user state
+							$cmd = "api callcenter_config agent set state " . $call_center_agent_uuid . " Waiting";
+							$response = event_socket_request($fp, $cmd);
 						}
-					}
-					else {
-						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
-							//build the array
-							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
-							$array['extensions'][$x]['dial_string'] = null;
-							$array['extensions'][$x]['do_not_disturb'] = 'false';
-
-							//delete extension from the cache
-							$cache = new cache;
-							$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
-							if(strlen($number_alias) > 0){
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
-							}
-
-							//incrment
-							$x++;
-						}
-					}
-
-				//grant temporary permissions
-					$p = new permissions;
-					$p->add('extension_edit', 'temp');
-
-				//execute update
-					$database = new database;
-					$database->app_name = 'calls';
-					$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-					$database->save($array);
-					unset($array);
-
-				//revoke temporary permissions
-					$p->delete('extension_edit', 'temp');
-
-				//delete extension from the cache
-					$cache = new cache;
-					$cache->delete("directory:".$extension."@".$this->domain_name);
-					if(strlen($number_alias) > 0){
-						$cache->delete("directory:".$number_alias."@".$this->domain_name);
 					}
 			}
 
