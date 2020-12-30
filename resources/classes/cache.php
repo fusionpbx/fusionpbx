@@ -10,10 +10,33 @@
  */
 class cache {
 
+	private $m;
 	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
+		
+		if ($_SESSION['cache']['method']['text'] == "memcache") {
+			if(extension_loaded('memcached')){
+				$port = is_int($_SESSION['cache']['port']['numeric'])?$_SESSION['cache']['port']['numeric']:11211;
+				$this->m = new Memcached();
+				if (is_array($_SESSION['cache']['servers'])) {
+					foreach ($_SESSION['cache']['servers'] as $server_port){
+						list ($server, $customport) = split(':',$server_port, 2);
+						if (!is_int($customport)){
+							$customport = $port;
+						}
+						$this->m->addServer($server, $customport);
+					}
+				}
+				else{
+					$this->m->addServer('localhost', $port);
+				}					
+			}
+			else{
+				$this->m = null;
+			}
+		}
 		//place holder
 	}
 
@@ -31,10 +54,15 @@ class cache {
 	 * Add a specific item in the cache
 	 * @var string $key		the cache id
 	 * @var string $value	string to be cached
+	 * @var int	$time
 	 */
-	public function set($key, $value) {
+	public function set($key, $value, $time = 3600) {
 		//save to memcache
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				if ($this-> instanceof Memcached) {
+					$this->m->set($key, $value, $time);
+				}
+				else{
 				//connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -47,10 +75,9 @@ class cache {
 
 				//close event socket
 					fclose($fp);
+				}
 			}
-
-		//save to the file cache
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			elseif ($_SESSION['cache']['method']['text'] == "file") {	//save to the file cache
 				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
 					$result = file_put_contents($_SESSION['cache']['location']['text'] . "/" . $key, $value);
 				}
@@ -68,6 +95,10 @@ class cache {
 
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				if ($this-> instanceof Memcached) {
+					$this->m->get($key);
+				}
+				else{
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -82,10 +113,9 @@ class cache {
 
 				//close event socket
 					fclose($fp);
+				}
 			}
-
-		//get the file cache
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			elseif ($_SESSION['cache']['method']['text'] == "file") {	//get the file cache
 				if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
 					$result = file_get_contents($_SESSION['cache']['location']['text'] . "/" . $key);
 				}
@@ -103,6 +133,11 @@ class cache {
 
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				if ($this-> instanceof Memcached) {
+					$this->m->delete($key);
+				}
+				else{
+
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -123,10 +158,9 @@ class cache {
 
 				//close event socket
 					fclose($fp);
+				}
 			}
-
-		//cache method file
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			elseif ($_SESSION['cache']['method']['text'] == "file") {	//cache method file
 				//change the delimiter
 					$key = str_replace(":", ".", $key);
 
@@ -165,6 +199,10 @@ class cache {
 	public function flush() {
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
+				if ($this-> instanceof Memcached) {
+					$this->m->flush();
+				}
+				else{
 				// connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
@@ -185,10 +223,9 @@ class cache {
 
 				//close event socket
 					fclose($fp);
+				}
 			}
-
-		//cache method file 
-			if ($_SESSION['cache']['method']['text'] == "file") {
+			elseif ($_SESSION['cache']['method']['text'] == "file") {	//cache method file
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
 					$event .= "Event-Name: CUSTOM\n";
