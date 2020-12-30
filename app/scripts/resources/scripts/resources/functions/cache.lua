@@ -129,20 +129,36 @@ end
 -- @return[2] error string `e.g. 'NOT FOUND'
 -- @note error string does not contain `-ERR` prefix
 function Cache.get(key)
-  local result, err = nil, 'UNSUPPORTTED'
-
+  local result, err = nil, 'UNSUPPORTTED';
   if (cache_method == "memcache") then
     result, err = check_error(api:execute('memcache', 'get ' .. key2key(key)))
     if result then
       result = memcache_decode(result)
     end
-  end
+  elseif (cache_method == "file") then
+    key = key2file(key);
+    files_string = File.find(key .. '.*', true);
+    files_table = split(files_string, "\n", true);
+    n = table.getn(files_table);
 
-  if (cache_method == "file") then
-    key = key2file(key)
-    -- log.noticef('location: %s', key)
-    result, err = File.read(key)
-    if not result then
+    if n > 0 then
+    -- there is a hit
+      last = 0;
+      for i,v in ipairs(files_table) do
+        path,file,extension = File.pathinfo(v);
+        last = max(last, tonumber(extension));
+      end
+      
+      if last > 0 and os.time() <= last then
+        -- log.noticef('location: %s', key)
+        result, err = File.read(key .. '.' .. last);
+        if not result then
+          err = 'NOT FOUND';
+        end
+      else
+        err = 'NOT FOUND';
+      end
+    else
       err = 'NOT FOUND';
     end
   end
@@ -161,28 +177,33 @@ function Cache.set(key, value, expire)
     -- some one else write this cache item so we just remove our
     -- temp file. This should works because all writers should
     -- write same values and it does not metter which one do this first.
-    key = key2file(key)
-    if (not File.exists(key)) then
-      -- get random name for the temp file
-      local key_tmp = tmp_file(key)
-      --write the temp file
-      local ok, err = File.write(key_tmp, value)
+      key = key2file(key);
+
+    -- get random name for the temp file
+      local key_tmp = tmp_file(key);
+    --write the temp file
+      local ok, err = File.write(key_tmp, value);
       if not ok then
-        log.errf('can not write file `%s`: %s', key_tmp, tostring(err))
-        return nil, err
+        log.errf('can not write file `%s`: %s', key_tmp, tostring(err));
+        return nil, err;
       end
+
+      File.remoe(key .. '.*');
       --move the temp file
-      ok, err = File.rename(key_tmp, key)
+      expire = tonumber(expire);
+      if expire == nil then
+        expire = 3600;
+      end
+      last = os.time() + expire;
+      ok, err = File.rename(key_tmp, key .. '.' .. last);
       -- if we can not rename file then assume that key already exists,
       -- so we have to remove our temp file.
       if not ok then File.remove(key_tmp) end
-      return ok, err
-    end
-    --! @todo returns special code to show reuse value?
-    return true
-  end
+      return ok, err;
 
-  if (cache_method == "memcache") then
+    --! @todo returns special code to show reuse value?
+    return true;
+  elseif (cache_method == "memcache") then
     value = memcache_encode(value)
     expire = expire and tostring(expire) or ""
     local ok, err = check_error(api:execute("memcache", "set " .. key2key(key) .. " '" .. value .. "' " .. expire))
@@ -205,20 +226,11 @@ function Cache.del(key)
       return nil, err
     end
     return result == '+OK'
-  end
-
-  if (cache_method == "file") then
+  elseif (cache_method == "file") then
     key = key2file(key)
-    --! @todo remove file exists check. This check needs only for return `NOT FOUND` code.
-    local result, err = not File.exists(key)
-    if not result then
-      result, err = File.remove(key)
-      if not result then
-        log.errf('can not remove file `%s`: %s', key, tostring(err))
-      end
-    end
+    local result, err = File.remove(key .. '.*');
     File.remove(key .. ".tmp")
-    return result, err
+    return true
   end
 
   return nil, 'UNSUPPORTTED'
