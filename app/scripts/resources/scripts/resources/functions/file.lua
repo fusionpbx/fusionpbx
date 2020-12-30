@@ -49,7 +49,7 @@ end
 
 local function pathinfo(strFilename)
   -- Returns the Path, Filename, and Extension as 3 values
-  return string.match(strFilename, "(.-)([^\\]-([^\\%.]+))$");
+  return string.match(strFilename, "(.-)([^\\//]-([^\\%.]+))$");
 end
 
 local function remove_file(fname)
