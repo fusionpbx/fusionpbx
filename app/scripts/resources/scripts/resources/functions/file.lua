@@ -47,9 +47,18 @@ local function file_exists(name)
 	return name
 end
 
-function pathinfo(strFilename)
+local function pathinfo(strFilename)
   -- Returns the Path, Filename, and Extension as 3 values
   return string.match(strFilename, "(.-)([^\\]-([^\\%.]+))$");
+end
+
+local function remove_file(fname)
+	if fname:find('*') == nil and fname:find('?') == nil then
+		os.remove(fname);
+	else
+		os.execute("rm " .. fname);
+	end
+	
 end
 
 return {
@@ -58,7 +67,7 @@ return {
 	write        = write_file;
 	write_base64 = write_base64;
 	exists       = file_exists;
-	remove       = os.remove;
+	remove       = remove_file;
 	rename       = os.rename;
 	pathinfo     = pathinfo;
 }
