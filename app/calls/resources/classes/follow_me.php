@@ -59,13 +59,13 @@ include "root.php";
 		} //function
 
 		protected function update(array $extension) : array {
-			$extension = parent::update($extension);
 			//disable other features
 			if ($extension['follow_me_enabled'] == feature_base::enabled) {
 				$extension['do_not_disturb'] = feature_base::disabled; //false
 				$extension['forward_all_enabled'] = feature_base::disabled; //false
 			}
-			return $extension;
+			// Important to have the parent update last. Otherwise the above information will not be sent for feature key syncing.
+			return parent::update($extension);
 		}
 
 		/**
