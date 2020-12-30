@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Zugriffssteuerungslisten verwalten";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Contrôles d'accès"; //fr-ca translation
+		$apps[$x]['description']['fr-fr'] = "Contrôles d'accès";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Beheer toegangs controle lijsten";
