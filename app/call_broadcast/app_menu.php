@@ -9,7 +9,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Rundrufe";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Llamada Broadcast";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Campagne d'appels"; //fr-ca translation
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Campagne d'Appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Multiple";
