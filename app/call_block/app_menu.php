@@ -10,8 +10,8 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Λίστα απορρίψεων";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Bloqueo de llamadas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Liste Noire";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Filtrage d'appel";  //fr-ca translation
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "blocage d'appels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "חסימת מספר";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Blocco Chiamate";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Oproep blokkade";
