@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Zeigt aktive Anrufe und Agenten in der Callcenter Warteschlange.";
 		$apps[$x]['description']['es-cl'] = "Muestra las llamadas activas y los agentes en la cola del centro de llamadas.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "Il montre les appels actives et des agents en queue du centre d'appels.";
+		$apps[$x]['description']['fr-ca'] = "Montre les appels actives et des agents dans les queues du centre d'appels."; //fr-ca translation
 		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en queue sur le centre d'appel.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
