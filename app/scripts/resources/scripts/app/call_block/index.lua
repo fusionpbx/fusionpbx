@@ -93,7 +93,7 @@
 
 			--check to see if the call should be blocked
 				sql = "select * from v_call_block\n";
-				sql = sql .. "where domain_uuid = :domain_uuid \n";
+				sql = sql .. "where (domain_uuid = :domain_uuid or domain_uuid is null) \n";
 				sql = sql .. "and call_block_enabled = 'true' \n";
 				sql = sql .. "and call_block_direction = :call_block_direction \n";
 				sql = sql .. "and ( \n";
