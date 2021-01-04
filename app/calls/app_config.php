@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Anrufweiterleitung, Follow Me und Nicht-Stören.";
 		$apps[$x]['description']['es-cl'] = "Reenvio de llamada, Sígueme y No Molestar.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "Renvoi d'appel, suivez-moi et ne pas déranger"; //fr-ca translation
 		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, Follow Me et ne pas deranger.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
