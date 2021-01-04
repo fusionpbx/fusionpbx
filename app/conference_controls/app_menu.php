@@ -9,8 +9,8 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = 'Konferenzsteuerung';
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-fr'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Commandes de conférence";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Commandes de conférence";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Controlli Conferenza";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Conferentie besturing";
