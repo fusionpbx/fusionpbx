@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Anrufsteuerung anhand von zugeordneten Ziffern. Diese können verschiedene Aktionen wie Stummschaltung, usw. während einer Konferenz auslösen.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Les contrôles d'appel vous permettent d'attribuer des numéros aux actions. Ils peuvent être utilisés pour muet, réactiver ou d'autres actions pendant la conférence téléphonique";
+		$apps[$x]['description']['fr-fr'] = "Les contrôles d'appel vous permettent d'attribuer des numéros aux actions. Ils peuvent être utilisés pour muet, réactiver ou d'autres actions pendant la conférence téléphonique";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Conferentie besturing maakt het mogelijk om functies aan cijfers toe te wijzen zodat een verbinding op stil of spreken gezet kan worden. of andere acties tijden een conferentie zitting.";
