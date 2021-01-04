@@ -188,6 +188,7 @@ include "root.php";
 						print "error: " . $error->getMessage() . "<br/>";
 						die();
 					}
+					$this->db->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 				}
 
 				if ($this->driver == "pgsql") {
