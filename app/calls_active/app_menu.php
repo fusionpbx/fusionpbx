@@ -9,7 +9,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Aktive Gespräche";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Llamadas Activas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Appels actif";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Appels en cours";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "שיחות פעילות";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Chiamate Attive";
