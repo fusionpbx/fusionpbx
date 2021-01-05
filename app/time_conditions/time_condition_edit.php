@@ -561,9 +561,7 @@
 			$sql .= "		dialplan_detail_tag = 'condition' ";
 			$sql .= "		and dialplan_detail_type in ('year','mon','mday','wday','yday','week','mweek','hour','minute','minute-of-day','time-of-day','date-time') ";
 			$sql .= "	) ";
-			$sql .= "	or ( ";
-			$sql .= "		dialplan_detail_tag = 'action' ";
-			$sql .= "	) ";
+			$sql .= "	or dialplan_detail_tag = 'action' ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
