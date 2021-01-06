@@ -137,6 +137,8 @@
 				//get a new voicemail_uuid
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						$voicemail_uuid = uuid();
+						//If adding a mailbox, set the default transcribe behavior
+						$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
 					}
 
 				//add common array fields
@@ -305,7 +307,7 @@
 //set defaults
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = "false"; }	
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: "false"; }	
 	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = "false"; }
 
 //get the greetings list
