@@ -8,8 +8,8 @@ local date_utc_now_sql
 local now_add_sec_sql
 
 if database.type == 'pgsql' then
-  date_utc_now_sql  = "NOW() at time zone 'utc'"
-  now_add_sec_sql   = "NOW() at time zone 'utc' + interval '%s second'"
+  date_utc_now_sql  = "NOW()"
+  now_add_sec_sql   = "NOW() + interval '%s second'"
 elseif database.type == 'mysql' then
   date_utc_now_sql  = "UTC_TIMESTAMP()"
   now_add_sec_sql   = "DATE_ADD(UTC_TIMESTAMP(), INTERVAL %s SECOND)"

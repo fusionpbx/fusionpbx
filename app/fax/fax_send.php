@@ -147,7 +147,7 @@ if (!function_exists('fax_enqueue')) {
 		$dial_string .= "fax_task_uuid='" . $fax_task_uuid . "',";
 		$description = ''; //! @todo add description
 		if ($db_type == "pgsql") {
-			$date_utc_now_sql  = "NOW() at time zone 'utc'";
+			$date_utc_now_sql  = "NOW()";
 		}
 		if ($db_type == "mysql") {
 			$date_utc_now_sql  = "UTC_TIMESTAMP()";
