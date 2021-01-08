@@ -135,7 +135,9 @@
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_enabled = $_POST["user_enabled"];
-			$api_key = $_POST["api_key"];
+			if (permission_exists('api_key')) {
+				$api_key = $_POST["api_key"];
+			}
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
@@ -498,7 +500,9 @@
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
 			if (permission_exists('user_add') || permission_exists('user_edit')) {
-				$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+				if (permission_exists('api_key')) {
+					$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+				}
 				$array['users'][$x]['user_enabled'] = $user_enabled;
 				if (permission_exists('contact_add')) {
 					$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
