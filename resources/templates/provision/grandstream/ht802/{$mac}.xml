@@ -1289,7 +1289,11 @@
     <!-- # Loop Current Disconnect. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_loop_current_disconnect)}
+    <P892>1</P892>
+    {else}
     <P892>0</P892>
+    {/if}
 
     <!-- # Play busy/reorder tone before Loop Current Disconnect. 0 - No, 1 - Yes. Default is 0.  -->
     <!-- # Number: 0, 1 -->
