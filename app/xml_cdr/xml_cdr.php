@@ -824,7 +824,7 @@
 						$content = '';
 					}
 				//show agent originated legs only to those with the permission
-					if (!permission_exists('xml_cdr_cc_agent_side') && $row['cc_side'] == "agent") {
+					if (!permission_exists('xml_cdr_cc_agent_leg') && $row['cc_side'] == "agent") {
 						$content = '';
 					}
 				//show the leg b only to those with the permission
