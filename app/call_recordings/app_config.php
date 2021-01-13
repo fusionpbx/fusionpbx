@@ -11,6 +11,8 @@
 		$apps[$x]['description']['en-us'] = 'Call Recordings';
 		$apps[$x]['description']['en-gb'] = 'Call Recordings';
 		$apps[$x]['description']['nl-nl'] = 'Gespreksopnamen';
+		$apps[$x]['description']['fr-ca'] = "Enregistrement d'appel"; //fr-ca translation
+		$apps[$x]['description']['fr-fr'] = "Enregistrement d'appel";
 
 	//permission details
 		$y = 0;

@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Anrufe zwischen zwei Ziele anhand eines Funktions-Codes steuern.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Appels directs entre deux destinations en appelant un code de fonction"; //fr-ca translation
+		$apps[$x]['description']['fr-fr'] = "Appels directs entre deux destinations en appelant un code de fonction";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Directe oproepen tussen twee bestemmingen via een feature code.";

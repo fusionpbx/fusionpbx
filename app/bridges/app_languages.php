@@ -9,7 +9,7 @@
 		$text['title-bridges']['de-de'] = '';
 		$text['title-bridges']['es-cl'] = '';
 		$text['title-bridges']['es-mx'] = '';
-		$text['title-bridges']['fr-ca'] = 'Ponts';
+		$text['title-bridges']['fr-ca'] = 'Bridges'; //fr-ca translation
 		$text['title-bridges']['fr-fr'] = 'Ponts';
 		$text['title-bridges']['he-il'] = '';
 		$text['title-bridges']['it-it'] = '';
@@ -30,7 +30,7 @@
 		$text['title-bridge']['de-de'] = '';
 		$text['title-bridge']['es-cl'] = '';
 		$text['title-bridge']['es-mx'] = '';
-		$text['title-bridge']['fr-ca'] = 'Pont';
+		$text['title-bridge']['fr-ca'] = 'Bridge'; //fr-ca translation
 		$text['title-bridge']['fr-fr'] = 'Pont';
 		$text['title-bridge']['he-il'] = '';
 		$text['title-bridge']['it-it'] = '';
@@ -51,7 +51,7 @@
 		$text['title_description-bridge']['de-de'] = '';
 		$text['title_description-bridge']['es-cl'] = '';
 		$text['title_description-bridge']['es-mx'] = '';
-		$text['title_description-bridge']['fr-ca'] = 'Ajouter des déclarations de pont à la liste de sélection';
+		$text['title_description-bridge']['fr-ca'] = 'Ajouter des déclarations de pont à la liste de sélection'; //fr-ca translation
 		$text['title_description-bridge']['fr-fr'] = 'Ajouter des déclarations de pont à la liste de sélection';
 		$text['title_description-bridge']['he-il'] = '';
 		$text['title_description-bridge']['it-it'] = '';
@@ -72,7 +72,7 @@
 		$text['label-bridge_name']['de-de'] = '';
 		$text['label-bridge_name']['es-cl'] = '';
 		$text['label-bridge_name']['es-mx'] = '';
-		$text['label-bridge_name']['fr-ca'] = 'Nom';
+		$text['label-bridge_name']['fr-ca'] = 'Nom'; //fr-ca translation
 		$text['label-bridge_name']['fr-fr'] = 'Nom';
 		$text['label-bridge_name']['he-il'] = '';
 		$text['label-bridge_name']['it-it'] = '';
@@ -93,7 +93,7 @@
 		$text['description-bridge_name']['de-de'] = '';
 		$text['description-bridge_name']['es-cl'] = '';
 		$text['description-bridge_name']['es-mx'] = '';
-		$text['description-bridge_name']['fr-ca'] = 'Entrez le nom';
+		$text['description-bridge_name']['fr-ca'] = 'Entrez le nom'; //fr-ca translation
 		$text['description-bridge_name']['fr-fr'] = 'Entrez le nom';
 		$text['description-bridge_name']['he-il'] = '';
 		$text['description-bridge_name']['it-it'] = '';
@@ -114,7 +114,7 @@
 		$text['label-bridge_destination']['de-de'] = '';
 		$text['label-bridge_destination']['es-cl'] = '';
 		$text['label-bridge_destination']['es-mx'] = '';
-		$text['label-bridge_destination']['fr-ca'] = 'Destination';
+		$text['label-bridge_destination']['fr-ca'] = 'Destination'; //fr-ca translationv
 		$text['label-bridge_destination']['fr-fr'] = 'Destination';
 		$text['label-bridge_destination']['he-il'] = '';
 		$text['label-bridge_destination']['it-it'] = '';
@@ -135,7 +135,7 @@
 		$text['description-bridge_destination']['de-de'] = '';
 		$text['description-bridge_destination']['es-cl'] = '';
 		$text['description-bridge_destination']['es-mx'] = '';
-		$text['description-bridge_destination']['fr-ca'] = 'Entrer la destination';
+		$text['description-bridge_destination']['fr-ca'] = 'Entrer la destination'; //fr-ca translation
 		$text['description-bridge_destination']['fr-fr'] = 'Entrer la destination';
 		$text['description-bridge_destination']['he-il'] = '';
 		$text['description-bridge_destination']['it-it'] = '';
@@ -156,7 +156,7 @@
 		$text['label-bridge_enabled']['de-de'] = '';
 		$text['label-bridge_enabled']['es-cl'] = '';
 		$text['label-bridge_enabled']['es-mx'] = '';
-		$text['label-bridge_enabled']['fr-ca'] = 'Activé';
+		$text['label-bridge_enabled']['fr-ca'] = 'Activé'; //fr-ca translation
 		$text['label-bridge_enabled']['fr-fr'] = 'Activé';
 		$text['label-bridge_enabled']['he-il'] = '';
 		$text['label-bridge_enabled']['it-it'] = '';
@@ -177,7 +177,7 @@
 		$text['description-bridge_enabled']['de-de'] = '';
 		$text['description-bridge_enabled']['es-cl'] = '';
 		$text['description-bridge_enabled']['es-mx'] = '';
-		$text['description-bridge_enabled']['fr-ca'] = 'Sélectionnez pour activer ou désactiver';
+		$text['description-bridge_enabled']['fr-ca'] = 'Sélectionnez pour activer ou désactiver'; //fr-ca translation
 		$text['description-bridge_enabled']['fr-fr'] = 'Sélectionnez pour activer ou désactiver';
 		$text['description-bridge_enabled']['he-il'] = '';
 		$text['description-bridge_enabled']['it-it'] = '';
@@ -198,7 +198,7 @@
 		$text['label-bridge_description']['de-de'] = '';
 		$text['label-bridge_description']['es-cl'] = '';
 		$text['label-bridge_description']['es-mx'] = '';
-		$text['label-bridge_description']['fr-ca'] = 'La description';
+		$text['label-bridge_description']['fr-ca'] = 'La description'; //fr-ca translation
 		$text['label-bridge_description']['fr-fr'] = 'La description';
 		$text['label-bridge_description']['he-il'] = '';
 		$text['label-bridge_description']['it-it'] = '';
@@ -219,7 +219,7 @@
 		$text['description-bridge_description']['de-de'] = '';
 		$text['description-bridge_description']['es-cl'] = '';
 		$text['description-bridge_description']['es-mx'] = '';
-		$text['description-bridge_description']['fr-ca'] = 'Entrez la description';
+		$text['description-bridge_description']['fr-ca'] = 'Entrez la description'; //fr-ca translation
 		$text['description-bridge_description']['fr-fr'] = 'Entrez la description';
 		$text['description-bridge_description']['he-il'] = '';
 		$text['description-bridge_description']['it-it'] = '';
@@ -240,8 +240,8 @@
 		$text['label-bridge_description']['de-de'] = "Beschreibung";
 		$text['label-bridge_description']['es-cl'] = "Descripción";
 		$text['label-bridge_description']['es-mx'] = "Descripción"; //copied from es-cl
-		$text['label-bridge_description']['fr-ca'] = "Description"; //copied from fr-fr
-		$text['label-bridge_description']['fr-fr'] = "Description";
+		$text['label-bridge_description']['fr-ca'] = "La description"; //fr-ca translation
+		$text['label-bridge_description']['fr-fr'] = "La description";
 		$text['label-bridge_description']['he-il'] = "";
 		$text['label-bridge_description']['it-it'] = "Descrizione";
 		$text['label-bridge_description']['nl-nl'] = "Omschrijving";

@@ -17,7 +17,7 @@
 		$apps[$x]['description']['el-gr'] = "Ουρές για διαχείριση εισερχόμενων κλήσεων και δρομολόγησης των κλήσεων σε διαθέσιμους τηλεφωνητές/τηλεφωνήτριες.";
 		$apps[$x]['description']['es-cl'] = "Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles.";
+		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles."; //fr-ca translation
 		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribu%uFFFDs aux agents disponibles.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";

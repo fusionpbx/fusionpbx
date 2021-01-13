@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Konferenzzentralen stellen ein oder mehrere Audio- und Videokonferenzräume bereit.";
 		$apps[$x]['description']['es-cl'] = "El Centro de Conferencia permite una o más salas de conferencia para audio y video.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";

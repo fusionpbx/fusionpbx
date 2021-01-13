@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Aktive Kanäle auf dem System.";
 		$apps[$x]['description']['es-cl'] = "Canales activos en el sistema.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "Channels actifs sur le système"; //fr-ca translation";
 		$apps[$x]['description']['fr-fr'] = "Channels actifs sur le système";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";

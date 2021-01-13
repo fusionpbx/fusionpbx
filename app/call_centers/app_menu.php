@@ -9,7 +9,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Callcenter";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Centro de Llamadas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centre d' appels";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Centre d'appels";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
