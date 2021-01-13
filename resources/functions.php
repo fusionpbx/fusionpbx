@@ -51,7 +51,7 @@
 				}
 			}
 			if ($db_type == "pgsql") {
-				$string = pg_escape_string($string);
+				$string = str_replace("'","''",$string);
 			}
 			if ($db_type == "mysql") {
 				if(function_exists('mysql_real_escape_string')){
