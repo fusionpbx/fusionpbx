@@ -67,5 +67,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the refresh rate in seconds (<=120) or milliseconds (>=500).";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0c273cad-1ee4-48d9-9336-08bc8260579a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "group_extensions";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set if extensions are grouped by call_group when viewing all extensions.";
+		$y++;
 
 ?>
