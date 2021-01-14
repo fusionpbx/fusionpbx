@@ -168,6 +168,11 @@ echo "	</tr>";
 echo "</table>";
 echo "<br>";
 
+// Define the arrays to ensure no errors are omitted below with the sizeof operators
+$user_extensions = array();
+$grouped_extensions = array();
+$other_extensions = array();
+
 if (is_array($activity)) foreach ($activity as $extension => $ext) {
 	unset($block);
 
@@ -453,42 +458,49 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	if (in_array($extension, $_SESSION['user']['extensions'])) {
 		$user_extensions[] = $block;
-	}
-	else {
+	} elseif (!empty($ext['call_group'])) {
+		$grouped_extensions[$ext['call_group']][] = $block;
+	} else {
 		$other_extensions[] = $block;
 	}
 }
 
-
-if (is_array($user_extensions) && @sizeof($user_extensions) > 0) {
+if (sizeof($user_extensions) > 0) {
 	echo "<table width='100%'><tr><td>";
 	if (is_array($user_extensions)) foreach ($user_extensions as $ext_block) {
 		echo $ext_block;
 	}
-	echo "</td></tr></table>";
+	echo "</td></tr></table><br>";
 }
 
-if ($_REQUEST['group'] != '') {
-	if (is_array($user_extensions) && @sizeof($user_extensions) > 0) { echo "<br>"; }
-	echo "<strong style='color: black;'>".ucwords(escape($_REQUEST['group']))."</strong>";
-	echo "<br><br>";
-}
-else if (is_array($user_extensions) && @sizeof($user_extensions) > 0) {
-	echo "<br>";
-	echo "<strong style='color: black;'>".$text['label-other_extensions']."</strong>";
-	echo "<br><br>";
+if (sizeof($grouped_extensions) > 0) {
+	// Ensure alphabetical order
+	ksort($grouped_extensions);
+	foreach ($grouped_extensions as $group => $extensions) {
+		echo "<strong style='color: black;'>".ucwords(escape($group))."</strong>";
+		echo "<br><br>";
+		echo "<table width='100%'><tr><td>";
+		foreach ($extensions as $ext_block) {
+			echo $ext_block;
+		}
+		echo "</td></tr></table><br>";
+	}
 }
 
 if (sizeof($other_extensions) > 0) {
+	echo "<strong style='color: black;'>".$text['label-other_extensions']."</strong>";
+	echo "<br><br>";
 	echo "<table width='100%'><tr><td>";
-	if (is_array($other_extensions)) foreach ($other_extensions as $ext_block) {
+	foreach ($other_extensions as $ext_block) {
 		echo $ext_block;
 	}
 	echo "</td></tr></table>";
 }
-else {
+
+if (sizeof($other_extensions) + sizeof($grouped_extensions) < 1) {
 	echo $text['label-no_extensions_found'];
 }
+
 echo "<br><br>";
 
 /*
