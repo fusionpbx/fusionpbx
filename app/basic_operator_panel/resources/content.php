@@ -458,7 +458,7 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 
 	if (in_array($extension, $_SESSION['user']['extensions'])) {
 		$user_extensions[] = $block;
-	} elseif (!empty($ext['call_group'])) {
+	} elseif (!empty($ext['call_group']) && filter_var($_SESSION['operator_panel']['group_extensions']['boolean'], FILTER_VALIDATE_BOOLEAN)) {
 		$grouped_extensions[$ext['call_group']][] = $block;
 	} else {
 		$other_extensions[] = $block;
