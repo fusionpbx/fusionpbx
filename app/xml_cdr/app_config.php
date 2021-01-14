@@ -197,6 +197,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_lose_race";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_cc_agent_leg";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
