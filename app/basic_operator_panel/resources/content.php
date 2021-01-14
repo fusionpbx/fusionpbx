@@ -354,13 +354,11 @@ if (is_array($activity)) foreach ($activity as $extension => $ext) {
 			$status_hover = $text['label-status_logged_out_or_unknown'];
 		}
 
-	$block .= "<div id='".escape($extension)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+	$block  = "<div id='".escape($call_identifier)."' class='".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, escape($extension));' ondragover='allowDrop(event, escape($extension));' ondragleave='discardDrop(event, escape($extension));'" : null).($draggable? "draggable='true' style='cursor: move;' ondragstart=\"drag(event, escape($extension));\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">"; // DRAG TO
 	$block .= "<table class='".$style."'>";
 	$block .= "	<tr>";
 	$block .= "		<td class='op_ext_icon'>";
-	$block .= "			<span name='".escape($extension)."'>"; // DRAG FROM
-	$block .= 				"<img id='".escape($call_identifier)."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
-	$block .= 			"</span>";
+	$block .= 			"<img class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' draggable='false' ".(($draggable) ? "onclick=\"virtual_drag('".escape($call_identifier)."', '".escape($extension)."');\"" : "style='cursor: not-allowed;'").">";
 	$block .= "		</td>";
 	$block .= "		<td class='op_ext_info ".$style."'>";
 	if ($dir_icon != '') {

@@ -2021,7 +2021,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		}
 
 	img.op_ext_icon {
-		cursor: move;
+		cursor: pointer;
 		width: 39px;
 		height: 42px;
 		border: none;
