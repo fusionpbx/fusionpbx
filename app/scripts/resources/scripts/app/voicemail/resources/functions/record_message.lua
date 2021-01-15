@@ -520,6 +520,7 @@
 
 		--play the beep
 			dtmf_digits = '';
+			session:execute("playback","silence_stream://200");
 			session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 
 		--start epoch
