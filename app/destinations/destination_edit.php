@@ -1226,15 +1226,17 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr id='tr_account_code'>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-account_code']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"".escape($destination_accountcode)."\">\n";
-	echo "<br />\n";
-	echo $text['description-account_code']."\n";
-	echo "</td>\n";
+	if (permission_exists("destination_accountcode")) {
+		echo "<tr id='tr_account_code'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-account_code']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"".escape($destination_accountcode)."\">\n";
+		echo "<br />\n";
+		echo $text['description-account_code']."\n";
+		echo "</td>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
