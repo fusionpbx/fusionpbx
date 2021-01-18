@@ -126,6 +126,23 @@
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
 		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select dl.device_uuid from v_device_lines as dl ";
+		$sql .= "		where dl.display_name like :search ";
+		$sql .= "		or dl.user_id like :search ";
+		$sql .= "		or dl.auth_id like :search ";
+		$sql .= "	) ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select dk.device_uuid from v_device_keys as dk ";
+		$sql .= "		where dk.device_key_value like :search ";
+		$sql .= "		or dk.device_key_label like :search ";
+		$sql .= "	) ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select ds.device_uuid from v_device_settings as ds ";
+		$sql .= "		where ds.device_setting_subcategory like :search ";
+		$sql .= "		or ds.device_setting_value like :search ";
+		$sql .= "		or ds.device_setting_description like :search ";
+		$sql .= "	) ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
@@ -155,7 +172,10 @@
 	}
 	$sql .= "where ( ";
 	$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
-	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
+	$sql .= "	or ( ";
+	$sql .= "		d.device_uuid_alternate is null and ";
+	$sql .= "		d.device_uuid = d2.device_uuid ";
+	$sql .= "	) ";
 	$sql .= ") ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= " and d.domain_uuid = d3.domain_uuid ";
@@ -183,6 +203,23 @@
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
 		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select dl.device_uuid from v_device_lines as dl ";
+		$sql .= "		where dl.display_name like :search ";
+		$sql .= "		or dl.user_id like :search ";
+		$sql .= "		or dl.auth_id like :search ";
+		$sql .= "	) ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select dk.device_uuid from v_device_keys as dk ";
+		$sql .= "		where dk.device_key_value like :search ";
+		$sql .= "		or dk.device_key_label like :search ";
+		$sql .= "	) ";
+		$sql .= "	or d.device_uuid in ( ";
+		$sql .= "		select ds.device_uuid from v_device_settings as ds ";
+		$sql .= "		where ds.device_setting_subcategory like :search ";
+		$sql .= "		or ds.device_setting_value like :search ";
+		$sql .= "		or ds.device_setting_description like :search ";
+		$sql .= "	) ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
