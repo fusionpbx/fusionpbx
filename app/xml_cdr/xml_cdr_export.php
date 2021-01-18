@@ -51,7 +51,7 @@
 	$export_format = $_REQUEST['export_format'];
 
 //export the csv
-	if ($export_format == 'csv') {
+	if (permission_exists('xml_cdr_export_csv') && $export_format == 'csv') {
 
 		//define file name
 			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
@@ -104,7 +104,7 @@
 	}
 
 //export as a PDF
-	if ($export_format == 'pdf') {
+	if (permission_exists('xml_cdr_export_pdf') && $export_format == 'pdf') {
 
 		//load pdf libraries
 		require_once "resources/tcpdf/tcpdf.php";
