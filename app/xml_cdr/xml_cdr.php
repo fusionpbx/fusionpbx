@@ -188,8 +188,12 @@
 		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
 		echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
-		echo "			<option value='csv'>CSV</option>";
-		echo "			<option value='pdf'>PDF</option>";
+		if (permission_exists('xml_cdr_export_csv')) {
+			echo "			<option value='csv'>CSV</option>";
+		}
+		if (permission_exists('xml_cdr_export_pdf')) {
+			echo "			<option value='pdf'>PDF</option>";
+		}
 		echo "		</select>";
 	}
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
