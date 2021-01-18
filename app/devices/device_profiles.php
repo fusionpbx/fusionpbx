@@ -86,6 +86,17 @@
 		$sql_search = "and (";
 		$sql_search .= "	lower(device_profile_name) like :search ";
 		$sql_search .= "	or lower(device_profile_description) like :search ";
+		$sql_search .= "	or device_profile_uuid in ( ";
+		$sql_search .= "		select dpk.device_profile_uuid from v_device_profile_keys as dpk ";
+		$sql_search .= "		where dpk.profile_key_value like :search ";
+		$sql_search .= "		or dpk.profile_key_label like :search ";
+		$sql_search .= "	) ";
+		$sql_search .= "	or device_profile_uuid in ( ";
+		$sql_search .= "		select dps.device_profile_uuid from v_device_profile_settings as dps ";
+		$sql_search .= "		where dps.profile_setting_name like :search ";
+		$sql_search .= "		or dps.profile_setting_value like :search ";
+		$sql_search .= "		or dps.profile_setting_description like :search ";
+		$sql_search .= "	) ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
