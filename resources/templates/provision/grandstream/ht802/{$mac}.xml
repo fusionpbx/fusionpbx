@@ -1052,7 +1052,11 @@
     <!-- # Enable Session Timer. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2395>1</P2395>
+    {if isset($grandstream_session_timer)}
+	<P2395>{$grandstream_session_timer}</P2395>
+    {else}
+	<P2395>1</P2395>
+    {/if}
 
     <!-- # Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
     <!-- # Number: 90-64800 -->
