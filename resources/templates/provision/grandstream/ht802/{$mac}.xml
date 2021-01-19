@@ -1294,7 +1294,7 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     {if isset($grandstream_loop_current_disconnect)}
-    <P892>1</P892>
+    <P892>{$grandstream_loop_current_disconnect}</P892>
     {else}
     <P892>0</P892>
     {/if}
