@@ -253,8 +253,8 @@ if (!class_exists('scripts')) {
 							$tmp .= "	database.switch = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 						}
 						elseif ($this->db_type == "mysql") {
-							$tmp .= "	database.system = \"\";\n";
-							$tmp .= "	database.switch = \"\";\n";
+							$tmp .= "       database.system = \"mariadb://".$host."=".$this->db_host." port=".$this->db_port." dbname=".$this->db_name." user=".$this->db_username." password=".$this->db_password."\";\n";
+                                                        $tmp .= "       database.switch = \"mariadb://".$host."=".$this->db_host." port=".$this->db_port." dbname=freeswitch user=".$this->db_username." password=".$this->db_password."\";\n";
 						}
 						$tmp .= "\n";
 						$tmp .= "	database.backend = {}\n";

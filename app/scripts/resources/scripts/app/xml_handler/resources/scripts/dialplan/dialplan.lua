@@ -121,12 +121,12 @@
 				sql = sql .. "	p.dialplan_uuid IN ( ";
 				sql = sql .. "		SELECT dialplan_uuid FROM v_destinations "
 				sql = sql .. "		WHERE ( ";
-				sql = sql .. "			destination_prefix || destination_area_code || destination_number = :destination_number ";
-				sql = sql .. "			OR destination_trunk_prefix || destination_area_code || destination_number = :destination_number ";
-				sql = sql .. "			OR destination_prefix || destination_number = :destination_number ";
-				sql = sql .. "			OR '+' || destination_prefix || destination_number = :destination_number ";
-				sql = sql .. "			OR '+' || destination_prefix || destination_area_code || destination_number = :destination_number ";
-				sql = sql .. "			OR destination_area_code || destination_number = :destination_number ";
+				sql = sql .. "			CONCAT(destination_prefix, destination_area_code, destination_number) = :destination_number ";
+				sql = sql .. "			OR CONCAT(destination_trunk_prefix, destination_area_code, destination_number) = :destination_number ";
+				sql = sql .. "			OR CONCAT(destination_prefix, destination_number) = :destination_number ";
+				sql = sql .. "			OR CONCAT('+', destination_prefix,destination_number) = :destination_number ";
+				sql = sql .. "			OR CONCAT('+', destination_prefix, destination_area_code, destination_number) = :destination_number ";
+				sql = sql .. "			OR CONCAT(destination_area_code, destination_number) = :destination_number ";
 				sql = sql .. "			OR destination_number = :destination_number ";
 				sql = sql .. "		) ";
 				sql = sql .. "	) ";

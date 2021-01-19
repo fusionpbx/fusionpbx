@@ -108,6 +108,9 @@
 			if ($key == 'database_password') {
 				$_SESSION['install'][$key] = $value;
 			}
+			if ($key == 'database_type') {
+			    $_SESSION['install'][$key] = $value;
+			}
 			//echo "if (\$key == '$key') {\n";
 			//echo "	\$_SESSION['install'][\$key] = \$value;\n";
 			//echo "}\n";
@@ -149,7 +152,7 @@
 			$config .= "//-----------------------------------------------------\n";
 			$config .= "\n";
 			$config .= "	//set the database type\n";
-			$config .= "		\$db_type = 'pgsql'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
+			$config .= "            \$db_type = '".$_SESSION['install']['database_type']."'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
 			$config .= "\n";
 			$config .= "//database connection information\n";
 			$config .= "		\$db_host = '".$_SESSION['install']['database_host']."'; //set the host only if the database is not local\n";
@@ -182,7 +185,7 @@
 			fclose($fout);
 
 			//add the database schema
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php core/upgrade/upgrade_schema.php');
 
 			//includes - this includes the config.php
 			require_once "resources/require.php";
@@ -236,7 +239,7 @@
 			$_SESSION['domain_name'] = $domain_name;
 
 			//app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /core/upgrade/upgrade_domains.php');
 
 			//prepare the user settings
 			$admin_username = $_SESSION['install']['admin_username'];
@@ -334,7 +337,7 @@
 			}
 
 			#app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php core/upgrade/upgrade_domains.php');
 
 			//install completed - prompt the user to login
 			header("Location: /logout.php");

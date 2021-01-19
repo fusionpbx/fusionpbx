@@ -130,7 +130,7 @@
 
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, groups, ";
-	$sql .= "contact_organization,contact_name, cast(user_enabled as text) ";
+	$sql .= "contact_organization,contact_name, ".($db_type=='pgsql'?"cast(user_enabled as text)":"user_enabled")." ";
 	$sql .= "from view_users ";
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		if (isset($sql_search)) {
