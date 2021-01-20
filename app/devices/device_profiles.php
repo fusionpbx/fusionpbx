@@ -49,6 +49,10 @@
 		$profiles = $_POST['profiles'];
 	}
 
+//get the search
+	$search = strtolower($_REQUEST["search"]);
+	$fields = strtolower($_REQUEST["fields"]);
+
 //process the http post data by action
 	if ($action != '' && is_array($profiles) && @sizeof($profiles) != 0) {
 		switch ($action) {
@@ -72,7 +76,7 @@
 				break;
 		}
 
-		header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: device_profiles.php'.($search != '' ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
 		exit;
 	}
 
@@ -81,22 +85,25 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
 		$sql_search .= "	lower(device_profile_name) like :search ";
 		$sql_search .= "	or lower(device_profile_description) like :search ";
-		$sql_search .= "	or device_profile_uuid in ( ";
-		$sql_search .= "		select dpk.device_profile_uuid from v_device_profile_keys as dpk ";
-		$sql_search .= "		where dpk.profile_key_value like :search ";
-		$sql_search .= "		or dpk.profile_key_label like :search ";
-		$sql_search .= "	) ";
-		$sql_search .= "	or device_profile_uuid in ( ";
-		$sql_search .= "		select dps.device_profile_uuid from v_device_profile_settings as dps ";
-		$sql_search .= "		where dps.profile_setting_name like :search ";
-		$sql_search .= "		or dps.profile_setting_value like :search ";
-		$sql_search .= "		or dps.profile_setting_description like :search ";
-		$sql_search .= "	) ";
+		if ($fields == 'all' || $fields == 'keys') {
+			$sql_search .= "	or device_profile_uuid in ( ";
+			$sql_search .= "		select dpk.device_profile_uuid from v_device_profile_keys as dpk ";
+			$sql_search .= "		where dpk.profile_key_value like :search ";
+			$sql_search .= "		or dpk.profile_key_label like :search ";
+			$sql_search .= "	) ";
+		}
+		if ($fields == 'all' || $fields == 'settings') {
+			$sql_search .= "	or device_profile_uuid in ( ";
+			$sql_search .= "		select dps.device_profile_uuid from v_device_profile_settings as dps ";
+			$sql_search .= "		where dps.profile_setting_name like :search ";
+			$sql_search .= "		or dps.profile_setting_value like :search ";
+			$sql_search .= "		or dps.profile_setting_description like :search ";
+			$sql_search .= "	) ";
+		}
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -114,7 +121,10 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
+	if ($search) {
+		$param = "&search=".$search;
+		$param .= "&fields=".$fields;
+	}
 	if ($_GET['show'] == "all" && permission_exists('device_profile_all')) {
 		$param .= "&show=all";
 	}
@@ -166,7 +176,15 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+
+	echo 		"<select class='formfld' name='fields' id='select_fields' style='width: auto; margin-left: 15px;' onchange=\"if (document.getElementById('search').value != '') { this.form.submit(); }\">\n";
+	echo "			<option value=''>".$text['label-fields']."...</option>\n";
+	echo "			<option value=''>".$text['label-default']."</option>\n";
+	echo "			<option value='keys' ".($fields == 'keys' ? " selected='selected'" : null).">".$text['label-keys']."</option>\n";
+	echo "			<option value='settings' ".($fields == 'settings' ? " selected='selected'" : null).">".$text['label-settings']."</option>\n";
+	echo "			<option value='all' ".($fields == 'all' ? " selected='selected'" : null).">".$text['label-all']."</option>\n";
+	echo "		</select>";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'device_profiles.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
@@ -193,6 +211,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='fields' value=\"".escape($fields)."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";

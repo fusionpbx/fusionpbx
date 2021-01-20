@@ -4583,6 +4583,27 @@ $text['label-custom']['ru-ru'] = "";
 $text['label-custom']['sv-se'] = "";
 $text['label-custom']['uk-ua'] = "";
 
+$text['label-fields']['en-us'] = "Fields";
+$text['label-fields']['en-gb'] = "Fields";
+$text['label-fields']['ar-eg'] = "Fields";
+$text['label-fields']['de-at'] = "Fields";
+$text['label-fields']['de-ch'] = "Fields";
+$text['label-fields']['de-de'] = "Fields";
+$text['label-fields']['es-cl'] = "Fields";
+$text['label-fields']['es-mx'] = "Fields";
+$text['label-fields']['fr-ca'] = "Fields";
+$text['label-fields']['fr-fr'] = "Fields";
+$text['label-fields']['he-il'] = "Fields";
+$text['label-fields']['it-it'] = "Fields";
+$text['label-fields']['nl-nl'] = "Fields";
+$text['label-fields']['pl-pl'] = "Fields";
+$text['label-fields']['pt-br'] = "Fields";
+$text['label-fields']['pt-pt'] = "Fields";
+$text['label-fields']['ro-ro'] = "Fields";
+$text['label-fields']['ru-ru'] = "Fields";
+$text['label-fields']['sv-se'] = "Fields";
+$text['label-fields']['uk-ua'] = "Fields";
+
 $text['header-device_import']['en-us'] = "Device Import";
 $text['header-device_import']['en-gb'] = "Device Import";
 $text['header-device_import']['ar-eg'] = "";
