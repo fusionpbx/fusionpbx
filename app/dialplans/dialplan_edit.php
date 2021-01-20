@@ -412,7 +412,7 @@
 					$details[$group][$x]['dialplan_detail_inline'] = '';
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
-					$details[$group][$x]['dialplan_detail_enabled'] = '';
+					$details[$group][$x]['dialplan_detail_enabled'] = 'true';
 					
 			}
 		}
@@ -773,6 +773,11 @@
 								$dialplan_detail_group = $row['dialplan_detail_group'];
 								$dialplan_detail_order = $row['dialplan_detail_order'];
 								$dialplan_detail_enabled = $row['dialplan_detail_enabled'];
+
+							//default to enabled true
+								if (strlen($dialplan_detail_enabled) == 0) {
+									$dialplan_detail_enabled = 'true';
+								}
 
 							//no border on last row
 								$no_border = ($index == 999) ? "border: none;" : null;
