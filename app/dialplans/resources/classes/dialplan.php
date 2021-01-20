@@ -600,42 +600,43 @@
 					if ($this->source == "details") {
 
 						//get the data using a join between the dialplans and dialplan details tables
-							$sql = "select ";
-							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, ";
-							$sql .= "p.dialplan_continue, p.dialplan_order, p.dialplan_enabled, p.dialplan_description, ";
-							$sql .= "s.dialplan_detail_uuid, s.dialplan_detail_tag, s.dialplan_detail_type, s.dialplan_detail_data, ";
-							$sql .= "s.dialplan_detail_break, s.dialplan_detail_inline, s.dialplan_detail_group, s.dialplan_detail_order ";
-							$sql .= "from v_dialplans as p, v_dialplan_details as s ";
-							$sql .= "where p.dialplan_uuid = s.dialplan_uuid ";
+							$sql = "select \n";
+							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, \n";
+							$sql .= "p.dialplan_continue, p.dialplan_order, p.dialplan_enabled, p.dialplan_description, \n";
+							$sql .= "s.dialplan_detail_uuid, s.dialplan_detail_tag, s.dialplan_detail_type, s.dialplan_detail_data, \n";
+							$sql .= "s.dialplan_detail_break, s.dialplan_detail_inline, s.dialplan_detail_group, s.dialplan_detail_order, s.dialplan_detail_enabled \n";
+							$sql .= "from v_dialplans as p, v_dialplan_details as s \n";
+							$sql .= "where p.dialplan_uuid = s.dialplan_uuid \n";
 							if ($this->is_empty == "dialplan_xml") {
-								$sql .= "and p.dialplan_xml is null ";
+								$sql .= "and p.dialplan_xml is null \n";
 							}
 							if (isset($this->context)) {
 								if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
-									$sql .= "and p.dialplan_context = :dialplan_context ";
+									$sql .= "and p.dialplan_context = :dialplan_context \n";
 								}
 								else {
-									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}') ";
+									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}') \n";
 								}
-								$sql .= "and p.dialplan_enabled = 'true' ";
+								$sql .= "and p.dialplan_enabled = 'true' \n";
 								$parameters['dialplan_context'] = $this->context;
 							}
 							if (is_uuid($this->uuid)) {
-								$sql .= "and p.dialplan_uuid = :dialplan_uuid ";
-								$sql .= "and s.dialplan_uuid = :dialplan_uuid ";
+								$sql .= "and p.dialplan_uuid = :dialplan_uuid \n";
+								$sql .= "and s.dialplan_uuid = :dialplan_uuid \n";
 								$parameters['dialplan_uuid'] = $this->uuid;
 							}
-							$sql .= "order by ";
-							$sql .= "p.dialplan_order asc, ";
-							$sql .= "p.dialplan_name asc, ";
-							$sql .= "p.dialplan_uuid asc, ";
-							$sql .= "s.dialplan_detail_group asc, ";
-							$sql .= "case s.dialplan_detail_tag ";
-							$sql .= "when 'condition' then 1 ";
-							$sql .= "when 'action' then 2 ";
-							$sql .= "when 'anti-action' then 3 ";
-							$sql .= "else 100 end, ";
-							$sql .= "s.dialplan_detail_order asc ";
+							$sql .= "and (s.dialplan_detail_enabled = 'true' or s.dialplan_detail_enabled is null) \n";
+							$sql .= "order by \n";
+							$sql .= "p.dialplan_order asc, \n";
+							$sql .= "p.dialplan_name asc, \n";
+							$sql .= "p.dialplan_uuid asc, \n";
+							$sql .= "s.dialplan_detail_group asc, \n";
+							$sql .= "case s.dialplan_detail_tag \n";
+							$sql .= "when 'condition' then 1 \n";
+							$sql .= "when 'action' then 2 \n";
+							$sql .= "when 'anti-action' then 3 \n";
+							$sql .= "else 100 end, \n";
+							$sql .= "s.dialplan_detail_order asc \n";
 							$database = new database;
 							$results = $database->select($sql, $parameters, 'all');
 							unset($sql, $parameters);
