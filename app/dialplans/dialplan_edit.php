@@ -232,6 +232,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row["dialplan_detail_enabled"];
 					}
 					$y++;
 				}
@@ -411,6 +412,8 @@
 					$details[$group][$x]['dialplan_detail_inline'] = '';
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+					$details[$group][$x]['dialplan_detail_enabled'] = '';
+					
 			}
 		}
 	//sort the details array by group number
@@ -748,6 +751,7 @@
 					echo "<td class='vncellcol' style='text-align: center;'>".$text['label-inline']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-group']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-order']."</td>\n";
+					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-enabled']."</td>\n";
 					if (permission_exists('dialplan_detail_delete')) {
 						echo "<td class='vncellcol edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\" onmouseout=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\">\n";
 						echo "	<span id='delete_label_group_".$g."'>".$text['label-delete']."</span>\n";
@@ -768,6 +772,7 @@
 								$dialplan_detail_inline = $row['dialplan_detail_inline'];
 								$dialplan_detail_group = $row['dialplan_detail_group'];
 								$dialplan_detail_order = $row['dialplan_detail_order'];
+								$dialplan_detail_enabled = $row['dialplan_detail_enabled'];
 
 							//no border on last row
 								$no_border = ($index == 999) ? "border: none;" : null;
@@ -966,6 +971,17 @@
 								}
 								echo "	</select>\n";
 								*/
+								echo "</td>\n";
+							//enabled
+								echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_enabled_".$x."','dialplan_detail_enabled_".$x."');\" nowrap='nowrap'>\n";
+								if ($element['hidden']) {
+									echo "	<label id=\"label_dialplan_detail_enabled_".$x."\">".escape($dialplan_detail_enabled)."</label>\n";
+								}
+								echo "	<select id='dialplan_detail_enabled_".$x."' name='dialplan_details[".$x."][dialplan_detail_enabled]' class='formfld' style='width: auto; ".$element['visibility']."'>\n";
+								echo "	<option></option>\n";
+								echo "	<option value='true' ".($dialplan_detail_enabled == "true" ? $selected : null).">".$text['option-true']."</option>\n";
+								echo "	<option value='false' ".($dialplan_detail_enabled == "false" ? $selected : null).">".$text['option-false']."</option>\n";
+								echo "	</select>\n";
 								echo "</td>\n";
 							//tools
 								if (permission_exists('dialplan_detail_delete')) {
