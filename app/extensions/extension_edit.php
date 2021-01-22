@@ -76,7 +76,16 @@
 	if (count($_POST) > 0) {
 
 		//get the values from the HTTP POST and save them as PHP variables
-			$extension = str_replace(' ','-',$_POST["extension"]);
+			if ($action == 'add' || permission_exists("extension_extension")) {
+				$extension = str_replace(' ','-',$_POST["extension"]);
+			}
+			else { //lookup extension based on submitted uuid
+				$sql = "select extension from v_extensions where extension_uuid = :extension_uuid";
+				$parameters['extension_uuid'] = $extension_uuid;
+				$database = new database;
+				$extension = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+			}
 			$number_alias = $_POST["number_alias"];
 			$password = $_POST["password"];
 
