@@ -387,7 +387,7 @@
 
 	//foreach($array["variables"] as $key => $value) {
 	if (is_array($array["app_log"]["application"])) {
-		foreach ($array["app_log"]["application"] as $row) {
+		foreach ($array["app_log"]["application"] as $key=>$row) {
 			//single app
 			if ($key == "@attributes") {
 				$app_name = $row["app_name"];
