@@ -347,6 +347,12 @@
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
 																}
 																$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+																if (isset($row2['@attributes']['enabled'])) {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
+																}
+																else {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																}
 																$y++;
 
 																//increase the order number
@@ -368,6 +374,12 @@
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
 																}
 																$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+																if (isset($row2['@attributes']['enabled'])) {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
+																}
+																else {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																}
 																$y++;
 
 																//increase the order number
