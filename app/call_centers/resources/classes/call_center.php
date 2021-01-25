@@ -422,7 +422,7 @@
 
 							//build the delete array
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
-									foreach ($uuids as $uuid) {
+									foreach ($uuids as $x => $uuid) {
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['call_center_tiers'][$x]['call_center_agent_uuid'] = $uuid;
