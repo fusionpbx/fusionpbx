@@ -348,7 +348,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_cert_validate";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require Provisioning Cert Validation 0=Disabled - 1=Enabled ";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5f80d126-eae1-41af-8c47-5d118ef7be50";
@@ -364,7 +364,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_platform_profile_cipher_suite";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ALL:!aNULL:!eNULL:!IDEA:!MEDIUM:!LOW:!ADH:!LOW:!EXP:!DH:!AECDH:!PSK:!SRP:!MD5:!RC4:@STRENGTH";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enter the cipher suites to use for TLS Platform Profile 1";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d8e53e24-fbb4-4cbd-bce1-dd793d92e789";
@@ -372,7 +372,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_dns_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the primary server to which the phone directs DNS queries.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "094f626b-5891-4a0c-a390-49c221fcb197";
@@ -380,7 +380,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_dns_alt_server";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the secondary server to which the phone directs DNS queries.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba9ad978-5c38-467b-9630-f417690b1303";
@@ -396,7 +396,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_keep_alive";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The keep-alive interval in seconds.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "808a4cb8-054a-416a-b473-804b84822385";
@@ -404,7 +404,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_boot_server_option";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Default";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default, Custom or Static";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "355b778a-1c6c-4ed4-ae7b-6db37b6f139a";
@@ -412,7 +412,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_lldp_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Phone attempts to determine its VLAN ID and negotiate power through LLDP. 0 - disabled. 1 - enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b19aea7a-5f3e-455c-94fe-b6b4f895a7ca";
@@ -420,7 +420,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_cdp_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "phone attempts to determine its VLAN ID and negotiate power through CDP. 0 - disabled. 1 - enabled";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "95a35bbe-3410-432a-b318-fbd6a490a56c";
@@ -430,13 +430,5 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Fixed";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disabled, Fixed or Custom";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be7b12ff-3172-43e1-be9a-df8da3cb6d76";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_local_admin_password";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "456";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Specify a local administrator password.";
 
 ?>
