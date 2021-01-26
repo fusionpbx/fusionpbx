@@ -49,8 +49,11 @@
 	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
 	if (is_array($_SESSION['time_conditions'][$preset_region])) {
 		foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
-			$available_presets[] = json_decode($json, true);
-			$valid_presets[] = array_key_first(end($available_presets));
+			$json_array = json_decode($json, true);
+			if (is_array($json_array)) {
+				$available_presets[] = $json_array;
+				$valid_presets[] = array_key_first(end($available_presets));
+			}
 		}
 	}
 	unset($preset_region);
