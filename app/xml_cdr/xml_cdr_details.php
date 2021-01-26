@@ -387,9 +387,17 @@
 
 	//foreach($array["variables"] as $key => $value) {
 	if (is_array($array["app_log"]["application"])) {
-		foreach ($array["app_log"]["application"] as $row) {
-			$app_name = $row["@attributes"]["app_name"];
-			$app_data = urldecode($row["@attributes"]["app_data"]);
+		foreach ($array["app_log"]["application"] as $key=>$row) {
+			//single app
+			if ($key == "@attributes") {
+				$app_name = $row["app_name"];
+				$app_data = urldecode($row["app_data"]);
+			}
+			//multiple apps
+			else {
+				$app_name = $row["@attributes"]["app_name"];
+				$app_data = urldecode($row["@attributes"]["app_data"]);
+			}
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";
