@@ -346,6 +346,17 @@
 							//delete the checked rows
 								if (is_array($array) && @sizeof($array) != 0) {
 
+									//setup the event socket connection
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+									//delete the queue in the switch
+										if ($fp) {
+											foreach ($uuids as $uuid) {
+												$cmd = "api callcenter_config queue unload ".$uuid;
+												$response = event_socket_request($fp, $cmd);
+											}
+										}
+
 									//grant temporary permissions
 										$p = new permissions;
 										$p->add('call_center_tier_delete', 'temp');
