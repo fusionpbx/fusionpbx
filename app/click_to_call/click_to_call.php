@@ -2,7 +2,7 @@
 /* $Id$ */
 /*
 	click_to_call.php
-	Copyright (C) 2008, 2018 Mark J Crane
+	Copyright (C) 2008, 2021 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -209,7 +209,7 @@
 			else {
 				//display the last command
 					$switch_cmd = "api originate ".$source.$switch_cmd;
-					echo "<div align='center'>".$switch_cmd."<br /><br /><strong>".$src." has called ".$dest."</strong></div>\n";
+					echo "<div align='center'><strong>".$src." has called ".$dest."</strong></div>\n";
 				//show the command result
 				$result = trim(event_socket_request($fp, $switch_cmd));
 				if (substr($result, 0,3) == "+OK") {
