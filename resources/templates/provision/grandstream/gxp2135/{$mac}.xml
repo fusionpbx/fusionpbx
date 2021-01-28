@@ -6056,50 +6056,66 @@
     <!-- # OpenVPN Enable.  0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1  -->
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_enable)}
+    <P7050>{$grandstream_openvpn_enable}</P7050>
+{else}
     <P7050>0</P7050>
+{/if}
 
     <!-- # OpenVPN Server Address -->
     <!-- # String -->
-    <P7051></P7051>
+    <P7051>{$grandstream_openvpn_server}</P7051>
 
     <!-- # OpenVPN Port. Default is 1194 -->
     <!-- # Number -->
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_port)}  
+    <P7052>{$grandstream_openvpn_port}</P7052>
+{else}
     <P7052>1194</P7052>
+{/if}
 
     <!-- # OpenVPN Transport.  0 - UDP, 1 - TCP. Default is 0 -->
     <!-- #Number: 0, 1  -->
     <!-- #Mandatory -->
+{if isset($grandstream_openvpn_transport)}
+    <P2912>{$grandstream_openvpn_transport}</P2912>
+{else}
     <P2912>0</P2912>
+{/if}
 
     <!-- # OpenVPN CA -->
     <!-- # String -->
-    <P9902></P9902>
+    <P9902>{$grandstream_openvpn_ca}</P9902>
 
     <!-- # OpenVPN Certificate -->
     <!-- # String -->
-    <P9903></P9903>
+    <P9903>{$grandstream_openvpn_cert}</P9903>
 
     <!-- # OpenVPN Client Key -->
     <!-- # String -->
-    <P9904></P9904>
+    <P9904>{$grandstream_openvpn_key}</P9904>
 
     <!-- # OpenVPN Cipher Method. 0 - Blowfish, 1 - AES-128, 2 - AES-256, 3 - Triple-DES. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3  -->
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_cipher)}
+    <P8396>{$grandstream_openvpn_cipher}</P8396>
+{else}
     <P8396>0</P8396>
+{/if}
 
     <!-- # OpenVPN Username -->
     <!-- # String -->
-    <P8394></P8394>
+    <P8394>{$grandstream_openvpn_username}</P8394>
 
     <!-- # OpenVPN Password -->
     <!-- # String -->
-    <P8395></P8395>
+    <P8395>{$grandstream_openvpn_password}</P8395>
 
     <!-- # Additional Options -->
     <!-- # String -->
-    <P8460></P8460>
+    <P8460>{$grandstream_openvpn_options}</P8460>
 
     <!-- ############################################################################## -->
     <!-- ## Network/SNMP Settings                     ## -->
