@@ -106,7 +106,8 @@
 				--set ringback
 					queue_ringback = format_ringback(queue_moh_sound);
 					table.insert(xml, [[                                    <param name="moh-sound" value="]]..queue_ringback..[["/>]]);
-					if (queue_record_template ~= nil) then
+					if (queue_record_template == "true") then
+						local queue_record_template = string.format("%s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}", recordings_dir, domain_name)
 						table.insert(xml, [[                                    <param name="record-template" value="]]..queue_record_template..[["/>]]);
 					end
 					if (queue_time_base_score ~= nil) then
