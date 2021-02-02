@@ -588,8 +588,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_record'>\n";
-	echo "	<option value='true' ".($agent_record ?  "selected='selected'" : '')." >".$text['option-true']."</option>\n";
-	echo "	<option value='false' ".(!$agent_record ?  "selected='selected'" : '').">".$text['option-false']."</option>\n";
+	echo "	<option value='true' ".($agent_record == "true" ?  "selected='selected'" : '')." >".$text['option-true']."</option>\n";
+	echo "	<option value='false' ".($agent_record != "true" ?  "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
