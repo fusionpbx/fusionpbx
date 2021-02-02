@@ -882,6 +882,9 @@
 				end
 			end
 
+		--release dbh before bridge
+				dbh:release();
+				
 		--session execute
 			if (session:ready()) then
 				--set the variables
@@ -1006,6 +1009,7 @@
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 						else
+							dbh = Database.new('system');
 							local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 							sql = sql .. "where ring_group_uuid = :ring_group_uuid";
 							local params = {ring_group_uuid = ring_group_uuid};
