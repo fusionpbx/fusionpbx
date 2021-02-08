@@ -634,7 +634,6 @@
 							}
 							if (is_uuid($this->uuid)) {
 								$sql .= "and p.dialplan_uuid = :dialplan_uuid \n";
-								$sql .= "and s.dialplan_uuid = :dialplan_uuid \n";
 								$parameters['dialplan_uuid'] = $this->uuid;
 							}
 							$sql .= "and (s.dialplan_detail_enabled = 'true' or s.dialplan_detail_enabled is null) \n";
