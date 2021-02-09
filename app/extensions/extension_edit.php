@@ -940,7 +940,7 @@
 		if (permission_exists('extension_copy')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"copy_extension();"]);
 		}
-		if (permission_exists('domain_setting_view') && file_exists(PROJECT_PATH.'/app/extension_settings/app_config.php')) {
+		if (permission_exists('extension_setting_view') && file_exists(PROJECT_PATH.'/app/extension_settings/app_config.php')) {
 			echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_settings'],'id'=>'btn_settings','style'=>'','link'=>PROJECT_PATH.'/app/extension_settings/extension_settings.php?id='.urlencode($extension_uuid)]);
 		}
 	}
