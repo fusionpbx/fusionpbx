@@ -389,7 +389,7 @@
 	if (is_array($array["app_log"]["application"])) {
 		foreach ($array["app_log"]["application"] as $key=>$row) {
 			//single app
-			if ($key == "@attributes") {
+			if ($key === "@attributes") {
 				$app_name = $row["app_name"];
 				$app_data = urldecode($row["app_data"]);
 			}
