@@ -28,6 +28,7 @@
 	if (session:ready()) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
+		uuid = session:getVariable("uuid");
 		destination_number = session:getVariable("destination_number");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
@@ -330,8 +331,23 @@
 				--get the extension_uuid
 				cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 				extension_uuid = trim(api:executeString(cmd));
+
+				local record_session = "";
+				--if session is already recording then skip
+				if (session:getVariable("record_session") ~= "true") then
+					local cmd = "user_data "..destination_number.."@"..domain_name.." var user_record";
+					local user_record = api:executeString(cmd);
+					if (user_record == "all" or user_record == call_direction) then 
+						local recordings_dir = session:getVariable("recordings_dir");
+						local record_ext = session:getVariable("record_ext") or "wav";
+						local record_name = uuid.."."..record_ext;
+						local record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+					end
+				end
+
 				--send to user
-				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
+				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid..record_session.."]user/" .. row.destination_number .. "@" .. domain_name;
 				dial_string = dial_string_to_user;
 			elseif (tonumber(destination_number) == nil) then
 				--sip uri
