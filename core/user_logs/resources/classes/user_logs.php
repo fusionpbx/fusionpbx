@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -67,6 +67,42 @@ if (!class_exists('user_logs')) {
 			foreach ($this as $key => $value) {
 				unset($this->$key);
 			}
+		}
+
+		/**
+		 * add user_logs
+		 */
+		public static function add($result) {
+			//prepare the array
+				$array['user_logs'][0]["timestamp"] = 'now()';
+				$array['user_logs'][0]["domain_uuid"] = $result['domain_uuid'];
+				$array['user_logs'][0]["user_uuid"] = $result['user_uuid'];
+				$array['user_logs'][0]["username"] = $result['username'];
+				$array['user_logs'][0]["type"] = 'login';
+				$array['user_logs'][0]["remote_address"] = $_SERVER['REMOTE_ADDR'];
+				$array['user_logs'][0]["user_agent"] = $_SERVER['HTTP_USER_AGENT'];
+				$array['user_logs'][0]["type"] = 'login';
+				if ($result["authorized"] == "true") {
+					$array['user_logs'][0]["result"] = 'success';
+				}
+				else {
+					$array['user_logs'][0]["result"] = 'failure';
+				}
+
+			//add the dialplan permission
+				$p = new permissions;
+				$p->add("user_log_add", 'temp');
+
+			//save to the data
+				$database = new database;
+				$database->app_name = 'authentication';
+				$database->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
+				$database->uuid($user_log_uuid);
+				$database->save($array);
+				$message = $database->message;
+
+			//remove the temporary permission
+				$p->delete("user_log_add", 'temp');
 		}
 
 		/**
