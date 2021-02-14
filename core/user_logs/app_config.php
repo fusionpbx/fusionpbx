@@ -15,6 +15,9 @@
 		$apps[$x]['permissions'][$y]['name'] = 'user_log_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'user_log_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'user_log_delete';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
