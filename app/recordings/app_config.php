@@ -92,8 +92,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "base64";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-
-		$y=0;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "960828e1-8d6b-4381-86c4-fa03fce4276a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_max_length";
