@@ -89,7 +89,6 @@
 //add the search
 	if (isset($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
-		$parameters['search'] = '%'.$search.'%';
 	}
 
 //get the count
@@ -103,6 +102,7 @@
 		$sql .= "	or lower(remote_address) like :search ";
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	else {
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -143,6 +143,7 @@
 		$sql .= "	or lower(remote_address) like :search ";
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$sql .= order_by($order_by, $order, 'timestamp', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
