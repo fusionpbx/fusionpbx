@@ -280,6 +280,10 @@
 		$sql_where_ands[] = "leg = :leg";
 		$parameters['leg'] = $leg;
 	}
+	//If you can't see lose_race, don't run stats on it
+	if (!permission_exists('xml_cdr_lose_race')) {
+		$sql_where_ands[] = "hangup_cause != 'LOSE_RACE'";
+	}
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
