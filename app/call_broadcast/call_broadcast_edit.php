@@ -103,6 +103,7 @@
 		$broadcast_avmd = $_POST["broadcast_avmd"];
 		$broadcast_destination_data = $_POST["broadcast_destination_data"];
 		$broadcast_description = $_POST["broadcast_description"];
+		$broadcast_toll_allow = $_POST["broadcast_toll_allow"];
 
 		if (if_group("superadmin")) {
 			$broadcast_accountcode = $_POST["broadcast_accountcode"];
@@ -234,6 +235,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['call_broadcasts'][0]['broadcast_destination_data'] = $broadcast_destination_data;
 					$array['call_broadcasts'][0]['broadcast_accountcode'] = $broadcast_accountcode;
 					$array['call_broadcasts'][0]['broadcast_description'] = $broadcast_description;
+					$array['call_broadcasts'][0]['broadcast_toll_allow'] = $broadcast_toll_allow;
 
 				//execute
 					$database = new database;
@@ -274,6 +276,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_destination_data = $row["broadcast_destination_data"];
 			$broadcast_accountcode = $row["broadcast_accountcode"];
 			$broadcast_description = $row["broadcast_description"];
+			$broadcast_toll_allow = $row["broadcast_toll_allow"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -493,6 +496,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-broadcast_toll_allow']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='broadcast_toll_allow' maxlength='255' value=".escape($broadcast_toll_allow).">\n";
+	echo "<br />\n";
+	echo $text['description-broadcast_toll_allow']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+		
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-description']."\n";
