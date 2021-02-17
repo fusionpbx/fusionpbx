@@ -182,6 +182,7 @@
 							$channel_variables .= ",domain=".$_SESSION['domain_name'];
 							$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
 							$channel_variables .= ",accountcode='$broadcast_accountcode'";
+							$channel_variables .= ",toll_allow='$broadcast_toll_allow'";
 							if ($broadcast_avmd == "true") {
 								$channel_variables .= ",execute_on_answer='avmd start'";
 							}
