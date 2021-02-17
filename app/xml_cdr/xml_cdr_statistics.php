@@ -314,7 +314,7 @@
 		echo "	<td>".escape($row['volume'])."&nbsp;</td>\n";
 		echo "	<td>".(round(escape($row['minutes']),2))."&nbsp;</td>\n";
 		echo "	<td>".(round(escape($row['avg_min']),2))."&nbsp;/&nbsp;".(round(escape($row['cpm_ans']),2))."&nbsp;</td>\n";
-		echo "	<td class='center'><a href=\"xml_cdr.php?missed=true&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
+		echo "	<td class='center'><a href=\"xml_cdr.php?call_result=missed&direction=$direction&start_epoch=".escape($row['start_epoch'])."&stop_epoch=".escape($row['stop_epoch'])."\">".escape($row['missed'])."</a>&nbsp;</td>\n";
 		echo "	<td>".(round(escape($row['asr']),2))."&nbsp;</td>\n";
 		echo "	<td>".(round(escape($row['aloc']),2))."&nbsp;</td>\n";
 		echo "</tr >\n";
