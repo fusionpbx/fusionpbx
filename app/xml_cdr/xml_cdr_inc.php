@@ -413,9 +413,12 @@
 		$sql .= "and billsec like :billsec ";
 		$parameters['billsec'] = '%'.$billsec.'%';
 	}
-	if (strlen($hangup_cause) > 0) {
+	if (strlen($hangup_cause) > 0 && $hangup_cause != 'LOSE_RACE') {
 		$sql .= "and hangup_cause like :hangup_cause ";
 		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
+	}
+	elseif (!permission_exists('xml_cdr_lose_race')) {
+		$sql .= "and hangup_cause != 'LOSE_RACE' ";
 	}
 	if (strlen($call_result) > 0) {
 		switch ($call_result) {
@@ -491,6 +494,10 @@
 		$sql .= "and leg = :leg ";
 		$parameters['leg'] = $leg;
 	}
+	//exclude enterprise ring group legs
+	if (!permission_exists('xml_cdr_enterprise_leg')) {
+		$sql .= "and originating_leg_uuid IS NULL ";
+	}
 	if (is_numeric($tta_min)) {
 		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min ";
 		$parameters['tta_min'] = $tta_min;
@@ -506,6 +513,10 @@
 		if ($recording == 'false') {
 			$sql .= "and (c.record_path is null or c.record_name is null) ";
 		}
+	}
+	//show agent originated legs only to those with the permission
+	if (!permission_exists('xml_cdr_cc_agent_leg')) {
+		$sql .= "and cc_side != 'agent' ";
 	}
 	//end where
 	if (strlen($order_by) > 0) {
