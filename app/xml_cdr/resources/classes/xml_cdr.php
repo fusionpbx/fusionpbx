@@ -316,7 +316,7 @@ if (!class_exists('xml_cdr')) {
 
 					//set missed calls
 						$missed_call = 'false';
-						if (strlen($xml->variables->answer_stamp) == 0) {
+						if ($xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
 							$missed_call = 'true';
 						}
 						if ($xml->variables->missed_call == 'true') {
@@ -340,6 +340,7 @@ if (!class_exists('xml_cdr')) {
 						//$this->array[$key]['digits_dialed'] = urldecode($xml->variables->digits_dialed);
 						$this->array[$key]['sip_hangup_disposition'] = urldecode($xml->variables->sip_hangup_disposition);
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
+						$this->array[$key]['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
 
 					//time
 						$this->array[$key]['start_epoch'] = urldecode($xml->variables->start_epoch);
