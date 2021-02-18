@@ -265,6 +265,9 @@
 
 		//store the call leg
 			$database->fields['leg'] = $leg;
+		
+		//store the originating leg
+			$database->fields['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
 
 		//store post dial delay, in milliseconds
 			$database->fields['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
@@ -292,7 +295,7 @@
 			if (strlen($domain_name) == 0) {
 				$presence_id = urldecode($xml->variables->presence_id);
 				if (strlen($presence_id) > 0) {
-					$presence_array = explode($presence_id);
+					$presence_array = explode($presence_id, '%40');
 					$domain_name = $presence_array[1];
 				}
 			}

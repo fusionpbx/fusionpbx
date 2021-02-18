@@ -145,6 +145,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "record_path";
 			$this->fields[] = "record_name";
 			$this->fields[] = "leg";
+			$this->fields[] = "originating_leg_uuid";
 			$this->fields[] = "pdd_ms";
 			$this->fields[] = "rtp_audio_in_mos";
 			$this->fields[] = "last_app";
@@ -316,7 +317,7 @@ if (!class_exists('xml_cdr')) {
 
 					//set missed calls
 						$missed_call = 'false';
-						if (strlen($xml->variables->answer_stamp) == 0) {
+						if (strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
 							$missed_call = 'true';
 						}
 						if ($xml->variables->missed_call == 'true') {
@@ -404,6 +405,9 @@ if (!class_exists('xml_cdr')) {
 					//store the call leg
 						$this->array[$key]['leg'] = $leg;
 
+					//store the originating leg uuid
+						$this->array[$key]['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
+
 					//store post dial delay, in milliseconds
 						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
@@ -430,7 +434,7 @@ if (!class_exists('xml_cdr')) {
 						if (strlen($domain_name) == 0) {
 							$presence_id = urldecode($xml->variables->presence_id);
 							if (strlen($presence_id) > 0) {
-								$presence_array = explode($presence_id);
+								$presence_array = explode($presence_id, '%40');
 								$domain_name = $presence_array[1];
 							}
 						}
@@ -1210,7 +1214,7 @@ if (!class_exists('xml_cdr')) {
 				// If the range starts with an '-' we start from the beginning
 				// If not, we forward the file pointer
 				// And make sure to get the end byte if spesified
-				if ($range0 == '-') {
+				if ($range == '-') {
 					// The n-number of the last bytes is requested
 					$c_start = $size - substr($range, 1);
 				}
