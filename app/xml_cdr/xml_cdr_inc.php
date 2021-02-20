@@ -413,7 +413,7 @@
 		$sql .= "and billsec like :billsec ";
 		$parameters['billsec'] = '%'.$billsec.'%';
 	}
-	if (strlen($hangup_cause) > 0 && $hangup_cause != 'LOSE_RACE') {
+	if (strlen($hangup_cause) > 0) {
 		$sql .= "and hangup_cause like :hangup_cause ";
 		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
 	}
@@ -514,10 +514,6 @@
 		if ($recording == 'false') {
 			$sql .= "and (c.record_path is null or c.record_name is null) ";
 		}
-	}
-	//show agent originated legs only to those with the permission
-	if (!permission_exists('xml_cdr_cc_agent_leg')) {
-		$sql .= "and cc_side != 'agent' ";
 	}
 	//end where
 	if (strlen($order_by) > 0) {
