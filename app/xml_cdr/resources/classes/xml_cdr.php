@@ -973,7 +973,10 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and missed_call = true \n";
-				if (!permission_exists('xml_cdr_lose_race')) {
+				if (!permission_exists('xml_cdr_enterprise_leg')) {
+					$sql .= " and originating_leg_uuid is null \n";
+				}
+				elseif (!permission_exists('xml_cdr_lose_race')) {
 					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
 				}
 				if ($this->include_internal) {
@@ -1029,7 +1032,10 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				if (!permission_exists('xml_cdr_lose_race')) {
+				if (!permission_exists('xml_cdr_enterprise_leg')) {
+					$sql .= " and originating_leg_uuid is null \n";
+				}
+				elseif (!permission_exists('xml_cdr_lose_race')) {
 					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
 				}
 				if ($this->include_internal) {

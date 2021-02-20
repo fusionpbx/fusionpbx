@@ -280,13 +280,13 @@
 		$sql_where_ands[] = "leg = :leg";
 		$parameters['leg'] = $leg;
 	}
-	//If you can't see lose_race, don't run stats on it
-	if (!permission_exists('xml_cdr_lose_race')) {
-		$sql_where_ands[] = "hangup_cause != 'LOSE_RACE'";
-	}
 	//Exclude enterprise ring group legs
 	if (!permission_exists('xml_cdr_enterprise_leg')) {
 		$sql_where_ands[] .= "originating_leg_uuid IS NULL";
+	}
+	//If you can't see lose_race, don't run stats on it
+	elseif (!permission_exists('xml_cdr_lose_race')) {
+		$sql_where_ands[] = "hangup_cause != 'LOSE_RACE'";
 	}
 	
 

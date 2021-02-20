@@ -417,8 +417,12 @@
 		$sql .= "and hangup_cause like :hangup_cause ";
 		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
 	}
-	elseif (!permission_exists('xml_cdr_lose_race')) {
+	elseif (!permission_exists('xml_cdr_lose_race') && permission_exists('xml_cdr_enterprise_leg')) {
 		$sql .= "and hangup_cause != 'LOSE_RACE' ";
+	}
+	//exclude enterprise ring group legs
+	if (!permission_exists('xml_cdr_enterprise_leg')) {
+		$sql .= "and originating_leg_uuid IS NULL ";
 	}
 	if (strlen($call_result) > 0) {
 		switch ($call_result) {
@@ -494,10 +498,6 @@
 	if (strlen($leg) > 0) {
 		$sql .= "and leg = :leg ";
 		$parameters['leg'] = $leg;
-	}
-	//exclude enterprise ring group legs
-	if (!permission_exists('xml_cdr_enterprise_leg')) {
-		$sql .= "and originating_leg_uuid IS NULL ";
 	}
 	if (is_numeric($tta_min)) {
 		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min ";
