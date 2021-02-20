@@ -211,7 +211,7 @@
 
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
-			if (strlen($xml->variables->answer_stamp) == 0) {
+			if (strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
 				$database->fields['missed_call'] = 'true';
 			}
 			if ($xml->variables->missed_call == 'true') {
@@ -265,9 +265,6 @@
 
 		//store the call leg
 			$database->fields['leg'] = $leg;
-		
-		//store the originating leg
-			$database->fields['originating_leg_uuid'] = urldecode($xml->variables->originating_leg_uuid);
 
 		//store post dial delay, in milliseconds
 			$database->fields['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
