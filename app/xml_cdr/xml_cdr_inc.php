@@ -453,7 +453,8 @@
 						))";
 				}
 				break;
-			default: //failed
+			default: 
+			    $sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) ";
 				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
 		}
 	}
