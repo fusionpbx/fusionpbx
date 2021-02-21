@@ -46,7 +46,9 @@ if (!class_exists('messages')) {
 				foreach ($_SESSION['messages'] as $message_mood => $message) {
 					$message_text = str_replace(array("\r\n", "\n", "\r"),'\\n',addslashes(join('<br/>', $message['message'])));
 					$message_delay = array_sum($message['delay'])/count($message['delay']);
-					$html .= "${spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
+					if(!is_array($message['message'][0])) {
+						$html .= "${spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
+					}
 				}
 			}
 			if($clear_messages) {
