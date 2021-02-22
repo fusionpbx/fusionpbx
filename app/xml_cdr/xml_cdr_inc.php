@@ -515,6 +515,10 @@
 			$sql .= "and (c.record_path is null or c.record_name is null) ";
 		}
 	}
+	//show agent originated legs only to those with the permission
+	if (!permission_exists('xml_cdr_cc_agent_leg')) {
+		$sql .= "and (cc_side is null or cc_side != 'agent') ";
+	}
 	//end where
 	if (strlen($order_by) > 0) {
 		$sql .= order_by($order_by, $order);
