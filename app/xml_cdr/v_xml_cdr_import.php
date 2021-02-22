@@ -198,6 +198,14 @@
 			$database->fields['last_app'] = urldecode($xml->variables->last_app);
 			$database->fields['last_arg'] = urldecode($xml->variables->last_arg);
 
+		//voicemail message success
+			if ($xml->variables->voicemail_action == "save" && $xml->variables->voicemail_message_seconds > 0){
+				$database->fields['voicemail_message'] = "true";
+			}
+			elseif ($xml->variables->voicemail_action == "save") {
+				$database->fields['voicemail_message'] = "false";
+			}
+
 		//conference
 			$database->fields['conference_name'] = urldecode($xml->variables->conference_name);
 			$database->fields['conference_uuid'] = urldecode($xml->variables->conference_uuid);

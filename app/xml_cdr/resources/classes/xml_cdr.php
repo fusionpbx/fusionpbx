@@ -150,6 +150,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "rtp_audio_in_mos";
 			$this->fields[] = "last_app";
 			$this->fields[] = "last_arg";
+			$this->fields[] = "voicemail_message";
 			$this->fields[] = "cc_side";
 			$this->fields[] = "cc_member_uuid";
 			$this->fields[] = "cc_queue_joined_epoch";
@@ -390,6 +391,14 @@ if (!class_exists('xml_cdr')) {
 					//app info
 						$this->array[$key]['last_app'] = urldecode($xml->variables->last_app);
 						$this->array[$key]['last_arg'] = urldecode($xml->variables->last_arg);
+
+					//voicemail message success
+						if ($xml->variables->voicemail_action == "save" && $xml->variables->voicemail_message_seconds > 0){
+							$this->array[$key]['voicemail_message'] = "true";
+						}
+						else { //if ($xml->variables->voicemail_action == "save") {
+							$this->array[$key]['voicemail_message'] = "false";
+						}
 
 					//conference
 						$this->array[$key]['conference_name'] = urldecode($xml->variables->conference_name);
@@ -922,13 +931,13 @@ if (!class_exists('xml_cdr')) {
 				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
-						$sql_date_range .= " and start_stamp between :start_stamp_begin and :start_stamp_end \n";
+						$sql_date_range = " and start_stamp between :start_stamp_begin and :start_stamp_end \n";
 						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
 						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
 					}
 					else {
 						if (strlen($this->start_stamp_begin) > 0) { 
-							$sql_date_range .= "and start_stamp >= :start_stamp_begin \n"; 
+							$sql_date_range = "and start_stamp >= :start_stamp_begin \n"; 
 							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
 						}
 						if (strlen($this->start_stamp_end) > 0) { 
@@ -939,13 +948,13 @@ if (!class_exists('xml_cdr')) {
 				}
 				else {
 					switch ($this->quick_select) {
-						case 1: $sql_date_range .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' \n"; break; //last 7 days
-						case 2: $sql_date_range .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' \n"; break; //last hour
-						case 3: $sql_date_range .= "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' \n"; break; //today
-						case 4: $sql_date_range .= "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' \n"; break; //yesterday
-						case 5: $sql_date_range .= "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' \n"; break; //this week
-						case 6: $sql_date_range .= "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' \n"; break; //this month
-						case 7: $sql_date_range .= "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' \n"; break; //this year
+						case 1: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' \n"; break; //last 7 days
+						case 2: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' \n"; break; //last hour
+						case 3: $sql_date_range = "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' \n"; break; //today
+						case 4: $sql_date_range = "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' \n"; break; //yesterday
+						case 5: $sql_date_range = "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' \n"; break; //this week
+						case 6: $sql_date_range = "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' \n"; break; //this month
+						case 7: $sql_date_range = "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' \n"; break; //this year
 					}
 				}
 
@@ -1086,6 +1095,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " direction, \n";
 				$sql .= " start_stamp, \n";
 				$sql .= " hangup_cause, \n";
+				$sql .= " originating_leg_uuid, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
 				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
