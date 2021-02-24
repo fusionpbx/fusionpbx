@@ -147,6 +147,7 @@
 				if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
 					$sql .= "and (".implode(' or ', $sql_where_or).") ";
 				}
+				$sql .= "and permission_assigned = 'true' ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
