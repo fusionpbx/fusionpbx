@@ -193,6 +193,8 @@
 					event:addHeader('content-type', 'application/simple-message-summary');
 				--check sync
 					event:addHeader('event-string', 'check-sync;reboot='..reboot);
+					--event:addHeader('event-string', 'resync');
+			resync
 				--send the event
 					event:fire();
 		end);
@@ -249,6 +251,7 @@
 			event:addHeader('content-type', 'application/simple-message-summary');
 		--check sync
 			event:addHeader('event-string', 'check-sync;reboot='..reboot);
+			--event:addHeader('event-string', 'resync');
 		--send the event
 			event:fire();
 	end
