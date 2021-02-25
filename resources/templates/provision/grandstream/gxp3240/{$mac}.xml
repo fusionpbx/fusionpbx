@@ -3547,13 +3547,23 @@ Account 5 Codec Settings
 <P1302>0</P1302>
 {/if}
 
-<!-- Headset Type. 0 - Normal Headset, 1 - Plantronics EHS. Default value is 0 -->
-<!-- Number: 0, 1 -->
-<P1487>0</P1487>
-
 <!-- Headset Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
 <!-- Advanced Settings - MPK LCD Settings -->
 

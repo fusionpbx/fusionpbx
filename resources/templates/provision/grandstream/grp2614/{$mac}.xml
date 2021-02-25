@@ -6072,17 +6072,21 @@
     <!-- # HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
     <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6779>0</P6779>
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
 
     <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1487>0</P1487>
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
     <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -6286,9 +6290,7 @@
 {if isset($grandstream_wallpaper_url)}
     <P2916>1</P2916>
     <P2917>{$grandstream_wallpaper_url}</P2917>
-{else}
-    <P2916>0</P2916>
-    <P2917></P2917>
+
 {/if}
 
     <!-- # Color Background. Default is #000000. -->
@@ -6300,8 +6302,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver)}
     <P2918>{$grandstream_screensaver}</P2918>
-{else}
-    <P2918>2</P2918>
 {/if}
 
     <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. -->
@@ -6309,8 +6309,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
     <P6759>{$grandstream_screensaver_source}</P6759>
-{else}
-    <P6759>0</P6759>
 {/if}
 
     <!-- # Show Date and Time. 0 - No, 1 - Yes. Default is 1 -->
