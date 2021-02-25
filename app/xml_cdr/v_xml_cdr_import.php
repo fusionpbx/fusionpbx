@@ -198,6 +198,14 @@
 			$database->fields['last_app'] = urldecode($xml->variables->last_app);
 			$database->fields['last_arg'] = urldecode($xml->variables->last_arg);
 
+		//voicemail message success
+			if ($xml->variables->voicemail_action == "save" && $xml->variables->voicemail_message_seconds > 0){
+				$database->fields['voicemail_message'] = "true";
+			}
+			elseif ($xml->variables->voicemail_action == "save") {
+				$database->fields['voicemail_message'] = "false";
+			}
+
 		//conference
 			$database->fields['conference_name'] = urldecode($xml->variables->conference_name);
 			$database->fields['conference_uuid'] = urldecode($xml->variables->conference_uuid);
@@ -211,7 +219,7 @@
 
 		//set missed calls
 			$database->fields['missed_call'] = 'false';
-			if (strlen($xml->variables->answer_stamp) == 0) {
+			if ($xml->variables->cc_side != "agent" && strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
 				$database->fields['missed_call'] = 'true';
 			}
 			if ($xml->variables->missed_call == 'true') {
@@ -292,7 +300,7 @@
 			if (strlen($domain_name) == 0) {
 				$presence_id = urldecode($xml->variables->presence_id);
 				if (strlen($presence_id) > 0) {
-					$presence_array = explode($presence_id);
+					$presence_array = explode($presence_id, '%40');
 					$domain_name = $presence_array[1];
 				}
 			}

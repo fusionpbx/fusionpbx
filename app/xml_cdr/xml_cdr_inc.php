@@ -417,6 +417,13 @@
 		$sql .= "and hangup_cause like :hangup_cause ";
 		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
 	}
+	elseif (!permission_exists('xml_cdr_lose_race') && !permission_exists('xml_cdr_enterprise_leg')) {
+		$sql .= "and hangup_cause != 'LOSE_RACE' ";
+	}
+	//exclude enterprise ring group legs
+	if (!permission_exists('xml_cdr_enterprise_leg')) {
+		$sql .= "and originating_leg_uuid IS NULL ";
+	}
 	if (strlen($call_result) > 0) {
 		switch ($call_result) {
 			case 'answered':
@@ -430,10 +437,20 @@
 				break;
 			case 'cancelled':
 				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
-					$sql = "and (answer_stamp is null and bridge_uuid is null and sip_hangup_disposition <> 'send_refuse') ";
+					$sql .= "
+						and ((
+							answer_stamp is null 
+							and bridge_uuid is null 
+							and sip_hangup_disposition <> 'send_refuse'
+						)
+						or (
+							answer_stamp is not null 
+							and bridge_uuid is null 
+							and voicemail_message = false
+						))";
 				}
 				else if ($direction == 'outbound') {
-					$sql = "and (answer_stamp is null and bridge_uuid is not null) ";
+					$sql .= "and (answer_stamp is null and bridge_uuid is not null) ";
 				}
 				else {
 					$sql .= "
@@ -447,10 +464,17 @@
 							direction = 'outbound'
 							and answer_stamp is null
 							and bridge_uuid is not null
+						)
+						or (
+							(direction = 'inbound' or direction = 'local')
+							and answer_stamp is not null
+							and bridge_uuid is null
+							and voicemail_message = false
 						))";
 				}
 				break;
-			default: //failed
+			default: 
+			    $sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) ";
 				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
 		}
 	}
@@ -506,6 +530,10 @@
 		if ($recording == 'false') {
 			$sql .= "and (c.record_path is null or c.record_name is null) ";
 		}
+	}
+	//show agent originated legs only to those with the permission
+	if (!permission_exists('xml_cdr_cc_agent_leg')) {
+		$sql .= "and (cc_side is null or cc_side != 'agent') ";
 	}
 	//end where
 	if (strlen($order_by) > 0) {
