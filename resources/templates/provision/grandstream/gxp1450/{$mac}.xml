@@ -2055,7 +2055,9 @@
 <!-- HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
