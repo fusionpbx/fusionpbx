@@ -796,7 +796,7 @@
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
-						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] >= 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
@@ -823,14 +823,6 @@
 					}
 
 					$content .= "</tr>\n";
-
-					if (!permission_exists('xml_cdr_lose_race') && $row['hangup_cause'] == 'LOSE_RACE') {
-						$content = '';
-					}
-				//show agent originated legs only to those with the permission
-					if (!permission_exists('xml_cdr_cc_agent_leg') && $row['cc_side'] == "agent") {
-						$content = '';
-					}
 				//show the leg b only to those with the permission
 					if ($row['leg'] == 'a') {
 						echo $content;
