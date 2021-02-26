@@ -5408,14 +5408,18 @@
 <!-- Headset Type. 0 - Normal Headset, 1 - Plantronics EHS, 2 - Jabra EHS. Default value is 0 -->
 <!-- Number: 0, 1 -->
 {if isset($grandstream_headset_type)}
+<P6779>{$grandstream_headset_type}</P6779>
+<!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+<!-- # Number: 0, 1 -->
+<!-- # Mandatory -->
 <P1487>{$grandstream_headset_type}</P1487>
-{else}
-<P1487>0</P1487>
 {/if}
 
 <!-- Headset Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
 <!-- Handset TX Gain (dB). 0 - 0, 1 - -6, 2 - +6. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
