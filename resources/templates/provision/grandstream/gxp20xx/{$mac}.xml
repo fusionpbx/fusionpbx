@@ -1991,7 +1991,9 @@
 
 <!--  Headset keymode. 0 - Default Mode, 1 - Toggle Speaker(default)/Headset, 2 - Toggle Speaker/Headset(default)   -->
 <!--  Not avaliable for GXP2000 -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
 <!--  For GXP1200 and GXP280 Only; 0 = Switch, 1 = Hub -->
 <P1348>0</P1348>
