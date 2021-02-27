@@ -137,26 +137,23 @@
 	}
 
 //get the domain_uuid
-	$sql = "select device_uuid, domain_uuid from v_devices ";
+	$sql = "select d.device_uuid, d.domain_uuid, n.domain_name ";
+	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_mac_address = :mac ";
+	$sql .= "and d.domain_uuid = n.domain_uuid; ";
 	$parameters['mac'] = $mac;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
-		$domain_uuid = $row['domain_uuid'];
 		$device_uuid = $row['device_uuid'];
+		$domain_uuid = $row['domain_uuid'];
+		$domain_name = $row['domain_name'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
-
-		//get the domain name
-			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
-
-	}
-	else {
+	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "true") {
 		//get the domain_name
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
