@@ -502,7 +502,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1488></P1488>
+    <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
     <!-- # Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
     <!-- # String -->
@@ -510,7 +510,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- # String -->
-    <P1490></P1490>
+    <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
     <!-- # Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
     <!-- # String -->
@@ -518,7 +518,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
     <!-- # String -->
-    <P1492></P1492>
+    <P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
     <!-- # Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
     <!-- # String -->
@@ -1632,7 +1632,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1500></P1500>
+    <P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
     <!-- # Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
     <P523>content://settings/system/ringtone</P523>

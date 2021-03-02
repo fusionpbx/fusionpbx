@@ -1924,7 +1924,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
 <!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
 <!-- String -->

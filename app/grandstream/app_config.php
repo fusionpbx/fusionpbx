@@ -422,6 +422,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "BLF Call-pickup. 0 - Auto, 1 - Force BLF Call-pickup by prefix, 2 - Disabled. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53a9f955-d199-44f5-a97d-eed636348da5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_blf_remote_status";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Hide BLF Remote Status. Default 0 - Not hidden, 1 - Hidden";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "09ed1352-2594-4eb8-b3f8-93cdaabe6302";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_active_backlight_timeout";

@@ -1686,7 +1686,7 @@
 <P523>0</P523>
 <!--  Matching Incoming Caller ID. Matching Rule 1 -->
 <!--  String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 <!--  Matching Rule 1 Distinctive Ringtone -->
 <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
 <!--  Number: 0, 1, 2, 3 -->
