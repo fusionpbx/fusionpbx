@@ -2615,7 +2615,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1500>grandstream_distinctive_ringtone_name_1</P1500>
+    <P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0. -->
@@ -7611,7 +7611,7 @@
     <!-- # Hide BLF Remote Status. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8374>0</P8374>
+    <P8374>{$grandstream_blf_remote_status}</P8374>
 
     <!-- # Show SIP Error Response. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
