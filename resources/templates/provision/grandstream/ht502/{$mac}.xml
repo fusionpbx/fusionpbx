@@ -379,28 +379,33 @@
 		<!-- 102 - AAL2-G.726-24, 104 - AAL2-G726-32, 103 - AAL2-G.726-40, 98 - iLBC, 99 - G.729E -->
 		<!-- Choice 1. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P57>0</P57>
+		<!-- # Get Codecs -->
+		{if !isset($grandstream_codecs)}
+		{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+		{/if}
+		{assign var="codecs" value=","|explode:$grandstream_codecs}
+		<P57>{$codecs[0]}</P57>
 		<!-- Choice 2. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P58>8</P58>
+		<P58>{$codecs[1]}</P58>
 		<!-- Choice 3. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P59>4</P59>
+		<P59>{$codecs[2]}</P59>
 		<!-- Choice 4. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P60>18</P60>
+		<P60>{$codecs[3]}</P60>
 		<!-- Choice 5. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P61>2</P61>
+		<P61>{$codecs[4]}</P61>
 		<!-- Choice 6. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P62>98</P62>
+		<P62>{$codecs[5]}</P62>
 		<!-- Choice 7. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P46>103</P46>
+		<P46>{$codecs[6]}</P46>
 		<!-- Choice 8. -->
 		<!-- Number: 0, 2, 4, 8, 18, 98, 99, 100, 102, 103, 104 -->
-		<P98>99</P98>
+		<P98>{$codecs[7]}</P98>
 		<!-- Voice Frame per TX. (Default 2, from 1 to 4 for G711/G726/G729) -->
 		<!-- Number: 1, 2, 3, 4 -->
 		<P37>2</P37>

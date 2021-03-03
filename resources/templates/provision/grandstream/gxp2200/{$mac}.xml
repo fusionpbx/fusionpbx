@@ -228,19 +228,24 @@
 <!-- Preferred Vocoder -->
 <!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
 <!-- Number: 0, 8, 9, 18 -->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
 <!-- Number: 0, 8, 9, 18 -->
-<P58>0</P58>
+<P58>{$codecs[1]}</P58>
 
 <!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
 <!-- Number: 0, 8, 9, 18. -->
-<P59>0</P59>
+<P59>{$codecs[2]}</P59>
 
 <!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 18 - G.729A/B. Default value is 0 -->
 <!-- Number: 0, 8, 9, 18 -->
-<P60>0</P60>
+<P60>{$codecs[3]}</P60>
 
 <!-- Enable RFC5168 support. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->

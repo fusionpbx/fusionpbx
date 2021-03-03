@@ -142,21 +142,26 @@
     <P743>101</P743>
     <!--  Codec/Voice Quality settings -->
     <!--  First codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P57>0</P57>
+    <!-- # Get Codecs -->
+    {if !isset($grandstream_codecs)}
+    {assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+    {/if}
+    {assign var="codecs" value=","|explode:$grandstream_codecs}
+    <P57>{$codecs[0]}</P57>
     <!--  Second codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P58>3</P58>
+    <P58>{$codecs[1]}</P58>
     <!--  Third codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P59>4</P59>
+    <P59>{$codecs[2]}</P59>
     <!--  Forth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P60>8</P60>
+    <P60>{$codecs[3]}</P60>
     <!--  Fifth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P61>18</P61>
+    <P61>{$codecs[4]}</P61>
     <!--  Sixth codec.   0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P62>0</P62>
+    <P62>{$codecs[5]}</P62>
     <!--  Seventh codec. 0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P46>0</P46>
+    <P46>{$codecs[6]}</P46>
     <!--  Eighth codec.  0 - PCMU, 3 - GSM, 4 - G.723.1, 8 - PCMA, 18 - G.729A/B -->
-    <P98>0</P98>
+    <P98>{$codecs[7]}</P98>
     <!--  Special Feature.    100 - Standard, 101 - Nortel MCS, 102 - BroadSoft, 104 - Sonus, 108 - CBCOM, 109 - RNK -->
     <P198>100</P198>
     <!--  Profile 2 Settings -->

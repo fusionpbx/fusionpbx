@@ -396,37 +396,42 @@
 <!-- choice 1. Default is 0 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- choice 2. Default is 8 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P58>8</P58>
+<P58>{$codecs[1]}</P58>
 
 <!-- choice 3. Default is 4 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P59>4</P59>
+<P59>{$codecs[2]}</P59>
 
 <!-- choice 4. Default is 18 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P60>18</P60>
+<P60>{$codecs[3]}</P60>
 
 <!-- choice 5. Default is 9 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P61>9</P61>
+<P61>{$codecs[4]}</P61>
 
 <!-- choice 6. Default is 98 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P62>98</P62>
+<P62>{$codecs[5]}</P62>
 
 <!-- choice 7. Default is 2 -->
 <!-- Number: 0, 2, 4, 8, 9, 18, 98 -->
 <!-- Mandatory -->
-<P46>2</P46>
+<P46>{$codecs[6]}</P46>
 
 <!-- Use First Matching Vocoder in 200OK SDP. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->

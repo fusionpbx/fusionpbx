@@ -303,35 +303,40 @@
     <!-- # Preferred Vocoder -->
     <!-- # First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 0 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P57>0</P57>
+    <!-- # Get Codecs -->
+    {if !isset($grandstream_codecs)}
+    {assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+    {/if}
+    {assign var="codecs" value=","|explode:$grandstream_codecs}
+    <P57>{$codecs[0]}</P57>
 
     <!-- # Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 8 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P58>8</P58>
+    <P58>{$codecs[1]}</P58>
 
     <!-- # Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P59>9</P59>
+    <P59>{$codecs[2]}</P59>
 
     <!-- # Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P60>9</P60>
+    <P60>{$codecs[3]}</P60>
 
     <!-- # Fifth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P61>9</P61>
+    <P61>{$codecs[4]}</P61>
 
     <!-- # Sixth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P62>9</P62>
+    <P62>{$codecs[5]}</P62>
 
     <!-- #Seventh codex. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P46>9</P46>
+    <P46>{$codecs[6]}</P46>
 
     <!-- #Eighth codex. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus, 104 - G.722.1. Default value is 9 -->
     <!-- # Number: 0, 8, 9, 2, 18, 98, 123, 104 -->
-    <P98>9</P98>
+    <P98>{$codecs[7]}</P98>
 
     <!-- # Hide Vocoder. 0 - No, 1 - Yes. Default value is 0. -->
     <!-- # Number: 0, 1 -->

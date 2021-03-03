@@ -362,35 +362,40 @@
 <!-- Preferred Vocoder -->
 <!-- First codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 0 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- Second codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 8 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P58>8</P58>
+<P58>{$codecs[1]}</P58>
 
 <!-- Third codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P59>4</P59>
+<P59>{$codecs[2]}</P59>
 
 <!-- Forth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P60>18</P60>
+<P60>{$codecs[3]}</P60>
 
 <!-- Fifth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P61>9</P61>
+<P61>{$codecs[4]}</P61>
 
 <!-- Sixth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P62>98</P62>
+<P62>{$codecs[5]}</P62>
 
 <!-- Seventh codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P46>2</P46>
+<P46>{$codecs[6]}</P46>
 
 <!-- Eigth codec. 0 - PCMU, 8 - PCMA, 9 - G.722, 2 - G.726-32, 18 - G729A/B, 98 - iLBC, 123 - Opus. Default value is 9 -->
 <!-- Number: 0, 8, 9, 2, 18, 98, 123 -->
-<P98>123</P98>
+<P98>{$codecs[7]}</P98>
 
 <!-- First Preferred Video Codec. 99 - H264, 34 - H263. Default value is 99. -->
 <!-- Number: 99, 34 -->

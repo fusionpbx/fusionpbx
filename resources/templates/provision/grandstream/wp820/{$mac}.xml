@@ -304,42 +304,47 @@
 <!-- # choice 1. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- # choice 2. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P58>8</P58>
+<P58>{$codecs[1]}</P58>
 
 <!-- # choice 3. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P59>9</P59>
+<P59>{$codecs[2]}</P59>
 
 <!-- # choice 4. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P60>9</P60>
+<P60>{$codecs[3]}</P60>
 
 <!-- # choice 5. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P61>9</P61>
+<P61>{$codecs[4]}</P61>
 
 <!-- # choice 6. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P62>9</P62>
+<P62>{$codecs[5]}</P62>
 
 <!-- # choice 7. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P46>9</P46>
+<P46>{$codecs[6]}</P46>
 
 <!-- # choice 8. Default is 0 -->
 <!-- # Number: 0, 8, 9, 18, 98, 123 -->
 <!-- # Mandatory -->
-<P98>9</P98>
+<P98>{$codecs[7]}</P98>
 
 <!-- # Codec Negotiation Priority. 0 - Caller, 1 - Callee. Default is 1 -->
 <!-- # Number: 0, 1 -->

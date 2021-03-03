@@ -499,7 +499,12 @@
 <!-- 0 - PCMU, 2 - G.726-32, 3 - GSM, 4 - G.723.1, 8 - PCMA,-->
 <!-- 9 - G.722, 18 - G.729A/B, 98 - L16-256-->
 <!-- Inherit sip phone(3000 phone)-->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- SIP regexpiration -->
 <P32>{$account.1.register_expires}</P32>

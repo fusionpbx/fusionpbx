@@ -433,22 +433,27 @@
 <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
 
 <!-- Choice 1.  -->
-<P57>0</P57>
+<!-- # Get Codecs -->
+{if !isset($grandstream_codecs)}
+{assign var="grandstream_codecs" value="0,8,4,18,9,98,2,123"}
+{/if}
+{assign var="codecs" value=","|explode:$grandstream_codecs}
+<P57>{$codecs[0]}</P57>
 
 <!-- Choice 2.  -->
-<P58>8</P58>
+<P58>{$codecs[1]}</P58>
 
 <!-- Choice 3.  -->
-<P59>4</P59>
+<P59>{$codecs[2]}</P59>
 
 <!-- Choice 4.  -->
-<P60>18</P60>
+<P60>{$codecs[3]}</P60>
 
 <!-- Choice 5.  -->
-<P61>2</P61>
+<P61>{$codecs[4]}</P61>
 
 <!-- Choice 6.  -->
-<P62>98</P62>
+<P62>{$codecs[5]}</P62>
 
 <!-- VAD. 0 - No, 1 - Yes -->
 <P50>0</P50>

@@ -246,6 +246,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Layer 2 QoS 802.1p Priority Value for SIP signaling";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "35b8178f-ddaf-4445-bf59-6e636e5ded03";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_codecs";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0,8,4,18,9,98,2,123";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default 0,8,4,18,9,98,2,123 : 0 - PCMU, 2 - G.726-32, 8 - PCMA, 9 - G.722, 18 - G.729A/B, 4 - G.723.1, 98 - iLBC, 123 - OPUS";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be807a0d-d939-484a-b34a-5605c28b7e11";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_sip_only_known_servers";
