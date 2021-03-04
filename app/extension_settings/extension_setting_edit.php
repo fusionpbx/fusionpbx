@@ -50,6 +50,9 @@
 	}
 
 //get the extension id
+	if (is_uuid($_REQUEST["extension_setting_uuid"])) {
+		$extension_setting_uuid = $_REQUEST["extension_setting_uuid"];
+	}
 	if (is_uuid($_REQUEST["extension_uuid"])) {
 		$extension_uuid = $_REQUEST["extension_uuid"];
 	}
@@ -130,7 +133,7 @@
 			}
 
 		//add the extension_setting_uuid
-			if (!is_uuid($$extension_setting_uuid)) {
+			if (!is_uuid($extension_setting_uuid)) {
 				$extension_setting_uuid = uuid();
 			}
 
