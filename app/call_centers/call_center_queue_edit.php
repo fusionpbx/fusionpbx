@@ -327,8 +327,8 @@
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$queue_extension."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
-			if ($queue_default_time_base_score != '') {
-				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_default_time_base_score."\"/>\n";
+			if ($queue_time_base_score_sec != '') {
+				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";
 			}
 			if ($queue_greeting_path != '') {
 				$greeting_array = explode(':', $queue_greeting_path);
