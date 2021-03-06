@@ -101,7 +101,6 @@
 		$forward_user_not_registered_destination = $row["forward_user_not_registered_destination"];
 		$forward_user_not_registered_enabled = $row["forward_user_not_registered_enabled"];
 		$follow_me_uuid = $row["follow_me_uuid"];
-		$forward_caller_id_uuid = $row["forward_caller_id_uuid"];
 	}
 	else {
 		echo "access denied";
@@ -123,11 +122,9 @@
 				$forward_user_not_registered_enabled = $_POST["forward_user_not_registered_enabled"];
 				$forward_user_not_registered_destination = $_POST["forward_user_not_registered_destination"];
 
-				$forward_caller_id_uuid = $_POST["forward_caller_id_uuid"];
 				$cid_name_prefix = $_POST["cid_name_prefix"];
 				$cid_number_prefix = $_POST["cid_number_prefix"];
 				$follow_me_enabled = $_POST["follow_me_enabled"];
-				$follow_me_caller_id_uuid = $_POST["follow_me_caller_id_uuid"];
 				$follow_me_ignore_busy = $_POST["follow_me_ignore_busy"];
 
 				$n = 0;
@@ -194,7 +191,6 @@
 				$array['extensions'][0]['forward_no_answer_destination'] = $forward_no_answer_destination;
 				$array['extensions'][0]['forward_user_not_registered_enabled'] = $forward_user_not_registered_enabled;
 				$array['extensions'][0]['forward_user_not_registered_destination'] = $forward_user_not_registered_destination;
-				$array['extensions'][0]['forward_caller_id_uuid'] = $forward_caller_id_uuid;
 			}
 
 		//do not disturb (dnd) config
@@ -226,7 +222,6 @@
 					$array['follow_me'][0]['follow_me_uuid'] = $follow_me_uuid;
 					$array['follow_me'][0]['cid_name_prefix'] = $cid_name_prefix;
 					$array['follow_me'][0]['cid_number_prefix'] = $cid_number_prefix;
-					$array['follow_me'][0]['follow_me_caller_id_uuid'] = $follow_me_caller_id_uuid;
 					$array['follow_me'][0]['follow_me_ignore_busy'] = $follow_me_ignore_busy;
 					if ($destination_found) {
 						$array['follow_me'][0]['follow_me_enabled'] = $follow_me_enabled;
@@ -297,7 +292,6 @@
 				$call_forward->extension_uuid = $extension_uuid;
 				$call_forward->forward_all_destination = $forward_all_destination;
 				$call_forward->forward_all_enabled = $forward_all_enabled;
-				$call_forward->forward_caller_id_uuid = $forward_caller_id_uuid;
 			}
 
 		//do not disturb (dnd) config
@@ -328,7 +322,6 @@
 				$follow_me->extension_uuid = $extension_uuid;
 				$follow_me->follow_me_uuid = $follow_me_uuid;
 				$follow_me->follow_me_ignore_busy = $follow_me_ignore_busy;
-				$follow_me->follow_me_caller_id_uuid = $follow_me_caller_id_uuid;
 				$follow_me->follow_me_enabled = $follow_me_enabled;
 				$follow_me->set();
 				unset($follow_me);
@@ -431,7 +424,6 @@
 			$cid_name_prefix = $row["cid_name_prefix"];
 			$cid_number_prefix = $row["cid_number_prefix"];
 			$follow_me_enabled = $row["follow_me_enabled"];
-			$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
 			$follow_me_ignore_busy = $row["follow_me_ignore_busy"];
 			unset($row);
 
@@ -582,43 +574,6 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('call_forward_caller_id')) {
-		$sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
-		$sql .= "from v_destinations ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and destination_type = 'inbound' ";
-		$sql .= "order by destination_number asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && sizeof($result) != 0) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
-			echo 	$text['label-cid-number'];
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
-			echo "		<option value=''></option>\n";
-			foreach ($result as &$row) {
-				$selected = $row["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
-				$caller_id_number = $row['destination_caller_id_number'];
-				if(strlen($caller_id_number) == 0){
-					$caller_id_number = $row['destination_number'];
-				}
-				$caller_id_name = $row['destination_caller_id_name'];
-				if(strlen($caller_id_name) == 0){
-					$caller_id_name = $row['destination_description'];
-				}
-				echo "		<option value='".escape($row["destination_uuid"])."' ".$selected.">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
-			}
-			echo "	</select><br />\n";
-			echo $text['description-cid-number']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
-		unset($sql, $parameters, $result, $row);
-	}
-
 	echo "<tr><td colspan='2'><br /></td></tr>\n";
 
 	echo "<tr>\n";
@@ -628,9 +583,6 @@
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_disabled').checked=true; ";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true; ";
-	if (permission_exists('follow_me_caller_id')) {
-		$on_click .= "document.getElementById('follow_me_caller_id_uuid').focus(); ";
-	}
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"$('#tr_follow_me_settings').slideUp('fast');\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$('#tr_follow_me_settings').slideDown('fast'); $on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
@@ -697,45 +649,6 @@
 		echo 				$text['description-ignore_busy']."\n";
 		echo "			</td>\n";
 		echo "		</tr>\n";
-	}
-
-	if (permission_exists('follow_me_caller_id')) {
-		$sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_number, destination_caller_id_name ";
-		$sql .= "from v_destinations ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and destination_type = 'inbound' ";
-		$sql .= "order by destination_number asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && sizeof($result) != 0) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>";
-			echo 	$text['label-cid-number'];
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
-			echo "		<option value=''></option>\n";
-			foreach ($result as &$row) {
-				$selected = $row["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : null;
-
-				$caller_id_number = $row['destination_caller_id_number'];
-				if(strlen($caller_id_number) == 0){
-					$caller_id_number = $row['destination_number'];
-				}
-				$caller_id_name = $row['destination_caller_id_name'];
-				if(strlen($caller_id_name) == 0){
-					$caller_id_name = $row['destination_description'];
-				}
-
-				echo "		<option value='".escape($row["destination_uuid"])."' ".$selected.">".format_phone(escape($caller_id_number))." : ".escape($caller_id_name)."</option>\n";
-			}
-			echo "	</select><br />\n";
-			echo $text['description-cid-number']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
-		}
-		unset($sql, $parameters, $result, $row);
 	}
 
 	if (permission_exists('follow_me_cid_name_prefix')) {
