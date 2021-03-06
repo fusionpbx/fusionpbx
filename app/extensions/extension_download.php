@@ -92,7 +92,6 @@
 	$available_columns[] = 'follow_me_uuid';
 	$available_columns[] = 'enabled';
 	$available_columns[] = 'description';
-	$available_columns[] = 'forward_caller_id_uuid';
 	$available_columns[] = 'absolute_codec_string';
 	$available_columns[] = 'forward_user_not_registered_destination';
 	$available_columns[] = 'forward_user_not_registered_enabled';
