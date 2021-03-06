@@ -2059,6 +2059,28 @@ $text['description-time_base_score']['ru-ru'] = "Выберие оценку п�
 $text['description-time_base_score']['sv-se'] = "Ange tids-baserad poäng.";
 $text['description-time_base_score']['uk-ua'] = "";
 
+
+$text['description-time_base_score_sec']['en-us'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
+$text['description-time_base_score_sec']['en-gb'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
+$text['description-time_base_score_sec']['ar-eg'] = "";
+$text['description-time_base_score_sec']['de-at'] = "";
+$text['description-time_base_score_sec']['de-ch'] = "";
+$text['description-time_base_score_sec']['de-de'] = "";
+$text['description-time_base_score_sec']['es-cl'] = "";
+$text['description-time_base_score_sec']['es-mx'] = "";
+$text['description-time_base_score_sec']['fr-ca'] = "";
+$text['description-time_base_score_sec']['fr-fr'] = "";
+$text['description-time_base_score_sec']['he-il'] = "";
+$text['description-time_base_score_sec']['it-it'] = "";
+$text['description-time_base_score_sec']['nl-nl'] = "";
+$text['description-time_base_score_sec']['pl-pl'] = "";
+$text['description-time_base_score_sec']['pt-br'] = "";
+$text['description-time_base_score_sec']['pt-pt'] = "";
+$text['description-time_base_score_sec']['ro-ro'] = "";
+$text['description-time_base_score_sec']['ru-ru'] = "";
+$text['description-time_base_score_sec']['sv-se'] = "";
+$text['description-time_base_score_sec']['uk-ua'] = "";
+
 $text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
 $text['description-tiers']['en-gb'] = "Tiers assign agents to queues.";
 $text['description-tiers']['ar-eg'] = "";
