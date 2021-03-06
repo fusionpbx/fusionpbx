@@ -925,6 +925,27 @@ $text['label-time_base_score']['ru-ru'] = "Оценка по времени";
 $text['label-time_base_score']['sv-se'] = "Tidsbaserat Resultat";
 $text['label-time_base_score']['uk-ua'] = "";
 
+$text['label-time_base_score_sec']['en-us'] = "Time Base Score - Seconds";
+$text['label-time_base_score_sec']['en-gb'] = "Time Base Score - Seconds";
+$text['label-time_base_score_sec']['ar-eg'] = "";
+$text['label-time_base_score_sec']['de-at'] = "Zeitgeber für Klassifikation- Seconden- Seconden"; //copied from de-de
+$text['label-time_base_score_sec']['de-ch'] = "Zeitgeber für Klassifikation- Seconden"; //copied from de-de
+$text['label-time_base_score_sec']['de-de'] = "Zeitgeber für Klassifikation- Seconden";
+$text['label-time_base_score_sec']['es-cl'] = "Puntuación basada en tiempo- Segundos";
+$text['label-time_base_score_sec']['es-mx'] = "Puntuación basada en tiempo- Segundos"; //copied from es-cl
+$text['label-time_base_score_sec']['fr-ca'] = "Score basé sur le temps- Seconds";
+$text['label-time_base_score_sec']['fr-fr'] = "Score Basé sur le temps- Seconds";
+$text['label-time_base_score_sec']['he-il'] = "";
+$text['label-time_base_score_sec']['it-it'] = "Punteggio su Base Tempo- Secondi";
+$text['label-time_base_score_sec']['nl-nl'] = "Tijd basis score";
+$text['label-time_base_score_sec']['pl-pl'] = "Wynik oparty na czasie- Sekundy";
+$text['label-time_base_score_sec']['pt-br'] = "Pontuação baseada no tempo- Segundos"; //copied from pt-pt
+$text['label-time_base_score_sec']['pt-pt'] = "Pontuação baseada no tempo- Segundos";
+$text['label-time_base_score_sec']['ro-ro'] = "";
+$text['label-time_base_score_sec']['ru-ru'] = "Оценка по времени- секунды";
+$text['label-time_base_score_sec']['sv-se'] = "Tidsbaserat Resultat- Sekunder";
+$text['label-time_base_score_sec']['uk-ua'] = "";
+
 $text['label-tiers']['en-us'] = "Tiers";
 $text['label-tiers']['en-gb'] = "Tiers";
 $text['label-tiers']['ar-eg'] = "";
