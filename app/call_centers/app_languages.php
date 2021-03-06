@@ -925,6 +925,27 @@ $text['label-time_base_score']['ru-ru'] = "Оценка по времени";
 $text['label-time_base_score']['sv-se'] = "Tidsbaserat Resultat";
 $text['label-time_base_score']['uk-ua'] = "";
 
+$text['label-time_base_score_sec']['en-us'] = "Time Base Score - Seconds";
+$text['label-time_base_score_sec']['en-gb'] = "Time Base Score - Seconds";
+$text['label-time_base_score_sec']['ar-eg'] = "";
+$text['label-time_base_score_sec']['de-at'] = "Zeitgeber für Klassifikation- Seconden- Seconden"; //copied from de-de
+$text['label-time_base_score_sec']['de-ch'] = "Zeitgeber für Klassifikation- Seconden"; //copied from de-de
+$text['label-time_base_score_sec']['de-de'] = "Zeitgeber für Klassifikation- Seconden";
+$text['label-time_base_score_sec']['es-cl'] = "Puntuación basada en tiempo- Segundos";
+$text['label-time_base_score_sec']['es-mx'] = "Puntuación basada en tiempo- Segundos"; //copied from es-cl
+$text['label-time_base_score_sec']['fr-ca'] = "Score basé sur le temps- Seconds";
+$text['label-time_base_score_sec']['fr-fr'] = "Score Basé sur le temps- Seconds";
+$text['label-time_base_score_sec']['he-il'] = "";
+$text['label-time_base_score_sec']['it-it'] = "Punteggio su Base Tempo- Secondi";
+$text['label-time_base_score_sec']['nl-nl'] = "Tijd basis score";
+$text['label-time_base_score_sec']['pl-pl'] = "Wynik oparty na czasie- Sekundy";
+$text['label-time_base_score_sec']['pt-br'] = "Pontuação baseada no tempo- Segundos"; //copied from pt-pt
+$text['label-time_base_score_sec']['pt-pt'] = "Pontuação baseada no tempo- Segundos";
+$text['label-time_base_score_sec']['ro-ro'] = "";
+$text['label-time_base_score_sec']['ru-ru'] = "Оценка по времени- секунды";
+$text['label-time_base_score_sec']['sv-se'] = "Tidsbaserat Resultat- Sekunder";
+$text['label-time_base_score_sec']['uk-ua'] = "";
+
 $text['label-tiers']['en-us'] = "Tiers";
 $text['label-tiers']['en-gb'] = "Tiers";
 $text['label-tiers']['ar-eg'] = "";
@@ -2037,6 +2058,28 @@ $text['description-time_base_score']['ro-ro'] = "";
 $text['description-time_base_score']['ru-ru'] = "Выберие оценку по времени";
 $text['description-time_base_score']['sv-se'] = "Ange tids-baserad poäng.";
 $text['description-time_base_score']['uk-ua'] = "";
+
+
+$text['description-time_base_score_sec']['en-us'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
+$text['description-time_base_score_sec']['en-gb'] = "Set the time base score in seconds. Higher numbers mean higher priority over other call centers.";
+$text['description-time_base_score_sec']['ar-eg'] = "";
+$text['description-time_base_score_sec']['de-at'] = "";
+$text['description-time_base_score_sec']['de-ch'] = "";
+$text['description-time_base_score_sec']['de-de'] = "";
+$text['description-time_base_score_sec']['es-cl'] = "";
+$text['description-time_base_score_sec']['es-mx'] = "";
+$text['description-time_base_score_sec']['fr-ca'] = "";
+$text['description-time_base_score_sec']['fr-fr'] = "";
+$text['description-time_base_score_sec']['he-il'] = "";
+$text['description-time_base_score_sec']['it-it'] = "";
+$text['description-time_base_score_sec']['nl-nl'] = "";
+$text['description-time_base_score_sec']['pl-pl'] = "";
+$text['description-time_base_score_sec']['pt-br'] = "";
+$text['description-time_base_score_sec']['pt-pt'] = "";
+$text['description-time_base_score_sec']['ro-ro'] = "";
+$text['description-time_base_score_sec']['ru-ru'] = "";
+$text['description-time_base_score_sec']['sv-se'] = "";
+$text['description-time_base_score_sec']['uk-ua'] = "";
 
 $text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
 $text['description-tiers']['en-gb'] = "Tiers assign agents to queues.";
