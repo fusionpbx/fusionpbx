@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -95,6 +95,7 @@
 			$destination_cid_name_prefix = trim($_POST["destination_cid_name_prefix"]);
 			$destination_context = trim($_POST["destination_context"]);
 			$fax_uuid = trim($_POST["fax_uuid"]);
+			$destination_order= trim($_POST["destination_order"]);
 			$destination_enabled = trim($_POST["destination_enabled"]);
 			$destination_description = trim($_POST["destination_description"]);
 			$destination_sell = check_float($_POST["destination_sell"]);
@@ -196,12 +197,12 @@
 
 				//array cleanup
 					if (is_array($dialplan_details)) {
-							foreach ($dialplan_details as $index => $row) {
-								//unset the empty row
-									if (strlen($row["dialplan_detail_data"]) == 0) {
-										unset($dialplan_details[$index]);
-									}
+						foreach ($dialplan_details as $index => $row) {
+							//unset the empty row
+							if (strlen($row["dialplan_detail_data"]) == 0) {
+								unset($dialplan_details[$index]);
 							}
+						}
 					}
 
 				//get the fax information
@@ -296,7 +297,7 @@
 					$dialplan["dialplan_number"] = $destination_area_code.$destination_number;
 					$dialplan["dialplan_context"] = $destination_context;
 					$dialplan["dialplan_continue"] = "false";
-					$dialplan["dialplan_order"] = "100";
+					$dialplan["dialplan_order"] = $destination_order;
 					$dialplan["dialplan_enabled"] = $destination_enabled;
 					$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 					$dialplan_detail_order = 10;
@@ -683,8 +684,10 @@
 						$array['destinations'][0]["destination_alternate_app"] = $destination_alternate_app;
 						$array['destinations'][0]["destination_alternate_data"] = $destination_alternate_data;
 					}
+					$array['destinations'][0]["destination_order"] = $destination_order;
 					$array['destinations'][0]["destination_enabled"] = $destination_enabled;
 					$array['destinations'][0]["destination_description"] = $destination_description;
+
 				//prepare the array
 					$array['dialplans'][] = $dialplan;
 					unset($dialplan);
@@ -803,13 +806,14 @@
 				$destination_alternate_app = $row["destination_alternate_app"];
 				$destination_alternate_data = $row["destination_alternate_data"];
 				$fax_uuid = $row["fax_uuid"];
-				$destination_enabled = $row["destination_enabled"];
-				$destination_description = $row["destination_description"];
 				$currency = $row["currency"];
 				$destination_sell = $row["destination_sell"];
 				$destination_buy = $row["destination_buy"];
 				$currency_buy = $row["currency_buy"];
 				$destination_carrier = $row["destination_carrier"];
+				$destination_order = $row["destination_order"];
+				$destination_enabled = $row["destination_enabled"];
+				$destination_description = $row["destination_description"];
 			}
 			unset($sql, $parameters, $row);
 		}
@@ -865,6 +869,7 @@
 	}
 
 //set the defaults
+	if (strlen($destination_order) == 0) { $destination_order = '100'; }
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
 	if ($destination_type =="outbound") { $destination_context = $_SESSION['domain_name']; }
@@ -1284,6 +1289,31 @@
 	else {
 		echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
 	}
+
+	echo "	<tr>\n";
+	echo "	<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+	echo "		".$text['label-order']."\n";
+	echo "	</td>\n";
+	echo "	<td class='vtable' align='left' width='70%'>\n";
+	echo "		<select name='destination_order' class='formfld'>\n";
+	$i=0;
+	while($i<=999) {
+		$selected = ($i == $destination_order) ? "selected" : null;
+		if (strlen($i) == 1) {
+			echo "			<option value='00$i' ".$selected.">00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "			<option value='0$i' ".$selected.">0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "			<option value='$i' ".$selected.">$i</option>\n";
+		}
+		$i++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
