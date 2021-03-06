@@ -337,7 +337,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_time_base_score_seconds";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_time_base_score_sec";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Used to set the time base score of the Call Center to prioritize one call center over another.";
 		$z++;
