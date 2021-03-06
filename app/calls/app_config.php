@@ -51,8 +51,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_forward_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "call_forward_caller_id";
 
 	//default settings
 		$y=0;
