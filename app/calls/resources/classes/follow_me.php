@@ -39,7 +39,6 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
-		public $follow_me_caller_id_uuid;
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
@@ -89,7 +88,7 @@ include "root.php";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$array['follow_me'][0]['cid_number_prefix'] = $this->cid_number_prefix;
 				}
-				$array['follow_me'][0]['follow_me_caller_id_uuid'] = is_uuid($this->follow_me_caller_id_uuid) ? $this->follow_me_caller_id_uuid : null;
+
 				$array['follow_me'][0]['follow_me_enabled'] = $this->follow_me_enabled;
 				$array['follow_me'][0]['follow_me_ignore_busy'] = $this->follow_me_ignore_busy;
 			//grant temporary permissions
@@ -114,7 +113,6 @@ include "root.php";
 				$array['follow_me'][0]['follow_me_uuid'] = $this->follow_me_uuid;
 				$array['follow_me'][0]['cid_name_prefix'] = $this->cid_name_prefix;
 				$array['follow_me'][0]['cid_number_prefix'] = $this->cid_number_prefix;
-				$array['follow_me'][0]['follow_me_caller_id_uuid'] = is_uuid($this->follow_me_caller_id_uuid) ? $this->follow_me_caller_id_uuid : null;
 				$array['follow_me'][0]['follow_me_enabled'] = $this->follow_me_enabled;
 				$array['follow_me'][0]['follow_me_ignore_busy'] = $this->follow_me_ignore_busy;
 			//grant temporary permissions
