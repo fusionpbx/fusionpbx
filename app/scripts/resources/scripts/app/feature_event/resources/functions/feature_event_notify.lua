@@ -39,7 +39,6 @@ function feature_event_notify.get_db_values(user, domain_name)
 					forward_no_answer_destination           = row.forward_no_answer_destination;
 					forward_user_not_registered_enabled     = row.forward_user_not_registered_enabled;
 					forward_user_not_registered_destination = row.forward_user_not_registered_destination;
-					forward_caller_id_uuid                  = row.forward_caller_id_uuid;
 					toll_allow                              = row.toll_allow
 					call_timeout                            = row.call_timeout
 					--freeswitch.consoleLog("NOTICE", "[feature_event] extension "..row.extension.."\n");
