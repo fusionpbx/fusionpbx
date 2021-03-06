@@ -143,7 +143,7 @@
 --get the follow me data
 	if (follow_me_uuid ~= nil) then
 		local sql = "select cid_name_prefix, cid_number_prefix, ";
-		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
+		sql = sql .. "follow_me_enabled, follow_me_ignore_busy ";
 		sql = sql .. "from v_follow_me ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid; ";
@@ -155,7 +155,6 @@
 			caller_id_name_prefix = row["cid_name_prefix"];
 			caller_id_number_prefix = row["cid_number_prefix"];
 			follow_me_enabled = row["follow_me_enabled"];
-			follow_me_caller_id_uuid = row["follow_me_caller_id_uuid"];
 			follow_me_ignore_busy = row["follow_me_ignore_busy"];
 		end);
 		--dbh:query(sql, params, function(row);
@@ -362,23 +361,6 @@
 				--set the toll allow to an empty string
 					if (toll_allow == nil) then
 						toll_allow = '';
-					end
-
-				--get the destination caller id name and number
-					if (follow_me_caller_id_uuid and follow_me_caller_id_uuid ~= '') then
-						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
-						sql = sql .. "from v_destinations ";
-						sql = sql .. "where domain_uuid = :domain_uuid ";
-						sql = sql .. "and destination_uuid = :destination_uuid ";
-						sql = sql .. "order by destination_number asc ";
-						local params = {domain_uuid = domain_uuid, destination_uuid = follow_me_caller_id_uuid};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
-						end
-						status = dbh:query(sql, params, function(field)
-							caller_id_name = field["destination_caller_id_name"];
-							caller_id_number = field["destination_caller_id_number"];
-						end);
 					end
 
 				--check if the user exists
