@@ -86,7 +86,7 @@
 			$queue_moh_sound = $_POST["queue_moh_sound"];
 			$queue_record_template = $_POST["queue_record_template"];
 			$queue_time_base_score = $_POST["queue_time_base_score"];
-			$queue_time_base_score = $_POST["queue_time_base_score_sec"];
+			$queue_time_base_score_sec = $_POST["queue_time_base_score_sec"];
 			$queue_max_wait_time = $_POST["queue_max_wait_time"];
 			$queue_max_wait_time_with_no_agent = $_POST["queue_max_wait_time_with_no_agent"];
 			$queue_max_wait_time_with_no_agent_time_reached = $_POST["queue_max_wait_time_with_no_agent_time_reached"];
