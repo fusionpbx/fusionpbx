@@ -1,5 +1,5 @@
-local Settings = require "resources.functions.lazy_settings";
 local Database = require "resources.functions.database";
+local Settings = require "resources.functions.lazy_settings";
 local cache = require"resources.functions.cache";
 local log = require "resources.functions.log".send_mail
 
@@ -28,6 +28,7 @@ if (email_queue_enabled == 'true') then
 			email_action_after = '';
 		end
 
+		local db = dbh or Database.new('system');
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
 		local email_from = settings:get('email', 'smtp_from', 'text');
