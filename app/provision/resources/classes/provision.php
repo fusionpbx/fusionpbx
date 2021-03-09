@@ -295,11 +295,12 @@ include "root.php";
 				$provision = array();
 				if (is_array($_SESSION['provision'])) {
 					foreach ($_SESSION['provision'] as $key => $val) {
-						if (strlen($val['var']) > 0) { $value = $val['var']; }
-						if (strlen($val['text']) > 0) { $value = $val['text']; }
-						if (strlen($val['boolean']) > 0) { $value = $val['boolean']; }
-						if (strlen($val['numeric']) > 0) { $value = $val['numeric']; }
-						if (strlen($value) > 0) { $provision[$key] = $value; }
+						if (isset($val['var'])) { $value = $val['var']; }
+						elseif (isset($val['text'])) { $value = $val['text']; }
+						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
+						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
+						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
+						if (isset($value)) { $provision[$key] = $value; }
 						unset($value);
 					}
 				}

@@ -325,6 +325,7 @@
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
+					dbh = Database.new('system');
 					dbh:query(sql, params, function(row)
 						subject = row["template_subject"];
 						body = row["template_body"];
@@ -882,6 +883,9 @@
 				end
 			end
 
+		--release dbh before bridge
+				dbh:release();
+				
 		--session execute
 			if (session:ready()) then
 				--set the variables
@@ -1006,6 +1010,7 @@
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 						else
+							dbh = Database.new('system');
 							local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 							sql = sql .. "where ring_group_uuid = :ring_group_uuid";
 							local params = {ring_group_uuid = ring_group_uuid};

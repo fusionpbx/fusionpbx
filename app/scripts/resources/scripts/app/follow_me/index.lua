@@ -28,6 +28,7 @@
 	if (session:ready()) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
+		uuid = session:getVariable("uuid");
 		destination_number = session:getVariable("destination_number");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
@@ -142,7 +143,7 @@
 --get the follow me data
 	if (follow_me_uuid ~= nil) then
 		local sql = "select cid_name_prefix, cid_number_prefix, ";
-		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
+		sql = sql .. "follow_me_enabled, follow_me_ignore_busy ";
 		sql = sql .. "from v_follow_me ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid; ";
@@ -154,7 +155,6 @@
 			caller_id_name_prefix = row["cid_name_prefix"];
 			caller_id_number_prefix = row["cid_number_prefix"];
 			follow_me_enabled = row["follow_me_enabled"];
-			follow_me_caller_id_uuid = row["follow_me_caller_id_uuid"];
 			follow_me_ignore_busy = row["follow_me_ignore_busy"];
 		end);
 		--dbh:query(sql, params, function(row);
@@ -330,8 +330,23 @@
 				--get the extension_uuid
 				cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 				extension_uuid = trim(api:executeString(cmd));
+
+				local record_session = "";
+				--if session is already recording then skip
+				if (session:getVariable("record_session") ~= "true") then
+					local cmd = "user_data "..destination_number.."@"..domain_name.." var user_record";
+					local user_record = api:executeString(cmd);
+					if (user_record == "all" or user_record == call_direction) then 
+						local recordings_dir = session:getVariable("recordings_dir");
+						local record_ext = session:getVariable("record_ext") or "wav";
+						local record_name = uuid.."."..record_ext;
+						local record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+					end
+				end
+
 				--send to user
-				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
+				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid..record_session.."]user/" .. row.destination_number .. "@" .. domain_name;
 				dial_string = dial_string_to_user;
 			elseif (tonumber(destination_number) == nil) then
 				--sip uri
@@ -346,23 +361,6 @@
 				--set the toll allow to an empty string
 					if (toll_allow == nil) then
 						toll_allow = '';
-					end
-
-				--get the destination caller id name and number
-					if (follow_me_caller_id_uuid and follow_me_caller_id_uuid ~= '') then
-						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
-						sql = sql .. "from v_destinations ";
-						sql = sql .. "where domain_uuid = :domain_uuid ";
-						sql = sql .. "and destination_uuid = :destination_uuid ";
-						sql = sql .. "order by destination_number asc ";
-						local params = {domain_uuid = domain_uuid, destination_uuid = follow_me_caller_id_uuid};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
-						end
-						status = dbh:query(sql, params, function(field)
-							caller_id_name = field["destination_caller_id_name"];
-							caller_id_number = field["destination_caller_id_number"];
-						end);
 					end
 
 				--check if the user exists

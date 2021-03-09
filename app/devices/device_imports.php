@@ -291,6 +291,12 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
+									//normalize the MAC address
+									if ($field_name == "device_mac_address") {
+										$result[$key] = strtolower($result[$key]);
+										$result[$key] = preg_replace('#[^a-fA-F0-9./]#', '', $result[$key]);
+									}
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
