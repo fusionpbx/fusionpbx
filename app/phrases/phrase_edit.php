@@ -296,8 +296,8 @@
 		unset($sql, $parameters);
 	}
 
-//get the recordings
-	$sql = "select * from v_recordings ";
+//get the recording names from the database. Do not select everything otherwise we can pull in large base64 data for no reason
+	$sql = "select recording_name, recording_filename from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
