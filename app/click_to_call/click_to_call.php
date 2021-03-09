@@ -2,7 +2,7 @@
 /* $Id$ */
 /*
 	click_to_call.php
-	Copyright (C) 2008, 2018 Mark J Crane
+	Copyright (C) 2008, 2021 Mark J Crane
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -209,7 +209,7 @@
 			else {
 				//display the last command
 					$switch_cmd = "api originate ".$source.$switch_cmd;
-					echo "<div align='center'>".$switch_cmd."<br /><br /><strong>".$src." has called ".$dest."</strong></div>\n";
+					echo "<div align='center'><strong>".escape($src)." has called ".escape($dest)."</strong></div>\n";
 				//show the command result
 				$result = trim(event_socket_request($fp, $switch_cmd));
 				if (substr($result, 0,3) == "+OK") {
@@ -218,11 +218,13 @@
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
 							date_default_timezone_set($_SESSION['time_zone']['system']);
 						//create the api record command and send it over event socket
-							$switch_cmd = "api uuid_record ".$origination_uuid." start ".$record_path."/".$record_name;
+							if (is_uuid($origination_uuid) && file_exists($record_path)) {
+								$switch_cmd = "api uuid_record ".$origination_uuid." start ".$record_path."/".$record_name;
+							}
 							$result2 = trim(event_socket_request($fp, $switch_cmd));
 					}
 				}
-				echo "<div align='center'><br />".$result."<br /><br /></div>\n";
+				echo "<div align='center'><br />".escape($result)."<br /><br /></div>\n";
 			}
 	}
 
@@ -291,7 +293,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>".$text['label-src-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"src\" value='$src' class='formfld'>\n";
+	echo "		<input name=\"src\" value='".escape($src)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-src-num']."\n";
 	echo "	</td>\n";
@@ -300,7 +302,7 @@
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>".$text['label-dest-num']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<input name=\"dest\" value='$dest' class='formfld'>\n";
+	echo "		<input name=\"dest\" value='".escape($dest)."' class='formfld'>\n";
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-num']."\n";
 	echo "	</td>\n";

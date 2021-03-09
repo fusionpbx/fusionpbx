@@ -556,19 +556,19 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
@@ -1185,7 +1185,7 @@
 
 <!-- # Match Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # -1 - No Ringtone. Default is 0. -->
@@ -1195,23 +1195,23 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone -->
 <!-- # -1 - No Rington Default is 0. -->
 <!-- # Number: -->
 <!-- # Mandatory -->
-<P1491>0</P1491>
+<P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone -->
 <!-- # -1 - No Ringtone Default is 0. -->
 <!-- # Number: -->
 <!-- # Mandatory -->
-<P1493>0</P1493>
+<P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
 <!-- ############################################################### -->
 <!-- # Account 2/Advanced Settings -->

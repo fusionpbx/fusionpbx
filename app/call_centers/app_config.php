@@ -261,6 +261,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_no_answer_delay_time";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_record";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_call_center_queues";
@@ -332,6 +336,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_time_base_score";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_time_base_score_sec";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Used to set the time base score of the Call Center to prioritize one call center over another.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_max_wait_time";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";

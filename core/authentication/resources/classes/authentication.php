@@ -102,7 +102,7 @@ class authentication {
 			}
 
 		//add user logs
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/user_logs/app_config.php")) {
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_logs/app_config.php")) {
 				user_logs::add($result);
 			}
 

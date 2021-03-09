@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2021
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -820,7 +820,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
+	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='domain_setting_description'>".escape($domain_setting_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

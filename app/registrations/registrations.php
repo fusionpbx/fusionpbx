@@ -191,13 +191,28 @@
 		foreach ($registrations as $row) {
 			$matches = preg_grep('/'.$search.'/i', $row);
 			if ($matches != false) {
+
+				//prepare the user variable
 				$user = explode('@', $row['user']);
 				if ($user[1] == $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name']) {
-					$user = "<span class='hide-sm-dn'>".escape($row['user'])."</span><span class='hide-md-up cursor-help' title='".$row['user']."'>".escape($user[0])."@...</span>";
+					$user = "<span class='hide-sm-dn'>".escape($row['user'])."</span><span class='hide-md-up cursor-help' title='".escape($row['user'])."'>".escape($user[0])."</span>";
 				}
 				else {
 					$user = escape($row['user']);
 				}
+
+				//reformat the status
+				$patterns = array();
+				$patterns[] = '/(\d{4})-(\d{2})-(\d{2})/';
+				$patterns[] = '/(\d{2}):(\d{2}):(\d{2})/';
+				$patterns[] = '/unknown/';
+				$patterns[] = '/exp\(/';
+				$patterns[] = '/\(/';
+				$patterns[] = '/\)/';
+				$patterns[] = '/\s+/';
+				$status = preg_replace($patterns, ' ', $row['status']);
+
+				//show the content
 				echo "<tr class='list-row' href='#'>\n";
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='registrations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
@@ -207,14 +222,14 @@
 				echo "		<input type='hidden' name='registrations[$x][host]' value='".escape($row['host'])."' />\n";
 				echo "		<input type='hidden' name='registrations[$x][domain]' value='".escape($row['sip-auth-realm'])."' />\n";
 				echo "	</td>\n";
-				echo "	<td>".$user."</td>\n";
-				echo "	<td class='overflow' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
+				echo "	<td class=''>".$user."</td>\n";
+				echo "	<td class='' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape(explode('"',$row['contact'])[1])."</td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['host'])."</td>\n";
-				echo "	<td class='overflow' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($row['status'])."</span></td>\n";
+				echo "	<td class='' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($status)."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";

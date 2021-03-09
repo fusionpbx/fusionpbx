@@ -312,6 +312,7 @@
 								password = row.password;
 								mwi_account = row.mwi_account;
 								auth_acl = row.auth_acl;
+
 							--variables
 								sip_from_user = row.extension;
 								sip_from_number = (#number_alias > 0) and number_alias or row.extension;
@@ -409,6 +410,25 @@
 											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
+						end);
+					end
+
+				--get the extension settings from the database
+					if (extension_uuid) then
+						local sql = "SELECT * FROM v_extension_settings "
+							.. "WHERE extension_uuid = :extension_uuid "
+							.. "and extension_setting_enabled = 'true' ";
+						local params = {extension_uuid=extension_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+						end
+						extension_settings = {}
+						dbh:query(sql, params, function(row)
+							table.insert(extension_settings, {
+								extension_setting_type = row.extension_setting_type,
+								extension_setting_name = row.extension_setting_name,
+								extension_setting_value = row.extension_setting_value
+							});
 						end);
 					end
 
@@ -510,6 +530,11 @@
 							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							for key,row in pairs(extension_settings) do
+								if (row.extension_setting_type == 'param') then
+									table.insert(xml, [[								<param name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
+								end
+							end
 							table.insert(xml, [[							</params>]]);
 							table.insert(xml, [[							<variables>]]);
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
@@ -645,6 +670,11 @@
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
 							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
+							for key,row in pairs(extension_settings) do
+								if (row.extension_setting_type == 'variable') then
+									table.insert(xml, [[								<variable name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
+								end
+							end
 							table.insert(xml, [[							</variables>]]);
 							table.insert(xml, [[						</user>]]);
 							table.insert(xml, [[					</users>]]);

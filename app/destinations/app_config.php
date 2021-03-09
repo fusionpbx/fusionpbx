@@ -319,6 +319,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the alternate data.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_order";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the destination order.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";

@@ -587,7 +587,7 @@
 
 		--if the recording is below the minimal length then re-record the message
 			if (message_length > 2) then
-				--continue
+				session:setVariable("voicemail_message_seconds", message_length);
 			else
 				if (session:ready()) then
 					--your recording is below the minimal acceptable length, please try again
