@@ -76,7 +76,7 @@ if (!class_exists('switch_recordings')) {
 		 * list recordings
 		 */
 		public function list_recordings() {
-			$sql = "select recording_uuid, recording_filename, recording_base64 ";
+			$sql = "select recording_uuid, recording_filename ";
 			$sql .= "from v_recordings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
