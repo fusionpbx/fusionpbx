@@ -296,7 +296,7 @@
 		unset($sql, $parameters);
 	}
 
-//get the recording names from the database. Do not select everything otherwise we can pull in large base64 data for no reason
+//get the recording names from the database.
 	$sql = "select recording_name, recording_filename from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
