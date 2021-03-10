@@ -369,7 +369,7 @@
 			$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-			if ($destination->valid($action_application_1.':'.$action_data_1)) {
+			if ($destination->valid($action_application_1.':'.$action_data_1) || (permission_exists("inbound_route_advanced") && $action == "advanced")) {
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_1;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_1;
 			}
@@ -383,7 +383,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-				if ($destination->valid($action_application_2.':'.$action_data_2)) {
+				if ($destination->valid($action_application_2.':'.$action_data_2) || (permission_exists("inbound_route_advanced") && $action == "advanced")) {
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $action_application_2;
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $action_data_2;
 				}
