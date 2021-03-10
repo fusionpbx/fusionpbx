@@ -365,7 +365,7 @@
 		*/
 	//recordings
 		$tmp_selected = false;
-		$sql = "select * from v_recordings where domain_uuid = :domain_uuid ";
+		$sql = "select recording_name, recording_filename from v_recordings where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$recordings = $database->select($sql, $parameters, 'all');
