@@ -2153,7 +2153,7 @@
 		<item name="sip.blf.eventlist.provisionStartingFrom">VPK</item>
 
 		<!-- # Hide BLF Remote Status. Yes or No -->
-		<item name="sip.blf.hideRemoteStatus"></item>
+		<item name="sip.blf.hideRemoteStatus">{$grandstream_blf_remote_status}</item>
 
 		<!-- # Show SIP Error Response. Yes or No -->
 		<item name="sip.showError">Yes</item>
