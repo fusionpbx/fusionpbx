@@ -357,6 +357,12 @@
 						$database->save($array);
 						//$message = $database->message;
 					}
+				
+					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+						$prov = new provision;
+						$prov->domain_uuid = $domain_uuid;
+						$response = $prov->write();
+					}
 
 				//send the redirect header
 					header("Location: devices.php");
