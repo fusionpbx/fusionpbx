@@ -267,6 +267,10 @@
 			echo "	</td>\n";
 			echo "	<td class='no-link center'>\n";
 			echo "		<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".escape($row['domain_uuid'])."&domain_change=true'>".$text['label-manage']."</a>";
+			if (permission_exists('domain_setting_view')) {
+				$list_setting_url = PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".urlencode($row['domain_uuid']);
+				echo " | <a href='".$list_setting_url."'\">".$text['button-settings'];
+			}
 			echo "	</td>\n";
 			if (permission_exists('domain_edit')) {
 				echo "	<td class='no-link center'>\n";
