@@ -543,67 +543,109 @@
 		<item name="account.{$line}.call.callWaiting">Default</item>
 
 		<!-- Account Ringtone -->
-		<item name="account.{$line}.ring.ringtone">5</item>
+		{if isset($grandstream_account_ring_tone_1)}
+		<item name="account.{$line}.ring.ringtone">{$grandstream_account_ring_tone_1}</item>
+		{/if}
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
-		<item name="account.{$line}.ring.match.1.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_1)}
+		<item name="account.{$line}.ring.match.1.callerId">{$grandstream_distinctive_ringtone_name_1}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.1.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_1)}
+		<item name="account.{$line}.ring.match.1.ringtone">{$grandstream_distinctive_ringtone_1}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
-		<item name="account.{$line}.ring.match.2.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_2)}
+		<item name="account.{$line}.ring.match.2.callerId">{$grandstream_distinctive_ringtone_name_2}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.2.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_2)}
+		<item name="account.{$line}.ring.match.2.ringtone">{$grandstream_distinctive_ringtone_2}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
-		<item name="account.{$line}.ring.match.3.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_3)}
+		<item name="account.{$line}.ring.match.3.callerId">{$grandstream_distinctive_ringtone_name_3}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.3.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_3)}
+		<item name="account.{$line}.ring.match.3.ringtone">{$grandstream_distinctive_ringtone_3}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
-		<item name="account.{$line}.ring.match.4.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_4)}
+		<item name="account.{$line}.ring.match.4.callerId">{$grandstream_distinctive_ringtone_name_4}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.4.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_4)}
+		<item name="account.{$line}.ring.match.4.ringtone">{$grandstream_distinctive_ringtone_4}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
-		<item name="account.{$line}.ring.match.5.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_5)}
+		<item name="account.{$line}.ring.match.5.callerId">{$grandstream_distinctive_ringtone_name_5}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.5.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_5)}
+		<item name="account.{$line}.ring.match.5.ringtone">{$grandstream_distinctive_ringtone_5}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
-		<item name="account.{$line}.ring.match.6.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_6)}
+		<item name="account.{$line}.ring.match.6.callerId">{$grandstream_distinctive_ringtone_name_6}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.6.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_6)}
+		<item name="account.{$line}.ring.match.6.ringtone">{$grandstream_distinctive_ringtone_6}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
-		<item name="account.{$line}.ring.match.7.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_7)}
+		<item name="account.{$line}.ring.match.7.callerId">{$grandstream_distinctive_ringtone_name_7}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.7.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_7)}
+		<item name="account.{$line}.ring.match.7.ringtone">{$grandstream_distinctive_ringtone_7}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
-		<item name="account.{$line}.ring.match.8.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_8)}
+		<item name="account.{$line}.ring.match.8.callerId">{$grandstream_distinctive_ringtone_name_8}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.8.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_8)}
+		<item name="account.{$line}.ring.match.8.ringtone">{$grandstream_distinctive_ringtone_8}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
-		<item name="account.{$line}.ring.match.9.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_9)}
+		<item name="account.{$line}.ring.match.9.callerId">{$grandstream_distinctive_ringtone_name_9}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.9.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_9)}
+		<item name="account.{$line}.ring.match.9.ringtone">{$grandstream_distinctive_ringtone_9}</item>
+		{/if}
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
-		<item name="account.{$line}.ring.match.10.callerId"></item>
+		{if isset($grandstream_distinctive_ringtone_name_10)}
+		<item name="account.{$line}.ring.match.10.callerId">{$grandstream_distinctive_ringtone_name_10}</item>
+		{/if}
 
 		<!-- Distinctive Ring Tone -->
-		<item name="account.{$line}.ring.match.10.ringtone">5</item>
+		{if isset($grandstream_distinctive_ringtone_10)}
+		<item name="account.{$line}.ring.match.10.ringtone">{$grandstream_distinctive_ringtone_10}</item>
+		{/if}
 
 		<!-- Ring Timeout -->
 		<!-- Number: 10 - 300 -->
