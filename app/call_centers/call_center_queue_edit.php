@@ -789,16 +789,17 @@
 				echo "	<tr>\n";
 				echo "		<td class=''>";
 				if (strlen($field['call_center_tier_uuid']) > 0) {
-					echo "		<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
+					echo "				<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
 				}
-				echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\">\n";
-				echo "					<option value=\"\"></option>\n";
-				foreach($agents as $row) {
-					$selected = '';
-					if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
-						$selected = "selected=\"selected\"";
+				echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\" style=\"width: 200px\">\n";
+				if (is_uuid($field['call_center_agent_uuid'])) {
+					echo "				<option value=\"".escape($field['call_center_agent_uuid'])."\">".escape($field['agent_name'])."</option>\n";
+				}
+				else {
+					echo "					<option value=\"\"></option>\n";
+					foreach($agents as $row) {
+						echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\">".escape($row['agent_name'])."</option>\n";
 					}
-					echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\" $selected>".escape($row['agent_name'])."</option>\n";
 				}
 				echo "				</select>";
 				echo "		</td>\n";
