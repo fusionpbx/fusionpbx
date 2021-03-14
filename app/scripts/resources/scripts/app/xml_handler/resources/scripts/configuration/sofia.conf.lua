@@ -68,7 +68,9 @@
 			table.insert(xml, [[				<param name="log-level" value="0"/>]]);
 			--table.insert(xml, [[				<param name="auto-restart" value="false"/>]]);
 			table.insert(xml, [[				<param name="debug-presence" value="0"/>]]);
-			--table.insert(xml, [[				<param name="capture-server" value="udp:homer.domain.com:5060"/>]]);
+			if (capture_server ~= nil) then
+				table.insert(xml, [[				<param name="capture-server" value="]] .. capture_server .. [["/>]]);
+			end
 			table.insert(xml, [[			</global_settings>]]);
 			table.insert(xml, [[			<profiles>]]);
 
