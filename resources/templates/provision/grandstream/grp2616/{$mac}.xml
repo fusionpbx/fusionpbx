@@ -7470,7 +7470,7 @@
 {if $grandstream_call_waiting_ring == "0"}    <P22102>0</P22102>{/if}
 {if $grandstream_call_waiting_ring == "1"}    <P22102>1</P22102>{/if}
 {else}
-<P2202>1</P2202>
+<P22102>1</P22102>
 {/if}
 
     <!-- # Disable Busy Tone on Remote Disconnect. 0 - No, 1 - Yes. Default is 0 -->
