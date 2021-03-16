@@ -656,6 +656,13 @@
 							}
 
 						//clear the cache
+							if (!permission_exists("extension_user_context") && $action == "update") {
+								$sql = "select user_context from v_extensions ";
+								$sql .= "where extension_uuid = :extension_uuid ";
+								$parameters['extension_uuid'] = $extension_uuid;
+								$database = new database;
+								$user_context = $database->select($sql, $parameters, 'column');
+							}
 							$cache = new cache;
 							$cache->delete("directory:".$extension."@".$user_context);
 							if (permission_exists('number_alias') && strlen($number_alias) > 0) {
