@@ -4,7 +4,8 @@
 --freeswitch.consoleLog("NOTICE", "Serial!\n" .. s)
 
 local call_uuid = event:getHeader("Caller-Unique-ID");
-local channel_timestamp = event:getHeader("Event-Date-Timestamp");
+--local channel_timestamp = event:getHeader("Event-Date-Timestamp");
+local channel_timestamp = os.time();
 local dtmf_value = event:getHeader("DTMF-Digit");
 
 local session = freeswitch.Session(call_uuid);
