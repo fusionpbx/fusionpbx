@@ -100,7 +100,7 @@
 		extension = row.extension;
 		number_alias = row.number_alias or '';
 		accountcode = row.accountcode;
-		follow_me_uuid = row.follow_me_uuid;
+		follow_me_uuid = row.follow_me_uuid or nil;
 		do_not_disturb = row.do_not_disturb;
 		forward_all_destination = row.forward_all_destination;
 		forward_all_enabled = row.forward_all_enabled;
