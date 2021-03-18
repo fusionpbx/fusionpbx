@@ -149,8 +149,9 @@
 			$sql .= "and dialplan_context <> 'public' ";
 		//hide outbound routes
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+		//hide global dialplans by default
 		if ($_GET['show'] <> "global" && $_GET['show'] <> "all") {
-			$sql .= " and dialplan_context <> '\${domain_name}'";
+			$sql .= " and dialplan_context not in ('\${domain_name}', 'global')";
 		}
 	}
 	else {
