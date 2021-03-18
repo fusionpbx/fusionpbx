@@ -149,6 +149,9 @@
 			$sql .= "and dialplan_context <> 'public' ";
 		//hide outbound routes
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+		if ($_GET['show'] <> "global" && $_GET['show'] <> "all") {
+			$sql .= " and dialplan_context <> '\${domain_name}'";
+		}
 	}
 	else {
 		if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
@@ -171,6 +174,12 @@
 	if ($order) { $params[] = "order=".$order; }
 	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
 		$params[] .= "show=all";
+	}
+	if ($_GET['show'] == "global") {
+		$params[] .= "show=global";
+	}
+	if ($_GET['show'] == "local") {
+		$params[] .= "show=local";
 	}
 	$param = $params ? implode('&', $params) : null;
 	unset($params);
@@ -263,16 +272,26 @@
 		}
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
+
 	if (permission_exists('dialplan_all')) {
-		if ($_GET['show'] == 'all' && permission_exists('dialplan_all')) {
+		if ( $_GET['show'] == 'all' ) {
 			echo "		<input type='hidden' name='show' value='all'>";
+			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=local'.($params ? '&'.implode('&', $params) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_global'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=global'.($params ? '&'.implode('&', $params) : null)]);
 		}
 		else {
 			if (is_uuid($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
 			if ($search) { $params[] = "search=".urlencode($search); }
 			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 			if ($order) { $params[] = "order=".urlencode($order); }
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
+			if ( $_GET['show'] == "global" ) {
+				echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=local'.($params ? '&'.implode('&', $params) : null)]);
+				echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
+			}
+			else {
+				echo button::create(['type'=>'button','label'=>$text['button-show_global'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=global'.($params ? '&'.implode('&', $params) : null)]);
+				echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all'.($params ? '&'.implode('&', $params) : null)]);
+			}	
 			unset($params);
 		}
 	}
