@@ -75,7 +75,7 @@
 //get fax extension
 	if (is_uuid($_GET["id"])) {
 		$fax_uuid = $_GET["id"];
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('fax_extension_view_domain')) {
 			//show all fax extensions
 			$sql = "select fax_name, fax_extension from v_fax ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -102,7 +102,7 @@
 				$fax_extension = $row["fax_extension"];
 		}
 		else {
-			if (!if_group("superadmin") && !if_group("admin")) {
+			if (!permission_exists('fax_extension_view_domain')) {
 				echo "access denied";
 				exit;
 			}
