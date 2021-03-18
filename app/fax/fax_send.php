@@ -60,7 +60,7 @@ if (!$included) {
 	//pre-populate the form
 		if (is_uuid($_REQUEST['id']) && $_POST["persistformvar"] != "true") {
 			$fax_uuid = $_REQUEST["id"];
-			if (if_group("superadmin") || if_group("admin")) {
+			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
 				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
@@ -96,7 +96,7 @@ if (!$included) {
 					$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
-				if (!if_group("superadmin") && !if_group("admin")) {
+				if (!permission_exists('fax_extension_view_domain')) {
 					echo "access denied";
 					exit;
 				}
@@ -901,8 +901,7 @@ if (!$included) {
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
-
-		echo $text['description-2']." ".(if_group('superadmin') ? $text['description-3'] : null)."\n";
+		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
 
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
