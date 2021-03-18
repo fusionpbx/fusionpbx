@@ -112,6 +112,16 @@ if (!class_exists('extension_settings')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+								
+								//clear the cache	
+									$sql = "select extension, number_alias, user_context from v_extensions ";
+									$sql .= "where extension_uuid = :extension_uuid ";
+									$parameters['extension_uuid'] = $extension_uuid;
+									$database = new database;
+									$extension = $database->select($sql, $parameters, 'row');
+									$cache = new cache;
+									$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
+									$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
 
 								//set message
 									message::add($text['message-delete']);
