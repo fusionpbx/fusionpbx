@@ -227,15 +227,15 @@
 
 		-- Get the sip_profile
 		if (extension ~= nil and domain_name ~= nil) then
-			sip_profile = notify.get_profile(extension, domain_name);
+			sip_profiles = notify.get_profiles(extension, domain_name);
 		end
 
 		-- check if not nil
-		if (sip_profile ~= nil) then 
+		if (sip_profiles ~= nil) then
 				freeswitch.consoleLog("NOTICE", "[feature_event] SIP NOTIFY: CFWD set to "..forward_all_enabled.."\n");
 
 			--Do Not Disturb
-				notify.dnd(extension, domain_name, sip_profile, do_not_disturb);
+				notify.dnd(extension, domain_name, sip_profiles, do_not_disturb);
 
 			--Forward all
 				forward_immediate_enabled = forward_all_enabled;
@@ -246,7 +246,7 @@
 						forward_immediate_destination = '0';
 					end
 
-				notify.forward_immediate(extension, domain_name, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				notify.forward_immediate(extension, domain_name, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 
 			--Forward busy
 				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
@@ -254,7 +254,7 @@
 						forward_busy_destination = '0';
 					end
 
-				notify.forward_busy(extension, domain_name, sip_profile, forward_busy_enabled, forward_busy_destination);
+				notify.forward_busy(extension, domain_name, sip_profiles, forward_busy_enabled, forward_busy_destination);
 
 			--Forward No Answer
 				ring_count = math.ceil (call_timeout / 6);
@@ -263,7 +263,7 @@
 						forward_no_answer_destination = '0';
 					end
 
-				notify.forward_no_answer(extension, domain_name, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+				notify.forward_no_answer(extension, domain_name, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 		end
 	end
 
