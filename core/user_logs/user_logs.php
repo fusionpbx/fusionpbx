@@ -94,8 +94,15 @@
 //get the count
 	$sql = "select count(user_log_uuid) ";
 	$sql .= "from v_user_logs ";
+	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (isset($search)) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	lower(username) like :search ";
 		$sql .= "	or lower(type) like :search ";
 		$sql .= "	or lower(result) like :search ";
@@ -103,13 +110,6 @@
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -135,8 +135,15 @@
 	$sql .= "remote_address, ";
 	$sql .= "user_agent ";
 	$sql .= "from v_user_logs ";
-	if (isset($_GET["search"])) {
-		$sql .= "where (";
+	if (permission_exists('user_log_all') && $_GET['show'] == 'all') {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (isset($search)) {
+		$sql .= "and ( ";
 		$sql .= "	lower(username) like :search ";
 		$sql .= "	or lower(type) like :search ";
 		$sql .= "	or lower(result) like :search ";
