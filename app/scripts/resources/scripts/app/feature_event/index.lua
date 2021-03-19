@@ -72,7 +72,7 @@
 	end
 
 --get the events
-	--if (user == nil) then 
+	--if (user == nil) then
 		--serialize the data for the console
 			--freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
 			--freeswitch.consoleLog("notice","[evnts] " .. event:serialize("json") .. "\n");
@@ -115,13 +115,13 @@
 
 	--get sip profile
 		if (user ~= nil and host ~= nil) then
-			sip_profile = notify.get_profile(user, host);
+			sip_profiles = notify.get_profiles(user, host);
 		end
 
 	--DND
-
+		if (sip_profiles ~= nil) then
 		--DND enabled
-			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true" and sip_profile ~= nil) then
+			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true") then
 				--set a variable
 					dial_string = "error/user_busy";
 					do_not_disturb = "true";
@@ -155,11 +155,11 @@
 					end
 
 				--send notify to the phone
-					notify.dnd(user, host, sip_profile, do_not_disturb);	
+					notify.dnd(user, host, sip_profiles, do_not_disturb);
 			end
 
 		--DND disabled
-			if (feature_action == "SetDoNotDisturb" and feature_enabled == "false" and sip_profile ~= nil ) then
+			if (feature_action == "SetDoNotDisturb" and feature_enabled == "false") then
 					--set a variable
 						do_not_disturb = "false";
 
@@ -177,14 +177,14 @@
 						dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.dnd(user, host, sip_profile, do_not_disturb);	
+					notify.dnd(user, host, sip_profiles, do_not_disturb);
 
 			end
 
 	--Call Forward
 
 		--Call Formward All enabled
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_immediate" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_immediate") then
 				--set a variable
 					forward_all_destination = action_value;
 					forward_all_enabled = "true";
@@ -247,11 +247,11 @@
 					end
 
 				--send notify to the phone
-					notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
 
 		--Call Formward All disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate") then
 				--set a variable				
 					forward_all_destination = action_value;
 					forward_all_enabled = "false";
@@ -277,14 +277,14 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					if (forward_immediate_destination == nil) then 
+					if (forward_immediate_destination == nil) then
 						forward_immediate_destination = " ";
 					end
-					notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
 
 		--Call Formward BUSY enable
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_busy" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
 					forward_busy_enabled = "true";
@@ -303,11 +303,11 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);
+					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
 
 		--Call Formward BUSY disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_busy" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
 					forward_busy_enabled = "false";
@@ -330,11 +330,11 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);					
+					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
 
 		--Call Formward NO ANSWER enable
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_no_answer" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
 					forward_no_answer_enabled = "true";
@@ -355,11 +355,11 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			end
 
 		--Call Formward NO ANSWER disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_no_answer" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
 					forward_no_answer_enabled = "false";
@@ -382,28 +382,28 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);					
+					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			end			
 	
 	--No feature event (phone boots): Send all values
 		if (feature_enabled == nil) then
 			--Do Not Disturb
-				--notify.dnd(user, host, sip_profile, do_not_disturb);
+				--notify.dnd(user, host, sip_profiles, do_not_disturb);
 
 			--Forward all
 				forward_immediate_enabled = forward_all_enabled;
 				forward_immediate_destination = forward_all_destination;
-				--notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				--notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 
 			--Forward busy
-				--notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);
+				--notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 
 			--Forward No Answer
 				ring_count = math.ceil (call_timeout / 6);
-				--notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+				--notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			notify.init(user, 
 				host, 
-				sip_profile, 
+				sip_profiles,
 				forward_immediate_enabled, 
 				forward_immediate_destination, 
 				forward_busy_enabled, 
@@ -414,8 +414,8 @@
 				do_not_disturb);
 		end
 
---		feature_event_notify.init(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
-
+--		feature_event_notify.init(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
+	end
 	--clear the cache
 		if (feature_enabled ~= nil) then
 			cache.del("directory:"..user.."@"..host)

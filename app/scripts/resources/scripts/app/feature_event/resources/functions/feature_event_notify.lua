@@ -56,22 +56,36 @@ function feature_event_notify.get_db_values(user, domain_name)
 			return do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout
 end
 
-function feature_event_notify.get_profile(user, host)		
+---@return table, nil
+function feature_event_notify.get_profiles(user, domain)
 		--includes
-		require "resources.functions.explode"
 		require "resources.functions.trim"
-		
-		local account = user.."@"..host
+
+		local account = user.."@"..domain
 		--create the api object
 		api = freeswitch.API();
 		local sofia_contact = trim(api:executeString("sofia_contact */"..account));
-		local array = explode("/", sofia_contact);
-		local sip_profile = array[2];
-		return sip_profile
+		--get all profiles for the user account
+		local profile_iterator = string.gmatch(sofia_contact, "sofia/([^,]+)/[^,]+");
+
+		--remove any duplicates and check if we have any profiles
+		local unique_profiles = {}
+		local has_profile = false
+		for profile in profile_iterator do
+			has_profile = true
+			unique_profiles[profile] = 1
+		end
+
+		-- return nil if we have no profiles
+		if not has_profile then return nil end
+
+		return unique_profiles
 end
 
-function feature_event_notify.dnd(user, host, sip_profile, do_not_disturb)
-		--set the event and send it
+
+function feature_event_notify.dnd(user, host, sip_profiles, do_not_disturb)
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
 		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
 		event:addHeader("profile", sip_profile)
 		event:addHeader("user", user)
@@ -83,10 +97,12 @@ function feature_event_notify.dnd(user, host, sip_profile, do_not_disturb)
 		local socket = require 'socket'
 		socket.sleep(0.2)
 		event:fire()
+	end
 end
 
-function feature_event_notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination)
-		--set the event and send it
+function feature_event_notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination)
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
 		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
 		event:addHeader("profile", sip_profile)
 		event:addHeader("user", user)
@@ -99,10 +115,12 @@ function feature_event_notify.forward_immediate(user, host, sip_profile, forward
 		local socket = require 'socket'
 		socket.sleep(0.2)
 		event:fire()
+	end
 end
 
-function feature_event_notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination)
-		--set the event and send it
+function feature_event_notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination)
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
 		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
 		event:addHeader("profile", sip_profile)
 		event:addHeader("user", user)
@@ -114,10 +132,12 @@ function feature_event_notify.forward_busy(user, host, sip_profile, forward_busy
 		local socket = require 'socket'
 		socket.sleep(0.2)
 		event:fire()
+	end
 end
 
-function feature_event_notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count)
-		--set the event and send it
+function feature_event_notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count)
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
 		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
 		event:addHeader("profile", sip_profile)
 		event:addHeader("user", user)
@@ -130,10 +150,12 @@ function feature_event_notify.forward_no_answer(user, host, sip_profile, forward
 		local socket = require 'socket'
 		socket.sleep(0.2)
 		event:fire()
+	end
 end
 
-function feature_event_notify.init(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
-		--set the event and send it
+function feature_event_notify.init(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
 		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
 		event:addHeader("profile", sip_profile)
 		event:addHeader("user", user)
@@ -153,6 +175,7 @@ function feature_event_notify.init(user, host, sip_profile, forward_immediate_en
 		local socket = require 'socket'
 		socket.sleep(0.2)
 		event:fire()
+	end
 end
 
 return feature_event_notify
