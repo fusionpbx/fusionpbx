@@ -153,7 +153,17 @@
 			$database->app_name = 'extension settings';
 			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
-
+		
+		//clear the cache	
+			$sql = "select extension, number_alias, user_context from v_extensions ";
+			$sql .= "where extension_uuid = :extension_uuid ";
+			$parameters['extension_uuid'] = $extension_uuid;
+			$database = new database;
+			$extension = $database->select($sql, $parameters, 'row');
+			$cache = new cache;
+			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
+			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
+		
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
