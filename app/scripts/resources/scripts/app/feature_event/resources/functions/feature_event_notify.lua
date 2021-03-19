@@ -82,19 +82,22 @@ function feature_event_notify.get_profiles(user, domain)
 		return unique_profiles
 end
 
+
 function feature_event_notify.dnd(user, host, sip_profiles, do_not_disturb)
-		--set the event and send it to each profile
-		for sip_profile, _ in pairs(sip_profiles) do
-			local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
-			event:addHeader("profile", sip_profile)
-			event:addHeader("user", user)
-			event:addHeader("host", host)
-			event:addHeader("device", "")
-			event:addHeader("Feature-Event", "DoNotDisturbEvent")
-			event:addHeader("doNotDisturbOn", do_not_disturb)
-			--freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
-			event:fire()
-		end
+	--set the event and send it to each profile
+	for sip_profile, _ in pairs(sip_profiles) do
+		local event = freeswitch.Event("SWITCH_EVENT_PHONE_FEATURE")
+		event:addHeader("profile", sip_profile)
+		event:addHeader("user", user)
+		event:addHeader("host", host)
+		event:addHeader("device", "")
+		event:addHeader("Feature-Event", "DoNotDisturbEvent")
+		event:addHeader("doNotDisturbOn", do_not_disturb)
+		--freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
+		local socket = require 'socket'
+		socket.sleep(0.2)
+		event:fire()
+	end
 end
 
 function feature_event_notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination)
@@ -109,6 +112,8 @@ function feature_event_notify.forward_immediate(user, host, sip_profiles, forwar
 		event:addHeader("forward_immediate_enabled", forward_immediate_enabled)
 		event:addHeader("forward_immediate", forward_immediate_destination);
 		freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
+		local socket = require 'socket'
+		socket.sleep(0.2)
 		event:fire()
 	end
 end
@@ -124,6 +129,8 @@ function feature_event_notify.forward_busy(user, host, sip_profiles, forward_bus
 		event:addHeader("Feature-Event", "ForwardingEvent")
 		event:addHeader("forward_busy", forward_busy_destination)
 		event:addHeader("forward_busy_enabled", forward_busy_enabled)
+		local socket = require 'socket'
+		socket.sleep(0.2)
 		event:fire()
 	end
 end
@@ -140,6 +147,8 @@ function feature_event_notify.forward_no_answer(user, host, sip_profiles, forwar
 		event:addHeader("forward_no_answer", forward_no_answer_destination)
 		event:addHeader("forward_no_answer_enabled", forward_no_answer_enabled)
 		event:addHeader("ringCount", ring_count)
+		local socket = require 'socket'
+		socket.sleep(0.2)
 		event:fire()
 	end
 end
@@ -163,6 +172,8 @@ function feature_event_notify.init(user, host, sip_profiles, forward_immediate_e
 		event:addHeader("ringCount", ring_count)		
 		event:addHeader("Feature-Event", "DoNotDisturbEvent")
 		event:addHeader("doNotDisturbOn", do_not_disturb)
+		local socket = require 'socket'
+		socket.sleep(0.2)
 		event:fire()
 	end
 end
