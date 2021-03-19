@@ -625,20 +625,6 @@
 		}
 	}
 
-//get the sip profile name
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$command = "sofia_contact */".$user_id."@".$server_address;
-		$contact_string = event_socket_request($fp, "api ".$command);
-		if (substr($contact_string, 0, 5) == "sofia") {
-			$contact_array = explode("/", $contact_string);
-			$sip_profile_name = $contact_array[1];
-		}
-		else {
-			$sip_profile_name = 'internal';
-		}
-	}
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -816,7 +802,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>$button_margin,'onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 			unset($button_margin);
 		}
-		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".urlencode($sip_profile_name)."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
 		unset($button_margin);
 		if (permission_exists("device_files")) {
 			//get the template directory
