@@ -1411,44 +1411,32 @@ function number_pad($number,$n) {
 
 			if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
 				$eml_recipients = str_replace(' ', '', $eml_recipients);
-				if (substr_count(',', $eml_recipients)) { $delim = ','; }
-				if (substr_count(';', $eml_recipients)) { $delim = ';'; }
-				if ($delim) { $eml_recipients = explode($delim, $eml_recipients); } // delimiter found, convert to array of addresses
+				$eml_recipients = str_replace(array(';',','), ' ', $eml_recipients);
+				$eml_recipients = explode(' ', $eml_recipients); // convert to array of addresses
 			}
-
-			if (is_array($eml_recipients)) { // check if multiple recipients
-				foreach ($eml_recipients as $eml_recipient) {
-					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
-						if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
-							switch ($eml_recipient["delivery"]) {
-								case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
-							}
-							$address_found = true;
+			foreach ($eml_recipients as $eml_recipient) {
+				if (is_array($eml_recipient)) { // check if each recipient has multiple fields
+					if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
+						switch ($eml_recipient["delivery"]) {
+							case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+							case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+							default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
 						}
-					}
-					else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
-						$mail -> AddAddress($eml_recipient);
 						$address_found = true;
 					}
 				}
-
-				if (!$address_found) {
-					$eml_error = "No valid e-mail address provided.";
-					return false;
-				}
-
-			}
-			else { // just a single e-mail address found, not an array of addresses
-				if ($eml_recipients != '' && preg_match($regexp, $eml_recipients) == 1) { // check if email syntax is valid
-					$mail -> AddAddress($eml_recipients);
-				}
-				else {
-					$eml_error = "No valid e-mail address provided.";
-					return false;
+				else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
+					$mail -> AddAddress($eml_recipient);
+					$address_found = true;
 				}
 			}
+
+			if (!$address_found) {
+				$eml_error = "No valid e-mail address provided.";
+				return false;
+			}
+
+
 
 			if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
 				foreach ($eml_attachments as $attachment) {
