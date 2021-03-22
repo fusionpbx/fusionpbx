@@ -1262,4 +1262,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "It configures the Daylight Saving Time (DST) type. (It works only if “local_time.summer_time” is set to 1 (Enabled)). 0-DST by Date, 1-DST by Week";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db7705b3-efe9-4c15-aecb-c06cf81acebd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone_start_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3/2/7/2";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Specifies the time & date to start DST. format: MM/DD/HH (For By Date), Month/Week of Month/Day of Week/Hour of Day (For By Week) - preferred. Works only if yealink_summer_time is set to 1 (Enabled)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9de27ba5-02a5-479d-8323-69f59b26b9e3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_time_zone_end_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "11/1/7/2";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Specifies the time & date to end DST. format: MM/DD/HH (For By Date), Month/Week of Month/Day of Week/Hour of Day (For By Week) - preferred. Works only if yealink_summer_time is set to 1 (Enabled)";
 ?>
