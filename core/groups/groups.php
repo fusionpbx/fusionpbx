@@ -125,19 +125,6 @@
 	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//get permission counts for each group
-	if (is_array($groups) && @sizeof($groups) != 0) {
-		$sql = "select group_uuid, count(group_permission_uuid) as permission_count from v_group_permissions group by group_uuid";
-		$database = new database;
-		$result = $database->select($sql, null, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
-			foreach ($result as $row) {
-				$group_permissions[$row['group_uuid']] = $row['permission_count'];
-			}
-		}
-		unset($sql);
-	}
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -245,8 +232,8 @@
 				echo "	".escape($row['group_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-link no-wrap pr-15'><a href='group_permissions.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_permissions']." (".($group_permissions[$row['group_uuid']] ?: 0).")</a></td>\n";
-			echo "	<td class='no-link no-wrap'><a href='groupmembers.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_members']." (".$row['group_members'].")</a></td>\n";
+			echo "	<td class='no-link no-wrap pr-15'><a href='group_permissions.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_permissions']." (".$row['group_permissions'].")</a></td>\n";
+			echo "	<td class='no-link no-wrap'><a href='group_members.php?group_uuid=".urlencode($row['group_uuid'])."'>".$text['label-group_members']." (".$row['group_members'].")</a></td>\n";
 			echo "	<td class='center'>".escape($row['group_level'])."</td>\n";
 			if (permission_exists('group_edit')) {
 				echo "	<td class='no-link center'>\n";

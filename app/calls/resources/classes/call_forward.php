@@ -42,7 +42,6 @@ include "root.php";
 		private $dial_string;
 		private $toll_allow;
 		public $accountcode;
-		public $forward_caller_id_uuid;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
 

@@ -94,6 +94,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53cc1060-78f9-44ca-b9b0-17fb2fffd5e1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "username_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "any";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require a specific username format.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e3f5f4cd-0f17-428a-b788-2f2db91b6dc7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";
@@ -220,6 +228,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "add_user";
@@ -346,7 +355,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_setting_description";

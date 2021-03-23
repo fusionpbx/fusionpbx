@@ -175,6 +175,9 @@ include "root.php";
 					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
 						return "cisco-spa";
 					}
+					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
+                                                return "digium";
+                                        }
 					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
 						return "grandstream";
 					}
@@ -308,6 +311,12 @@ include "root.php";
 						//build the delete array
 							foreach ($records as $x => $record) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									$sql = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
+									$parameters['device_uuid_alternate'] = $record['uuid'];
+									$database = new database;
+									$database->execute($sql, $parameters);
+									unset($sql, $parameters);
+
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 									$array['device_settings'][$x]['device_uuid'] = $record['uuid'];
 									$array['device_lines'][$x]['device_uuid'] = $record['uuid'];

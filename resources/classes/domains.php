@@ -262,8 +262,6 @@ if (!class_exists('domains')) {
 
 										//clear the domains session array to update it
 											unset($_SESSION["domains"]);
-											unset($_SESSION["domain_uuid"]);
-											unset($_SESSION["domain_name"]);
 											unset($_SESSION['domain']);
 											unset($_SESSION['switch']);
 
@@ -769,11 +767,6 @@ if (!class_exists('domains')) {
 						$domains_processed++;
 				}
 
-			//synchronize the dialplan
-				if (function_exists('save_dialplan_xml')) {
-					save_dialplan_xml();
-				}
-
 			//update config.lua
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
 					$obj = new scripts;
@@ -878,6 +871,9 @@ if (!class_exists('domains')) {
 						$sql .= "default_setting_subcategory, ";
 						$sql .= "default_setting_name, ";
 						$sql .= "default_setting_value, ";
+						if ($row['default_setting_order']) {
+							$sql .= "default_setting_order, ";
+						}
 						$sql .= "default_setting_enabled, ";
 						$sql .= "default_setting_description ";
 						$sql .= ") values \n";
@@ -887,6 +883,9 @@ if (!class_exists('domains')) {
 						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
 						$sql .= "'".check_str($row['default_setting_name'])."', ";
 						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						if ($row['default_setting_order']) {
+							$sql .= "'".check_str($row['default_setting_order'])."', ";
+						}
 						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
 						$sql .= "'".check_str($row['default_setting_description'])."' ";
 						$sql .= ");";

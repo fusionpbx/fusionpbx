@@ -32,4 +32,5 @@
 <Headset_Input_Gain>6</Headset_Input_Gain>
 <Time_Format>{$spa_time_format}</Time_Format>
 <Date_Format>{$spa_date_format}</Date_Format>
+<Lcd_Contrast group="User/Audio_Volume">0</Lcd_Contrast>
 </flat-profile>

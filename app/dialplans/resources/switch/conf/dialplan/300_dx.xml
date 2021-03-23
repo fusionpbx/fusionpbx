@@ -3,7 +3,7 @@
 	<extension name="dx" number="dx" continue="false" app_uuid="ddcf7740-78ca-4035-8c19-e2df10cebf67" order="300">
 		<condition field="destination_number" expression="^dx$">
 			<action application="answer"/>
-			<action application="read" data="11 11 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>
+			<action application="read" data="2 6 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>
 			<action application="transfer" data="-bleg ${digits}"/>
 		</condition>
 	</extension>

@@ -154,8 +154,12 @@
 
 		--get the agents
 			table.insert(xml, [[                    <agents>]]);
-			sql = "select * from v_call_center_agents as a, v_domains as d ";
+			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
+			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1)) as extension_uuid, a.*, d.domain_name  ";
+			sql = sql .. "from v_call_center_agents as a, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
+			--sql = "select * from v_call_center_agents as a, v_domains as d ";
+			--sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
@@ -165,6 +169,7 @@
 					agent_uuid = row.call_center_agent_uuid;
 					domain_uuid = row.domain_uuid;
 					domain_name = row.domain_name;
+					extension_uuid = row.extension_uuid;
 					agent_name = row.agent_name;
 					agent_type = row.agent_type;
 					agent_call_timeout = row.agent_call_timeout;
@@ -175,16 +180,21 @@
 					agent_wrap_up_time = row.agent_wrap_up_time;
 					agent_reject_delay_time = row.agent_reject_delay_time;
 					agent_busy_delay_time = row.agent_busy_delay_time;
+					agent_record = row.agent_record;
 
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
 						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
+						local record = "";
+						if (agent_record == "true") then
+							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
+						end
 						if (string.find(agent_contact, '}') == nil) then
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}"..record.."}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
@@ -197,7 +207,7 @@
 										--add the call_timeout
 										pos = string.find(agent_contact, "}");
 										first = string.sub(agent_contact, 0, pos);
-										last = string.sub(agent_contact, tmp_pos);
+										last = string.sub(agent_contact, pos);
 										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
 								else
 										--the string has the call timeout
@@ -210,7 +220,7 @@
 								last = string.sub(agent_contact, pos);
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
-									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination}call_timeout='..agent_call_timeout..last;
+									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
 								else
 									--add confirm
 									agent_contact = tmp_first..',sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;

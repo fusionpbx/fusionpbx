@@ -354,7 +354,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2318></P2318>
+    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -420,7 +420,9 @@
     <!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
 
     <!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -686,7 +688,7 @@
 
     <!-- # Dial Plan Prefix -->
     <!-- # String  -->
-    <P66></P66>
+    <P66>{$grandstream_dial_prefix}</P66>
 
     <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
@@ -695,7 +697,7 @@
 {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
 {else}
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -1306,7 +1308,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2418></P2418>
+    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -1645,7 +1647,7 @@
 {if isset($grandstream_dial_plan) }
     <P459>{$grandstream_dial_plan}</P459>
 {else}
-    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -2254,7 +2256,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2518></P2518>
+    <P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -2592,7 +2594,7 @@
 {if isset($grandstream_dial_plan) }
     <P559>{$grandstream_dial_plan}</P559>
 {else}
-    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P559>
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P559>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -2613,7 +2615,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1500>grandstream_distinctive_ringtone_name_1</P1500>
+    <P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0. -->
@@ -3203,7 +3205,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2618></P2618>
+    <P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -3543,7 +3545,7 @@
 {if isset($grandstream_dial_plan) }
     <P659>{$grandstream_dial_plan}</P659>
 {else}
-    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P659>
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P659>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -4153,7 +4155,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2718></P2718>
+    <P2718>{if $nway_conference == true}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -4491,7 +4493,7 @@
 {if isset($grandstream_dial_plan) }
     <P1759>{$grandstream_dial_plan}</P1759>
 {else}
-    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1759>
+    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1759>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -5103,7 +5105,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2818></P2818>
+    <P2818>{if $nway_conference == true}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -5443,7 +5445,7 @@
 {if isset($grandstream_dial_plan) }
     <P1859>{$grandstream_dial_plan}</P1859>
 {else}
-    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P1859>
+    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1859>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -5720,6 +5722,7 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
     <!-- # P8 = 0 -->
+    <P8>{$grandstream_ip_address_mode}</P8>
 
     <!-- ########################################## -->
     <!-- # DHCP -->
@@ -6053,50 +6056,66 @@
     <!-- # OpenVPN Enable.  0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1  -->
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_enable)}
+    <P7050>{$grandstream_openvpn_enable}</P7050>
+{else}
     <P7050>0</P7050>
+{/if}
 
     <!-- # OpenVPN Server Address -->
     <!-- # String -->
-    <P7051></P7051>
+    <P7051>{$grandstream_openvpn_server}</P7051>
 
     <!-- # OpenVPN Port. Default is 1194 -->
-    <!-- # Number -->
+    <!-- # Number -->   
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_port)}  
+    <P7052>{$grandstream_openvpn_port}</P7052>
+{else}
     <P7052>1194</P7052>
+{/if}
 
     <!-- # OpenVPN Transport.  0 - UDP, 1 - TCP. Default is 0 -->
     <!-- #Number: 0, 1  -->
     <!-- #Mandatory -->
+{if isset($grandstream_openvpn_transport)}
+    <P2912>{$grandstream_openvpn_transport}</P2912>
+{else}
     <P2912>0</P2912>
+{/if}
 
     <!-- # OpenVPN CA -->
     <!-- # String -->
-    <P9902></P9902>
+    <P9902>{$grandstream_openvpn_ca}</P9902>
 
     <!-- # OpenVPN Certificate -->
     <!-- # String -->
-    <P9903></P9903>
+    <P9903>{$grandstream_openvpn_cert}</P9903>
 
     <!-- # OpenVPN Client Key -->
     <!-- # String -->
-    <P9904></P9904>
+    <P9904>{$grandstream_openvpn_key}</P9904>
 
     <!-- # OpenVPN Cipher Method. 0 - Blowfish, 1 - AES-128, 2 - AES-256, 3 - Triple-DES. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3  -->
     <!-- # Mandatory -->
+{if isset($grandstream_openvpn_cipher)}
+    <P8396>{$grandstream_openvpn_cipher}</P8396>
+{else}
     <P8396>0</P8396>
+{/if}
 
     <!-- # OpenVPN Username -->
     <!-- # String -->
-    <P8394></P8394>
+    <P8394>{$grandstream_openvpn_username}</P8394>
 
     <!-- # OpenVPN Password -->
     <!-- # String -->
-    <P8395></P8395>
+    <P8395>{$grandstream_openvpn_password}</P8395>
 
     <!-- # Additional Options -->
     <!-- # String -->
-    <P8460></P8460>
+    <P8460>{$grandstream_openvpn_options}</P8460>
 
     <!-- ############################################################################## -->
     <!-- ## Network/SNMP Settings                     ## -->
@@ -6232,18 +6251,18 @@
     <!-- # When set to Yes(1), it will override the configured provision path and method -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
     <!-- # Additional Override DHCP Option. 0 - None,  1 - Option 150,  2 - Option 160. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8337>0</P8337>
+    {if isset($grandstream_dhcp_option_additional_override)}<P8337>{$grandstream_dhcp_option_additional_override}</P8337>{else}<P8337>0</P8337>{/if}
 
     <!-- # Allow DHCP Option 120 to Override SIP Server -->
     <!-- # 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1411>0</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes -->
     <!-- # Number: 0, 1 -->
@@ -6304,7 +6323,7 @@
     <P237></P237>
 {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
@@ -7329,7 +7348,9 @@
     <!-- # Onhook Dial Barging. 0 - Disabled, 1 - Enabled. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8397>1</P8397>
+    {if isset($grandstream_onhook_dial_barging)}
+      <P8397>{$grandstream_onhook_dial_barging}</P8397>
+    {/if}
 
     <!-- # Off-hook Auto Dial -->
     <!-- # String -->
@@ -7372,7 +7393,9 @@
     <!-- # Bypass Dial Plan Through Call History and Directories. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6758>0</P6758>
+    {if isset($grandstream_history_dialplan_bypass)}
+      <P6758>{$grandstream_history_dialplan_bypass}</P6758>
+    {/if}
 
     <!-- # Disable Call Waiting. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7446,7 +7469,11 @@
     <!-- # Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+{if isset($dnd)}
+    <P8446>{$dnd}</P8446>
+{else}
     <P8446>1</P8446>
+{/if}
 
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
@@ -7572,7 +7599,7 @@
     <!-- # Hide BLF Remote Status. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8374>0</P8374>
+    <P8374>{$grandstream_blf_remote_status}</P8374>
 
     <!-- # Show SIP Error Response. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
@@ -7899,17 +7926,21 @@
     <!-- # HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
     <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6779>0</P6779>
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
 
     <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1487>0</P1487>
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
     <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -7924,12 +7955,20 @@
     <!-- # Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_tx_gain)}
+    <P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
     <P1301>0</P1301>
+{/if}
 
     <!-- # Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_headset_rx_gain)}
+    <P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
     <P1302>0</P1302>
+{/if}
 
     <!-- # Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
@@ -8098,16 +8137,15 @@
     <!-- # Wallpaper Source. 0 - Default, 1 - Download, 2-USB(for GXP2140/2160/2170 only), 3 - Uploaded, 4 - Color Background -->
     <!-- # Number: 0-4 -->
     <!-- # Mandatory -->
-    <P2916>0</P2916>
+    <!-- # This is defined in if/else statement below. Commented out here to avoid duplicate declaration -->
+    <!-- <P2916>0</P2916> -->
 
     <!-- # Wallpaper Server Path -->
     <!-- # String  -->
 {if isset($grandstream_wallpaper_url)}
     <P2916>1</P2916>
     <P2917>{$grandstream_wallpaper_url}</P2917>
-{else}
-    <P2916>0</P2916>
-    <P2917></P2917>
+
 {/if}
 
     <!-- # Color Background. Default is #000000. -->
@@ -8119,8 +8157,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver)}
     <P2918>{$grandstream_screensaver}</P2918>
-{else}
-    <P2918>1</P2918>
 {/if}
 
     <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. ~~for GXP2140/2160/2170 only -->
@@ -8128,8 +8164,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
     <P6759>{$grandstream_screensaver_source}</P6759>
-{else}
-    <P6759>0</P6759>
 {/if}
 
     <!-- # Show Date and Time. 0 - No, 1 - Yes. Default is 1 -->
@@ -8238,7 +8272,9 @@
     <!-- # Speaker Ring Volume -->
     <!-- # Number: 0-7. Default is 5. -->
     <!-- # Mandatory -->
-    <P8352>5</P8352>
+{if isset($grandstream_speaker_ring_volume)}
+    <P8352>{$grandstream_speaker_ring_volume}</P8352>
+{/if} 
 
     <!-- # Notification Tone Volume -->
     <!-- # Number: 0-7. Default is 5. -->

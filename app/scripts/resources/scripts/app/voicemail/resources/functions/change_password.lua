@@ -32,7 +32,7 @@
 				valid_password = "false";
 			--please enter your password followed by pound
 				dtmf_digits = '';
-				password = macro(session, "password_new", 20, 5000, '');
+				password = session:playAndGetDigits(1, 20, max_tries, 5000, "#", "phrase:voicemail_enter_new_pass", "", "\\d+");
 				if (password_complexity ~= "true") then
 					valid_password = "true";
 				end
@@ -43,7 +43,7 @@
 							password_error_flag = "1";
 							dtmf_digits = '';
 							--freeswitch.consoleLog("notice", "[voicemail] Not long enough \n");
-							macro(session, "password_below_minimum", 20, 3000, password_min_length);
+							session:execute("playback", "phrase:voicemail_password_below_minimum:" .. password_min_length);
 							timeouts = 0;
 							if (menu == "tutorial") then
 								change_password(voicemail_id, "tutorial");
@@ -60,7 +60,7 @@
 								password_error_flag = "1";
 								dtmf_digits = '';
 								--freeswitch.consoleLog("notice", "[voicemail] You can't use repeating digits like ".. repeating[i] .."  \n");
-								macro(session, "password_not_secure", 20, 3000);
+								session:execute("playback", "phrase:voicemail_password_not_secure");
 								timeouts = 0;
 								if (menu == "tutorial") then
 									change_password(voicemail_id, "tutorial");
@@ -72,13 +72,13 @@
 						end
 
 					--check for squential digits
-						local sequential = {"012", "123", "345", "456", "567", "678", "789", "987"};
+						local sequential = {"012", "123", "234", "345", "456", "567", "678", "789", "987", "876", "765", "654", "543", "432", "321", "210"};
 						for i = 1, 8 do
 							if (string.match(password, sequential[i])) then
 								password_error_flag = "1";
 								dtmf_digits = '';
 								--freeswitch.consoleLog("notice", "[voicemail] You can't use sequential digits like ".. sequential[i] .."  \n");
-								macro(session, "password_not_secure", 20, 3000);
+								session:execute("playback", "phrase:voicemail_password_not_secure");
 								timeouts = 0;
 								if (menu == "tutorial") then
 									change_password(voicemail_id, "tutorial");
@@ -110,7 +110,7 @@
 				end
 			--has been changed to
 				dtmf_digits = '';
-				macro(session, "password_changed", 20, 3000, password);
+				session:execute("playback", "phrase:voicemail_change_pass_repeat_success:" .. password);
 			--advanced menu
 				timeouts = 0;
 				if (menu == "advanced") then

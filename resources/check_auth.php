@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 //includes
 	require_once "resources/require.php";
 
@@ -73,6 +74,7 @@
 			if ($result["authorized"] === "true") {
 				//set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
+					//$_SESSION["domain_name"] = $result["domain_name"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
 
 				//user session array
@@ -145,6 +147,7 @@
 				if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
 					$sql .= "and (".implode(' or ', $sql_where_or).") ";
 				}
+				$sql .= "and permission_assigned = 'true' ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				$database = new database;
 				$result = $database->select($sql, $parameters, 'all');
@@ -155,6 +158,11 @@
 					}
 				}
 				unset($sql, $parameters, $result, $row);
+			}
+
+		//get the domains
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){
+				require_once "app/domains/resources/domains.php";
 			}
 
 		//get the user settings
@@ -197,13 +205,8 @@
 
 		//get the extensions that are assigned to this user
 			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/extensions/app_config.php")) {
-				if (
-					isset($_SESSION["user"]) &&
-					is_uuid($_SESSION["user_uuid"]) &&
-					is_uuid($_SESSION["domain_uuid"]) &&
-					!isset($_SESSION['user']['extension'])
-					) {
-					//get the user extension list
+				if (isset($_SESSION["user"]) && is_uuid($_SESSION["user_uuid"]) && is_uuid($_SESSION["domain_uuid"]) && !isset($_SESSION['user']['extension'])) {
+						//get the user extension list
 						$_SESSION['user']['extension'] = null;
 						$sql = "select ";
 						$sql .= "e.extension_uuid, ";
@@ -230,22 +233,24 @@
 						if (is_array($result) && @sizeof($result) != 0) {
 							foreach($result as $x => $row) {
 								//set the destination
-									$destination = $row['extension'];
-									if (strlen($row['number_alias']) > 0) {
-										$destination = $row['number_alias'];
-									}
+								$destination = $row['extension'];
+								if (strlen($row['number_alias']) > 0) {
+									$destination = $row['number_alias'];
+								}
+
 								//build the user array
-									$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
-									$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
-									$_SESSION['user']['extension'][$x]['destination'] = $destination;
-									$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
-									$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-									$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-									$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
-									$_SESSION['user']['extension'][$x]['description'] = $row['description'];
-								//set the user context
-									$_SESSION['user']['user_context'] = $row["user_context"];
-									$_SESSION['user_context'] = $row["user_context"];
+								$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
+								$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
+								$_SESSION['user']['extension'][$x]['destination'] = $destination;
+								$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
+								$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
+								$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+								$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
+								$_SESSION['user']['extension'][$x]['description'] = $row['description'];
+
+								//set the context
+								$_SESSION['user']['user_context'] = $row["user_context"];
+								$_SESSION['user_context'] = $row["user_context"];
 							}
 						}
 						unset($sql, $parameters, $result, $row);
@@ -260,12 +265,6 @@
 					exit();
 				}
 			}
-
-		//get the domains
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){
-				require_once "app/domains/resources/domains.php";
-			}
-
 	}
 
 //set the time zone

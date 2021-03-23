@@ -86,9 +86,11 @@
 
 		// load an array of the database schema and compare it with the active database
 		if ($do["schema"] && permission_exists("upgrade_schema")) {
-			$upgrade_data_types = check_str($do["data_types"]);
 			require_once "resources/classes/schema.php";
 			$obj = new schema();
+			if (isset($do["data_types"]) && $do["data_types"] == 'true') {
+				$obj->data_types = true;
+			}
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
@@ -182,7 +184,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
-		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step++."</span></div>";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		".$text['label-upgrade_schema'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
@@ -195,6 +197,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align:middle;'>\n";
+		echo "		<div style='".$step_container_style."'><span style='".$step_number_style." letter-spacing: -0.06em;'>".$step++."B</span></div>";
 		echo "		".$text['label-upgrade_data_types'];
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";

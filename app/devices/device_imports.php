@@ -66,25 +66,24 @@
 //save the data to the csv file
 	if (isset($_POST['data'])) {
 		$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
-		file_put_contents($file, $_POST['data']);
-		$_SESSION['file'] = $file;
-	}
-
-//copy the csv file
-	//$_POST['submit'] == "Upload" &&
-	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_imports')) {
-		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-			unset($_POST['txtCommand']);
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
 	}
 
+//copy the csv file
+	//$_POST['submit'] == "Upload" &&
+	if ( is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
+		if ($_POST['type'] == 'csv') {
+			$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
+			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
+				$_SESSION['file'] = $file;
+			}
+		}
+	}
+
 //get the schema
-	if (strlen($delimiter) > 0) {
+	if (strlen($delimiter) > 0 && file_exists($_SESSION['file'])) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -292,6 +291,12 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
+									//normalize the MAC address
+									if ($field_name == "device_mac_address") {
+										$result[$key] = strtolower($result[$key]);
+										$result[$key] = preg_replace('#[^a-fA-F0-9./]#', '', $result[$key]);
+									}
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
@@ -352,6 +357,12 @@
 						$database->save($array);
 						//$message = $database->message;
 					}
+				
+					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+						$prov = new provision;
+						$prov->domain_uuid = $domain_uuid;
+						$response = $prov->write();
+					}
 
 				//send the redirect header
 					header("Location: devices.php");
@@ -401,7 +412,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='from_row'>\n";
-	$i=1;
+	$i=2;
 	while($i<=99) {
 		$selected = ($i == $from_row) ? "selected" : null;
 		echo "			<option value='$i' ".$selected.">$i</option>\n";

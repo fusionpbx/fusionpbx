@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2020 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,9 @@
 	function send_email(id, uuid)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
-
+		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
+		local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
+		
 		--get voicemail message details
 			local sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = :domain_uuid
@@ -46,6 +48,7 @@
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
+				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 				voicemail_description = row["voicemail_description"];
@@ -71,11 +74,18 @@
 						dbh = Database.new('system', 'base64/read')
 					end
 
+				--get the time zone
+					local time_zone = settings:get('domain', 'time_zone', 'name');
+					if (time_zone == nil) then
+						time_zone = 'UTC';
+					end
+
 				--get voicemail message details
-					local sql = [[SELECT * FROM v_voicemail_messages
+					local sql = [[SELECT to_char(timezone(:time_zone, to_timestamp(created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, * 
+						FROM v_voicemail_messages
 						WHERE domain_uuid = :domain_uuid
 						AND voicemail_message_uuid = :uuid]]
-					local params = {domain_uuid = domain_uuid, uuid = uuid};
+					local params = {domain_uuid = domain_uuid, uuid = uuid, time_zone = time_zone};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
@@ -85,6 +95,7 @@
 							created_epoch = row["created_epoch"];
 							caller_id_name = row["caller_id_name"];
 							caller_id_number = row["caller_id_number"];
+							message_date = row["message_date"];
 							message_length = row["message_length"];
 							--message_status = row["message_status"];
 							--message_priority = row["message_priority"];
@@ -112,9 +123,10 @@
 				--format the message length and date
 					message_length_formatted = format_seconds(message_length);
 					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] message date: " .. message_date .. "\n");
 						freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
 					end
-					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch);
+					--local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch);
 
 				--connect to the database
 					local dbh = Database.new('system');
@@ -124,10 +136,10 @@
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'voicemail' "
-					if (transcription == nil) then
-						sql = sql .. "AND template_subcategory = 'default' "
-					else
+					if (transcribe_enabled == 'true' and voicemail_transcription_enabled == 'true') then
 						sql = sql .. "AND template_subcategory = 'transcription' "
+					else
+						sql = sql .. "AND template_subcategory = 'default' "
 					end
 					sql = sql .. "AND template_enabled = 'true' "
 					sql = sql .. "ORDER BY domain_uuid DESC "
@@ -149,6 +161,7 @@
 						["X-FusionPBX-Domain-Name"] = domain_name;
 						["X-FusionPBX-Call-UUID"]   = uuid;
 						["X-FusionPBX-Email-Type"]  = 'voicemail';
+						["X-FusionPBX-local_after_email"]  = voicemail_local_after_email;
 					}
 
 				--prepare the voicemail_name_formatted
@@ -172,6 +185,7 @@
 					subject = subject:gsub("${voicemail_description}", voicemail_description);
 					subject = subject:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					subject = subject:gsub("${domain_name}", domain_name);
+					subject = subject:gsub("${new_messages}", new_messages);
 					subject = trim(subject);
 					subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
 
@@ -190,6 +204,9 @@
 					body = body:gsub("${voicemail_name_formatted}", voicemail_name_formatted);
 					body = body:gsub("${domain_name}", domain_name);
 					body = body:gsub("${sip_to_user}", id);
+					if (origination_callee_id_name ~= nil) then
+						body = body:gsub("${origination_callee_id_name}", origination_callee_id_name);
+					end
 					body = body:gsub("${dialed_user}", id);
 					if (voicemail_file == "attach") then
 						body = body:gsub("${message}", text['label-attached']);
@@ -215,7 +232,7 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (string.len(voicemail_mail_to) > 2) then
+			if (string.len(voicemail_mail_to) > 2 and email_queue_enabled == 'false') then
 				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
 						local sql = [[DELETE FROM v_voicemail_messages

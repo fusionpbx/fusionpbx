@@ -35,18 +35,18 @@
 		--request the forward_voicemail_id
 			if (session:ready()) then
 				dtmf_digits = '';
-				forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
+				forward_voicemail_id = session:playAndGetDigits(1, 20, max_tries, digit_timeout, "#", "phrase:voicemail_forward_message_enter_extension:#", "", "\\d+");
 				if (session:ready()) then
 					if (string.len(forward_voicemail_id) == 0) then
 						dtmf_digits = '';
-						forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
+						forward_voicemail_id = session:playAndGetDigits(1, 20, max_tries, digit_timeout, "#", "phrase:voicemail_forward_message_enter_extension:#", "", "\\d+");
 					end
 				end
 			end
 			if (session:ready()) then
 				if (string.len(forward_voicemail_id) == 0) then
 					dtmf_digits = '';
-					forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
+					forward_voicemail_id = session:playAndGetDigits(1, 20, max_tries, digit_timeout, "#", "phrase:voicemail_forward_message_enter_extension:#", "", "\\d+");
 				end
 			end
 

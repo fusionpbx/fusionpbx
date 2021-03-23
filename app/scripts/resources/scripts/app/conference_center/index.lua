@@ -309,7 +309,7 @@
 						--freeswitch.consoleLog("notice", "[conference center] <conference_start_epoch> sql: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 
 					--set the conference_recording
-						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
+						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid .. "." .. record_ext;
 						freeswitch.consoleLog("notice", "[conference center] conference_recording: "..conference_recording.."\n");
 					--conference has ended set the end_epoch
 						local sql = {}
@@ -568,6 +568,7 @@
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];
+					moderator_endconf = row["moderator_endconf"];
 					moderator_pin = row["moderator_pin"];
 					participant_pin = row["participant_pin"];
 					announce_name = row["announce_name"];
@@ -690,13 +691,14 @@
 							flags = flags .. "|mute";
 						end
 					end
+					
 					if (member_type == "moderator") then
 						--set as the moderator
 							flags = flags .. "|moderator";
 						--when the moderator leaves end the conference
-							--flags = flags .. "|endconf";
-						--set the moderator controls
-							session:execute("set","conference_controls=moderator");
+							if (moderator_endconf == "true") then
+								flags = flags .. "|endconf";
+							end
 					end
 
 				--get the conference xml_list

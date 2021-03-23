@@ -30,7 +30,7 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists('call_recording_view')) {
+	if (permission_exists('call_recording_view') || permission_exists('conference_session_play')) {
 		//access granted
 	}
 	else {

@@ -24,7 +24,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --define function to listen to the recording
-	function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number)
+	function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status)
 
 		--set default values
 			dtmf_digits = '';
@@ -43,36 +43,30 @@
 		--say the message number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "message_number", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
 				end
 			end
-		--say the number
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					session:say(message_number, default_language, "number", "pronounced");
-				end
+		--say the caller id number first (default)
+			if (
+				session:ready() and
+				caller_id_number ~= nil and (
+					vm_say_caller_id_number == nil or
+					vm_say_caller_id_number == "true"
+				)) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
+				session:say(caller_id_number, default_language, "name_spelled", "iterated");
 			end
-		--say the caller id number
-			if (session:ready() and caller_id_number ~= nil) then
-				if (vm_say_caller_id_number ~= nil) then
-					if (vm_say_caller_id_number == "true") then
-						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-message_from.wav");
-						session:say(caller_id_number, default_language, "name_spelled", "iterated");
-					end
+		--say the message date first (default)
+			if (
+				session:ready() and
+				string.len(dtmf_digits) == 0 and (
+					vm_say_date_time == nil or
+					vm_say_date_time == "true"
+				)) then
+				if (current_time_zone ~= nil) then
+					session:execute("set", "timezone="..current_time_zone.."");
 				end
-			end
-		--say the message date
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					if (vm_say_date_time ~= nil) then
-						if (vm_say_date_time == "true") then
-							if (current_time_zone ~= nil) then
-								session:execute("set", "timezone="..current_time_zone.."");
-							end
-							session:say(created_epoch, default_language, "current_date_time", "pronounced");
-						end
-					end
-				end
+				session:say(created_epoch, default_language, "current_date_time", "pronounced");
 			end
 		--get the recordings from the database
 			if (storage_type == "base64") then
@@ -162,40 +156,32 @@
 				os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 			end
-		--to listen to the recording press 1
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "listen_to_recording", 1, 100, '');
-				end
+		--say the caller id number last (optional)
+			if (
+				session:ready() and
+				caller_id_number ~= nil and
+				vm_say_caller_id_number ~= nil and
+				vm_say_caller_id_number == "last"
+				) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
+				session:say(caller_id_number, default_language, "name_spelled", "iterated");
 			end
-		--to save the recording press 2
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "save_recording", 1, 100, '');
+		--say the message date last (optional)
+			if (
+				session:ready() and
+				string.len(dtmf_digits) == 0 and
+				vm_say_date_time ~= nil and
+				vm_say_date_time == "last"
+				) then
+				if (current_time_zone ~= nil) then
+					session:execute("set", "timezone="..current_time_zone.."");
 				end
+				session:say(created_epoch, default_language, "current_date_time", "pronounced");
 			end
-		--to return the call now press 5
+		--post listen options
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "return_call", 1, 100, '');
-				end
-			end
-		--to delete the recording press 7
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "delete_recording", 1, 100, '');
-				end
-			end
-		--to forward this message press 8
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "to_forward_message", 1, 100, '');
-				end
-			end
-		--to forward this recording to your email press 9
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "forward_to_email", 1, 3000, '');
+					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:5:7:8:9:0", "", "\\d+");
 				end
 			end
 		--wait for more digits
@@ -207,10 +193,10 @@
 		--process the dtmf
 			if (session:ready()) then
 				if (dtmf_digits == "1") then
-					listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number);
+					listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
 				elseif (dtmf_digits == "2") then
 					message_saved(voicemail_id, uuid);
-					macro(session, "message_saved", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_ack:saved");
 				elseif (dtmf_digits == "5") then
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
@@ -224,11 +210,11 @@
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
-					macro(session, "message_saved", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_ack:saved");
 				elseif (dtmf_digits == "9") then
 					send_email(voicemail_id, uuid);
 					dtmf_digits = '';
-					macro(session, "emailed", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_ack:emailed");
 				elseif (dtmf_digits == "*") then
 					timeouts = 0;
 					main_menu();
@@ -237,7 +223,8 @@
 					session:transfer("0", "XML", context);
 				else
 					message_saved(voicemail_id, uuid);
-					macro(session, "message_saved", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_ack:saved");
 				end
+				session:execute("sleep", "400");
 			end
 	end

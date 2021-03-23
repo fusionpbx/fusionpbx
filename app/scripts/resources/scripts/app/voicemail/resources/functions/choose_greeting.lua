@@ -34,7 +34,7 @@
 		--select the greeting
 			if (session:ready()) then
 				dtmf_digits = '';
-				greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+				greeting_id = session:playAndGetDigits(1, 1, max_tries, 5000, "#", "phrase:voicemail_choose_greeting", "", "\\d+");
 			end
 
 		--check to see if the greeting file exists
@@ -137,7 +137,7 @@
 				--greeting selected
 					if (session:ready()) then
 						dtmf_digits = '';
-						macro(session, "greeting_selected", 1, 100, greeting_id);
+						session:execute("playback", "phrase:voicemail_greeting_selected:" .. greeting_id);
 					end
 
 				--advanced menu
@@ -149,7 +149,7 @@
 				--invalid greeting_id
 					if (session:ready()) then
 						dtmf_digits = '';
-						greeting_id = macro(session, "choose_greeting_fail", 1, 100, '');
+						session:execute("playback", "phrase:voicemail_choose_greeting_fail");
 					end
 
 				--send back to choose the greeting

@@ -89,7 +89,7 @@ if (!class_exists('conference_centers')) {
 				}
 				$sql = "select count(*) from v_conference_rooms as r, v_meetings as p ";
 				if ($not_admin) {
-					$sql .= "v_meeting_users as u, ";
+					$sql .= ",v_meeting_users as u ";
 				}
 				$sql .= "where r.domain_uuid = :domain_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
@@ -221,7 +221,7 @@ if (!class_exists('conference_centers')) {
 		 * download the recordings
 		 */
 		public function download() {
-			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+			if (permission_exists('conference_session_play') || permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
 				//cache limiter
 					session_cache_limiter('public');
@@ -373,10 +373,12 @@ if (!class_exists('conference_centers')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
-								//syncrhonize configuration
-									save_dialplan_xml();
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
@@ -602,15 +604,17 @@ if (!class_exists('conference_centers')) {
 								//revoke temporary permissions
 									$p->delete("dialplan_edit", "temp");
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);

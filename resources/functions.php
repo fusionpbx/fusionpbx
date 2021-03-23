@@ -51,7 +51,7 @@
 				}
 			}
 			if ($db_type == "pgsql") {
-				$string = pg_escape_string($string);
+				$string = str_replace("'","''",$string);
 			}
 			if ($db_type == "mysql") {
 				if(function_exists('mysql_real_escape_string')){
@@ -106,22 +106,41 @@
 			$uuid = null;
 			if (PHP_OS === 'FreeBSD') {
 				$uuid = trim(shell_exec("uuid -v 4"));
-				if (!is_uuid($uuid)) {
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
 					echo "Please install the following package.\n";
 					echo "pkg install ossp-uuid\n";
 					exit;
 				}
 			}
-			if (PHP_OS === 'Linux' && !is_uuid($uuid)) {
+			if (PHP_OS === 'Linux') {
 				$uuid = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					$uuid = trim(shell_exec("uuidgen"));
+					if (is_uuid($uuid)) {
+						return $uuid;
+					}
+					else {
+						echo "Please install the uuidgen.\n";
+						exit;
+					}
+				}
 			}
-			if (!is_uuid($uuid)) {
-				$uuid = trim(shell_exec("uuidgen"));
-			}
-			if (function_exists('com_create_guid') === true && PHP_OS === 'Windows') {
+			if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && function_exists('com_create_guid')) {
 				$uuid = trim(com_create_guid(), '{}');
+				if (is_uuid($uuid)) {
+					return $uuid;
+				}
+				else {
+					echo "The com_create_guid() function failed to create a uuid.\n";
+					exit;
+				}
 			}
-			return $uuid;
 		}
 	}
 
@@ -374,7 +393,7 @@
 		//html table header order by
 		function th_order_by($field_name, $column_title, $order_by, $order, $app_uuid = '', $css = '', $http_get_params = '', $description = '') {
 			global $text;
-			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
+			if (is_uuid($app_uuid) > 0) { $app_uuid = "&app_uuid=".urlencode($app_uuid); }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
 
 			$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 			$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value);
@@ -419,13 +438,19 @@
 			if (strlen($order_by) == 0) {
 				$order = 'asc';
 			}
-			if ($order == "asc") {
-				$description .= $text['label-order'].': '.$text['label-ascending'];
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+			if ($order_by == $field_name) {
+				if ($order == "asc") {
+					$description .= $text['label-order'].' '.$text['label-descending'];
+					$html .= "<a href='?order_by=".urlencode($field_name)."&order=desc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+				}
+				else {
+					$description .= $text['label-order'].' '.$text['label-ascending'];
+					$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+				}
 			}
 			else {
-				$description .= $text['label-order'].': '.$text['label-descending'];
-				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".urlencode($app_uuid).$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
+				$description .= $text['label-order'].' '.$text['label-ascending'];
+				$html .= "<a href='?order_by=".urlencode($field_name)."&order=asc".$app_uuid.$sanitized_parameters."' title=\"".escape($description)."\">".escape($column_title)."</a>";
 			}
 			$html .= "</th>";
 			return $html;
@@ -1029,24 +1054,6 @@ function number_pad($number,$n) {
 		}
 	}
 
-// ellipsis nicely truncate long text
-	if(!function_exists('ellipsis')) {
-		function ellipsis($string, $max_characters, $preserve_word = true) {
-			if ($max_characters+$x >= strlen($string)) { return $string; }
-			if ($preserve_word) {
-				for ($x = 0; $x < strlen($string); $x++) {
-					if ($string{$max_characters+$x} == " ") {
-						return substr($string,0,$max_characters+$x)." ...";
-					}
-					else { continue; }
-				}
-			}
-			else {
-				return substr($string,0,$max_characters)." ...";
-			}
-		}
-	}
-
 //function to convert hexidecimal color value to rgb string/array value
 	if (!function_exists('hex_to_rgb')) {
 		function hex_to_rgb($hex, $delim = '') {
@@ -1404,44 +1411,32 @@ function number_pad($number,$n) {
 
 			if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
 				$eml_recipients = str_replace(' ', '', $eml_recipients);
-				if (substr_count(',', $eml_recipients)) { $delim = ','; }
-				if (substr_count(';', $eml_recipients)) { $delim = ';'; }
-				if ($delim) { $eml_recipients = explode($delim, $eml_recipients); } // delimiter found, convert to array of addresses
+				$eml_recipients = str_replace(array(';',','), ' ', $eml_recipients);
+				$eml_recipients = explode(' ', $eml_recipients); // convert to array of addresses
 			}
-
-			if (is_array($eml_recipients)) { // check if multiple recipients
-				foreach ($eml_recipients as $eml_recipient) {
-					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
-						if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
-							switch ($eml_recipient["delivery"]) {
-								case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
-							}
-							$address_found = true;
+			foreach ($eml_recipients as $eml_recipient) {
+				if (is_array($eml_recipient)) { // check if each recipient has multiple fields
+					if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
+						switch ($eml_recipient["delivery"]) {
+							case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+							case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+							default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
 						}
-					}
-					else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
-						$mail -> AddAddress($eml_recipient);
 						$address_found = true;
 					}
 				}
-
-				if (!$address_found) {
-					$eml_error = "No valid e-mail address provided.";
-					return false;
-				}
-
-			}
-			else { // just a single e-mail address found, not an array of addresses
-				if ($eml_recipients != '' && preg_match($regexp, $eml_recipients) == 1) { // check if email syntax is valid
-					$mail -> AddAddress($eml_recipients);
-				}
-				else {
-					$eml_error = "No valid e-mail address provided.";
-					return false;
+				else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
+					$mail -> AddAddress($eml_recipient);
+					$address_found = true;
 				}
 			}
+
+			if (!$address_found) {
+				$eml_error = "No valid e-mail address provided.";
+				return false;
+			}
+
+
 
 			if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
 				foreach ($eml_attachments as $attachment) {
@@ -1708,6 +1703,7 @@ function number_pad($number,$n) {
 //converts a string to a regular expression
 	if (!function_exists('string_to_regex')) {
 		function string_to_regex($string, $prefix='') {
+			$original_string = $string;
 			//escape the plus
 				if (substr($string, 0, 1) == "+") {
 					$string = "^\\+(".substr($string, 1).")$";
@@ -1723,9 +1719,11 @@ function number_pad($number,$n) {
 					}
 				}
 			//convert N,X,Z syntax to regex
-				$string = str_ireplace("N", "[2-9]", $string);
-				$string = str_ireplace("X", "[0-9]", $string);
-				$string = str_ireplace("Z", "[1-9]", $string);
+				if (preg_match('/^[NnXxZz]+$/', $original_string)) {
+					$string = str_ireplace("N", "[2-9]", $string);
+					$string = str_ireplace("X", "[0-9]", $string);
+					$string = str_ireplace("Z", "[1-9]", $string);
+				}
 			//add ^ to the start of the string if missing
 				if (substr($string, 0, 1) != "^") {
 					$string = "^".$string;
@@ -1919,7 +1917,7 @@ function number_pad($number,$n) {
 		//send the mkdir command to freeswitch
 			if ($fp) {
 				//build and send the mkdir command to freeswitch
-					$switch_cmd = "lua mkdir.lua '$dir'";
+					$switch_cmd = "lua mkdir.lua ".escapeshellarg($dir);
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					fclose($fp);
 				//check result
@@ -2054,13 +2052,25 @@ function number_pad($number,$n) {
 //validate and format order by clause of select statement
 	if (!function_exists('order_by')) {
 		function order_by($col, $dir, $col_default = '', $dir_default = 'asc') {
+			$order_by = ' order by ';
 			$col = preg_replace('#[^a-zA-Z0-9-_.]#', '', $col);
 			$dir = strtolower($dir) == 'desc' ? 'desc' : 'asc';
 			if ($col != '') {
-				return ' order by '.$col.' '.$dir.' ';
+				return $order_by.$col.' '.$dir.' ';
 			}
-			else if ($col_default != '') {
-				return ' order by '.$col_default.' '.$dir_default.' ';
+			else if (is_array($col_default) || $col_default != '') {
+				if (is_array($col_default) && @sizeof($col_default) != 0) {
+					foreach ($col_default as $k => $column) {
+						$direction = (is_array($dir_default) && @sizeof($dir_default) != 0 && (strtolower($dir_default[$k]) == 'asc' || strtolower($dir_default[$k]) == 'desc')) ? $dir_default[$k] : 'asc';
+						$order_bys[] = $column.' '.$direction.' ';
+					}
+					if (is_array($order_bys) && @sizeof($order_bys) != 0) {
+						return $order_by.implode(', ', $order_bys);
+					}
+				}
+				else {
+					return $order_by.$col_default.' '.$dir_default.' ';
+				}
 			}
 		}
 	}
@@ -2131,19 +2141,29 @@ function number_pad($number,$n) {
 		function persistent_form_values($action, $array = null) {
 			switch ($action) {
 				case 'store':
+					// $array is expected to be an array of key / value pairs to store in the session
 					if (is_array($array) && @sizeof($array) != 0) {
-						$_SESSION[$_SERVER['PHP_SELF']] = $array;
+						$_SESSION['persistent'][$_SERVER['PHP_SELF']] = $array;
 					}
 					break;
 				case 'exists':
-					return is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0 ? true : false;
+					return is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0 ? true : false;
 					break;
 				case 'load':
-					if (is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0) {
-						foreach ($_SESSION[$_SERVER['PHP_SELF']] as $key => $value) {
+					// $array is expected to be the name of the array to create containing the key / value pairs
+					if ($array && !is_array($array)) {
+						global $$array;
+					}
+					if (is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
+						foreach ($_SESSION['persistent'][$_SERVER['PHP_SELF']] as $key => $value) {
 							if ($key != 'XID' && $key != 'ACT' && $key != 'RET') {
-								global $$key;
-								$$key = $value;
+								if ($array && !is_array($array)) {
+									$$array[$key] = $value;
+								}
+								else {
+									global $$key;
+									$$key = $value;
+								}
 							}
 						}
 						global $unsaved;
@@ -2151,15 +2171,25 @@ function number_pad($number,$n) {
 					}
 					break;
 				case 'view':
-					if (is_array($_SESSION[$_SERVER['PHP_SELF']]) && @sizeof($_SESSION[$_SERVER['PHP_SELF']]) != 0) {
-						view_array($_SESSION[$_SERVER['PHP_SELF']], false);
+					if (is_array($_SESSION['persistent'][$_SERVER['PHP_SELF']]) && @sizeof($_SESSION['persistent'][$_SERVER['PHP_SELF']]) != 0) {
+						view_array($_SESSION['persistent'][$_SERVER['PHP_SELF']], false);
 					}
 					break;
 				case 'clear':
-					unset($_SESSION[$_SERVER['PHP_SELF']]);
+					unset($_SESSION['persistent'][$_SERVER['PHP_SELF']]);
 					break;
 			}
 		}
+	}
+
+//add alternative array_key_first for older verisons of PHP
+	if (!function_exists('array_key_first')) {
+	    function array_key_first(array $arr) {
+		foreach($arr as $key => $unused) {
+		    return $key;
+		}
+		return NULL;
+	    }
 	}
 
 ?>

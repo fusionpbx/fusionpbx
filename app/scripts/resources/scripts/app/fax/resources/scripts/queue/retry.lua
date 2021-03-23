@@ -223,8 +223,8 @@
 			fax_file                       = fax_file or dbh.NULL;
 			fax_ecm_used                   = fax_ecm_used or dbh.NULL;
 			fax_local_station_id           = fax_local_station_id or dbh.NULL;
-			fax_document_transferred_pages = fax_document_transferred_pages or "'0'";
-			fax_document_total_pages       = fax_document_total_pages or "'0'";
+			fax_document_transferred_pages = fax_document_transferred_pages or '0';
+			fax_document_total_pages       = fax_document_total_pages or '0';
 			fax_image_resolution           = fax_image_resolution or dbh.NULL;
 			fax_image_size                 = fax_image_size or dbh.NULL;
 			fax_bad_rows                   = fax_bad_rows or dbh.NULL;

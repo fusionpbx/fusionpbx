@@ -49,7 +49,11 @@
 	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
 	if (is_array($_SESSION['time_conditions'][$preset_region])) {
 		foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
-			$available_presets[] = json_decode($json, true);
+			$json_array = json_decode($json, true);
+			if (is_array($json_array)) {
+				$available_presets[] = $json_array;
+				$valid_presets[] = array_key_first(end($available_presets));
+			}
 		}
 	}
 	unset($preset_region);
@@ -501,10 +505,12 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("dialplan:".$_SESSION["context"]);
+			$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
-		//synchronize the xml config
-			save_dialplan_xml();
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
 
 		//set the message
 			if ($action == "add") {
@@ -526,7 +532,9 @@
 		//get main dialplan entry
 			$sql = "select * from v_dialplans ";
 			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
@@ -549,65 +557,70 @@
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data ";
 			$sql .= "from v_dialplan_details ";
 			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
 			$sql .= "and ";
 			$sql .= "( ";
 			$sql .= "	( ";
 			$sql .= "		dialplan_detail_tag = 'condition' ";
 			$sql .= "		and dialplan_detail_type in ('year','mon','mday','wday','yday','week','mweek','hour','minute','minute-of-day','time-of-day','date-time') ";
 			$sql .= "	) ";
-			$sql .= "	or ( ";
-			$sql .= "		dialplan_detail_tag = 'action' ";
-			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
-			$sql .= "	) ";
+			$sql .= "	or dialplan_detail_tag = 'action' ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
+			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
 			$dialplan_details = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
 		//load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
-			if (is_array($dialplan_details)) {
-				foreach ($dialplan_details as $row) {
-					if ($row['dialplan_detail_tag'] == 'action') {
-						if ($row['dialplan_detail_group'] == '999') {
-							$dialplan_anti_action = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
+			if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
+				//detect dialplan detail group has valid preset
+				$dialplan_detail_group_max = 0;
+				foreach ($dialplan_details as $i => $row) {
+					if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] == 'set' && strpos($row['dialplan_detail_data'], 'preset=') === 0) {
+						$preset_name = explode('=',$row['dialplan_detail_data'])[1];
+						if (in_array($preset_name, $valid_presets)) {
+							$dialplan_detail_group_preset[$row['dialplan_detail_group']] = $preset_name;
 						}
 						else {
-							$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
+							$invalid_presets_dialplan_detail_groups[] = $row['dialplan_detail_group'];
+							unset($dialplan_details[$i]);
+						}
+					}
+					if ($row['dialplan_detail_group'] > $dialplan_detail_group_max) { $dialplan_detail_group_max = $row['dialplan_detail_group']; }
+				}
+				//reorder any invalid preset dialplan detail groups
+				if (is_array($invalid_presets_dialplan_detail_groups) && @sizeof($invalid_presets_dialplan_detail_groups) != 0) {
+					foreach ($dialplan_details as $i => $row) {
+						if (in_array($row['dialplan_detail_group'], $invalid_presets_dialplan_detail_groups)) {
+							$dialplan_details[$i]['dialplan_detail_group'] = $dialplan_detail_group_max + 5;
+						}
+					}
+				}
+				//parse out dialplan actions, anti-actions and conditions
+				foreach ($dialplan_details as $i => $row) {
+					if ($row['dialplan_detail_tag'] == 'action') {
+						if ($row['dialplan_detail_group'] == '999') {
+							$dialplan_anti_action = $row['dialplan_detail_type'].($row['dialplan_detail_data'] != '' || $row['dialplan_detail_type'] == 'hangup' ? ':'.$row['dialplan_detail_data'] : null);
+						}
+						else {
+							$dialplan_detail_group = $dialplan_detail_group_preset[$row['dialplan_detail_group']] ?: $row['dialplan_detail_group'];
+							$dialplan_actions[$dialplan_detail_group] = $row['dialplan_detail_type'].($row['dialplan_detail_data'] != '' || $row['dialplan_detail_type'] == 'hangup' ? ':'.$row['dialplan_detail_data'] : null);
 						}
 					}
 					else if ($row['dialplan_detail_tag'] == 'condition') {
-						$current_conditions[$row['dialplan_detail_group']][$row['dialplan_detail_type']] = $row['dialplan_detail_data'];
+						$dialplan_detail_group = $dialplan_detail_group_preset[$row['dialplan_detail_group']] ?: $row['dialplan_detail_group'];
+						$current_conditions[$dialplan_detail_group][$row['dialplan_detail_type']] = $row['dialplan_detail_data'];
 					}
 				}
 			}
 
-// 		//find the selected presets
-// 			if (is_array($available_presets)) {
-// 				foreach ($available_presets as $preset_number => &$preset) {
-// 					if (is_array($preset)) {
-// 						foreach ($preset as $preset_name => $preset_variables) {
-// 							$preset_checked[$preset_name] = 'false';
-// 							if (is_array($dialplan_details)) {
-// 								foreach ($dialplan_details as $row) {
-// 									if ($row['dialplan_detail_tag'] == 'action') {
-// 										if ($row['dialplan_detail_data'] == 'preset='.$preset_name) {
-// 											$preset_checked[$preset_name] = 'true';
-// 										}
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-
 		//loop through available presets (if any)
-			if (is_array($available_presets)) {
+			if (is_array($available_presets) && @sizeof($available_presets) != 0) {
 				foreach ($available_presets as $preset_number => $preset) {
-					if (is_array($preset)) {
+					if (is_array($preset) && @sizeof($preset) != 0) {
 						foreach ($preset as $preset_name => $preset_variables) {
 							//loop through each condition group
 							if (is_array($current_conditions)) {
@@ -621,8 +634,17 @@
 									}
 									//if all preset variables found, then condition is a preset
 									if ($matches == sizeof($preset_variables)) {
-
-										$current_presets[$preset_number] = $group_id;
+										//preset found
+										if (!is_numeric($group_id)) {
+											$current_presets[] = $group_id;
+										}
+										//preset *conditions* found, but wasn't marked as a preset in the dialplan, so promote and update current conditions and dialplan actions
+										else {
+											$current_presets[] = $preset_name;
+											$current_conditions[$preset_name] = $current_conditions[$group_id];
+											$dialplan_actions[$preset_name] = $dialplan_actions[$group_id];
+											unset($current_conditions[$group_id], $dialplan_actions[$group_id]);
+										}
 									}
 								}
 							}
@@ -630,6 +652,11 @@
 					}
 				}
 			}
+
+		//sort arrays by keys
+			if (is_array($dialplan_actions)) { ksort($dialplan_actions); }
+			if (is_array($current_conditions)) { ksort($current_conditions); }
+
 	}
 
 //set the defaults
@@ -642,6 +669,16 @@
 //include the header
 	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
+
+//debug
+// 	echo "<div style='overflow: auto; font-family: courier; width: 100%; height: 200px; border: 1px solid #ccc; padding: 20px;'>\n";
+// 	echo "<b>".'$dialplan_details'."</b>\n"; view_array($dialplan_details, false);
+// 	echo "<b>".'$dialplan_anti_action'."</b>\n"; view_array($dialplan_anti_action, false);
+// 	echo "<b>".'$dialplan_actions'."</b>\n"; view_array($dialplan_actions, false); //
+// 	echo "<b>".'$current_conditions'."</b>\n"; view_array($current_conditions, false); //
+// 	echo "<b>".'$available_presets'."</b>\n"; view_array($available_presets, false);
+// 	echo "<b>".'$current_presets'."</b>\n"; view_array($current_presets, false); //
+// 	echo "</div><br><br>\n";
 
 ?>
 
@@ -1020,7 +1057,7 @@ if ($action == 'update') {
 					}
 				}
 				//used to determine largest custom group id in use
-				$largest_group_id = ($group_id > $largest_group_id) ? $group_id : $largest_group_id;
+				$largest_group_id = (is_numeric($group_id) && $group_id > $largest_group_id) ? $group_id : $largest_group_id;
 			}
 		}
 	}
@@ -1052,10 +1089,8 @@ if ($action == 'update') {
 			foreach ($available_presets as $preset_number => $preset) {
 				if (is_array($preset)) {
 					foreach ($preset as $preset_name => $preset_variables) {
-						$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
-// 						$checked = (is_array($current_presets) && $preset_checked[$preset_name] == 'true') ? "checked='checked'" : null;
-
-						$preset_group_id = ($checked) ? $current_presets[$preset_number] : $preset_group_id = $preset_number * 5 + 100;
+						$checked = is_array($current_presets) && in_array($preset_name, $current_presets) ? "checked='checked'" : null;
+						$preset_group_id = $preset_number * 5 + 100;
 						if (strlen($text['label-preset_'.$preset_name]) > 0) {
 							$label_preset_name = $text['label-preset_'.$preset_name];
 						}
@@ -1076,17 +1111,17 @@ if ($action == 'update') {
 						echo "		</tr>";
 						echo "		<tr>";
 						echo "			<td colspan='4' style='padding-top: 10px;'>";
-						echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_action);
+						echo 				$destination->select('dialplan', 'dialplan_action['.$preset_group_id.']', $dialplan_actions[$preset_name]);
 						echo "			</td>";
 						echo "		</tr>";
 						echo "	</table>";
 						echo "	<br />";
 						echo "</div>";
 
-						if ($action == 'update' && is_array($current_presets) && $current_presets[$preset_number] != '') {
+						if ($action == 'update' && is_array($current_presets) && in_array($preset_name, $current_presets)) {
 							//add (potentially customized) preset conditions and populate
-							if (is_array($current_conditions[$preset_group_id])) {
-								foreach ($current_conditions[$preset_group_id] as $cond_var => $cond_val) {
+							if (is_array($current_conditions[$preset_name])) {
+								foreach ($current_conditions[$preset_name] as $cond_var => $cond_val) {
 									$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
 									$tmp = explode($range_indicator, $cond_val);
 									$cond_val_start = $tmp[0];
@@ -1116,7 +1151,6 @@ if ($action == 'update') {
 										echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$cond_val_start."\"]').prop('selected', true);\n";
 										echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$cond_val_stop."\"]').prop('selected', true);\n";
 									}
-									echo "	$('#dialplan_action_".$preset_group_id." option[value=\"".$dialplan_actions[$preset_group_id]."\"]').prop('selected', true);\n\n";
 									echo "</script>";
 								}
 							}
@@ -1151,7 +1185,7 @@ if ($action == 'update') {
 		echo "		<tr>";
 		echo "			<td>";
 		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>"$(this).fadeOut(400, function() { $('#default_preset_destination').fadeIn(400); document.getElementById('default_preset_destination_description').innerHTML += '<br>".$text['description-presets_advanced']."'; });"]);
-		echo "				<span id='default_preset_destination' style=' display: none;'>";
+		echo "				<span id='default_preset_destination' style='display: none;'>";
 		echo 				$destination->select('dialplan', 'default_preset_action', $dialplan_action);
 		echo "				</span>";
 		echo "			</td>";

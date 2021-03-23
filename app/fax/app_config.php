@@ -38,6 +38,7 @@
 		$apps[$x]['destinations'][$y]['order_by'] = "fax_extension asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "fax_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "fax_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "fax_extension";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
@@ -172,6 +173,10 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "fax_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 

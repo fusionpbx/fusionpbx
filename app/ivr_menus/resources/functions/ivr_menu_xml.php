@@ -29,28 +29,28 @@
 			global $domain_uuid;
 
 			//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
-				if (count($_SESSION["domains"]) > 1) {
-					$v_needle = 'v_'.$_SESSION['domain_name'].'_';
-				}
-				else {
-					$v_needle = 'v_';
-				}
-				if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
-					$files = Array();
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($dir . "/" . $file)) {
-								//this is a directory
-							} else {
-								if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-									//echo "file: $file<br />\n";
-									unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
-								}
+			if (count($_SESSION["domains"]) > 1) {
+				$v_needle = 'v_'.$_SESSION['domain_name'].'_';
+			}
+			else {
+				$v_needle = 'v_';
+			}
+			if($dh = opendir($_SESSION['switch']['conf']['dir']."/ivr_menus/")) {
+				$files = Array();
+				while($file = readdir($dh)) {
+					if($file != "." && $file != ".." && $file[0] != '.') {
+						if(is_dir($dir . "/" . $file)) {
+							//this is a directory
+						} else {
+							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+								//echo "file: $file<br />\n";
+								unlink($_SESSION['switch']['conf']['dir']."/ivr_menus/".$file);
 							}
 						}
 					}
-					closedir($dh);
 				}
+				closedir($dh);
+			}
 
 			$sql = "select * from v_ivr_menus ";
 			$sql .= " where domain_uuid = :domain_uuid ";
@@ -82,6 +82,7 @@
 					$ivr_menu_max_timeouts = $row["ivr_menu_max_timeouts"];
 					$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 					$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
+					$ivr_menu_context = $row["ivr_menu_context"];
 					$ivr_menu_enabled = $row["ivr_menu_enabled"];
 					$ivr_menu_description = $row["ivr_menu_description"];
 
@@ -159,7 +160,7 @@
 						unset($sub_sql, $sub_result, $sub_row);
 
 						if ($ivr_menu_direct_dial == "true") {
-							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$_SESSION["context"]."\"/>\n";
+							$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$ivr_menu_context."\"/>\n";
 						}
 						$tmp .= "	</menu>\n";
 						$tmp .= "</include>\n";
@@ -181,10 +182,8 @@
 			}
 			unset($result, $row);
 
-			save_dialplan_xml();
-
 			//apply settings
-				$_SESSION["reload_xml"] = true;
+			$_SESSION["reload_xml"] = true;
 		}
 	}
 

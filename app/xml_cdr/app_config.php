@@ -39,6 +39,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -193,6 +194,15 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_b_leg";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_lose_race";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_enterprise_leg";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_cc_agent_leg";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_archive";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -200,6 +210,17 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_export";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_export_csv";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_export_pdf";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;
@@ -357,9 +378,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_extensions";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "extension_uuid";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_extensions";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "extension_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
@@ -519,6 +540,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(1)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The leg of the call a or b.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "originating_leg_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Originating Leg UUID. Used to identify legs of an enterprise ring group - and exclude them ";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "pdd_ms";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "numeric";
@@ -536,6 +563,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_arg";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Save the last application data.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_message";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "missed_call";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";

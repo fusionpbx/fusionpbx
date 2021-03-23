@@ -86,12 +86,10 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = '';
-	if (isset($_GET['page'])) {
-		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
-		$offset = $rows_per_page * $page;
-	}
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = "select * from v_conference_session_details ";
@@ -109,7 +107,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-conference_session_details']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-conference_session_details']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_sessions.php']);
 	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;

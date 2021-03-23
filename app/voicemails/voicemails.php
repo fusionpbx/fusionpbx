@@ -79,6 +79,16 @@
 			}
 		}
 	}
+	else {
+		$voicemail = new voicemail;
+		$rows = $voicemail->voicemails();
+		if (is_array($rows) && @sizeof($rows) != 0) {
+			foreach ($rows as $row) {
+				$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
+			}
+		}
+		unset($voicemail, $rows, $row);
+	}
 
 //get order and order by
 	$order_by = $_GET["order_by"];
@@ -100,7 +110,7 @@
 //prepare to page the results
 	$sql = "select count(voicemail_uuid) from v_voicemails ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!permission_exists('voicemail_delete')) {
+	if (!permission_exists('voicemail_domain')) {
 		if (is_array($voicemail_uuids) && @sizeof($voicemail_uuids) != 0) {
 			$sql .= "and (";
 			foreach ($voicemail_uuids as $x => $row) {

@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Aufnahmen verwalten. Diese werden hauptsächlich für Anrufzentralen (IVR) verwendet.";
 		$apps[$x]['description']['es-cl'] = "Administrador de grabaciones, utilizadas primordialmente con un IVR";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "Gestion des enregistrements principalement utilisés dans les IVR";
+		$apps[$x]['description']['fr-ca'] = "Gestion des guides vocaux principalement utilisés dans les RVI";
+		$apps[$x]['description']['fr-fr'] = "Gestion des guides vocaux principalement utilisés dans les RVI";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Beheer opnamen met name gebruikt in een IVR.";
@@ -92,8 +92,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "base64";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-
-		$y=0;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "960828e1-8d6b-4381-86c4-fa03fce4276a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_max_length";

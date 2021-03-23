@@ -178,7 +178,7 @@
 	$voicemails = $vm->messages();
 
 //count messages
-	$new_messages = 0;
+	$new_messages = $num_rows = 0;
 	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
 		foreach ($voicemails as $voicemail) {
 			if (is_array($voicemail['messages'])) {

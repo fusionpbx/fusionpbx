@@ -145,11 +145,13 @@ class cache {
 					event_socket_request($fp, $event);
 
 				//remove the local files
-					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key)) {
-						unlink($_SESSION['cache']['location']['text'] . "/" . $key);
-					}
-					if (file_exists($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp")) {
-						unlink($_SESSION['cache']['location']['text'] . "/" . $key . ".tmp");
+					foreach (glob($_SESSION['cache']['location']['text'] . "/" . $key) as $file) {
+						if (file_exists($file)) {
+							unlink($file);
+						}
+						if (file_exists($file)) {
+							unlink($file . ".tmp");
+						}
 					}
 			}
 

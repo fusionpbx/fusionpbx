@@ -145,14 +145,16 @@ if (!class_exists('phrases')) {
 								//revoke temporary permissions
 									$p->delete('phrase_detail_delete', 'temp');
 
-								//save the xml
-									save_phrases_xml();
-
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
 									foreach ($phrase_languages as $phrase_language) {
 										$cache->delete("languages:".$phrase_language);
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -224,9 +226,6 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_detail_delete', 'temp');
-
-								//save the xml
-									save_phrases_xml();
 
 								//clear the cache
 									if ($phrase_language != '') {
@@ -301,14 +300,16 @@ if (!class_exists('phrases')) {
 									$database->save($array);
 									unset($array);
 
-								//save the xml
-									save_phrases_xml();
-
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);
 									$cache = new cache;
 									foreach ($phrase_languages as $phrase_language) {
 										$cache->delete("languages:".$phrase_language);
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -415,9 +416,6 @@ if (!class_exists('phrases')) {
 
 								//revoke temporary permissions
 									$p->delete('phrase_detail_add', 'temp');
-
-								//save the xml
-									save_phrases_xml();
 
 								//clear the cache
 									$phrase_languages = array_unique($phrase_languages);

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -129,7 +129,9 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from view_users ";
+	$sql = "select domain_name, domain_uuid, user_uuid, username, groups, ";
+	$sql .= "contact_organization,contact_name, cast(user_enabled as text) ";
+	$sql .= "from view_users ";
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
 		if (isset($sql_search)) {
 			$sql .= "where ".$sql_search;

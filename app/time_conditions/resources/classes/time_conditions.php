@@ -114,9 +114,6 @@
 										$p->delete('dialplan_delete', 'temp');
 										$p->delete('dialplan_detail_delete', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -124,6 +121,11 @@
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message
@@ -204,9 +206,6 @@
 									//revoke temporary permissions
 										$p->delete('dialplan_edit', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -214,6 +213,11 @@
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message
@@ -318,9 +322,6 @@
 
 									//revoke temporary permissions
 										$p->delete('dialplan_detail_add', 'temp');
-
-									//synchronize the xml config
-										save_dialplan_xml();
 
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {

@@ -52,9 +52,9 @@ if (!class_exists('ivr_menu')) {
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name = 'ivr_menus';
-				$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-				$this->list_page = 'ivr_menus.php';
+			$this->app_name = 'ivr_menus';
+			$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
+			$this->list_page = 'ivr_menus.php';
 
 		}
 
@@ -161,9 +161,6 @@ if (!class_exists('ivr_menu')) {
 									$p->delete('ivr_menu_option_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									if (is_array($ivr_menu_contexts) && @sizeof($ivr_menu_contexts) != 0) {
 										$ivr_menu_contexts = array_unique($ivr_menu_contexts);
@@ -171,6 +168,11 @@ if (!class_exists('ivr_menu')) {
 										foreach ($ivr_menu_contexts as $ivr_menu_context) {
 											$cache->delete("dialplan:".$ivr_menu_context);
 										}
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -325,14 +327,16 @@ if (!class_exists('ivr_menu')) {
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION['domain_name']);
 									foreach ($ivr_menus as $ivr_menu_uuid => $ivr_menu) {
 										$cache->delete("configuration:ivr.conf:".$ivr_menu_uuid);
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -471,12 +475,9 @@ if (!class_exists('ivr_menu')) {
 									$p->delete('ivr_menu_option_add', 'temp');
 									$p->delete('dialplan_add', 'temp');
 
-								//synchronize the xml config
-									save_dialplan_xml();
-
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION['domain_name']);
 
 								//set message
 									message::add($text['message-copy']);

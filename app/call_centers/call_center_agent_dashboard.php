@@ -212,7 +212,4 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
-//include footer
-	require_once "resources/footer.php";
-
 ?>

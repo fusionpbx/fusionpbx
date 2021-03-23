@@ -1,7 +1,7 @@
 <settings>
 <phone-settings>
 <update_policy>auto_update</update_policy>
-<firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$v_mac}&amp;filename_firmware-{$v_mac}.xml</firmware_status>
+<firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$mac}&amp;filename_firmware-{$mac}.xml</firmware_status>
 <date_us_format>off</date_us_format>
 <time_24_format>on</time_24_format>
 <challenge_response>off</challenge_response>

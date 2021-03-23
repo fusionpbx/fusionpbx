@@ -148,6 +148,26 @@ $text['label-size']['ru-ru'] = "KB";
 $text['label-size']['sv-se'] = "KB";
 $text['label-size']['uk-ua'] = "КБ";
 
+$text['label-log_file']['en-us'] = "Log file";
+$text['label-log_file']['ar-eg'] = "Log file";
+$text['label-log_file']['de-at'] = "Log file";
+$text['label-log_file']['de-ch'] = "log_file"; 
+$text['label-log_file']['de-de'] = "log_file";
+$text['label-log_file']['es-cl'] = "log_file";
+$text['label-log_file']['es-mx'] = "log_file"; 
+$text['label-log_file']['fr-ca'] = "Log file";
+$text['label-log_file']['fr-fr'] = "Log file";
+$text['label-log_file']['he-il'] = "Log file";
+$text['label-log_file']['it-it'] = "Log file";
+$text['label-log_file']['nl-nl'] = "Log file";
+$text['label-log_file']['pl-pl'] = "Log file";
+$text['label-log_file']['pt-br'] = "Log file";
+$text['label-log_file']['pt-pt'] = "Log file";
+$text['label-log_file']['ro-ro'] = "Log file";
+$text['label-log_file']['ru-ru'] = "Log file";
+$text['label-log_file']['sv-se'] = "Log file";
+$text['label-log_file']['uk-ua'] = "Log file";
+
 $text['label-filter']['en-us'] = "Filter";
 $text['label-filter']['en-gb'] = "Filter";
 $text['label-filter']['ar-eg'] = "";

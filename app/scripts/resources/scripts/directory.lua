@@ -105,6 +105,9 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--directory recording prompt
+			directory_prompt = session:getVariable("directory_prompt");
+
 		--set ringback
 			directory_ringback = format_ringback(session:getVariable("ringback"));
 			session:setVariable("ringback", directory_ringback);
@@ -212,7 +215,8 @@
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
+		directory_prompt = directory_prompt or sounds_dir.."/directory/dir-enter_person_first_or_last.wav";
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", directory_prompt, "", "\\d+");
 		return dtmf_digits;
 	end
 
@@ -345,7 +349,7 @@
 	end
 
 --get the extensions from the database
-	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true') ORDER BY directory_first_name, effective_caller_id_name asc; ";
 	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");

@@ -32,7 +32,9 @@
 
 			--play the name record
 				dtmf_digits = '';
-				macro(session, "record_name", 1, 100, '');
+				session:execute("playback", "phrase:voicemail_record_name");
+				session:execute("sleep", "1000");
+				session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 
 			--prepate to record
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)

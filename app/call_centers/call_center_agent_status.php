@@ -49,7 +49,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$tiers = $database->select($sql, $parameters, 'all');
-	if (count($tiers) == 0) {
+	if (is_array($tiers) && count($tiers) == 0) {
 		$per_queue_login = true;
 	}
 	else {
@@ -91,51 +91,61 @@
 
 //add the status to the call_center_queues array
 	$x = 0;
-	foreach ($call_center_queues as $queue) {
-		//get the queue list from event socket
-		$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
-		$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-		$queue_list = csv_to_named_array($event_socket_str, '|');
-		$call_center_queues[$x]['queue_list'] = $queue_list;
-		$x++;
+	if (is_array($call_center_queues)) {
+		foreach ($call_center_queues as $queue) {
+			//get the queue list from event socket
+			$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
+			$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			$queue_list = csv_to_named_array($event_socket_str, '|');
+			$call_center_queues[$x]['queue_list'] = $queue_list;
+			$x++;
+		}
 	}
-	//view_array($call_center_queues, false);
 
 //get the agent status from mod_callcenter and update the agent status in the agents array
 	$x = 0;
-	foreach ($agents as $row) {
-		//add the domain name
-			$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-			$agents[$x]['domain_name'] = $domain_name;
+	if (is_array($agents)) {
+		foreach ($agents as $row) {
+			//add the domain name
+				$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				$agents[$x]['domain_name'] = $domain_name;
 
-		//update the queue status
-			$i = 0;
-			foreach ($call_center_queues as $queue) {
-				$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
-				$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
-				$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
-				$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
-				$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
-				foreach ($queue['queue_list'] as $queue_list) {
-					if ($row['call_center_agent_uuid'] == $queue_list['name']) {
-						$agents[$x]['queues'][$i]['queue_status'] = 'Available';
+			//update the queue status
+				$i = 0;
+				if (is_array($call_center_queues)) {
+					foreach ($call_center_queues as $queue) {
+						$agents[$x]['queues'][$i]['agent_name'] = $row['agent_name'];
+						$agents[$x]['queues'][$i]['queue_name'] = $queue['queue_name'];
+						$agents[$x]['queues'][$i]['call_center_agent_uuid'] = $row['call_center_agent_uuid'];
+						$agents[$x]['queues'][$i]['call_center_queue_uuid'] = $queue['call_center_queue_uuid'];
+						$agents[$x]['queues'][$i]['queue_status'] = 'Logged Out';
+						if (is_array($queue['queue_list'])) {
+							foreach ($queue['queue_list'] as $queue_list) {
+								if ($row['call_center_agent_uuid'] == $queue_list['name']) {
+									$agents[$x]['queues'][$i]['queue_status'] = 'Available';
+								}
+							}
+						}
+						$i++;
 					}
 				}
-				$i++;
-			}
 
-		//update the agent status
-			foreach ($agent_list as $r) {
-				if ($r['name'] == $row['call_center_agent_uuid']) {
-					$agents[$x]['agent_status'] = $r['status'];
+			//update the agent status
+				if (is_array($agent_list)) {
+					foreach ($agent_list as $r) {
+						if ($r['name'] == $row['call_center_agent_uuid']) {
+							$agents[$x]['agent_status'] = $r['status'];
+						}
+					}
 				}
-			}
-		//increment x
-			$x++;
+
+			//increment x
+				$x++;
+		}
 	}
 
 //remove rows from the http post array where the status has not changed
-	if (count($_POST['agents']) > 0 && !$per_queue_login) {
+	if (is_array($_POST['agents']) && !$per_queue_login) {
 		foreach($_POST['agents'] as $key => $row) {
 			foreach($agents as $k => $field) {
 				if ($field['agent_name'] === $row['agent_name'] && $field['agent_status'] === $row['agent_status']) {
@@ -146,7 +156,7 @@
 	}
 
 //use the http post array to change the status
-	if (count($_POST['agents']) > 0) {
+	if (is_array($_POST['agents'])) {
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
@@ -302,7 +312,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (count($_POST['agents']) > 0 && !$per_queue_login) {
+	if (is_array($_POST['agents']) && !$per_queue_login) {
 		echo $text['description-call_center_agent_status']."\n";
 		echo "<br /><br />\n";
 	}
@@ -349,29 +359,31 @@
 					$html .= "			<th>".$text['label-status']."</th>\n";
 					$html .= "			<th>".$text['label-options']."</th>\n";
 					$html .= "		</tr>\n";
-					foreach ($row['queues'] as $queue) {
-						$x++;
-						$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
-						$html .= "	<tr class='list-row'>\n";
-						$html .= "		<td ".$onclick." class='pct-80 no-wrap'>".$queue['queue_name']."</td>\n";
-						$html .= "		<td>\n";
-						if ($queue['queue_status'] == "Available") {
-							$html .= "		".$text['option-available']."\n";
+					if (is_array($row['queues'])) {
+						foreach ($row['queues'] as $queue) {
+							$x++;
+							$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
+							$html .= "	<tr class='list-row'>\n";
+							$html .= "		<td ".$onclick." class='pct-80 no-wrap'>".$queue['queue_name']."</td>\n";
+							$html .= "		<td>\n";
+							if ($queue['queue_status'] == "Available") {
+								$html .= "		".$text['option-available']."\n";
+							}
+							if ($queue['queue_status'] == "Logged Out") {
+								$html .= "		".$text['option-logged_out']."\n";
+							}
+							$html .= "		</td>\n";
+							$html .= "		<td class='no-wrap right'>";
+							$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' value='".escape($queue['queue_name'])."'>\n";
+							$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($row['agent_name'])."'>\n";
+							$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' value='".escape($row['user_uuid'])."'>\n";
+							$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' value='".escape($queue['call_center_queue_uuid'])."'>\n";
+							$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' value='".escape($row['call_center_agent_uuid'])."'>\n";
+							$html .= "			<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($queue['queue_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>&nbsp;\n";
+							$html .= "			<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($queue['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+							$html .= "		</td>\n";
+							$html .= "	</tr>\n";
 						}
-						if ($queue['queue_status'] == "Logged Out") {
-							$html .= "		".$text['option-logged_out']."\n";
-						}
-						$html .= "		</td>\n";
-						$html .= "		<td class='no-wrap right'>";
-						$html .= "			<input type='hidden' name='agents[".$x."][queue_name]' value='".escape($queue['queue_name'])."'>\n";
-						$html .= "			<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($row['agent_name'])."'>\n";
-						$html .= "			<input type='hidden' name='agents[".$x."][user_uuid]' value='".escape($row['user_uuid'])."'>\n";
-						$html .= "			<input type='hidden' name='agents[".$x."][queue_uuid]' value='".escape($queue['call_center_queue_uuid'])."'>\n";
-						$html .= "			<input type='hidden' name='agents[".$x."][agent_uuid]' value='".escape($row['call_center_agent_uuid'])."'>\n";
-						$html .= "			<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($queue['queue_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>&nbsp;\n";
-						$html .= "			<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($queue['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
-						$html .= "		</td>\n";
-						$html .= "	</tr>\n";
 					}
 					$html .= "	</table>\n";
 				}

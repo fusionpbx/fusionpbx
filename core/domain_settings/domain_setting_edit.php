@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2021
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -317,7 +317,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: ".PROJECT_PATH."/core/domains/domain_edit.php?id=".$domain_uuid);
+				header("Location: ".PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".$domain_uuid);
 				exit;
 		}
 }
@@ -325,7 +325,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true" && is_uuid($_GET["id"])) {
 		$domain_setting_uuid = $_GET["id"];
-		$sql = "select * from v_domain_settings ";
+		$sql = "select domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, domain_setting_value, domain_setting_order, cast(domain_setting_enabled as text), domain_setting_description ";
+		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and domain_setting_uuid = :domain_setting_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -631,6 +632,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
 		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
 		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
@@ -666,6 +668,40 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    	<option value='never' ".($row['domain_setting_value'] == "never" ? "selected='selected'" : null).">".$text['option-button_icons_never']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_side_state" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='expanded'>".$text['option-expanded']."</option>\n";
+		echo "    	<option value='contracted' ".($row['domain_setting_value'] == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
+		echo "    	<option value='hidden' ".($row['domain_setting_value'] == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='hover'>".$text['option-hover']."</option>\n";
+		echo "    	<option value='click' ".($row['domain_setting_value'] == "click" ? "selected='selected'" : null).">".$text['option-click']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_toggle_body_width" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
+		echo "    	<option value='fixed' ".($row['domain_setting_value'] == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {
+		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='image' ".(($row['domain_setting_value'] == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
+		echo "    	<option value='text' ".(($row['domain_setting_value'] == "text") ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
+		echo "    	<option value='image_text' ".(($row['domain_setting_value'] == "image_text") ? "selected='selected'" : null).">".$text['label-image_text']."</option>\n";
+		echo "    	<option value='none' ".(($row['domain_setting_value'] == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='any' ".($row['domain_setting_value'] == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
+		echo "    	<option value='email' ".($row['domain_setting_value'] == 'email' ? "selected='selected'" : null).">".$text['option-username_format_email']."</option>\n";
+		echo "    	<option value='no_email' ".($row['domain_setting_value'] == 'no_email' ? "selected='selected'" : null).">".$text['option-username_format_no_email']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='listen' ".(($row['domain_setting_value'] == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
@@ -683,6 +719,30 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='file'>".$text['label-file']."</option>\n";
 		echo "    	<option value='base64' ".(($row['domain_setting_value'] == "base64") ? "selected='selected'" : null).">".$text['label-base64']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "dialplan_details" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='true'>".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "dialplan_mode" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='multiple'>".$text['label-multiple']."</option>\n";
+		echo "    	<option value='single' ".(($row['domain_setting_value'] == "single") ? "selected='selected'" : null).">".$text['label-single']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "select_mode" && $name == "text" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='default'>".$text['label-default']."</option>\n";
+		echo "    	<option value='dynamic' ".(($row['domain_setting_value'] == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "unique" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
+		echo "    	<option value='true'>".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['domain_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif (is_json($row['domain_setting_value'])) {
@@ -760,7 +820,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"".escape($domain_setting_description)."\">\n";
+	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='domain_setting_description'>".escape($domain_setting_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";

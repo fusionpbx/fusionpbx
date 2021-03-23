@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2019 All Rights Reserved.
+	Copyright (C) 2020 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -489,21 +489,25 @@
 		echo "			<td class='formfld'>\n";
 		echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_category]'>\n";
 		echo "					<option value='line' ".($row['profile_key_category'] == "line" ? "selected='selected'" : null).">".$text['label-line']."</option>\n";
-		if ($row['device_key_vendor'] !== "polycom") { 
+		if ($row['profile_key_vendor'] !== "polycom") { 
 			echo "					<option value='memory' ".($row['profile_key_category'] == "memory" ? "selected='selected'" : null).">".$text['label-memory']."</option>\n";
 		}
 		echo "					<option value='programmable' ".($row['profile_key_category'] == "programmable" ? "selected='selected'" : null).">".$text['label-programmable']."</option>\n";
-		if ($row['device_key_vendor'] !== "polycom") { 
-			if (strlen($row['device_key_vendor']) == 0) {
-				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
+		if ($row['profile_key_vendor'] !== "polycom") { 
+			if (strlen($row['profile_key_vendor']) == 0) {
+				echo "					<option value='expansion' ".($row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
+				echo "					<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
 				echo "					<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
 				echo "					<option value='expansion-3' ".($row['profile_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";
 				echo "					<option value='expansion-4' ".($row['profile_key_category'] == "expansion-4" ? "selected='selected'" : null).">".$text['label-expansion']." 4</option>\n";
 				echo "					<option value='expansion-5' ".($row['profile_key_category'] == "expansion-5" ? "selected='selected'" : null).">".$text['label-expansion']." 5</option>\n";
 				echo "					<option value='expansion-6' ".($row['profile_key_category'] == "expansion-6" ? "selected='selected'" : null).">".$text['label-expansion']." 6</option>\n";
 			}
+			elseif (strtolower($row['profile_key_vendor']) == "grandstream") {
+				echo "	<option value='expansion' ".($row['profile_key_category'] == "expansion" || $row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']."</option>\n";
+			}
 			else {
-				if (strtolower($row['device_key_vendor']) == "cisco" || strtolower($row['device_key_vendor']) == "yealink") {
+				if (strtolower($row['profile_key_vendor']) == "cisco" || strtolower($row['profile_key_vendor']) == "yealink") {
 					echo "	<option value='expansion-1' ".($row['profile_key_category'] == "expansion-1" || $row['profile_key_category'] == "expansion" ? "selected='selected'" : null).">".$text['label-expansion']." 1</option>\n";
 					echo "	<option value='expansion-2' ".($row['profile_key_category'] == "expansion-2" ? "selected='selected'" : null).">".$text['label-expansion']." 2</option>\n";
 					echo "	<option value='expansion-3' ".($row['profile_key_category'] == "expansion-3" ? "selected='selected'" : null).">".$text['label-expansion']." 3</option>\n";

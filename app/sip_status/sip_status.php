@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,11 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (
-		permission_exists('system_status_sofia_status') ||
-		permission_exists('system_status_sofia_status_profile') ||
-		if_group("superadmin")
-		) {
+	if (permission_exists('system_status_sofia_status') || permission_exists('system_status_sofia_status_profile') || if_group("superadmin")) {
 		//access granted
 	}
 	else {
@@ -116,9 +112,9 @@
 	echo "	<div class='heading'><b>".$text['title-sip_status']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('system_status_sofia_status')) {
-		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?cmd=api+cache+flush']);
-		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?cmd=api+reloadacl']);
-		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?cmd=api+reloadxml']);
+		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush']);
+		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadacl']);
+		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadxml']);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'sip_status.php']);
 	echo "	</div>\n";
@@ -175,6 +171,7 @@
 					if (is_array($gateways) && @sizeof($gateways) != 0) {
 						foreach($gateways as $field) {
 							if ($field["gateway_uuid"] == strtolower($row->name)) {
+								$gateway_uuid = $field["gateway_uuid"];
 								$gateway_name = $field["gateway"];
 								$gateway_domain_name = $field["domain_name"];
 								break;
@@ -201,7 +198,7 @@
 					echo "	<td class='hide-sm-dn'>".escape($row->to)."</td>\n";
 					echo "	<td class='no-wrap'>".escape($row->state)."</td>\n";
 					echo "	<td class='center no-link'>";
-					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode(($gateway_name ? $gateway_name : $row->name))."&cmd=api+sofia+profile+".urlencode($row->profile)."+killgw+".urlencode($row->name)]);
+					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode(($gateway_uuid ? $gateway_uuid : $row->name))."&action=killgw"]);
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
@@ -251,17 +248,17 @@
 			echo "	<div class='heading'><b><a href='javascript:void(0);' onclick=\"$('#".escape($sip_profile_name)."').slideToggle();\">".$text['title-sofia-status-profile']." ".urlencode($sip_profile_name)."</a></b></div>\n";
 			echo "	<div class='actions'>\n";
 			if ($sip_profile_name != "external") {
-				echo button::create(['type'=>'button','label'=>$text['button-flush_registrations'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&cmd=api+sofia+profile+'.urlencode($sip_profile_name).'+flush_inbound_reg']);
+				echo button::create(['type'=>'button','label'=>$text['button-flush_registrations'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=flush_inbound_reg']);
 			}
 			echo button::create(['type'=>'button','label'=>$text['button-registrations'],'icon'=>'phone-alt','collapse'=>'hide-xs','link'=>PROJECT_PATH.'/app/registrations/registrations.php?profile='.urlencode($sip_profile_name)]);
 			if ($profile_state == 'stopped') {
-				echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&cmd=api+sofia+profile+'.urlencode($sip_profile_name).'+start']);
+				echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=start']);
 			}
 			if ($profile_state == 'running') {
-				echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&cmd=api+sofia+profile+'.urlencode($sip_profile_name).'+stop']);
+				echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=stop']);
 			}
-			echo button::create(['type'=>'button','label'=>$text['button-restart'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&cmd=api+sofia+profile+'.urlencode($sip_profile_name).'+restart']);
-			echo button::create(['type'=>'button','label'=>$text['button-rescan'],'icon'=>$_SESSION['theme']['button_icon_search'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&cmd=api+sofia+profile+'.urlencode($sip_profile_name).'+rescan']);
+			echo button::create(['type'=>'button','label'=>$text['button-restart'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=restart']);
+			echo button::create(['type'=>'button','label'=>$text['button-rescan'],'icon'=>$_SESSION['theme']['button_icon_search'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=rescan']);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";

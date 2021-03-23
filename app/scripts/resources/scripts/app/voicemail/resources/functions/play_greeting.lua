@@ -85,24 +85,32 @@
 
 								if saved then
 									--play the greeting
-										dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
+										dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);
 										--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 
 									--delete the greeting (retain local for better responsiveness)
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 								end
 							elseif (storage_type == "http_cache") then
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
+								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);
 								--session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);								
+								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);
 								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
 					else
 						--default greeting
 						session:execute("playback","silence_stream://200");
-						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
+						--determine the voicemail_id to say
+						if (voicemail_alternate_greet_id and string.len(voicemail_alternate_greet_id) > 0) then
+							voicemail_id_say = voicemail_alternate_greet_id;
+						elseif (voicemail_greet_id and string.len(voicemail_greet_id) > 0) then
+							voicemail_id_say = voicemail_greet_id;
+						else
+							voicemail_id_say = voicemail_id;
+						end
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", ".*");
 					end
 			end
 		end

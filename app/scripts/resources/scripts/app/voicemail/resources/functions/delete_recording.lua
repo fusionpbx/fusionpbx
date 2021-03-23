@@ -29,7 +29,7 @@
 			if (session ~= nil) then
 				if (session:ready()) then
 					dtmf_digits = '';
-					macro(session, "message_deleted", 1, 100, '');
+					session:execute("playback", "phrase:voicemail_ack:deleted");
 				end
 			end
 

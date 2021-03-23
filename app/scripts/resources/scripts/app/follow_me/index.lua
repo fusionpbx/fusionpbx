@@ -15,18 +15,20 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2020
 --	the Initial Developer. All Rights Reserved.
 
 --includes
 	local Database = require "resources.functions.database";
 	local route_to_bridge = require "resources.functions.route_to_bridge"
+	local Settings = require "resources.functions.lazy_settings"
 	require "resources.functions.trim";
 
 --get the variables
 	if (session:ready()) then
 		domain_name = session:getVariable("domain_name");
 		domain_uuid = session:getVariable("domain_uuid");
+		uuid = session:getVariable("uuid");
 		destination_number = session:getVariable("destination_number");
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
@@ -49,8 +51,12 @@
 		call_direction = "local";
 	end
 
+--connect to the database
+	local dbh = Database.new('system');
+
 --set the strategy
-	follow_me_strategy = 'enterprise'; --simultaneous, enterprise
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
+	local follow_me_strategy = settings:get('follow_me', 'strategy', 'text') or 'enterprise'; --simultaneous, enterprise
 
 --include json library
 	debug["sql"] = false;
@@ -75,22 +81,24 @@
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
 						toll_allow = api:executeString(cmd);
 						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
+					
+					--get the extensions accountcode
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var accountcode";
+						accountcode = api:executeString(cmd);
 
 					--get the new destination 
 						cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_destination";
 						destination_number = api:executeString(cmd);
+
 						--freeswitch.consoleLog("notice", "[follow me][call forward all] " .. count .. " " .. cmd .. " ".. destination_number .."\n");
 						count = count + 1;
 						if (count < 5) then
-							count, destination_number = get_forward_all(count, destination_number, domain_name);
+							count, destination_number, toll_allow, accountcode = get_forward_all(count, destination_number, domain_name);
 						end
 				end
 		end
-		return count, destination_number, toll_allow;
+		return count, destination_number, toll_allow, accountcode;
 	end
-
---connect to the database
-	local dbh = Database.new('system');
 
 --get the forward busy
 	--cmd = "user_data ".. destination_number .."@"..domain_name.." var forward_busy_enabled=";
@@ -114,7 +122,7 @@
 	end
 
 --select data from the database
-	local sql = "select follow_me_uuid, toll_allow ";
+	local sql = "select follow_me_uuid, toll_allow, accountcode ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and ( ";
@@ -128,13 +136,14 @@
 	status = dbh:query(sql, params, function(row)
 		follow_me_uuid = row["follow_me_uuid"];
 		extension_toll_allow = row["toll_allow"];
+		accountcode = row["accountcode"];
 	end);
 	--dbh:query(sql, params, function(row);
 
 --get the follow me data
 	if (follow_me_uuid ~= nil) then
 		local sql = "select cid_name_prefix, cid_number_prefix, ";
-		sql = sql .. "follow_me_enabled, follow_me_caller_id_uuid, follow_me_ignore_busy ";
+		sql = sql .. "follow_me_enabled, follow_me_ignore_busy ";
 		sql = sql .. "from v_follow_me ";
 		sql = sql .. "where domain_uuid = :domain_uuid ";
 		sql = sql .. "and follow_me_uuid = :follow_me_uuid; ";
@@ -146,7 +155,6 @@
 			caller_id_name_prefix = row["cid_name_prefix"];
 			caller_id_number_prefix = row["cid_number_prefix"];
 			follow_me_enabled = row["follow_me_enabled"];
-			follow_me_caller_id_uuid = row["follow_me_caller_id_uuid"];
 			follow_me_ignore_busy = row["follow_me_ignore_busy"];
 		end);
 		--dbh:query(sql, params, function(row);
@@ -174,7 +182,7 @@
 			end
 
 			--follow the forwards
-			count, destination_number, toll_allow = get_forward_all(0, row.destination_number, domain_name);
+			count, destination_number, toll_allow, accountcode = get_forward_all(0, row.destination_number, domain_name);
 
 			--update values
 			row['destination_number'] = destination_number
@@ -198,6 +206,7 @@
 				--set the values
 					external = "true";
 					row['user_exists'] = "false";
+					row['accountcode'] = accountcode;
 				--add the row to the destinations array
 					destinations[x] = row;
 			end
@@ -260,6 +269,7 @@
 			group_confirm_key = row.group_confirm_key;
 			group_confirm_file = row.group_confirm_file;
 			toll_allow = row.toll_allow;
+			accountcode = row.accountcode;
 			user_exists = row.user_exists;
 
 		--follow the forwards
@@ -320,8 +330,23 @@
 				--get the extension_uuid
 				cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 				extension_uuid = trim(api:executeString(cmd));
+
+				local record_session = "";
+				--if session is already recording then skip
+				if (session:getVariable("record_session") ~= "true") then
+					local cmd = "user_data "..destination_number.."@"..domain_name.." var user_record";
+					local user_record = api:executeString(cmd);
+					if (user_record == "all" or user_record == call_direction) then 
+						local recordings_dir = session:getVariable("recordings_dir");
+						local record_ext = session:getVariable("record_ext") or "wav";
+						local record_name = uuid.."."..record_ext;
+						local record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+					end
+				end
+
 				--send to user
-				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. "]user/" .. row.destination_number .. "@" .. domain_name;
+				local dial_string_to_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid..record_session.."]user/" .. row.destination_number .. "@" .. domain_name;
 				dial_string = dial_string_to_user;
 			elseif (tonumber(destination_number) == nil) then
 				--sip uri
@@ -338,23 +363,6 @@
 						toll_allow = '';
 					end
 
-				--get the destination caller id name and number
-					if (follow_me_caller_id_uuid ~= nil) then
-						local sql = "select destination_uuid, destination_number, destination_description, destination_caller_id_name, destination_caller_id_number ";
-						sql = sql .. "from v_destinations ";
-						sql = sql .. "where domain_uuid = :domain_uuid ";
-						sql = sql .. "and destination_uuid = :destination_uuid ";
-						sql = sql .. "order by destination_number asc ";
-						local params = {domain_uuid = domain_uuid, destination_uuid = follow_me_caller_id_uuid};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "SQL:" .. sql .. "; params: " .. json.encode(params) .. "\n");
-						end
-						status = dbh:query(sql, params, function(field)
-							caller_id_name = field["destination_caller_id_name"];
-							caller_id_number = field["destination_caller_id_number"];
-						end);
-					end
-
 				--check if the user exists
 					if tonumber(caller_id_number) ~= nil then
 						cmd = "user_exists id ".. caller_id_number .." "..domain_name;
@@ -362,7 +370,8 @@
 					end
 
 				--set the outbound caller id
-					if (session:ready() and caller_is_local) then
+					ignore_outbound_caller_id = session:getVariable("follow_me_ignore_outbound_caller_id");
+					if (session:ready() and caller_is_local and ignore_outbound_caller_id ~= "true") then
 						if (outbound_caller_id_name ~= nil) then
 							caller_id_name = outbound_caller_id_name;
 						end
@@ -382,7 +391,9 @@
 					end
 
 				--set the destination dial string
-					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
+					destination_delay = destination_delay * 2;
+					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations

@@ -89,12 +89,11 @@
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = '';
-	if (isset($_GET['page'])) {
-		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
-		$offset = $rows_per_page * $page;
-	}
+	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+	
 
 //get the list
 	$sql = "select * from v_conference_sessions ";
@@ -208,16 +207,9 @@
 				echo "	<td>".$end_date."&nbsp;</td>\n";
 				echo "	<td>".$time_difference."&nbsp;</td>\n";
 				echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
-				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-				$tmp_name = '';
-				if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
-					$tmp_name = $row['conference_session_uuid'].".mp3";
-				}
-				elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
-					$tmp_name = $row['conference_session_uuid'].".wav";
-				}
+				$recording_name = $row['recording'];
 				echo "	<td class='button no-link'>\n";
-				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+				if (strlen($recording_name) > 0 && file_exists($recording_name)) {
 					echo "<table border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td>\n";
@@ -225,7 +217,7 @@
 					echo "</td>\n";
 					if (permission_exists('conference_session_play')) {
 						echo "<td>\n";
-						echo "	<audio controls=\"controls\">\n";
+						echo "	<audio controls=\"controls\" preload=\"none\">\n";
   						echo "		<source src=\"download.php?id=".escape($row['conference_session_uuid'])."\" type=\"audio/x-wav\">\n";
 						echo "	</audio>\n";
 						//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";

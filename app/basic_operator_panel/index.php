@@ -64,7 +64,12 @@
 			}
 
 		//update the status
-			if (permission_exists("user_account_setting_edit")) {
+			if (permission_exists("user_setting_edit")) {
+				//add the user_edit permission
+				$p = new permissions;
+				$p->add("user_edit", "temp");
+
+				//update the database user_status
 				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
 				$array['users'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 				$array['users'][0]['user_status'] = $user_status;
@@ -72,6 +77,10 @@
 				$database->app_name = 'operator_panel';
 				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
 				$database->save($array);
+
+				//remove the temporary permission
+				$p->delete("user_edit", "temp");
+
 				unset($array);
 			}
 
@@ -185,8 +194,24 @@
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
+<?php
+//determine refresh rate
+$refresh_default = 1500; //milliseconds
+$refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
+if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
+	$refresh = $refresh * 1000;
+}
+else if ($refresh < 0.5 || ($refresh > 120 && $refresh < 500)) {
+	$refresh = $refresh_default; //use default
+}
+else {
+	//>= 500, must be milliseconds
+}
+unset($refresh_default);
+?>
+
 //ajax refresh
-	var refresh = 1500;
+	var refresh = <?php echo $refresh; ?>;
 	var source_url = 'resources/content.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
@@ -233,6 +258,8 @@
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+		url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
+		url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
 		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 		if (document.getElementById('sort1'))
 			if (document.getElementById('sort1').value == '1') url += '&sort';
@@ -320,6 +347,8 @@
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+			url += '&extension_filter=' + ((document.getElementById('extension_filter')) ? document.getElementById('extension_filter').value : '');
+			url += '&name_filter=' + ((document.getElementById('name_filter')) ? document.getElementById('name_filter').value : '');
 			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			if (document.getElementById('sort1'))
 				if (document.getElementById('sort1').value == '1') url += '&sort';
