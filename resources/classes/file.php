@@ -65,15 +65,25 @@ class file {
 	/**
 	 * Get the sounds list of search as a relative path without the rate
 	 */
-	public function sounds() {
-		$dir = $_SESSION['switch']['sounds']['dir'].'/en/us/callie';
+	public function sounds($language = 'en', $dialect = 'us', $voice = 'callie') {
+		//set default values
+		if (!isset($language)) { $language = 'en'; }
+		if (!isset($dialect)) { $dialect = 'us'; }
+		if (!isset($voice)) { $voice = 'callie'; }
+
+		//set the variables
+		$dir = $_SESSION['switch']['sounds']['dir'].'/'.$language.'/'.$dialect.'/'.$voice;
 		$rate = '8000';
 		$files = $this->glob($dir.'/*/'.$rate, true);
+		
+		//loop through the languages
 		foreach($files as $file) {
 			$file = substr($file, strlen($dir)+1);
 			$file = str_replace("/".$rate, "", $file);
 			$array[] = $file;
 		}
+
+		//return the list of sounds
 		return $array;
 	}
 

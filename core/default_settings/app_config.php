@@ -82,7 +82,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "time_zone";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "name";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "UTC";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
@@ -221,6 +221,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = base64_encode(openssl_random_pseudo_bytes(32));
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display a Reset Password link on the login box (requires smtp_host be defined).";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a21a002c-c065-411c-ae56-3d33a09f64b4";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_reset_domain";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the domain to use in the Password Reset link sent via email.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "962ac32c-74ce-4cce-b1d9-89f4d921493d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";

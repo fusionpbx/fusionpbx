@@ -85,17 +85,17 @@
 
 								if saved then
 									--play the greeting
-										dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
+										dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);
 										--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 
 									--delete the greeting (retain local for better responsiveness)
 										--os.remove(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 								end
 							elseif (storage_type == "http_cache") then
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);								
+								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);
 								--session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);								
+								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);
 								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 
@@ -110,7 +110,7 @@
 						else
 							voicemail_id_say = voicemail_id;
 						end
-						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", "\\d+");
+						dtmf_digits = session:playAndGetDigits(0, 1, 1, 200, "#", "phrase:voicemail_play_greeting:" .. voicemail_id_say, "", ".*");
 					end
 			end
 		end

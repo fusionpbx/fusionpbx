@@ -153,7 +153,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if ($missed == true) {
-		$sql_where_ands[] = "billsec = '0'";
+		$sql_where_ands[] = "missed_call = true ";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql_where_ands[] = "start_epoch between :start_epoch and :stop_epoch";
@@ -280,6 +280,15 @@
 		$sql_where_ands[] = "leg = :leg";
 		$parameters['leg'] = $leg;
 	}
+	//Exclude enterprise ring group legs
+	if (!permission_exists('xml_cdr_enterprise_leg')) {
+		$sql_where_ands[] .= "originating_leg_uuid IS NULL";
+	}
+	//If you can't see lose_race, don't run stats on it
+	elseif (!permission_exists('xml_cdr_lose_race')) {
+		$sql_where_ands[] = "hangup_cause != 'LOSE_RACE'";
+	}
+	
 
 	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
@@ -345,7 +354,7 @@
 
 //get the call volume between a start end end time in seconds
 	function get_call_volume_between($start, $end, $where, $parameters) {
-		$sql = "select count(*) as count, sum(billsec) as seconds from v_xml_cdr ";
+		$sql = "select count(*) as count, sum(billsec) as seconds, sum(answer_stamp - start_stamp) as tta from v_xml_cdr ";
 		$sql .= $where." ";
 		$sql .= "start_epoch between :start and :end ";
 		$parameters['start'] = $start;
@@ -356,6 +365,7 @@
 			return array(
 				'volume' => $row['count'],
 				'seconds' => $row['seconds'],
+				'tta' => $row['tta'],
 			);
 		}
 		return false;
@@ -375,14 +385,13 @@
 		$stats[$i]['volume'] = $stat_range ? $stat_range['volume'] : 0;
 		$stats[$i]['seconds'] = $stat_range ? $stat_range['seconds'] : 0;
 		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
-		$stats[$i]['avg_sec'] = $stats[$i]['volume'] == 0 ? 0 : $stats[$i]['seconds'] / $stats[$i]['volume'];
 
 		if ($missed) {
 			//we select only missed calls at first place - no reasons to select it again
 			$stats[$i]['missed'] = $stats[$i]['volume'];
 		}
 		else {
-			$where = $sql_where."billsec = '0' and ";
+			$where = $sql_where."missed_call = true and ";
 			$stat_range = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], $where, $parameters);
 			$stats[$i]['missed'] = $stat_range ? $stat_range['volume'] : 0;
 		}
@@ -398,6 +407,9 @@
 
 		//answer / seizure ratio
 		$stats[$i]['asr'] = $stats[$i]['volume'] == 0 ? 0 : ($success_volume / $stats[$i]['volume'] * 100);
+
+		//average time to answer
+		$stats[$i]['avg_tta'] = $stats[$i]['volume'] == 0 ? 0 : round($stat_range['tta'] / $success_volume);
 
 		//average length of call
 		$stats[$i]['aloc'] = $success_volume == 0 ? 0 : $stats[$i]['minutes'] / $success_volume;

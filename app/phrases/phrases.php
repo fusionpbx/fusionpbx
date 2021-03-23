@@ -54,21 +54,21 @@
 				if (permission_exists('phrase_add')) {
 					$obj = new phrases;
 					$obj->copy($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('phrase_edit')) {
 					$obj = new phrases;
 					$obj->toggle($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 			case 'delete':
 				if (permission_exists('phrase_delete')) {
 					$obj = new phrases;
 					$obj->delete($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 		}

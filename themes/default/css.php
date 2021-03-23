@@ -1440,6 +1440,11 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		<?php } ?>
 		}
 
+	textarea.txt,
+	textarea.formfld {
+		resize: both;
+		}
+
 	input.login {
 		font-family: <?php echo ($_SESSION['theme']['login_input_text_font']['text'] != '') ? $_SESSION['theme']['login_input_text_font']['text'] : (($_SESSION['theme']['input_text_font']['text'] != '') ? $_SESSION['theme']['input_text_font']['text'] : 'Arial'); ?>;
 		font-size: <?php echo ($_SESSION['theme']['login_input_text_size']['text'] != '') ? $_SESSION['theme']['login_input_text_size']['text'] : (($_SESSION['theme']['input_text_size']['text'] != '') ? $_SESSION['theme']['input_text_size']['text'] : '12px'); ?>;

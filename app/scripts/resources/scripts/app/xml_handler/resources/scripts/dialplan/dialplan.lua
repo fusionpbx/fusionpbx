@@ -116,7 +116,7 @@
 
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
-				sql = "SELECT d.domain_name, dialplan_xml FROM v_dialplans AS p, v_domains AS d ";
+				sql = "SELECT (select domain_name from v_domains where domain_uuid = p.domain_uuid) as domain_name, dialplan_xml FROM v_dialplans AS p ";
 				sql = sql .. "WHERE ( ";
 				sql = sql .. "	p.dialplan_uuid IN ( ";
 				sql = sql .. "		SELECT dialplan_uuid FROM v_destinations "
@@ -132,7 +132,6 @@
 				sql = sql .. "	) ";
 				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid IS NULL) ";
 				sql = sql .. ") ";
-				sql = sql .. "AND p.domain_uuid = d.domain_uuid ";
 				sql = sql .. "AND (p.hostname = :hostname OR p.hostname IS NULL) ";
 				sql = sql .. "AND p.dialplan_enabled = 'true' ";
 				sql = sql .. "ORDER BY p.dialplan_order ASC ";

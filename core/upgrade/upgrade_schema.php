@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -64,12 +64,16 @@
 //get the database schema put it into an array then compare and update the database as needed.
 	require_once "resources/classes/schema.php";
 	$obj = new schema;
+	if (isset($argv[1]) && $argv[1] == 'data_types') {
+		$obj->data_types = true;
+	}
 	echo $obj->schema($format);
 
-if (!$included && $format == 'html') {
-	echo "<br />\n";
-	echo "<br />\n";
-	require_once "resources/footer.php";
-}
+//formatting for html
+	if (!$included && $format == 'html') {
+		echo "<br />\n";
+		echo "<br />\n";
+		require_once "resources/footer.php";
+	}
 
 ?>

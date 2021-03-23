@@ -48,22 +48,9 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
-		$apps[$x]['destinations'][$y]['label'] = "loopback";
-		$apps[$x]['destinations'][$y]['name'] = "extensions";
-		$apps[$x]['destinations'][$y]['sql'] = "select extension_uuid, extension, number_alias, user_context as context, description from v_extensions ";
-		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and enabled = 'true' ";
-		$apps[$x]['destinations'][$y]['order_by'] = "number_alias, extension asc";
-		$apps[$x]['destinations'][$y]['field']['extension_uuid'] = "extension_uuid";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
-		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
-		$apps[$x]['destinations'][$y]['field']['description'] = "description";
-		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination}/\${context}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
-		$y++;
-		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_groups";
 		$apps[$x]['destinations'][$y]['name'] = "extensions";
-		$apps[$x]['destinations'][$y]['sql']['pgsql'] = "select extension_uuid, distinct(unnest(string_to_array(call_group, ','))) as destination from v_extensions ";
+		$apps[$x]['destinations'][$y]['sql']['pgsql'] = "select distinct(unnest(string_to_array(call_group, ','))) as destination from v_extensions ";
 		$apps[$x]['destinations'][$y]['sql']['sqlite'] = "select distinct(call_group) as destination from v_extensions";
 		$apps[$x]['destinations'][$y]['sql']['mysql'] = "select distinct(call_group) as destination from v_extensions";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_group <> '' and enabled = 'true' ";
@@ -94,6 +81,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "extension_extension";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -169,6 +160,8 @@
 		$apps[$x]['permissions'][$y]['name'] = "emergency_caller_id_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "emergency_caller_id_select";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_user_record";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -213,6 +206,26 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_directory";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_limit";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_call_group";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_hold_music";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $apps[$x]['permissions'][$y]['groups'][] = "admin";
+                $apps[$x]['permissions'][$y]['groups'][] = "user"; 
 
 
 	//default settings
@@ -577,12 +590,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_follow_me";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "follow_me_uuid";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_caller_id_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "follow_me_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

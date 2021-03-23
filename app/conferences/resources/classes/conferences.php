@@ -141,7 +141,12 @@ if (!class_exists('conferences')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-delete']);
@@ -227,7 +232,12 @@ if (!class_exists('conferences')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);
@@ -362,7 +372,7 @@ if (!class_exists('conferences')) {
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//set message
 									message::add($text['message-copy']);

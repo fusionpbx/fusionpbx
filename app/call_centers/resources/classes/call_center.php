@@ -109,7 +109,7 @@
 					$dialplan["domain_uuid"] = $this->domain_uuid;
 					$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
 					$dialplan["dialplan_number"] = $this->destination_number;
-					$dialplan["dialplan_context"] = $_SESSION['context'];
+					$dialplan["dialplan_context"] = $_SESSION['domain_name'];
 					$dialplan["dialplan_continue"] = "false";
 					$dialplan["dialplan_order"] = "210";
 					$dialplan["dialplan_enabled"] = "true";
@@ -267,7 +267,7 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$_SESSION['context']);
+					$cache->delete("dialplan:".$_SESSION['domain_name']);
 
 				//return the dialplan_uuid
 					return $dialplan_response;
@@ -346,6 +346,17 @@
 							//delete the checked rows
 								if (is_array($array) && @sizeof($array) != 0) {
 
+									//setup the event socket connection
+										$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+									//delete the queue in the switch
+										if ($fp) {
+											foreach ($uuids as $uuid) {
+												$cmd = "api callcenter_config queue unload ".$uuid;
+												$response = event_socket_request($fp, $cmd);
+											}
+										}
+
 									//grant temporary permissions
 										$p = new permissions;
 										$p->add('call_center_tier_delete', 'temp');
@@ -366,8 +377,13 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["context"]);
+										$cache->delete("dialplan:".$_SESSION["domain_name"]);
 										remove_config_from_cache('configuration:callcenter.conf');
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
+										}
 
 									//synchronize configuration
 										save_call_center_xml();
@@ -417,7 +433,7 @@
 
 							//build the delete array
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
-									foreach ($uuids as $uuid) {
+									foreach ($uuids as $x => $uuid) {
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 										$array['call_center_tiers'][$x]['call_center_agent_uuid'] = $uuid;
@@ -592,7 +608,7 @@
 
 									//clear the cache
 										$cache = new cache;
-										$cache->delete("dialplan:".$_SESSION["context"]);
+										$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 									//set message
 										message::add($text['message-copy']);

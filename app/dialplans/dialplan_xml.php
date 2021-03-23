@@ -92,8 +92,11 @@
 			$database->save($array);
 			unset($array);
 
-			//clear the cache
+		//clear the cache
 			$cache = new cache;
+			if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
+				$dialplan_context = "*";
+			}
 			$cache->delete("dialplan:".$dialplan_context);
 
 		//save the message to a session variable

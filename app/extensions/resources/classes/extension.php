@@ -625,12 +625,12 @@ if (!class_exists('extension')) {
 										$this->delete_voicemail
 										&& permission_exists('voicemail_delete')
 										&& is_array($voicemail_ids)
-										&& @sizeof($voicemail_ids)
+										&& @sizeof($voicemail_ids) != 0
 										) {
 										//retrieve voicemail uuids
 											$sql = "select voicemail_uuid as uuid from v_voicemails ";
 											$sql .= "where domain_uuid = :domain_uuid ";
-											$sql .= "and voicemail_id in (".implode(',', $voicemail_ids).") ";
+											$sql .= "and voicemail_id in ('".implode("','", $voicemail_ids)."') ";
 											$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 											$database = new database;
 											$rows = $database->select($sql, $parameters, 'all');
@@ -681,6 +681,11 @@ if (!class_exists('extension')) {
 								//synchronize configuration
 									if (is_writable($_SESSION['switch']['extensions']['dir'])) {
 										$this->xml();
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -786,6 +791,11 @@ if (!class_exists('extension')) {
 										}
 									}
 									unset($extensions);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);

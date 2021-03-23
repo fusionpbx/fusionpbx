@@ -211,7 +211,7 @@
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$default_setting_uuid = $_GET["id"];
-		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+		$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
 		$sql .= "from v_default_settings ";
 		$sql .= "where default_setting_uuid = :default_setting_uuid ";
 		$parameters['default_setting_uuid'] = $default_setting_uuid;
@@ -642,6 +642,13 @@
 		echo "    	<option value='none' ".(($default_setting_value == "none") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='any' ".($default_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
+		echo "    	<option value='email' ".($default_setting_value == 'email' ? "selected='selected'" : null).">".$text['option-username_format_email']."</option>\n";
+		echo "    	<option value='no_email' ".($default_setting_value == 'no_email' ? "selected='selected'" : null).">".$text['option-username_format_no_email']."</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($category == "voicemail" && $subcategory == "voicemail_file" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='listen' ".(($default_setting_value == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
@@ -659,6 +666,30 @@
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='file'>".$text['label-file']."</option>\n";
 		echo "    	<option value='base64' ".(($default_setting_value == "base64") ? "selected='selected'" : null).">".$text['label-base64']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "dialplan_details" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='true'>".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "dialplan_mode" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='multiple'>".$text['label-multiple']."</option>\n";
+		echo "    	<option value='single' ".(($default_setting_value == "single") ? "selected='selected'" : null).">".$text['label-single']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "select_mode" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='default'>".$text['label-default']."</option>\n";
+		echo "    	<option value='dynamic' ".(($default_setting_value == "dynamic") ? "selected='selected'" : null).">".$text['label-dynamic']."</option>\n";
+		echo "	</select>\n";
+	}
+	elseif ($category == "destinations" && $subcategory == "unique" && $name == "boolean" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='true'>".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif (is_json($default_setting_value)) {
@@ -734,8 +765,8 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_description' style='width: 80%; max-width: 600px; min-width: 167px;' maxlength='255' value=\"".$default_setting_description."\">\n";
-	echo "<br />\n";
+	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='default_setting_description'>".escape($default_setting_description)."</textarea>\n";
+	echo "	<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";

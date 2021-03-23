@@ -8,7 +8,7 @@
 --  p     - pause 500 ms
 --  P     - pause 1000 ms
 --
--- example: pause 5 sec dial 008 pause 2 sec paly greeting
+-- example: pause 5 sec dial 008 pause 2 sec play greeting
 -- PPPPP008@300PP
 --
 

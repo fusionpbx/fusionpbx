@@ -106,6 +106,11 @@ if (!class_exists('bridges')) {
 									$database->delete($array);
 									unset($array);
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -173,6 +178,11 @@ if (!class_exists('bridges')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);

@@ -124,6 +124,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-call_center_queues']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+	if (permission_exists('call_center_imports')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>PROJECT_PATH.'/app/call_center_imports/call_center_imports.php?import_type=call_center_queues']);
+	}
 	if (permission_exists('call_center_agent_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-agents'],'icon'=>'users','link'=>'call_center_agents.php']);
 	}
@@ -182,6 +185,7 @@
 	//echo th_order_by('queue_moh_sound', $text['label-music_on_hold'], $order_by, $order);
 	//echo th_order_by('queue_record_template', $text['label-record_template'], $order_by, $order);
 	//echo th_order_by('queue_time_base_score', $text['label-time_base_score'], $order_by, $order);
+	//echo th_order_by('queue_time_base_score_sec', $text['label-time_base_score_sec'], $order_by, $order);
 	//echo th_order_by('queue_max_wait_time', $text['label-max_wait_time'], $order_by, $order);
 	//echo th_order_by('queue_max_wait_time_with_no_agent', $text['label-max_wait_time_with_no_agent'], $order_by, $order);
 	echo th_order_by('queue_tier_rules_apply', $text['label-tier_rules_apply'], $order_by, $order);
@@ -222,6 +226,7 @@
 			//echo "	<td>".escape($row[queue_moh_sound])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row[queue_record_template])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row[queue_time_base_score])."&nbsp;</td>\n";
+			//echo "	<td>".escape($row[queue_time_base_score_sec])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row[queue_max_wait_time])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row[queue_max_wait_time_with_no_agent])."&nbsp;</td>\n";
 			echo "	<td>".ucwords(escape($row['queue_tier_rules_apply']))."</td>\n";

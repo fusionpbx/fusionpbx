@@ -290,7 +290,9 @@
     <!--  Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
     <!--  Line-Seize Timeout (in seconds). Default is 15 -->
     <!--  Number: 15 - 60 -->
     <!--  Mandatory -->
@@ -300,7 +302,7 @@
     <P134></P134>
     <!--  Conference URI -->
     <!--  String -->
-    <P2318></P2318>
+    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2350></P2350>
@@ -481,7 +483,7 @@
     {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
     {else}
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
     {/if}
     
     <!--  Delayed Call Forward Wait Time (in seconds). Default is 20 -->
@@ -502,28 +504,28 @@
     <P104>0</P104>
     <!--  Matching Incoming Caller ID. Matching Rule 1 -->
     <!--  String -->
-    <P1488></P1488>
+    <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
     <!--  Matching Rule 1 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1489>0</P1489>
+    <P1489>{$grandstream_distinctive_ringtone_1}</P1489>
     <!--  Matching Incoming Caller ID. Matching Rule 2 -->
     <!--  String -->
-    <P1490></P1490>
+    <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
     <!--  Matching Rule 2 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1491>0</P1491>
+    <P1491>{$grandstream_distinctive_ringtone_2}</P1491>
     <!--  Matching Incoming Caller ID. Matching Rule 3 -->
     <!--  String -->
-    <P1492></P1492>
+    <P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
     <!--  Matching Rule 3 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1493>0</P1493>
+    <P1493>{$grandstream_distinctive_ringtone_3}</P1493>
     <!--  Ring Timeout (in seconds). Default is 60 -->
     <!--  Number: 30 - 3600 -->
     <!--  Mandatory -->
@@ -734,7 +736,7 @@
     <P444></P444>
     <!--  Conference URI -->
     <!--  String -->
-    <P2418></P2418>
+    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2450></P2450>
@@ -1186,7 +1188,7 @@
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
     
@@ -1206,12 +1208,12 @@
     <!--  When set to Yes(1), it will override the configured provision path and method -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!--  Allow DHCP Option 120 to Override SIP Server -->
     <!--  0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P1411>0</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
     <!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
@@ -1548,7 +1550,9 @@
     <!--  HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P1312>0</P1312>
+    {if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
     <!--  Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->

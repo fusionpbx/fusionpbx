@@ -137,108 +137,23 @@
 	}
 
 //get the domain_uuid
-	$sql = "select device_uuid, domain_uuid from v_devices ";
+	$sql = "select d.device_uuid, d.domain_uuid, n.domain_name ";
+	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_mac_address = :mac ";
+	$sql .= "and d.domain_uuid = n.domain_uuid; ";
 	$parameters['mac'] = $mac;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
-		$domain_uuid = $row['domain_uuid'];
 		$device_uuid = $row['device_uuid'];
+		$domain_uuid = $row['domain_uuid'];
+		$domain_name = $row['domain_name'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
 	}
 	unset($sql, $parameters);
 
 //get the domain_name and domain_uuid
-	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "false") {
-
-		//get the domain name
-			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
-
-		//get the default settings
-			$sql = "select * from v_default_settings ";
-			$sql .= "where default_setting_enabled = 'true' ";
-			$sql .= "order by default_setting_order asc ";
-			$database = new database;
-			$result = $database->select($sql, null, 'all');
-			//unset the previous settings
-			if (is_array($result) && @sizeof($result) != 0) {
-				foreach ($result as $row) {
-					unset($_SESSION[$row['default_setting_category']]);
-				}
-				//set the settings as a session
-				foreach ($result as $row) {
-					$name = $row['default_setting_name'];
-					$category = $row['default_setting_category'];
-					$subcategory = $row['default_setting_subcategory'];
-					if (strlen($subcategory) == 0) {
-						if ($name == "array") {
-							$_SESSION[$category][] = $row['default_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$name] = $row['default_setting_value'];
-						}
-					}
-					else {
-						if ($name == "array") {
-							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
-							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
-						}
-					}
-				}
-			}
-			unset($sql, $result, $row);
-
-		//get the domains settings
-			if (is_uuid($domain_uuid)) {
-				$sql = "select * from v_domain_settings ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and domain_setting_enabled = 'true' ";
-				$sql .= "order by domain_setting_order asc ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
-				//unset the arrays that domains are overriding
-				if (is_array($result) && @sizeof($result) != 0) {
-					foreach ($result as $row) {
-						$name = $row['domain_setting_name'];
-						$category = $row['domain_setting_category'];
-						$subcategory = $row['domain_setting_subcategory'];
-						if ($name == "array") {
-							unset($_SESSION[$category][$subcategory]);
-						}
-					}
-					//set the settings as a session
-					foreach ($result as $row) {
-						$name = $row['domain_setting_name'];
-						$category = $row['domain_setting_category'];
-						$subcategory = $row['domain_setting_subcategory'];
-						if (strlen($subcategory) == 0) {
-							//$$category[$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][] = $row['domain_setting_value'];
-							}
-							else {
-								$_SESSION[$category][$name] = $row['domain_setting_value'];
-							}
-						}
-						else {
-							//$$category[$subcategory][$name] = $row['domain_setting_value'];
-							if ($name == "array") {
-								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-							}
-							else {
-								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-							}
-						}
-					}
-				}
-			}
-	}
-	else {
+	if ($_SESSION['provision']['http_domain_filter']['boolean'] == "true") {
 		//get the domain_name
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			$domain_name = $domain_array[0];
@@ -250,6 +165,89 @@
 			$database = new database;
 			$domain_uuid = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
+	}
+
+//get the default settings
+	$sql = "select * from v_default_settings ";
+	$sql .= "where default_setting_enabled = 'true' ";
+	$sql .= "order by default_setting_order asc ";
+	$database = new database;
+	$result = $database->select($sql, null, 'all');
+	//unset the previous settings
+	if (is_array($result) && @sizeof($result) != 0) {
+		foreach ($result as $row) {
+			unset($_SESSION[$row['default_setting_category']]);
+		}
+		//set the settings as a session
+		foreach ($result as $row) {
+			$name = $row['default_setting_name'];
+			$category = $row['default_setting_category'];
+			$subcategory = $row['default_setting_subcategory'];
+			if (strlen($subcategory) == 0) {
+				if ($name == "array") {
+					$_SESSION[$category][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$name] = $row['default_setting_value'];
+				}
+			}
+			else {
+				if ($name == "array") {
+					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+				}
+			}
+		}
+	}
+	unset($sql, $result, $row);
+
+//get the domains settings
+	if (is_uuid($domain_uuid)) {
+		$sql = "select * from v_domain_settings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and domain_setting_enabled = 'true' ";
+		$sql .= "order by domain_setting_order asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$result = $database->select($sql, $parameters, 'all');
+		//unset the arrays that domains are overriding
+		if (is_array($result) && @sizeof($result) != 0) {
+			foreach ($result as $row) {
+				$name = $row['domain_setting_name'];
+				$category = $row['domain_setting_category'];
+				$subcategory = $row['domain_setting_subcategory'];
+				if ($name == "array") {
+					unset($_SESSION[$category][$subcategory]);
+				}
+			}
+			//set the settings as a session
+			foreach ($result as $row) {
+				$name = $row['domain_setting_name'];
+				$category = $row['domain_setting_category'];
+				$subcategory = $row['domain_setting_subcategory'];
+				if (strlen($subcategory) == 0) {
+					//$$category[$name] = $row['domain_setting_value'];
+					if ($name == "array") {
+						$_SESSION[$category][] = $row['domain_setting_value'];
+					}
+					else {
+						$_SESSION[$category][$name] = $row['domain_setting_value'];
+					}
+				}
+				else {
+					//$$category[$subcategory][$name] = $row['domain_setting_value'];
+					if ($name == "array") {
+						$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+					}
+					else {
+						$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+					}
+				}
+			}
+		}
 	}
 
 //build the provision array

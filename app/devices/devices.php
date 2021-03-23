@@ -51,6 +51,7 @@
 
 //get the search
 	$search = strtolower($_REQUEST["search"]);
+	$fields = strtolower($_REQUEST["fields"]);
 
 //process the http post data by action
 	if ($action != '' && is_array($devices) && @sizeof($devices) != 0) {
@@ -69,7 +70,7 @@
 				break;
 		}
 
-		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
 		exit;
 	}
 
@@ -126,6 +127,29 @@
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
 		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
+		if ($fields == 'all' || $fields == 'lines') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select dl.device_uuid from v_device_lines as dl ";
+			$sql .= "		where dl.display_name like :search ";
+			$sql .= "		or dl.user_id like :search ";
+			$sql .= "		or dl.auth_id like :search ";
+			$sql .= "	) ";
+		}
+		if ($fields == 'all' || $fields == 'keys') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select dk.device_uuid from v_device_keys as dk ";
+			$sql .= "		where dk.device_key_value like :search ";
+			$sql .= "		or dk.device_key_label like :search ";
+			$sql .= "	) ";
+		}
+		if ($fields == 'all' || $fields == 'settings') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select ds.device_uuid from v_device_settings as ds ";
+			$sql .= "		where ds.device_setting_subcategory like :search ";
+			$sql .= "		or ds.device_setting_value like :search ";
+			$sql .= "		or ds.device_setting_description like :search ";
+			$sql .= "	) ";
+		}
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
@@ -135,11 +159,12 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
-		$param = "&search=".$search."&show=all";
-	}
-	else {
+	if ($search) {
 		$param = "&search=".$search;
+		$param .= "&fields=".$fields;
+	}
+	if ($_GET['show'] == "all" && permission_exists('device_all')) {
+		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
@@ -155,7 +180,10 @@
 	}
 	$sql .= "where ( ";
 	$sql .= "	d.device_uuid_alternate = d2.device_uuid  ";
-	$sql .= "	or d.device_uuid_alternate is null and d.device_uuid = d2.device_uuid ";
+	$sql .= "	or ( ";
+	$sql .= "		d.device_uuid_alternate is null and ";
+	$sql .= "		d.device_uuid = d2.device_uuid ";
+	$sql .= "	) ";
 	$sql .= ") ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= " and d.domain_uuid = d3.domain_uuid ";
@@ -183,6 +211,29 @@
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
 		$sql .= "	or lower(d.device_provisioned_ip) like :search ";
+		if ($fields == 'all' || $fields == 'lines') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select dl.device_uuid from v_device_lines as dl ";
+			$sql .= "		where dl.display_name like :search ";
+			$sql .= "		or dl.user_id like :search ";
+			$sql .= "		or dl.auth_id like :search ";
+			$sql .= "	) ";
+		}
+		if ($fields == 'all' || $fields == 'keys') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select dk.device_uuid from v_device_keys as dk ";
+			$sql .= "		where dk.device_key_value like :search ";
+			$sql .= "		or dk.device_key_label like :search ";
+			$sql .= "	) ";
+		}
+		if ($fields == 'all' || $fields == 'settings') {
+			$sql .= "	or d.device_uuid in ( ";
+			$sql .= "		select ds.device_uuid from v_device_settings as ds ";
+			$sql .= "		where ds.device_setting_subcategory like :search ";
+			$sql .= "		or ds.device_setting_value like :search ";
+			$sql .= "		or ds.device_setting_description like :search ";
+			$sql .= "	) ";
+		}
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
@@ -255,7 +306,15 @@
 		}
 	}
 
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo 		"<select class='formfld' name='fields' id='select_fields' style='width: auto; margin-left: 15px;' onchange=\"if (document.getElementById('search').value != '') { this.form.submit(); }\">\n";
+	echo "			<option value=''>".$text['label-fields']."...</option>\n";
+	echo "			<option value=''>".$text['label-default']."</option>\n";
+	echo "			<option value='lines' ".($fields == 'lines' ? " selected='selected'" : null).">".$text['label-lines']."</option>\n";
+	echo "			<option value='keys' ".($fields == 'keys' ? " selected='selected'" : null).">".$text['label-keys']."</option>\n";
+	echo "			<option value='settings' ".($fields == 'settings' ? " selected='selected'" : null).">".$text['label-settings']."</option>\n";
+	echo "			<option value='all' ".($fields == 'all' ? " selected='selected'" : null).">".$text['label-all']."</option>\n";
+	echo "		</select>";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
@@ -279,6 +338,7 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	echo "<input type='hidden' name='fields' value=\"".escape($fields)."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";

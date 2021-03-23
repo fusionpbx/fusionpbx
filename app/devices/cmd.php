@@ -41,7 +41,6 @@ else {
 //set the variables
 	$cmd = check_str($_GET['cmd']);
 	$rdr = check_str($_GET['rdr']);
-	$profile = check_str($_GET['profile']);
 	$domain = check_str($_GET['domain']);
 	$show = check_str($_GET['show']);
 	$user = check_str($_GET['user']);
@@ -51,26 +50,39 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
+		// Get the SIP profiles for the user
+		$command = "sofia_contact */{$user}";
+		$contact_string = event_socket_request($fp, "api ".$command);
+		// The first value in the array will be full matching text, the second one will be the array of profile matches
+		preg_match_all('/sofia\/([^,]+)\/(?:[^,]+)/', $contact_string, $matches);
+		if (sizeof($matches) != 2 || sizeof($matches[1]) < 1) {
+			$profiles = array("internal");
+		} else {
+			// We have at least one profile, get all of the unique profiles
+			$profiles = array_unique($matches[1]);
+		}
 
-		//prepare the command
+		foreach ($profiles as $profile) {
+			//prepare the command
 			if ($cmd == "unregister") {
-				$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
+				$command = "sofia profile {$profile} flush_inbound_reg {$user} reboot";
 			}
 			else {
-				$command = "lua app.lua event_notify ".$profile." ".$cmd." ".$user." ".$vendor;
+				$command = "lua app.lua event_notify {$profile} {$cmd} {$user} {$vendor}";
 				//if ($cmd == "check_sync") {
 				//	$command = "sofia profile ".$profile." check_sync ".$user;
 				//}
 			}
-		//send the command
-			$response = event_socket_request($fp, "api ".$command);
-			$response = event_socket_request($fp, "api log notice ".$command);
+			//send the command
+			$response = event_socket_request($fp, "api {$command}");
+			event_socket_request($fp, "api log notice {$command}");
 
-		//show the response
+			//show the response
 			message::add($text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].htmlentities($response));
+		}
 
 		//close the connection
-			fclose($fp);
+		fclose($fp);
 	}
 
 //redirect the user

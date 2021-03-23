@@ -23,8 +23,10 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 
-	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
+	The original Call Block was written by Gerrit Visser <gerrit308@gmail.com> 
+	All of it has been rewritten over years.
 */
+
 //includes
 	require_once "root.php";
 	require_once "resources/require.php";
@@ -83,6 +85,7 @@
 	if (strlen($search) > 0) {
 		$sql_search = " (";
 		$sql_search .= "lower(call_block_name) like :search ";
+		$sql_search .= "or call_block_country_code like :search ";
 		$sql_search .= "or lower(call_block_number) like :search ";
 		$sql_search .= "or lower(call_block_description) like :search ";
 		$sql_search .= ") ";
@@ -91,7 +94,15 @@
 
 //prepare to page the results
 	$sql = "select count(*) from view_call_block ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where true ";
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
@@ -106,13 +117,16 @@
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "&search=".$search;
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$param .= "&show=all";
+	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -121,7 +135,15 @@
 
 //get the list
 	$sql = "select * from view_call_block ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where true ";
+	if ($_GET['show'] == "all" && permission_exists('call_forward_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (!permission_exists('call_block_all') && is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 		$sql .= "and extension_uuid in (";
 		$x = 0;
@@ -136,7 +158,7 @@
 	if (isset($sql_search)) {
 		$sql .= "and ".$sql_search;
 	}
-	$sql .= order_by($order_by, $order, 'call_block_number');
+	$sql .= order_by($order_by, $order, ['call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
@@ -167,6 +189,14 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	if (permission_exists('call_forward_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type).'&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+		}
+	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_block.php','style'=>($search == '' ? 'display: none;' : null)]);
@@ -202,8 +232,13 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	if ($_GET['show'] == 'all' && permission_exists('domain_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	}
+	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_country_code', $text['label-country_code'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
@@ -228,7 +263,16 @@
 				echo "		<input type='hidden' name='call_blocks[".$x."][uuid]' value='".escape($row['call_block_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>";
+			if ($_GET['show'] == 'all' && permission_exists('domain_all')) {
+				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+			}
+			echo "	<td class='center'>";
+			switch ($row['call_block_direction']) {
+				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+			}
+			echo "	</td>\n";
+			echo "	<td class='center'>";
 			if (strlen($row['extension']) == 0) {
 				echo $text['label-all'];
 			}
@@ -237,6 +281,14 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['call_block_name'])."</td>\n";
+			echo "	<td>";
+			if (permission_exists('call_block_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['call_block_country_code'])."</a>";
+			}
+			else {
+				echo escape($row['call_block_country_code']);
+			}
+			echo "	</td>\n";
 			echo "	<td>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='".$list_row_url."'>".escape(format_phone($row['call_block_number']))."</a>";
