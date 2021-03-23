@@ -503,7 +503,7 @@ if (!class_exists('destinations')) {
 					if ($key == $destination_key) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
-							$uuid = $row[$this->singular($key).'_uuid'] ?? $row['uuid'];
+							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : $row['uuid'];
 							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
 						}
 					}
