@@ -502,8 +502,9 @@ if (!class_exists('destinations')) {
 				foreach($_SESSION['destinations']['array'][$destination_type] as $key => $value) {
 					if ($key == $destination_key) {
 						foreach($value as $k => $row) {
-							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : ''; 
-							$response .= "		<option id='{$row[$this->singular($key).'_uuid']}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
+							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
+							$uuid = $row[$this->singular($key).'_uuid'] ?? $row['uuid'];
+							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
 						}
 					}
 				}
