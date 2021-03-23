@@ -503,10 +503,21 @@ if (!class_exists('destinations')) {
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : ''; 
 							$response .= "		<option value='".$row['destination']."' $selected>".$row['label']."</option>\n";
+							if ($row['destination'] == $destination_value) {
+								$response_button = button::create([
+									'type'=>'button',
+									'icon'=>'external-link-alt',
+									'id'=>'btn_dest_go',
+									'title'=>$row['label'],
+									//'style'=>'margin-left: 15px;',
+									'link'=>'/app/'.$key.'/'.$this->singular($key).'_edit.php?id='.$row[$this->singular($key).'_uuid']
+								])."\n";
+							}
 						}
 					}
 				}
-				$response .= "	</select>\n";
+				$response .= "	</select>".$response_button."\n";
+				
 
 				//debug information
 				//echo $response;
