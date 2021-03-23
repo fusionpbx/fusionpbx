@@ -51,7 +51,8 @@
 					$select_label = str_replace('email-icon', '&#9993', $select_label);
 
 					//add the select option
-					echo "		<option id='{$row[$singular.'_uuid']}' value='".$select_value."'>".$select_label."</option>\n";
+					$uuid = $row[$singular.'_uuid'] ?? $row['uuid'];
+					echo "		<option id='{$uuid}' value='".$select_value."'>".$select_label."</option>\n";
 				}
 			}
 		}
