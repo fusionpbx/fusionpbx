@@ -514,7 +514,7 @@ if (!class_exists('destinations')) {
 					'icon'=>'external-link-alt',
 					'id'=>'btn_dest_go',
 					'title'=>$text['label-edit'],
-					'onclick'=>"let types = document.getElementById('{destination_id}_type').options; let opts = document.getElementById('{$destination_id}').options; window.location.assign('/app/'+types[types.selectedIndex].className+'/'+types[types.selectedIndex].id+'_edit.php?id='+opts[opts.selectedIndex].id);"
+					'onclick'=>"let types = document.getElementById('{destination_id}_type').options; let opts = document.getElementById('{$destination_id}').options; if(opts[opts.selectedIndex].id && opts[opts.selectedIndex].id.length > 0) {window.location.assign('/app/'+types[types.selectedIndex].className+'/'+types[types.selectedIndex].id+'_edit.php?id='+opts[opts.selectedIndex].id);}"
 				])."\n";
 
 				//debug information
