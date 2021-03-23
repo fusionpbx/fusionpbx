@@ -188,8 +188,12 @@
 		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'onclick'=>"toggle_select('export_format'); this.blur();"]);
 		echo 		"<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>";
-		echo "			<option value='csv'>CSV</option>";
-		echo "			<option value='pdf'>PDF</option>";
+		if (permission_exists('xml_cdr_export_csv')) {
+			echo "			<option value='csv'>CSV</option>";
+		}
+		if (permission_exists('xml_cdr_export_pdf')) {
+			echo "			<option value='pdf'>PDF</option>";
+		}
 		echo "		</select>";
 	}
 	if (!$archive_request && permission_exists('xml_cdr_delete')) {
@@ -758,7 +762,7 @@
 					}
 				//recording
 					if (permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
-						if ($record_path != '' && file_exists($record_path.'/'.$record_name)) {
+						if ($record_path != '') {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if (permission_exists('xml_cdr_recording_play')) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."&t=record\" type='".escape($record_type)."'></audio>";
@@ -792,7 +796,7 @@
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
-						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+						$content .= "	<td class='middle right hide-md-dn'>".(($row['tta'] >= 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
 					}
 				//duration
 					if (permission_exists('xml_cdr_duration')) {
@@ -819,11 +823,7 @@
 					}
 
 					$content .= "</tr>\n";
-
 				//show the leg b only to those with the permission
-					if (!permission_exists('xml_cdr_lose_race') && $row['hangup_cause'] == 'LOSE_RACE') {
-						$content = '';
-					}
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}

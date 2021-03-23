@@ -79,6 +79,16 @@
 			}
 		}
 	}
+	else {
+		$voicemail = new voicemail;
+		$rows = $voicemail->voicemails();
+		if (is_array($rows) && @sizeof($rows) != 0) {
+			foreach ($rows as $row) {
+				$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
+			}
+		}
+		unset($voicemail, $rows, $row);
+	}
 
 //get order and order by
 	$order_by = $_GET["order_by"];

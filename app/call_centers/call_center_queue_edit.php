@@ -86,6 +86,7 @@
 			$queue_moh_sound = $_POST["queue_moh_sound"];
 			$queue_record_template = $_POST["queue_record_template"];
 			$queue_time_base_score = $_POST["queue_time_base_score"];
+			$queue_time_base_score_sec = $_POST["queue_time_base_score_sec"];
 			$queue_max_wait_time = $_POST["queue_max_wait_time"];
 			$queue_max_wait_time_with_no_agent = $_POST["queue_max_wait_time_with_no_agent"];
 			$queue_max_wait_time_with_no_agent_time_reached = $_POST["queue_max_wait_time_with_no_agent_time_reached"];
@@ -188,6 +189,7 @@
 			//if (strlen($queue_moh_sound) == 0) { $msg .= $text['message-required'].$text['label-music_on_hold']."<br>\n"; }
 			//if (strlen($queue_record_template) == 0) { $msg .= $text['message-required'].$text['label-record_template']."<br>\n"; }
 			//if (strlen($queue_time_base_score) == 0) { $msg .= $text['message-required'].$text['label-time_base_score']."<br>\n"; }
+			//if (strlen($queue_time_base_score_sec) == 0) { $msg .= $text['message-required'].$text['label-time_base_score_sec']."<br>\n"; }
 			//if (strlen($queue_max_wait_time) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time']."<br>\n"; }
 			//if (strlen($queue_max_wait_time_with_no_agent) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent']."<br>\n"; }
 			//if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $msg .= $text['message-required'].$text['label-max_wait_time_with_no_agent_time_reached']."<br>\n"; }
@@ -269,6 +271,7 @@
 			$array['call_center_queues'][0]['queue_moh_sound'] = $queue_moh_sound;
 			$array['call_center_queues'][0]['queue_record_template'] = $queue_record_template;
 			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
+			$array['call_center_queues'][0]['queue_time_base_score_sec'] = $queue_time_base_score_sec;
 			$array['call_center_queues'][0]['queue_max_wait_time'] = $queue_max_wait_time;
 			$array['call_center_queues'][0]['queue_max_wait_time_with_no_agent'] = $queue_max_wait_time_with_no_agent;
 			$array['call_center_queues'][0]['queue_max_wait_time_with_no_agent_time_reached'] = $queue_max_wait_time_with_no_agent_time_reached;
@@ -324,8 +327,19 @@
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$queue_extension."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
+			if ($queue_time_base_score_sec != '') {
+				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";
+			}
 			if ($queue_greeting_path != '') {
-				$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+				$greeting_array = explode(':', $queue_greeting_path);
+				if (count($greeting_array) == 1) {
+					$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
+				}
+				else {
+					if ($greeting_array[0] == 'say' || $greeting_array[0] == 'tone_stream' || $greeting_array[0] == 'phrase') {
+						$dialplan_xml .= "		<action application=\"".$greeting_array[0]."\" data=\"".$greeting_array[1]."\"/>\n";
+					}
+				}
 			}
 			if (strlen($queue_cid_prefix) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".$queue_cid_prefix."#\${caller_id_name}\"/>\n";
@@ -345,7 +359,7 @@
 			$array['dialplans'][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array['dialplans'][0]["dialplan_name"] = $queue_name;
 			$array['dialplans'][0]["dialplan_number"] = $queue_extension;
-			$array['dialplans'][0]["dialplan_context"] = $_SESSION['context'];
+			$array['dialplans'][0]["dialplan_context"] = $_SESSION['domain_name'];
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
@@ -377,7 +391,12 @@
 
 		//clear the cache
 			$cache = new cache;
-			$cache->delete("dialplan:".$_SESSION["context"]);
+			$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
 
 		//redirect the user
 			if (isset($action)) {
@@ -468,6 +487,7 @@
 				$queue_moh_sound = $row["queue_moh_sound"];
 				$queue_record_template = $row["queue_record_template"];
 				$queue_time_base_score = $row["queue_time_base_score"];
+				$queue_time_base_score_sec = $row["queue_time_base_score_sec"];
 				$queue_max_wait_time = $row["queue_max_wait_time"];
 				$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
 				$queue_max_wait_time_with_no_agent_time_reached = $row["queue_max_wait_time_with_no_agent_time_reached"];
@@ -538,6 +558,7 @@
 	if (strlen($queue_strategy) == 0) { $queue_strategy = "longest-idle-agent"; }
 	if (strlen($queue_moh_sound) == 0) { $queue_moh_sound = "\$\${hold_music}"; }
 	if (strlen($queue_time_base_score) == 0) { $queue_time_base_score = "system"; }
+	if (strlen($queue_time_base_score) == 0) { $queue_time_base_score = ""; }
 	if (strlen($queue_max_wait_time) == 0) { $queue_max_wait_time = "0"; }
 	if (strlen($queue_max_wait_time_with_no_agent) == 0) { $queue_max_wait_time_with_no_agent = "90"; }
 	if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
@@ -768,16 +789,17 @@
 				echo "	<tr>\n";
 				echo "		<td class=''>";
 				if (strlen($field['call_center_tier_uuid']) > 0) {
-					echo "		<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
+					echo "				<input name='call_center_tiers[".$x."][call_center_tier_uuid]' type='hidden' value=\"".escape($field['call_center_tier_uuid'])."\">\n";
 				}
-				echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\">\n";
-				echo "					<option value=\"\"></option>\n";
-				foreach($agents as $row) {
-					$selected = '';
-					if ($row['call_center_agent_uuid'] == $field['call_center_agent_uuid']) {
-						$selected = "selected=\"selected\"";
+				echo "				<select name=\"call_center_tiers[$x][call_center_agent_uuid]\" class=\"formfld\" style=\"width: 200px\">\n";
+				if (is_uuid($field['call_center_agent_uuid'])) {
+					echo "				<option value=\"".escape($field['call_center_agent_uuid'])."\">".escape($field['agent_name'])."</option>\n";
+				}
+				else {
+					echo "					<option value=\"\"></option>\n";
+					foreach($agents as $row) {
+						echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\">".escape($row['agent_name'])."</option>\n";
 					}
-					echo "				<option value=\"".escape($row['call_center_agent_uuid'])."\" $selected>".escape($row['agent_name'])."</option>\n";
 				}
 				echo "				</select>";
 				echo "		</td>\n";
@@ -881,6 +903,17 @@
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-time_base_score']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-time_base_score_sec']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='number' name='queue_time_base_score_sec' maxlength='255' min='0' step='1' value='".escape($queue_time_base_score_sec)."'>\n";
+	echo "<br />\n";
+	echo $text['description-time_base_score_sec']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

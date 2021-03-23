@@ -45,6 +45,29 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination_number} XML \${destination_context}";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "loopback/\${destination_number}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
+		/*
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = 'array';
+		$apps[$x]['destinations'][$y]['label'] = 'other';
+		$apps[$x]['destinations'][$y]['name'] = 'dialplans';
+		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
+		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*411 XML ${context}';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'hangup';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'hangup';
+		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
+		*/
 
 	//permission details
 		$y=0;
@@ -97,10 +120,21 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_accountcode";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_emergency";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "other_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -129,7 +163,24 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "multiple";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: multiple, single";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b132ff5a-da8d-4846-b46d-2f0bfa9ae96b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "unique";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require destinations to be unique true or false.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d6cf39aa-edc0-4682-9868-5f8198b3383c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "select_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "default";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: default, dynamic";
+		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
@@ -243,6 +294,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for fax calls.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_emergency";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used to place emergency calls.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_type_text";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for text messages.";
@@ -263,6 +318,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_alternate_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the alternate data.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_order";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the destination order.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

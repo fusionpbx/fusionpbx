@@ -324,8 +324,12 @@
 			$array['ring_groups'][0]["ring_group_greeting"] = $ring_group_greeting;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
 			$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
-			$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
-			$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+			if (permission_exists('ring_group_caller_id_name')) {
+				$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
+			}
+			if (permission_exists('ring_group_caller_id_number')) {
+				$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+			}
 			if (permission_exists('ring_group_cid_name_prefix')) {
 				$array["ring_groups"][0]["ring_group_cid_name_prefix"] = $ring_group_cid_name_prefix;
 			}
@@ -434,6 +438,11 @@
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$ring_group_context);
+
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
 
 		//set the message
 			if ($action == "add") {

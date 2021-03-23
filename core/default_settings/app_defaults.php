@@ -487,6 +487,21 @@
 				unset($sql, $parameters);
 			}
 
+		//set domain > time_zone to UTC if not set
+			$sql = "update v_default_settings set ";
+			$sql .= "default_setting_value = 'UTC', ";
+			$sql .= "default_setting_enabled = 'true' ";
+			$sql .= "where ( ";
+			$sql .= "	default_setting_value is null or ";
+			$sql .= "	default_setting_value = '' ";
+			$sql .= ") ";
+			$sql .= "and default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'time_zone' ";
+			$sql .= "and default_setting_name = 'name' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+
 	}
 
 ?>

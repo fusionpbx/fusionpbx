@@ -123,6 +123,11 @@
 											}
 										}
 
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
+										}
+
 									//set message
 										message::add($text['message-delete'].': '.@sizeof($array[$this->table]));
 
@@ -208,6 +213,11 @@
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message

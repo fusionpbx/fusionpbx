@@ -171,7 +171,7 @@
 <P237></P237>
 {elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
@@ -196,7 +196,7 @@
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
 <!-- Reboot required -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0,1,2,3 -->
@@ -1021,7 +1021,7 @@
 {if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
 {else}
-<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
 {/if}
 
 <!-- Use # as Dial Key (if set to Yes, "#" will function as the "(Re-)Dial" key). 0 - no, 1 - yes -->

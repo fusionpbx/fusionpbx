@@ -255,6 +255,11 @@
 			$cache = new cache;
 			$cache->delete("dialplan:".$call_flow_context);
 
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {

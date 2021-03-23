@@ -166,6 +166,11 @@ if (!class_exists('ring_groups')) {
 										}
 									}
 
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
+
 								//set message
 									message::add($text['message-delete']);
 							}
@@ -333,6 +338,11 @@ if (!class_exists('ring_groups')) {
 										foreach ($ring_group_contexts as $ring_group_context) {
 											$cache->delete("dialplan:".$ring_group_context);
 										}
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message

@@ -128,10 +128,40 @@
 	$default_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get default setting categories
+	$sql = "select ";
+	$sql .= "distinct(d1.default_setting_category), ";
+	$sql .= "( ";
+	$sql .= "	select ";
+	$sql .= "	count(d2.default_setting_category) ";
+	$sql .= "	from v_default_settings as d2 ";
+	$sql .= "	where d2.default_setting_category = d1.default_setting_category ";
+	if (isset($search) && strlen($search) > 0) {
+		$sql .= "	and (";
+		$sql .= "		lower(d2.default_setting_category) like :search ";
+		$sql .= "		or lower(d2.default_setting_subcategory) like :search ";
+		$sql .= "		or lower(d2.default_setting_name) like :search ";
+		$sql .= "		or lower(d2.default_setting_value) like :search ";
+		$sql .= "		or lower(d2.default_setting_description) like :search ";
+		$sql .= "	) ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$sql .= ") as quantity ";
+	$sql .= "from v_default_settings as d1 ";
+	$sql .= "order by d1.default_setting_category asc ";
+	$database = new database;
+	$rows = $database->select($sql, $parameters, 'all');
+	if (is_array($rows) && @sizeof($rows) != 0) {
+		foreach ($rows as $row) {
+			$default_setting_categories[$row['default_setting_category']] += $row['quantity'];
+		}
+	}
+	unset($sql, $rows, $row);
+
 //get the list of categories
-	if (is_array($default_settings) && @sizeof($default_settings) != 0) {
-		foreach ($default_settings as $default_setting) {
-			$category = strtolower($default_setting['default_setting_category']);
+	if (is_array($default_setting_categories) && @sizeof($default_setting_categories) != 0) {
+		foreach ($default_setting_categories as $default_setting_category => $quantity) {
+			$category = strtolower($default_setting_category);
 			switch ($category) {
 				case "api" : $category = "API"; break;
 				case "cdr" : $category = "CDR"; break;
@@ -142,11 +172,11 @@
 					$category = str_replace("-", " ", $category);
 					$category = ucwords($category);
 			}
-			$categories[$default_setting['default_setting_category']]['formatted'] = $category;
-			$categories[$default_setting['default_setting_category']]['count']++;
+			$categories[$default_setting_category]['formatted'] = $category;
+			$categories[$default_setting_category]['count'] = $quantity;
 		}
 		ksort($categories);
-		unset($default_setting, $category);
+		unset($default_setting_categories, $default_setting_category, $category);
 	}
 
 //create token
@@ -180,7 +210,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-default_settings']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-default_settings']." (".number_format($num_rows).")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($search != '' ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
 	if (permission_exists('default_setting_add')) {
@@ -209,17 +239,18 @@
 	if (is_array($categories) && @sizeof($categories) != 0) {
 		echo 		"<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
+		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
 			$selected = ($_GET['default_setting_category'] == $category_name) ? " selected='selected'" : "";
-			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted'])." (".$category['count'].")</option>\n";
+			echo "		<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
 		}
-		echo "			<option value=''>".$text['label-all']." (".$num_rows.")</option>\n";
+		echo "			<option disabled='disabled'>\n";
+		echo "			<option value=''>".$text['label-all']."</option>\n";
 		echo "		</select>";
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? '' : null)]);
-	//echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -368,7 +399,16 @@
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['default_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['default_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['default_setting_value'])."</span>\n";
 			}
+			else if ($category == 'users' && $subcategory == 'username_format' && $name == 'text') {
+				echo "		".$text['option-username_format_'.$row['default_setting_value']]."\n";
+			}
 			else if ($category == 'recordings' && $subcategory == 'storage_type' && $name == 'text') {
+				echo "		".$text['label-'.$row['default_setting_value']]."\n";
+			}
+			else if ($category == 'destinations' && $subcategory == 'dialplan_mode' && $name == 'text') {
+				echo "		".$text['label-'.$row['default_setting_value']]."\n";
+			}
+			else if ($category == 'destinations' && $subcategory == 'select_mode' && $name == 'text') {
 				echo "		".$text['label-'.$row['default_setting_value']]."\n";
 			}
 			else {
@@ -406,13 +446,6 @@
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-
-//focus on category selector
-	echo "<script>\n";
-	echo "	$(document).ready(function() {\n";
-	echo "		document.getElementById('select_category').focus();\n";
-	echo "	});\n";
-	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";

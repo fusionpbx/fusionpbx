@@ -94,6 +94,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "53cc1060-78f9-44ca-b9b0-17fb2fffd5e1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "username_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "any";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Require a specific username format.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e3f5f4cd-0f17-428a-b788-2f2db91b6dc7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_length";

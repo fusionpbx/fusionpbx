@@ -25,6 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Errol Samuels <voiptology@gmail.com>
+	Corey Moullas <cmoullas@emak.tech>
 */
 
 if (!isset($included)) { $included = false; }
@@ -59,7 +60,7 @@ if (!$included) {
 	//pre-populate the form
 		if (is_uuid($_REQUEST['id']) && $_POST["persistformvar"] != "true") {
 			$fax_uuid = $_REQUEST["id"];
-			if (if_group("superadmin") || if_group("admin")) {
+			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
 				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
@@ -95,7 +96,7 @@ if (!$included) {
 					$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
-				if (!if_group("superadmin") && !if_group("admin")) {
+				if (!permission_exists('fax_extension_view_domain')) {
 					echo "access denied";
 					exit;
 				}
@@ -369,7 +370,9 @@ if (!function_exists('fax_split_dtmf')) {
 				$fax_name = str_replace("=", "_", $fax_name);
 
 				$attachment_file_name = $_files['name'][$index];
-				rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				if ($attachment_file_name != $fax_name.'.'.$fax_file_extension) {
+					rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				}
 				unset($attachment_file_name);
 
 				if (!$included) {
@@ -394,12 +397,8 @@ if (!function_exists('fax_split_dtmf')) {
 				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
 					chdir($dir_fax_temp);
 
-					//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_name).".pdf -- ".correct_path($fax_name).".pdf -c quit");
-					// echo($cmd . "<br/>\n");
-					//exec($cmd);
-
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
+					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
@@ -660,41 +659,14 @@ if (!function_exists('fax_split_dtmf')) {
 				@unlink($tif_file);
 			}
 
-			//generate pdf (a work around, as tiff2pdf was improperly inverting the colors)
+			//generate pdf from tif
 			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
-			// echo($cmd . "<br/>\n");
 			exec($cmd);
-
-			chdir($dir_fax_temp);
-
-			//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_instance_uuid).".pdf -- ".correct_path($fax_instance_uuid).".pdf -c quit");
-			// echo($cmd . "<br/>\n");
-			//exec($cmd);
-
-			//convert pdf to tif
-			$cmd = gs_cmd('-q -sDEVICE=tiffg32d -r'.$gs_r.' -g'.$gs_g.' -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile='.
-				correct_path($fax_instance_uuid.'_temp.tif').
-				' -- '.$fax_instance_uuid.'.pdf -c quit');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
-
-			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
-				' -w '.$page_width.
-				' -l '.$page_height.
-				' -f -o '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'_temp.tif');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
 		}
 		else {
 			if (!$included) {
@@ -768,16 +740,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-		$dial_string  = "for_fax=1,";
-		$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-		$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-		$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$dial_string .= "fax_file='"                     . $fax_file                . "',";
+		$tmp_dial_string  = "for_fax=1,";
+		$tmp_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+		$tmp_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$tmp_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$tmp_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$tmp_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "fax_file='"                     . $fax_file                . "',";
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
@@ -803,6 +775,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			if ($fax_send_mode != 'queue') {
+				$dial_string = $tmp_dial_string;
 				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
@@ -827,6 +800,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else { // enqueue
 				$wav_file = ''; //! @todo add custom message
+				$dial_string = $tmp_dial_string;
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
 		}
@@ -927,8 +901,7 @@ if (!$included) {
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
-
-		echo $text['description-2']." ".(if_group('superadmin') ? $text['description-3'] : null)."\n";
+		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
 
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";

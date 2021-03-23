@@ -165,12 +165,16 @@
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','link'=>'menu.php']);
 	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language)]);
 	if (permission_exists('menu_restore') && $action == "update") {
-		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>'key','collapse'=>'hide-xs','link'=>'menu_restore_default.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language)]);
+		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>'undo-alt','collapse'=>'hide-xs','onclick'=>"modal_open('modal-restore','btn_restore');"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
+	if (permission_exists('menu_restore') && $action == "update") {
+		echo modal::create(['id'=>'modal-restore','type'=>'confirmation','message'=>$text['confirm-restore'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_restore','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>'menu_restore_default.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language),'onclick'=>'modal_close();'])]);
+	}
 
 	echo $text['description-menu']."\n";
 	echo "<br /><br />\n";

@@ -180,16 +180,21 @@
 					agent_wrap_up_time = row.agent_wrap_up_time;
 					agent_reject_delay_time = row.agent_reject_delay_time;
 					agent_busy_delay_time = row.agent_busy_delay_time;
+					agent_record = row.agent_record;
 
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
 						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
+						local record = "";
+						if (agent_record == "true") then
+							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
+						end
 						if (string.find(agent_contact, '}') == nil) then
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}"..record.."}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;

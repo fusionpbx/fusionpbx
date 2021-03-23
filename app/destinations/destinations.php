@@ -110,22 +110,6 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(destination_type) like :search ";
-		$sql_search .= "or lower(destination_number) like :search ";
-		$sql_search .= "or lower(destination_context) like :search ";
-		$sql_search .= "or lower(destination_accountcode) like :search ";
-		if (permission_exists('outbound_caller_id_select')) {
-			$sql_search .= "or lower(destination_caller_id_name) like :search ";
-			$sql_search .= "or destination_caller_id_number like :search ";
-		}
-		$sql_search .= "or lower(destination_enabled) like :search ";
-		$sql_search .= "or lower(destination_description) like :search ";
-		$sql_search .= "or lower(destination_data) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //prepare to page the results
 	$sql = "select count(*) from v_destinations ";
@@ -134,7 +118,22 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$sql .= $sql_search;
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "lower(destination_type) like :search ";
+		$sql .= "or lower(destination_number) like :search ";
+		$sql .= "or lower(destination_context) like :search ";
+		$sql .= "or lower(destination_accountcode) like :search ";
+		if (permission_exists('outbound_caller_id_select')) {
+			$sql .= "or lower(destination_caller_id_name) like :search ";
+			$sql .= "or destination_caller_id_number like :search ";
+		}
+		$sql .= "or lower(destination_enabled) like :search ";
+		$sql .= "or lower(destination_description) like :search ";
+		$sql .= "or lower(destination_data) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$parameters['destination_type'] = $destination_type;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -152,8 +151,29 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'destination_number', 'asc');
+	$sql = "select * from v_destinations ";
+	$sql .= "where destination_type = :destination_type ";
+	if ($_GET['show'] != "all" || !permission_exists('destination_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "lower(destination_type) like :search ";
+		$sql .= "or lower(destination_number) like :search ";
+		$sql .= "or lower(destination_context) like :search ";
+		$sql .= "or lower(destination_accountcode) like :search ";
+		if (permission_exists('outbound_caller_id_select')) {
+			$sql .= "or lower(destination_caller_id_name) like :search ";
+			$sql .= "or destination_caller_id_number like :search ";
+		}
+		$sql .= "or lower(destination_enabled) like :search ";
+		$sql .= "or lower(destination_description) like :search ";
+		$sql .= "or lower(destination_data) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');

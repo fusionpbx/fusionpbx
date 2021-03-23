@@ -181,6 +181,12 @@
 								if (string.len(field.ping) > 0) then
 									table.insert(xml, [[							<param name="ping" value="]] .. field.ping .. [["/>]]);
 								end
+								if (string.len(field.ping_min) > 0) then
+									table.insert(xml, [[							<param name="ping-min" value="]] .. field.ping_min .. [["/>]]);
+								end
+								if (string.len(field.ping_max) > 0) then
+									table.insert(xml, [[							<param name="ping-max" value="]] .. field.ping_max .. [["/>]]);
+								end
 								if (string.len(field.context) > 0) then
 									table.insert(xml, [[							<param name="context" value="]] .. field.context .. [["/>]]);
 								end

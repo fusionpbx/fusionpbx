@@ -43,7 +43,7 @@
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
     
@@ -57,7 +57,7 @@
     <P235></P235>
     <!--  Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!--  When set to Yes(1), it will override the configured provision path and method. -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
     <P194>0</P194>
     <!--  Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
@@ -567,7 +567,7 @@
     {if isset($grandstream_dial_plan) }
     <P3331>{$grandstream_dial_plan}</P3331>
     {else}
-    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P3331>
+    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P3331>
     {/if}
     
     <!--  Hookflash Duration (X10ms). Default 60. -->

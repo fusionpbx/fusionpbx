@@ -392,7 +392,7 @@
 						if (strlen($dialplan_order) == 0) {
 							$dialplan_order ='333';
 						}
-						$dialplan_context = $_SESSION['context'];
+						$dialplan_context = $_SESSION['domain_name'];
 						$dialplan_continue = 'false';
 						$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
@@ -684,6 +684,11 @@
 				} //end foreach
 			}
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("dialplan_add", "temp");
+			$p->add("dialplan_detail_add", "temp");
+
 		//save to the data
 			$database = new database;
 			$database->app_name = 'outbound_routes';
@@ -698,6 +703,10 @@
 			$dialplans->destination = "database";
 			$dialplans->uuid = $dialplan_uuid;
 			$dialplans->xml();
+
+		//remove the temporary permission
+			$p->delete("dialplan_add", "temp");
+			$p->delete("dialplan_detail_add", "temp");
 
 		//clear the cache
 			$cache = new cache;
@@ -720,12 +729,13 @@
 	$sql = "select * from v_gateways ";
 	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid, gateway ";
+		$sql .= "order by domain_uuid = :domain_uuid DESC, gateway ";
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		
 	}
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$gateways = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -806,50 +816,49 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 
-	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 400px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
-		echo "function update_dialplan_expression() {\n";
-		echo "	if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
-		echo "		document.getElementById('outbound_prefix').value = '';\n";
-		echo "		$('#enter_custom_outbound_prefix_box').slideDown();\n";
-		echo "	} else { \n";
-		echo "		document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\n";
-		echo "		document.getElementById('outbound_prefix').value = '';\n";
-		echo "		$('#enter_custom_outbound_prefix_box').slideUp();\n";
-		echo "	}\n";
-		echo "}\n";
-		echo "function update_outbound_prefix() {\n";
-		echo "	document.getElementById('dialplan_expression').value += '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$' + '\\n';\n";
-		echo "}\n";
-		echo "</script>\n";
-		echo "\n";
-	}
+	echo "<script>\n";
+	echo "var Objs;\n";
+	echo "\n";
+	echo "function changeToInput(obj){\n";
+	echo "	tb=document.createElement('INPUT');\n";
+	echo "	tb.type='text';\n";
+	echo "	tb.name=obj.name;\n";
+	echo "	tb.setAttribute('class', 'formfld');\n";
+	echo "	tb.setAttribute('style', 'width: 400px;');\n";
+	echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+	echo "	tbb=document.createElement('INPUT');\n";
+	echo "	tbb.setAttribute('class', 'btn');\n";
+	echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+	echo "	tbb.type='button';\n";
+	echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+	echo "	tbb.objs=[obj,tb,tbb];\n";
+	echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+	echo "	obj.parentNode.insertBefore(tb,obj);\n";
+	echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+	echo "	obj.parentNode.removeChild(obj);\n";
+	echo "}\n";
+	echo "\n";
+	echo "function Replace(obj){\n";
+	echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+	echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+	echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+	echo "}\n";
+	echo "function update_dialplan_expression() {\n";
+	echo "	if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
+	echo "		document.getElementById('outbound_prefix').value = '';\n";
+	echo "		$('#enter_custom_outbound_prefix_box').slideDown();\n";
+	echo "	} else { \n";
+	echo "		document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\n";
+	echo "		document.getElementById('outbound_prefix').value = '';\n";
+	echo "		$('#enter_custom_outbound_prefix_box').slideUp();\n";
+	echo "	}\n";
+	echo "}\n";
+	echo "function update_outbound_prefix() {\n";
+	echo "	document.getElementById('dialplan_expression').value += '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$' + '\\n';\n";
+	echo "}\n";
+	echo "</script>\n";
+	echo "\n";
+
 
 	//set the onchange
 	$onchange = '';

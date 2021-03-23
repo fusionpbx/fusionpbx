@@ -354,7 +354,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2318></P2318>
+    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -420,7 +420,9 @@
     <!-- # Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
 
     <!-- # Broadsoft Call Park. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -686,7 +688,7 @@
 
     <!-- # Dial Plan Prefix -->
     <!-- # String  -->
-    <P66></P66>
+    <P66>{$grandstream_dial_prefix}</P66>
 
     <!-- # Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
     <!-- # String -->
@@ -695,7 +697,7 @@
 {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
 {else}
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -793,7 +795,7 @@
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1489>5</P1489>
+    <P1489>{$grandstream_distinctive_ringtone_1}</P1489>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
     <!-- # String -->
@@ -803,87 +805,87 @@
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1491>2</P1491>
+    <P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
     <!-- # String -->
-    <P1492>ring3</P1492>
+    <P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
     <!-- # Matching Rule 3 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P1493>3</P1493>
+    <P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 4 -->
     <!-- # String -->
-    <P6716></P6716>
+    <P6716>{$grandstream_distinctive_ringtone_name_4}</P6716>
 
     <!-- # Matching Rule 4 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6717>5</P6717>
+    <P6717>{$grandstream_distinctive_ringtone_4}</P6717>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 5 -->
     <!-- # String -->
-    <P6718></P6718>
+    <P6718>{$grandstream_distinctive_ringtone_name_5}</P6718>
 
     <!-- # Matching Rule 5 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6719>5</P6719>
+    <P6719>{$grandstream_distinctive_ringtone_5}</P6719>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 6 -->
     <!-- # String -->
-    <P6720></P6720>
+    <P6720>{$grandstream_distinctive_ringtone_name_6}</P6720>
 
     <!-- # Matching Rule 6 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P6721>5</P6721>
+    <P6721>{$grandstream_distinctive_ringtone_6}</P6721>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 7 -->
     <!-- # String -->
-    <P26064></P26064>
+    <P26064>{$grandstream_distinctive_ringtone_name_7}</P26064>
 
     <!-- # Matching Rule 7 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26065>5</P26065>
+    <P26065>{$grandstream_distinctive_ringtone_7}</P26065>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 8 -->
     <!-- # String -->
-    <P26066></P26066>
+    <P26066>{$grandstream_distinctive_ringtone_name_8}</P26066>
 
     <!-- # Matching Rule 8 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26067>5</P26067>
+    <P26067>{$grandstream_distinctive_ringtone_8}</P26067>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 9 -->
     <!-- # String -->
-    <P26068></P26068>
+    <P26068>{$grandstream_distinctive_ringtone_name_9}</P26068>
 
     <!-- # Matching Rule 9 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26069>5</P26069>
+    <P26069>{$grandstream_distinctive_ringtone_9}</P26069>
 
     <!-- # Matching Incoming Caller ID. Matching Rule 10 -->
     <!-- # String -->
-    <P26096></P26096>
+    <P26096>{$grandstream_distinctive_ringtone_name_10}</P26096>
 
     <!-- # Matching Rule 10 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
     <!-- # Number: -1, 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-    <P26097>5</P26097>
+    <P26097>{$grandstream_distinctive_ringtone_10}</P26097>
 
     <!-- # Ring Timeout (in seconds). Default is 60 -->
     <!-- # Number: 30 - 3600 -->
@@ -1306,7 +1308,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2418></P2418>
+    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -1645,7 +1647,7 @@
 {if isset($grandstream_dial_plan) }
     <P459>{$grandstream_dial_plan}</P459>
 {else}
-    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -2254,7 +2256,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2518></P2518>
+    <P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -2592,7 +2594,7 @@
 {if isset($grandstream_dial_plan) }
     <P559>{$grandstream_dial_plan}</P559>
 {else}
-    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P559>
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P559>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -2613,7 +2615,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
     <!-- # String -->
-    <P1500></P1500>
+    <P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
     <!-- # Matching Rule 1 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0. -->
@@ -3203,7 +3205,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2618></P2618>
+    <P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -3543,7 +3545,7 @@
 {if isset($grandstream_dial_plan) }
     <P659>{$grandstream_dial_plan}</P659>
 {else}
-    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P659>
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P659>
 {/if}
 
     <!-- # Bypass Dial Plan -->
@@ -4411,18 +4413,18 @@
     <!-- # When set to Yes(1), it will override the configured provision path and method -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P145>0</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
     <!-- # Additional Override DHCP Option. 0 - None,  1 - Option 150,  2 - Option 160. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8337>0</P8337>
+    {if isset($grandstream_dhcp_option_additional_override)}<P8337>{$grandstream_dhcp_option_additional_override}</P8337>{else}<P8337>0</P8337>{/if}
 
     <!-- # Allow DHCP Option 120 to Override SIP Server -->
     <!-- # 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1411>0</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes -->
     <!-- # Number: 0, 1 -->
@@ -4483,7 +4485,7 @@
     <P237></P237>
 {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
@@ -5569,7 +5571,7 @@
 {if $grandstream_call_waiting_ring == "0"}    <P22102>0</P22102>{/if}
 {if $grandstream_call_waiting_ring == "1"}    <P22102>1</P22102>{/if}
 {else}
-<P2202>1</P2202>
+<P22102>1</P22102>
 {/if}
 
     <!-- # Disable Busy Tone on Remote Disconnect. 0 - No, 1 - Yes. Default is 0 -->
@@ -5743,7 +5745,7 @@
     <!-- # Hide BLF Remote Status. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8374>0</P8374>
+    <P8374>{$grandstream_blf_remote_status}</P8374>
 
     <!-- # Show SIP Error Response. 0 - No, 1 - Yes. Default is 1 -->
     <!-- # Number: 0, 1 -->
@@ -6070,17 +6072,21 @@
     <!-- # HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
     <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6779>0</P6779>
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
 
     <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1487>0</P1487>
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
     <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -6284,9 +6290,7 @@
 {if isset($grandstream_wallpaper_url)}
     <P2916>1</P2916>
     <P2917>{$grandstream_wallpaper_url}</P2917>
-{else}
-    <P2916>0</P2916>
-    <P2917></P2917>
+
 {/if}
 
     <!-- # Color Background. Default is #000000. -->
@@ -6298,8 +6302,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver)}
     <P2918>{$grandstream_screensaver}</P2918>
-{else}
-    <P2918>2</P2918>
 {/if}
 
     <!-- # Screensaver Source.  0 - Default, 1 - USB, 2 - Download. Default is 0. -->
@@ -6307,8 +6309,6 @@
     <!-- # Mandatory -->
 {if isset($grandstream_screensaver_source)}
     <P6759>{$grandstream_screensaver_source}</P6759>
-{else}
-    <P6759>0</P6759>
 {/if}
 
     <!-- # Show Date and Time. 0 - No, 1 - Yes. Default is 1 -->
@@ -6431,7 +6431,9 @@
     <!-- # Speaker Ring Volume -->
     <!-- # Number: 0-7. Default is 5. -->
     <!-- # Mandatory -->
-    <P8352>5</P8352>
+{if isset($grandstream_speaker_ring_volume)}
+    <P8352>{$grandstream_speaker_ring_volume}</P8352>
+{/if} 
 
     <!-- # Notification Tone Volume -->
     <!-- # Number: 0-7. Default is 5. -->
@@ -6891,7 +6893,7 @@
     <!-- # P8480 = -->
 
     <!-- ######################################################################## -->
-    <!-- ##          Settings/Extension Boards --->
+    <!-- ##          Settings/Extension Boards -->
     <!-- ######################################################################## -->
 
     <!-- ######################################################################## -->
@@ -6936,8 +6938,6 @@
     <!-- # String -->
     <!-- <P23003></P23003> -->
 
-
-
 {assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 {$start_id=23000}
 {for $exp=1 to 160}
@@ -6955,7 +6955,6 @@
 {/if}
 
 {/for}
-{
 
   </config>
 </gs_provision>

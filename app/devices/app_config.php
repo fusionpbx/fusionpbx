@@ -2152,6 +2152,13 @@
 		$vendors[$y]['functions'][$z]['value'] = "none";
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "5fab2239-b72c-404a-a392-251e22770ec5";
+		$vendors[$y]['functions'][$z]['label'] = "label-phonebook";
+		$vendors[$y]['functions'][$z]['name'] = "phonebook";
+		$vendors[$y]['functions'][$z]['value'] = "phonebook";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 //mitel
 		$y++;
 		$vendors[$y]['uuid'] = "03931359-917e-455b-b4fc-f875c530b79c";

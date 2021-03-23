@@ -48,7 +48,8 @@
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "ivr_menus_sub";
-		$apps[$x]['destinations'][$y]['name'] = "ivr_menus";
+		$apps[$x]['destinations'][$y]['name'] = "ivr_menus_sub";
+		$apps[$x]['destinations'][$y]['sql'] = "select ivr_menu_name as name, ivr_menu_uuid as uuid from v_ivr_menus ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and ivr_menu_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "ivr_menu_extension asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "ivr_menu_name";
@@ -59,24 +60,21 @@
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = 'array';
 		$apps[$x]['destinations'][$y]['label'] = 'ivr_menus_other';
-		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus';
+		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus_other';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 		$z=0;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'top';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-top';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['application'] = 'menu-top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'top';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-top';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'back';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'back';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-back';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'exit';
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'menu-exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'exit';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'menu-exit';
 		//menu-say-phrase
-		//menu-play-sound
 
 	//permission details
 		$y=0;
@@ -122,6 +120,14 @@
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menus_sub_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menus_other_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 
 	//default settings
 		$y=0;
@@ -147,6 +153,38 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/^(\d{2,11})$/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1012fd92-acf9-4ce9-89da-f02d4cd0e794";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "confirm_attempts";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "028bab4e-60e3-48d0-8892-4f678c8b72af";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "inter_digit_timeout";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2000";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Digit timeout in milliseconds";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5829fb7-8bd6-4c42-af16-565882fad7ca";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_failures";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "46dc3c7b-8a8d-4957-b4bd-27708c933af9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_timeouts";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "26984efd-2445-4ac9-b459-bb7bda4217c6";
@@ -223,6 +261,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_dialect";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_voice";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_greet_long";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -236,6 +282,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_exit_sound";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ivr_menu_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

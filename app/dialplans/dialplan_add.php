@@ -80,7 +80,7 @@
 	}
 
 //set the default
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['context']; }
+	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
 
 //add or update data from http post
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {

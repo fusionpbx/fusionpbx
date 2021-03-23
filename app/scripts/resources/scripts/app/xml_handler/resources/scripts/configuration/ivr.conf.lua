@@ -98,6 +98,7 @@
 					ivr_menu_greet_short = row["ivr_menu_greet_short"];
 					ivr_menu_invalid_sound = row["ivr_menu_invalid_sound"];
 					ivr_menu_exit_sound = row["ivr_menu_exit_sound"];
+					ivr_menu_pin_number = row["ivr_menu_pin_number"];
 					ivr_menu_confirm_macro = row["ivr_menu_confirm_macro"];
 					ivr_menu_confirm_key = row["ivr_menu_confirm_key"];
 					ivr_menu_tts_engine = row["ivr_menu_tts_engine"];
@@ -248,6 +249,7 @@
 					table.insert(xml, [[				greet-short="]]..ivr_menu_greet_short..[[" ]]);
 					table.insert(xml, [[				invalid-sound="]]..ivr_menu_invalid_sound..[[" ]]);
 					table.insert(xml, [[				exit-sound="]]..ivr_menu_exit_sound..[[" ]]);
+					table.insert(xml, [[				pin="]]..ivr_menu_pin_number..[[" ]]);
 					table.insert(xml, [[				confirm-macro="]]..ivr_menu_confirm_macro..[[" ]]);
 					table.insert(xml, [[				confirm-key="]]..ivr_menu_confirm_key..[[" ]]);
 					table.insert(xml, [[				tts-engine="]]..ivr_menu_tts_engine..[[" ]]);
@@ -279,9 +281,12 @@
 				--direct dial
 					if (ivr_menu_direct_dial == "true") then
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="set ${cond(${user_exists id $1 ]]..domain_name..[[} == true ? user_exists=true : user_exists=false)}" description="direct dial"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
+						--table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="set ${cond(${user_exists} == true ? user_exists=true : ivr_max_failures=${system(expr ${ivr_max_failures} + 1)})}" description="increment max failures"/>\n]]);
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="playback ${cond(${user_exists} == true ? ]]..sound_prefix..[[ivr/ivr-call_being_transferred.wav : ]]..sound_prefix..[[ivr/ivr-that_was_an_invalid_entry.wav)}" description="play sound"/>\n]]);
-						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="transfer ${cond(${ivr_max_failures} == ]]..ivr_menu_max_failures..[[ ? ]]..ivr_menu_exit_data..[[)}" description="max fail transfer"/>\n]]);
+						--table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="transfer ${cond(${ivr_max_failures} == ]]..ivr_menu_max_failures..[[ ? ]]..ivr_menu_exit_data..[[)}" description="max fail transfer"/>\n]]);
+						if (#ivr_menu_cid_prefix > 0) then
+							table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="set effective_caller_id_name=]]..ivr_menu_cid_prefix..[[#${caller_id_name}" description="direct dial"/>\n]]);
+						end
 						table.insert(xml, [[					<entry action="menu-exec-app" digits="]]..direct_dial_digits..[[" param="transfer ${cond(${user_exists} == true ? $1 XML ]]..domain_name..[[)}" description="direct dial transfer"/>\n]]);
 					end
 

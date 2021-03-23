@@ -278,7 +278,9 @@
 				//prep authorized senders
 					if (sizeof($fax_email_outbound_authorized_senders) > 0) {
 						foreach ($fax_email_outbound_authorized_senders as $sender_num => $sender) {
-							if ($sender == '' || !valid_email($sender)) { unset($fax_email_outbound_authorized_senders[$sender_num]); }
+							if ($sender == '' || (substr_count($sender, '@') == 1 && !valid_email($sender)) || substr_count($sender, '.') == 0) {
+								unset($fax_email_outbound_authorized_senders[$sender_num]);
+							}
 						}
 						$fax_email_outbound_authorized_senders = strtolower(implode(',', $fax_email_outbound_authorized_senders));
 					}
@@ -356,6 +358,12 @@
 					//revoke temp permissions
 						$p->delete('fax_add', 'temp');
 						$p->delete('fax_edit', 'temp');
+
+					//clear the destinations session array
+						if (isset($_SESSION['destinations']['array'])) {
+							unset($_SESSION['destinations']['array']);
+						}
+
 				}
 
 				//get the dialplan_uuid
