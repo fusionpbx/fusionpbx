@@ -826,7 +826,7 @@
 				$prov = new provision;
 				$prov->domain_uuid = $domain_uuid;
 				$template_dir = $prov->template_dir;
-				$files = glob($template_dir.'/'.$device_template.'/*');
+				$files = glob($prov->resolve_template($template_dir, $device_template).'/*');
 			//add file buttons and the file list
 				echo button::create(['type'=>'button','id'=>'button_files','label'=>$text['button-files'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>'show_files()']);
 				echo 		"<select class='formfld' style='display: none; width: auto;' name='target_file' id='target_file' onchange='download(this.value)'>\n";
