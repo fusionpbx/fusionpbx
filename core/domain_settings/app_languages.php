@@ -664,6 +664,27 @@ $text['label-multiple']['pt-br'] = "Multiple";
 $text['label-multiple']['pt-pt'] = "Multiple";
 $text['label-multiple']['ro-ro'] = "Multiple";
 
+$text['select-global']['en-us'] = "Global";
+$text['select-global']['en-gb'] = "Global";
+$text['select-global']['ar-eg'] = "";
+$text['select-global']['de-at'] = "Global"; //copied from de-de
+$text['select-global']['de-ch'] = "Global"; //copied from de-de
+$text['select-global']['de-de'] = "Global";
+$text['select-global']['es-cl'] = "Global";
+$text['select-global']['es-mx'] = "Global"; //copied from es-cl
+$text['select-global']['fr-ca'] = "Global"; //copied from fr-fr
+$text['select-global']['fr-fr'] = "Global";
+$text['select-global']['he-il'] = "כללי";
+$text['select-global']['it-it'] = "Globale";
+$text['select-global']['nl-nl'] = "Globaal";
+$text['select-global']['pl-pl'] = "Globalny";
+$text['select-global']['pt-br'] = "Global"; //copied from pt-pt
+$text['select-global']['pt-pt'] = "Global";
+$text['select-global']['ro-ro'] = "Global";
+$text['select-global']['ru-ru'] = "Глобальный";
+$text['select-global']['sv-se'] = "Global";
+$text['select-global']['uk-ua'] = "Global";
+
 $text['header-settings']['en-us'] = "Settings";
 $text['header-settings']['en-gb'] = "Settings";
 $text['header-settings']['ar-eg'] = "";
