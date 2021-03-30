@@ -151,33 +151,6 @@
 					$p->delete('dialplan_edit', 'temp');
 			}
 
-			public function restore_advanced_xml() {
-				$switch_dialplan_dir = $this->switch_dialplan_dir;
-				if (is_dir($switch_dialplan_dir)) {
-					//copy resources/templates/conf to the freeswitch conf dir
-						if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
-							$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
-						}
-						else {
-							$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
-						}
-					//get the contents of the dialplan/default.xml
-						$file_default_path = $src_dir.'/dialplan/default.xml';
-						$file_default_contents = file_get_contents($file_default_path);
-					//prepare the file contents and the path
-						//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-							$file_default_contents = str_replace("{v_domain}", $_SESSION['domain_name'], $file_default_contents);
-						//set the file path
-							$file_path = $switch_dialplan_dir.'/'.$_SESSION['domain_name'].'.xml';
-					//write the default dialplan
-						$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
-						fwrite($fh, $file_default_contents);
-						fclose($fh);
-					//set the message
-						$this->result['dialplan']['restore']['msg'] = "Default Restored";
-				}
-			}
-
 			private function app_uuid_exists() {
 				$sql = "select count(*) from v_dialplans ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -204,13 +177,54 @@
 				//set the row id
 					$x = 0;
 
+				//get the array of xml files
+					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+
+				//build the dialplan xml array
+					/*
+					foreach ($xml_list as $xml_file) {
+						$xml_string = file_get_contents($xml_file);
+
+						//prepare the xml
+						if (strlen($xml_string) > 0) {
+							//replace the variables
+								$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
+								$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
+								$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
+							//convert the xml string to an xml object
+								$xml = simplexml_load_string($xml_string);
+							//convert to json
+								$json = json_encode($xml);
+							//convert to an array
+								$dialplan = json_decode($json, true);
+						}
+						if (strlen($this->json) > 0) {
+							//convert to an array
+								$dialplan = json_decode($json, true);
+						}
+						$_SESSION['dialplans']['default'][] = $dialplan;
+					}
+					*/
+
+				//create the database object
+					$database = new database;
+
 				//loop through each domain
 					foreach ($domains as $domain) {
+						//debug info
+							//echo "domain name ".$domain['domain_name']."\n";
 
-						//get the array of xml files
-							$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+						//determine if the dialplan already exists
+							$sql = "select app_uuid from v_dialplans ";
+							$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$sql .= "and app_uuid is not null ";
+							$parameters['domain_uuid'] = $domain['domain_uuid'];
+							//$database = new database;
+							$app_uuids = $database->select($sql, $parameters, 'all');
+							unset($parameters);
 
 						//process the dialplan xml files
+							//foreach ($_SESSION['dialplans']['default'] as $dialplan) {
 							foreach ($xml_list as $xml_file) {
 								//get the xml string
 									$xml_string = file_get_contents($xml_file);
@@ -221,13 +235,16 @@
 											$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
 											$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
 											$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
-											$xml_string = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $xml_string);
+
 										//convert the xml string to an xml object
 											$xml = simplexml_load_string($xml_string);
+
 										//convert to json
 											$json = json_encode($xml);
+
 										//convert to an array
 											$dialplan = json_decode($json, true);
+
 									}
 									if (strlen($this->json) > 0) {
 										//convert to an array
@@ -244,17 +261,18 @@
 									}
 
 								//determine if the dialplan already exists
-									$sql = "select count(*) from v_dialplans ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and app_uuid = :app_uuid ";
-									$parameters['domain_uuid'] = $domain['domain_uuid'];
-									$parameters['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
-									$database = new database;
-									$app_uuid_exists = $database->select($sql, $parameters, 'column') > 0 ? true : false;
-									unset($parameters);
+									$app_uuid_exists = false;
+									foreach($app_uuids as $row) {
+										if ($dialplan['extension']['@attributes']['app_uuid'] == $row['app_uuid']) {
+											$app_uuid_exists = true;
+										}
+									}
 
 								//check if the dialplan exists
 									if (!$app_uuid_exists) {
+										
+										//debug info
+											//echo "	dialplan name ".$dialplan['extension']['@attributes']['name']." not found\n";
 
 										//dialplan global
 											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
@@ -419,7 +437,7 @@
 
 						//save the data
 							if (is_array($array)) {
-								$database = new database;
+								//$database = new database;
 								$database->app_name = 'dialplans';
 								$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 								$database->save($array);
@@ -586,7 +604,7 @@
 										$sql .= "where dialplan_context = :dialplan_context ";
 									}
 									else {
-										$sql .= "where (dialplan_context = :dialplan_context or dialplan_context = '\${domain_name}') ";
+										$sql .= "where (dialplan_context = :dialplan_context or dialplan_context = '\${domain_name}' or dialplan_context = 'global') ";
 									}
 									$sql .= "and dialplan_enabled = 'true' ";
 									$parameters['dialplan_context'] = $this->context;
@@ -627,7 +645,7 @@
 									$sql .= "and p.dialplan_context = :dialplan_context \n";
 								}
 								else {
-									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}') \n";
+									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}' or dialplan_context = 'global') \n";
 								}
 								$sql .= "and p.dialplan_enabled = 'true' \n";
 								$parameters['dialplan_context'] = $this->context;
