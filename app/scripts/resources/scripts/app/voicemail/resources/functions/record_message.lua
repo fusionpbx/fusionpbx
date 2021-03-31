@@ -281,7 +281,7 @@
 			if (transcribe_provider == "google") then
 				local api_key = settings:get('voicemail', 'google_key', 'text') or '';
 				local transcription_server = settings:get('voicemail', 'google_url', 'text') or '';
-
+				transcribe_alternate_language = settings:get('voicemail', 'transcribe_alternate_language', 'text') or 'es-US';
 				if (api_key ~= '') then
 					transcribe_cmd = [[sox ]]..file_path..[[ ]]..file_path..[[.flac trim 0 00:59 && echo "{ 'config': { 'languageCode': ']]..transcribe_language..[[', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': ']]..transcribe_alternate_language..[[' }, 'audio': { 'content': '`base64 -w 0 ]]..file_path..[[.flac`' } }" | curl -X POST -H "Content-Type: application/json" -d @- "]]..transcription_server..[[:recognize?key=]]..api_key..[[" && rm -f ]]..file_path..[[.flac]]
 				end
