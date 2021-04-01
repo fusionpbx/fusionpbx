@@ -1033,42 +1033,44 @@
 					</div>
 					<div id='domains_list'>
 						{foreach $domains as $row}
-							{*//alternate background colors of inactive domains *}
-								{if $background_color == $domain_selector_background_color_1}
-									{$background_color=$domain_selector_background_color_2}
-								{else}
-									{$background_color=$domain_selector_background_color_1}
-								{/if}
-							{*//set active domain color *}
-								{if $domain_active_background_color != ''}
-									{if $row.domain_uuid == $domain_uuid}{$background_color=$domain_active_background_color}{/if}
-								{/if}
-							{*//active domain text hover color *}
-								{if $settings.theme.domain_active_text_color_hover != '' && $row.domain_uuid == $domain_uuid}
-									<div id='{$row.domain_name}' class='domains_list_item_active' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-								{elseif $settings.theme.domain_inactive_text_color_hover != '' && $row.domain_uuid != $domain_uuid}
-									<div id='{$row.domain_name}' class='domains_list_item_inactive' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-								{else}
-									<div id='{$row.domain_name}' class='domains_list_item' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
-								{/if}
-							{*//domain link *}
-								<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}>{$row.domain_name}</a>
-							{*//domain description *}
-								{if $row.domain_description != ''}
-									{*//active domain description text color *}
-										{if $settings.theme.domain_active_desc_text_color != '' && $row.domain_uuid == $domain_uuid}
-											<span class='domain_active_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-									{*//inactive domains description text color *}
-										{elseif $settings.theme.domain_inactive_desc_text_color != '' && $row.domain_uuid != $domain_uuid}
-											<span class='domain_inactive_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-									{*//default domain description text color *}
-										{else}
-											<span class='domain_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
-										{/if}
-								{/if}
-							</div>
-							{$ary_domain_names[]=$row.domain_name}
-							{$ary_domain_descs[]=$row.domain_description|replace:'"':'\"'}
+							{if $row.domain_enabled}
+								{*//alternate background colors of inactive domains *}
+									{if $background_color == $domain_selector_background_color_1}
+										{$background_color=$domain_selector_background_color_2}
+									{else}
+										{$background_color=$domain_selector_background_color_1}
+									{/if}
+								{*//set active domain color *}
+									{if $domain_active_background_color != ''}
+										{if $row.domain_uuid == $domain_uuid}{$background_color=$domain_active_background_color}{/if}
+									{/if}
+								{*//active domain text hover color *}
+									{if $settings.theme.domain_active_text_color_hover != '' && $row.domain_uuid == $domain_uuid}
+										<div id='{$row.domain_name}' class='domains_list_item_active' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
+									{elseif $settings.theme.domain_inactive_text_color_hover != '' && $row.domain_uuid != $domain_uuid}
+										<div id='{$row.domain_name}' class='domains_list_item_inactive' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
+									{else}
+										<div id='{$row.domain_name}' class='domains_list_item' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
+									{/if}
+								{*//domain link *}
+									<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}>{$row.domain_name}</a>
+								{*//domain description *}
+									{if $row.domain_description != ''}
+										{*//active domain description text color *}
+											{if $settings.theme.domain_active_desc_text_color != '' && $row.domain_uuid == $domain_uuid}
+												<span class='domain_active_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
+										{*//inactive domains description text color *}
+											{elseif $settings.theme.domain_inactive_desc_text_color != '' && $row.domain_uuid != $domain_uuid}
+												<span class='domain_inactive_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
+										{*//default domain description text color *}
+											{else}
+												<span class='domain_list_item_description' title="{$row.domain_description}"> - {$row.domain_description}</span>
+											{/if}
+									{/if}
+								</div>
+								{$ary_domain_names[]=$row.domain_name}
+								{$ary_domain_descs[]=$row.domain_description|replace:'"':'\"'}
+							{/if}
 						{/foreach}
 					</div>
 
