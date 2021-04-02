@@ -308,7 +308,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P243>0</P243>
+<P243>1</P243>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -852,7 +852,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P743>0</P743>
+<P743>1</P743>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -1381,7 +1381,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P4043>0</P4043>
+<P4043>1</P4043>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -1911,7 +1911,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P4044>0</P4044>
+<P4044>1</P4044>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
