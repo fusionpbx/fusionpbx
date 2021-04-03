@@ -149,7 +149,7 @@
     <!-- # Unregister On Reboot. 0 - No, 1 - Yes, 2 - Instance. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P81>0</P81>
+    <P81>1</P81>
 
     <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
     <!-- # Number: 1 - 64800 -->
@@ -929,19 +929,35 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2344></P2344>
+    {if isset($account.1.password)}
+        <P2344>*78</P2344>
+    {else}
+        <P2344></P2344>
+    {/if}
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2345></P2345>
+    {if isset($account.1.password)}
+        <P2345>*79</P2345>
+    {else}
+        <P2345></P2345>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26013></P26013>
+    {if isset($account.1.password)}
+    	<P26013>*72</P26013>
+    {else}
+    	<P26013></P26013>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26014></P26014>
+    {if isset($account.1.password)}
+    	<P26014>*73</P26014>
+    {else}
+    	<P26014></P26014>
+    {/if}
 
     <!-- #Call Forward Busy - On -->
     <!-- # String -->
@@ -1878,19 +1894,35 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2444></P2444>
+    {if isset($account.2.password)}
+        <P2444>*78</P2444>
+    {else}
+	      <P2444></P2444>
+    {/if}
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2445></P2445>
+    {if isset($account.2.password)}
+        <P2445>*79</P2445>
+    {else}
+        <P2445></P2445>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26113></P26113>
+    {if isset($account.2.password)}
+        <P26113>*72</P26113>
+    {else}
+        <P26113></P26113>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26114></P26114>
+    {if isset($account.2.password)}
+        <P26114>*73</P26114>
+    {else}
+        <P26114></P26114>
+    {/if}
 
     <!-- #Call Forward Busy - On -->
     <!-- # String -->
@@ -2826,19 +2858,35 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2544></P2544>
+    {if isset($account.3.password)}
+        <P2544>*78</P2544>
+    {else}
+        <P2544></P2544>
+    {/if}
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2545></P2545>
+    {if isset($account.3.password)}
+        <P2545>*79</P2545>
+    {else}
+        <P2545></P2545>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26213></P26213>
+    {if isset($account.3.password)}
+        <P26213>*72</P26213>
+    {else}
+        <P26213></P26213>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26214></P26214>
+    {if isset($account.3.password)}
+        <P26214>*73</P26214>
+    {else}
+        <P26214></P26214>
+    {/if}
 
     <!-- #Call Forward Busy - On -->
     <!-- # String -->
@@ -3777,19 +3825,35 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2644></P2644>
+    {if isset($account.4.password)}
+        <P2644>*78</P2644>
+    {else}
+        <P2644></P2644>
+    {/if}
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2645></P2645>
+    {if isset($account.4.password)}
+        <P2645>*79</P2645>
+    {else}
+        <P2645></P2645>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26313></P26313>
+    {if isset($account.4.password)}
+        <P26313>*72</P26313>
+    {else}
+        <P26313></P26313>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26314></P26314>
+    {if isset($account.4.password)}
+        <P26314>*73</P26314>
+    {else}
+        <P26314></P26314>
+    {/if}
 
     <!-- #Call Forward Busy - On -->
     <!-- # String -->
@@ -4725,19 +4789,35 @@
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
-    <P2744></P2744>
+    {if isset($account.5.password)}
+        <P2744>*78</P2744>
+    {else}
+        <P2744></P2744>
+    {/if}
 
     <!-- #Do Not Disturb (DND) - Off -->
     <!-- # String -->
-    <P2745></P2745>
+    {if isset($account.5.password)}
+        <P2745>*79</P2745>
+    {else}
+        <P2745></P2745>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - On -->
     <!-- # String -->
-    <P26413></P26413>
+    {if isset($account.5.password)}
+        <P26413>*72</P26413>
+    {else}
+        <P26413></P26413>
+    {/if}
 
     <!-- #Call Forward Unconditionally (All) - Off -->
     <!-- # String -->
-    <P26414></P26414>
+    {if isset($account.5.password)}
+        <P26414>*73</P26414>
+    {else}
+        <P26414></P26414>
+    {/if}
 
     <!-- #Call Forward Busy - On -->
     <!-- # String -->
@@ -7083,7 +7163,7 @@
     <!-- # When set to Yes(1), it will override the configured NTP server -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P144>1</P144>
+    <P144>0</P144>
 
     <!-- # Time Zone -->
 
@@ -7162,7 +7242,7 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    <P143>0</P143>
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->
