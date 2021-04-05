@@ -495,11 +495,11 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Pickup softkey  0=Disabled - 1=Enabled ";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "eabcfacc-64be-457a-ad7f-1d53e27e9eaf";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5b0c8d4e-85b0-4595-b4a3-f543d2ba084f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_pickup_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_1_precede";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Pick up softkey  0=Disabled - 1=Enabled ";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "If 0, soft key is positioned in the first empty space from the left. If 1, the soft key is displayed BEFORE (to the left of) the first default soft key. default = 0";
 ?>
