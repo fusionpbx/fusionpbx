@@ -323,7 +323,7 @@
 						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
 						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 						if (strlen($destination_cid_name_prefix) > 0) {
-							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"true\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"false\"/>\n";
 						}
 						if (strlen($destination_record) > 0 && $destination_record == 'true') {
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
@@ -429,7 +429,7 @@
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
-								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "false";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
 
