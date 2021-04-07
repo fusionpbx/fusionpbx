@@ -167,9 +167,7 @@
 				$dialplan_detail_order = $dialplan_detail_order + 10;
 
 				//action fifo
-				//if (strlen($pin_number) > 0) { $pin_number = "+".$pin_number; }
-				//if (strlen($flags) > 0) { $flags = "+{".$flags."}"; }
-				//$queue_action_data = $extension_name."@\${domain_name}".$profile.$flags.$pin_number;
+				$queue_action_data = $queue_name." in";
 				$array["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 				$array["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 				$array["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -194,7 +192,7 @@
 			//	</condition>
 			//</extension>
 			//--------------------------------------------------------
-			$queue_name = $extension_name."_agent@\${domain_name}";
+			$queue_name = $extension_name."@\${domain_name}";
 			if (is_uuid($dialplan_uuid)) {
 
 				//set the dialplan detial order to zero
@@ -208,7 +206,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$agent_queue_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
 				if (strlen($agent_login_logout_extension_number) > 0) {
-					$array["dialplan_details"][$y]["dialplan_detail_break"] = $dialplan_detail_break;
+					$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				}
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 				$array["dialplan_details"][$y]["dialplan_detail_group"] = '2';
@@ -262,12 +260,16 @@
 		// agent or member login / logout
 		if (strlen($agent_login_logout_extension_number) > 0) {
 			//--------------------------------------------------------
-			// Agent Queue [FIFO out]
-			//<extension name="Agent_Wait">
-			//	<condition field="destination_number" expression="^7010\$">
-			//		<action application="set" data="fifo_music=$${hold_music}"/>
-			//		<action application="answer"/>
-			//		<action application="fifo" data="myq out wait"/>
+			// Agent Queue [FIFO login logout]
+			//<extension name="Agent_login_logout">
+			//	<condition field="destination_number" expression="^7012\$">
+			//		<action application="set" data="queue_name=myq" inline="true"/>
+			//		<action application="set" data="user_name=${caller_id_number}@${domain_name}" inline="true"/>
+			//		<action application="set" data="fifo_simo=1" inline="true"/>
+			//		<action application="set" data="fifo_timeout=10" inline="true"/>
+			//		<action application="set" data="fifo_lag=10" inline="true"/>
+			//		<action application="set" data="pin_number=" inline="true"/>
+			//		<action application="lua" data="fifo_member.lua"/>
 			//	</condition>
 			//</extension>
 			//--------------------------------------------------------
@@ -284,6 +286,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = '^'.$agent_login_logout_extension_number.'$';
 				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
+				$array["dialplan_details"][$y]["dialplan_detail_break"] = 'on-true';
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 				$array["dialplan_details"][$y]["dialplan_detail_group"] = '3';
 				$y++;
@@ -381,7 +384,7 @@
 				$array["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 				$array["dialplan_details"][$y]["dialplan_detail_type"] = "lua";
 				$array["dialplan_details"][$y]["dialplan_detail_data"] = "fifo_member.lua";
-				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+				$array["dialplan_details"][$y]["dialplan_detail_inline"] = "";
 				$array["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 				$array["dialplan_details"][$y]["dialplan_detail_group"] = '3';
 				$y++;
