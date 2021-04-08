@@ -757,6 +757,27 @@ $text['label-911']['ru-ru'] = "911 Служба Спасения";
 $text['label-911']['sv-se'] = "911 Nödfall";
 $text['label-911']['uk-ua'] = "911";
 
+$text['label-988']['en-us'] = "988 National Suicide Prevention Lifeline";
+$text['label-988']['en-gb'] = "988 National Suicide Prevention Lifeline";
+$text['label-988']['ar-eg'] = "988";
+$text['label-988']['de-at'] = "988 Nationale Rettungsleine für Suizidprävention (USA)";
+$text['label-988']['de-ch'] = "988 Nationale Rettungsleine für Suizidprävention (USA)";
+$text['label-988']['de-de'] = "988 Nationale Rettungsleine für Suizidprävention (USA)";
+$text['label-988']['es-cl'] = "988 Línea de vida nacional para la prevención del suicidio";
+$text['label-988']['es-mx'] = "988 Línea de vida nacional para la prevención del suicidio";
+$text['label-988']['fr-ca'] = "988 Ligne de vie nationale pour la prévention du suicide";
+$text['label-988']['fr-fr'] = "988 Ligne de vie nationale pour la prévention du suicide";
+$text['label-988']['he-il'] = "988";
+$text['label-988']['it-it'] = "988 Linea di vita nazionale per la prevenzione del suicidio";
+$text['label-988']['nl-nl'] = "988 Nationale levenslijn voor zelfmoordpreventie";
+$text['label-988']['pl-pl'] = "988 National Suicide Prevention Lifeline";
+$text['label-988']['pt-br'] = "988 National Suicide Prevention Lifeline";
+$text['label-988']['pt-pt'] = "988";
+$text['label-988']['ro-ro'] = "988";
+$text['label-988']['ru-ru'] = "988";
+$text['label-988']['sv-se'] = "988";
+$text['label-988']['uk-ua'] = "988";
+
 $text['label-8d']['en-us'] = "8 Digits";
 $text['label-8d']['en-gb'] = "8 Digits";
 $text['label-8d']['ar-eg'] = "";
