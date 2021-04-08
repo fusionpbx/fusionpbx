@@ -1,6 +1,6 @@
 <settings>
 <phone-settings>
-<update_policy>auto_update</update_policy>
+<update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
 <firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$mac}&amp;filename_firmware-{$mac}.xml</firmware_status>
 <date_us_format>off</date_us_format>
 <time_24_format>on</time_24_format>
