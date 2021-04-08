@@ -81,6 +81,11 @@
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
+				$pattern = '/\s+as\s+/i';
+				if (preg_match($pattern, $field_name)){
+					$field_pattern = preg_split ($pattern, $field_name);
+					$field_name = $field_pattern[1];
+				}
 				if (isset($_REQUEST[$field_name])) {
 					$$field_name = check_str($_REQUEST[$field_name]);
 				}
@@ -141,6 +146,11 @@
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
+			$pattern = '/\s+as\s+/i';
+			if (preg_match($pattern, $field_name)){
+				$field_pattern = preg_split ($pattern, $field_name);
+				$field_name = $field_pattern[0];
+			}
 			if (isset($$field_name)) {
 				$$field_name = check_str($_REQUEST[$field_name]);
 				if (strlen($$field_name) > 0) {
@@ -307,6 +317,11 @@
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
+			$pattern = '/\s+as\s+/i';
+			if (preg_match($pattern, $field_name)){
+				$field_pattern = preg_split ($pattern, $field_name);
+				$field_name = $field_pattern[1];
+			}
 			if (isset($$field_name)) {
 				$param .= "&".$field_name."=".escape($$field_name);
 			}
