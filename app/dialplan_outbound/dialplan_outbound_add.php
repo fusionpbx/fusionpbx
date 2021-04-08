@@ -263,6 +263,10 @@
 							$label = $text['label-911'];
 							$abbrv = "911";
 							break;
+						case "(^988$)":
+							$label = $text['label-988'];
+							$abbrv = "988";
+							break;
 						case "^9(\d{3})$":
 							$label = $text['label-9d3'];
 							$abbrv = "9.3d";
@@ -308,15 +312,27 @@
 	
 						if ($gateway_type == "gateway") {
 							$dialplan_name = $gateway_name.".".$abbrv;
-							$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."18002738255";
+							} else {
+								$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
+							}
 						}
 						if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
 							$extension_2_name = $gateway_2_id.".".$abbrv;
-							$bridge_2_data .= "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."18002738255";
+							} else {
+								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
+							}
 						}
 						if (strlen($gateway_3_name) > 0 && $gateway_3_type == "gateway") {
 							$extension_3_name = $gateway_3_id.".".$abbrv;
-							$bridge_3_data .= "sofia/gateway/".$gateway_3_id."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_3_data = "sofia/gateway/".$gateway_3_id."/".$prefix_number."18002738255";
+							} else {
+								$bridge_3_data = "sofia/gateway/".$gateway_3_id."/".$prefix_number."\$1";
+							}
 						}
 						if ($gateway_type == "freetdm") {
 							$dialplan_name = "freetdm.".$abbrv;
@@ -1074,6 +1090,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(411)\$'>".$text['label-411']."</option>\n";
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
+	echo "  <option value='(^988\$)'>".$text['label-988']."</option>\n";
 	echo "	<option value='^1?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
