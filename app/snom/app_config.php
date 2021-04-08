@@ -159,6 +159,11 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the Expansion Module firmware. Download from https://service.snom.com/display/wiki/How+to+update+firmware+on+a+D3%2C+D7+Expansion+Module+-+UXM";
 		$y++;
-
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d9ea738d-33a7-4bad-9768-fb4b1d1e7e8c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_update_policy";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "auto_update";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "valid options are: auto_update, ask_for_update, settings_only, never_update. default is auto_update.";
 ?>
