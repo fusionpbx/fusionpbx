@@ -736,8 +736,8 @@ $text['description-conditions_and_actions']['ru-ru'] = "Следующие ус�
 $text['description-conditions_and_actions']['sv-se'] = "Följande villkor, åtgärder och anti-handlingar används i nummerplanen för att styra ett samtals flöde. Varje steg bearbetas i ordning tills du når steget dialplan_detail_tag som berättar vilken åtgärd som ska utföras. Du är inte begränsad till endast ett villkor eller åtgärd dialplan_detail_tag för en viss anknytning.";
 $text['description-conditions_and_actions']['uk-ua'] = "";
 
-$text['description-agent_queue_extension']['en-us'] = "The extension number for the Agent FIFO Queue. This is the holding pattern for agents waiting to service calls in the caller FIFO queue.";
-$text['description-agent_queue_extension']['en-gb'] = "The extension number for the Agent FIFO Queue. This is the holding pattern for agents waiting to service calls in the caller FIFO queue.";
+$text['description-agent_queue_extension']['en-us'] = "The extension number for agents to dial to either wait for a call to enter the queue, or pick up a call that is in queue. The agent will hear hold music until a caller enters the queue and the call is connected.";
+$text['description-agent_queue_extension']['en-gb'] = "The extension number for agents to dial to either wait for a call to enter the queue, or pick up a call that is in queue. The agent will hear hold music until a caller enters the queue and the call is connected.";
 $text['description-agent_queue_extension']['ar-eg'] = "";
 $text['description-agent_queue_extension']['de-at'] = "Die Nebenstelle für die Agent FIFO Warteschlange."; //copied from de-de
 $text['description-agent_queue_extension']['de-ch'] = "Die Nebenstelle für die Agent FIFO Warteschlange."; //copied from de-de
@@ -757,8 +757,8 @@ $text['description-agent_queue_extension']['ru-ru'] = "Внутренний но
 $text['description-agent_queue_extension']['sv-se'] = "Anknytningsnumret för Agent FIFO Queue. Detta är väntplatsen för agenter som väntar på att betjäna samtal i den uppringande FIFO-köen.";
 $text['description-agent_queue_extension']['uk-ua'] = "";
 
-$text['description-agent_loginout_extension']['en-us'] = "Agents use this extension number to login or logout of the Queue. After logging into the agent will be ready to receive calls from the Queue.";
-$text['description-agent_loginout_extension']['en-gb'] = "Agents use this extension number to login or logout of the Queue. After logging into the agent will be ready to receive calls from the Queue.";
+$text['description-agent_loginout_extension']['en-us'] = "Agents use this extension number to login or logout of the Queue. At the prompt, dial 1 to login and 2 to logout. After logging into the agent will be ready to receive calls from the Queue.";
+$text['description-agent_loginout_extension']['en-gb'] = "Agents use this extension number to login or logout of the Queue. At the prompt, dial 1 to login and 2 to logout. After logging into the agent will be ready to receive calls from the Queue.";
 $text['description-agent_loginout_extension']['ar-eg'] = "";
 $text['description-agent_loginout_extension']['de-at'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen."; //copied from de-de
 $text['description-agent_loginout_extension']['de-ch'] = "Der Agent verwendet diese Nebenstelle um sich bei der Warteschlange an oder ab zu melden. Nach der Anmeldung kann der Agent Anrufe aus der Warteschlange entgegennehmen."; //copied from de-de
