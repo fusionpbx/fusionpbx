@@ -370,7 +370,7 @@
 
 		<!-- Accept Incoming SIP from Proxy Only  -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.incomingServer">No</item>
+		<item name="account.{$line}.sip.validate.incomingServer">Yes</item>
 
 		<!-- Authenticate Incoming INVITE -->
 		<!-- Yes, No -->
