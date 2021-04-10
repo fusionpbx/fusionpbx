@@ -1,0 +1,31 @@
+On branch 4.2
+Your branch is up-to-date with 'origin/4.2'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   app/backup/app_config.php
+        modified:   app/backup/app_languages.php
+        modified:   app/conferences_active/conference_exec.php
+        modified:   app/conferences_active/conference_interactive.php
+        modified:   app/conferences_active/conference_interactive_inc.php
+        modified:   app/devices/device_edit.php
+        modified:   app/dialplan/resources/switch/conf/dialplan/030_is_local.xml
+        modified:   app/fax/fax_log_delete.php
+        modified:   app/fax/fax_logs.php
+        modified:   app/provision/resources/classes/provision.php
+        modified:   resources/templates/provision/cisco/spa502g/{$mac}.xml
+        modified:   resources/templates/provision/polycom/5.x/{$mac}.cfg
+        modified:   resources/templates/provision/yealink/cp860/y000000000037.cfg
+        modified:   resources/templates/provision/yealink/cp860/{$mac}.cfg
+        modified:   themes/default/images/logo.png
+        modified:   themes/default/images/logo_header.png
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        app/cp_cc_report/
+        app/devices/sync_device
+        app/provision/phoneApps/
+        resources/chartjs/
+        resources/php_xlswriter/
