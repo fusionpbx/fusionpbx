@@ -91,6 +91,7 @@ if (!class_exists('xml_cdr')) {
 		 * cdr fields in the database schema
 		 */
 		public function fields() {
+			$pattern = '/\s+as\s+/i';
 
 			$this->fields[] = "xml_cdr_uuid";
 			$this->fields[] = "domain_uuid";
@@ -154,9 +155,16 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "sip_hangup_disposition";
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
-					$this->fields[] = $field;
+					if (preg_match($pattern, $field)){
+						$field_pattern = preg_split ($pattern, $field);
+						$field = $field_pattern[0];
+					}
+					if (!in_array($field, $this->fields)){
+						$this->fields[] = $field;
+					}
 				}
 			}
+			$this->fields = array_unique($this->fields);
 		}
 
 		/**
@@ -394,15 +402,24 @@ if (!class_exists('xml_cdr')) {
 							foreach ($_SESSION['cdr']['field'] as $field) {
 								$fields = explode(",", $field);
 								$field_name = end($fields);
-								$this->fields[] = $field_name;
+								$pattern = '/\s+as\s+/i';
+								if (preg_match($pattern, $field_name)){
+									$field_pattern = preg_split ($pattern, $field_name);
+									$field_name = $field_pattern[0];
+								}
+								if (!in_array($field_name, $this->fields))
+									$this->fields[] = $field_name;
 								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
 								}
 								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
 								}
 								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+									if (is_null($this->array[$key][$field_name]))
+										$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
 								}
 							}
 						}
