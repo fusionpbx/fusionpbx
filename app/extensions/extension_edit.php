@@ -102,6 +102,7 @@
 			$directory_last_name = $_POST["directory_last_name"];
 			$directory_visible = $_POST["directory_visible"];
 			$directory_exten_visible = $_POST["directory_exten_visible"];
+			$max_registrations = $_POST["max_registrations"];
 			$limit_max = $_POST["limit_max"];
 			$limit_destination = $_POST["limit_destination"];
 			//$device_uuid = $_POST["device_uuid"];
@@ -420,6 +421,10 @@
 										$array["extensions"][$i]["directory_visible"] = $directory_visible;
 										$array["extensions"][$i]["directory_exten_visible"] = $directory_exten_visible;
 									}
+									if (!permission_exists("extension_max_registrations") && $action == "add") {
+										$max_registrations = $_SESSION['extension']['max_registrations']['numeric'];
+									}
+									$array["extensions"][$i]["max_registrations"] = $max_registrations;
 									if (permission_exists("extension_limit")) {
 										$array["extensions"][$i]["limit_max"] = $limit_max;
 										$array["extensions"][$i]["limit_destination"] = $limit_destination;
@@ -717,6 +722,7 @@
 			$directory_last_name = $row["directory_last_name"];
 			$directory_visible = $row["directory_visible"];
 			$directory_exten_visible = $row["directory_exten_visible"];
+			$max_registrations = $row["max_registrations"];
 			$limit_max = $row["limit_max"];
 			$limit_destination = $row["limit_destination"];
 			$user_context = $row["user_context"];
@@ -867,6 +873,7 @@
 
 //set the defaults
 	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
+	if (strlen($max_registrations) == 0) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
@@ -1559,6 +1566,19 @@
 		echo "<br />\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists("extension_max_registrations")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-max_registrations']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='max_registrations' maxlength='255' value=\"".escape($max_registrations)."\">\n";
+		echo "<br />\n";
+		echo $text['description-max_registrations']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
