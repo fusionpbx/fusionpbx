@@ -421,10 +421,14 @@
 										$array["extensions"][$i]["directory_visible"] = $directory_visible;
 										$array["extensions"][$i]["directory_exten_visible"] = $directory_exten_visible;
 									}
-									if (!permission_exists("extension_max_registrations") && $action == "add") {
-										$max_registrations = $_SESSION['extension']['max_registrations']['numeric'];
+									if (permission_exists("extension_max_registrations")) {
+										$array["extensions"][$i]["max_registrations"] = $max_registrations;
 									}
-									$array["extensions"][$i]["max_registrations"] = $max_registrations;
+									else {
+										if ($action == "add") {
+											$array["extensions"][$i]["max_registrations"] = $_SESSION['extension']['max_registrations']['numeric'];
+										}
+									}
 									if (permission_exists("extension_limit")) {
 										$array["extensions"][$i]["limit_max"] = $limit_max;
 										$array["extensions"][$i]["limit_destination"] = $limit_destination;
