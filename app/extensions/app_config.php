@@ -311,7 +311,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default value to set whether to record inbound, outbound, or all calls.";
 
 	//cache details
-		$apps[$x]['cache']['key'] = "directory.\${extension}@\${user_context}";
+		$apps[$x]['cache']['key'] = "directory.\${extension}@\${domain_name}";
 
 	//schema details
 		$y=0;
