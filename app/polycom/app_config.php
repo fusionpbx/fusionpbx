@@ -502,4 +502,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "If 0, soft key is positioned in the first empty space from the left. If 1, the soft key is displayed BEFORE (to the left of) the first default soft key. default = 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d25fc66f-f363-4322-8efa-80b438a9a64f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_subscribe_expires";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3600";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Subscribe expire time in seconds. Default 3600";
+
 ?>
