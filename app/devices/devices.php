@@ -416,7 +416,7 @@
 				echo $text['label-'.$row['device_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-link'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
+			echo "	<td class='no-link'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a> - <a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".$text['label-user_agent']."</a>&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
 			if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
