@@ -225,7 +225,7 @@
 		<!-- Ring Timeout. (10-300, default is 60 seconds) -->
 		<P185>60</P185>
 		<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-		<P4330>60</P4330>
+		<P4330>300</P4330>
 		<!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared line -->
 		<P4395>1</P4395>
 		<!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
@@ -400,7 +400,7 @@
 		<!-- Ring Timeout. (10-300, default is 60 seconds) -->
 		<P816>60</P816>
 		<!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-		<P4331>60</P4331>
+		<P4331>300</P4331>
 		<!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared Line -->
 		<P4396>1</P4396>
 		<!-- Delayed Call Forward Wait Time. Allowed range 1-120, in seconds. Default 20 seconds. -->
