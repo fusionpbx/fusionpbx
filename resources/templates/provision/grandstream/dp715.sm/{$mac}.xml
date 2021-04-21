@@ -352,7 +352,7 @@
 <P185>60</P185>
 
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-<P4330>20</P4330>
+<P4330>60</P4330>
 
 <!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared line -->
 <P4395>1</P4395>
@@ -609,7 +609,7 @@
 <P816>60</P816>
 
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-<P4331>20</P4331>
+<P4331>60</P4331>
 
 <!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared Line -->
 <P4396>1</P4396>
