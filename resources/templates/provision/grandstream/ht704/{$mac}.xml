@@ -629,7 +629,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4330>60</P4330>
+<P4330>300</P4330>
 
 <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
 <!-- Number: 0, 1 -->
@@ -1290,7 +1290,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4331>60</P4331>
+<P4331>300</P4331>
 
 <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
 <!-- Number: 0, 1 -->
