@@ -1121,7 +1121,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4330>60</P4330>
+<P4330>300</P4330>
 
 <!-- Special Feature -->
 <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
@@ -1794,7 +1794,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4331>60</P4331>
+<P4331>300</P4331>
 
 <!-- Special Feature -->
 <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
@@ -2466,7 +2466,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4332>60</P4332>
+<P4332>300</P4332>
 
 <!-- Special Feature -->
 <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
@@ -3138,7 +3138,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4333>60</P4333>
+<P4333>300</P4333>
 
 <!-- Special Feature -->
 <!-- 100 - Standard, 102 - BroadSoft, 108 - CBCOM, 109 - RNK, 111 - Huawei, 114 - ZTE IMS, 119 - PhonePower, 120 - TELKOM SA. -->
