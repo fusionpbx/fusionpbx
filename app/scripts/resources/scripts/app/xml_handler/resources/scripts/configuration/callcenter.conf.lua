@@ -101,7 +101,7 @@
 					queue_name = queue_name:gsub(" ", "-");
 
 				--start the xml
-					table.insert(xml, [[                            <queue name="]]..queue_uuid..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
+					table.insert(xml, [[                            <queue name="]]..queue_uuid..[[@]]..domain_name..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
 				--set ringback
 					queue_ringback = format_ringback(queue_moh_sound);
@@ -272,7 +272,7 @@
 				--build the xml
 					table.insert(xml, [[                            <tier ]]);
 					table.insert(xml, [[                            	agent="]]..agent_uuid..[[" ]]);
-					table.insert(xml, [[                            	queue="]]..queue_uuid..[[" ]]);
+					table.insert(xml, [[                            	queue="]]..queue_uuid..[[@]]..domain_name..[[" ]]);
 					table.insert(xml, [[                            	domain_name="]]..domain_name..[[" ]]);
 					--table.insert(xml, [[                            	agent_name="]]..agent_name..[[" ]]);
 					--table.insert(xml, [[                            	queue_name="]]..queue_name..[[" ]]);
