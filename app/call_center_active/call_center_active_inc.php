@@ -116,7 +116,7 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
-				$switch_command = 'callcenter_config queue list tiers '.$queue_uuid;
+				$switch_command = 'callcenter_config queue list tiers '.$queue_uuid."@".$_SESSION["domain_name"];
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
@@ -138,7 +138,7 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
-				$switch_command = 'callcenter_config queue list agents '.$queue_uuid;
+				$switch_command = 'callcenter_config queue list agents '.$queue_uuid."@".$_SESSION["domain_name"];
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
@@ -287,7 +287,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
 				if (is_uuid($queue_uuid)) {
-					$switch_command = 'callcenter_config queue list members '.$queue_uuid;
+					$switch_command = 'callcenter_config queue list members '.$queue_uuid."@".$_SESSION["domain_name"];
 					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 					$result = str_to_named_array($event_socket_str, '|');
 					if (!is_array($result)) { unset($result); }
