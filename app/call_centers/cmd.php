@@ -67,7 +67,7 @@
 	if ($fp) {
 		$response = event_socket_request($fp, 'api reloadxml');
 		if (isset($cmd) && isset($queue)) {
-			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue);
+			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue."@".$_SESSION["domain_name"]);
 		}
 		fclose($fp);
 	}

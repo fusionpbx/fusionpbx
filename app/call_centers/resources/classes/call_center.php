@@ -352,7 +352,7 @@
 									//delete the queue in the switch
 										if ($fp) {
 											foreach ($uuids as $uuid) {
-												$cmd = "api callcenter_config queue unload ".$uuid;
+												$cmd = "api callcenter_config queue unload ".$uuid."@".$_SESSION["domin_name"];
 												$response = event_socket_request($fp, $cmd);
 											}
 										}

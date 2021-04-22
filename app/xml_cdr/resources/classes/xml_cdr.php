@@ -372,7 +372,14 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
-						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
+						//remove the @domain from the queue name
+						$cc_queue = urldecode($xml->variables->cc_queue);
+						if (strpos($cc_queue, "@")) {
+							$this->array[$key]['cc_queue'] = substr($cc_queue, 0, strpos($cc_queue, "@"));
+						}
+						else {
+							$this->array[$key]['cc_queue'] = $cc_queue;
+						}
 						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
 						$this->array[$key]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
 						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
