@@ -151,6 +151,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D120 firmware";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0435781d-19e7-4a37-bcd2-c2e568867863";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_pa1";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "snomPA1-8.7.5.75.bin";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the PA1 firmware";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9b64afb4-f367-11e9-81b4-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_uxm";
