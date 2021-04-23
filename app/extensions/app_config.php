@@ -212,6 +212,9 @@
                 $apps[$x]['permissions'][$y]['groups'][] = "admin";
                 $apps[$x]['permissions'][$y]['groups'][] = "user";
                 $y++;
+                $apps[$x]['permissions'][$y]['name'] = "extension_max_registrations";
+                $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $y++;
                 $apps[$x]['permissions'][$y]['name'] = "extension_limit";
                 $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
                 $apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -432,6 +435,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "directory_exten_visible";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "max_registrations";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
