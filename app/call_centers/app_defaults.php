@@ -64,6 +64,18 @@ if ($domains_processed == 1) {
 		}
 		unset($sql);
 
+		//update all callcenter dialplans to have the @domain in the queue name
+			$sql = "UPDATE \n";
+			$sql .= "   v_dialplans d SET dialplan_xml = REPLACE( \n";
+			$sql .= "        dialplan_xml, \n";
+			$sql .= "        (SELECT call_center_queue_uuid::text FROM v_call_center_queues c WHERE c.dialplan_uuid = d.dialplan_uuid ), \n";
+			$sql .= "        (SELECT call_center_queue_uuid::text FROM v_call_center_queues c WHERE c.dialplan_uuid = d.dialplan_uuid ) || '@' || (SELECT domain_name  FROM v_domains vd WHERE vd.domain_uuid = d.domain_uuid) \n";
+			$sql .= "    ) \n";
+			$sql .= "WHERE dialplan_uuid IN (SELECT dialplan_uuid FROM v_call_center_queues) \n";
+			$sql .= "AND dialplan_xml NOT LIKE '%<action application=\"callcenter\" data=%@%\"/>%' \n";
+			$database = new database;
+			$database->execute($sql);
+
 }
 
 ?>
