@@ -49,7 +49,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 
 <!-- Account 1/Network Settings -->
@@ -608,7 +608,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 
 <!-- Account 2/Network Settings -->

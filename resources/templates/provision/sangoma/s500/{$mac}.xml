@@ -24,7 +24,7 @@
         <P109 para="Account1.OutCallWithoutReg">1</P109>
         <P40 para="Account1.LocalSipPort" />
         <P78 para="Account1.UseRandomPort">1</P78>
-        <P33 para="Account1.VoiceMailId">*97</P33>
+        <P33 para="Account1.VoiceMailId">{$voicemail_number}</P33>
         <P136 para="Account1.RPort">1</P136>
         <P1100 para="Account1.RFC2543Hold">1</P1100>
         <P8775 para="Account1.ConnectMode">0</P8775>
@@ -153,7 +153,7 @@
         <P813 para="Account2.OutCallWithoutReg">1</P813>
         <P740 para="Account2.LocalSipPort" />
         <P778 para="Account2.UseRandomPort">1</P778>
-        <P426 para="Account2.VoiceMailId">*97</P426>
+        <P426 para="Account2.VoiceMailId">{$voicemail_number}</P426>
         <P137 para="Account2.RPort">1</P137>
         <P1101 para="Account2.RFC2543Hold">1</P1101>
         <P8776 para="Account2.ConnectMode">0</P8776>
@@ -282,7 +282,7 @@
         <P913 para="Account3.OutCallWithoutReg">1</P913>
         <P513 para="Account3.LocalSipPort" />
         <P578 para="Account3.UseRandomPort">1</P578>
-        <P526 para="Account3.VoiceMailId">*97</P526>
+        <P526 para="Account3.VoiceMailId">{$voicemail_number}</P526>
         <P138 para="Account3.RPort">1</P138>
         <P1102 para="Account3.RFC2543Hold">1</P1102>
         <P8777 para="Account3.ConnectMode">0</P8777>
@@ -411,7 +411,7 @@
         <P1013 para="Account4.OutCallWithoutReg">1</P1013>
         <P613 para="Account4.LocalSipPort" />
         <P678 para="Account4.UseRandomPort">1</P678>
-        <P626 para="Account4.VoiceMailId">*97</P626>
+        <P626 para="Account4.VoiceMailId">{$voicemail_number}</P626>
         <P139 para="Account4.RPort">1</P139>
         <P1103 para="Account4.RFC2543Hold">1</P1103>
         <P8778 para="Account4.ConnectMode">0</P8778>
@@ -540,7 +540,7 @@
         <P1113 para="Account5.OutCallWithoutReg">1</P1113>
         <P1713 para="Account5.LocalSipPort" />
         <P20390 para="Account5.UseRandomPort">1</P20390>
-        <P1726 para="Account5.VoiceMailId">*97</P1726>
+        <P1726 para="Account5.VoiceMailId">{$voicemail_number}</P1726>
         <P140 para="Account5.RPort">1</P140>
         <P1104 para="Account5.RFC2543Hold">1</P1104>
         <P20476 para="Account5.ConnectMode">0</P20476>
@@ -669,7 +669,7 @@
         <P1213 para="Account6.OutCallWithoutReg">1</P1213>
         <P1813 para="Account6.LocalSipPort" />
         <P20391 para="Account6.UseRandomPort">1</P20391>
-        <P1826 para="Account6.VoiceMailId">*97</P1826>
+        <P1826 para="Account6.VoiceMailId">{$voicemail_number}</P1826>
         <P141 para="Account6.RPort">1</P141>
         <P1105 para="Account6.RFC2543Hold">1</P1105>
         <P20477 para="Account6.ConnectMode">0</P20477>

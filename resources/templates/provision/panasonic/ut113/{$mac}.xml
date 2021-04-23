@@ -72,7 +72,7 @@
  <CallWaitingEnable CW_ENABLE_1="Y"/>
  </CallingFeatures>
 <CallFeat>
- <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_1="*97"/>
+ <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_1="{$voicemail_number}"/>
  <X_P_IPTEL_DialPlanNotMatchEnable DIAL_PLAN_NOT_MATCH_ENABLE_1="N"/>
  <X_P_IPTEL_SharedCallEnable SHARED_CALL_ENABLE_1="N"/>
  <X_P_IPTEL_FwdDndSynchroEnable FWD_DND_SYNCHRO_ENABLE_1="N"/>
@@ -155,7 +155,7 @@
  <CallWaitingEnable CW_ENABLE_2="Y"/>
  </CallingFeatures>
 <CallFeat>
- <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2="*97"/>
+ <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2="{$voicemail_number}"/>
  <X_P_IPTEL_DialPlanNotMatchEnable DIAL_PLAN_NOT_MATCH_ENABLE_2="N"/>
  <X_P_IPTEL_SharedCallEnable SHARED_CALL_ENABLE_2="N"/>
  <X_P_IPTEL_FwdDndSynchroEnable FWD_DND_SYNCHRO_ENABLE_2="N"/>

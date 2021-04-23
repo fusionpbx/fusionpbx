@@ -54,7 +54,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27680>*97</P27680>
+<P27680>{$voicemail_number}</P27680>
 
 <!-- ################################# -->
 <!-- #  Profile 1/Network Settings  ## -->
@@ -598,7 +598,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27681>*97</P27681>
+<P27681>{$voicemail_number}</P27681>
 
 <!-- ################################# -->
 <!-- #  Profile 2/Network Settings  ## -->
@@ -1127,7 +1127,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27682>*97</P27682>
+<P27682>{$voicemail_number}</P27682>
 
 <!-- ################################# -->
 <!-- #  Profile 3/Network Settings  ## -->
@@ -1657,7 +1657,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27683>*97</P27683>
+<P27683>{$voicemail_number}</P27683>
 
 <!-- ################################# -->
 <!-- #  Profile 4/Network Settings  ## -->
