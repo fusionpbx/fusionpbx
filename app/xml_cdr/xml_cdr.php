@@ -167,6 +167,11 @@
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = $array[count($array) - 1];
+			$pattern = '/\s+as\s+/i';
+			if (preg_match($pattern, $field_name)){
+				$field_pattern = preg_split ($pattern, $field_name);
+				$field_name = $field_pattern[1];
+			}
 			if (isset($_REQUEST[$field_name])) {
 				echo "	<input type='hidden' name='".escape($field_name)."' value='".escape($$field_name)."'>\n";
 			}
@@ -472,6 +477,11 @@
 					foreach ($_SESSION['cdr']['field'] as $field) {
 						$array = explode(",", $field);
 						$field_name = end($array);
+						$pattern = '/\s+as\s+/i';
+						if (preg_match($pattern, $field_name)){
+							$field_pattern = preg_split ($pattern, $field_name);
+							$field_name = $field_pattern[1];
+						}
 						$field_label = ucwords(str_replace("_", " ", $field_name));
 						$field_label = str_replace("Sip", "SIP", $field_label);
 						if ($field_name != "destination_number") {
@@ -564,6 +574,11 @@
 			foreach ($_SESSION['cdr']['field'] as $field) {
 				$array = explode(",", $field);
 				$field_name = end($array);
+				$pattern = '/\s+as\s+/i';
+				if (preg_match($pattern, $field_name)){
+					$field_pattern = preg_split ($pattern, $field_name);
+					$field_name = $field_pattern[1];
+				}
 				$field_label = ucwords(str_replace("_", " ", $field_name));
 				$field_label = str_replace("Sip", "SIP", $field_label);
 				if ($field_name != "destination_number") {
