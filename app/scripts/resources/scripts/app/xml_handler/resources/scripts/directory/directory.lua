@@ -337,6 +337,7 @@
 								directory_exten_visible = row.directory_exten_visible;
 								limit_max = row.limit_max;
 								call_timeout = row.call_timeout;
+								max_registrations = row.max_registrations;
 								limit_destination = row.limit_destination;
 								sip_force_contact = row.sip_force_contact;
 								sip_force_expires = row.sip_force_expires;
@@ -530,6 +531,7 @@
 							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[								<param name="max-registrations-per-extension" value="]] .. max_registrations .. [["/>]]);
 							for key,row in pairs(extension_settings) do
 								if (row.extension_setting_type == 'param') then
 									table.insert(xml, [[								<param name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
