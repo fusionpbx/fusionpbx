@@ -625,7 +625,7 @@
 <user_expiry idx="10" perm="">3600</user_expiry>
 <user_expiry idx="11" perm="">3600</user_expiry>
 <user_expiry idx="12" perm="">3600</user_expiry>
-<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
 <user_mailbox idx="2" perm=""></user_mailbox>
 <user_mailbox idx="3" perm=""></user_mailbox>
 <user_mailbox idx="4" perm=""></user_mailbox>

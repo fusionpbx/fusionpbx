@@ -58,7 +58,7 @@
     <user_expiry idx="{$row.line_number}" perm="R">{$row.register_expires}</user_expiry>
     <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
     <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
-    <user_mailbox idx="{$row.line_number}" perm="R">{if isset($voicemail_number)}{$voicemail_number}{else}*97{/if}</user_mailbox>
+    <user_mailbox idx="{$row.line_number}" perm="R">{$voicemail_number}</user_mailbox>
 	{if isset($account.{$row.line_number}.shared_line) }
 	<user_shared_line idx="{$row.line_number}" perm="RW">{$account.{$row.line_number}.shared_line}</user_shared_line>
 	{else}
