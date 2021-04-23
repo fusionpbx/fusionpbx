@@ -8,7 +8,7 @@
 <Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 
 <Upgrade_Rule></Upgrade_Rule>
-<Voice_Mail_Number>*97</Voice_Mail_Number>
+<Voice_Mail_Number>{$voicemail_number}</Voice_Mail_Number>
 <Time_Zone>{$spa_time_zone}</Time_Zone>
 <!--
 <Daylight_Saving_Time_Rule>start=9/27/0/2;end=4/4/0/3;save=1</Daylight_Saving_Time_Rule>-->

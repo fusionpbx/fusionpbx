@@ -1649,7 +1649,7 @@
 <!-- General -->
 <Station_Name ua="na">{$device_label}</Station_Name>
 <Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
-<Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
+<Voice_Mail_Number ua="na">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>
 <Select_Logo ua="na"></Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->

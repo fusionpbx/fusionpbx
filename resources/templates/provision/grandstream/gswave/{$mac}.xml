@@ -38,7 +38,7 @@
 <P34>{$account.1.password}</P34>
 
 <!-- Voice Mail Access Number -->
-<!--<P33>*97</P33> -->
+<!--<P33>{$voicemail_number}</P33> -->
 <P33>*98</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->

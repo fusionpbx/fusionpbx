@@ -90,7 +90,7 @@ sip_invite_retx: "6"               ; Default 7
 timer_invite_expires: "180"        ; Default 180 sec
 
 # Setting for Message speeddial to UOne box
-messages_uri: "*97"
+messages_uri: "{$voicemail_number}"
 
 # TFTP Phone Specific Configuration File Directory
 tftp_cfg_dir: ""

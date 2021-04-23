@@ -253,7 +253,7 @@
 <P34>{$account.1.password}</P34>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P3>{$account.1.display_name}</P3>
@@ -728,7 +728,7 @@
 <P406>{$account.2.password}</P406>
 
 <!-- Voice Mail UserID -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P407>{$account.2.display_name}</P407>
@@ -1168,7 +1168,7 @@
 <P506>{$account.3.password}</P506>
 
 <!-- Voice Mail UserID -->
-<P526>*97</P526> =
+<P526>{$voicemail_number}</P526> =
 
 <!-- Name (Display name: John Doe) -->
 <P507>{$account.3.display_name}</P507>
@@ -1613,7 +1613,7 @@
 <P606>{$account.4.password}</P606>
 
 <!-- Voice Mail UserID -->
-<P606>*97</P606>
+<P606>{$voicemail_number}</P606>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P606>{$account.4.display_name}</P606>
@@ -2059,7 +2059,7 @@
 <P1706>{$account.5.password}</P1706>
 
 <!-- Voice Mail UserID -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P1707>{$account.5.display_name}</P1707>
@@ -2502,7 +2502,7 @@
 <P1806>{$account.6.password}</P1806>
 
 <!-- Voice Mail UserID -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 <!-- Name (Display name :John Doe) -->
 <P1807>{$account.6.display_name}</P1807>

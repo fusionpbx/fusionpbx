@@ -37,7 +37,7 @@
 		<!-- SIP Authentication Password -->
 		<item name="account.{$line}.sip.subscriber.password">{$row.password}</item>
 		<!-- Voice Mail Access Number -->
-		<item name="account.{$line}.sip.voicemail.number">*97</item>
+		<item name="account.{$line}.sip.voicemail.number">{$voicemail_number}</item>
 		<!-- Display Name -->
 		<item name="account.{$line}.sip.subscriber.name">{$row.display_name}</item>
 		<!-- Tel URI -->

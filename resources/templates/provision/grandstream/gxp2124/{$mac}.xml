@@ -39,7 +39,7 @@
     <P3>{$account.1.display_name}</P3>
     <!-- Voice Mail UserID -->
     <!-- String -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
     <!-- Account 1/Network Settings -->
     <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- Number: 0, 1, 2, 3 -->
@@ -480,7 +480,7 @@
     <P407>{$account.2.display_name_2}</P407>
     <!-- Voice Mail UserID -->
     <!-- String -->
-    <P426>*97</P426>
+    <P426>{$voicemail_number}</P426>
     <!-- Account 2/Network Settings -->
     <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- Number: 0, 1, 2, 3 -->
@@ -912,7 +912,7 @@
     <P507>{$display_name_3}</P507>
     <!-- Voice Mail UserID -->
     <!-- String -->
-    <P526>*97</P526>
+    <P526>{$voicemail_number}</P526>
     <!-- Account 3/Network Settings -->
     <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0  -->
     <!-- Number: 0, 1, 2, 3 -->
@@ -1343,7 +1343,7 @@
     <P607>{$account.4.display_name}</P607>
     <!-- Voice Mail UserID -->
     <!-- String -->
-    <P626>*97</P626>
+    <P626>{$voicemail_number}</P626>
     <!-- Account 4/Network Settings -->
     <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!-- Number: 0, 1, 2, 3 -->

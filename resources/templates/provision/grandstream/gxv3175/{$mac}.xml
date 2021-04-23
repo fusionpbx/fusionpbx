@@ -38,7 +38,7 @@
 
 <!-- Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
 <!-- MaxLength 64 characters -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Name (Display name :John Doe), MaxLength 64 characters -->
 <P3>{$account.1.display_name}</P3>

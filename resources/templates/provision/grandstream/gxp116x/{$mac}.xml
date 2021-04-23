@@ -50,7 +50,7 @@
 
 <!--  Voice Mail UserID -->
 <!--  String -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 
 <!--  Account 1/Network Settings -->

@@ -257,7 +257,7 @@
 <Secure_One_Call_Deact_Code ua="na">*19</Secure_One_Call_Deact_Code>
 <Paging_Code ua="na">*96</Paging_Code>
 <Call_Park_Code ua="na">*68</Call_Park_Code>
-<Call_Pickup_Code ua="na">*97</Call_Pickup_Code>
+<Call_Pickup_Code ua="na">{$voicemail_number}</Call_Pickup_Code>
 <Call_Unpark_Code ua="na">*88</Call_Unpark_Code>
 <Group_Call_Pickup_Code ua="na">*98</Group_Call_Pickup_Code>
 <Referral_Services_Codes ua="na"/>
@@ -297,7 +297,7 @@
 <!-- General -->
 <Station_Name ua="na">{$device_label}</Station_Name>
 <Station_Display_Name ua="na">{$display_name_1}</Station_Display_Name>
-<Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
+<Voice_Mail_Number ua="na">{$voicemail_number}</Voice_Mail_Number>
 <!-- Handsfree -->
 <Bluetooth_Mode ua="na">Phone</Bluetooth_Mode>
 <Line ua="na">5</Line>

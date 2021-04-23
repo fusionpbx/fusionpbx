@@ -227,7 +227,7 @@
       <password>{$account.1.user_password}</password>
       <register_on_startup>true</register_on_startup>
       <do_not_play_ringback_tones>false</do_not_play_ringback_tones>
-      <voicemail_check_extension>*97</voicemail_check_extension>
+      <voicemail_check_extension>{$voicemail_number}</voicemail_check_extension>
       <voicemail_transfer_extension>*99</voicemail_transfer_extension>
       <force_rfc3264>false</force_rfc3264>
       <use_kpml>false</use_kpml>

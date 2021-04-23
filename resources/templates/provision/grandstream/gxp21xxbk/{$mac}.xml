@@ -135,7 +135,7 @@
 <P3>{$account.1.display_name}</P3>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Account 1/Network Settings -->
 
@@ -656,7 +656,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 
 <!-- Account 2/Network Settings -->
@@ -1217,7 +1217,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P526>*97</P526>
+<P526>{$voicemail_number}</P526>
 
 
 <!-- Account 3/Network Settings -->
@@ -1772,7 +1772,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P626>*97</P626>
+<P626>{$voicemail_number}</P626>
 
 
 <!-- Account 4/Network Settings -->
@@ -2324,7 +2324,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 
 <!-- Account 5/Network Settings -->
@@ -2878,7 +2878,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 
 <!-- Account 6/Network Settings -->
