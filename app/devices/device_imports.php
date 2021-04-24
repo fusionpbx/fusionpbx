@@ -252,10 +252,14 @@
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
+		//open the database
+			$database = new database;
+			$database->app_name = 'devices';
+			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+
 		//get the users
 			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$users = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
@@ -320,13 +324,30 @@
 									}
 								}
 
+							// Do not duplicate MAC addresses, get the device UUID from the database and set it in the array
+								if (isset($array['devices']) && !isset($array['devices'][$row_id]['device_uuid']) &&
+									isset($array['devices'][$row_id]['device_mac_address'])) {
+									$sql = "SELECT device_uuid, domain_uuid FROM v_devices ";
+									$sql .= "WHERE device_mac_address = :mac ";
+									$parameters['mac'] = $array['devices'][$row_id]['device_mac_address'];
+									$row = $database->select($sql, $parameters, 'row');
+									if (is_array($row)) {
+										// Validate that the hit we got is for the same domain, if not add a message stating the fact
+										if ($array['devices'][$row_id]['domain_uuid'] == $row['domain_uuid']) {
+											$array['devices'][$row_id]['device_uuid'] = $row['device_uuid'];
+										} else {
+											// Maybe add in a better new message stating that it was found in a different domain?
+											message::add($text['message-duplicate'] . ": " . $parameters['mac']);
+											unset($array['devices'][$row_id]);
+										}
+									}
+									unset($sql, $parameters);
+								}
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database = new database;
-										$database->app_name = 'devices';
-										$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 										$database->save($array);
 										//$message = $database->message;
 
@@ -351,9 +372,6 @@
 
 				//save to the data
 					if (is_array($array)) {
-						$database = new database;
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						//$message = $database->message;
 					}
