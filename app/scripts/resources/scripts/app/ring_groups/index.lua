@@ -47,6 +47,7 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
 	require "resources.functions.format_ringback"
+	require "resources.functions.send_presence";
 
 --- include libs
 	local route_to_bridge = require "resources.functions.route_to_bridge"
@@ -978,6 +979,9 @@
 						freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 						-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 						if (ring_group_strategy ~= "rollover") then
+							if (session:getVariable("ring_group_send_presence") == "true") then
+								send_presence(uuid, ring_group_extension.."@"..domain_name, "early");
+							end
 							session:execute("bridge", app_data);
 						end
 						-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
