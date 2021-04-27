@@ -380,6 +380,17 @@
 			if (permission_exists('device_edit')) {
 				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']);
 			}
+
+			$device_provisioned_method = '';
+			if (isset($row['device_provisioned_method']) && ($row['device_provisioned_method'] == 'http' || $row['device_provisioned_method'] == 'https')) {
+				$device_provisioned_method = $row['device_provisioned_method'];
+			}
+
+			$device_provisioned_ip = '';
+			if (isset($row['device_provisioned_ip']) && filter_var($row['device_provisioned_ip'], FILTER_VALIDATE_IP)) {
+				$device_provisioned_ip = $row['device_provisioned_ip'];
+			}
+
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('device_edit') || permission_exists('device_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -416,7 +427,7 @@
 				echo $text['label-'.$row['device_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-link'>".escape($row['device_provisioned_date'])." - ".escape($row['device_provisioned_method'])." - <a href='http://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a> - <a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".$text['label-user_agent']."</a>&nbsp;</td>\n";
+			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['device_provisioned_date'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
 			if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
