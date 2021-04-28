@@ -85,7 +85,9 @@
 				$name_array = explode('@', $name);
 				if ($name_array[1] == $_SESSION['domain_name']) {
 					$conference_uuid = $name_array[0];
-					if (is_uuid($conference_uuid)) {
+
+					//if uuid then lookup the conference name
+					if (isset($name_array[0]) && is_uuid($name_array[0])) {
 						//check for the conference center room
 						$sql = "select ";
 						$sql .= "cr.conference_room_name, ";
@@ -124,9 +126,14 @@
 						}
 					}
 
+					//if numeric use the conference extension as the name
+					if (isset($name_array[0]) && is_numeric($name_array[0])) {
+						$conference_name = $name_array[0];
+					}
 					if (permission_exists('conference_interactive_view')) {
 						$list_row_url = 'conference_interactive.php?c='.urlencode($conference_uuid);
 					}
+
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if (permission_exists('conference_interactive_view')) {
