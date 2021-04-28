@@ -58,5 +58,8 @@
 
     <!-- Subscribe to events -->
     <!--<hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
+
+    <!-- FusionPBX: Valet Parking Backwards Compatibility, forwards park+59xx presence events to park+*59xx -->
+    <hook event="PRESENCE_IN" subclass="" script="park_compatibility.lua" />
   </settings>
 </configuration>
