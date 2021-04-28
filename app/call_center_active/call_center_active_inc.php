@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -60,6 +60,7 @@
 	foreach ($_SESSION['queues'] as $row) {
 		if ($row['call_center_queue_uuid'] == $queue_uuid) {
 			$queue_name = $row['queue_name'];
+			$queue_extension = $row['queue_extension'];
 		}
 	}
 
@@ -116,7 +117,7 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
-				$switch_command = 'callcenter_config queue list tiers '.$queue_uuid."@".$_SESSION["domain_name"];
+				$switch_command = 'callcenter_config queue list tiers '.$queue_extension."@".$_SESSION["domain_name"];
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$result = str_to_named_array($event_socket_str, '|');
 
@@ -138,7 +139,7 @@
 
 			//send the event socket command and get the response
 				//callcenter_config queue list agents [queue_name] [status] |
-				$switch_command = 'callcenter_config queue list agents '.$queue_uuid."@".$_SESSION["domain_name"];
+				$switch_command = 'callcenter_config queue list agents '.$queue_extension."@".$_SESSION["domain_name"];
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 				$agent_result = str_to_named_array($event_socket_str, '|');
 
@@ -287,7 +288,7 @@
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
 				if (is_uuid($queue_uuid)) {
-					$switch_command = 'callcenter_config queue list members '.$queue_uuid."@".$_SESSION["domain_name"];
+					$switch_command = 'callcenter_config queue list members '.$queue_extension."@".$_SESSION["domain_name"];
 					$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_command));
 					$result = str_to_named_array($event_socket_str, '|');
 					if (!is_array($result)) { unset($result); }

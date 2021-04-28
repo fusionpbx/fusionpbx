@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -118,11 +118,13 @@
 		//set the variables
 			$call_center_queue_uuid = $_REQUEST["id"];
 			$call_center_tier_uuid = $_REQUEST["call_center_tier_uuid"];
+
 		//get the agent details
-			$sql = "select agent_name, queue_name, call_center_agent_uuid, call_center_queue_uuid ";
-			$sql .= "from v_call_center_tiers ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and call_center_tier_uuid = :call_center_tier_uuid ";
+			$sql = "select t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension  ";
+			$sql .= "from v_call_center_tiers as t, v_call_center_queues as q ";
+			$sql .= "where t.domain_uuid = :domain_uuid  ";
+			$sql .= "and t.call_center_tier_uuid = :call_center_tier_uuid ";
+			$sql .= "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['call_center_tier_uuid'] = $call_center_tier_uuid;
 			$database = new database;
@@ -133,8 +135,10 @@
 				foreach ($tiers as &$row) {
 					$call_center_agent_uuid = $row["call_center_agent_uuid"];
 					$call_center_queue_uuid = $row["call_center_queue_uuid"];
+					$queue_extension = $row["queue_extension"];
 				}
 			}
+
 		//delete the agent from freeswitch
 			//setup the event socket connection
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -142,10 +146,11 @@
 			if ($fp) {
 				//callcenter_config tier del [queue_name] [agent_name]
 				if (is_uuid($call_center_queue_uuid) && is_uuid($call_center_agent_uuid)) {
-					$cmd = "api callcenter_config tier del ".$call_center_queue_uuid."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
+					$cmd = "api callcenter_config tier del ".$queue_extension."@".$_SESSION['domain_name']." ".$call_center_agent_uuid;
 					$response = event_socket_request($fp, $cmd);
 				}
 			}
+
 		//delete the tier from the database
 			if (strlen($call_center_tier_uuid) > 0) {
 				$array['call_center_tiers'][0]['call_center_tier_uuid'] = $call_center_tier_uuid;
@@ -347,7 +352,7 @@
 			if (strlen($queue_cc_exit_keys) > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".$queue_cc_exit_keys."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$call_center_queue_uuid."@".$_SESSION["domain_name"]."\"/>\n";
+			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".$queue_extension."@".$_SESSION["domain_name"]."\"/>\n";
 			if ($destination->valid($queue_timeout_app.':'.$queue_timeout_data)) {
 				$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
 			}
@@ -429,20 +434,20 @@
 							callcenter_config tier set position [queue_name] [agent_name] [position]
 						*/
 						//add the agent
-						if (is_uuid($call_center_queue_uuid) && is_uuid($call_center_agent_uuid) && is_numeric($tier_level) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier add ".$call_center_queue_uuid."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
+						if (is_uuid($call_center_queue_uuid) && is_numeric($queue_extension) && is_numeric($tier_level) && is_numeric($tier_position)) {
+							$cmd = "api callcenter_config tier add ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level." ".$tier_position;
 							$response = event_socket_request($fp, $cmd);
 						}
 						usleep(200);
 						//agent set level
-						if (is_uuid($call_center_queue_uuid) && is_uuid($call_center_agent_uuid) && is_numeric($tier_level)) {
-							$cmd = "api callcenter_config tier set level ".$call_center_queue_uuid."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
+						if (is_uuid($call_center_queue_uuid) && is_numeric($queue_extension) && is_numeric($tier_level)) {
+							$cmd = "api callcenter_config tier set level ".$queue_extension."@".$_SESSION["domain_name"]." ".$call_center_agent_uuid." ".$tier_level;
 							$response = event_socket_request($fp, $cmd);
 						}
 						usleep(200);
 						//agent set position
-						if (is_uuid($call_center_queue_uuid) && is_uuid($call_center_agent_uuid) && is_numeric($tier_position)) {
-							$cmd = "api callcenter_config tier set position ".$call_center_queue_uuid."@".$_SESSION["domain_name"]." ".$tier_position;
+						if (is_uuid($call_center_queue_uuid) && is_numeric($queue_extension) && is_numeric($tier_position)) {
+							$cmd = "api callcenter_config tier set position ".$queue_extension."@".$_SESSION["domain_name"]." ".$tier_position;
 							$response = event_socket_request($fp, $cmd);
 						}
 						usleep(200);
