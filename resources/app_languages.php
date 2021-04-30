@@ -4262,6 +4262,27 @@ $text['label-uploaded']['ru-ru'] = "Загружено";
 $text['label-uploaded']['sv-se'] = "Uppladdad";
 $text['label-uploaded']['uk-ua'] = "Завантажено";
 
+$text['label-hostname']['en-us'] = "Hostname";
+$text['label-hostname']['en-gb'] = "Hostname";
+$text['label-hostname']['ar-eg'] = "";
+$text['label-hostname']['de-at'] = "Hostname"; //copied from de-de
+$text['label-hostname']['de-ch'] = "Hostname"; //copied from de-de
+$text['label-hostname']['de-de'] = "Hostname";
+$text['label-hostname']['es-cl'] = "";
+$text['label-hostname']['es-mx'] = "";
+$text['label-hostname']['fr-ca'] = "Nom d'hôte"; //copied from fr-fr
+$text['label-hostname']['fr-fr'] = "Nom d'hôte";
+$text['label-hostname']['he-il'] = "";
+$text['label-hostname']['it-it'] = "Hostname";
+$text['label-hostname']['nl-nl'] = "Hostnaam";
+$text['label-hostname']['pl-pl'] = "Nazwa hosta";
+$text['label-hostname']['pt-br'] = "Hostname"; //copied from pt-pt
+$text['label-hostname']['pt-pt'] = "Hostname";
+$text['label-hostname']['ro-ro'] = "";
+$text['label-hostname']['ru-ru'] = "Имя хоста";
+$text['label-hostname']['sv-se'] = "Hostname";
+$text['label-hostname']['uk-ua'] = "Назва хоста";
+
 $text['button-tickets']['en-us'] = "Tickets";
 $text['button-tickets']['en-gb'] = "Tickets";
 $text['button-tickets']['ar-eg'] = "";
