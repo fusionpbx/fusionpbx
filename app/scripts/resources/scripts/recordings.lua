@@ -132,8 +132,10 @@
 			end
 
 		--prompt for the recording
-			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
-			session:execute("set", "playback_terminators=#");
+			session:execute("playback", "phrase:voicemail_record_greeting");
+			session:execute("sleep", "500");
+			session:streamFile("tone_stream://L=1;%(500, 0, 640)");
+			session:execute("set", "playback_terminators=any");
 
 		--make the directory
 			mkdir(recordings_dir);
@@ -273,7 +275,7 @@
 
 			if (digits == "1") then
 				--recording saved, hangup
-				session:streamFile("voicemail/vm-saved.wav");
+				session:streamFile("ivr/ivr-recording_saved.wav");
 				return;
 			elseif (digits == "2") then
 				--reset the digit timeout
@@ -285,7 +287,7 @@
 					begin_record(session, sounds_dir, recordings_dir);
 			else
 				--recording saved, hangup
-					session:streamFile("voicemail/vm-saved.wav");
+					session:streamFile("ivr/ivr-recording_saved.wav");
 				return;
 			end
 	end
