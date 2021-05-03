@@ -980,10 +980,17 @@
 						-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 						if (ring_group_strategy ~= "rollover") then
 							if (session:getVariable("ring_group_send_presence") == "true") then
-								session:setVariable("presence_id", ring_group_extension.."@"..domain_name );
+								session:setVariable("presence_id", ring_group_extension.."@"..domain_name);
 								send_presence(uuid, ring_group_extension.."@"..domain_name, "early");
 							end
+							
 							session:execute("bridge", app_data);
+							
+							--set the presence to terminated and unset presence_id
+							if (session:getVariable("ring_group_send_presence") == "true") then
+								session:setVariable("presence_id", "");
+								send_presence(uuid, ring_group_extension.."@"..domain_name, "terminated");
+							end
 						end
 						-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 					end
