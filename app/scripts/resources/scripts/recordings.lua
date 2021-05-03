@@ -361,8 +361,10 @@
 				end
 				
 				--recording saved, hangup
-				session:streamFile("ivr/ivr-recording_saved.wav");
-				return;
+					session:streamFile("ivr/ivr-recording_saved.wav");
+					return;
+					
+					
 			elseif (digits == "2") then
 				--reset the digit timeout
 					digit_timeout = "3000";
