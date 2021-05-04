@@ -532,7 +532,7 @@
 	echo "	".$text['label-no_answer_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_no_answer_delay_time' maxlength='255' min='1' step='0' value='".escape($agent_no_answer_delay_time)."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_no_answer_delay_time' maxlength='255' min='0' step='1' value='".escape($agent_no_answer_delay_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-no_answer_delay_time']."\n";
 	echo "</td>\n";
