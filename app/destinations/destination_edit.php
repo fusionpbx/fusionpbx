@@ -320,8 +320,13 @@
 						$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
 						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
-						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
-						$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
+
+						//add this only if using application bridge
+						if ($destination_app == 'bridge') {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
+						}
+
 						if (strlen($destination_cid_name_prefix) > 0) {
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"false\"/>\n";
 						}
@@ -398,27 +403,30 @@
 
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+						//add this only if using application bridge
+							if ($destination_app == 'bridge') {
+								//add hangup_after_bridge
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+	
+								//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
 
-						//add hangup_after_bridge
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
-						//increment the dialplan detail order
-							$dialplan_detail_order = $dialplan_detail_order + 10;
-
-						//add continue_on_fail
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
+								//add continue_on_fail
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+							}
 
 						//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
