@@ -867,20 +867,9 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$record_template = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}";
 	echo "	<select class='formfld' name='queue_record_template'>\n";
-	if (strlen($queue_record_template) > 0) {
-		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
-	}
-	if (strlen($queue_record_template) == 0) {
-		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value=''>".$text['option-false']."</option>\n";
-	}
+	echo "	<option value='true' ".($queue_record_template == "true" ?  "selected='selected'" : '')." >".$text['option-true']."</option>\n";
+	echo "	<option value='false' ".(!$queue_record_template != "true" ?  "selected='selected'" : '').">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";

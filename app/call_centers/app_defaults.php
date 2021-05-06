@@ -147,25 +147,27 @@ if ($domains_processed == 1) {
 		}
 		unset ($prep_statement);
 	
-	//save the array to the database
-		if (is_array($array)) {
-			//add the dialplan permission
-				$p = new permissions;
-				$p->add("dialplan_add", "temp");
-				$p->add("dialplan_edit", "temp");
+		//save the array to the database
+			if (is_array($array)) {
+				//add the dialplan permission
+					$p = new permissions;
+					$p->add("dialplan_add", "temp");
+					$p->add("dialplan_edit", "temp");
 
-			//save to the data
-				$database = new database;
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-				$database->save($array);
-				$message = $database->message;
+				//save to the data
+					$database = new database;
+					$database->app_name = 'call_centers';
+					$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+					$database->save($array);
+					$message = $database->message;
 
-			//remove the temporary permission
-				$p->delete("dialplan_add", "temp");
-				$p->delete("dialplan_edit", "temp");
-		}
+				//remove the temporary permission
+					$p->delete("dialplan_add", "temp");
+					$p->delete("dialplan_edit", "temp");
+			}
 
+	//update queue_record_template to true instead of a path
+		$database->execute("UPDATE v_call_center_queues SET queue_record_template = 'true' WHERE queue_record_template IS NOT NULL", null);
 }
 
 ?>
