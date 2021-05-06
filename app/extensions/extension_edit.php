@@ -397,6 +397,11 @@
 									if (permission_exists('extension_accountcode')) {
 										$array["extensions"][$i]["accountcode"] = $accountcode;
 									}
+									else {
+										if ($action == "add") {
+											$array["extensions"][$i]["accountcode"] = get_accountcode();
+										}
+									}
 									if (permission_exists("effective_caller_id_name")) {
 										$array["extensions"][$i]["effective_caller_id_name"] = $effective_caller_id_name;
 									}
@@ -878,6 +883,7 @@
 //set the defaults
 	if (strlen($user_context) == 0) { $user_context = $_SESSION['domain_name']; }
 	if (strlen($max_registrations) == 0) { $max_registrations = $_SESSION['extension']['max_registrations']['numeric']; }
+	if (strlen($accountcode) == 0) { $accountcode = get_accountcode(); }
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($limit_destination) == 0) { $limit_destination = 'error/user_busy'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
