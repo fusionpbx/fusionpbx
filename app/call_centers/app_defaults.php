@@ -99,6 +99,12 @@ if ($domains_processed == 1) {
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$row["queue_extension"]."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+					if (is_uuid($row['call_center_queue_uuid'])) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".$row['call_center_queue_uuid']."\"/>\n";
+					}
+					if (is_numeric($queue_extension)) {
+						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$row['queue_extension']."\"/>\n";
+					}
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					if ($row['queue_time_base_score_sec'] != '') {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$row['queue_time_base_score_sec']."\"/>\n";
