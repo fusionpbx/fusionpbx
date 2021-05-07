@@ -178,7 +178,6 @@
 			$database->fields['cc_side'] = urldecode($xml->variables->cc_side);
 			$database->fields['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 			$database->fields['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
-			$database->fields['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid);
 			$database->fields['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
 			$database->fields['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
 			$database->fields['cc_agent'] = urldecode($xml->variables->cc_agent);
@@ -194,7 +193,7 @@
 				$database->fields['direction'] = 'inbound';
 			}
 			if (is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
-				$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid;
+				$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid);
 			}
 
 		//app info
