@@ -387,7 +387,7 @@ if (!class_exists('xml_cdr')) {
 							$this->array[$key]['direction'] = 'inbound';
 						}
 						if (is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
-							$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid;
+							$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid);
 						}
 
 					//app info
