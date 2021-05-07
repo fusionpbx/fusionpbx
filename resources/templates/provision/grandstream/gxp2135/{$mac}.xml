@@ -4,7 +4,7 @@
 <mac>{$mac|replace:'-':''}</mac>
   <config version="1">
     <!-- ########################################################################################## -->
-    <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.9.127    ## -->
+    <!-- ## Configuration Template For GXP2130/2140/2160/2170/2135 Firmware Version 1.0.10.35    ## -->
     <!-- ########################################################################################## -->
 
     <!-- #################################################################### -->
@@ -62,7 +62,11 @@
 
     <!-- # SIP User ID -->
     <!-- # String -->
+{if isset($account.1.server_address_secondary)}
+    <P35>{$account.1.user_id}@{$account.1.server_address}</P35>
+{else}
     <P35>{$account.1.user_id}</P35>
+{/if}
 
     <!-- # Authenticate ID -->
     <!-- # String -->
