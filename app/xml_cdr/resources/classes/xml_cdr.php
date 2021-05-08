@@ -176,7 +176,8 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "sip_hangup_disposition";
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
-					$this->fields[] = $field;
+					$field_name = end($field);
+					$this->fields[] = $field_name;
 				}
 			}
 		}
@@ -457,13 +458,19 @@ if (!class_exists('xml_cdr')) {
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
 								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
+									$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
 								}
 								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
 								}
 								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
+								}
+								if (count($fields) == 4) {
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
+								}
+								if (count($fields) == 5) {
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
 								}
 							}
 						}
