@@ -387,8 +387,20 @@ if (!class_exists('xml_cdr')) {
 						if (urldecode($xml->variables->cc_side) == 'agent') {
 							$this->array[$key]['direction'] = 'inbound';
 						}
-						if (is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
-							$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid);
+						if (strlen($xml->variables->cc_queue) > 0) {
+							$cc_queue = urldecode($xml->variables->cc_queue);
+							$cc_queue_array = explode('@', $cc_queue);
+							$cc_queue_extension = $cc_queue_array[0];
+							if (is_numeric($cc_queue_extension)) {
+								$sql = "select call_center_queue_uuid from v_call_center_queues ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and queue_extension = :queue_extension ";
+								$parameters['domain_uuid'] = urldecode($xml->variables->domain_uuid);
+								$parameters['queue_extension'] = $cc_queue_extension;
+								$database = new database;
+								$this->array[$key]['cc_queue'] = $database->select($sql, $parameters, 'column');
+								unset($parameters);
+							}
 						}
 
 					//app info
