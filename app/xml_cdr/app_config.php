@@ -578,8 +578,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_center_queue_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_call_centers";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "call_center_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Queue uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_side";
