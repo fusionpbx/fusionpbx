@@ -563,6 +563,7 @@
 				end
 				dbh:query(sql, params, function(row)
 					conference_room_uuid = string.lower(row["conference_room_uuid"]);
+					conference_room_name = string.lower(row["conference_room_name"]);
 					meeting_uuid = string.lower(row["meeting_uuid"]);
 					record = string.lower(row["record"]);
 					profile = string.lower(row["profile"]);
@@ -595,6 +596,16 @@
 
 		--close the database connection
 			dbh:release();
+
+		--set the conference_room_uuid
+			if (conference_room_uuid) then
+				session:setVariable("conference_room_uuid", conference_room_uuid);
+			end
+
+		--set the conference_room_name
+			if (conference_room_name) then
+				session:setVariable("conference_room_name", conference_room_name);
+			end
 
 		--set the meeting uuid
 			if (meeting_uuid) then
