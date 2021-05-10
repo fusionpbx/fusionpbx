@@ -176,7 +176,8 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "sip_hangup_disposition";
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
-					$this->fields[] = $field;
+					$field_name = end($field);
+					$this->fields[] = $field_name;
 				}
 			}
 		}
@@ -386,8 +387,20 @@ if (!class_exists('xml_cdr')) {
 						if (urldecode($xml->variables->cc_side) == 'agent') {
 							$this->array[$key]['direction'] = 'inbound';
 						}
-						if (is_uuid(urldecode($xml->variables->call_center_queue_uuid))) {
-							$this->array[$key]['cc_queue'] = urldecode($xml->variables->call_center_queue_uuid);
+						if (strlen($xml->variables->cc_queue) > 0) {
+							$cc_queue = urldecode($xml->variables->cc_queue);
+							$cc_queue_array = explode('@', $cc_queue);
+							$cc_queue_extension = $cc_queue_array[0];
+							if (is_numeric($cc_queue_extension)) {
+								$sql = "select call_center_queue_uuid from v_call_center_queues ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and queue_extension = :queue_extension ";
+								$parameters['domain_uuid'] = urldecode($xml->variables->domain_uuid);
+								$parameters['queue_extension'] = $cc_queue_extension;
+								$database = new database;
+								$this->array[$key]['cc_queue'] = $database->select($sql, $parameters, 'column');
+								unset($parameters);
+							}
 						}
 
 					//app info
@@ -457,13 +470,19 @@ if (!class_exists('xml_cdr')) {
 								$field_name = end($fields);
 								$this->fields[] = $field_name;
 								if (count($fields) == 1) {
-									$this->array[$key][$field_name] = urldecode($xml->variables->$fields[0]);
+									$this->array[$key][$field_name] = urldecode($xml->variables->{$fields[0]});
 								}
 								if (count($fields) == 2) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]);
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]});
 								}
 								if (count($fields) == 3) {
-									$this->array[$key][$field_name] = urldecode($xml->$fields[0]->$fields[1]->$fields[2]);
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]});
+								}
+								if (count($fields) == 4) {
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]});
+								}
+								if (count($fields) == 5) {
+									$this->array[$key][$field_name] = urldecode($xml->{$fields[0]}->{$fields[1]}->{$fields[2]}->{$fields[3]}->{$fields[4]});
 								}
 							}
 						}
