@@ -2532,7 +2532,7 @@
     <!-- Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P1415>0</P1415>
+    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
     <!-- IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
