@@ -3771,7 +3771,8 @@
 
     <!-- # Preferred Internet Protocol. 0 - Both, prefer IPv4, 1 - Both prefer IPv6, 2 - IPv4 only, 3 - IPv6 only. Default value is 0. -->
     <!-- # Number: 0, 1, 2, 3 -->
-    <P1415>0</P1415>
+    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
+
 
     <!-- # Address Type. 0 - DHCP, 1 - Static, 2 - PPPoE. Default value is 0 -->
     <!-- # Number: 0, 1, 2 -->
