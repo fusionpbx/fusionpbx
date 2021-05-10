@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -220,12 +220,23 @@
 	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+	$parameters['time_zone'] = $time_zone;
+
 //get the results from the db
 	$sql = "select \n";
 	$sql .= "c.domain_uuid, \n";
 	$sql .= "e.extension, \n";
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.duration, \n";
@@ -357,48 +368,49 @@
 	}
 
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-		$sql .= "and start_stamp between :start_stamp_begin and :start_stamp_end ";
-		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
-		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+		$sql .= "and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz ";
+		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
+		$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($start_stamp_begin) > 0) {
 			$sql .= "and start_stamp >= :start_stamp_begin ";
-			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
+			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($start_stamp_end) > 0) {
 			$sql .= "and start_stamp <= :start_stamp_end ";
-			$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+			$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
-		$sql .= "and answer_stamp between :answer_stamp_begin and :answer_stamp_end ";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz ";
+
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;
+		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($answer_stamp_begin) > 0) {
 			$sql .= "and answer_stamp >= :answer_stamp_begin ";
-			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
+			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;;
 		}
 		if (strlen($answer_stamp_end) > 0) {
 			$sql .= "and answer_stamp <= :answer_stamp_end "; 
-			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
-		$sql .= "and end_stamp between :end_stamp_begin and :end_stamp_end ";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
+		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz ";
+		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
+		$parameters['end_stamp_end'] = $end_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($end_stamp_begin) > 0) {
 			$sql .= "and end_stamp >= :end_stamp_begin ";
-			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
+			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($end_stamp_end) > 0) {
 			$sql .= "and end_stamp <= :end_stamp_end ";
-			$parameters['end_stamp'] = $end_stamp_end.':59.999';
+			$parameters['end_stamp'] = $end_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (is_numeric($duration_min)) {
@@ -551,6 +563,9 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
+//echo $sql;
+//print_r($parameters);
+//exit;
 	$database = new database;
 	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
 		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];

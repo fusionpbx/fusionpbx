@@ -948,34 +948,42 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function user_summary() {
 
+			//set the time zone
+				if (isset($_SESSION['domain']['time_zone']['name'])) {
+					$time_zone = $_SESSION['domain']['time_zone']['name'];
+				}
+				else {
+					$time_zone = date_default_timezone_get();
+				}
+
 			//build the date range
 				if (strlen($this->start_stamp_begin) > 0 || strlen($this->start_stamp_end) > 0) {
 					unset($this->quick_select);
 					if (strlen($this->start_stamp_begin) > 0 && strlen($this->start_stamp_end) > 0) {
-						$sql_date_range = " and start_stamp between :start_stamp_begin and :start_stamp_end \n";
-						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
-						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
+						$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
+						$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
+						$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 					}
 					else {
 						if (strlen($this->start_stamp_begin) > 0) { 
-							$sql_date_range = "and start_stamp >= :start_stamp_begin \n"; 
-							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000';
+							$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n"; 
+							$parameters['start_stamp_begin'] = $this->start_stamp_begin.':00.000 '.$time_zone;
 						}
 						if (strlen($this->start_stamp_end) > 0) { 
-							$sql_date_range .= "and start_stamp <= :start_stamp_end \n"; 
-							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999';
+							$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n"; 
+							$parameters['start_stamp_end'] = $this->start_stamp_end.':59.999 '.$time_zone;
 						}
 					}
 				}
 				else {
 					switch ($this->quick_select) {
-						case 1: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' \n"; break; //last 7 days
-						case 2: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' \n"; break; //last hour
-						case 3: $sql_date_range = "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000' \n"; break; //today
-						case 4: $sql_date_range = "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000' and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999' \n"; break; //yesterday
-						case 5: $sql_date_range = "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000' \n"; break; //this week
-						case 6: $sql_date_range = "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000' \n"; break; //this month
-						case 7: $sql_date_range = "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000' \n"; break; //this year
+						case 1: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))." ".$time_zone."'::timestamptz \n"; break; //last 7 days
+						case 2: $sql_date_range = "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))." ".$time_zone."'::timestamptz \n"; break; //last hour
+						case 3: $sql_date_range = "and start_stamp >= '".date('Y-m-d')." "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //today
+						case 4: $sql_date_range = "and start_stamp between '".date('Y-m-d',strtotime("-1 day"))." "."00:00:00.000 ".$time_zone."'::timestamptz and '".date('Y-m-d',strtotime("-1 day"))." "."23:59:59.999 ".$time_zone."'::timestamptz \n"; break; //yesterday
+						case 5: $sql_date_range = "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000 ".$time_zone."' \n"; break; //this week
+						case 6: $sql_date_range = "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this month
+						case 7: $sql_date_range = "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this year
 					}
 				}
 
