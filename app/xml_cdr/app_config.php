@@ -576,6 +576,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_center_queue_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Queue uuid";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_side";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Queue side is either member or agent";
