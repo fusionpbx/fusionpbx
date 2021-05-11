@@ -84,6 +84,7 @@
 			$voicemail_options = $_POST["voicemail_options"];
 			$voicemail_alternate_greet_id = $_POST["voicemail_alternate_greet_id"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
+			$voicemail_auto_mail = $_POST["voicemail_auto_mail"];
 			$voicemail_sms_to = $_POST["voicemail_sms_to"];
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
@@ -149,6 +150,7 @@
 					$array['voicemails'][0]['greeting_id'] = $greeting_id != '' ? $greeting_id : null;
 					$array['voicemails'][0]['voicemail_alternate_greet_id'] = $voicemail_alternate_greet_id != '' ? $voicemail_alternate_greet_id : null;
 					$array['voicemails'][0]['voicemail_mail_to'] = $voicemail_mail_to;
+					$array['voicemails'][0]['voicemail_auto_mail'] = $voicemail_auto_mail;
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
 					$array['voicemails'][0]['voicemail_tutorial'] = $voicemail_tutorial;
@@ -286,6 +288,7 @@
 			$greeting_id = $row["greeting_id"];
 			$voicemail_alternate_greet_id = $row["voicemail_alternate_greet_id"];
 			$voicemail_mail_to = $row["voicemail_mail_to"];
+			$voicemail_auto_mail = $row["voicemail_auto_mail"];
 			$voicemail_sms_to = $row["voicemail_sms_to"];
 			$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 			$voicemail_tutorial = $row["voicemail_tutorial"];
@@ -306,6 +309,7 @@
 
 //set defaults
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
+	if (strlen($voicemail_auto_mail) == 0) { $voicemail_auto_mail = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
 	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: "false"; }	
 	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = "false"; }
@@ -624,6 +628,20 @@
 	echo "	<input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_mail_to']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-voicemail_auto_mail']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='voicemail_auto_mail' id='voicemail_auto_mail'>\n";
+	echo "    	<option value='true' ".(($voicemail_auto_mail == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "    	<option value='false' ".(($voicemail_auto_mail == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['voicemail_auto_mail']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -626,7 +626,7 @@
 
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
-								send_email(voicemail_id_copy, voicemail_message_uuid);
+								send_email(voicemail_id_copy, voicemail_message_uuid, true);
 								if (voicemail_to_sms) then
 									send_sms(voicemail_id_copy, voicemail_message_uuid);
 								end

@@ -29,7 +29,7 @@
 	local Settings = require "resources.functions.lazy_settings"
 
 --define a function to send email
-	function send_email(id, uuid)
+	function send_email(id, uuid, auto)
 		local db = dbh or Database.new('system')
 		local settings = Settings.new(db, domain_name, domain_uuid)
 		local transcribe_enabled = settings:get('voicemail', 'transcribe_enabled', 'boolean');
@@ -48,11 +48,16 @@
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
+				voicemail_auto_mail = row["voicemail_auto_mail"];
 				voicemail_transcription_enabled = row["voicemail_transcription_enabled"];
 				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 				voicemail_description = row["voicemail_description"];
 			end);
+
+			if (voicemail_auto_mail == "false" and auto) then
+				return;
+			end
 
 		--set default values
 			if (voicemail_local_after_email == nil) then

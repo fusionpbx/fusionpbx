@@ -344,6 +344,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email address to send voicemail to.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_auto_mail";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose whether to automatically send the vocemail to email.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_sms_to";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the sms did to send voicemail to.";
