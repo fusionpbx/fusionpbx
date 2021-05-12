@@ -108,7 +108,6 @@
 	$sql_where .= "and not ( ";
 	$sql_where .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
 	$sql_where .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
-	$sql_where .= "or (user_setting_category = 'message' and user_setting_subcategory = 'key') ";
 	$sql_where .= ") ";
 	$parameters['user_uuid'] = $user_uuid;
 
