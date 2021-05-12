@@ -27,12 +27,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.1.sip_transport != 'dns srv'}
     <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+    <P47>{$account.1.server_address}</P47>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.1.server_address_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
     <P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
 {else}
     <P2312>{$account.1.server_address_secondary}</P2312>
@@ -41,7 +45,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.1.outbound_proxy_primary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
     <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
     <P48>{$account.1.outbound_proxy_primary}</P48>
@@ -50,7 +54,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.1.outbound_proxy_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
     <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
 {else}
     <P2333>{$account.1.outbound_proxy_secondary}</P2333>
@@ -989,12 +993,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.2.sip_transport != 'dns srv'}
     <P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+{else}
+    <P402>{$account.2.server_address}</P402>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.2.server_address_secondary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.server_address_secondary)}
     <P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
 {else}
     <P2412>{$account.2.server_address_secondary}</P2412>
@@ -1003,7 +1011,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.2.outbound_proxy_primary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
     <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
 {else}
     <P403>{$account.2.outbound_proxy_primary}</P403>
@@ -1012,7 +1020,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.2.outbound_proxy_secondary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
     <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
 {else}
     <P2433>{$account.2.outbound_proxy_secondary}</P2433>
@@ -1938,12 +1946,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.3.sip_transport != 'dns srv'}
     <P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
+{else}
+    <P502>{$account.3.server_address}</P502>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.3.server_address_secondary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.server_address_secondary)}
     <P2512>{$account.3.server_address_secondary}:{$account.3.sip_port}</P2512>
 {else}
     <P2512>{$account.3.server_address_secondary}</P2512>
@@ -1952,7 +1964,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.3.outbound_proxy_primary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_primary)}
     <P503>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P503>
 {else}
     <P503>{$account.3.outbound_proxy_primary}</P503>
@@ -1961,7 +1973,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.3.outbound_proxy_secondary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_secondary)}
     <P2533>{$account.3.outbound_proxy_secondary}:{$account.3.sip_port}</P2533>
 {else}
     <P2533>{$account.3.outbound_proxy_secondary}</P2533>
@@ -2886,12 +2898,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.4.sip_transport != 'dns srv'}
     <P602>{$account.4.server_address}:{$account.4.sip_port}</P602>
+{else}
+    <P602>{$account.4.server_address}</P602>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.4.server_address_secondary)}
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.server_address_secondary)}
     <P2612>{$account.4.server_address_secondary}:{$account.4.sip_port}</P2612>
 {else}
     <P2612>{$account.4.server_address_secondary}</P2612>
@@ -2900,7 +2916,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.4.outbound_proxy_primary)}
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_primary)}
     <P603>{$account.4.outbound_proxy_primary}:{$account.4.sip_port}</P603>
 {else}
     <P603>{$account.4.outbound_proxy_primary}</P603>
@@ -2909,7 +2925,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.4.outbound_proxy_secondary)}
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_secondary)}
     <P2633>{$account.4.outbound_proxy_secondary}:{$account.4.sip_port}</P2633>
 {else}
     <P2633>{$account.4.outbound_proxy_secondary}</P2633>
@@ -3837,12 +3853,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.5.sip_transport != 'dns srv'}
     <P1702>{$account.5.server_address}:{$account.5.sip_port}</P1702>
+{else}
+    <P1702>{$account.5.server_address}</P1702>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
 
-{if isset($account.5.server_address_secondary)}
+{if $account.5.sip_transport != 'dns srv' && isset($account.5.server_address_secondary)}
     <P2712>{$account.5.server_address_secondary}:{$account.5.sip_port}</P2712>
 {else}
     <P2712>{$account.5.server_address_secondary}</P2712>
@@ -3851,7 +3871,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.5.outbound_proxy_primary)}
+{if $account.5.sip_transport != 'dns srv' && isset($account.5.outbound_proxy_primary)}
     <P1703>{$account.5.outbound_proxy_primary}:{$account.5.sip_port}</P1703>
 {else}
     <P1703>{$account.5.outbound_proxy_primary}</P1703>
@@ -3860,7 +3880,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.5.outbound_proxy_secondary)}
+{if $account.5.sip_transport != 'dns srv' && isset($account.5.outbound_proxy_secondary)}
     <P2733>{$account.5.outbound_proxy_secondary}:{$account.5.sip_port}</P2733>
 {else}
     <P2733>{$account.5.outbound_proxy_secondary}</P2733>
@@ -4785,12 +4805,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.6.sip_transport != 'dns srv'}
     <P1802>{$account.6.server_address}:{$account.6.sip_port}</P1802>
+{else}
+    <P1802>{$account.6.server_address}</P1802>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.6.server_address_secondary)}
+{if $account.6.sip_transport != 'dns srv' && isset($account.6.server_address_secondary)}
     <P2812>{$account.6.server_address_secondary}:{$account.6.sip_port}</P2812>
 {else}
     <P2812>{$account.6.server_address_secondary}</P2812>
@@ -4799,7 +4823,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.6.outbound_proxy_primary)}
+{if $account.6.sip_transport != 'dns srv' && isset($account.6.outbound_proxy_primary)}
     <P1803>{$account.6.outbound_proxy_primary}:{$account.6.sip_port}</P1803>
 {else}
     <P1803>{$account.6.outbound_proxy_primary}</P1803>
@@ -4808,7 +4832,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
 
-{if isset($account.6.outbound_proxy_secondary)}
+{if $account.6.sip_transport != 'dns srv' && isset($account.6.outbound_proxy_secondary)}
     <P2833>{$account.5.outbound_proxy_secondary}:{$account.6.sip_port}</P2833>
 {else}
     <P2833>{$account.6.outbound_proxy_secondary}</P2833>
@@ -5720,7 +5744,7 @@
     <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
+    <P1415>0</P1415>
 
     <!-- # IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
