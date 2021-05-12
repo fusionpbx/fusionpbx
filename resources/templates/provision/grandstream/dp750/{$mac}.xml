@@ -27,12 +27,16 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
+{if $account.1.sip_transport != 'dns srv'}
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
 
-{if isset($account.1.server_address_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
 <P967>{$account.1.server_address_secondary}:{$account.1.sip_port}</P967>
 {else}
 <P967>{$account.1.server_address_secondary}</P967>
@@ -46,7 +50,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.1.outbound_proxy_primary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
 <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
 <P48>{$account.1.outbound_proxy_primary}</P48>
@@ -590,7 +594,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.2.outbound_proxy_primary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
 <P748>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P748>
 {else}
 <P748>{$account.2.outbound_proxy_primary}</P748>
@@ -1119,7 +1123,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.3.outbound_proxy_primary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_primary)}
 <P548>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P548>
 {else}
 <P548>{$account.3.outbound_proxy_primary}</P548>
@@ -1649,7 +1653,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.4.outbound_proxy_primary)}
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_primary)}
 <P603>{$account.4.outbound_proxy_primary}:{$account.4.sip_port}</P603>
 {else}
 <P603>{$account.4.outbound_proxy_primary}</P603>

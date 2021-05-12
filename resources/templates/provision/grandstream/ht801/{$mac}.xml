@@ -536,7 +536,11 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
+{if $account.1.sip_transport != 'dns srv'}
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
