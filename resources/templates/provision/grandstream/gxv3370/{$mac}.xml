@@ -666,7 +666,17 @@
 		<!-- Ethernet Settings -->
 		<!-- Preferred Internet Protocol -->
 		<!-- BothAndPreferIPv4, BothAndPreferIPv6, IPv4Only, IPv6Only -->
-		<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{if $grandstream_ipv_mode=='0'}
+			<item name="network.internetProtocol">BothAndPreferIPv4</item>
+			{elseif $grandstream_ipv_mode=='1'}
+			<item name="network.internetProtocol">BothAndPreferIPv6</item>
+			{elseif $grandstream_ipv_mode=='2'}
+			<item name="network.internetProtocol">IPv4Only</item>
+			{elseif $grandstream_ipv_mode=='3'}
+			<item name="network.internetProtocol">IPv6Only</item>
+			{else}
+			<item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{/if} 
 		<!-- IPv4 Address Type -->
 		<!-- DHCP, StaticIP, PPPoE -->
 		<item name="network.port.eth.1.type">DHCP</item>
