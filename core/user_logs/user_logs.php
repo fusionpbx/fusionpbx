@@ -225,8 +225,8 @@
 	if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
-	echo "<th class='center'>".$text['label-date']."</th>\n";
-	echo "<th class='center hide-md-dn'>".$text['label-time']."</th>\n";
+	echo "<th class='left'>".$text['label-date']."</th>\n";
+	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
 	echo th_order_by('result', $text['label-result'], $order_by, $order);
@@ -254,7 +254,7 @@
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
-			echo "	<td>".escape($row['time_formatted'])."</td>\n";
+			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";
 			echo "	<td>".escape($row['result'])."</td>\n";
