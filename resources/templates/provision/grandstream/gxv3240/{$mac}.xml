@@ -4393,7 +4393,7 @@
 
 <!-- Preferred Internet Protocol. 0 - IPv4, 1 - IPv6. Default value is 0. -->
 <!-- Number: 0, 1 -->
-<P1415>0</P1415>
+{if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
 <!-- Different Network for Data and VOIP Calls. 0 - No, 1 - Yes. Default value is 0. -->
 <!-- Number: 0, 1 -->
