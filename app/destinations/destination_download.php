@@ -156,6 +156,9 @@
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+	
+	echo $text['description-destination_export'];
+	echo "<br /><br />\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
