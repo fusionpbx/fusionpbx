@@ -1053,6 +1053,29 @@ $text['description-destination_import']['ru-ru'] = "";
 $text['description-destination_import']['sv-se'] = "";
 $text['description-destination_import']['uk-ua'] = "";
 
+$text['description-destination_export']['en-us'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['en-gb'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['ar-eg'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['de-at'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['de-ch'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['de-de'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['ek-gr'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['es-cl'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['es-mx'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['fr-ca'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['fr-fr'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['he-il'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['it-it'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['nl-nl'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['pl-pl'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['pt-br'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['pt-pt'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['ro-ro'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['ru-ru'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['sv-se'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['uk-ua'] = "Select the fields you wish to include in the export.";
+$text['description-destination_export']['tr-tr'] = "Select the fields you wish to include in the export.";
+
 $text['description-monthly_price_buy']['en-us'] = "Enter monthly price you pay for this destination (only when inbound)";
 $text['description-monthly_price_buy']['en-gb'] = "Enter monthly price you pay for this destination (only when inbound)";
 $text['description-monthly_price_buy']['ar-eg'] = "";
@@ -1514,5 +1537,26 @@ $text['billing-warning']['ro-ro'] = "";
 $text['billing-warning']['ru-ru'] = "Если вы используете приложение биллинга FusionPBX, обязательно добавьте код учетной записи и переменные-несущие.";
 $text['billing-warning']['sv-se'] = "Om du använder fusionpbx fakturering program, se till att lägga till 'account code' och operatör variabler";
 $text['billing-warning']['uk-ua'] = "Якщо ви користуєтеся додатком для тарифікації в fusionpbx, то переконайтеся, щоб додано змінні код облікового запису і оператора. ";
+
+$text['label-column_name']['en-us'] = "Column Name";
+$text['label-column_name']['en-gb'] = "Column Name";
+$text['label-column_name']['ar-eg'] = "";
+$text['label-column_name']['de-at'] = "";
+$text['label-column_name']['de-ch'] = "";
+$text['label-column_name']['de-de'] = "";
+$text['label-column_name']['es-cl'] = "";
+$text['label-column_name']['es-mx'] = "";
+$text['label-column_name']['fr-ca'] = "Nom de colonne";
+$text['label-column_name']['fr-fr'] = "Nom de colonne";
+$text['label-column_name']['he-il'] = "";
+$text['label-column_name']['it-it'] = "";
+$text['label-column_name']['nl-nl'] = "Kolomnaam";
+$text['label-column_name']['pl-pl'] = "";
+$text['label-column_name']['pt-br'] = "Nome da Coluna";
+$text['label-column_name']['pt-pt'] = "";
+$text['label-column_name']['ro-ro'] = "";
+$text['label-column_name']['ru-ru'] = "";
+$text['label-column_name']['sv-se'] = "";
+$text['label-column_name']['uk-ua'] = "";
 
 ?>
