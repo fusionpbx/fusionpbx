@@ -372,6 +372,10 @@ if (!class_exists('xml_cdr')) {
 						$tmp_year = date("Y", $tmp_time);
 						$tmp_month = date("M", $tmp_time);
 						$tmp_day = date("d", $tmp_time);
+						$start_time = strtotime($start_stamp);
+						$start_year = date("Y", $start_time);
+						$start_month = date("M", $start_time);
+						$start_day = date("d", $start_time);
 
 					//get the domain values from the xml
 						$domain_name = check_str(urldecode($xml->variables->domain_name));
@@ -443,8 +447,8 @@ if (!class_exists('xml_cdr')) {
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
 						elseif (strlen($xml->variables->record_session) > 0) {
-							$record_path = dirname(urldecode($xml->variables->record_session));
-							$record_name = basename(urldecode($xml->variables->record_session));
+							$record_path = urldecode($xml->variables->record_path);
+                                                        $record_name = urldecode($xml->variables->record_name);
 							$record_length = urldecode($xml->variables->record_seconds);
 						}
 						elseif (strlen($xml->variables->sofia_record_file) > 0) {
@@ -499,13 +503,13 @@ if (!class_exists('xml_cdr')) {
 						if (!isset($record_name) || is_null ($record_name) || (strlen($record_name) == 0)) {
 						       $bridge_uuid = check_str(urldecode($xml->variables->bridge_uuid));
 						       $path = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name.'/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
-						       if (file_exists($path.'/'.$bridge_uuid.'.wav')) {
+						       if (file_exists($path.'/'.$uuid.'.wav')) {
 							       $record_path = $path;
-							       $record_name = $bridge_uuid.'.wav';
+							       $record_name = $uuid.'.wav';
 							       $record_length = urldecode($xml->variables->duration);
-						       } elseif (file_exists($path.'/'.$bridge_uuid.'.mp3')) {
+						       } elseif (file_exists($path.'/'.$uuid.'.mp3')) {
 							       $record_path = $path;
-							       $record_name = $bridge_uuid.'.mp3';
+							       $record_name = $uuid.'.mp3';
 							       $record_length = urldecode($xml->variables->duration);
 						       } elseif (file_exists($path.'/'.$bridge_uuid.'.wav')) {
 							       $record_path = $path;
