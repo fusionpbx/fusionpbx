@@ -1454,7 +1454,9 @@
 		if (permission_exists('emergency_caller_id_select')) {
 			if (count($emergency_destinations) > 0) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
-				//echo "	<option value=''></option>\n"; Don't allow no selection when validating emergency numbers this way
+				if (permission_exists('emergency_caller_id_select_blank')) {
+					echo "		<option value=''></option>\n";
+				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(strlen($tmp) == 0){

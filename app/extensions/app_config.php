@@ -162,6 +162,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "emergency_caller_id_select";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "emergency_caller_id_select_blank";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "extension_user_record";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
