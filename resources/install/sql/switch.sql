@@ -350,7 +350,7 @@ ALTER TABLE sip_authentication OWNER TO fusionpbx;
 --
 CREATE TABLE sip_dialogs (
     call_id character varying(255),
-    uuid uuid,
+    uuid character varying(255),
     sip_to_user character varying(255),
     sip_to_host character varying(255),
     sip_from_user character varying(255),
