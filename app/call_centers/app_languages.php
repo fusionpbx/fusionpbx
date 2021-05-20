@@ -1114,6 +1114,27 @@ $text['label-strategy']['ru-ru'] = "Стратегия";
 $text['label-strategy']['sv-se'] = "Strategi";
 $text['label-strategy']['uk-ua'] = "";
 
+$text['label-default-status']['en-us'] = "Default Status";
+$text['label-default-status']['en-gb'] = "Default Status";
+$text['label-default-status']['ar-eg'] = "";
+$text['label-default-status']['de-at'] = "Standard Status"; //copied from de-de
+$text['label-default-status']['de-ch'] = "Standard Status"; //copied from de-de
+$text['label-default-status']['de-de'] = "Standard Status";
+$text['label-default-status']['es-cl'] = "Estado Predeterminado";
+$text['label-default-status']['es-mx'] = "Estado Predeterminado"; //copied from es-cl
+$text['label-default-status']['fr-ca'] = "État par défaut";
+$text['label-default-status']['fr-fr'] = "État par défaut";
+$text['label-default-status']['he-il'] = "";
+$text['label-default-status']['it-it'] = "Stato predefinito";
+$text['label-default-status']['nl-nl'] = "Standaard Status";
+$text['label-default-status']['pl-pl'] = "Domyślny Status";
+$text['label-default-status']['pt-br'] = "Estado Padrão"; //copied from pt-pt
+$text['label-default-status']['pt-pt'] = "Estado Padrão";
+$text['label-default-status']['ro-ro'] = "";
+$text['label-default-status']['ru-ru'] = "Статус по умолчанию";
+$text['label-default-status']['sv-se'] = "Standardstatus";
+$text['label-default-status']['uk-ua'] = "Статус за замовчуванням";
+
 $text['label-status']['en-us'] = "Status";
 $text['label-status']['en-gb'] = "Status";
 $text['label-status']['ar-eg'] = "";

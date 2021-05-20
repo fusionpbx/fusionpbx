@@ -240,10 +240,12 @@
 					$cmd = "api callcenter_config agent set contact ".$call_center_agent_uuid." ".$agent_contact;
 					$response = event_socket_request($fp, $cmd);
 					usleep(200);
-				//agent set status
-					$cmd = "api callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
-					$response = event_socket_request($fp, $cmd);
-					usleep(200);
+				//agent set status, for newly created agents only
+                    if ($action == "add") {
+                        $cmd = "api callcenter_config agent set status ".$call_center_agent_uuid." '".$agent_status."'";
+                        $response = event_socket_request($fp, $cmd);
+                        usleep(200);
+                    }
 				//agent set reject_delay_time
 					$cmd = "api callcenter_config agent set reject_delay_time ".$call_center_agent_uuid." ".$agent_reject_delay_time;
 					$response = event_socket_request($fp, $cmd);
@@ -446,7 +448,7 @@
 			echo "			<option value='".escape($field['user_uuid'])."' selected='selected'>".escape($field['username'])."</option>\n";
 		}
 		else {
-			echo "			<option value='".escape($field['user_uuid'])."' $selected>".escape($field['username'])."</option>\n";
+			echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 		}
 	}
 	echo "			</select>";
@@ -492,7 +494,7 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-status']."\n";
+	echo "	".$text['label-default-status']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
