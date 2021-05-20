@@ -3773,7 +3773,6 @@
     <!-- # Number: 0, 1, 2, 3 -->
     {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
-
     <!-- # Address Type. 0 - DHCP, 1 - Static, 2 - PPPoE. Default value is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <P8>0</P8>
