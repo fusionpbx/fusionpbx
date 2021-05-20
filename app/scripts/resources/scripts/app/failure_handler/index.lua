@@ -76,6 +76,12 @@
 					headers["X-FusionPBX-Call-UUID"]   = uuid;
 					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
+				--remove quotes from caller id name and number
+					caller_id_name = caller_id_name:gsub("'", "&#39;");
+					caller_id_name = caller_id_name:gsub([["]], "&#34;");
+					caller_id_number = caller_id_number:gsub("'", "&#39;");
+					caller_id_number = caller_id_number:gsub([["]], "&#34;");
+
 				--prepare the subject
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
