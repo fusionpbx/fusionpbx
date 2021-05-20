@@ -94,8 +94,6 @@
 					body = body:gsub("&nbsp;", " ");
 					body = body:gsub("\n", "");
 					body = body:gsub("\n", "");
-					body = body:gsub("'", "&#39;");
-					body = body:gsub([["]], "&#34;");
 					body = trim(body);
 
 				--send the emails
