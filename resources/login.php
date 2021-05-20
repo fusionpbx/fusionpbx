@@ -248,9 +248,6 @@
 	}
 
 //set a default login destination
-	if (!empty($_REQUEST['path'])) {
-		$_SESSION['login']['destination']['url'] = $_REQUEST['path'];
-	}
 	if (strlen($_SESSION['login']['destination']['url']) == 0) {
 		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
 	}
