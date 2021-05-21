@@ -630,6 +630,27 @@ $text['label-variables']['ru-ru'] = "Переменные";
 $text['label-variables']['sv-se'] = "Variabler";
 $text['label-variables']['uk-ua'] = "Змінні";
 
+$text['label-call-stats']['en-us'] = "Call Stats: Audio";
+$text['label-call-stats']['en-gb'] = "Call Stats: Audio";
+$text['label-call-stats']['ar-eg'] = "";
+$text['label-call-stats']['de-at'] = "";
+$text['label-call-stats']['de-ch'] = "";
+$text['label-call-stats']['de-de'] = "";
+$text['label-call-stats']['es-cl'] = "";
+$text['label-call-stats']['es-mx'] = "";
+$text['label-call-stats']['fr-ca'] = "";
+$text['label-call-stats']['fr-fr'] = "";
+$text['label-call-stats']['he-il'] = "";
+$text['label-call-stats']['it-it'] = "";
+$text['label-call-stats']['nl-nl'] = "";
+$text['label-call-stats']['pl-pl'] = "";
+$text['label-call-stats']['pt-br'] = "";
+$text['label-call-stats']['pt-pt'] = "";
+$text['label-call-stats']['ro-ro'] = "";
+$text['label-call-stats']['ru-ru'] = "";
+$text['label-call-stats']['sv-se'] = "";
+$text['label-call-stats']['uk-ua'] = "";
+
 $text['label-uuid']['en-us'] = "UUID";
 $text['label-uuid']['en-gb'] = "UUID";
 $text['label-uuid']['ar-eg'] = "";
