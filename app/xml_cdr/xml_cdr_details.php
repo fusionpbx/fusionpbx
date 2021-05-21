@@ -298,7 +298,6 @@
 				echo "			<th width='70%'>".$text['label-value']."</th>\n";
 				echo "		</tr>\n";
 				foreach($stat as $key => $value) {
-					if (is_array($value)) { $value = implode($value); }
 					$value = urldecode($value);
 					echo "<tr >\n";
 					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
