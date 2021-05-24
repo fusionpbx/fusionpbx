@@ -207,7 +207,6 @@
 			}
 			else {
 				//add the call_timeout and confirm
-				$agent_contact = $first.',call_timeout='.$agent_call_timeout.$last;
 				$agent_contact = "{".$confirm.",call_timeout=".$agent_call_timeout.",sip_invite_domain=".$_SESSION['domain_name']."}".$agent_contact;
 			}
 		}
