@@ -247,6 +247,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "5060 default";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "089119ac-c2f2-46a2-8d0e-6f78ac3fb740";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_super_search_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/provision/?file=super_search.xml";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for Yealink Super Search XML configuration file";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f903069-c0fc-4bf1-9c33-907bf238475e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_url";
