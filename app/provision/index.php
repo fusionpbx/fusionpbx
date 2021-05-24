@@ -86,7 +86,7 @@
 	if (empty($mac)) {
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
-			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4"; 
+			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T56A  58.80.0.25 001565f429a4";
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
 			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
 				if (strstr(substr($_SERVER['HTTP_USER_AGENT'],-4), ':')) { //remove colons if they exist
