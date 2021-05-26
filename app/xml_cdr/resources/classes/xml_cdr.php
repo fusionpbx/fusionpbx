@@ -346,13 +346,15 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['pin_number'] = urldecode($xml->variables->pin_number);
 
 					//time
-						$this->array[$key]['start_epoch'] = urldecode($xml->variables->start_epoch);
-						$start_stamp = urldecode($xml->variables->start_stamp);
-						$this->array[$key]['start_stamp'] = $start_stamp;
-						$this->array[$key]['answer_stamp'] = urldecode($xml->variables->answer_stamp);
-						$this->array[$key]['answer_epoch'] = urldecode($xml->variables->answer_epoch);
-						$this->array[$key]['end_epoch'] = urldecode($xml->variables->end_epoch);
-						$this->array[$key]['end_stamp'] = urldecode($xml->variables->end_stamp);
+						$start_epoch = urldecode($xml->variables->start_epoch);
+						$this->array[$key]['start_epoch'] = $start_epoch;
+						$this->array[$key]['start_stamp'] = date('c', $start_epoch);
+						$answer_epoch = urldecode($xml->variables->answer_epoch);
+						$this->array[$key]['answer_epoch'] = $answer_epoch;
+						$this->array[$key]['answer_stamp'] = date('c', $answer_epoch);
+						$end_epoch = urldecode($xml->variables->end_epoch);
+						$this->array[$key]['end_epoch'] = $end_epoch;
+						$this->array[$key]['end_stamp'] = date('c', $end_epoch);
 						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
 						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
@@ -424,6 +426,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['pdd_ms'] = urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec);
 
 					//get break down the date to year, month and day
+						$start_stamp = urldecode($xml->variables->start_stamp);
 						$start_time = strtotime($start_stamp);
 						$start_year = date("Y", $start_time);
 						$start_month = date("M", $start_time);
@@ -635,7 +638,7 @@ if (!class_exists('xml_cdr')) {
 									$array['call_recordings'][$x]['call_recording_name'] = $record_name;
 									$array['call_recordings'][$x]['call_recording_path'] = $record_path;
 									$array['call_recordings'][$x]['call_recording_length'] = $record_length;
-									$array['call_recordings'][$x]['call_recording_date'] = urldecode($xml->variables->start_stamp);
+									$array['call_recordings'][$x]['call_recording_date'] = date('c', $start_epoch);
 									$array['call_recordings'][$x]['call_direction'] = urldecode($xml->variables->call_direction);
 									//$array['call_recordings'][$x]['call_recording_description']= $row['zzz'];
 									//$array['call_recordings'][$x]['call_recording_base64']= $row['zzz'];
