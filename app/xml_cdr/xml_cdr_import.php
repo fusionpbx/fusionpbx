@@ -44,10 +44,11 @@
 	ini_set('memory_limit', '256M');
 	ini_set("precision", 6);
 
+//import the call detail records
 	$cdr = new xml_cdr;
-//import from the FreeSWITCH POST
+	//import from the FreeSWITCH POST
 	$cdr->post();
-//import from the file system
+	//import from the file system
 	$cdr->read_files();
 
 ?>
