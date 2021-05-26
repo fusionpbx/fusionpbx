@@ -453,6 +453,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "/var/cache/fusionpbx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Location for the file cache.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "31b60c5f-e501-4982-893b-b56ef4ef5b56";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "log";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable logging true or false.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "81008738-aec1-4535-b451-29c25f213694";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "log";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "syslog";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: syslog, file";
 
 	//schema details
 		$y=0;
