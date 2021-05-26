@@ -17,12 +17,12 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+
 */
 
 //this file exists for legacy reasons, old installs call this script to import CDR records.
