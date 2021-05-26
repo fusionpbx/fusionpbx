@@ -44,11 +44,9 @@
 	ini_set('memory_limit', '256M');
 	ini_set("precision", 6);
 
-//import the call detail records
+//import the call detail records from HTTP POST or file system
 	$cdr = new xml_cdr;
-	//import from the FreeSWITCH POST
 	$cdr->post();
-	//import from the file system
 	$cdr->read_files();
 
 ?>
