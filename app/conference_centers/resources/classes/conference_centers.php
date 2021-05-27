@@ -17,7 +17,7 @@ The Original Code is FusionPBX
 
 The Initial Developer of the Original Code is
 Mark J Crane <markjcrane@fusionpbx.com>
-Portions created by the Initial Developer are Copyright (C) 2008-2019
+Portions created by the Initial Developer are Copyright (C) 2008-2021
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -33,7 +33,7 @@ if (!class_exists('conference_centers')) {
 		 * declare public variables
 		 */
 		public $domain_uuid;
-		public $meeting_uuid;
+		public $conference_room_uuid;
 		public $order_by;
 		public $order;
 		public $rows_per_page;
@@ -87,20 +87,19 @@ if (!class_exists('conference_centers')) {
 				if (permission_exists("conference_room_view_all")) {
 					$not_admin = 0;
 				}
-				$sql = "select count(*) from v_conference_rooms as r, v_meetings as p ";
+				$sql = "select count(*) from v_conference_rooms as r ";
 				if ($not_admin) {
-					$sql .= ",v_meeting_users as u ";
+					$sql .= ", v_conference_room_users as u ";
 				}
 				$sql .= "where r.domain_uuid = :domain_uuid ";
-				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
 				if ($not_admin) {
-					$sql .= "and r.meeting_uuid = u.meeting_uuid ";
+					$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
 					$sql .= "and u.user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $user_uuid;
 				}
-				if (isset($this->meeting_uuid)) {
-					$sql .= "and r.meeting_uuid = :meeting_uuid ";
-					$parameters['meeting_uuid'] = $this->meeting_uuid;
+				if (isset($this->conference_room_uuid)) {
+					$sql .= "and r.conference_room_uuid = :conference_room_uuid ";
+					$parameters['conference_room_uuid'] = $this->conference_room_uuid;
 				}
 
 				if (isset($this->created_by)) {
@@ -139,20 +138,21 @@ if (!class_exists('conference_centers')) {
 				if (permission_exists("conference_room_view_all")) {
 					$not_admin = 0;
 				}
-				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, r.conference_room_name, max_members, ";
-				$fields .= "wait_mod, announce_name, announce_count, announce_recording, mute, sounds, created, created_by, r.enabled, r.description, record, ";
-				$fields .= "profile, moderator_pin, participant_pin";
+
+				$sql = "select ";
+				$sql .= "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.conference_room_name, r.max_members, ";
+				$sql .= "wait_mod, announce_name, announce_count, announce_recording, mute, sounds, created, created_by, r.enabled, r.description, record, ";
+				$sql .= "profile, r.moderator_pin, r.participant_pin ";
 				if ($not_admin) {
-					$fields .= ", meeting_user_uuid, user_uuid";
+					$sql .= ", u.conference_room_user_uuid, u.user_uuid ";
 				}
-				$sql = "select ".$fields." from v_conference_rooms as r, v_meetings as p ";
+				$sql .= "from v_conference_rooms as r ";
 				if ($not_admin) {
-					$sql .= ", v_meeting_users as u ";
+					$sql .= ", v_conference_room_users as u ";
 				}
 				$sql .= "where r.domain_uuid = :domain_uuid ";
-				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
 				if ($not_admin) {
-					$sql .= "and r.meeting_uuid = u.meeting_uuid ";
+					$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
 					$sql .= "and u.user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $_SESSION["user_uuid"];
 				}
@@ -160,16 +160,12 @@ if (!class_exists('conference_centers')) {
 				//	$sql .= "and p.member_pin = '".$this->search."' ";
 				//	$parameters['domain_uuid'] = $this->domain_uuid;
 				//}
-				if (isset($this->search)) {
-					$sql .= "and r.meeting_uuid = :meeting_uuid ";
-					$parameters['meeting_uuid'] = $this->meeting_uuid;
-				}
 				if (isset($this->created_by)) {
 					$sql .= "and r.created_by = :created_by ";
 					$parameters['created_by'] = $this->created_by;
 				}
 				if (strlen($this->order_by) == 0) {
-					$sql .= "order by r.description, r.meeting_uuid asc ";
+					$sql .= "order by r.description, r.conference_room_uuid asc ";
 				}
 				else {
 					$sql .= "order by $order_by $order ";
@@ -190,7 +186,7 @@ if (!class_exists('conference_centers')) {
 							$result[$x]["domain_uuid"] = $row["domain_uuid"];
 							$result[$x]["conference_room_uuid"] = $row["conference_room_uuid"];
 							$result[$x]["conference_center_uuid"] = $row["conference_center_uuid"];
-							$result[$x]["meeting_uuid"] = $row["meeting_uuid"];
+							//$result[$x]["meeting_uuid"] = $row["meeting_uuid"];
 							$result[$x]["conference_room_name"] = $row["conference_room_name"];
 							$result[$x]["max_members"] = $row["max_members"];
 							$result[$x]["wait_mod"] = $row["wait_mod"];
@@ -201,7 +197,7 @@ if (!class_exists('conference_centers')) {
 							$result[$x]["record"] = $row["record"];
 							$result[$x]["sounds"] = $row["sounds"];
 							$result[$x]["profile"] = $row["profile"];
-							$result[$x]["meeting_user_uuid"] = $row["meeting_user_uuid"];
+							$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"];
 							$result[$x]["user_uuid"] = $row["user_uuid"];
 							$result[$x]["moderator_pin"] = $row["moderator_pin"];
 							$result[$x]["participant_pin"] = $row["participant_pin"];
@@ -423,12 +419,8 @@ if (!class_exists('conference_centers')) {
 									//create array
 										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
 										$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-										if (is_uuid($record['meeting_uuid'])) {
-											$array['meeting_users'][$x]['meeting_uuid'] = $record['meeting_uuid'];
-											$array['meeting_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-											$array['meetings'][$x]['meeting_uuid'] = $record['meeting_uuid'];
-											$array['meetings'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-										}
+										$array['conference_room_users'][$x]['conference_room_uuid'] = $record['uuid'];
+										$array['conference_room_users'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 								}
 							}
 
@@ -437,8 +429,8 @@ if (!class_exists('conference_centers')) {
 
 								//grant temporary permissions
 									$p = new permissions;
-									$p->add('meeting_user_delete', 'temp');
-									$p->add('meeting_delete', 'temp');
+									$p->add('conference_room_user_delete', 'temp');
+									$p->add('conference_room_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -448,8 +440,8 @@ if (!class_exists('conference_centers')) {
 									unset($array);
 
 								//revoke temporary permissions
-									$p->delete('meeting_user_delete', 'temp');
-									$p->delete('meeting_delete', 'temp');
+									$p->delete('conference_room_user_delete', 'temp');
+									$p->delete('conference_room_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
@@ -463,7 +455,7 @@ if (!class_exists('conference_centers')) {
 
 			//assign private variables
 				$this->permission_prefix = 'conference_session_';
-				$this->list_page = 'conference_sessions.php?id='.$this->meeting_uuid;
+				$this->list_page = 'conference_sessions.php?id='.$this->conference_room_uuid;
 				$this->table = 'conference_sessions';
 				$this->uuid_prefix = 'conference_session_';
 
@@ -502,8 +494,7 @@ if (!class_exists('conference_centers')) {
 								//grant temporary permissions
 									$p = new permissions;
 									$p->add('conference_session_detail_delete', 'temp');
-									$p->add('meeting_user_delete', 'temp');
-									$p->add('meeting_delete', 'temp');
+									$p->add('conference_user_delete', 'temp');
 
 								//execute delete
 									$database = new database;
@@ -514,8 +505,7 @@ if (!class_exists('conference_centers')) {
 
 								//revoke temporary permissions
 									$p->delete('conference_session_detail_delete', 'temp');
-									$p->delete('meeting_user_delete', 'temp');
-									$p->delete('meeting_delete', 'temp');
+									$p->delete('conference_user_delete', 'temp');
 
 								//set message
 									message::add($text['message-delete']);
@@ -687,10 +677,7 @@ if (!class_exists('conference_centers')) {
 							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								if ($this->toggle_field == 'enabled' && is_uuid($meeting_uuid[$uuid])) {
-									$array['meetings'][$x]['meeting_uuid'] = $meeting_uuid[$uuid];
-									$array['meetings'][$x]['enabled'] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								}
+
 /*
 								//if toggling to true, start recording
 									if ($this->toggle_field == 'record' && is_uuid($meeting_uuid[$uuid]) && $state == $this->toggle_values[1]) {
