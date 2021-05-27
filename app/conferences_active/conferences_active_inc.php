@@ -78,9 +78,11 @@
 		echo "</tr>\n";
 		$x = 0;
 		foreach ($xml->conference as $row) {
+
 			//set the variables
 				$name = $row['name'];
 				$member_count = $row['member-count'];
+
 			//show the conferences that have a matching domain
 				$name_array = explode('@', $name);
 				if ($name_array[1] == $_SESSION['domain_name']) {
@@ -90,15 +92,11 @@
 					if (isset($name_array[0]) && is_uuid($name_array[0])) {
 						//check for the conference center room
 						$sql = "select ";
-						$sql .= "cr.conference_room_name, ";
-						$sql .= "v.participant_pin ";
-						$sql .= "from ";
-						$sql .= "v_meetings as v, ";
-						$sql .= "v_conference_rooms as cr ";
-						$sql .= "where ";
-						$sql .= "v.meeting_uuid = cr.meeting_uuid ";
-						$sql .= "and v.meeting_uuid = :meeting_uuid  ";
-						$parameters['meeting_uuid'] = $conference_uuid;
+						$sql .= "conference_room_name, ";
+						$sql .= "participant_pin ";
+						$sql .= "from v_conference_rooms ";
+						$sql .= "where conference_room_uuid = :conference_room_uuid ";
+						$parameters['conference_room_uuid'] = $conference_uuid;
 						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_room_name'];
