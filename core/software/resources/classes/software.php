@@ -12,7 +12,7 @@ if (!class_exists('software')) {
 		 * version
 		 */
 		public static function version() {
-			return '4.5.24';
+			return '4.5.25';
 		}
 
 		/**
