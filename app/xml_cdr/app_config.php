@@ -343,6 +343,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "fusionpbx";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Archive Database Name";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d47ba248-0257-45c6-b418-22c8032414ce";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cdr";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "cidr";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "127.0.0.1/32";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Limit allowed range of addresses for CDR over HTTP POST.";
 
 	//schema details
 		$y=0;
