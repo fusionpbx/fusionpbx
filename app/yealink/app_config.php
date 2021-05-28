@@ -391,6 +391,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T53w firmware ROM";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "304c78ff-bbac-477e-a399-8cdf7b0264ef";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t53";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54W(T57W,T53W,T53)-96.85.0.5.rom";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T53 firmware ROM";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "83e51b20-2d8d-4437-889d-dc97d9810fb5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
