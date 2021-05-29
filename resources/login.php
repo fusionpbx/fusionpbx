@@ -152,7 +152,7 @@
 								$email_body = str_replace('${domain}', $domain_name, $email_body);
 
 							//send reset link
-								if (send_email($email, $email_subject, $email_body)) {
+								if (send_email($email, $email_subject, $email_body, $eml_error)) {
 									//email sent
 										message::add($text['message-reset_link_sent'], 'positive', 2500);
 								}
@@ -241,6 +241,11 @@
 
 //set variable if not set
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
+
+//set the requested destination after login
+	if (!empty($_REQUEST['path'])) {
+		$_SESSION['login']['destination']['url'] = $_REQUEST['path'];
+	}
 
 //set a default login destination
 	if (strlen($_SESSION['login']['destination']['url']) == 0) {
