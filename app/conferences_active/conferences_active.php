@@ -79,9 +79,17 @@ function loadXmlHttp(url, id) {
 }
 
 loadXmlHttp.prototype.stateChanged=function () {
-if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-	//this.el.innerHTML = this.xmlHttp.responseText;
-	document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
+	var url = new URL(this.xmlHttp.responseURL);
+	if (/login\.php$/.test(url.pathname)) {
+		// You are logged out. Stop refresh!
+		url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+		window.location.href = url.href;
+		return;
+	}
+
+	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+		//this.el.innerHTML = this.xmlHttp.responseText;
+		document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 
 	//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
 		$('.tr_hover tr,.list tr').each(function(i,e) {
