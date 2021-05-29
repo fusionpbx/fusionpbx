@@ -244,11 +244,20 @@ unset($refresh_default);
 	}
 
 	loadXmlHttp.prototype.stateChanged=function () {
-	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-		//this.el.innerHTML = this.xmlHttp.responseText;
-		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
-		if(document.getElementById('sort')){
-			 if(document.getElementById('sort').value != "") 
+		var url = new URL(this.xmlHttp.responseURL);
+		if (/login\.php$/.test(url.pathname)) {
+			// You are logged out. Stop refresh!
+			refresh_stop();
+			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+			window.location.href = url.href;
+			return;
+		}
+
+		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+			//this.el.innerHTML = this.xmlHttp.responseText;
+			document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
+		if (document.getElementById('sort')) {
+			if (document.getElementById('sort').value != "")
 				document.getElementById('sort1').value=document.getElementById('sort').value;
 		}
 	}
