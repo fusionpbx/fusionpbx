@@ -2459,8 +2459,8 @@ $text['description-max_wait_time']['ru-ru'] = "Введите максималь
 $text['description-max_wait_time']['sv-se'] = "Ange max vänt-tid.";
 $text['description-max_wait_time']['uk-ua'] = "";
 
-$text['description-max_no_answer']['en-us'] = "At max no answer, the agent will be logged out.";
-$text['description-max_no_answer']['en-gb'] = "At max no answer, the agent will be logged out.";
+$text['description-max_no_answer']['en-us'] = "At max no answer, the agent's status will change to 'On Break'.";
+$text['description-max_no_answer']['en-gb'] = "At max no answer, the agent's status will change to 'On Break'.";
 $text['description-max_no_answer']['ar-eg'] = "";
 $text['description-max_no_answer']['de-at'] = "Geben Sie Max keine Antwort an."; //copied from de-de
 $text['description-max_no_answer']['de-ch'] = "Geben Sie Max keine Antwort an."; //copied from de-de
