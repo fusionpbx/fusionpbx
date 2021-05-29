@@ -219,14 +219,6 @@
 									$talk_time = $agent_row['talk_time'];
 									$ready_time = $agent_row['ready_time'];
 
-									$last_offered_call_seconds = time() - $last_offered_call;
-									$last_offered_call_length_hour = floor($last_offered_call_seconds/3600);
-									$last_offered_call_length_min = floor($last_offered_call_seconds/60 - ($last_offered_call_length_hour * 60));
-									$last_offered_call_length_sec = $last_offered_call_seconds - (($last_offered_call_length_hour * 3600) + ($last_offered_call_length_min * 60));
-									$last_offered_call_length_min = sprintf("%02d", $last_offered_call_length_min);
-									$last_offered_call_length_sec = sprintf("%02d", $last_offered_call_length_sec);
-									$last_offered_call_length = $last_offered_call_length_hour.':'.$last_offered_call_length_min.':'.$last_offered_call_length_sec;
-
 									$last_status_change_seconds = time() - $last_status_change;
 									$last_status_change_length_hour = floor($last_status_change_seconds/3600);
 									$last_status_change_length_min = floor($last_status_change_seconds/60 - ($last_status_change_length_hour * 60));
