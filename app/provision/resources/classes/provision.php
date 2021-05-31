@@ -423,7 +423,7 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
-
+							
 							$templates['Fanvil X6'] = 'fanvil/x6';
 							$templates['Fanvil i30'] = 'fanvil/i30';
 
@@ -522,7 +522,7 @@ include "root.php";
 							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
 							
 							foreach ($templates as $key=>$value){
-
+								
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;
 									break;
@@ -1011,7 +1011,7 @@ include "root.php";
 								$database = new database;
 								$keys = $database->select($sql, $parameters, 'all');
 								unset($parameters);
-
+								
 								//add the profile keys to the device keys array
 								if (is_array($keys) && sizeof($keys) != 0) {
 									//$id=0;
@@ -1021,7 +1021,7 @@ include "root.php";
 										//$id++;
 										$id = $row['device_key_id'];
 										$category = $row['device_key_category'];
-
+										
 										//Update BLF name with extension name from database if it's empty
 										if ($row['device_key_label'] == "") {
 											$sql = "select effective_caller_id_name ";
@@ -1085,7 +1085,7 @@ include "root.php";
 									//set the variables
 									$id = $row['device_key_id'];
 									$category = $row['device_key_category'];
-
+									
 									//Update BLF name with extension name from database if it's empty
 									if ($row['device_key_label'] == "") {
 											$sql = "select effective_caller_id_name ";
@@ -1102,10 +1102,12 @@ include "root.php";
 
 									//build the device keys array
 									$device_keys[$category][$id] = $row;
+									$device_keys[$category][$id]['device_key_id'] = $id;
 									$device_keys[$category][$id]['device_key_owner'] = "device";
 
 									//kept temporarily for backwards comptability to allow custom templates to be updated
 									$device_keys[$id] = $row;
+									$device_keys[$category][$id]['device_key_id'] = $id;
 									$device_keys[$id]['device_key_owner'] = "device";
 								}
 							}
@@ -1266,7 +1268,7 @@ include "root.php";
 
 				//set the mac address in the correct format
 					$mac = $this->format_mac($mac, $device_vendor);
-
+				
 				// set date/time for versioning provisioning templates
 					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
 						$time = date($_SESSION['provision']['version_format']['text']);
