@@ -423,7 +423,7 @@ include "root.php";
 							$templates['snom370-SIP'] = 'snom/370';
 							$templates['snom820-SIP'] = 'snom/820';
 							$templates['snom-m3-SIP'] = 'snom/m3';
-
+							
 							$templates['Fanvil X6'] = 'fanvil/x6';
 							$templates['Fanvil i30'] = 'fanvil/i30';
 
@@ -1073,20 +1073,6 @@ include "root.php";
 											unset($sql, $parameters);
 										}
 
-										//Update BLF name with extension name from database if it's empty
-										if ($row['device_key_label'] == "") {
-											$sql = "select effective_caller_id_name ";
-											$sql .= "from v_extensions ";
-											$sql .= "where domain_uuid= :domain_uuid ";
-											$sql .= "and extension= :extension ";
-											$parameters['domain_uuid'] = $domain_uuid;
-											$parameters['extension'] = $row['device_key_value'];
-											$database = new database;
-											$blf_label = $database->select($sql, $parameters, 'column');
-											$row['device_key_label'] = $blf_label;
-											unset($sql, $parameters);
-										}
-
 										//build the device keys array
 										$device_keys[$category][$id] = $row;
 										$device_keys[$category][$id]['device_key_id'] = $id;
@@ -1137,20 +1123,6 @@ include "root.php";
 									$id = $row['device_key_id'];
 									$category = $row['device_key_category'];
 									
-									//Update BLF name with extension name from database if it's empty
-									if ($row['device_key_label'] == "") {
-											$sql = "select effective_caller_id_name ";
-											$sql .= "from v_extensions ";
-											$sql .= "where domain_uuid= :domain_uuid ";
-											$sql .= "and extension= :extension ";
-											$parameters['domain_uuid'] = $domain_uuid;
-											$parameters['extension'] = $row['device_key_value'];
-											$database = new database;
-											$blf_label = $database->select($sql, $parameters, 'column');
-											$row['device_key_label'] = $blf_label;
-											unset($sql, $parameters);
-									}
-
 									//Update BLF name with extension name from database if it's empty
 									if ($row['device_key_label'] == "") {
 											$sql = "select effective_caller_id_name ";
@@ -1333,7 +1305,7 @@ include "root.php";
 
 				//set the mac address in the correct format
 					$mac = $this->format_mac($mac, $device_vendor);
-
+				
 				// set date/time for versioning provisioning templates
 					if (strlen($_SESSION['provision']['version_format']['text']) > 0) {
 						$time = date($_SESSION['provision']['version_format']['text']);
