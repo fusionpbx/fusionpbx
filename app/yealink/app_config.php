@@ -235,9 +235,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_hide";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled, 1-Enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enables or disables suppressing the display of DTMF digits during an active call. Enabled, the DTMF digits are displayed as asterisks. 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "968c9f53-305c-4fbd-a7dd-4dd6099e829e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
