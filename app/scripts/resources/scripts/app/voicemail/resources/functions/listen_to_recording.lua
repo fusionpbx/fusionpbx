@@ -213,6 +213,7 @@
 						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
 							message_waiting(voicemail_id_copy, domain_uuid);
 						end
+					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
