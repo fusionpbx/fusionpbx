@@ -1385,5 +1385,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "010";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Settings application on the phone's screen. Separate applications with forward slashes '/'.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0a86ac21-de2f-4a52-b6ee-3e9e63720214";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_enhanced_dss_keys";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables customizing the functions of the DSS keys(line keys, programmable keys, and ext keys)and assign functions to custom soft keys.";
 
 ?>
