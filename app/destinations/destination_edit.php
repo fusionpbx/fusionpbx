@@ -45,7 +45,7 @@
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$destination_uuid = trim($_REQUEST["id"]);
+		$destination_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
@@ -81,35 +81,37 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		//set the variables
-			$dialplan_uuid = trim($_POST["dialplan_uuid"]);
-			$domain_uuid = trim($_POST["domain_uuid"]);
-			$destination_type = trim($_POST["destination_type"]);
-			$destination_condition_field = trim($_POST["destination_condition_field"]);
-			$destination_number = trim($_POST["destination_number"]);
-			$destination_prefix = trim($_POST["destination_prefix"]);
-			$destination_trunk_prefix = trim($_POST["destination_trunk_prefix"]);
-			$destination_area_code = trim($_POST["destination_area_code"]);
-			$db_destination_number = trim($_POST["db_destination_number"]);
-			$destination_caller_id_name = trim($_POST["destination_caller_id_name"]);
-			$destination_caller_id_number = trim($_POST["destination_caller_id_number"]);
-			$destination_cid_name_prefix = trim($_POST["destination_cid_name_prefix"]);
-			$destination_context = trim($_POST["destination_context"]);
-			$fax_uuid = trim($_POST["fax_uuid"]);
-			$destination_order= trim($_POST["destination_order"]);
-			$destination_enabled = trim($_POST["destination_enabled"]);
-			$destination_description = trim($_POST["destination_description"]);
+			$dialplan_uuid = $_POST["dialplan_uuid"];
+			$domain_uuid = $_POST["domain_uuid"];
+			$destination_type = $_POST["destination_type"];
+			$destination_condition_field = $_POST["destination_condition_field"];
+			$destination_number = $_POST["destination_number"];
+			$destination_prefix = $_POST["destination_prefix"];
+			$destination_trunk_prefix = $_POST["destination_trunk_prefix"];
+			$destination_area_code = $_POST["destination_area_code"];
+			$db_destination_number = $_POST["db_destination_number"];
+			$destination_caller_id_name = $_POST["destination_caller_id_name"];
+			$destination_caller_id_number = $_POST["destination_caller_id_number"];
+			$destination_cid_name_prefix = $_POST["destination_cid_name_prefix"];
+			$destination_context = $_POST["destination_context"];
+			$fax_uuid = $_POST["fax_uuid"];
+			$provider_uuid = $_POST["provider_uuid"];
+			$user_uuid = $_POST["user_uuid"];
+			$destination_order= $_POST["destination_order"];
+			$destination_enabled = $_POST["destination_enabled"];
+			$destination_description = $_POST["destination_description"];
 			$destination_sell = check_float($_POST["destination_sell"]);
-			$currency = trim($_POST["currency"]);
+			$currency = $_POST["currency"];
 			$destination_buy = check_float($_POST["destination_buy"]);
-			$currency_buy = trim($_POST["currency_buy"]);
-			$destination_hold_music = trim($_POST["destination_hold_music"]);
-			$destination_record = trim($_POST["destination_record"]);
-			$destination_accountcode = trim($_POST["destination_accountcode"]);
+			$currency_buy = $_POST["currency_buy"];
+			$destination_hold_music = $_POST["destination_hold_music"];
+			$destination_record = $_POST["destination_record"];
+			$destination_accountcode = $_POST["destination_accountcode"];
 			$destination_type_voice = $_POST["destination_type_voice"];
 			$destination_type_fax = $_POST["destination_type_fax"];
 			$destination_type_text = $_POST["destination_type_text"];
 			$destination_type_emergency = $_POST["destination_type_emergency"];
-			$destination_carrier = trim($_POST["destination_carrier"]);
+			$destination_carrier = $_POST["destination_carrier"];
 
 		//get the destination app and data
 			$destination_array = explode(":", $_POST["destination_action"], 2);
@@ -133,7 +135,7 @@
 
 		//get the uuid
 			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
-				$destination_uuid = trim($_POST["destination_uuid"]);
+				$destination_uuid = $_POST["destination_uuid"];
 			}
 			else {
 				$destination_uuid = uuid();
@@ -665,6 +667,12 @@
 					$array['destinations'][0]["destination_uuid"] = $destination_uuid;
 					$array['destinations'][0]["dialplan_uuid"] = $dialplan_uuid;
 					$array['destinations'][0]["fax_uuid"] = $fax_uuid;
+					if (permission_exists('provider_edit')) {
+						$array['destinations'][0]["provider_uuid"] = $provider_uuid;
+					}
+					if (permission_exists('user_edit')) {
+						$array['destinations'][0]["user_uuid"] = $user_uuid;
+					}
 					$array['destinations'][0]["destination_type"] = $destination_type;
 					if (permission_exists('destination_condition_field')) {
 						$array['destinations'][0]["destination_condition_field"] = $destination_condition_field;
@@ -823,6 +831,8 @@
 				$destination_alternate_app = $row["destination_alternate_app"];
 				$destination_alternate_data = $row["destination_alternate_data"];
 				$fax_uuid = $row["fax_uuid"];
+				$provider_uuid = $row["provider_uuid"];
+				$user_uuid = $row["user_uuid"];
 				$currency = $row["currency"];
 				$destination_sell = $row["destination_sell"];
 				$destination_buy = $row["destination_buy"];
@@ -896,6 +906,33 @@
 	$destination = new destinations;
 	if (permission_exists('destination_domain') && is_uuid($domain_uuid)) {
 		$destination->domain_uuid = $domain_uuid;
+	}
+
+//get the providers list
+	if (permission_exists('provider_edit')) {
+		$sql = "select ";
+		$sql .= "provider_uuid, ";
+		$sql .= "provider_name, ";
+		$sql .= "domain_uuid ";
+		$sql .= "from v_providers ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and provider_enabled = true ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$providers = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
+
+//get the users list
+	if (permission_exists('user_edit')) {
+		$sql = "select * from v_users ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and user_enabled = 'true' ";
+		$sql .= "order by username asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 	}
 
 //create token
@@ -1161,6 +1198,47 @@
 			echo "</tr>\n";
 		}
 		unset($sql, $parameters, $result, $row);
+	}
+
+	if (permission_exists('provider_edit') && is_array($providers) && @sizeof($providers) != 0) {
+		echo "<tr id='tr_fax_detection'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-provider']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='provider_uuid' id='provider_uuid' class='formfld' style='".$select_style."'>\n";
+		echo "	<option value=''></option>\n";
+		foreach ($providers as &$row) {
+			if ($row["provider_uuid"] == $provider_uuid) {
+				echo "		<option value='".escape($row["provider_uuid"])."' selected='selected'>".escape($row["provider_name"])."</option>\n";
+			}
+			else {
+				echo "		<option value='".escape($row["provider_uuid"])."'>".escape($row["provider_name"])."</option>\n";
+			}
+		}
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo "	".$text['description-providers']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('user_edit')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-user']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "			<option value=\"\"></option>\n";
+		foreach($users as $field) {
+			if ($field['user_uuid'] == $user_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "			<option value='".escape($field['user_uuid'])."' $selected>".escape($field['username'])."</option>\n";
+		}
+		echo "			</select>";
+		unset($users);
+		echo "			<br>\n";
+		echo "			".$text['description-user']."\n";
 	}
 
 	echo "<tr id='tr_cid_name_prefix'>\n";
