@@ -332,7 +332,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Always Ring Speaker. 0 - No, 1 - Yes. Default is 0";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Always Ring Speaker. 0 - No, 1 - Yes both, 2 - Yes Speaker Only. Default is 0";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "453ec939-ef61-4ecd-ad0a-31905153efd8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
