@@ -30,20 +30,12 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
-{if $account.1.sip_transport != 'dns srv'}
-<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
-{else}
 <P47>{$account.1.server_address}</P47>
-{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-    
-{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
-    <P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
-{else}
-    <P2312>{$account.1.server_address_secondary}</P2312>
-{/if}
+<P50602></P50602>
+
 <!-- # SIP User ID -->
 <!-- # String -->
 <P35>{$account.1.user_id}</P35>
@@ -73,19 +65,14 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
-    <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
-{else}
-    <P48>{$account.1.outbound_proxy_primary}</P48>
+{if isset($account.1.server_address_primary)}
+    <P48>{$account.1.server_address_primary}:{$account.1.sip_port}</P48>
 {/if}
 
 <!-- # Secondary Outbound Proxy -->
 <!-- # String -->
-    
-{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
-    <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
-{else}
-    <P2333>{$account.1.outbound_proxy_secondary}</P2333>
+{if isset($account.1.server_address_secondary)}
+    <P2333>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2333>
 {/if}
 
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
@@ -666,15 +653,11 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
-{if $account.2.sip_transport != 'dns srv'}
 <P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
-{else}
-<P402>{$account.2.server_address}</P402>
-{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-{if $account.2.sip_transport != 'dns srv' && isset($account.2.server_address_secondary)}
+{if isset($account.2.server_address_secondary)}
     <P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
 {else}
     <P2412>{$account.2.server_address_secondary}</P2412>
@@ -702,13 +685,13 @@
 
 <!-- # Voice Mail Access Number -->
 <!-- # String -->
-<P426>{$voicemail_number}</P426>
+<P426>*97</P426>
 
 <!-- # Network Settings -->
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
+{if isset($account.2.outbound_proxy_primary)}
     <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
 {else}
     <P403>{$account.2.outbound_proxy_primary}</P403>
@@ -716,7 +699,7 @@
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
+{if isset($account.2.outbound_proxy_secondary)}
     <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
 {else}
     <P2433>{$account.2.outbound_proxy_secondary}</P2433>
@@ -1266,7 +1249,7 @@
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2346>0</P2346>
+<P2346>1</P2346>
 
 <!-- # SIP Realm Used for Challenge INVITE & NOTIFY  -->
 <!-- # Strings -->
@@ -1828,29 +1811,29 @@
 <!-- #################################################################### -->
 <!-- # Alternate DNS Server -->
 <!-- # Number: 0 - 255 -->
-<!-- # P92 =  -->
+<P92>208</P92>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P93 =  -->
+<P93>67</P93>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P94 =  -->
+<P94>222</P94>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P95 =  -->
+<P95>222</P95>
 
 <!-- # Second Alternate DNS Server -->
 <!-- # Number: 0 - 255 -->
-<!-- # P5026 =  -->
+<P5026>8</P5026>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P5027 =  -->
+<P5027>8</P5027>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P5028 =  -->
+<P5028>8</P5028>
 
 <!-- # Number: 0 - 255 -->
-<!-- # P5029 =  -->
+<P5029>8</P5029>
 
 <!-- # Layer 3 QoS for SIP. 0-63. Default is 26. -->
 <!-- # Number: 0-63 -->
@@ -2013,7 +1996,7 @@
 <!-- # Date Display Format. 0 - Normal(M/D/YYYY), 1 - YYYY/MM/DD, 2 - MM/DD/YYYY, 3 - DD/MM/YYYY.  Default value is 1. -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P102>2</P102>
+<P102>1</P102>
 
 <!-- #################################################################### -->
 <!-- # System Settings/Time and Language/Language                      ## -->
@@ -2321,11 +2304,11 @@
 <!-- # Default is No -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P194>1</P194>
+<P194>0</P194>
 
 <!-- # Automatic Upgrade Check Interval (m). Minimum 60 minutes. Default value is 10080 (7 days) -->
 <!-- # Number: 60 - 5256000 -->
-<P193>1440</P193>
+<P193>10080</P193>
 
 <!-- # Starting/Ending Hour of the Day(0-23) -->
 <!-- # Number: 0 - 23 -->
@@ -2547,5 +2530,20 @@
 <!-- # Screen lock. 0 - Disable, 1 - Enable. Default is 0. -->
 <!-- # Number: 0, 1 -->
 <!-- # P22235 -->
+
+<!-- Enable DND Feature. 0 - No, 1 - Yes. Default is 1 -->
+<!-- Number: 0, 1 -->
+<!-- Mandatory -->
+<P8446>0</P8446>
+
+<!-- Enable Video Call. 0 - Yes, 1 - No. Default is 0. -->
+<!-- Number: 0, 1 -->
+<P22091>1</P22091>
+
+
+<!-- Start Video Automatically. 0 - Disable, 1 - Enable. Default is 1. -->
+<!-- Number: 0, 1 -->
+<P2314>0</P2314>
+
 </config>
 </gs_provision>
