@@ -4,7 +4,7 @@
 CREATE TABLE agents (
    uuid uuid,
    name character varying(255),
-   system character varying(255),
+   instance_id varying(255),
    type character varying(255),
    contact character varying(255),
    status character varying(255),
@@ -22,6 +22,7 @@ CREATE TABLE agents (
    calls_answered integer DEFAULT 0 NOT NULL,
    talk_time integer DEFAULT 0 NOT NULL,
    ready_time integer DEFAULT 0 NOT NULL,
+   external_calls_count INTEGER NOT NULL DEFAULT 0
    agent_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE agents OWNER TO fusionpbx;
@@ -234,7 +235,7 @@ ALTER TABLE limit_data OWNER TO fusionpbx;
 --
 CREATE TABLE members (
    queue character varying(255),
-   system character varying(255),
+   instance_id varying(255),
    uuid uuid NOT NULL,
    session_uuid uuid NOT NULL,
    cid_number character varying(255),
@@ -248,7 +249,6 @@ CREATE TABLE members (
    skill_score integer DEFAULT 0 NOT NULL,
    serving_agent character varying(255),
    serving_system character varying(255),
-   instance_id character varying(255),
    state character varying(255),
    member_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
@@ -478,7 +478,6 @@ CREATE TABLE tiers (
    level integer DEFAULT 1 NOT NULL,
    "position" integer DEFAULT 1 NOT NULL,
    tier_uuid uuid PRIMARY KEY default gen_random_uuid()
-
 );
 ALTER TABLE tiers OWNER TO fusionpbx;
 
