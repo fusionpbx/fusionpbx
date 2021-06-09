@@ -1085,38 +1085,44 @@ if (!$included) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-fax-subject']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
-		echo "	<br />\n";
-		echo "	".$text['description-fax-subject']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_subject')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-fax-subject']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
+			echo "	<br />\n";
+			echo "	".$text['description-fax-subject']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		".$text['label-fax-message']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
-		echo "<br />\n";
-		echo "	".$text['description-fax-message']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_message')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "		".$text['label-fax-message']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
+			echo "<br />\n";
+			echo "	".$text['description-fax-message']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-fax-footer']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$_SESSION['fax']['cover_footer']['text']."</textarea>\n";
-		echo "	<br />\n";
-		echo "	".$text['description-fax-footer']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_footer')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-fax-footer']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$_SESSION['fax']['cover_footer']['text']."</textarea>\n";
+			echo "	<br />\n";
+			echo "	".$text['description-fax-footer']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "</table>";
 		echo "<br /><br />\n";
