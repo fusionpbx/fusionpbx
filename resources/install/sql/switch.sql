@@ -237,7 +237,7 @@ CREATE TABLE members (
    queue character varying(255),
    instance_id character varying(255),
    uuid uuid NOT NULL,
-   session_uuid uuid NOT NULL,
+   session_uuid VARCHAR(255) NOT NULL,
    cid_number character varying(255),
    cid_name character varying(255),
    system_epoch integer DEFAULT 0 NOT NULL,
