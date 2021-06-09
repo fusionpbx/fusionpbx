@@ -375,7 +375,10 @@
 											}
 										}
 									}
-									if (is_array($array[$parent][$row_id])) { $y++; }
+									if (is_array($array[$parent][$row_id]) && 
+										($field_name != "phone_number" && $field_name != "phone_speed_dial" && $field_name != "phone_type_voice")) {
+										$y++;
+									}
 								}
 
 							//debug information
