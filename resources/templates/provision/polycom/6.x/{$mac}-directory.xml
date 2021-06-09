@@ -16,6 +16,7 @@
 			<ct>{$row.phone_extension}</ct>
 			{/if}
 			<dc/>
+			<sd>{$x}</sd>
 			<ad>0</ad>
 			<ar>0</ar>
 			<bw>0</bw>
