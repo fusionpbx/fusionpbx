@@ -70,6 +70,12 @@
 			headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
 			headers = headers..'"X-FusionPBX-Email-Type":"emergency_call"}';
 
+		--remove quotes from caller id name and number
+			caller_id_name = caller_id_name:gsub("'", "&#39;");
+			caller_id_name = caller_id_name:gsub([["]], "&#34;");
+			caller_id_number = caller_id_number:gsub("'", "&#39;");
+			caller_id_number = caller_id_number:gsub([["]], "&#34;");
+
 		--prepare the subject
 			local f = io.open(file_subject, "r");
 			local subject = f:read("*all");
@@ -94,8 +100,6 @@
 			body = body:gsub("&nbsp;", " ");
 			body = body:gsub("\n", "");
 			body = body:gsub("\n", "");
-			body = body:gsub("'", "&#39;");
-			body = body:gsub([["]], "&#34;");
 			body = trim(body);
 
 		--send the email
