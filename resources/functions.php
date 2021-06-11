@@ -1449,35 +1449,35 @@ function number_pad($number,$n) {
 						//set the mime type
 						switch (substr($attachment['name'], -4)) {
 							case ".png":
-								$attachment['type'] = 'image/png';
+								$attachment['mime_type'] = 'image/png';
 								break;
 							case ".pdf":
-								$attachment['type'] = 'application/pdf';
+								$attachment['mime_type'] = 'application/pdf';
 								break;
 							case ".mp3":
-								$attachment['type'] = 'audio/mpeg';
+								$attachment['mime_type'] = 'audio/mpeg';
 								break;
 							case ".wav":
-								$attachment['type'] = 'audio/wav';
+								$attachment['mime_type'] = 'audio/x-wav';
 								break;
 							case ".opus":
-								$attachment['type'] = 'audio/opus';
+								$attachment['mime_type'] = 'audio/opus';
 								break;
 							case ".ogg":
-								$attachment['type'] = 'audio/ogg';
-							break;
+								$attachment['mime_type'] = 'audio/ogg';
+								break;
 						}
 
 						//add the attachments
 						if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
-							$mail->AddAttachment($attachment['value'], $attachment['name'], null, $attachment['type']);
+							$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
 						}
 						else if ($attachment['type'] == 'string') {
 							if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['type']);
+								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
 							}
 							else {
-								$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['type']);
+								$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
 							}
 						}
 					}
