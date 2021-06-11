@@ -1354,11 +1354,14 @@ function number_pad($number,$n) {
 			*/
 
 			try {
+				//include the phpmailer classes
 				include_once("resources/phpmailer/class.phpmailer.php");
 				include_once("resources/phpmailer/class.smtp.php");
 
+				//regular expression to validate email addresses
 				$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,7}$/';
 
+				//create the email object and set general settings
 				$mail = new PHPMailer();
 				$mail->IsSMTP();
 				if ($_SESSION['email']['smtp_hostname']['text'] != '') {
@@ -1408,8 +1411,8 @@ function number_pad($number,$n) {
 					$mail->SMTPDebug = $eml_debug_level;
 				}
 
+				//add the email recipients
 				$address_found = false;
-
 				if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
 					$eml_recipients = str_replace(' ', '', $eml_recipients);
 					$eml_recipients = str_replace(array(';',','), ' ', $eml_recipients);
@@ -1437,18 +1440,44 @@ function number_pad($number,$n) {
 					return false;
 				}
 
+				//add email attachments
 				if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
 					foreach ($eml_attachments as $attachment) {
+						//set the name of the file
 						$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+
+						//set the mime type
+						switch (substr($attachment['name'], -4)) {
+							case ".png":
+								$attachment['type'] = 'image/png';
+								break;
+							case ".pdf":
+								$attachment['type'] = 'application/pdf';
+								break;
+							case ".mp3":
+								$attachment['type'] = 'audio/mpeg';
+								break;
+							case ".wav":
+								$attachment['type'] = 'audio/wav';
+								break;
+							case ".opus":
+								$attachment['type'] = 'audio/opus';
+								break;
+							case ".ogg":
+								$attachment['type'] = 'audio/ogg';
+							break;
+						}
+
+						//add the attachments
 						if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
-							$mail->AddAttachment($attachment['value'], $attachment['name']);
+							$mail->AddAttachment($attachment['value'], $attachment['name'], null, $attachment['type']);
 						}
 						else if ($attachment['type'] == 'string') {
 							if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name']);
+								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['type']);
 							}
 							else {
-								$mail->AddStringAttachment($attachment['value'], $attachment['name']);
+								$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['type']);
 							}
 						}
 					}
