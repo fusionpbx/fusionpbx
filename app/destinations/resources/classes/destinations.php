@@ -440,12 +440,6 @@ if (!class_exists('destinations')) {
 						//alert(action);
 						var xhttp = new XMLHttpRequest();
 						xhttp.onreadystatechange = function() {
-							var url = new URL(this.xmlHttp.responseURL);
-							if (/login\.php$/.test(url.pathname)) {
-								// You are logged out. Not much we can de here.
-								return;
-							}
-
 							if (this.readyState == 4 && this.status == 200) {
 								document.getElementById(id).innerHTML = this.responseText;
 							}
