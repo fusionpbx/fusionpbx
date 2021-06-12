@@ -181,7 +181,7 @@
 		--post listen options
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:5:7:8:9:0", "", "\\d+");
+					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "", "phrase:voicemail_listen_file_options:1:2:5:7:8:9:0", "", "^[\\d\\*#]$");
 				end
 			end
 		--wait for more digits
@@ -217,10 +217,12 @@
 					session:execute("playback", "phrase:voicemail_ack:emailed");
 				elseif (dtmf_digits == "*") then
 					timeouts = 0;
-					main_menu();
+					return main_menu();
 				elseif (dtmf_digits == "0") then
 					message_saved(voicemail_id, uuid);
 					session:transfer("0", "XML", context);
+				elseif (dtmf_digits == "#") then
+					return;
 				else
 					message_saved(voicemail_id, uuid);
 					session:execute("playback", "phrase:voicemail_ack:saved");
