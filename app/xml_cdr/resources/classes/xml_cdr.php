@@ -346,6 +346,9 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->missed_call == 'true') {
 							$missed_call = 'true';
 						}
+						if ($xml->variables->voicemail_action == "save"){
+							$missed_call = 'true';
+						}
 
 					//misc
 						$uuid = urldecode($xml->variables->uuid);
