@@ -346,7 +346,7 @@ if (!class_exists('xml_cdr')) {
 						if ($xml->variables->missed_call == 'true') {
 							$missed_call = 'true';
 						}
-						if ($xml->variables->voicemail_action == "save"){
+						if ($xml->variables->voicemail_action == "save" && strlen($xml->variables->bridge_uuid) > 0) {
 							$missed_call = 'true';
 						}
 
