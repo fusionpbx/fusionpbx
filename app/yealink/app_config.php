@@ -1393,5 +1393,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables customizing the functions of the DSS keys(line keys, programmable keys, and ext keys)and assign functions to custom soft keys.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e803d3d4-d58f-413b-be33-37b91d6b64b8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_screensaver_wait";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6h";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 1h, 2h, 3h or 6h, the default is 6h";
 
 ?>
