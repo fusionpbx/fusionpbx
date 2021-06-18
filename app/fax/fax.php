@@ -86,7 +86,7 @@
 		$sql = "select count(f.fax_uuid) from v_fax as f ";
 		$sql .= "where f.domain_uuid = :domain_uuid ";
 		if (isset($search)) {
-			$sql = "and (";
+			$sql .= "and (";
 			$sql .= "	lower(fax_name) like :search ";
 			$sql .= "	or lower(fax_email) like :search ";
 			$sql .= "	or lower(fax_extension) like :search ";
@@ -108,7 +108,7 @@
 		$sql .= "and f.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_uuid = :user_uuid ";
 		if (isset($search)) {
-			$sql = "and (";
+			$sql .= "and (";
 			$sql .= "	lower(fax_name) like :search ";
 			$sql .= "	or lower(fax_email) like :search ";
 			$sql .= "	or lower(fax_extension) like :search ";
