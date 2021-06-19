@@ -235,7 +235,7 @@
 	echo $text['description-destinations']."\n";
 	echo "<br /><br />\n";
 
-	echo "<form id='form_list' method='get'>\n";
+	echo "<form id='form_list' method='POST'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
