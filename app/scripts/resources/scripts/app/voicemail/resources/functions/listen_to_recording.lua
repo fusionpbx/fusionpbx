@@ -181,7 +181,7 @@
 		--post listen options
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "", "phrase:voicemail_listen_file_options:1:2:5:7:8:9:0", "", "^[\\d\\*#]$");
+					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
 				end
 			end
 		--wait for more digits
@@ -197,6 +197,12 @@
 				elseif (dtmf_digits == "2") then
 					message_saved(voicemail_id, uuid);
 					session:execute("playback", "phrase:voicemail_ack:saved");
+				elseif (dtmf_digits == "3") then
+					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
+					session:say(caller_id_number, default_language, "name_spelled", "iterated");
+					if (current_time_zone ~= nil) then
+						session:execute("set", "timezone="..current_time_zone.."");
+					end
 				elseif (dtmf_digits == "5") then
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
@@ -207,6 +213,7 @@
 						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
 							message_waiting(voicemail_id_copy, domain_uuid);
 						end
+					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
