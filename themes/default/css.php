@@ -1160,8 +1160,8 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	#default_login {
 		position: fixed;
-		top: 50%;
-		left: 50%;
+		top: <?php echo ($_SESSION['theme']['login_body_top']['text'] != '') ? $_SESSION['theme']['login_body_top']['text'] : '50%'; ?>;
+		left: <?php echo ($_SESSION['theme']['login_body_left']['text'] != '') ? $_SESSION['theme']['login_body_left']['text'] : '50%'; ?>;
 		-moz-transform: translate(-50%, -50%);
 		-webkit-transform: translate(-50%, -50%);
 		-khtml-transform: translate(-50%, -50%);

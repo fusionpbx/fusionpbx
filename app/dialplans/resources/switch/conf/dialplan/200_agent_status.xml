@@ -4,8 +4,8 @@
 			<action application="set" data="agent_id=${sip_from_user}"/>
 			<action application="lua" data="app.lua agent_status"/>
 		</condition>
-		<condition field="destination_number" expression="^(agent\+)(.*)$">
-			<action application="set" data="agent_id=${sip_from_user}"/>
+		<condition field="destination_number" expression="^agent\+(.*)$">
+			<action application="set" data="agent_id=$1"/>
 			<action application="lua" data="app.lua agent_status"/>
 		</condition>
 	</extension>
