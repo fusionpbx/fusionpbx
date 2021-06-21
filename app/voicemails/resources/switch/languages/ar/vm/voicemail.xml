@@ -2,7 +2,7 @@
 
   <macro name="voicemail_enter_new_pass">
   	<input pattern="(.*)">
-      <match>
+  	  <match>
   	  	<action function="play-file" data="voicemail/vm-enter_new_pin.wav"/>
   	  </match>
   	</input>
@@ -10,7 +10,7 @@
 
   <macro name="voicemail_password_below_minimum">
   	<input pattern="(.*)">
-      <match>
+  	  <match>
   	  	<action function="play-file" data="voicemail/vm-pin_below_minimum_length.wav"/>
   	  	<action function="execute" data="sleep(300)"/>
   	  	<action function="play-file" data="voicemail/vm-minimum_pin_length_is.wav"/>
@@ -21,7 +21,7 @@
 
   <macro name="voicemail_password_not_secure">
   	<input pattern="(.*)">
-      <match>
+  	  <match>
   	  	<action function="play-file" data="voicemail/vm-password_is_not_secure.wav"/>
   	  </match>
   	</input>
@@ -152,7 +152,7 @@
       <match>
         <action function="play-file" data="ivr/ivr-to_skip.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
-       <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
       </match>
    </input>
   </macro>
@@ -165,7 +165,7 @@
         <action function="execute" data="sleep(1000)"/>
         <action function="play-file" data="voicemail/vm-change_password.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
-       <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
       </match>
    </input>
   </macro>
@@ -176,7 +176,7 @@
       <match>
         <action function="play-file" data="voicemail/vm-to_record_greeting.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
-       <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
       </match>
    </input>
   </macro>
