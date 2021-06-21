@@ -34,7 +34,7 @@
 
 //get media uuid
 	$message_media_uuid = $_GET['id'];
-	$message_media_source = $_GET['src'];
+	$message_media_source = escape($_GET['src']);
 	$action = $_GET['action'];
 
 //get media

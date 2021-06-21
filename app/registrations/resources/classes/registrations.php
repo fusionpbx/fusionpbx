@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2021
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -311,75 +311,80 @@ if (!class_exists('registrations')) {
 
 						//loop through registrations
 							if ($fp) {
-								foreach ($registrations as $registration) {
+								//check if registrations exist
+								if (is_array($registrations)) {
+									foreach ($registrations as $registration) {
 
-									//validate the submitted profile
-										if ($registration['profile'] != '' && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
-											foreach ($sip_profiles as $field) {
-												if ($field['name'] == $registration['profile']) {
-													$profile = $registration['profile'];
-													break;
+										//validate the submitted profile
+											if ($registration['profile'] != '' && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
+												foreach ($sip_profiles as $field) {
+													if ($field['name'] == $registration['profile']) {
+														$profile = $registration['profile'];
+														break;
+													}
 												}
 											}
-										}
-										else {
-											header('Location: '.$this->list_page);
-											exit;
-										}
-
-									//validate the submitted user
-										if ($registration['user'] != '') {
-											$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $registration['user']);
-										}
-
-									//validate the submitted host
-										if ($registration['host'] != '') {
-											$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $registration['host']);
-										}
-
-									//lookup vendor by agent
-										if ($registration['agent'] != '') {
-											$vendor = device::get_vendor_by_agent($registration['agent']);
-										}
-
-									//prepare the api command
-										if ($profile && $user) {
-											switch ($action) {
-												case 'unregister':
-													$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
-													$response_message = $text['message-registrations_unregistered'];
-													break;
-												case 'provision':
-													if ($vendor && $host) {
-														$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
-														$response_message = $text['message-registrations_provisioned'];
-													}
-													break;
-												case 'reboot':
-													if ($vendor && $host) {
-														$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
-														$response_message = $text['message-registrations_rebooted'];
-													}
-													break;
-												default:
-													header('Location: '.$this->list_page);
-													exit;
+											else {
+												header('Location: '.$this->list_page);
+												exit;
 											}
-										}
 
-									//send the api command
-										if ($command && $fp) {
-											$response_api[$registration['user']]['command'] = event_socket_request($fp, "api ".$command);
-											$response_api[$registration['user']]['log'] = event_socket_request($fp, "api log notice ".$command);
-										}
+										//validate the submitted user
+											if ($registration['user'] != '') {
+												$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $registration['user']);
+											}
 
+										//validate the submitted host
+											if ($registration['host'] != '') {
+												$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $registration['host']);
+											}
+
+										//lookup vendor by agent
+											if ($registration['agent'] != '') {
+												$vendor = device::get_vendor_by_agent($registration['agent']);
+											}
+
+										//prepare the api command
+											if ($profile && $user) {
+												switch ($action) {
+													case 'unregister':
+														$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
+														$response_message = $text['message-registrations_unregistered'];
+														break;
+													case 'provision':
+														if ($vendor && $host) {
+															$command = "lua app.lua event_notify ".$profile." check_sync ".$user." ".$vendor." ".$host;
+															$response_message = $text['message-registrations_provisioned'];
+														}
+														break;
+													case 'reboot':
+														if ($vendor && $host) {
+															$command = "lua app.lua event_notify ".$profile." reboot ".$user." ".$vendor." ".$host;
+															$response_message = $text['message-registrations_rebooted'];
+														}
+														break;
+													default:
+														header('Location: '.$this->list_page);
+														exit;
+												}
+											}
+
+										//send the api command
+											if ($command && $fp) {
+												$response_api[$registration['user']]['command'] = event_socket_request($fp, "api ".$command);
+												$response_api[$registration['user']]['log'] = event_socket_request($fp, "api log notice ".$command);
+											}
+
+									}
 								}
 
 								//set message
 									if (is_array($response_api)) {
 										$message = $response_message;
 										foreach ($response_api as $registration_user => $response) {
-											$message .= "<br>\n<strong>".$registration_user."</strong>: ".$response['command'];
+											if (trim($response['command']) != '-ERR no reply') {
+												$message .= "<br>\n<strong>".$registration_user."</strong>: ".$response['command'];
+											}
 										}
 										message::add($message, 'positive', '7000');
 									}

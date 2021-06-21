@@ -340,10 +340,13 @@ if (!class_exists('xml_cdr')) {
 
 					//set missed calls
 						$missed_call = 'false';
-						if ($xml->variables->cc_side != "agent" && strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
+						if ($xml->variables->missed_call == 'true') {
 							$missed_call = 'true';
 						}
-						if ($xml->variables->missed_call == 'true') {
+						elseif ($xml->variables->cc_side != "agent" && strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
+							$missed_call = 'true';
+						}
+						elseif ($xml->variables->voicemail_action == "save" && strlen($xml->variables->bridge_uuid) > 0) {
 							$missed_call = 'true';
 						}
 
