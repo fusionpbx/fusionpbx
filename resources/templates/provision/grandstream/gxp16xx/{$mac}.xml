@@ -2913,11 +2913,18 @@
 <!--  4: MMMM dd, dddd   eg. October 31, Monday -->
 <!--  Number: 0, 1, 2, 3, 4 -->
 <!--  Mandatory -->
-<P102>0</P102>
-<!--  Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
-<!--  Number: 0, 1 -->
-<!--  Mandatory -->
-<P122>0</P122>
+{if isset($grandstream_date_display_format)}
+    <P102>{$grandstream_date_display_format}</P102>
+{else}
+    <P102>0</P102>
+
+    <!-- # Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_time_display_format)}
+    <P122>{$grandstream_time_display_format}</P122>
+{else}
+    <P122>0</P122>
 <!-- ############################################################################# -->
 <!-- #  Settings/Web Service -->
 <!-- ############################################################################# -->
