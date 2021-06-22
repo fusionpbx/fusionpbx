@@ -110,8 +110,11 @@ if (!class_exists('destinations')) {
 					//add prefix
 						if (strlen($destination_prefix) > 0) {
 							if (strlen($destination_prefix) > 0 && strlen($destination_prefix) < 4) {
-								$plus = (substr($destination_prefix, 0, 1) == "+") ? '' : '\+?';
-								$destination_prefix = $plus.$destination_prefix.'?';
+								$destination_prefix = trim($destination_prefix, '+');
+								if (strlen($destination_prefix) > 0) {
+									$destination_prefix.='?';
+								}
+								$destination_prefix = '\+?'.$destination_prefix;
 							}
 							else {
 								$destination_prefix = '(?:'.$destination_prefix.')?';
