@@ -38,10 +38,9 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
+--define objects
 	local Database = require "resources.functions.database";
-
 	local log = require "resources.functions.log".call_flow_monitor
-
 	local presence_in = require "resources.functions.presence_in"
 
 --make sure the scripts/run dir exists
@@ -96,7 +95,7 @@
 
 					-- turn the lamp
 						presence_in.turn_lamp( call_flow_status == "false",
-							call_flow_feature_code.."@"..domain_name,
+							'flow+'..call_flow_feature_code.."@"..domain_name,
 							call_flow_uuid
 						);
 
