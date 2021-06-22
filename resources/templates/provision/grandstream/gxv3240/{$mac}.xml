@@ -4030,7 +4030,9 @@
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Virtual Account Group Avaya Mode. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
