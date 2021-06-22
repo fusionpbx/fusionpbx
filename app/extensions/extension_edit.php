@@ -1301,9 +1301,10 @@
 				foreach ($destinations as &$row) {
 					$tmp = $row["destination_caller_id_name"];
 					if(strlen($tmp) == 0){
-						$tmp = $row["destination_description"];
+						// $tmp = $row["destination_description"];
 					}
-					if(strlen($tmp) > 0){
+					if(strlen($tmp) > 0 && !in_array($tmp, $in_list)){
+						$in_list[] = $tmp;
 						if ($outbound_caller_id_name == $tmp) {
 							echo "		<option value='".escape($tmp)."' selected='selected'>".escape($tmp)."</option>\n";
 						}
