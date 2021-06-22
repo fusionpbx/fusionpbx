@@ -326,6 +326,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c245a640-9caa-472a-9e5a-f2f0392c40ff";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_headset_ring";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Always Ring Speaker. 0 - No, 1 - Yes both, 2 - Yes Speaker Only. Default is 0";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "453ec939-ef61-4ecd-ad0a-31905153efd8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_attended_transfer";

@@ -2830,7 +2830,9 @@ Account 5 Codec Settings
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Auto Conference. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->

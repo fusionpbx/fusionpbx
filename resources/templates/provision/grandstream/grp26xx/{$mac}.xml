@@ -7288,7 +7288,9 @@
     <!-- # Always Ring Speaker. 0 - No, 1 - Yes, both, 2 - Yes, speaker only. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+    <P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
     <!-- # Headset TX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
