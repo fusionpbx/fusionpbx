@@ -38,7 +38,7 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
---define objects
+--initialize the objects
 	local Database = require "resources.functions.database";
 	local log = require "resources.functions.log".call_flow_monitor
 	local presence_in = require "resources.functions.presence_in"
@@ -65,6 +65,7 @@
 	file:close()
 
 	log.notice("Start")
+
 --monitor the call flows status
 	local sql = "select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code," ..
 		"f.call_flow_status, f.call_flow_label, f.call_flow_alternate_label "..
