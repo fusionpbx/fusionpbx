@@ -192,7 +192,7 @@
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
-	echo "		<th>".$text['label-number_alias']."</th>\n";
+	//echo "	<th>".$text['label-number_alias']."</th>\n";
 	echo "		<th class='center'>".$text['label-answered']."</th>\n";
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
@@ -212,7 +212,7 @@
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
+			//echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['missed'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['no_answer'])."&nbsp;</td>\n";

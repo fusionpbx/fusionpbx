@@ -37,6 +37,7 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public $db;
 		public $array;
+		public $debug;
 		public $fields;
 
 		/**
@@ -399,6 +400,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['cc_side'] = urldecode($xml->variables->cc_side);
 						$this->array[$key]['cc_member_uuid'] = urldecode($xml->variables->cc_member_uuid);
 						$this->array[$key]['cc_queue_joined_epoch'] = urldecode($xml->variables->cc_queue_joined_epoch);
+						$this->array[$key]['cc_queue'] = urldecode($xml->variables->cc_queue);
 						$this->array[$key]['cc_member_session_uuid'] = urldecode($xml->variables->cc_member_session_uuid);
 						$this->array[$key]['cc_agent_uuid'] = urldecode($xml->variables->cc_agent_uuid);
 						$this->array[$key]['cc_agent'] = urldecode($xml->variables->cc_agent);
@@ -1007,10 +1009,15 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "e.extension, \n";
 				$sql .= "e.number_alias, \n";
 
+				//answered
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and missed_call = false \n";
+				$sql .= " and hangup_cause != 'LOSE_RACE' \n";
+				$sql .= " and originating_leg_uuid IS NULL \n";
+				$sql .= " and (answer_stamp IS NOT NULL and bridge_uuid IS NOT NULL) \n";
+				$sql .= " and (cc_side IS NULL or cc_side !='agent')";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
@@ -1020,16 +1027,31 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as answered, \n";
 
+				//missed
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				$sql .= " and missed_call = true \n";
-				if (!permission_exists('xml_cdr_enterprise_leg')) {
-					$sql .= " and originating_leg_uuid is null \n";
-				}
-				elseif (!permission_exists('xml_cdr_lose_race')) {
-					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
-				}
+				$sql .= " and hangup_cause != 'LOSE_RACE' \n";
+				$sql .= " and originating_leg_uuid IS NULL \n";
+
+				$sql .= " and ( \n";
+				$sql .= " ( \n";
+				$sql .= " missed_call = '1' \n";
+				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
+				$sql .= " ) \n";
+				
+				$sql .= " or ( \n";
+				$sql .= " (cc_side is null or cc_side != 'agent') \n";
+				$sql .= " and (answer_stamp is not null and bridge_uuid is null) \n";
+				$sql .= " ) \n";
+				
+				$sql .= " or ( \n";
+				$sql .= " ((answer_stamp is null and bridge_uuid is null) \n";
+				$sql .= " and sip_hangup_disposition != 'send_refuse' ) \n";
+				$sql .= " or ( answer_stamp is not null and bridge_uuid is null and voicemail_message = false )) \n";
+				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
+				$sql .= " ) \n";
+				
 				if ($this->include_internal) {
 							$sql .= " and (direction = 'inbound' or direction = 'local') ";
 				} else {
@@ -1038,10 +1060,12 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as missed, \n";
 
+				//cc missed
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
 				$sql .= " and c.hangup_cause = 'NO_ANSWER' \n";
+				$sql .= " and (cc_side IS NOT NULL or cc_side ='agent')";
  				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
@@ -1051,6 +1075,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as no_answer, \n";
 
+				//busy
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
@@ -1064,6 +1089,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as busy, \n";
 
+				//aloc
 				$sql .= "sum(c.billsec) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
@@ -1080,15 +1106,13 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as aloc, \n";
 
+				//inbound calls
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				if (!permission_exists('xml_cdr_enterprise_leg')) {
-					$sql .= " and originating_leg_uuid is null \n";
-				}
-				elseif (!permission_exists('xml_cdr_lose_race')) {
-					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
-				}
+				$sql .= " and hangup_cause != 'LOSE_RACE' \n";
+				$sql .= " and originating_leg_uuid IS NULL \n";
+				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
 				if ($this->include_internal) {
 						$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
@@ -1098,6 +1122,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= ") \n";
 				$sql .= "as inbound_calls, \n";
 
+				//inbound duration
 				$sql .= "sum(c.billsec) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
@@ -1109,6 +1134,7 @@ if (!class_exists('xml_cdr')) {
 				}
 				$sql .= "as inbound_duration, \n";
 
+				//outbound duration
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
@@ -1138,7 +1164,10 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " start_stamp, \n";
 				$sql .= " hangup_cause, \n";
 				$sql .= " originating_leg_uuid, \n";
-				$sql .= " billsec \n";
+				$sql .= " billsec, \n";
+				$sql .= " cc_side, \n";
+				$sql .= " sip_hangup_disposition, \n";
+				$sql .= " voicemail_message \n";
 				$sql .= " from v_xml_cdr \n";
 				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
