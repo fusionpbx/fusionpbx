@@ -37,7 +37,6 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public $db;
 		public $array;
-		public $debug;
 		public $fields;
 
 		/**
