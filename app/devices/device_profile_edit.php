@@ -161,15 +161,17 @@
 				}
 			}
 			$y = 0;
-			foreach ($device_profile_settings as $row) {
-				if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
-					$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
-					$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
-					$y++;
+			if (permission_exists("device_profile_setting_edit")) {
+				foreach ($device_profile_settings as $row) {
+					if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
+						$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
+						$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
+						$y++;
+					}
 				}
 			}
 
