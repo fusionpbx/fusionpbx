@@ -976,7 +976,9 @@
 		if (permission_exists('device_line_password')) {
 			echo "				<td class='vtable'>".$text['label-password']."</td>\n";
 		}
-		echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		if (permission_exists('device_line_port')) {
+			echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		}
 		if (permission_exists('device_line_transport')) {
 			echo "				<td class='vtable'>".$text['label-sip_transport']."</td>\n";
 		}
@@ -1128,9 +1130,11 @@
 					echo "			</td>\n";
 				}
 
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
-				echo "			</td>\n";
+				if (permission_exists('device_line_port')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
+					echo "			</td>\n";
+				}
 
 				if (permission_exists('device_line_transport')) {
 					echo "			<td align='left'>\n";
