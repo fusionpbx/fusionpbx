@@ -8526,7 +8526,8 @@
 {/if}
 
 {/for}
-    
+
+{literal}
     <!-- # Description. Max length allowed is 32 characters. -->
     <!-- # String -->
     <!-- # P1465 = -->
@@ -12275,6 +12276,7 @@
     <!-- # User ID.  Max length allowed is 64 characters. -->
     <!-- # String -->
     <!-- <P303></P303> -->
+{/literal}
 
 {assign var=key_types value=["none"=>-1,"speed dial"=>0, "blf"=>1, "presence watcher"=>2, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"voicemail"=>6,"call return"=>7,"transfer"=>8,"call park"=>9,"intercom"=>10,"ldap search"=>11,"conference"=>12,"multicast paging"=>13,"record"=>14,"call log"=>15,"monitored call park"=>16,"menu"=>17]}
 {$start_id=323}
@@ -12342,6 +12344,7 @@
 
 {/for}
 
+{literal}
     <!-- ###################################################################################### -->
     <!-- # MPK 2- GXP2130/2160 only -->
     <!-- ###################################################################################### -->
@@ -12941,7 +12944,7 @@
     <!-- # User ID. Max length allowed is 64 character -->
     <!-- # String -->
     <!-- # <P1463></P1463> -->
-
+{/literal}
     <!-- ############################################################################## -->
     <!-- ##  Settings/Programmable Keys / Softkeys Settings -->
     <!-- ############################################################################## -->
@@ -13224,6 +13227,7 @@
 {/for}
 {/if}
 
+{literal}
     <!-- ###################################################################################### -->
     <!-- # EXT MPK 2 -->
     <!-- ###################################################################################### -->
@@ -17214,7 +17218,7 @@
     <!-- # Value -->
     <!-- # String -->
     <!-- # <P23798></P23798> -->
-
+{/literal}
 
 
   </config>
