@@ -203,6 +203,7 @@
 					if (current_time_zone ~= nil) then
 						session:execute("set", "timezone="..current_time_zone.."");
 					end
+					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				elseif (dtmf_digits == "5") then
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
@@ -213,7 +214,6 @@
 						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
 							message_waiting(voicemail_id_copy, domain_uuid);
 						end
-					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
