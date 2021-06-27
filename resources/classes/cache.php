@@ -195,7 +195,7 @@ class cache {
 					$event .= "Event-Subclass: fusion::file\n";
 					$event .= "API-Command: cache\n";
 					$event .= "API-Command-Argument: flush\n";
-					event_socket_request($fp, $event);
+					// event_socket_request($fp, $event);
 
 				//remove the cache
 					recursive_delete($_SESSION['cache']['location']['text']);
