@@ -165,7 +165,7 @@
 		--send the email with the voicemail recording attached
 			send_email(forward_voicemail_id, voicemail_message_uuid);
 
-			session:execute("playback", "phrase:voicemail_ack:forwarded");
+			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-message_forwarded.wav");
 
 		--delete or save the message
 			local action = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_post_forward_action:1:2", "", "^[1-2]$");
