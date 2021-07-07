@@ -1428,7 +1428,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "06f33638-df48-11eb-a35d-536492a496c1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_all_on_code";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_always_on_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*72";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
@@ -1436,7 +1436,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8250e104-df48-11eb-a35e-536492a496c1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_all_off_code";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_forward_always_off_code";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*73";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
