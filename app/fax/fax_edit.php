@@ -546,8 +546,20 @@
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='email' name='fax_email' maxlength='255' value=\"".escape($fax_email)."\">\n";
-		echo "<br />\n";
+		echo "<table border='0' cellpadding='2' cellspacing='0'>\n";
+		$x = 0;
+		foreach($fax_emails as $email) {
+			echo "<tr>\n";
+			echo "<td>\n";
+			echo "	<input class='formfld' type=\"text\" name=\"fax_email[".$x."]\" maxlength='255' style=\"width: 90%;\"value=\"".escape($email)."\">\n";
+			echo "</td>\n";
+			$x++;
+		}
+		echo "<tr>\n";
+		echo "	<td>\n";
+		echo "		<input class='formfld' type=\"text\" name=\"fax_email[".$x++."]\" maxlength='255' style=\"width: 90%;\"value=\"\">\n";
+		echo "	</td>\n";
+		echo "</table>\n";
 		echo "	".$text['description-email']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
