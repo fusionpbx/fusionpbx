@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -173,6 +173,11 @@
 
 		//call forward config
 			if (permission_exists('call_forward')) {
+				//trim hidden characters
+				$forward_all_destination = trim($forward_all_destination);
+				$forward_busy_destination = trim($forward_busy_destination);
+				$forward_no_answer_destination = trim($forward_no_answer_destination);
+				$forward_user_not_registered_destination = trim($forward_user_not_registered_destination);
 
 				//sanitize the destinations
 				$forward_all_destination = str_replace('$', '', $forward_all_destination);
@@ -234,6 +239,8 @@
 					$destination_found = false;
 					foreach ($destinations as $field) {
 						if ($field['destination'] != '') {
+							//trim hidden characters
+							$field['destination'] = trim($field['destination']);
 
 							//sanitize the destination
 							$field['destination'] = str_replace('$', '', $field['destination']);
