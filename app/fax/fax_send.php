@@ -476,10 +476,15 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 			}
 			if (isset($logo) && $logo) {
+				$logo_dirname = strtolower(pathinfo($logo, PATHINFO_DIRNAME));
 				$logo_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
 				$logo_fileext = pathinfo($logo_filename, PATHINFO_EXTENSION);
 				if (in_array($logo_fileext, ['gif','jpg','jpeg','png','bmp'])) {
-					if (!file_exists($dir_fax_temp.'/'.$logo_filename)) {
+					if (file_exists($logo_dirname.'/'.$logo_filename)) {
+						$logo = $logo_dirname.'/'.$logo_filename;
+						$display_logo = true;	
+					}
+					else {
 						$raw = file_get_contents($logo);
 						if (file_put_contents($dir_fax_temp.'/'.$logo_filename, $raw)) {
 							$logo = $dir_fax_temp.'/'.$logo_filename;
@@ -488,10 +493,6 @@ if (!function_exists('fax_split_dtmf')) {
 						else {
 							unset($logo);
 						}
-					}
-					else {
-						$logo = $dir_fax_temp.'/'.$logo_filename;
-						$display_logo = true;
 					}
 				}
 				else {
