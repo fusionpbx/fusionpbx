@@ -1249,7 +1249,7 @@
 <!-- # Authenticate Incoming INVITE. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P2346>1</P2346>
+<P2346>0</P2346>
 
 <!-- # SIP Realm Used for Challenge INVITE & NOTIFY  -->
 <!-- # Strings -->
