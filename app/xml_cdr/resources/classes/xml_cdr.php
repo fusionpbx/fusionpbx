@@ -197,7 +197,7 @@ if (!class_exists('xml_cdr')) {
 			if (is_array($_SESSION['cdr']['field'])) {
 				foreach ($_SESSION['cdr']['field'] as $field) {
 					$field_name = end($field);
-					if (!in_array($field, $this->fields)){
+					if (!in_array($field, $this->fields))
 						$this->fields[] = $field_name;
 				}
 			}
