@@ -52,17 +52,14 @@
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
-	//add the user_edit permission
-		$p = new permissions;
-		$p->add("user_edit", "temp");
 		foreach ($_POST['agents'] as $row) {
 			if (strlen($row['agent_status']) > 0) {
 				//agent set status
 					if ($fp) {
-						// update user_status
-							$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
-							$array['users'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-							$array['users'][0]['user_status'] = $row['agent_status'];
+						// update the database
+							$array['call_center_agents'][0]['call_center_agent_uuid'] = $row['id'];
+							$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+							$array['call_center_agents'][0]['agent_status'] = $row['agent_status'];
 							$database = new database;
 							$database->app_name = 'call_centers_dashboard';
 							$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
@@ -88,8 +85,6 @@
 					}
 			}
 		}
-		//remove the temporary permission
-			$p->delete("user_edit", "temp");
 
 		//set message
 			//...
@@ -133,7 +128,7 @@
 		$call_center_queues[$x]['queue_status'] = 'Logged Out';
 		foreach ($call_center_tiers as $tier) {
 			if ($queue['queue_extension'] .'@'. $_SESSION['user']['domain_name'] == $tier['queue'] && $agent['call_center_agent_uuid'] == $tier['agent']) {
-				$call_center_queues[$x]['queue_status'] = 'Available';
+				$call_center_queues[$x]['queue_status'] = $agent['agent_status'];
 			}
 		}
 		$x++;
@@ -200,7 +195,8 @@
 			echo "		<input type='hidden' name='agents[".$x."][agent_name]' value='".escape($agent['agent_name'])."'>\n";
 			echo "		<input type='hidden' name='agents[".$x."][id]' value='".escape($agent['call_center_agent_uuid'])."'>\n";
 			echo "		<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Available' ".($row['queue_status'] == 'Available' ? "checked='checked'" : null).">&nbsp;".$text['option-available']."</label>\n";
-			echo "		<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($row['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+			echo "		<label style='margin: 0; cursor: pointer; margin-right: 10px;'><input type='radio' name='agents[".$x."][agent_status]' value='Logged Out' ".($row['queue_status'] == 'Logged Out' ? "checked='checked'" : null).">&nbsp;".$text['option-logged_out']."</label>\n";
+			echo "		<label style='margin: 0; cursor: pointer;'><input type='radio' name='agents[".$x."][agent_status]' value='On Break' ".($row['queue_status'] == 'On Break' ? "checked='checked'" : null).">&nbsp;".$text['option-on_break']."</label>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
