@@ -500,10 +500,23 @@
 									if (is_array($device_mac_addresses) && @sizeof($device_mac_addresses) != 0) {
 										foreach ($device_mac_addresses as $d => $device_mac_address) {
 											if (is_mac($device_mac_address)) {
+												//get the device vendor
+												if (isset($device_templates[$d])) {
+													//use the the template to get the vendor
+													$template_array = explode("/", $device_templates[$d]);
+													$device_vendor = $template_array[0];
+												}
+												else {
+													//use the mac address to get the vendor
+													$device_vendor = device::get_vendor($device_mac_address);	
+												}
+
+												//build the devices array
 												$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 												$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
 												$array["devices"][$j]["device_mac_address"] = $device_mac_address;
 												$array["devices"][$j]["device_label"] = $extension;
+												$array["devices"][$j]["device_vendor"] = $device_vendor;
 												if (strlen($device_templates[$d]) > 0) {
 													$array["devices"][$j]["device_template"] = $device_templates[$d];
 												}
