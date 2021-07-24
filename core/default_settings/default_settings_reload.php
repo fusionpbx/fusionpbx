@@ -17,15 +17,19 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2014
+ Portions created by the Initial Developer are Copyright (C) 2008-2021
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
+
+//includes
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+
+//check permissions
 if (permission_exists('default_setting_view')) {
 	//access granted
 }
@@ -35,22 +39,28 @@ else {
 }
 
 //add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+$language = new text;
+$text = $language->get();
 
+//set the variables
 $search = $_REQUEST['search'];
 $domain_uuid = $_GET['id'];
 
+//reload default settings
 require "resources/classes/domains.php";
 $domain = new domains();
 $domain->db = $db;
 $domain->set();
 
+//add a message
 message::add($text['message-settings_reloaded']);
+
+//redirect the browser
 if (is_uuid($domain_uuid)) {
 	$location = PROJECT_PATH.'/core/domains/domain_edit.php?id='.$domain_uuid;
 }
 else {
+	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
 	$location = 'default_settings.php'.($search != '' ? "?search=".$search : null);
 }
 header("Location: ".$location);

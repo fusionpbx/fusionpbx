@@ -17,22 +17,26 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2016
+ Portions created by the Initial Developer are Copyright (C) 2008-2021
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('default_setting_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//includes
+	require_once "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (permission_exists('default_setting_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -54,6 +58,7 @@ else {
 					$default_setting_enabled = $database->select($sql, $parameters, 'column');
 					$new_status = ($default_setting_enabled == 'true') ? 'false' : 'true';
 					unset($sql, $parameters);
+
 				//set new status
 					$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuid;
 					$array['default_settings'][0]['default_setting_enabled'] = $new_status;
@@ -63,6 +68,7 @@ else {
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
+
 				//increment toggle total
 					$toggled++;
 			}
@@ -73,6 +79,7 @@ else {
 	}
 
 //redirect the user
+	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
 	header("Location: default_settings.php".($search != '' ? '?search='.$search : null));
 
 ?>

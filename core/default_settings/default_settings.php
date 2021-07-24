@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,6 +50,11 @@
 		$domain_uuid = $_POST['domain_uuid'];
 		$default_settings = $_POST['default_settings'];
 	}
+
+//sanitize the variables
+	$action = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $action);
+	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
 
 //process the http post data by action
 	if ($action != '' && is_array($default_settings) && @sizeof($default_settings) != 0) {
@@ -279,8 +284,11 @@
 		$x = 0;
 		foreach ($default_settings as $row) {
 			$default_setting_category = strtolower($row['default_setting_category']);
-
+			$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+	
 			$label_default_setting_category = $row['default_setting_category'];
+			$label_default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $label_default_setting_category);
+
 			switch (strtolower($label_default_setting_category)) {
 				case "api" : $label_default_setting_category = "API"; break;
 				case "cdr" : $label_default_setting_category = "CDR"; break;
