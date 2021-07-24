@@ -34,8 +34,6 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once  '../../resources/classes/database.php';
-
 if (permission_exists('sms_add') || permission_exists('sms_edit')) {
 	//access granted
 }
@@ -117,8 +115,6 @@ else {
 			header( 'Location: sms.php') ;
 
 		}
-		//addDestinationToApi($destination);
-		
 	} elseif (count($_POST) > 0 && $action == "update") {
 			$destination = str_replace(' ','-',check_str($_POST["destination"]));
 			$carrier = check_str($_POST["carrier"]);
@@ -148,7 +144,7 @@ else {
 
 			error_log($sql_insert);
 			unset ($prep_statement);
-			header( 'Location: sms.php');
+			header( 'Location: sms.php') ;
 	}
 
 //include the header
