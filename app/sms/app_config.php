@@ -125,15 +125,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '2ecbcfa1-8884-45dd-8509-3c4826e7fde7';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'carriers';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'signalwire';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
-
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e997203c-ca48-45b4-828d-e347ff66fa7c';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'twilio_api_url';
@@ -142,16 +133,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
-
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e0059b1b-4d9d-436b-b47a-0c9dc801fdda';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_api_url';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'https://example.signalwire.com/api/laml/2010-04-01/Accounts/{AccountSid}/Messages.json';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
-
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '957b31ab-bc8e-4bff-8366-59f17e658550';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'plivo_api_url';
@@ -265,24 +246,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
-		$y++;
-
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '023c12dc-17d0-46d3-9419-a8286e83e19e';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_access_key';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'On SignalWires LaML API, the AccountSid and Project ID are the same thing.';
-		$y++;
-
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '44d268b2-65ae-480f-9c9b-841c0cb445b0';
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_secret_key';
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'YourAuthToken';
 		$y++;
 
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4a86c939-9d80-4da7-bbda-49d6bf1c3882';
