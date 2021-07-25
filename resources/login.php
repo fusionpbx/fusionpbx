@@ -242,11 +242,6 @@
 //set variable if not set
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
 
-//set the requested destination after login
-	if (!empty($_REQUEST['path'])) {
-		$_SESSION['login']['destination']['url'] = $_REQUEST['path'];
-	}
-
 //set a default login destination
 	if (strlen($_SESSION['login']['destination']['url']) == 0) {
 		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
