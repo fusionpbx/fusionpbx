@@ -527,6 +527,8 @@
 												$array["devices"][$j]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
 												$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
 												$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
+												$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
+												$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
 												$array["devices"][$j]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
 												$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
 												$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
