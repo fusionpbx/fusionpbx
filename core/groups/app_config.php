@@ -48,9 +48,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "group_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "group_global";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
