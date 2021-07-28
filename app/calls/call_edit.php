@@ -173,17 +173,11 @@
 
 		//call forward config
 			if (permission_exists('call_forward')) {
-				//trim hidden characters
-				$forward_all_destination = trim($forward_all_destination);
-				$forward_busy_destination = trim($forward_busy_destination);
-				$forward_no_answer_destination = trim($forward_no_answer_destination);
-				$forward_user_not_registered_destination = trim($forward_user_not_registered_destination);
-
 				//sanitize the destinations
-				$forward_all_destination = str_replace('$', '', $forward_all_destination);
-				$forward_busy_destination = str_replace('$', '', $forward_busy_destination);
-				$forward_no_answer_destination = str_replace('$', '', $forward_no_answer_destination);
-				$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
+				$forward_all_destination = preg_replace('#[^\*0-9]#', '', $forward_all_destination);
+				$forward_busy_destination = preg_replace('#[^\*0-9]#', '', $forward_busy_destination);
+				$forward_no_answer_destination = preg_replace('#[^\*0-9]#', '', $forward_no_answer_destination);
+				$forward_user_not_registered_destination = preg_replace('#[^\*0-9]#', '', $forward_user_not_registered_destination);
 
 				//build the array
 				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -239,11 +233,8 @@
 					$destination_found = false;
 					foreach ($destinations as $field) {
 						if ($field['destination'] != '') {
-							//trim hidden characters
-							$field['destination'] = trim($field['destination']);
-
 							//sanitize the destination
-							$field['destination'] = str_replace('$', '', $field['destination']);
+							$field['destination'] = preg_replace('#[^\*0-9]#', '', $field['destination']);
 
 							//build the array
 							$array['follow_me'][0]['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
