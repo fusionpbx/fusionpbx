@@ -185,6 +185,33 @@
 				return;
 			}
 
+		//build the destination_numbers array
+			$array = explode('-', $destination_number);
+			$array = array_map('trim', $array);
+			if (count($array) == 2 && is_numeric($array[0]) && is_numeric($array[1])) {
+				$destination_numbers = range($array[0], $array[1]);
+				$destination_number_range = true;
+			}
+			elseif (stristr($destination_number, 'n') || stristr($destination_number, 'x') || stristr($destination_number, 'z')) {
+				//n = 2-9, x = 0-9, z = 1-9
+				$destination_start = $destination_number;
+				$destination_end = $destination_number;
+				$destination_start = str_ireplace("n", "2", $destination_start);
+				$destination_end = str_ireplace("n", "9", $destination_end);
+				$destination_start = str_ireplace("x", "0", $destination_start);
+				$destination_end = str_ireplace("x", "9", $destination_end);
+				$destination_start = str_ireplace("z", "1", $destination_start);
+				$destination_end = str_ireplace("z", "9", $destination_end);
+				$destination_numbers = range($destination_start, $destination_end);
+				$destination_number_range = true;
+			}
+			else {
+				//$destination_numbers[] = $destination_number;
+				$destination_numbers = $array;
+				$destination_number_range = false;
+			}
+			unset($array);
+
 		//save the inbound destination and add the dialplan for the inbound route
 			if ($destination_type == 'inbound' || $destination_type == 'local') {
 
@@ -266,33 +293,6 @@
 						}
 					}
 					unset($sql, $parameters, $row);
-
-				//build the destination_numbers array
-					$array = explode('-', $destination_number);
-					$array = array_map('trim', $array);
-					if (count($array) == 2 && is_numeric($array[0]) && is_numeric($array[1])) {
-						$destination_numbers = range($array[0], $array[1]);
-						$destination_number_range = true;
-					}
-					elseif (stristr($destination_number, 'n') || stristr($destination_number, 'x') || stristr($destination_number, 'z')) {
-						//n = 2-9, x = 0-9, z = 1-9
-						$destination_start = $destination_number;
-						$destination_end = $destination_number;
-						$destination_start = str_ireplace("n", "2", $destination_start);
-						$destination_end = str_ireplace("n", "9", $destination_end);
-						$destination_start = str_ireplace("x", "0", $destination_start);
-						$destination_end = str_ireplace("x", "9", $destination_end);
-						$destination_start = str_ireplace("z", "1", $destination_start);
-						$destination_end = str_ireplace("z", "9", $destination_end);
-						$destination_numbers = range($destination_start, $destination_end);
-						$destination_number_range = true;
-					}
-					else {
-						//$destination_numbers[] = $destination_number;
-						$destination_numbers = $array;
-						$destination_number_range = false;
-					}
-					unset($array);
 
 				//add the destinations and asscociated dialplans
 					$x = 0;
@@ -807,16 +807,33 @@
 		//save the outbound destination
 			if ($destination_type == 'outbound') {
 
-				//prepare the array
+				//add the destinations and asscociated dialplans
 					$x = 0;
-					$array['destinations'][$x]["destination_uuid"] = $destination_uuid;
-					$array['destinations'][$x]["domain_uuid"] = $domain_uuid;
-					$array['destinations'][$x]["destination_type"] = $destination_type;
-					$array['destinations'][$x]["destination_number"] = $destination_number;
-					$array['destinations'][$x]["destination_prefix"] = $destination_prefix;
-					$array['destinations'][$x]["destination_context"] = $destination_context;
-					$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
-					$array['destinations'][$x]["destination_description"] = $destination_description;
+					foreach($destination_numbers as $destination_number) {
+
+						//if empty then get new uuid
+							if (!is_uuid($destination_uuid)) {
+								$destination_uuid = uuid();
+							}
+
+
+						//if the destination range is true then set a new uuid for each iteration of the loop
+							if ($destination_number_range) {
+								$destination_uuid = uuid();
+							}
+
+						//prepare the array
+							$x = 0;
+							$array['destinations'][$x]["destination_uuid"] = $destination_uuid;
+							$array['destinations'][$x]["domain_uuid"] = $domain_uuid;
+							$array['destinations'][$x]["destination_type"] = $destination_type;
+							$array['destinations'][$x]["destination_number"] = $destination_number;
+							$array['destinations'][$x]["destination_prefix"] = $destination_prefix;
+							$array['destinations'][$x]["destination_context"] = $destination_context;
+							$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
+							$array['destinations'][$x]["destination_description"] = $destination_description;
+							$x++;
+					}
 
 				//save the destination
 					$database = new database;
@@ -824,6 +841,7 @@
 					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
 					$dialplan_response = $database->message;
+					unset($array);
 
 				//clear the destinations session array
 					if (isset($_SESSION['destinations']['array'])) {
@@ -1008,6 +1026,8 @@
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = 'none';\n";
+	echo "			if (document.getElementById('tr_user')) { document.getElementById('tr_user').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_hold_music')) { document.getElementById('tr_hold_music').style.display = 'none'; }\n";
 	//echo "			document.getElementById('destination_context').value = '".$destination_context."'";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
@@ -1019,6 +1039,8 @@
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_user')) { document.getElementById('tr_user').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_hold_music')) { document.getElementById('tr_hold_music').style.display = ''; }\n";
 	echo "			document.getElementById('tr_account_code').style.display = '';\n";
 	echo "			document.getElementById('destination_context').value = 'public'";
 	echo "		}\n";
@@ -1271,7 +1293,7 @@
 	}
 
 	if (permission_exists('user_edit')) {
-		echo "<tr>\n";
+		echo "<tr id='tr_user'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-user']."\n";
 		echo "</td>\n";
@@ -1324,7 +1346,7 @@
 	}
 
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
-		echo "<tr>\n";
+		echo "<tr id='tr_hold_music'>\n";
 		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_hold_music']."\n";
 		echo "</td>\n";
