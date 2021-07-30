@@ -362,73 +362,54 @@
 							}
 
 						//build the xml dialplan
-							if ($_SESSION['destinations']['dialplan_details']['boolean'] == "false") {
-								$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
-								$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
-								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
-								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
-								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
+							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
+							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_name=".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
 
-								//add this only if using application bridge
-								if ($destination_app == 'bridge') {
-										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
-										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
-								}
-
-								if (strlen($destination_cid_name_prefix) > 0) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"false\"/>\n";
-								}
-								if (strlen($destination_record) > 0 && $destination_record == 'true') {
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.\${record_ext}\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_in_progress=true\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"recording_follow_transfer=true\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
-								}
-								if (strlen($destination_hold_music) > 0) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
-								}
-								if (strlen($destination_accountcode) > 0) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
-								}
-								if (strlen($destination_carrier) > 0) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
-								}
-								if (strlen($fax_uuid) > 0) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +3000\"/>\n";
-
-								}
-								if ($destination->valid($destination_app.':'.$destination_data)) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
-								}
-								if (strlen($destination_alternate_app) > 0 && $destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
-									$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_alternate_app."\" data=\"".$destination_alternate_data."\"/>\n";
-								}
-								$dialplan["dialplan_xml"] .= "	</condition>\n";
-								$dialplan["dialplan_xml"] .= "</extension>\n";
+							//add this only if using application bridge
+							if ($destination_app == 'bridge') {
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 							}
+
+							if (strlen($destination_cid_name_prefix) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}\" inline=\"false\"/>\n";
+							}
+							if (strlen($destination_record) > 0 && $destination_record == 'true') {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.\${record_ext}\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_in_progress=true\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"recording_follow_transfer=true\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
+							}
+							if (strlen($destination_hold_music) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
+							}
+							if (strlen($destination_accountcode) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
+							}
+							if (strlen($destination_carrier) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"carrier=".$destination_carrier."\" inline=\"true\"/>\n";
+							}
+							if (strlen($fax_uuid) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"tone_detect_hits=1\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"execute_on_tone_detect=transfer ".$fax_extension." XML \${domain_name}\" inline=\"true\"/>\n";
+								$dialplan["dialplan_xml"] .= "		<action application=\"tone_detect\" data=\"fax 1100 r +3000\"/>\n";
+							}
+							if ($destination->valid($destination_app.':'.$destination_data)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_app."\" data=\"".$destination_data."\"/>\n";
+							}
+							if (strlen($destination_alternate_app) > 0 && $destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"".$destination_alternate_app."\" data=\"".$destination_alternate_data."\"/>\n";
+							}
+							$dialplan["dialplan_xml"] .= "	</condition>\n";
+							$dialplan["dialplan_xml"] .= "</extension>\n";
 
 						//dialplan details
 							if ($_SESSION['destinations']['dialplan_details']['boolean'] == "true") {
-
-								//delete previous dialplan details
-									$sql = "delete from v_dialplan_details ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and (dialplan_uuid = :dialplan_uuid or dialplan_uuid is null) ";
-									$sql .= "and (";
-									$sql .= "	dialplan_detail_data like '%tone_detect%' ";
-									$sql .= "	or dialplan_detail_type = 'tone_detect' ";
-									$sql .= "	or dialplan_detail_type = 'record_session' ";
-									$sql .= "	or (dialplan_detail_type = 'sleep' and  dialplan_detail_data = '3000') ";
-									$sql .= ")";
-									$parameters['domain_uuid'] = $domain_uuid;
-									$parameters['dialplan_uuid'] = $dialplan_uuid;
-									$database = new database;
-									$database->execute($sql, $parameters);
-									unset($sql, $parameters);
 
 								//increment the dialplan detail order
 									$dialplan_detail_order = $dialplan_detail_order + 10;
@@ -784,14 +765,6 @@
 					$p->delete("dialplan_detail_add", 'temp');
 					$p->delete("dialplan_edit", 'temp');
 					$p->delete("dialplan_detail_edit", 'temp');
-
-				//update the dialplan xml
-					if ($_SESSION['destinations']['dialplan_details']['boolean'] == "true") {
-						$dialplans = new dialplan;
-						$dialplans->source = "details";
-						$dialplans->destination = "database";
-						$dialplans->xml();
-					}
 
 				//clear the cache
 					$cache = new cache;
