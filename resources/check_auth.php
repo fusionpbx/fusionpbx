@@ -294,15 +294,6 @@
 						unset($sql, $parameters, $result, $row);
 				}
 			}
-
-		//redirect the user
-			if (check_str($_REQUEST["rdr"]) !== 'n'){
-				$path = check_str($_POST["path"]);
-				if (isset($path) && !empty($path) && $path!="index2.php" && $path!="/install.php") {
-					header("Location: ".$path);
-					exit();
-				}
-			}
 	}
 
 //set the time zone
