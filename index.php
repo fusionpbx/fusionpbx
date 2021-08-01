@@ -58,7 +58,18 @@
 	require_once "resources/require.php";
 
 //if logged in, redirect to login destination
-	if (!isset($_SESSION["username"])) {
+	if (isset($_SESSION["username"])) {
+		if (isset($_SESSION['login']['destination']['url'])) {
+			header("Location: ".$_SESSION['login']['destination']['url']);
+		} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_settings/user_dashboard.php")) {
+			header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+		}
+		else {
+			require_once "resources/header.php";
+			require_once "resources/footer.php";
+		}
+	}
+	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
 		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
 			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
