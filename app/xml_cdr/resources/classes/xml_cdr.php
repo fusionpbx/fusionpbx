@@ -131,6 +131,7 @@ if (!class_exists('xml_cdr')) {
 			$this->fields[] = "xml_cdr_uuid";
 			$this->fields[] = "domain_uuid";
 			$this->fields[] = "extension_uuid";
+			$this->fields[] = "sip_call_id";
 			$this->fields[] = "domain_name";
 			$this->fields[] = "accountcode";
 			$this->fields[] = "direction";
@@ -354,6 +355,7 @@ if (!class_exists('xml_cdr')) {
 						$uuid = urldecode($xml->variables->uuid);
 						$this->array[$key]['xml_cdr_uuid'] = $uuid;
 						$this->array[$key]['destination_number'] = $destination_number;
+						$this->array[$key]['sip_call_id'] = urldecode($xml->variables->sip_call_id);
 						$this->array[$key]['source_number'] = urldecode($xml->variables->effective_caller_id_number);
 						$this->array[$key]['user_context'] = urldecode($xml->variables->user_context);
 						$this->array[$key]['network_addr'] = urldecode($xml->variables->sip_network_ip);
