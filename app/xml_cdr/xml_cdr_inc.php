@@ -232,6 +232,7 @@
 //get the results from the db
 	$sql = "select \n";
 	$sql .= "c.domain_uuid, \n";
+	$sql .= "c.sip_call_id, \n";
 	$sql .= "e.extension, \n";
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
@@ -563,9 +564,9 @@
 		}
 	}
 	$sql = str_replace("  ", " ", $sql);
-//echo $sql;
-//print_r($parameters);
-//exit;
+	//echo $sql;
+	//print_r($parameters);
+	//exit;
 	$database = new database;
 	if ($archive_request && $_SESSION['cdr']['archive_database']['boolean'] == 'true') {
 		$database->driver = $_SESSION['cdr']['archive_database_driver']['text'];
