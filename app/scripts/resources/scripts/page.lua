@@ -152,9 +152,14 @@
 					end
 			end
 
+		--get the channels
+			api = freeswitch.API();
+			cmd_string = "show channels";
+			channel_result = api:executeString(cmd_string);
+
 		--originate the calls
 			destination_count = 0;
-			api = freeswitch.API();
+
 			for index,value in pairs(destination_table) do
 				for destination in each_number(value) do
 
@@ -164,9 +169,7 @@
 					--prevent calling the user that initiated the page
 					if (sip_from_user ~= destination) then
 
-						cmd_string = "show channels";
-						channel_result = api:executeString(cmd_string);
-
+						--loop through channels to determine if destination is available or busy
 						destination_status = 'available';
 						channel_array = explode("\n", channel_result);
 						for index,row in pairs(channel_array) do
@@ -175,6 +178,7 @@
 							end
 						end
 
+						--if available then page then originate the call with auto answer
 						if (destination_status == 'available') then
 							freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
 							if destination == sip_from_user then
