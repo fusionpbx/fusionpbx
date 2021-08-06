@@ -242,13 +242,15 @@
 //set variable if not set
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
 
-//set the requested destination after login
-	if (!empty($_REQUEST['path'])) {
-		$_SESSION['login']['destination']['url'] = $_REQUEST['path'];
+//santize the login destination url and set a default value
+	if (isset($_SESSION['login']['destination']['url'])) {
+		$destination_path = parse_url($_SESSION['login']['destination']['url'])['path'];
+		$destination_query = parse_url($_SESSION['login']['destination']['url'])['query'];
+		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
+		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
+		$_SESSION['login']['destination']['url'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
-
-//set a default login destination
-	if (strlen($_SESSION['login']['destination']['url']) == 0) {
+	else {
 		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
 	}
 
