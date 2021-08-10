@@ -80,6 +80,10 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		//get the uuid
+			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+				$destination_uuid = $_POST["destination_uuid"];
+			}
 
 		//set the variables
 			$dialplan_uuid = $_POST["dialplan_uuid"];
@@ -185,6 +189,43 @@
 				return;
 			}
 
+		//get the destination row values
+			if ($action == 'update' && is_uuid($destination_uuid)) {
+				$sql = "select * from v_destinations ";
+				$sql .= "where destination_uuid = :destination_uuid ";
+				$parameters['destination_uuid'] = $destination_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+			}
+
+		//get the dialplan_uuid from the database
+			if (is_array($row) && @sizeof($row) != 0) {
+				$dialplan_uuid = $row["dialplan_uuid"];
+			}
+
+		//if the user doesn't have the correct permission then 
+		//override destination_number and destination_context values
+			if (is_array($row) && @sizeof($row) != 0) {
+				if (!permission_exists('destination_trunk_prefix')) {
+					$destination_trunk_prefix = $row["destination_trunk_prefix"];
+				}
+				if (!permission_exists('destination_area_code')) {
+					$destination_area_code = $row["destination_area_code"];
+				}
+				if (!permission_exists('destination_number')) {
+					$destination_prefix = $row["destination_prefix"];
+					$destination_number = $row["destination_number"];
+				}
+				if (!permission_exists('destination_condition_field')) {
+					$destination_condition_field = $row["destination_condition_field"];
+				}
+				if (!permission_exists('destination_context')) {
+					$destination_context = $row["destination_context"];
+				}
+			}
+			unset($row);
+
 		//build the destination_numbers array
 			$array = explode('-', $destination_number);
 			$array = array_map('trim', $array);
@@ -252,47 +293,6 @@
 						}
 						unset($sql, $parameters, $row);
 					}
-
-				//get the uuid
-					if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
-						$destination_uuid = $_POST["destination_uuid"];
-					}
-
-				//get the destination row values
-					if ($action == 'update' && is_uuid($destination_uuid)) {
-						$sql = "select * from v_destinations ";
-						$sql .= "where destination_uuid = :destination_uuid ";
-						$parameters['destination_uuid'] = $destination_uuid;
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-					}
-
-				//get the dialplan_uuid from the database
-					if (is_array($row) && @sizeof($row) != 0) {
-						$dialplan_uuid = $row["dialplan_uuid"];
-					}
-
-				//if the user doesn't have the correct permission then 
-				//override destination_number and destination_context values
-					if (is_array($row) && @sizeof($row) != 0) {
-						if (!permission_exists('destination_trunk_prefix')) {
-							$destination_trunk_prefix = $row["destination_trunk_prefix"];
-						}
-						if (!permission_exists('destination_area_code')) {
-							$destination_area_code = $row["destination_area_code"];
-						}
-						if (!permission_exists('destination_number')) {
-							$destination_number = $row["destination_number"];
-							$destination_prefix = $row["destination_prefix"];
-						}
-						if (!permission_exists('destination_condition_field')) {
-							$destination_condition_field = $row["destination_condition_field"];
-						}
-						if (!permission_exists('destination_context')) {
-							$destination_context = $row["destination_context"];
-						}
-					}
-					unset($sql, $parameters, $row);
 
 				//add the destinations and asscociated dialplans
 					$x = 0;
