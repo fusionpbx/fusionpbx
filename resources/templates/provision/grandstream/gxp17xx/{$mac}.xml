@@ -3556,7 +3556,12 @@
 <!-- # Use Random Port. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P78>0</P78>
+{if isset($grandstream_random_port) && !empty($grandstream_random_port)}
+    <P78>{$grandstream_random_port}</P78>
+{else}
+    <P78>0</P78>
+{/if}
+
 
 <!-- # Keep-Alive Interval (in seconds). Default is 20 -->
 <!-- # Number: 10 - 160 -->
@@ -3569,7 +3574,11 @@
 
 <!-- # STUN server -->
 <!-- # String -->
-<P76></P76>
+{if isset($grandstream_stun_server)}
+    <P76>{$grandstream_stun_server}</P76>
+{else}
+    <P76></P76>
+{/if}
 
 <!-- # Public Mode. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
