@@ -310,6 +310,34 @@ include "root.php";
 					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
 
+			public function table_exists ($db_type, $db_name, $table_name) {
+				//connect to the database if needed
+				if (!$this->db) {
+					$this->connect();
+				}
+
+				//query table store to see if the table exists
+				$sql = "";
+				if ($db_type == "sqlite") {
+					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
+				}
+				if ($db_type == "pgsql") {
+					$sql .= "select * from pg_tables where schemaname='public' and tablename = '$table_name' ";
+				}
+				if ($db_type == "mysql") {
+					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
+				}
+				$prep_statement = $this->db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) > 0) {
+					return true; //table exists
+				}
+				else {
+					return false; //table doesn't exist
+				}
+			}
+
 			public function fields() {
 				//public $db;
 				//public $type;
