@@ -38,7 +38,8 @@ if ($domains_processed == 1) {
 	$database = new database;
 	$pin_null_count = $database->select($sql, null, 'column');
 
-	if ($conference_room_count > 0 and $pin_null_count > 0 and $conference_room_count == $pin_null_count) {
+	//if missing move pin numbers from meetings table to the conference rooms table
+	if ($database->table_exists($db_type, $db_name, 'v_meetings') && $conference_room_count > 0 && $pin_null_count > 0) {
 		$sql = "UPDATE v_conference_rooms ";
 		$sql .= "SET participant_pin = subquery.participant_pin, moderator_pin = subquery.moderator_pin ";
 		$sql .= "FROM ( ";
@@ -54,18 +55,23 @@ if ($domains_processed == 1) {
 		unset($sql);
 	}
 
-
 	//get the count of moderator and participant pins that are null
 	$sql = "select count(*) from v_conference_room_users; ";
 	$database = new database;
 	$conference_room_user_count = $database->select($sql, null, 'column');
 
-	//coung the meeting users table
-	$sql = "select count(*) from v_meeting_users; ";
-	$database = new database;
-	$meeting_user_count = $database->select($sql, null, 'column');
+	//check if meeting_users table exists
+	$table_exists = $database->table_exists($db_type, $db_name, 'v_meeting_users');
 
-	if ($conference_room_user_count == 0 && $meeting_user_count > 0) {
+	//count the meeting users table
+	if ($table_exists) {
+		$sql = "select count(*) from v_meeting_users; ";
+		$database = new database;
+		$meeting_user_count = $database->select($sql, null, 'column');
+	}
+
+	//if missing mv users from the meeting_users table to the conference room users table
+	if ($table_exists && $conference_room_user_count == 0 && $meeting_user_count > 0) {
 		$sql = "INSERT INTO v_conference_room_users ( ";
 		$sql .= "	domain_uuid, conference_room_user_uuid, conference_room_uuid, user_uuid ";
 		$sql .= ") ";
@@ -76,6 +82,9 @@ if ($domains_processed == 1) {
 		$database->execute($sql);
 		unset($sql);
 	}
+	
+	//unset
+	unset($table_exists);
 
 }
 
