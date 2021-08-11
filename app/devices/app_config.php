@@ -1748,6 +1748,13 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "e824b1e0-bb95-44dc-8899-4dba656c9a71";
+		$vendors[$y]['functions'][$z]['label'] = "label-unassigned";
+		$vendors[$y]['functions'][$z]['name'] = "unassigned";
+		$vendors[$y]['functions'][$z]['value'] = "unassigned";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 		$vendors[$y]['functions'][$z]['uuid'] = "617e4474-c381-4ef8-950a-2b29b67ed8e3";
 		$vendors[$y]['functions'][$z]['label'] = "label-normal";
 		$vendors[$y]['functions'][$z]['name'] = "normal";
