@@ -671,7 +671,7 @@
 							end
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
-							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
+							table.insert(xml, [[								<variable name="export_vars" value="domain_name,absolute_codec_string"/>]]);
 							for key,row in pairs(extension_settings) do
 								if (row.extension_setting_type == 'variable') then
 									table.insert(xml, [[								<variable name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
