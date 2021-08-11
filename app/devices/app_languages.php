@@ -3595,6 +3595,27 @@ $text['label-automata']['ru-ru'] = "Automata";
 $text['label-automata']['sv-se'] = "Automata";
 $text['label-automata']['uk-ua'] = "Automata";
 
+$text['label-unassigned']['en-us'] = "Unassigned";
+$text['label-unassigned']['en-gb'] = "Unassigned";
+$text['label-unassigned']['ar-eg'] = "Unassigned";
+$text['label-unassigned']['de-at'] = "Unassigned"; //copied from de-de
+$text['label-unassigned']['de-ch'] = "Unassigned"; //copied from de-de
+$text['label-unassigned']['de-de'] = "Unassigned";
+$text['label-unassigned']['es-cl'] = "Unassigned";
+$text['label-unassigned']['es-mx'] = "Unassigned"; //copied from es-cl
+$text['label-unassigned']['fr-ca'] = "Unassigned"; //copied from fr-fr
+$text['label-unassigned']['fr-fr'] = "Unassigned";
+$text['label-unassigned']['he-il'] = "Unassigned";
+$text['label-unassigned']['it-it'] = "Unassigned";
+$text['label-unassigned']['nl-nl'] = "Unassigned";
+$text['label-unassigned']['pl-pl'] = "Unassigned";
+$text['label-unassigned']['pt-br'] = "Unassigned"; //copied from pt-pt
+$text['label-unassigned']['pt-pt'] = "Unassigned";
+$text['label-unassigned']['ro-ro'] = "Unassigned";
+$text['label-unassigned']['ru-ru'] = "Unassigned";
+$text['label-unassigned']['sv-se'] = "Unassigned";
+$text['label-unassigned']['uk-ua'] = "Unassigned";
+
 $text['label-messages']['en-us'] = "Messages";
 $text['label-messages']['en-gb'] = "Messages";
 $text['label-messages']['ar-eg'] = "رسائل";
