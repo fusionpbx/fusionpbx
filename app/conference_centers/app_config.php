@@ -286,15 +286,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "conference_center_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Conference UUID";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "meeting_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_meetings";
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "meeting_uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Meeting UUID";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_room_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference room name.";
