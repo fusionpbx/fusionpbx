@@ -238,7 +238,7 @@
 	}
 	$mail->SMTPDebug  = 2;
 
-//add informaiton to the log
+//add information to the log
 	if (sizeof($headers)>0) {
 		foreach ($headers as $header => $value) {
 			echo $header.": ".$value."\n";
@@ -263,7 +263,7 @@
 
 //add the reciepients
 	$to = trim($to, "<>");
-	$to = str_replace(" ", $to);
+	$to = str_replace(" ", "", $to);
 	$to = str_replace(";", ",", $to);
 	$to_array = explode(",", $to);
 	if (count($to_array) == 0) {
