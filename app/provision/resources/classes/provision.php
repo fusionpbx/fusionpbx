@@ -802,7 +802,6 @@ include "root.php";
 								$sql .= "cast(device_key_id as numeric) asc ";
 							}
 							$parameters['device_uuid'] = $device_uuid;
-							$parameters['user_id'] = $device_lines['1']['user_id'];
 							$database = new database;
 							$keys = $database->select($sql, $parameters, 'all');
 
