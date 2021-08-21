@@ -753,7 +753,7 @@
 						session:execute("set", "uuids="..uuids);
 
 					--export the ringback
-						if (ring_group_distinctive_ring ~= nil) then
+						if (ring_group_distinctive_ring and #ring_group_distinctive_ring > 0) then
 							if (local_ip_v4 ~= nil) then
 								ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", local_ip_v4);
 							end
