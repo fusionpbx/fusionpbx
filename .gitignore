@@ -10,3 +10,8 @@ secure/*.sqlite
 *.php~
 
 app/yealink/resources/firmware/*
+app/provision/logs/
+app/provision/calls/
+app/provision/corefiles/
+app/provision/directories/
+app/provision/phoneconfigs/
