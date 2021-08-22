@@ -745,7 +745,8 @@ include "root.php";
 										$device_key_line = $row['device_key_line'];
 										
 										//Update BLF name with extension name from database if it's empty
-										if ($row['device_key_label'] == "") {
+										if ($row['device_key_label'] == "" || !isset($row['device_key_label'])) {
+											unset($parameters);
 											$sql = "select effective_caller_id_name ";
 											$sql .= "from v_extensions ";
 											$sql .= "where domain_uuid= :domain_uuid ";
@@ -819,7 +820,8 @@ include "root.php";
 									}
 									
 									//Update BLF name with extension name from database if it's empty
-                                	if ($row['device_key_label'] == "") {
+                                	if ($row['device_key_label'] == "" || !isset($row['device_key_label'])) {
+										unset($parameters);
                                         $sql = "select effective_caller_id_name ";
                                         $sql .= "from v_extensions ";
                                         $sql .= "where domain_uuid= :domain_uuid ";
