@@ -65,15 +65,14 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if isset($account.1.server_address_primary)}
-    <P48>{$account.1.server_address_primary}:{$account.1.sip_port}</P48>
-{/if}
+<P48>portal.us.nemerald.net:{$account.1.sip_port}</P48>
+
 
 <!-- # Secondary Outbound Proxy -->
 <!-- # String -->
-{if isset($account.1.server_address_secondary)}
+<!-- # {if isset($account.1.server_address_secondary)}
     <P2333>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2333>
-{/if}
+{/if}-->
 
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
