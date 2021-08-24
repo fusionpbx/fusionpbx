@@ -39,7 +39,6 @@ include "root.php";
 		private $number_alias;
 		public $forward_all_destination;
 		public $forward_all_enabled;
-		private $dial_string;
 		private $toll_allow;
 		public $accountcode;
 		public $outbound_caller_id_name;
@@ -68,11 +67,9 @@ include "root.php";
 				$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
 				$array['extensions'][0]['forward_all_destination'] = strlen($this->forward_all_destination) != 0 ? $this->forward_all_destination : null;
 				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
-					$array['extensions'][0]['dial_string'] = null;
 					$array['extensions'][0]['forward_all_enabled'] = 'false';
 				}
 				else {
-					$array['extensions'][0]['dial_string'] = $this->dial_string;
 					$array['extensions'][0]['forward_all_enabled'] = 'true';
 				}
 
