@@ -743,6 +743,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Pickup softkey  0=Disabled - 1=Enabled ";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "093d14d4-50f7-4180-9660-14b9e6ed1b66";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_voicemail_softkey_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Voicemail softkey  0=Disabled - 1=Enabled ";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5b0c8d4e-85b0-4595-b4a3-f543d2ba084f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_softkey_1_precede";
