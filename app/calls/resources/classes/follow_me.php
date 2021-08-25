@@ -242,12 +242,10 @@ include "root.php";
 			//add follow me to the array
 				$array['follow_me'][0]["follow_me_uuid"] = $this->follow_me_uuid;
 				$array['follow_me'][0]["domain_uuid"] = $this->domain_uuid;
-				$array['follow_me'][0]["dial_string"] = '';
 
 			//add extensions to the array
 				$array['extensions'][0]["extension_uuid"] = $extension_uuid;
 				$array['extensions'][0]["dial_domain"] = $this->domain_name;
-				$array['extensions'][0]["dial_string"] = '';
 				$array['extensions'][0]["follow_me_destinations"] = '';
 				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;
 
