@@ -33,7 +33,6 @@ include "root.php";
 		public $extension_uuid;
 		public $extension;
 		public $enabled;
-		private $dial_string;
 
 		//update the user_status
 		public function user_status() {
@@ -92,12 +91,8 @@ include "root.php";
 				}
 				unset($sql, $parameters, $row);
 
-			//set the dial string
-				$this->dial_string = $this->enabled == "true" ? "error/user_busy" : '';
-
 			//build extension update array
 				$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
-				$array['extensions'][0]['dial_string'] = $this->dial_string;
 				$array['extensions'][0]['do_not_disturb'] = $this->enabled;
 
 			//grant temporary permissions

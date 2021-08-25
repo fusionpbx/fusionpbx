@@ -380,7 +380,9 @@
 								presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 
 							--set the dial_string
-								if (string.len(row.dial_string) > 0) then
+								if (do_not_disturb == "true") then
+									dial_string = "error/USER_BUSY";
+								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;

@@ -197,7 +197,6 @@
 				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
 				$array['extensions'][0]['do_not_disturb'] = $dnd_enabled;
-				$array['extensions'][0]['dial_string'] = $dnd_enabled == "true" ? "error/user_busy" : '';
 			}
 
 		//follow me config
