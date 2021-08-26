@@ -3254,7 +3254,11 @@
 <P4120>{$account.1.password}</P4120>
 <P4180>{$account.1.display_name}</P4180>
 <P4150>0</P4150>
+{if !isset($account.1.user_id) && $grandstream_fxs_enabled == 0}
+<P4595>0</P4595>
+{else}
 <P4595>1</P4595>
+{/if}
 
 <P4210></P4210>
 <P4300>0</P4300>
@@ -3269,7 +3273,11 @@
 <P4121>{$account.2.password}</P4121>
 <P4181>{$account.2.display_name}</P4181>
 <P4151>0</P4151>
+{if !isset($account.2.user_id) && $grandstream_fxs_enabled == 0}
+<P4596>0</P4596>
+{else}
 <P4596>1</P4596>
+{/if}
 
 <P4211></P4211>
 <P4301>0</P4301>
@@ -3284,7 +3292,11 @@
 <P4122>{$account.3.password}</P4122>
 <P4182>{$account.3.display_name}</P4182>
 <P4152>0</P4152>
+{if !isset($account.3.user_id) && $grandstream_fxs_enabled == 0}
+<P4597>0</P4597>
+{else}
 <P4597>1</P4597>
+{/if}
 
 <P4212></P4212>
 <P4302>0</P4302>
@@ -3299,7 +3311,11 @@
 <P4123>{$account.4.password}</P4123>
 <P4183>{$account.4.display_name}</P4183>
 <P4153></P4153>
+{if !isset($account.4.user_id) && $grandstream_fxs_enabled == 0}
+<P4598>0</P4598>
+{else}
 <P4598>1</P4598>
+{/if}
 
 <P4213></P4213>
 <P4303>0</P4303>
@@ -3314,7 +3330,11 @@
 <P4124>{$account.5.password}</P4124>
 <P4184>{$account.5.display_name}</P4184>
 <P4154>0</P4154>
+{if !isset($account.5.user_id) && $grandstream_fxs_enabled == 0}
+<P4599>0</P4599>
+{else}
 <P4599>1</P4599>
+{/if}
 
 <P4214></P4214>
 <P4304>0</P4304>
@@ -3329,7 +3349,11 @@
 <P4125>{$account.6.password}</P4125>
 <P4185>{$account.6.display_name}</P4185>
 <P4155>0</P4155>
+{if !isset($account.6.user_id) && $grandstream_fxs_enabled == 0}
+<P4600>0</P4600>
+{else}
 <P4600>1</P4600>
+{/if}
 
 <P4215></P4215>
 <P4305>0</P4305>
@@ -3344,7 +3368,11 @@
 <P4126>{$account.7.password}</P4126>
 <P4186>{$account.7.display_name}</P4186>
 <P4156>0</P4156>
+{if !isset($account.7.user_id) && $grandstream_fxs_enabled == 0}
+<P4601>0</P4601>
+{else}
 <P4601>1</P4601>
+{/if}
 
 <P4216></P4216>
 <P4306>0</P4306>
@@ -3359,7 +3387,11 @@
 <P4127>{$account.8.password}</P4127>
 <P4187>{$account.8.display_name}</P4187>
 <P4157>0</P4157>
+{if !isset($account.8.user_id) && $grandstream_fxs_enabled == 0}
+<P4602>0</P4602>
+{else}
 <P4602>1</P4602>
+{/if}
 
 <P4217></P4217>
 <P4307>0</P4307>
@@ -3374,7 +3406,11 @@
 <P4128>{$account.9.password}</P4128>
 <P4188>{$account.9.display_name}</P4188>
 <P4158>0</P4158>
+{if !isset($account.9.user_id) && $grandstream_fxs_enabled == 0}
+<P4603>0</P4603>
+{else}
 <P4603>1</P4603>
+{/if}
 
 <P4218></P4218>
 <P4308>0</P4308>
@@ -3389,7 +3425,11 @@
 <P4129>{$account.10.password}</P4129>
 <P4189>{$account.10.display_name}</P4189>
 <P4159>0</P4159>
+{if !isset($account.10.user_id) && $grandstream_fxs_enabled == 0}
+<P4604>0</P4604>
+{else}
 <P4604>1</P4604>
+{/if}
 
 <P4219></P4219>
 <P4309>0</P4309>
@@ -3404,7 +3444,11 @@
 <P4130>{$account.11.password}</P4130>
 <P4190>{$account.11.display_name}</P4190>
 <P4160>0</P4160>
+{if !isset($account.11.user_id) && $grandstream_fxs_enabled == 0}
+<P4605>0</P4605>
+{else}
 <P4605>1</P4605>
+{/if}
 
 <P4220></P4220>
 <P4310>0</P4310>
@@ -3419,7 +3463,11 @@
 <P4131>{$account.12.password}</P4131>
 <P4191>{$account.12.display_name}</P4191>
 <P4161>0</P4161>
+{if !isset($account.12.user_id) && $grandstream_fxs_enabled == 0}
+<P4606>0</P4606>
+{else}
 <P4606>1</P4606>
+{/if}
 
 <P4221></P4221>
 <P4311>0</P4311>
@@ -3434,7 +3482,11 @@
 <P4132>{$account.13.password}</P4132>
 <P4192>{$account.13.display_name}</P4192>
 <P4162>0</P4162>
+{if !isset($account.13.user_id) && $grandstream_fxs_enabled == 0}
+<P4607>0</P4607>
+{else}
 <P4607>1</P4607>
+{/if}
 
 <P4222></P4222>
 <P4312>0</P4312>
@@ -3449,7 +3501,11 @@
 <P4133>{$account.14.password}</P4133>
 <P4193>{$account.14.display_name}</P4193>
 <P4163>0</P4163>
+{if !isset($account.14.user_id) && $grandstream_fxs_enabled == 0}
+<P4608>0</P4608>
+{else}
 <P4608>1</P4608>
+{/if}
 
 <P4223></P4223>
 <P4313>0</P4313>
@@ -3464,7 +3520,11 @@
 <P4134>{$account.15.password}</P4134>
 <P4194>{$account.15.display_name}</P4194>
 <P4164>0</P4164>
+{if !isset($account.15.user_id) && $grandstream_fxs_enabled == 0}
+<P4609>0</P4609>
+{else}
 <P4609>1</P4609>
+{/if}
 
 <P4224></P4224>
 <P4314>0</P4314>
@@ -3479,7 +3539,11 @@
 <P4135>{$account.16.password}</P4135>
 <P4195>{$account.16.display_name}</P4195>
 <P4165>0</P4165>
+{if !isset($account.16.user_id) && $grandstream_fxs_enabled == 0}
+<P4610>0</P4610>
+{else}
 <P4610>1</P4610>
+{/if}
 
 <P4225></P4225>
 <P4315>0</P4315>
@@ -3494,7 +3558,11 @@
 <P4136>{$account.17.password}</P4136>
 <P4196>{$account.17.display_name}</P4196>
 <P4166>0</P4166>
+{if !isset($account.17.user_id) && $grandstream_fxs_enabled == 0}
+<P4611>0</P4611>
+{else}
 <P4611>1</P4611>
+{/if}
 
 <P4226></P4226>
 <P4316>0</P4316>
@@ -3509,7 +3577,11 @@
 <P4137>{$account.18.password}</P4137>
 <P4197>{$account.18.display_name}</P4197>
 <P4167>0</P4167>
+{if !isset($account.18.user_id) && $grandstream_fxs_enabled == 0}
+<P4612>0</P4612>
+{else}
 <P4612>1</P4612>
+{/if}
 
 <P4227></P4227>
 <P4317>0</P4317>
@@ -3524,7 +3596,11 @@
 <P4138>{$account.19.password}</P4138>
 <P4198>{$account.19.display_name}</P4198>
 <P4168>0</P4168>
+{if !isset($account.19.user_id) && $grandstream_fxs_enabled == 0}
+<P4613>0</P4613>
+{else}
 <P4613>1</P4613>
+{/if}
 
 <P4228></P4228>
 <P4318>0</P4318>
@@ -3539,7 +3615,11 @@
 <P4139>{$account.20.password}</P4139>
 <P4199>{$account.20.display_name}</P4199>
 <P4169>0</P4169>
+{if !isset($account.20.user_id) && $grandstream_fxs_enabled == 0}
+<P4614>0</P4614>
+{else}
 <P4614>1</P4614>
+{/if}
 
 <P4229></P4229>
 <P4319>0</P4319>
@@ -3554,7 +3634,11 @@
 <P4140>{$account.21.password}</P4140>
 <P4252>{$account.21.display_name}</P4252>
 <P4170>0</P4170>
+{if !isset($account.21.user_id) && $grandstream_fxs_enabled == 0}
+<P4615>0</P4615>
+{else}
 <P4615>1</P4615>
+{/if}
 
 <P4230></P4230>
 <P4320>0</P4320>
@@ -3569,7 +3653,11 @@
 <P4141>{$account.22.password}</P4141>
 <P4253>{$account.22.display_name}</P4253>
 <P4171>0</P4171>
+{if !isset($account.22.user_id) && $grandstream_fxs_enabled == 0}
+<P4616>0</P4616>
+{else}
 <P4616>1</P4616>
+{/if}
 
 <P4231></P4231>
 <P4321>0</P4321>
@@ -3584,7 +3672,11 @@
 <P4142>{$account.23.password}</P4142>
 <P4254>{$account.23.display_name}</P4254>
 <P4172>0</P4172>
+{if !isset($account.23.user_id) && $grandstream_fxs_enabled == 0}
+<P4617>0</P4617>
+{else}
 <P4617>1</P4617>
+{/if}
 
 <P4232></P4232>
 <P4322>0</P4322>
@@ -3599,7 +3691,11 @@
 <P4143>{$account.24.password}</P4143>
 <P4255>{$account.24.display_name}</P4255>
 <P4173>0</P4173>
+{if !isset($account.24.user_id) && $grandstream_fxs_enabled == 0}
+<P4618>0</P4618>
+{else}
 <P4618>1</P4618>
+{/if}
 
 <P4233></P4233>
 <P4323>0</P4323>
@@ -3614,7 +3710,11 @@
 <P4144>{$account.25.password}</P4144>
 <P4256>{$account.25.display_name}</P4256>
 <P4174>0</P4174>
+{if !isset($account.25.user_id) && $grandstream_fxs_enabled == 0}
+<P4619>0</P4619>
+{else}
 <P4619>1</P4619>
+{/if}
 
 <P4800></P4800>
 <P4324>0</P4324>
@@ -3630,7 +3730,11 @@
 <P4145>{$account.26.password}</P4145>
 <P4257>{$account.26.display_name}</P4257>
 <P4175>0</P4175>
+{if !isset($account.26.user_id) && $grandstream_fxs_enabled == 0}
+<P4620>0</P4620>
+{else}
 <P4620>1</P4620>
+{/if}
 
 <P4801></P4801>
 <P4325>0</P4325>
@@ -3645,7 +3749,11 @@
 <P4146>{$account.27.password}</P4146>
 <P4258>{$account.27.display_name}</P4258>
 <P4176>0</P4176>
+{if !isset($account.27.user_id) && $grandstream_fxs_enabled == 0}
+<P4621>0</P4621>
+{else}
 <P4621>1</P4621>
+{/if}
 
 <P4802></P4802>
 <P4326>0</P4326>
@@ -3660,7 +3768,11 @@
 <P4147>{$account.28.password}</P4147>
 <P4259>{$account.28.display_name}</P4259>
 <P4177>0</P4177>
+{if !isset($account.28.user_id) && $grandstream_fxs_enabled == 0}
+<P4622>0</P4622>
+{else}
 <P4622>1</P4622>
+{/if}
 
 <P4803></P4803>
 <P4327>0</P4327>
@@ -3675,7 +3787,11 @@
 <P4148>{$account.29.password}</P4148>
 <P4260>{$account.29.display_name}</P4260>
 <P4178>0</P4178>
+{if !isset($account.29.user_id) && $grandstream_fxs_enabled == 0}
+<P4623>0</P4623>
+{else}
 <P4623>1</P4623>
+{/if}
 
 <P4804></P4804>
 <P4328>0</P4328>
@@ -3690,7 +3806,11 @@
 <P4149>{$account.30.password}</P4149>
 <P4261>{$account.30.display_name}</P4261>
 <P4179>0</P4179>
+{if !isset($account.30.user_id) && $grandstream_fxs_enabled == 0}
+<P4624>0</P4624>
+{else}
 <P4624>1</P4624>
+{/if}
 
 <P4805></P4805>
 <P4329>0</P4329>
@@ -3705,7 +3825,11 @@
 <P4244>{$account.31.password}</P4244>
 <P4262>{$account.31.display_name}</P4262>
 <P4246>0</P4246>
+{if !isset($account.31.user_id) && $grandstream_fxs_enabled == 0}
+<P4625>0</P4625>
+{else}
 <P4625>1</P4625>
+{/if}
 
 <P4806></P4806>
 <P4250>0</P4250>
@@ -3720,7 +3844,11 @@
 <P4245>{$account.32.password}</P4245>
 <P4263>{$account.32.display_name}</P4263>
 <P4247>0</P4247>
+{if !isset($account.32.user_id) && $grandstream_fxs_enabled == 0}
+<P4626>0</P4626>
+{else}
 <P4626>1</P4626>
+{/if}
 
 <P4807></P4807>
 <P4251>0</P4251>
@@ -3735,7 +3863,11 @@
 <P21128>{$account.33.password}</P21128>
 <P21192>{$account.33.display_name}</P21192>
 <P21256>0</P21256>
+{if !isset($account.33.user_id) && $grandstream_fxs_enabled == 0}
+<P21384>0</P21384>
+{else}
 <P21384>1</P21384>
+{/if}
 
 <P21448></P21448>
 <P21320>0</P21320>
@@ -3750,7 +3882,11 @@
 <P21129>{$account.34.password}</P21129>
 <P21193>{$account.34.display_name}</P21193>
 <P21257>0</P21257>
+{if !isset($account.34.user_id) && $grandstream_fxs_enabled == 0}
+<P21385>0</P21385>
+{else}
 <P21385>1</P21385>
+{/if}
 
 <P21449></P21449>
 <P21321>0</P21321>
@@ -3765,7 +3901,11 @@
 <P21130>{$account.34.password}</P21130>
 <P21194>{$account.34.display_name}</P21194>
 <P21258>0</P21258>
+{if !isset($account.34.user_id) && $grandstream_fxs_enabled == 0}
+<P21386>0</P21386>
+{else}
 <P21386>1</P21386>
+{/if}
 
 <P21450></P21450>
 <P21322>0</P21322>
@@ -3780,7 +3920,11 @@
 <P21131>{$account.36.password}</P21131>
 <P21195>{$account.36.display_name}</P21195>
 <P21259>0</P21259>
+{if !isset($account.36.user_id) && $grandstream_fxs_enabled == 0}
+<P21387>0</P21387>
+{else}
 <P21387>1</P21387>
+{/if}
 
 <P21451></P21451>
 <P21323>0</P21323>
@@ -3795,7 +3939,11 @@
 <P21132>{$account.37.password}</P21132>
 <P21196>{$account.37.display_name}</P21196>
 <P21260>0</P21260>
+{if !isset($account.37.user_id) && $grandstream_fxs_enabled == 0}
+<P21388>0</P21388>
+{else}
 <P21388>1</P21388>
+{/if}
 
 <P21452></P21452>
 <P21324>0</P21324>
@@ -3810,7 +3958,11 @@
 <P21133>{$account.38.password}</P21133>
 <P21197>{$account.38.display_name}</P21197>
 <P21261>0</P21261>
+{if !isset($account.38.user_id) && $grandstream_fxs_enabled == 0}
+<P21389>0</P21389>
+{else}
 <P21389>1</P21389>
+{/if}
 
 <P21453></P21453>
 <P21325>0</P21325>
@@ -3825,7 +3977,11 @@
 <P21134>{$account.39.password}</P21134>
 <P21198>{$account.39.display_name}</P21198>
 <P21262>0</P21262>
+{if !isset($account.39.user_id) && $grandstream_fxs_enabled == 0}
+<P21390>0</P21390>
+{else}
 <P21390>1</P21390>
+{/if}
 
 <P21454></P21454>
 <P21326>0</P21326>
@@ -3840,7 +3996,11 @@
 <P21145>{$account.40.password}</P21145>
 <P21199>{$account.40.display_name}</P21199>
 <P21263>0</P21263>
+{if !isset($account.40.user_id) && $grandstream_fxs_enabled == 0}
+<P21391>0</P21391>
+{else}
 <P21391>1</P21391>
+{/if}
 
 <P21455></P21455>
 <P21327>0</P21327>
@@ -3855,7 +4015,11 @@
 <P21146>{$account.41.password}</P21146>
 <P21200>{$account.41.display_name}</P21200>
 <P21264>0</P21264>
+{if !isset($account.41.user_id) && $grandstream_fxs_enabled == 0}
+<P21392>0</P21392>
+{else}
 <P21392>1</P21392>
+{/if}
 
 <P21456></P21456>
 <P21328>0</P21328>
@@ -3870,7 +4034,11 @@
 <P21147>{$account.42.password}</P21147>
 <P21201>{$account.42.display_name}</P21201>
 <P21265>0</P21265>
+{if !isset($account.42.user_id) && $grandstream_fxs_enabled == 0}
+<P21393>0</P21393>
+{else}
 <P21393>1</P21393>
+{/if}
 
 <P21457></P21457>
 <P21329>0</P21329>
@@ -3885,7 +4053,11 @@
 <P21148>{$account.43.password}</P21148>
 <P21202>{$account.43.display_name}</P21202>
 <P21266>0</P21266>
+{if !isset($account.43.user_id) && $grandstream_fxs_enabled == 0}
+<P21394>0</P21394>
+{else}
 <P21394>1</P21394>
+{/if}
 
 <P21458></P21458>
 <P21330>0</P21330>
@@ -3900,7 +4072,11 @@
 <P21139>{$account.44.password}</P21139>
 <P21203>{$account.44.display_name}</P21203>
 <P21267>0</P21267>
+{if !isset($account.44.user_id) && $grandstream_fxs_enabled == 0}
+<P21395>0</P21395>
+{else}
 <P21395>1</P21395>
+{/if}
 
 <P21459></P21459>
 <P21331>0</P21331>
@@ -3915,7 +4091,11 @@
 <P21140>{$account.45.password}</P21140>
 <P21204>{$account.45.display_name}</P21204>
 <P21268>0</P21268>
+{if !isset($account.45.user_id) && $grandstream_fxs_enabled == 0}
+<P21396>0</P21396>
+{else}
 <P21396>1</P21396>
+{/if}
 
 <P21460></P21460>
 <P21332>0</P21332>
@@ -3930,7 +4110,11 @@
 <P21141>{$account.46.password}</P21141>
 <P21205>{$account.46.display_name}</P21205>
 <P21269>0</P21269>
+{if !isset($account.46.user_id) && $grandstream_fxs_enabled == 0}
+<P21397>0</P21397>
+{else}
 <P21397>1</P21397>
+{/if}
 
 <P21461></P21461>
 <P21333>0</P21333>
@@ -3945,7 +4129,11 @@
 <P21142>{$account.47.password}</P21142>
 <P21206>{$account.47.display_name}</P21206>
 <P21270>0</P21270>
+{if !isset($account.47.user_id) && $grandstream_fxs_enabled == 0}
+<P21398>0</P21398>
+{else}
 <P21398>1</P21398>
+{/if}
 
 <P21462></P21462>
 <P21334>0</P21334>
@@ -3960,7 +4148,11 @@
 <P21143>{$account.48.password}</P21143>
 <P21207>{$account.48.display_name}</P21207>
 <P21271>0</P21271>
+{if !isset($account.48.user_id) && $grandstream_fxs_enabled == 0}
+<P21399>0</P21399>
+{else}
 <P21399>1</P21399>
+{/if}
 
 <P21463></P21463>
 <P21335>0</P21335>
