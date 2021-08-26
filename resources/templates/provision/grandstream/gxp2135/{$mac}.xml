@@ -2651,7 +2651,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
     <!-- # String -->
-    <P1504>grandstream_distinctive_ringtone_name_3</P1504>
+    <P1504>{$grandstream_distinctive_ringtone_name_3}</P1504>
 
     <!-- # Matching Rule 3 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 0. -->
@@ -2661,7 +2661,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 4 -->
     <!-- # String -->
-    <P6728>grandstream_distinctive_ringtone_name_4</P6728>
+    <P6728>{$grandstream_distinctive_ringtone_name_4}</P6728>
 
     <!-- # Matching Rule 4 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -2671,7 +2671,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 5 -->
     <!-- # String -->
-    <P6730>grandstream_distinctive_ringtone_name_5</P6730>
+    <P6730>{$grandstream_distinctive_ringtone_name_5}</P6730>
 
     <!-- # Matching Rule 5 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -2681,7 +2681,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 6 -->
     <!-- # String -->
-    <P6732>grandstream_distinctive_ringtone_name_6</P6732>
+    <P6732>{$grandstream_distinctive_ringtone_name_6}</P6732>
 
     <!-- # Matching Rule 6 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -2691,7 +2691,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 7 -->
     <!-- # String -->
-    <P26264>grandstream_distinctive_ringtone_name_7</P26264>
+    <P26264>{$grandstream_distinctive_ringtone_name_7}</P26264>
 
     <!-- # Matching Rule 7 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -2701,7 +2701,7 @@
 
     <!-- # Matching Incoming Caller ID. Matching Rule 8 -->
     <!-- # String -->
-    <P26266>grandstream_distinctive_ringtone_name_8</P26266>
+    <P26266>{$grandstream_distinctive_ringtone_name_8}</P26266>
 
     <!-- # Matching Rule 8 Distinctive Ringtone -->
     <!-- # -1 - No Ringtone, 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3, 4 - silent, 5 - Default Ringtone. Default is 5. -->
@@ -8411,7 +8411,7 @@
     <!-- # Use Long Label. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8346>0</P8346>
+    <P8346>{$grandstream_long_label}</P8346>
 
     <!-- # Call Screen Settings -->
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
