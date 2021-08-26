@@ -6516,7 +6516,7 @@
     <!-- # Use Long Label. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8346>1</P8346>
+    <P8346>{$grandstream_long_label}</P8346>
 
     <!-- # Call Screen Settings -->
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
