@@ -100,6 +100,7 @@
 			$queue_cid_prefix = $_POST["queue_cid_prefix"];
 			$queue_outbound_caller_id_name = $_POST["queue_outbound_caller_id_name"];
 			$queue_outbound_caller_id_number = $_POST["queue_outbound_caller_id_number"];
+			$queue_announce_position = $_POST["queue_announce_position"];
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
 			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
@@ -296,6 +297,7 @@
 			if (permission_exists('call_center_outbound_caller_id_number')) {
 				$array['call_center_queues'][0]['queue_outbound_caller_id_number'] = $queue_outbound_caller_id_number;
 			}
+			$array['call_center_queues'][0]['queue_announce_position'] = $queue_announce_position;
 			$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
 			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
 			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
@@ -513,6 +515,7 @@
 				$queue_cid_prefix = $row["queue_cid_prefix"];
 				$queue_outbound_caller_id_name = $row["queue_outbound_caller_id_name"];
 				$queue_outbound_caller_id_number = $row["queue_outbound_caller_id_number"];
+				$queue_announce_position = $row["queue_announce_position"];
 				$queue_announce_sound = $row["queue_announce_sound"];
 				$queue_announce_frequency = $row["queue_announce_frequency"];
 				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
@@ -1128,27 +1131,57 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "  ".$text['label-caller_announce_sound']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='".escape($queue_announce_sound)."'>\n";
-	echo "<br />\n";
-	echo $text['description-caller_announce_sound']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('call_center_announce_position')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "  ".$text['label-queue_announce_position']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='queue_announce_position'>\n";
+		if ($queue_announce_position == "false") {
+			echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['option-false']."</option>\n";
+		}
+		if ($queue_announce_position == "true") {
+			echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['option-true']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-queue_announce_position']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "  ".$text['label-caller_announce_frequency']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='0' step='1' value='".escape($queue_announce_frequency)."'>\n";
-	echo "<br />\n";
-	echo $text['description-caller_announce_frequency']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('call_center_announce_sound')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "  ".$text['label-caller_announce_sound']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='".escape($queue_announce_sound)."'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_announce_sound']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('call_center_announce_frequency')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "  ".$text['label-caller_announce_frequency']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='0' step='1' value='".escape($queue_announce_frequency)."'>\n";
+		echo "<br />\n";
+		echo $text['description-caller_announce_frequency']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
