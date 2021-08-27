@@ -156,6 +156,9 @@ include "root.php";
 				case "0080f0":
 					$device_vendor = "panasonic";
 					break;
+				case "0021f2":
+					$device_vendor = "flyingvoice";
+					break;					
 				default:
 					$device_vendor = "";
 				}
@@ -214,6 +217,9 @@ include "root.php";
 					}
 					if (preg_replace('/^.*?(fanvil).*$/i', '$1', $agent) == "fanvil") {
 						return "fanvil";
+					}
+					if (preg_replace('/^.*?(flyingvoice).*$/i', '$1', $agent) == "flyingvoice") {
+						return "flyingvoice";
 					}
 					// unknown vendor
 					return "";
