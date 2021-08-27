@@ -502,6 +502,16 @@ include "root.php";
 
 							$templates['Vesa VCS754'] = 'vtech/vcs754';
 							$templates['Wget/1.11.3'] = 'konftel/kt300ip';
+
+							$templates['Flyingvoice FIP10'] = 'flyingvoice/fip10';
+							$templates['Flyingvoice FIP11C'] = 'flyingvoice/fip11c';
+							$templates['Flyingvoice FIP12WP'] = 'flyingvoice/fip12wp';
+							$templates['Flyingvoice FIP13G'] = 'flyingvoice/fip13g';
+							$templates['Flyingvoice FIP14G'] = 'flyingvoice/fip14g';
+							$templates['Flyingvoice FIP15G'] = 'flyingvoice/fip15g';
+							$templates['Flyingvoice FIP16'] = 'flyingvoice/fip16';
+							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
+							
 							foreach ($templates as $key=>$value){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;

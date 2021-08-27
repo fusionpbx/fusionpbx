@@ -122,6 +122,11 @@
 				$mac = $matches[1];
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
+		//Flyingvoice: $_SERVER['HTTP_USER_AGENT'] = "Flyingvoice FIP13G V0.6.24 00:21:F2:22:AE:F1"
+			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,11)) == "flyingvoice") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
 	}
 
 //prepare the mac address
@@ -452,7 +457,7 @@
 			header("Content-Type: text/plain");
 			header("Content-Length: ".strlen($file_contents));
 		}
-		else if ($device_vendor === "yealink") {
+		else if ($device_vendor === "yealink" || $device_vendor === "flyingvoice") {
 			header("Content-Type: text/plain");
 			header("Content-Length: ".strval(strlen($file_contents)));
 		}
