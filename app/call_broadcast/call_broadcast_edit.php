@@ -325,16 +325,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-start_time']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_start_time' value=\"".escape($broadcast_start_time)."\">\n";
-	echo "<br />\n";
-	echo "".$text['description-start_time']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('call_broadcast_start_time')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-start_time']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='broadcast_start_time' value=\"".escape($broadcast_start_time)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-start_time']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (if_group("superadmin")){
 		echo "<tr>\n";
@@ -350,28 +352,30 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-timeout']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"".escape($broadcast_timeout)."\">\n";
-	echo "<br />\n";
-	echo "".$text['description-timeout']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-concurrent-limit']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"".escape($broadcast_concurrent_limit)."\">\n";
-	echo "<br />\n";
-	echo "".$text['description-concurrent-limit']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
+	if (permission_exists('call_broadcast_timeout')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-timeout']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='broadcast_timeout' maxlength='255' min='1' step='1' value=\"".escape($broadcast_timeout)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-timeout']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	if (permission_exists('call_broadcast_concurrent_limit')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-concurrent-limit']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='broadcast_concurrent_limit' maxlength='255' min='1' step='1' value=\"".escape($broadcast_concurrent_limit)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-concurrent-limit']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	//echo "<tr>\n";
 	//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -455,57 +459,62 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 */
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-destination']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
-	echo "<br />\n";
-	echo "".$text['description-destination']." <br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('call_broadcast_destination_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-destination']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"".escape($broadcast_destination_data)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-destination']." <br /><br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	if (permission_exists('call_broadcast_phone_number_list')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-phone']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-phone']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers)."</textarea>";
+		echo "<br><br>";
+		echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
+		echo "<br /><br />";
 
-	echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers)."</textarea>";
-	echo "<br><br>";
-	echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
-	echo "<br /><br />";
-
-	echo "".$text['description-phone']." <br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-avmd']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='broadcast_avmd'>\n";
-	echo "    	<option value='false' ".(($broadcast_avmd == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "    	<option value='true' ".(($broadcast_avmd == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo $text['description-avmd']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-broadcast_toll_allow']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='broadcast_toll_allow' maxlength='255' value=".escape($broadcast_toll_allow).">\n";
-	echo "<br />\n";
-	echo $text['description-broadcast_toll_allow']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "".$text['description-phone']." <br /><br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	if (permission_exists('call_broadcast_voicemail_detection')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-avmd']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='broadcast_avmd'>\n";
+		echo "    	<option value='false' ".(($broadcast_avmd == "false") ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "    	<option value='true' ".(($broadcast_avmd == "true") ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo $text['description-avmd']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	if (permission_exists('broadcast_toll_allow')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-broadcast_toll_allow']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='broadcast_toll_allow' maxlength='255' value=".escape($broadcast_toll_allow).">\n";
+		echo "<br />\n";
+		echo $text['description-broadcast_toll_allow']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 		
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
