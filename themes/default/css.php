@@ -344,6 +344,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu {
 		margin-top: 0;
 		padding-top: 0;
+		white-space: nowrap;
 		padding-bottom: 10px;
 		<?php
 		echo ($_SESSION['theme']['menu_sub_border_color']['text'] == '' && $_SESSION['theme']['menu_sub_border_size']['text'] == '') ? "border: 0;\n" : null;
