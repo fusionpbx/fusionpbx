@@ -266,7 +266,7 @@
 	$to = str_replace(" ", "", $to);
 	$to = str_replace(";", ",", $to);
 	$to_array = explode(",", $to);
-	if (count($to_array) == 0) {
+	if (count($to_array) == 1) {
 		$mail->AddAddress($to);
 	}
 	else {
