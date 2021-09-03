@@ -1534,6 +1534,27 @@ $text['label-outbound_caller_id_number']['ru-ru'] = "Идентификатор 
 $text['label-outbound_caller_id_number']['sv-se'] = "Utgående Nummerpresentation";
 $text['label-outbound_caller_id_number']['uk-ua'] = "";
 
+$text['label-queue_announce_position']['en-us'] = "Announce Position";
+$text['label-queue_announce_position']['en-gb'] = "Announce Position";
+$text['label-queue_announce_position']['ar-eg'] = "";
+$text['label-queue_announce_position']['de-at'] = "";
+$text['label-queue_announce_position']['de-ch'] = "";
+$text['label-queue_announce_position']['de-de'] = "";
+$text['label-queue_announce_position']['es-cl'] = "";
+$text['label-queue_announce_position']['es-mx'] = "";
+$text['label-queue_announce_position']['fr-ca'] = ""; 
+$text['label-queue_announce_position']['fr-fr'] = "";
+$text['label-queue_announce_position']['he-il'] = "";
+$text['label-queue_announce_position']['it-it'] = "";
+$text['label-queue_announce_position']['nl-nl'] = "";
+$text['label-queue_announce_position']['pl-pl'] = "";
+$text['label-queue_announce_position']['pt-br'] = "";
+$text['label-queue_announce_position']['pt-pt'] = "";
+$text['label-queue_announce_position']['ro-ro'] = "";
+$text['label-queue_announce_position']['ru-ru'] = "";
+$text['label-queue_announce_position']['sv-se'] = "";
+$text['label-queue_announce_position']['uk-ua'] = "";
+
 $text['label-caller_announce_sound']['en-us'] = "Announce Sound";
 $text['label-caller_announce_sound']['en-gb'] = "Announce Sound";
 $text['label-caller_announce_sound']['ar-eg'] = "";
