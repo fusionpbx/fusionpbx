@@ -740,11 +740,19 @@
 							if (permission_exists('destination_emergency')){
 								$array['destinations'][$x]["destination_type_emergency"] = $destination_type_emergency ? 1 : null;
 							}
-							if ($destination->valid($destination_app.':'.$destination_data)) {
+							if (strlen($destination_app) == 0) {
+								$array['destinations'][$x]["destination_app"] = null;
+								$array['destinations'][$x]["destination_data"] = null;
+							}
+							elseif ($destination->valid($destination_app.':'.$destination_data)) {
 								$array['destinations'][$x]["destination_app"] = $destination_app;
 								$array['destinations'][$x]["destination_data"] = $destination_data;
 							}
-							if ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
+							if (strlen($destination_alternate_app) == 0) {
+								$array['destinations'][$x]["destination_alternate_app"] = null;
+								$array['destinations'][$x]["destination_alternate_data"] = null;
+							}
+							elseif ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
 								$array['destinations'][$x]["destination_alternate_app"] = $destination_alternate_app;
 								$array['destinations'][$x]["destination_alternate_data"] = $destination_alternate_data;
 							}
