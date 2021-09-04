@@ -103,7 +103,7 @@ class cache {
 
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
-				// connect to event socket
+				//connect to event socket
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp === false) {
 						return false;
@@ -155,8 +155,6 @@ class cache {
 					}
 			}
 
-		// return result
-			return $result;
 	}
 
 	/**
