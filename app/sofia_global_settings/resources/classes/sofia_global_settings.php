@@ -210,7 +210,7 @@ if (!class_exists('sofia_global_settings')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid(sofia_global_setting_uuid')) {
+								if ($record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
 									$uuids[] = "'".$record['sofia_global_setting_uuid']."'";
 								}
 							}
