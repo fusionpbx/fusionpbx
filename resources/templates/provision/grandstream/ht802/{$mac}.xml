@@ -1113,7 +1113,7 @@
     <P2359>0</P2359>
 
     <!-- # Conference URI -->
-    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- ################################################################################# -->
     <!-- # Codec/Voice Quality settings                                                  # -->
@@ -1999,7 +1999,7 @@
     <P2459>0</P2459>
 
     <!-- #Conference URI -->
-    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
     <!-- ################################################################################# -->
     <!-- # Codec/Voice Quality settings                                                  # -->
