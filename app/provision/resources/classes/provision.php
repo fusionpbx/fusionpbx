@@ -719,8 +719,8 @@ include "root.php";
 								$parameters['device_profile_uuid'] = $device_profile_uuid;
 								$database = new database;
 								$keys = $database->select($sql, $parameters, 'all');
-								//add the profile keys to the device keys array
 
+								//add the profile keys to the device keys array
 								if (is_array($keys) && sizeof($keys) != 0) {
 									foreach($keys as $row) {
 										//set the variables
@@ -780,6 +780,12 @@ include "root.php";
 									//set the variables
 									$id = $row['device_key_id'];
 									$category = $row['device_key_category'];
+									$device_key_line = $row['device_key_line'];
+
+									//add line_keys to the polycom array
+									if ($row['device_key_vendor'] == 'polycom' && $row['device_key_type'] == 'line') {
+										$device_lines[$device_key_line]['line_keys'] = $row['device_key_value'];
+									}
 
 									//build the device keys array
 									$device_keys[$category][$id] = $row;
