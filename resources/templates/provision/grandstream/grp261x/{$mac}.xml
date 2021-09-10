@@ -249,7 +249,7 @@
 		<item name="account.{$line}.sip.blf.eventlist.autoProvision">Disabled</item>
 
 		<!-- Conference URI -->
-		<item name="account.{$line}.sip.conferenceUri">{if $nway_conference == true}nway{$row.user_id}@{$row.server_address}{/if}</item>
+		<item name="account.{$line}.sip.conferenceUri">{if $nway_conference == 'true'}nway{$row.user_id}@{$row.server_address}{/if}</item>
 
 		<!-- Music On Hold URI -->
 		<item name="account.{$line}.sip.musicOnHoldUri"></item>
