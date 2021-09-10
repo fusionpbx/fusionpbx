@@ -555,7 +555,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -973,7 +973,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1401,7 +1401,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1831,7 +1831,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
 <P623>content://settings/system/ringtone</P623>
@@ -2256,7 +2256,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2718>{if $nway_conference == true}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2682,7 +2682,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2818>{if $nway_conference == true}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
