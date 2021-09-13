@@ -334,10 +334,8 @@ if ($db_type == "pgsql") {
 	}
 
 //set the setting arrays
-	if (!isset($_SESSION['domain']['menu'])){
-		require "resources/classes/domains.php";
+	if (!isset($_SESSION['domain']['menu'])) {
 		$domain = new domains();
-		$domain->db = $db;
 		$domain->set();
 	}
 
