@@ -488,7 +488,7 @@ if (!class_exists('domains')) {
 
 			//get the domains settings
 				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php")) {
-					require_once "app/domains/resources/settings.php";
+					include "app/domains/resources/settings.php";
 				}
 
 			//get the domains settings
