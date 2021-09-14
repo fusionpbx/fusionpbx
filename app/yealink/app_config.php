@@ -117,7 +117,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Compulsory";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Mandatory";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0704072-c3d9-48df-b89b-2aea6035b3c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -142,7 +142,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Tone 0-Disabled, 1-Enabled (default)";
-                $y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1f298476-c8e0-4315-9d7f-b70d36166fcc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_direct_pickup_enable";
