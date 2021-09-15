@@ -184,6 +184,42 @@
 		unset($default_setting_categories, $default_setting_category, $category);
 	}
 
+//get the list of installed apps from the core and mod directories
+	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+	$x=0;
+	foreach ($config_list as $config_path) {
+		include($config_path);
+		$x++;
+	}
+	$x = 0;
+	foreach ($apps as $app) {
+		if (is_array($app['default_settings'])) {
+			foreach ($app['default_settings'] as $setting) {
+				$setting_array[$x] = ($setting);
+				$setting_array[$x]['app_uuid'] = $app['uuid'];
+				$x++;
+			}
+		}
+	}
+
+//create a function to find matching row in array and return the row or boolean
+	function find_in_array($search_array, $field, $value, $type = 'boolean') {
+		foreach($search_array as $row) {
+			if ($row[$field] == $value) {
+				if ($type == 'boolean') {
+					return true;
+				}
+				if ($type == 'row') {
+					return $row;
+				}
+				break;
+			}
+		}
+		if ($type == 'boolean') {
+			return false;
+		}
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -285,9 +321,18 @@
 		foreach ($default_settings as $row) {
 			$default_setting_category = strtolower($row['default_setting_category']);
 			$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
-	
+
 			$label_default_setting_category = $row['default_setting_category'];
 			$label_default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $label_default_setting_category);
+
+			//check if the default setting uuid exists in the array
+			$result = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
+			if (is_array($result)) {
+				$setting_message = '';
+			}
+			else {
+				$setting_message = 'Custom';
+			}
 
 			switch (strtolower($label_default_setting_category)) {
 				case "api" : $label_default_setting_category = "API"; break;
@@ -322,6 +367,9 @@
 				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
 				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
 				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
+				if (isset($_GET['debug'])) {
+					echo "	<th class=''>&nbsp;</td>\n";
+				}
 				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
 				if (permission_exists('default_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -424,6 +472,9 @@
 				echo "		".escape($row['default_setting_value'])."\n";
 			}
 			echo "	</td>\n";
+			if (isset($_GET['debug'])) {
+				echo "	<td class='hide-sm-dn'>".escape($setting_message)."</td>\n";
+			}
 			if (permission_exists('default_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
