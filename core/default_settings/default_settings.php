@@ -326,13 +326,28 @@
 			$label_default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $label_default_setting_category);
 
 			//check if the default setting uuid exists in the array
-			$result = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
-			if (is_array($result)) {
-				$setting_message = '';
+			$field = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
+			unset($setting_bold, $enabled_bold, $default_value, $default_enabled);
+			if (is_array($field)) {
+				if ($row['default_setting_value'] !== $field['default_setting_value']) {
+					$setting_bold = 'font-weight:bold;';
+				}
+				if (strlen($field['default_setting_value']) > 0) {
+					$default_value = 'Default: '.$field['default_setting_value'];
+				}
+				else {
+					$default_value = 'Default: null';
+				}
+				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
+					$default_enabled = $field['default_setting_enabled'];
+					$enabled_bold = true;
+				}
 			}
 			else {
-				$setting_message = 'Custom';
+				$default_value = 'Custom';
+				$setting_bold = 'font-weight:bold;';
 			}
+			unset($field);
 
 			switch (strtolower($label_default_setting_category)) {
 				case "api" : $label_default_setting_category = "API"; break;
@@ -367,9 +382,6 @@
 				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
 				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
 				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
-				if (isset($_GET['debug'])) {
-					echo "	<th class=''>&nbsp;</td>\n";
-				}
 				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
 				if (permission_exists('default_setting_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -399,7 +411,8 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
-			echo "	<td class='overflow no-wrap'>\n";
+			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
+
 			$category = $row['default_setting_category'];
 			$subcategory = $row['default_setting_subcategory'];
 			$name = $row['default_setting_name'];
@@ -472,15 +485,17 @@
 				echo "		".escape($row['default_setting_value'])."\n";
 			}
 			echo "	</td>\n";
-			if (isset($_GET['debug'])) {
-				echo "	<td class='hide-sm-dn'>".escape($setting_message)."</td>\n";
-			}
 			if (permission_exists('default_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				if (isset($enabled_bold)) {
+					echo button::create(['type'=>'submit','class'=>'link','style'=>'font-weight:bold', 'label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				}
+				else {
+					echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				}
 			}
 			else {
-				echo "	<td class='center'>\n";
+				echo "	<td class='center' title=\"".escape($default_enabled)."\" style=\"".$setting_bold."\">\n";
 				echo $text['label-'.$row['default_setting_enabled']];
 			}
 			echo "	</td>\n";
