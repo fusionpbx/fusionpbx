@@ -64,7 +64,7 @@
 	local dbh = Database.new('system');
 
 --determine whether to update the dial string
-	local sql = "select extension, number_alias, follow_me_uuid, follow_me_enabled ";
+	local sql = "select extension, number_alias, accountcode, follow_me_uuid, follow_me_enabled ";
 	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
@@ -78,6 +78,7 @@
 
 	local extension = row.extension;
 	local number_alias = row.number_alias or '';
+	local accountcode = row.accountcode;
 	local follow_me_uuid = row.follow_me_uuid;
 	local follow_me_enabled = row.follow_me_enabled;
 
