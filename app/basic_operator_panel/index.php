@@ -115,7 +115,7 @@
 						foreach($_SESSION['user']['extension'] as $row) {
 							//build the array
 							$array['extensions'][$x]['extension_uuid'] = $row['extension_uuid'];
-							$array['extensions'][$x]['dial_string'] = 'error/user_busy';
+							$array['extensions'][$x]['dial_string'] = '!USER_BUSY';
 							$array['extensions'][$x]['do_not_disturb'] = 'true';
 
 							//delete extension from the cache

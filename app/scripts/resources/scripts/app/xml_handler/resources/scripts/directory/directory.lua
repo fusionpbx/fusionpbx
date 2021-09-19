@@ -381,7 +381,7 @@
 
 							--set the dial_string
 								if (do_not_disturb == "true") then
-									dial_string = "error/USER_BUSY";
+									dial_string = "!USER_BUSY";
 								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else

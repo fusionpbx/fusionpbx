@@ -123,7 +123,7 @@
 		--DND enabled
 			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true") then
 				--set a variable
-					dial_string = "error/user_busy";
+					dial_string = "!USER_BUSY";
 					do_not_disturb = "true";
 
 				--update the extension
