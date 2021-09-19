@@ -144,23 +144,23 @@
 			}
 
 			$cidrs = preg_split("/[\s,]+/", $cidr);
-                        $ips = array();
-                        foreach ($cidrs as $ipaddr){
-                                $cx = strpos($ipaddr, '/');
-                                if ($cx){
-                                        $subnet = (int)(substr($ipaddr, $cx+1));
-                                        $ipaddr = substr($ipaddr, 0, $cx);
-                                }
-                                else{
-                                        $subnet = 32;
-                                }
+			$ips = array();
+			foreach ($cidrs as $ipaddr){
+				$cx = strpos($ipaddr, '/');
+				if ($cx){
+					$subnet = (int)(substr($ipaddr, $cx+1));
+					$ipaddr = substr($ipaddr, 0, $cx);
+				}
+				else{
+					$subnet = 32;
+				}
+				
+				if(($addr = inet_pton($ipaddr)) !== false){
+					$ips[] = $ipaddr.'/'.$subnet;
+				}
+			}
+			$cidr = implode(',',$ips);
 
-                                if(($addr = inet_pton($ipaddr)) !== false){
-                                        $ips[] = $ipaddr.'/'.$subnet;
-                                }
-                        }
-                        $cidr = implode(',',$ips);
-		
 		//change toll allow delimiter
 			$toll_allow = str_replace(',',':', $toll_allow);
 
@@ -185,13 +185,32 @@
 					$device_mac_address = strtolower($device_mac_address);
 					$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
-					$sql = "select device_uuid from v_devices ";
-					$sql .= "where device_mac_address = :device_mac_address ";
-					$sql .= "and domain_uuid = :domain_uuid ";
+					$sql = "select ";
+					$sql .= "d1.device_uuid, ";
+					$sql .= "d1.domain_uuid, ";
+					$sql .= "d2.domain_name ";
+					$sql .= "from ";
+					$sql .= "v_devices as d1, ";
+					$sql .= "v_domains as d2 ";
+					$sql .= "where ";
+					$sql .= "d1.domain_uuid = d2.domain_uuid and ";
+					$sql .= "d1.device_mac_address = :device_mac_address ";
 					$parameters['device_mac_address'] = $device_mac_address;
-					$parameters['domain_uuid'] = $domain_uuid;
 					$database = new database;
-					$device_uuid = $database->select($sql, $parameters, 'column');
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row)) {
+						if ($_SESSION['domain_uuid'] == $row['domain_uuid']) {
+							$device_uuid = $row['device_uuid'];
+							$device_domain_name = $row['device_domain_name'];
+						}
+						else {
+							$device_domain_name = $row['device_domain_name'];
+						}
+						$device_unique = false;
+					}
+					else {
+						$device_unique = true;
+					}
 					unset($sql, $parameters);
 
 					$device_uuids[$d] = is_uuid($device_uuid) ? $device_uuid : uuid();
@@ -452,14 +471,14 @@
 										$array["extensions"][$i]["call_timeout"] = $call_timeout;
 									}
 									if (permission_exists("extension_call_group")) {
-									       $array["extensions"][$i]["call_group"] = $call_group;
+										$array["extensions"][$i]["call_group"] = $call_group;
 									}
 									$array["extensions"][$i]["call_screen_enabled"] = $call_screen_enabled;
 									if (permission_exists('extension_user_record')) {
 										$array["extensions"][$i]["user_record"] = $user_record;
 									}
 									if (permission_exists('extension_hold_music')) {
-									       $array["extensions"][$i]["hold_music"] = $hold_music;
+										$array["extensions"][$i]["hold_music"] = $hold_music;
 									}
 									$array["extensions"][$i]["auth_acl"] = $auth_acl;
 									if (permission_exists("extension_cidr")) {
@@ -511,33 +530,43 @@
 													$device_vendor = device::get_vendor($device_mac_address);	
 												}
 
-												//build the devices array
-												$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
-												$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
-												$array["devices"][$j]["device_mac_address"] = $device_mac_address;
-												$array["devices"][$j]["device_label"] = $extension;
-												$array["devices"][$j]["device_vendor"] = $device_vendor;
-												if (strlen($device_templates[$d]) > 0) {
-													$array["devices"][$j]["device_template"] = $device_templates[$d];
+												//send a message to the user the device is not unique
+												if (!$device_unique) {
+													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
+													message::add($message,'negative');
 												}
-												$array["devices"][$j]["device_enabled"] = "true";
-												$array["devices"][$j]["device_lines"][0]["device_uuid"] = $device_uuids[$d];
-												$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
-												$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
-												$array["devices"][$j]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
-												$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
-												$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
-												$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
-												$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
-												$array["devices"][$j]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
-												$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
-												$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
-												$array["devices"][$j]["device_lines"][0]["password"] = $password;
-												$array["devices"][$j]["device_lines"][0]["line_number"] = is_numeric($line_numbers[$d]) ? $line_numbers[$d] : '1';
-												$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['numeric'];
-												$array["devices"][$j]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
-												$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
-												$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
+
+												//build the devices array
+												if ($device_unique && $device_mac_address != '000000000000') {
+													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
+													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
+													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
+													$array["devices"][$j]["device_label"] = $extension;
+													$array["devices"][$j]["device_vendor"] = $device_vendor;
+													if (strlen($device_templates[$d]) > 0) {
+														$array["devices"][$j]["device_template"] = $device_templates[$d];
+													}
+													$array["devices"][$j]["device_enabled"] = "true";
+													$array["devices"][$j]["device_lines"][0]["device_uuid"] = $device_uuids[$d];
+													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
+													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $_SESSION['domain_uuid'];
+													$array["devices"][$j]["device_lines"][0]["server_address"] = $_SESSION['domain_name'];
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_primary"] = $_SESSION['provision']['outbound_proxy_primary']['text'];
+													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
+													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
+													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
+													$array["devices"][$j]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
+													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
+													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
+													$array["devices"][$j]["device_lines"][0]["password"] = $password;
+													$array["devices"][$j]["device_lines"][0]["line_number"] = is_numeric($line_numbers[$d]) ? $line_numbers[$d] : '1';
+													$array["devices"][$j]["device_lines"][0]["sip_port"] = $_SESSION['provision']['line_sip_port']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["sip_transport"] = $_SESSION['provision']['line_sip_transport']['text'];
+													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
+													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
+												}
+
+												//increment
 												$j++;
 											}
 										}
@@ -650,7 +679,7 @@
 					$database->save($array);
 					$message = $database->message;
 					unset($array);
-				
+
 				//reload acl if allowed
 					if (permission_exists("extension_cidr")) {
 						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
