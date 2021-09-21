@@ -236,7 +236,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -645,7 +645,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -1054,7 +1054,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -1463,7 +1463,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -1872,7 +1872,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2718>{if $nway_conference == true}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->
@@ -2281,7 +2281,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2818>{if $nway_conference == true}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- # BLF Call-pickup Prefix. Default is ** -->
 <!-- # String -->

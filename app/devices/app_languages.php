@@ -277,6 +277,27 @@ $text['message-duplicate']['ru-ru'] = "Обнаружено дублирован
 $text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
 $text['message-duplicate']['uk-ua'] = "Знайдено дублікат";
 
+$text['message-command_sent']['en-us'] = "Command Sent";
+$text['message-command_sent']['en-gb'] = "Command Sent";
+$text['message-command_sent']['ar-eg'] = "Command Sent";
+$text['message-command_sent']['de-at'] = "Command Sent";
+$text['message-command_sent']['de-ch'] = "Command Sent";
+$text['message-command_sent']['de-de'] = "Command Sent";
+$text['message-command_sent']['es-cl'] = "Command Sent";
+$text['message-command_sent']['es-mx'] = "Command Sent";
+$text['message-command_sent']['fr-ca'] = "Command Sent";
+$text['message-command_sent']['fr-fr'] = "Command Sent";
+$text['message-command_sent']['he-il'] = "Command Sent";
+$text['message-command_sent']['it-it'] = "Command Sent";
+$text['message-command_sent']['nl-nl'] = "Command Sent";
+$text['message-command_sent']['pl-pl'] = "Command Sent";
+$text['message-command_sent']['pt-br'] = "Command Sent";
+$text['message-command_sent']['pt-pt'] = "Command Sent";
+$text['message-command_sent']['ro-ro'] = "Command Sent";
+$text['message-command_sent']['ru-ru'] = "Command Sent";
+$text['message-command_sent']['sv-se'] = "Command Sent";
+$text['message-command_sent']['uk-ua'] = "Command Sent";
+
 $text['label-zero_sp_touch']['en-us'] = "Zero-Sp-Touch";
 $text['label-zero_sp_touch']['en-gb'] = "Zero-Sp-Touch";
 $text['label-zero_sp_touch']['ar-eg'] = "";

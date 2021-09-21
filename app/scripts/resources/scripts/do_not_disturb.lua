@@ -172,7 +172,7 @@
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false', ";
-		sql = sql .. "dial_string = 'error/user_busy', ";
+		sql = sql .. "dial_string = '!USER_BUSY', ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else

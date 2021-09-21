@@ -189,6 +189,11 @@
 				return;
 			}
 
+		//get the uuid
+			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+				$destination_uuid = $_POST["destination_uuid"];
+			}
+
 		//get the destination row values
 			if ($action == 'update' && is_uuid($destination_uuid)) {
 				$sql = "select * from v_destinations ";
@@ -199,9 +204,16 @@
 				unset($sql, $parameters);
 			}
 
-		//get the dialplan_uuid from the database
+		//get the destination settings from the database
 			if (is_array($row) && @sizeof($row) != 0) {
+				//get the dialplan_uuid from the database
 				$dialplan_uuid = $row["dialplan_uuid"];
+
+				//if the destination_number is not set then get it from the database
+				if (!isset($destination_number)) {
+					$destination_prefix = $row["destination_prefix"];
+					$destination_number = $row["destination_number"];
+				}
 			}
 
 		//if the user doesn't have the correct permission then 
@@ -728,11 +740,19 @@
 							if (permission_exists('destination_emergency')){
 								$array['destinations'][$x]["destination_type_emergency"] = $destination_type_emergency ? 1 : null;
 							}
-							if ($destination->valid($destination_app.':'.$destination_data)) {
+							if (strlen($destination_app) == 0) {
+								$array['destinations'][$x]["destination_app"] = null;
+								$array['destinations'][$x]["destination_data"] = null;
+							}
+							elseif ($destination->valid($destination_app.':'.$destination_data)) {
 								$array['destinations'][$x]["destination_app"] = $destination_app;
 								$array['destinations'][$x]["destination_data"] = $destination_data;
 							}
-							if ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
+							if (strlen($destination_alternate_app) == 0) {
+								$array['destinations'][$x]["destination_alternate_app"] = null;
+								$array['destinations'][$x]["destination_alternate_data"] = null;
+							}
+							elseif ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
 								$array['destinations'][$x]["destination_alternate_app"] = $destination_alternate_app;
 								$array['destinations'][$x]["destination_alternate_data"] = $destination_alternate_data;
 							}
@@ -768,14 +788,19 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$destination_context);
-					if (isset($destination_number) && is_numeric($destination_number)) {
-						$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'multiple') {
+						$cache->delete("dialplan:".$destination_context);
 					}
-					if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
-						$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'single') {
+						if (isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
+						}
+						if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+						}
 					}
-			}
+
+			} //if $destination_type == inbound
 
 		//save the outbound destination
 			if ($destination_type == 'outbound') {
@@ -821,7 +846,7 @@
 						unset($_SESSION['destinations']['array']);
 					}
 
-			}
+			} //if destination_type == outbound
 
 		//redirect the user
 			if ($action == "add") {

@@ -1,0 +1,12 @@
+<context name="{v_context}">
+	<extension name="valet_park_in" number="5900" continue="false" app_uuid="2ed78bcf-0b40-485d-9815-aa0568dd4edc" enabled="false" order="470">
+		<condition field="destination_number" expression="^(park\+)?(5900)$">
+			<action application="answer" data="" enabled="true"/>
+			<action application="set" data="valet_announce_slot=disable" enabled="false"/>
+			<action application="set" data="valet_hold_music=${hold_music}" enabled="true"/>
+			<action application="set" data="valet_parking_orbit_exten=${referred_by_user}" enabled="true"/>
+			<action application="set" data="valet_parking_timeout=180" enabled="true"/>
+			<action application="valet_park" data="5900@${domain_name} auto in 5901 5999" enabled="true"/>
+		</condition>
+	</extension>
+</context>

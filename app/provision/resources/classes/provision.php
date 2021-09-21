@@ -502,6 +502,16 @@ include "root.php";
 
 							$templates['Vesa VCS754'] = 'vtech/vcs754';
 							$templates['Wget/1.11.3'] = 'konftel/kt300ip';
+
+							$templates['Flyingvoice FIP10'] = 'flyingvoice/fip10';
+							$templates['Flyingvoice FIP11C'] = 'flyingvoice/fip11c';
+							$templates['Flyingvoice FIP12WP'] = 'flyingvoice/fip12wp';
+							$templates['Flyingvoice FIP13G'] = 'flyingvoice/fip13g';
+							$templates['Flyingvoice FIP14G'] = 'flyingvoice/fip14g';
+							$templates['Flyingvoice FIP15G'] = 'flyingvoice/fip15g';
+							$templates['Flyingvoice FIP16'] = 'flyingvoice/fip16';
+							$templates['Flyingvoice FIP16PLUS'] = 'flyingvoice/fip16plus';
+							
 							foreach ($templates as $key=>$value){
 								if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
 									$device_template = $value;
@@ -709,8 +719,8 @@ include "root.php";
 								$parameters['device_profile_uuid'] = $device_profile_uuid;
 								$database = new database;
 								$keys = $database->select($sql, $parameters, 'all');
-								//add the profile keys to the device keys array
 
+								//add the profile keys to the device keys array
 								if (is_array($keys) && sizeof($keys) != 0) {
 									foreach($keys as $row) {
 										//set the variables
@@ -770,6 +780,12 @@ include "root.php";
 									//set the variables
 									$id = $row['device_key_id'];
 									$category = $row['device_key_category'];
+									$device_key_line = $row['device_key_line'];
+
+									//add line_keys to the polycom array
+									if ($row['device_key_vendor'] == 'polycom' && $row['device_key_type'] == 'line') {
+										$device_lines[$device_key_line]['line_keys'] = $row['device_key_value'];
+									}
 
 									//build the device keys array
 									$device_keys[$category][$id] = $row;

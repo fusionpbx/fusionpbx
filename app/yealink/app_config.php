@@ -117,7 +117,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Compulsory";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0=Disabled, 1=Optional, 2=Mandatory";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f0704072-c3d9-48df-b89b-2aea6035b3c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -142,7 +142,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call Waiting Tone 0-Disabled, 1-Enabled (default)";
-                $y++;
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1f298476-c8e0-4315-9d7f-b70d36166fcc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_direct_pickup_enable";
@@ -1302,8 +1302,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configures the interval (in seconds) to automatically lock the IP phone. It ranges from 0 to 3600, the default value is 0.";
-    	$y++;
-    	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1549a926-fcb5-4384-a237-83aa77170e5a";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1549a926-fcb5-4384-a237-83aa77170e5a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_summer_time";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -1311,7 +1311,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "It configures Daylight Saving Time (DST) feature. 0-Disabled, 1-Enabled, 2-Automatic";
 		$y++;
-    	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bcfc683-8731-4eb1-b79e-a4fb94ede2c9";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bcfc683-8731-4eb1-b79e-a4fb94ede2c9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dst_type";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
