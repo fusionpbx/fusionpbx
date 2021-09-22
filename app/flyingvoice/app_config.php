@@ -2,7 +2,7 @@
 
 	//application details
 		$apps[$x]['name'] = "Flyingvoice";
-		$apps[$x]['uuid'] = "";
+		$apps[$x]['uuid'] = "f9c57629-cb6b-4068-957e-5bb43e4cb877";
 		$apps[$x]['category'] = "Vendor";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
