@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -97,7 +97,7 @@
 	}
 
 //set the type
-	switch ($_GET['type']) {
+	switch ($_REQUEST['type']) {
 		case 'inbound': $destination_type = 'inbound'; break;
 		case 'outbound': $destination_type = 'outbound'; break;
 		case 'local': $destination_type = 'local'; break;
@@ -140,7 +140,8 @@
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
+	$param = "&search=".urlencode($search);
+	$param .= "&type=".$destination_type;
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		$param .= "&show=all";
 	}
@@ -197,6 +198,9 @@
 	if (permission_exists('destination_import')) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'destination_imports.php']);
 	}
+	if (permission_exists('destination_export')) {
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'destination_download.php']);
+	}
 	if (permission_exists('destination_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','style'=>'margin-left: 15px;','link'=>'destination_edit.php']);
 	}
@@ -212,7 +216,8 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type).'&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo "		<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'destinations.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
@@ -230,8 +235,9 @@
 	echo $text['description-destinations']."\n";
 	echo "<br /><br />\n";
 
-	echo "<form id='form_list' method='post'>\n";
+	echo "<form id='form_list' method='POST'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<table class='list'>\n";

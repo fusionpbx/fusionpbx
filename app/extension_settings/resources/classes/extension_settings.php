@@ -116,7 +116,7 @@ if (!class_exists('extension_settings')) {
 								//clear the cache	
 									$sql = "select extension, number_alias, user_context from v_extensions ";
 									$sql .= "where extension_uuid = :extension_uuid ";
-									$parameters['extension_uuid'] = $extension_uuid;
+									$parameters['extension_uuid'] = $this->extension_uuid;
 									$database = new database;
 									$extension = $database->select($sql, $parameters, 'row');
 									$cache = new cache;

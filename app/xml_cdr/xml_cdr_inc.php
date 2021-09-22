@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -220,12 +220,24 @@
 	if (!isset($_GET['page'])) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+	$parameters['time_zone'] = $time_zone;
+
 //get the results from the db
 	$sql = "select \n";
 	$sql .= "c.domain_uuid, \n";
+	$sql .= "c.sip_call_id, \n";
 	$sql .= "e.extension, \n";
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.duration, \n";
@@ -306,16 +318,26 @@
 	}
 	if (strlen($caller_id_name) > 0) {
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
-		$sql .= "and caller_id_name like :caller_id_name \n";
-		$parameters['caller_id_name'] = '%'.$mod_caller_id_name.'%';
+		if (strstr($mod_caller_id_name, '%')) {
+			$sql .= "and caller_id_name like :caller_id_name \n";
+			$parameters['caller_id_name'] = $mod_caller_id_name;
+		}
+		else {
+			$sql .= "and caller_id_name = :caller_id_name \n";
+			$parameters['caller_id_name'] = $mod_caller_id_name;
+		}
 	}
 	if (strlen($caller_id_number) > 0) {
-		$mod_caller_id_number = preg_replace("#[^0-9./]#", "", $caller_id_number);
-		if (strlen($mod_caller_id_number) == 0) {
-			$mod_caller_id_number = trim($caller_id_number);
+		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
+		$mod_caller_id_number = preg_replace("#[^\+0-9.%/]#", "", $mod_caller_id_number);
+		if (strstr($mod_caller_id_number, '%')) {
+			$sql .= "and caller_id_number like :caller_id_number \n";
+			$parameters['caller_id_number'] = $mod_caller_id_number;
 		}
-		$sql .= "and caller_id_number like :caller_id_number \n";
-		$parameters['caller_id_number'] = '%'.$mod_caller_id_number.'%';
+		else {
+			$sql .= "and caller_id_number = :caller_id_number \n";
+			$parameters['caller_id_number'] = $mod_caller_id_number;
+		}
 	}
 
 	if (strlen($extension_uuid) > 0 && is_uuid($extension_uuid)) {
@@ -323,20 +345,28 @@
 		$parameters['extension_uuid'] = $extension_uuid;
 	}
 	if (strlen($caller_destination) > 0) {
-		$mod_caller_destination = preg_replace("#[^0-9./]#", "", $caller_destination);
-		if (strlen($mod_caller_destination) == 0) {
-			$mod_caller_destination = trim($caller_destination);
+		$mod_caller_destination = str_replace("*", "%", $caller_destination);
+		$mod_caller_destination = preg_replace("#[^\+0-9.%/]#", "", $mod_caller_destination);
+		if (strstr($mod_caller_destination, '%')) {
+			$sql .= "and caller_destination like :caller_destination \n";
+			$parameters['caller_destination'] = $mod_caller_destination;
 		}
-		$sql .= "and caller_destination like :caller_destination \n";
-		$parameters['caller_destination'] = '%'.$mod_caller_destination.'%';
+		else {
+			$sql .= "and caller_destination = :caller_destination \n";
+			$parameters['caller_destination'] = $mod_caller_destination;
+		}
 	}
 	if (strlen($destination_number) > 0) {
-		$mod_destination_number = preg_replace("#[^0-9./]#", "", $destination_number);
-		if (strlen($mod_destination_number) == 0) {
-			$mod_destination_number = trim($destination_number);
+		$mod_destination_number = str_replace("*", "%", $destination_number);
+		$mod_destination_number = preg_replace("#[^\+0-9.%/]#", "", $mod_destination_number);
+		if (strstr($mod_destination_number, '%')) {
+			$sql .= "and destination_number like :destination_number \n";
+			$parameters['destination_number'] = $mod_destination_number;
 		}
-		$sql .= "and destination_number like :destination_number \n";
-		$parameters['destination_number'] = '%'.$mod_destination_number.'%';
+		else {
+			$sql .= "and destination_number = :destination_number \n";
+			$parameters['destination_number'] = $mod_destination_number;
+		}
 	}
 	if (strlen($context) > 0) {
 		$sql .= "and context like :context \n";
@@ -349,56 +379,62 @@
 			if (isset($$field_name)) {
 				$$field_name = $_REQUEST[$field_name];
 				if (strlen($$field_name) > 0) {
-					$sql .= "and $field_name like :".$field_name." \n";
-					$parameters[$field_name] = '%'.$$field_name.'%';
+					if (strstr($$field_name, '%')) {
+						$sql .= "and $field_name like :".$field_name." \n";
+						$parameters[$field_name] = $$field_name;
+					}
+					else {
+						$sql .= "and $field_name = :".$field_name." \n";
+						$parameters[$field_name] = $$field_name;
+					}
 				}
 			}
 		}
 	}
 
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-		$sql .= "and start_stamp between :start_stamp_begin and :start_stamp_end ";
-		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
-		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+		$sql .= "and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz ";
+		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
+		$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($start_stamp_begin) > 0) {
 			$sql .= "and start_stamp >= :start_stamp_begin ";
-			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
+			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($start_stamp_end) > 0) {
 			$sql .= "and start_stamp <= :start_stamp_end ";
-			$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+			$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
-		$sql .= "and answer_stamp between :answer_stamp_begin and :answer_stamp_end ";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz ";
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;
+		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($answer_stamp_begin) > 0) {
 			$sql .= "and answer_stamp >= :answer_stamp_begin ";
-			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
+			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;;
 		}
 		if (strlen($answer_stamp_end) > 0) {
 			$sql .= "and answer_stamp <= :answer_stamp_end "; 
-			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
-		$sql .= "and end_stamp between :end_stamp_begin and :end_stamp_end ";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
+		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz ";
+		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
+		$parameters['end_stamp_end'] = $end_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($end_stamp_begin) > 0) {
 			$sql .= "and end_stamp >= :end_stamp_begin ";
-			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
+			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($end_stamp_end) > 0) {
 			$sql .= "and end_stamp <= :end_stamp_end ";
-			$parameters['end_stamp'] = $end_stamp_end.':59.999';
+			$parameters['end_stamp'] = $end_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (is_numeric($duration_min)) {
@@ -474,7 +510,7 @@
 				}
 				break;
 			default: 
-			    $sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) ";
+				$sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) ";
 				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
 		}
 	}

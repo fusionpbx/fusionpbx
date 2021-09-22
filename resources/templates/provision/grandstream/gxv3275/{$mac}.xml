@@ -230,14 +230,17 @@
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 1 -->
 <!-- Number: 0, 1 -->
+{if isset($account.1.password)}
 <P271>1</P271>
+{else}
+<P271>0</P271>
+{/if}
 
 <!-- Account Name -->
-<P270></P270>
+<P270>{$account.1.display_name}</P270>
 
 <!-- SIP Server -->
 <P47>{$account.1.server_address}</P47>
-
 
 <!-- SIP User ID -->
 <P35>{$account.1.user_id}</P35>
@@ -250,7 +253,7 @@
 <P34>{$account.1.password}</P34>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P3>{$account.1.display_name}</P3>
@@ -262,10 +265,10 @@
 <!-- Account 1 Network Settings -->
 
 <!-- Outbound Proxy -->
-<P48></P48>
+<P48>{$account.1.outbound_proxy_primary}</P48>
 
 <!-- Secondary Outbound Proxy -->
-<P2333></P2333>
+<P2333>{$account.2.outbound_proxy_secondary}</P2333>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -273,7 +276,11 @@
 
 <!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
-<P52>2</P52>
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
+{else}
+<P52>0</P52>
+{/if}
 
 <!-- Proxy-Require -->
 <P197></P197>
@@ -303,7 +310,11 @@
 
 <!-- SUBSCRIBE For MWI. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P99>1</P99>
+{else}
 <P99>0</P99>
+{/if}
 
 <!-- Session Expiration. In seconds. Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -378,7 +389,11 @@
 <!-- Validate Incoming SIP Messages -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($grandstream_validate_incoming_sip)}
+<P2306>1</P2306>
+{else}
 <P2306>0</P2306>
+{/if}
 
 <!-- Authenticate Incoming INVITE -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
@@ -505,7 +520,11 @@
 <P66></P66>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P290>{$grandstream_dial_plan}</P290>
+{if isset($grandstream_dial_plan) }
+    <P290>{$grandstream_dial_plan}</P290>
+{else}
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -560,7 +579,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -575,7 +594,11 @@
 <P2343>0</P2343>
 
 <!-- Account Ring Tone. See ring tone options and value in the Ring Tone Value Table below -->
+{if isset($grandstream_account_ring_tone_1)||$grandstream_account_ring_tone_1==0}
+<P104>{$grandstream_account_ring_tone_1}</P104>
+{else}
 <P104>content://settings/system/ringtone</P104>
+{/if}
 
 <!-- No Answer Timeout (s). Default value is 20 -->
 <!-- Number: 1 - 120 -->
@@ -587,23 +610,33 @@
 
 <!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-<P1489>content://settings/system/ringtone</P1489>
+{if isset($grandstream_ring_tone_1_1)||$grandstream_ring_tone_1_1==0}
+<P1489>{$grandstream_ring_tone_1_1}</P1489>
+{/if}
 
 <!-- Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- String -->
-<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+{if isset($grandstream_ring_tone_caller_id_2_1)}
+<P1490>{$grandstream_ring_tone_caller_id_2_1}</P1490>
+{/if}
 
 <!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-<P1491>content://settings/system/ringtone</P1491>
+{if isset($grandstream_ring_tone_2_1)||$grandstream_ring_tone_2_1==0}
+<P1491>{$grandstream_ring_tone_2_1}</P1491>
+{/if}
 
 <!-- Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- String -->
-<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
+{if isset($grandstream_ring_tone_caller_id_3_1)}
+<P1492>{$grandstream_ring_tone_caller_id_3_1}</P1492>
+{/if}
 
 <!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
-<P1493>content://settings/system/ringtone</P1493>
+{if isset($grandstream_ring_tone_3_1)||$grandstream_ring_tone_2_1==0}
+<P1493>{$grandstream_ring_tone_3_1}</P1493>
+{/if}
 
 <!-- Enable Local MOH. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -673,10 +706,14 @@
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($account.2.password)}
+<P401>1</P401>
+{else}
 <P401>0</P401>
+{/if}
 
 <!-- Account Name -->
-<P417></P417>
+<P417>{$account.2.display_name}</P417>
 
 <!-- SIP Server -->
 <P402>{$account.2.server_address}</P402>
@@ -691,7 +728,7 @@
 <P406>{$account.2.password}</P406>
 
 <!-- Voice Mail UserID -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P407>{$account.2.display_name}</P407>
@@ -704,10 +741,10 @@
 
 
 <!-- Outbound Proxy -->
-<P403></P403>
+<P403>{$account.2.outbound_proxy_primary}</P403>
 
 <!-- Secondary Outbound Proxy -->
-<P2433></P2433>
+<P2433>{$account.2.outbound_proxy_secondary}</P2433>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -746,7 +783,11 @@
 <!-- SUBSCRIBE for MWI (Whether or not send SUBSCRIBE for Message Waiting Indication) -->
 <!-- 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1. -->
+{if isset($subscribe_mwi)}
+<P415>1</P415>
+{else}
 <P415>0</P415>
+{/if}
 
 <!-- Session Expiration. In seconds. Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -796,7 +837,12 @@
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P448>0</P448>
+{$tp=0}
+{if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P448>{$tp}</P448>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -928,7 +974,11 @@
 <P419></P419>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P459>{ x+ | \+x+ | *x+ | *xx*x+ }</P459>
+{if isset($grandstream_dial_plan) }
+    <P459>{$grandstream_dial_plan}</P459>
+{else}
+    <P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -978,7 +1028,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1096,10 +1146,14 @@
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($account.3.password)}
+<P501>1</P501>
+{else}
 <P501>0</P501>
+{/if}
 
 <!-- Account Name -->
-<P517></P517>
+<P517>{$account.3.display_name}</P517>
 
 <!-- SIP Server -->
 <P502>{$account.3.server_address}</P502>
@@ -1114,7 +1168,7 @@
 <P506>{$account.3.password}</P506>
 
 <!-- Voice Mail UserID -->
-<P526>*97</P526> =
+<P526>{$voicemail_number}</P526> =
 
 <!-- Name (Display name: John Doe) -->
 <P507>{$account.3.display_name}</P507>
@@ -1127,13 +1181,14 @@
 
 
 <!-- Outbound Proxy -->
-<P503></P503>
+<P503>{$account.3.outbound_proxy_primary}</P503>
 
 
 <!-- Secondary Outbound Proxy -->
-<P2533></P2533>
+<P2533>{$account.3.outbound_proxy_secondary}</P2533>
+
 <!-- DNS Mode0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
-VNumber: 0, 1, 2. -->
+<!-- VNumber: 0, 1, 2. -->
 <P508>0</P508>
 
 <!-- NAT Traversal. 0 - No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
@@ -1168,7 +1223,11 @@ VNumber: 0, 1, 2. -->
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P515>1</P515>
+{else}
 <P515>0</P515>
+{/if}
 
 <!-- Session Expiration. In seconds. Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -1219,7 +1278,12 @@ VNumber: 0, 1, 2. -->
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P548>0</P548>
+{$tp=0}
+{if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P548>{$tp}</P548>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1352,7 +1416,11 @@ VNumber: 0, 1, 2. -->
 <P519></P519>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P559>{ x+ | \+x+ | *x+ | *xx*x+ }</P559>
+{if isset($grandstream_dial_plan) }
+    <P559>{$grandstream_dial_plan}</P559>
+{else}
+    <P559>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P559>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1406,7 +1474,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1523,7 +1591,11 @@ VNumber: 0, 1, 2. -->
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($account.4.password)}
+<P601>1</P601>
+{else}
 <P601>0</P601>
+{/if}
 
 <!-- Account Name -->
 <P617></P617>
@@ -1541,7 +1613,7 @@ VNumber: 0, 1, 2. -->
 <P606>{$account.4.password}</P606>
 
 <!-- Voice Mail UserID -->
-<P606>*97</P606>
+<P606>{$voicemail_number}</P606>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P606>{$account.4.display_name}</P606>
@@ -1555,10 +1627,10 @@ VNumber: 0, 1, 2. -->
 
 
 <!-- Outbound Proxy -->
-<P606></P606>
+<P606>{$account.4.outbound_proxy_primary}</P606>
 
 <!-- Secondary Outbound Proxy -->
-<P2633></P2633>
+<P2633>{$account.4.outbound_proxy_secondary}</P2633>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -1596,7 +1668,11 @@ VNumber: 0, 1, 2. -->
 
 <!-- SUBSCRIBE For MWI. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P615>1</P615>
+{else}
 <P615>0</P615>
+{/if}
 
 <!-- Session Expiration. In seconds. Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -1648,7 +1724,12 @@ VNumber: 0, 1, 2. -->
 
 <!-- SIP Transport. 0 - UDP , 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P648>0</P648>
+{$tp=0}
+{if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P648>{$tp}</P648>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1782,7 +1863,11 @@ VNumber: 0, 1, 2. -->
 <P619></P619>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P659>{ x+ | \+x+ | *x+ | *xx*x+ }</P659>
+{if isset($grandstream_dial_plan) }
+    <P659>{$grandstream_dial_plan}</P659>
+{else}
+    <P659>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P659>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1836,7 +1921,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
 <P623>content://settings/system/ringtone</P623>
@@ -1886,7 +1971,7 @@ VNumber: 0, 1, 2. -->
 <P2657>0</P2657>
 
 
- 	Ring Tone Value Table
+<!-- 	Ring Tone Value Table -->
 <!-- Web GUI OptionValue -->
 <!-- Use System Ring tone content://settings/system/ringtone -->
 <!-- Silentringtone_silence -->
@@ -1952,10 +2037,14 @@ VNumber: 0, 1, 2. -->
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($account.5.password)}
+<P1701>1</P1701>
+{else}
 <P1701>0</P1701>
+{/if}
 
 <!-- Account Name -->
-<P1717></P1717>
+<P1717>{$account.5.display_name}</P1717>
 
 <!-- SIP Server -->
 <P1702>{$account.5.server_address}</P1702>
@@ -1970,7 +2059,7 @@ VNumber: 0, 1, 2. -->
 <P1706>{$account.5.password}</P1706>
 
 <!-- Voice Mail UserID -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P1707>{$account.5.display_name}</P1707>
@@ -1983,7 +2072,7 @@ VNumber: 0, 1, 2. -->
 
 
 <!-- Outbound Proxy -->
-<P1703></P1703>
+<P1703>{$account.5.outbound_proxy_primary}</P1703>
 
 <!-- Secondary Outbound Proxy -->
 <P1703></P1703>
@@ -2024,7 +2113,11 @@ VNumber: 0, 1, 2. -->
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1715>1</P1715>
+{else}
 <P1715>0</P1715>
+{/if}
 
 <!-- Session Expiration. In seconds. Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -2074,7 +2167,12 @@ VNumber: 0, 1, 2. -->
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P1748>0</P1748>
+{$tp=0}
+{if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1748>{$tp}</P1748>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2125,7 +2223,7 @@ VNumber: 0, 1, 2. -->
 <P2713>15</P2713>
 
 
-Account 5 Codec Settings
+<!-- Account 5 Codec Settings  -->
 
 <!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2191,7 +2289,7 @@ Account 5 Codec Settings
 <!-- Number: 0, 1, 2 -->
 <P1797>1</P1797>
 
-	 Account 5 Call Settings
+<!--	 Account 5 Call Settings  -->
 
 
 <!-- Start Video Automatically. 0 - No, 1 - Yes. Default value is 1 -->
@@ -2207,7 +2305,11 @@ Account 5 Codec Settings
 <P1719></P1719>
 
 <!-- Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
-<P1759>{$grandstream_dial_plan}</P1759>
+{if isset($grandstream_dial_plan) }
+    <P1759>{$grandstream_dial_plan}</P1759>
+{else}
+    <P1759>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1759>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2261,7 +2363,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2718>{if $nway_conference == true}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2311,7 +2413,7 @@ Account 5 Codec Settings
 <P2757>0</P2757>
 
 
- 	Ring Tone Value Table
+<!-- 	Ring Tone Value Table -->
 <!-- Web GUI OptionValue -->
 <!-- Use System Ring tone content://settings/system/ringtone -->
 <!-- Silentringtone_silence -->
@@ -2370,18 +2472,22 @@ Account 5 Codec Settings
 <!-- Backroad /system/media/audio/ringtones/Backroad.ogg -->
 
 
-	 Account 6 Settings
+<!--	 Account 6 Settings  -->
 
 
-	Account 6 General Settings
+<!--	Account 6 General Settings  -->
 
 
 <!-- Account Active. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($account.6.password)}
+<P1801>1</P1801>
+{else}
 <P1801>0</P1801>
+{/if}
 
 <!-- Account Name -->
-<P1817></P1817>
+<P1817>{$account.6.display_name}</P1817>
 
 <!-- SIP Server -->
 <P1802>{$account.6.server_address}</P1802>
@@ -2396,7 +2502,7 @@ Account 5 Codec Settings
 <P1806>{$account.6.password}</P1806>
 
 <!-- Voice Mail UserID -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 <!-- Name (Display name :John Doe) -->
 <P1807>{$account.6.display_name}</P1807>
@@ -2409,10 +2515,10 @@ Account 5 Codec Settings
 
 
 <!-- Outbound Proxy -->
-<P1803></P1803>
+<P1803>{$account.6.outbound_proxy_primary}</P1803>
 
 <!-- Secondary Outbound Proxy -->
-<P2833></P2833>
+<P2833>{$account.6.outbound_proxy_secondary}</P2833>
 
 <!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
@@ -2450,7 +2556,11 @@ Account 5 Codec Settings
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
+{if isset($subscribe_mwi)}
+<P1815>1</P1815>
+{else}
 <P1815>0</P1815>
+{/if}
 
 <!-- Session Expiration (in seconds). Default value is 180 seconds -->
 <!-- Number: 90 - 64800 -->
@@ -2501,7 +2611,12 @@ Account 5 Codec Settings
 
 <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS. Default value is 0 -->
 <!-- Number: 0, 1, 2 -->
-<P1848>0</P1848>
+{$tp=0}
+{if $account.6.sip_transport == 'udp'}{$tp=0}{/if}
+{if $account.6.sip_transport == 'tcp'}{$tp=1}{/if}
+{if $account.6.sip_transport == 'tls'}{$tp=2}{/if}
+{if $account.6.sip_transport == 'dns srv'}{$tp=1}{/if}
+<P1848>{$tp}</P1848>
 
 <!-- Symmetric RTP. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2551,7 +2666,7 @@ Account 5 Codec Settings
 <!-- Default value is 15 -->
 <P2813>15</P2813>
 
-	Account 6 Codec Settings
+<!--	Account 6 Codec Settings  -->
 
 <!-- DTMF: in audio. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2633,7 +2748,11 @@ Account 5 Codec Settings
 <P1819></P1819>
 
 <!-- Dial Plan. Default value is { x+ | \+x+ | *x+ | *xx*x+ } -->
-<P1859>{ x+ | \+x+ | *x+ | *xx*x+ }</P1859>
+{if isset($grandstream_dial_plan) }
+    <P1859>{$grandstream_dial_plan}</P1859>
+{else}
+    <P1859>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P1859>
+{/if}
 
 <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2687,7 +2806,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2818>{if $nway_conference == true}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2736,7 +2855,7 @@ Account 5 Codec Settings
 <!-- Number: 0, 1 -->
 <P2857>0</P2857>
 
-	 Ring Tone Value Table
+<!-- 	Ring Tone Value Table -->
 <!-- Web GUI OptionValue -->
 <!-- Use System Ring tone content://settings/system/ringtone -->
 <!-- Silentringtone_silence -->
@@ -2816,7 +2935,11 @@ Account 5 Codec Settings
 <P84>20</P84>
 
 <!-- STUN Server -->
-<P76>stun.ipvideotalk.com</P76>
+{if isset($grandstream_stun_server) }
+<P76>{$grandstream_stun_server}</P76>
+{else}
+<P76></P76>
+{/if}
 
 <!-- Use NAT IP. This will enable our SIP client to use this IP in the SIP message. -->
 <!-- Example 64.3.153.50 -->
@@ -2835,7 +2958,9 @@ Account 5 Codec Settings
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Auto Conference. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2887,7 +3012,7 @@ Account 5 Codec Settings
 <!-- Offhook Timeout (in seconds) -->
 <P1485></P1485>
 
-	 Advanced Settings - Video Settings
+<!--	 Advanced Settings - Video Settings  -->
 
 <!-- Video Frame Rate. 15 - 15 frames/second, 30 - 30 frames/second. Default value is 15 -->
 <!-- Number: 15, 30 -->
@@ -2981,7 +3106,7 @@ Account 5 Codec Settings
 <P146></P146>
 
 <!-- Vendor Class ID (DHCP option 60) -->
-<P148>GXP</P148>
+<P148>GXV3275</P148>
 
 <!-- Static IP. IP address -->
 <!-- P9 = 192 -->
@@ -3030,7 +3155,11 @@ Account 5 Codec Settings
 
 <!-- Layer 2 QoS. 802.1Q/VLAN Tag. Default value is 0 -->
 <!-- Number: 0 - 4095 -->
+{if isset($grandstream_lan_port_vlan) }
+<P51>{$grandstream_lan_port_vlan}</P51>
+{else}
 <P51>0</P51>
+{/if}
 
 <!-- Layer 2 QoS. 802.1p priority value. Default value is 0 -->
 <!-- Number: 0 - 7 -->
@@ -3050,7 +3179,11 @@ Account 5 Codec Settings
 
 
 <!-- Assign NTP Server Address -->
-<P30>us.pool.ntp.org</P30>
+{if isset($ntp_server_primary)}
+<P30>{$ntp_server_primary}</P30>
+{else}
+<P30>pool.ntp.org</P30>
+{/if}
 
 <!-- DHCP Option 42 override NTP server. 0 - No, 1 - Yes. Default value is 1 -->
 <!-- When set to Yes (1), it will override the configured NTP server -->
@@ -3265,7 +3398,11 @@ Account 5 Codec Settings
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check Every Day, 2 - Check Every Week, 3 - Check at a Period Time. Default value is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
+{if isset($grandstream_auto_upgrade)}
+<P194>{$grandstream_auto_upgrade}</P194>
+{else}
 <P194>0</P194>
+{/if}
 
 <!-- Automatic Upgrade Check Interval (m). Minimum 60 minutes. Default value is 10080 (7 days) -->
 <!-- Number: 60 - 5256000 -->
@@ -3298,15 +3435,23 @@ Account 5 Codec Settings
 
 
 <!-- Syslog Server. Name of the server -->
-<P207>log.ipvideotalk.com</P207>
+<P207>{$grandstream_syslog_server}</P207>
 
 <!-- Syslog Level -->
 <!-- 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR. Default value is 0 -->
 <!-- Number: 0, 1, 2, 3, 4 -->
+{if isset($grandstream_syslog_level)}
+<P208>{$grandstream_syslog_level}</P208>
+{else}
 <P208>0</P208>
+{/if}
 
 <!-- Send SIP Log. 0 - No, 1 - Yes. Default value is 0 -->
+{if isset($grandstream_send_sip_log)}
+<P1387>{$grandstream_send_sip_log}</P1387>
+{else}
 <P1387>0</P1387>
+{/if}
 
 <!-- Maintenance - Language-->
 
@@ -3415,7 +3560,13 @@ Account 5 Codec Settings
 <!-- Phonebook XML Server Path. It MUST be in the host/path format -->
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
+{if isset($contact_grandstream)}
+<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
+{elseif isset($grandstream_phonebook_xml_server_path)}
+<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{else}
 <P331></P331>
+{/if}
 
 <!-- Phonebook Download Interval (in minutes). Default is 0 for disabled -->
 <!-- Number: 0, 120, 240, 360, 480, 720 -->
@@ -3426,55 +3577,55 @@ Account 5 Codec Settings
 <!-- LDAP Directory -->
 <!-- LDAP Server Address, up to 256 characters can be used. It can be IP address or Domain name -->
 <!-- String -->
-<P8020></P8020>
+<P8020>{$grandstream_ldap_server}</P8020>
 
 <!-- LDAP Server Port -->
 <!-- Number: 1 - 65535 -->
-<P8021></P8021>
+<P8021>389</P8021>
 
 <!-- Base. The LDAP search base refers to the location in the directory where the search is requested to begin -->
 <!-- Example 1: dc=grandstream,dc=com -->
 <!-- Example 2: ou=Boston, dc=grandstream,dc=com -->
 <!-- String -->
-<P8022></P8022>
+<P8022>{$grandstream_ldap_base_dn}</P8022>
 
 <!-- User Name. The bind "Username" for querying LDAP servers. Some LDAP servers allow anonymous binds in which case the setting can be left blank -->
 <!-- String -->
-<P8023></P8023>
+<P8023>{$ldap_username}</P8023>
 
 <!-- Password. The bind "Password" for querying LDAP servers. And the field can be left blank if the LDAP server allows anonymous binds -->
 <!-- String -->
-<P8024></P8024>
+<P8024>{$ldap_password}</P8024>
 
 <!-- LDAP Name Attributes. This setting specifies the "name" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated name attributes -->
 <!-- String -->
-<P8028></P8028>
+<P8028>{$grandstream_ldap_name_attr}</P8028>
 
 <!-- LDAP Number Attributes. This setting specifies the "number" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated number attributes -->
 <!-- String -->
-<P8029></P8029>
+<P8029>{$grandstream_ldap_number_attr}</P8029>
 
 <!-- LDAP Mail Attributes. This setting specifies the "mail" attributes of each record which are returned in the LDAP search result -->
 <!-- The setting allows the users to configure multiple space separated mail attributes -->
 <!-- String -->
-<P8038></P8038>
+<P8038>{$grandstream_ldap_mail_attr}</P8038>
 
 <!-- LDAP Name Filter -->
 <!-- LDAP name filter is the filter used for name look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8025></P8025>
+<P8025>{$grandstream_ldap_number_filter}</P8025>
 
 <!-- LDAP Number Filter -->
 <!-- LDAP name filter is the filter used for number look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8026></P8026>
+<P8026>{$grandstream_ldap_name_filter}</P8026>
 
 <!-- LDAP Mail Filter -->
 <!-- LDAP mail filter is the filter used for mail look ups. Please refer to usermanual for examples -->
 <!-- String -->
-<P8039></P8039>
+<P8039>{$grandstream_ldap_mail_filter}</P8039>
 
 <!-- LDAP Display Name. The entry information to be shown on phone LCD. Grandstream phones will display up to 3 fields -->
 <!-- String -->
@@ -5934,2931 +6085,28 @@ MPK 7
 <!-- String -->
 <P6712></P6712>
 
-Advanced Settings - MPK EXT 1 Settings
-
-The MPKs in this section are for the GXP2200EXT 1
-
-
-<!-- EXT MPK 1 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23000>0</P23000>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23001>0</P23001>
-
-<!-- Name -->
-<!-- String -->
-<P23002></P23002>
-
-<!-- UserID -->
-<!-- String -->
-<P23003></P23003>
-
-<!-- EXT MPK 2 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23005>0</P23005>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23006>0</P23006>
-
-<!-- Name -->
-<!-- EXT MPK 3 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23010>0</P23010>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23011>0</P23011>
-
-<!-- Name -->
-<!-- String -->
-<P23012></P23012>
-
-<!-- UserID -->
-<!-- String -->
-<P23013></P23013>
-
-<!-- EXT MPK 4 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23015>0</P23015>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23016>0</P23016>
-
-<!-- Name -->
-<!-- String -->
-<P23017></P23017>
-
-<!-- UserID -->
-<!-- String -->
-<P23018></P23018>
-
-<!-- EXT MPK 5 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23020>0</P23020>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23021>0</P23021>
-
-<!-- Name -->
-<!-- String -->
-<P23022></P23022>
-
-<!-- UserID -->
-<!-- String -->
-<P23023></P23023>
-
-<!-- EXT MPK 6 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23025>0</P23025>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23026>0</P23026>
-
-<!-- Name -->
-<!-- String -->
-<P23027></P23027>
-
-<!-- UserID -->
-<!-- String -->
-<P23028></P23028>
-
-<!-- EXT MPK 7 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23030>0</P23030>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23031>0</P23031>
-
-<!-- Name -->
-<!-- String -->
-<P23032></P23032>
-
-<!-- UserID -->
-<!-- String -->
-<P23033></P23033>
-
-<!-- EXT MPK 8 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23035>0</P23035>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23036>0</P23036>
-
-<!-- Name -->
-<!-- String -->
-<P23037></P23037>
-
-<!-- UserID -->
-<!-- String -->
-<P23038></P23038>
-
-<!-- EXT MPK 9 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23040>0</P23040>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23041>0</P23041>
-
-<!-- Name -->
-<!-- String -->
-<P23042></P23042>
-
-<!-- UserID -->
-<!-- String -->
-<P23043></P23043>
-
-<!-- EXT MPK 10 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23045>0</P23045>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23046>0</P23046>
-
-<!-- Name -->
-<!-- String -->
-<P23047></P23047>
-
-<!-- UserID -->
-<!-- String -->
-<P23048></P23048>
-
-<!-- EXT MPK 11 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23050>0</P23050>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23051>0</P23051>
-
-<!-- Name -->
-<!-- String -->
-<P23052></P23052>
-
-<!-- UserID -->
-<!-- String -->
-<P23053></P23053>
-
-<!-- EXT MPK 12 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23055>0</P23055>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23056>0</P23056>
-
-<!-- Name -->
-<!-- String -->
-<P23057></P23057>
-
-<!-- UserID -->
-<!-- String -->
-<P23058></P23058>
-
-<!-- EXT MPK 13 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23060>0</P23060>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23061>0</P23061>
-
-<!-- Name -->
-<!-- String -->
-<P23062></P23062>
-
-<!-- UserID -->
-<!-- String -->
-<P23063></P23063>
-
-<!-- EXT MPK 14 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23065>0</P23065>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23066>0</P23066>
-
-<!-- Name -->
-<!-- String -->
-<P23067></P23067>
-
-<!-- UserID -->
-<!-- String -->
-<P23068></P23068>
-
-<!-- EXT MPK 15 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23070>0</P23070>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23071>0</P23071>
-
-<!-- Name -->
-<!-- String -->
-<P23072></P23072>
-
-<!-- UserID -->
-<!-- String -->
-<P23073></P23073>
-
-<!-- EXT MPK 16 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23075>0</P23075>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23076>0</P23076>
-
-<!-- Name -->
-<!-- String -->
-<P23077></P23077>
-
-<!-- UserID -->
-<!-- String -->
-<P23078></P23078>
-
-<!-- EXT MPK 17 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23080>0</P23080>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23081>0</P23081>
-
-<!-- Name -->
-<!-- String -->
-<P23082></P23082>
-
-<!-- UserID -->
-<!-- String -->
-<P23083></P23083>
-
-<!-- EXT MPK 18 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23085>0</P23085>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23086>0</P23086>
-
-<!-- Name -->
-<!-- String -->
-<P23087></P23087>
-
-<!-- UserID -->
-<!-- String -->
-<P23088></P23088>
-
-
-<!-- EXT MPK 19 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23090>0</P23090>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23091>0</P23091>
-
-<!-- Name -->
-<!-- String -->
-<P23092></P23092>
-
-<!-- UserID -->
-<!-- String -->
-<P23093></P23093>
-
-<!-- EXT MPK 20 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23095>0</P23095>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23096>0</P23096>
-
-<!-- Name -->
-<!-- String -->
-<P23097></P23097>
-
-<!-- UserID -->
-<!-- String -->
-<P23098></P23098>
-
-<!-- EXT MPK 21 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23100>0</P23100>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23101>0</P23101>
-
-<!-- Name -->
-<!-- String -->
-<P23102></P23102>
-
-<!-- UserID -->
-<!-- String -->
-<P23103></P23103>
-
-<!-- EXT MPK 22 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23105>0</P23105>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23106>0</P23106>
-
-<!-- Name -->
-<!-- String -->
-<P23107></P23107>
-
-<!-- UserID -->
-<!-- String -->
-<P23108></P23108>
-
-<!-- EXT MPK 23 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23110>0</P23110>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23111>0</P23111>
-
-<!-- Name -->
-<!-- String -->
-<P23112></P23112>
-
-<!-- UserID -->
-<!-- String -->
-<P23113></P23113>
-
-<!-- EXT MPK 24 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23115>0</P23115>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23116>0</P23116>
-
-<!-- Name -->
-<!-- String -->
-<P23117></P23117>
-
-<!-- UserID -->
-<!-- String -->
-<P23118></P23118>
-
-<!-- EXT MPK 25 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23120>0</P23120>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23121>0</P23121>
-
-<!-- Name -->
-<!-- String -->
-<P23122></P23122>
-
-<!-- UserID -->
-<!-- String -->
-<P23123></P23123>
-
-<!--EXT MPK 26 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23125>0</P23125>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23126>0</P23126>
-
-<!-- Name -->
-<!-- String -->
-<P23127></P23127>
-
-<!-- UserID -->
-<!-- String -->
-<P23128></P23128>
-
-<!-- EXT MPK 27 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23130>0</P23130>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23131>0</P23131>
-
-<!-- Name -->
-<!-- String -->
-<P23132></P23132>
-
-<!-- UserID -->
-<!-- String -->
-<P23133></P23133>
-
-<!-- EXT MPK 28-->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23135>0</P23135>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23136>0</P23136>
-
-<!-- Name -->
-<!-- String -->
-<P23137></P23137>
-
-<!-- UserID -->
-<!-- String -->
-<P23138></P23138>
-
-<!-- EXT MPK 29 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23140>0</P23140>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23141>0</P23141>
-
-<!-- Name -->
-<!-- String -->
-<P23142></P23142>
-
-<!-- UserID -->
-<!-- String -->
-<P23143></P23143>
-
-
-<!-- EXT MPK 30 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23145>0</P23145>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23146>0</P23146>
-
-<!-- Name -->
-<!-- String -->
-<P23147></P23147>
-
-<!-- UserID -->
-<!-- String -->
-<P23148></P23148>
-
-<!-- EXT MPK 31 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23150>0</P23150>
-
-<!--Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23151>0</P23151>
-
-<!-- Name -->
-<!-- String -->
-<P23152></P23152>
-
-<!-- UserID -->
-<!-- String -->
-<P23153></P23153>
-
-<!-- EXT MPK 32 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23155>0</P23155>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!--Number: 0 - 5 -->
-<P23156>0</P23156>
-
-<!-- Name -->
-<!-- String -->
-<P23157></P23157>
-
-<!-- UserID -->
-<!--String -->
-<P23158></P23158>
-
-<!-- EXT MPK 33 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23160>0</P23160>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23161>0</P23161>
-
-<!-- Name -->
-<!-- String -->
-<P23162></P23162>
-
-<!-- UserID -->
-<!--String -->
-<P23163></P23163>
-
-<!-- EXT MPK 34 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23165>0</P23165>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23166>0</P23166>
-
-<!-- Name -->
-<!-- String -->
-<P23167></P23167>
-
-<!-- UserID -->
-<!-- String -->
-<P23168></P23168>
-
-<!-- EXT MPK 35 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23170>0</P23170>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23171>0</P23171>
-
-<!-- Name -->
-<!-- String -->
-<P23172></P23172>
-
-<!-- UserID -->
-<!-- String -->
-<P23173></P23173>
-
-
-<!-- EXT MPK 36 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23175>0</P23175>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23176>0</P23176>
-
-<!-- Name -->
-<!-- String -->
-<P23177></P23177>
-
-<!-- UserID -->
-<!-- String -->
-<P23178></P23178>
-
-<!-- EXT MPK 37 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23180>0</P23180>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23181>0</P23181>
-
-<!-- Name -->
-<!-- String -->
-<P23182></P23182>
-
-<!-- UserID -->
-<!-- String -->
-<P23183></P23183>
-
-<!-- EXT MPK 38 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23185>0</P23185>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23186>0</P23186>
-
-<!-- Name -->
-<!--String -->
-<P23187></P23187>
-
-<!-- UserID -->
-<!-- String -->
-<P23188></P23188>
-
-<!-- EXT MPK 39 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23190>0</P23190>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23191>0</P23191>
-
-<!-- Name -->
-<!-- String -->
-<P23192></P23192>
-
-<!-- UserID -->
-<!-- String -->
-<P23193></P23193>
-
-<!-- EXT MPK 40 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23195>0</P23195>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23196>0</P23196>
-
-<!-- Name -->
-<!-- String -->
-<P23197></P23197>
-
-<!-- UserID -->
-<!-- String -->
-<P23198></P23198>
-
-<!-- Advanced Settings - MPK EXT 2 Settings -->
-<!-- The MPKs in this section are for the GXP2200EXT 2 -->
-
-
-<!-- EXT MPK 41 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23200>0</P23200>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23201>0</P23201>
-
-<!-- Name -->
-<!-- String -->
-<P23202></P23202>
-
-<!-- UserID -->
-<!-- String -->
-<P23203></P23203>
-
-<!-- EXT MPK 42 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23205>0</P23205>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23206>0</P23206>
-
-<!-- Name -->
-<!-- String -->
-<P23207></P23207>
-
-<!-- UserID -->
-<!-- String -->
-<P23208></P23208>
-
-<!-- EXT MPK 43 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23210>0</P23210>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23211>0</P23211>
-
-<!-- Name -->
-<!-- String -->
-<P23212></P23212>
-
-<!-- UserID -->
-<!-- String -->
-<P23213></P23213>
-
-
-<!-- EXT MPK 44 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23215>0</P23215>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23216>0</P23216>
-
-<!-- Name -->
-<!-- String -->
-<P23217></P23217>
-
-<!-- UserID -->
-<!-- String -->
-<P23218></P23218>
-
-
-<!-- EXT MPK 45 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23220>0</P23220>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23221>0</P23221>
-
-<!-- Name -->
-<!-- String -->
-<P23222></P23222>
-
-<!-- UserID -->
-<!-- String -->
-<P23223></P23223>
-
-<!-- EXT MPK 46 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23225>0</P23225>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23226>0</P23226>
-
-<!-- Name -->
-<!-- String -->
-<P23227></P23227>
-
-<!-- UserID -->
-<!-- String -->
-<P23228></P23228>
-
-<!-- EXT MPK 47 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23230>0</P23230>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23231>0</P23231>
-
-<!-- Name -->
-<!-- String -->
-<P23232></P23232>
-
-<!-- UserID -->
-<!-- String -->
-<P23233></P23233>
-
-<!-- EXT MPK 48 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23235>0</P23235>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23236>0</P23236>
-
-<!-- Name -->
-<!-- String -->
-<P23237></P23237>
-
-<!-- UserID -->
-<!-- String -->
-<P23238></P23238>
-
-<!-- EXT MPK 49 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23240>0</P23240>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23241>0</P23241>
-
-<!-- Name -->
-<!-- String -->
-<P23242></P23242>
-
-<!-- UserID -->
-<!-- String -->
-<P23243></P23243>
-
-<!-- EXT MPK 50 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23245>0</P23245>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23246>0</P23246>
-
-<!-- Name -->
-<!-- String -->
-<P23247></P23247>
-
-<!-- UserID -->
-<!-- String -->
-<P23248></P23248>
-
-<!-- EXT MPK 51 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23250>0</P23250>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23251>0</P23251>
-
-<!-- Name -->
-<!-- String -->
-<P23252></P23252>
-
-<!-- UserID -->
-<!-- String -->
-<P23253></P23253>
-
-<!-- EXT MPK 52 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23255>0</P23255>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23256>0</P23256>
-
-<!-- Name -->
-<!-- String -->
-<P23257></P23257>
-
-<!-- UserID -->
-<!-- String -->
-<P23258></P23258>
-
-<!-- EXT MPK 53 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23260>0</P23260>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23261>0</P23261>
-
-<!-- Name -->
-<!-- String -->
-<P23262></P23262>
-
-
-<!-- UserID -->
-<!-- String -->
-<P23263></P23263>
-
-
-<!-- EXT MPK 54 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23265>0</P23265>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23266>0</P23266>
-
-<!-- Name -->
-<!-- String -->
-<P23267></P23267>
-
-<!-- UserID -->
-<!-- String -->
-<P23268></P23268>
-
-<!-- EXT MPK 55 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23270>0</P23270>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23271>0</P23271>
-
-<!-- Name -->
-<!-- String -->
-<P23272></P23272>
-
-<!-- UserID -->
-<!-- String -->
-<P23273></P23273>
-
-<!--EXT MPK 56 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23275>0</P23275>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23276>0</P23276>
-
-<!-- Name -->
-<!-- String -->
-<P23277></P23277>
-
-<!-- UserID -->
-<!-- String -->
-<P23278></P23278>
-
-<!-- EXT MPK 57 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23280>0</P23280>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23281>0</P23281>
-
-<!-- Name -->
-<!-- String -->
-<P23282></P23282>
-
-<!-- UserID -->
-<!-- String -->
-<P23283></P23283>
-<!-- EXT MPK 58 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23285>0</P23285>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23286>0</P23286>
-
-<!-- Name -->
-<!-- String -->
-<P23287></P23287>
-
-<!-- UserID -->
-<!-- String -->
-<P23288></P23288>
-
-<!-- EXT MPK 59 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23290>0</P23290>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23291>0</P23291>
-
-<!-- Name -->
-<!-- String -->
-<P23292></P23292>
-
-<!-- UserID -->
-<!-- String -->
-<P23293></P23293>
-
-<!-- EXT MPK 60 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23295>0</P23295>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23296>0</P23296>
-
-<!-- Name -->
-<!-- String -->
-<P23297></P23297>
-
-<!-- UserID -->
-<!-- String -->
-<P23298></P23298>
-
-<!-- EXT MPK 61 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23300>0</P23300>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23301>0</P23301>
-
-<!-- Name -->
-<!-- String -->
-<P23302></P23302>
-
-<!-- UserID -->
-<!-- String -->
-<P23303></P23303>
-
-<!-- EXT MPK 62 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23305>0</P23305>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23306>0</P23306>
-
-<!-- Name -->
-<!-- String -->
-<P23307></P23307>
-
-<!-- UserID -->
-<!-- String -->
-<P23308></P23308>
-
-<!-- EXT MPK 63 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23310>0</P23310>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23311>0</P23311>
-
-<!-- Name -->
-<!-- String -->
-<P23312></P23312>
-
-<!-- UserID -->
-<!-- String -->
-<P23313></P23313>
-
-<!-- EXT MPK 64 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23315>0</P23315>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23316>0</P23316>
-
-<!-- Name -->
-<!-- String -->
-<P23317></P23317>
-
-<!-- UserID -->
-<!-- String -->
-<P23318></P23318>
-
-<!-- EXT MPK 65 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23320>0</P23320>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23321>0</P23321>
-
-<!-- Name -->
-<!-- String -->
-<P23322></P23322>
-
-<!-- UserID -->
-<!-- String -->
-<P23323></P23323>
-
-<!-- EXT MPK 66 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23325>0</P23325>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23326>0</P23326>
-
-<!-- Name -->
-<!-- String -->
-<P23327></P23327>
-
-<!-- UserID -->
-<!-- String -->
-<P23328></P23328>
-
-<!-- EXT MPK 67 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23330>0</P23330>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23331>0</P23331>
-
-<!-- Name -->
-<!-- String -->
-<P23332></P23332>
-
-<!-- UserID -->
-<!-- String -->
-<P23333></P23333>
-
-<!-- EXT MPK 68 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23335>0</P23335>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23336>0</P23336>
-
-<!-- Name -->
-<!-- String -->
-<P23337></P23337>
-
-<!-- UserID -->
-<!-- String -->
-<P23338></P23338>
-
-<!-- EXT MPK 69 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23340>0</P23340>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23341>0</P23341>
-
-<!-- Name -->
-<!-- String -->
-<P23342></P23342>
-
-<!-- UserID -->
-<!-- String -->
-<P23343></P23343>
-
-<!-- EXT MPK 70 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23345>0</P23345>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23346>0</P23346>
-
-<!-- Name -->
-<!-- String -->
-<P23347></P23347>
-
-<!-- UserID -->
-<!-- String -->
-<P23348></P23348>
-
-<!-- EXT MPK 71 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23350>0</P23350>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23351>0</P23351>
-
-<!-- Name -->
-<!-- String -->
-<P23352></P23352>
-
-<!-- UserID -->
-<!-- String -->
-<P23353></P23353>
-
-<!-- EXT MPK 72 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23355>0</P23355>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23356>0</P23356>
-
-<!-- Name -->
-<!-- String -->
-<P23357></P23357>
-
-<!-- UserID -->
-<!-- String -->
-<P23358></P23358>
-
-<!-- EXT MPK 73 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23360>0</P23360>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23361>0</P23361>
-
-<!-- Name -->
-<!-- String -->
-<P23362></P23362>
-
-<!-- UserID -->
-<!-- String -->
-<P23363></P23363>
-
-<!-- EXT MPK 74 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23365>0</P23365>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23366>0</P23366>
-
-<!-- Name -->
-<!-- String -->
-<P23367></P23367>
-
-<!-- UserID -->
-<!-- String -->
-<P23368></P23368>
-
-<!-- EXT MPK 75 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23370>0</P23370>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23371>0</P23371>
-
-<!-- Name -->
-<!-- String -->
-<P23372></P23372>
-
-<!-- UserID -->
-<!-- String -->
-<P23373></P23373>
-
-<!-- EXT MPK 76 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23375>0</P23375>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!--Number: 0 - 5 -->
-<P23376>0</P23376>
-
-<!-- Name -->
-<!-- String -->
-<P23377></P23377>
-
-<!-- UserID -->
-<!-- String -->
-<P23378></P23378>
-
-<!-- EXT MPK 77 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23380>0</P23380>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23381>0</P23381>
-
-<!-- Name -->
-<!-- String -->
-<P23382></P23382>
-
-<!-- UserID -->
-<!-- String -->
-<P23383></P23383>
-
-<!-- EXT MPK 78 -->
-<!--Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23385>0</P23385>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23386>0</P23386>
-
-<!-- Name -->
-<!-- String -->
-<P23387></P23387>
-
-<!-- UserID -->
-<!-- String -->
-<P23388></P23388>
-
-<!-- EXT MPK 79 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23390>0</P23390>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23391>0</P23391>
-
-<!-- Name -->
-<!-- String -->
-<P23392></P23392>
-
-<!-- UserID -->
-<!-- String -->
-<P23393></P23393>
-
-<!-- EXT MPK 80 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23395>0</P23395>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23396>0</P23396>
-
-<!-- Name -->
-<!-- String -->
-<P23397></P23397>
-
-<!-- UserID -->
-<!-- String -->
-<P23398></P23398>
-
-
-
-Advanced Settings - MPK EXT 3 Settings
-
-The MPKs in this section are for the GXP2200EXT 3
-
-
-
-<!-- EXT MPK 81 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23400>0</P23400>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23401>0</P23401>
-
-<!-- Name -->
-<!-- String -->
-<P23402></P23402>
-
-<!-- UserID -->
-<!-- String -->
-<P23403></P23403>
-
-<!-- EXT MPK 82 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23405>0</P23405>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23406>0</P23406>
-
-<!-- Name -->
-<!-- String -->
-<P23407></P23407>
-
-<!-- UserID -->
-<!-- String -->
-<P23408></P23408>
-
-<!-- EXT MPK 83 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23410>0</P23410>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23411>0</P23411>
-
-<!-- Name -->
-<!-- String -->
-<P23412></P23412>
-
-<!-- UserID -->
-<!-- String -->
-<P23413></P23413>
-
-<!-- EXT MPK 84 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23415>0</P23415>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23416>0</P23416>
-
-<!-- Name -->
-<!-- String -->
-<P23417></P23417>
-
-<!-- UserID -->
-<!-- String -->
-<P23418></P23418>
-
-<!-- EXT MPK 85 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23420>0</P23420>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23421>0</P23421>
-
-<!-- Name -->
-<!-- String -->
-<P23422></P23422>
-
-<!-- UserID -->
-<!-- String -->
-<P23423></P23423>
-
-<!-- EXT MPK 86 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23425>0</P23425>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23426>0</P23426>
-
-<!-- Name -->
-<!-- String -->
-<P23427></P23427>
-
-<!-- UserID -->
-<!-- String -->
-<P23428></P23428>
-
-
-<!-- EXT MPK 87 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23430>0</P23430>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23431>0</P23431>
-
-<!-- Name -->
-<!-- String -->
-<P23432></P23432>
-
-<!-- UserID -->
-<!-- String -->
-<P23433></P23433>
-
-<!-- EXT MPK 88 -->
-<!--Key Mode. -->
-<!--0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23435>0</P23435>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23436>0</P23436>
-
-<!-- Name -->
-<!-- String -->
-<P23437></P23437>
-
-<!-- UserID -->
-<!-- String -->
-<P23438></P23438>
-
-
-<!-- EXT MPK 89 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23440>0</P23440>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23441>0</P23441>
-
-<!-- Name -->
-<!-- String -->
-<P23442></P23442>
-
-<!-- UserID -->
-<!--String -->
-<P23443></P23443>
-
-<!-- EXT MPK 90 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23445>0</P23445>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23446>0</P23446>
-
-<!-- Name -->
-<!-- String -->
-<P23447></P23447>
-
-<!-- UserID -->
-<!-- String -->
-<P23448></P23448>
-
-<!-- EXT MPK 91 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23450>0</P23450>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23451>0</P23451>
-
-<!-- Name -->
-<!-- String -->
-<P23452></P23452>
-
-<!-- UserID -->
-<!-- String -->
-<P23453></P23453>
-
-<!-- EXT MPK 92 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23455>0</P23455>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23456>0</P23456>
-
-<!-- Name -->
-<!-- String -->
-<P23457></P23457>
-
-<!-- UserID -->
-<!-- String -->
-<P23458></P23458>
-
-<!-- EXT MPK 93 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23460>0</P23460>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23461>0</P23461>
-
-<!-- Name -->
-<!-- String -->
-<P23462></P23462>
-
-<!-- UserID -->
-<!-- String -->
-<P23463></P23463>
-
-<!-- EXT MPK 94 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23465>0</P23465>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23466>0</P23466>
-
-<!-- Name -->
-<!-- String -->
-<P23467></P23467>
-
-<!-- UserID -->
-<!-- String -->
-<P23468></P23468>
-
-<!-- EXT MPK 95 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23470>0</P23470>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23471>0</P23471>
-
-<!-- Name -->
-<!-- String -->
-<P23472></P23472>
-
-<!-- UserID -->
-<!-- String -->
-<P23473></P23473>
-
-<!-- EXT MPK 96 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23475>0</P23475>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23476>0</P23476>
-
-<!-- Name -->
-<!-- String -->
-<P23477></P23477>
-
-<!-- UserID -->
-<!-- String -->
-<P23478></P23478>
-
-<!-- EXT MPK 97 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23480>0</P23480>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23481>0</P23481>
-
-<!-- Name -->
-<!-- String -->
-<P23482></P23482>
-
-<!-- UserID -->
-<!-- String -->
-<P23483></P23483>
-
-<!-- EXT MPK 98 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23485>0</P23485>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23486>0</P23486>
-
-<!-- Name -->
-<!-- String -->
-<P23487></P23487>
-
-<!-- UserID -->
-<!-- String -->
-<P23488></P23488>
-
-<!-- EXT MPK 99 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23490>0</P23490>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23491>0</P23491>
-
-<!-- Name -->
-<!-- String -->
-<P23492></P23492>
-
-<!-- UserID -->
-<!-- String -->
-<P23493></P23493>
-
-<!-- EXT MPK 100 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23495>0</P23495>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23496>0</P23496>
-
-<!-- Name -->
-<!-- String -->
-<P23497></P23497>
-
-<!-- UserID -->
-<!-- String -->
-<P23498></P23498>
-
-<!-- EXT MPK 101 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23500>0</P23500>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23501>0</P23501>
-
-<!-- Name -->
-<!-- String -->
-<P23502></P23502>
-
-<!-- UserID -->
-<!-- String -->
-<P23503></P23503>
-
-<!-- EXT MPK 102 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23505>0</P23505>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23506>0</P23506>
-
-<!-- Name -->
-<!-- String -->
-<P23507></P23507>
-
-<!-- UserID -->
-<!-- String -->
-<P23508></P23508>
-
-<!-- EXT MPK 103 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23510>0</P23510>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23511>0</P23511>
-
-<!-- Name -->
-<!-- String -->
-<P23512></P23512>
-
-<!-- UserID -->
-<!-- String -->
-<P23513></P23513>
-<!-- EXT MPK 104 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23515>0</P23515>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23516>0</P23516>
-
-<!-- Name -->
-<!-- String -->
-<P23517></P23517>
-
-<!-- UserID -->
-<!-- String -->
-<P23518></P23518>
-
-<!-- EXT MPK 105 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23520>0</P23520>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23521>0</P23521>
-
-<!-- Name -->
-<!-- String -->
-<P23522></P23522>
-
-<!-- UserID -->
-<!-- String -->
-<P23523></P23523>
-
-<!-- EXT MPK 106 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23525>0</P23525>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23526>0</P23526>
-
-<!-- Name -->
-<!-- String -->
-<P23527></P23527>
-
-<!-- UserID -->
-<!-- String -->
-<P23528></P23528>
-
-<!-- EXT MPK 107 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23530>0</P23530>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23531>0</P23531>
-
-<!-- Name -->
-<!-- String -->
-<P23532></P23532>
-
-<!-- UserID -->
-<!-- String -->
-<P23533></P23533>
-<!-- EXT MPK 108 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23535>0</P23535>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23536>0</P23536>
-
-<!-- Name -->
-<!-- String -->
-<P23537></P23537>
-
-<!-- UserID -->
-<!-- String -->
-<P23538></P23538>
-<!-- EXT MPK 109 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23540>0</P23540>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23541>0</P23541>
-
-<!-- Name -->
-<!--String -->
-<P23542></P23542>
-
-<!-- UserID -->
-<!-- String -->
-<P23543></P23543>
-
-
-<!-- EXT MPK 110 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23545>0</P23545>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23546>0</P23546>
-
-<!-- Name -->
-<!-- String -->
-<P23547></P23547>
-
-<!-- UserID -->
-<!-- String -->
-<P23548></P23548>
-
-
-<!-- EXT MPK 111 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23550>0</P23550>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23551>0</P23551>
-
-<!-- Name -->
-<!-- String -->
-<P23552></P23552>
-
-<!-- UserID -->
-<!-- String -->
-<P23553></P23553>
-
-<!-- EXT MPK 112 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23555>0</P23555>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23556>0</P23556>
-
-<!-- Name -->
-<!-- String -->
-<P23557></P23557>
-
-<!-- UserID -->
-<!-- String -->
-<P23558></P23558>
-
-<!-- EXT MPK 113 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23560>0</P23560>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23561>0</P23561>
-
-<!-- Name -->
-<!-- String -->
-<P23562></P23562>
-
-<!-- UserID -->
-<!-- String -->
-<P23563></P23563>
-
-<!-- EXT MPK 114 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23565>0</P23565>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23566>0</P23566>
-
-<!-- Name -->
-<!-- String -->
-<P23567></P23567>
-
-<!-- UserID -->
-<!-- String -->
-<P23568></P23568>
-
-<!-- EXT MPK 115 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23570>0</P23570>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23571>0</P23571>
-
-<!-- Name -->
-<!-- String -->
-<P23572></P23572>
-
-<!-- UserID -->
-<!-- String -->
-<P23573></P23573>
-
-
-<!-- EXT MPK 116 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23575>0</P23575>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23576>0</P23576>
-
-<!-- Name -->
-<!-- String -->
-<P23577></P23577>
-
-<!-- UserID -->
-<!-- String -->
-<P23578></P23578>
-
-
-<!-- EXT MPK 117 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23580>0</P23580>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23581>0</P23581>
-
-<!-- Name -->
-<!-- String -->
-<P23582></P23582>
-
-<!-- UserID -->
-<!-- String -->
-<P23583></P23583>
-
-
-<!-- EXT MPK 118 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23585>0</P23585>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23586>0</P23586>
-
-<!-- Name -->
-<!-- String -->
-<P23587></P23587>
-
-<!-- UserID -->
-<!-- String -->
-<P23588></P23588>
-
-<!-- EXT MPK 119 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23590>0</P23590>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23591>0</P23591>
-
-<!-- Name -->
-<!-- String -->
-<P23592></P23592>
-
-<!-- UserID -->
-<!-- String -->
-<P23593></P23593>
-
-<!-- EXT MPK 120 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23595>0</P23595>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23596>0</P23596>
-
-<!-- Name -->
-<!-- String -->
-<P23597></P23597>
-
-<!-- UserID -->
-<!-- String -->
-<P23598></P23598>
-
-
-Advanced Settings - MPK EXT 4 Settings
-
-The MPKs in this section are for the GXP2200EXT 4
-
-<!-- EXT MPK 121 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23600>0</P23600>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23601>0</P23601>
-
-<!-- Name -->
-<!-- String -->
-<P23602></P23602>
-
-<!-- UserID -->
-<!-- String -->
-<P23603></P23603>
-
-<!-- EXT MPK 122 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23605>0</P23605>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23606>0</P23606>
-
-<!-- Name -->
-<!-- String -->
-<P23607></P23607>
-
-<!-- UserID -->
-<!-- String -->
-<P23608></P23608>
-
-<!-- EXT MPK 123 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23610>0</P23610>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23611>0</P23611>
-
-<!-- Name -->
-<!-- String -->
-<P23612></P23612>
-
-<!-- UserID -->
-<!-- String -->
-<P23613></P23613>
-
-<!-- EXT MPK 124 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23615>0</P23615>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23616>0</P23616>
-
-<!-- Name -->
-<!-- String -->
-<P23617></P23617>
-
-<!-- UserID -->
-<!-- String -->
-<P23618></P23618>
-
-<!-- EXT MPK 125 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23620>0</P23620>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23621>0</P23621>
-
-<!-- Name -->
-<!-- String -->
-<P23622></P23622>
-
-<!-- UserID -->
-<!-- String -->
-<P23623></P23623>
-
-<!-- EXT MPK 126 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23625>0</P23625>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23626>0</P23626>
-
-<!-- Name -->
-<!-- String -->
-<P23627></P23627>
-
-<!-- UserID -->
-<!-- String -->
-<P23628></P23628>
-
-<!-- EXT MPK 127 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23630>0</P23630>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23631>0</P23631>
-
-<!-- Name -->
-<!-- String -->
-<P23632></P23632>
-
-<!-- UserID -->
-<!-- String -->
-<P23633></P23633>
-
-<!-- EXT MPK 128 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23635>0</P23635>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23636>0</P23636>
-
-<!-- Name -->
-<!-- String -->
-<P23637></P23637>
-
-<!-- UserID -->
-<!-- String -->
-<P23638></P23638>
-<!-- EXT MPK 129 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23640>0</P23640>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23641>0</P23641>
-
-<!-- Name -->
-<!-- String -->
-<P23642></P23642>
-
-<!-- UserID -->
-<!-- String -->
-<P23643></P23643>
-
-<!-- EXT MPK 130 -->
-<!-- Key Mode.-->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23645>0</P23645>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23646>0</P23646>
-
-<!-- Name -->
-<!-- String -->
-<P23647></P23647>
-
-<!-- UserID -->
-<!-- String -->
-<P23648></P23648>
-<!-- EXT MPK 131 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23650>0</P23650>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23651>0</P23651>
-
-<!-- Name -->
-<!-- String -->
-<P23652></P23652>
-
-<!-- UserID -->
-<!-- String -->
-<P23653></P23653>
-
-<!-- EXT MPK 132 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23655>0</P23655>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23656>0</P23656>
-
-<!-- Name -->
-<!-- String -->
-<P23657></P23657>
-
-<!-- UserID -->
-<!-- String -->
-<P23658></P23658>
-
-<!-- EXT MPK 133 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23660>0</P23660>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23661>0</P23661>
-
-<!-- Name -->
-<!-- String -->
-<P23662></P23662>
-
-<!-- UserID -->
-<!-- String -->
-<P23663></P23663>
-
-<!-- EXT MPK 134 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23665>0</P23665>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23666>0</P23666>
-
-<!-- Name -->
-<!-- String -->
-<P23667></P23667>
-
-<!-- UserID -->
-<!-- String -->
-<P23668></P23668>
-
-<!-- EXT MPK 135 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23670>0</P23670>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23671>0</P23671>
-
-<!-- Name -->
-<!-- String -->
-<P23672></P23672>
-
-<!-- UserID -->
-<!-- String -->
-<P23673></P23673>
-
-<!-- EXT MPK 136 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23675>0</P23675>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23676>0</P23676>
-
-<!-- Name -->
-<!-- String -->
-<P23677></P23677>
-
-<!-- UserID -->
-<!-- String -->
-<P23678></P23678>
-
-<!-- EXT MPK 137 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23680>0</P23680>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23681>0</P23681>
-
-<!-- Name -->
-<!-- String -->
-<P23682></P23682>
-
-<!-- UserID -->
-<!-- String -->
-<P23683></P23683>
-
-<!-- EXT MPK 138 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23685>0</P23685>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23686>0</P23686>
-
-<!-- Name -->
-<!-- String -->
-<P23687></P23687>
-
-<!-- UserID -->
-<!-- String -->
-<P23688></P23688>
-
-<!-- EXT MPK 139 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23690>0</P23690>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23691>0</P23691>
-
-<!-- Name -->
-<!-- String -->
-<P23692></P23692>
-
-<!-- UserID -->
-<!-- String -->
-<P23693></P23693>
-
-<!-- EXT MPK 140 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23695>0</P23695>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23696>0</P23696>
-
-<!-- Name -->
-<!-- String -->
-<P23697></P23697>
-
-<!-- UserID -->
-<!-- String -->
-<P23698></P23698>
-<!-- EXT MPK 141 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23700>0</P23700>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23701>0</P23701>
-
-<!-- Name -->
-<!-- String -->
-<P23702></P23702>
-
-<!-- UserID -->
-<!-- String -->
-<P23703></P23703>
-
-<!-- EXT MPK 142 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23705>0</P23705>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23706>0</P23706>
-
-<!-- Name -->
-<!-- String -->
-<P23707></P23707>
-
-<!-- UserID -->
-<!-- String -->
-<P23708></P23708>
-
-<!-- EXT MPK 143 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23710>0</P23710>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23711>0</P23711>
-
-<!-- Name -->
-<!-- String -->
-<P23712></P23712>
-
-<!-- UserID -->
-<!-- String -->
-<P23713></P23713>
-
-<!-- EXT MPK 144 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23715>0</P23715>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23716>0</P23716>
-
-<!-- Name -->
-<!-- String -->
-<P23717></P23717>
-
-<!-- UserID -->
-<!-- String -->
-<P23718></P23718>
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23720>0</P23720>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23721>0</P23721>
-
-<!-- Name -->
-<!-- String -->
-<P23722></P23722>
-
-<!-- UserID -->
-<!-- String -->
-<P23723></P23723>
-
-<!-- EXT MPK 146 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23725>0</P23725>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23726>0</P23726>
-
-<!-- Name -->
-<!-- String -->
-<P23727></P23727>
-
-<!-- UserID -->
-<!-- String -->
-<P23728></P23728>
-
-<!-- EXT MPK 147 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!--Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23730>0</P23730>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23731>0</P23731>
-
-<!-- Name -->
-<!-- String -->
-<P23732></P23732>
-
-<!-- UserID -->
-<!-- String -->
-<P23733></P23733>
-
-<!-- EXT MPK 148 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23735>0</P23735>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23736>0</P23736>
-
-<!-- Name -->
-<!-- String -->
-<P23737></P23737>
-
-<!-- UserID -->
-<!-- String -->
-<P23738></P23738>
-
-
-<!-- EXT MPK 149 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23740>0</P23740>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23741>0</P23741>
-
-<!-- Name -->
-<!--String -->
-<P23742></P23742>
-
-<!-- UserID -->
-<!-- String -->
-<P23743></P23743>
-
-
-<!-- EXT MPK 150 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23745>0</P23745>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23746>0</P23746>
-
-<!-- Name -->
-<!-- String -->
-<P23747></P23747>
-
-<!-- UserID -->
-<!-- String -->
-<P23748></P23748>
-
-<!-- EXT MPK 151 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23750>0</P23750>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23751>0</P23751>
-
-<!-- Name -->
-<!-- String -->
-<P23752></P23752>
-
-<!-- UserID -->
-<!-- String -->
-<P23753></P23753>
-
-<!-- EXT MPK 152 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23755>0</P23755>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23756>0</P23756>
-
-<!-- Name -->
-<!-- String -->
-<P23757></P23757>
-
-<!-- UserID -->
-<!-- String -->
-<P23758></P23758>
-
-<!-- EXT MPK 153 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23760>0</P23760>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23761>0</P23761>
-
-<!-- Name -->
-<!-- String -->
-<P23762></P23762>
-
-<!-- UserID -->
-<!-- String -->
-<P23763></P23763>
-
-
-<!-- EXT MPK 154 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23765>0</P23765>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23766>0</P23766>
-
-<!-- Name -->
-<!-- String -->
-<P23767></P23767>
-
-<!-- UserID -->
-<!-- String -->
-<P23768></P23768>
-
-
-<!-- EXT MPK 155 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23770>0</P23770>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23771>0</P23771>
-
-<!-- Name -->
-<!-- String -->
-<P23772></P23772>
-
-<!-- UserID -->
-<!-- String -->
-<P23773></P23773>
-
-<!-- EXT MPK 156 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23775>0</P23775>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23776>0</P23776>
-
-<!-- Name -->
-<!-- String -->
-<P23777></P23777>
-
-<!-- UserID -->
-<!-- String -->
-<P23778></P23778>
-
-<!-- EXT MPK 157 -->
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!--Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23780>0</P23780>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23781>0</P23781>
-
-<!-- Name -->
-<!-- String -->
-<P23782></P23782>
-
-<!-- UserID -->
-<!-- String -->
-<P23783></P23783>
-
-<!-- EXT MPK 158 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23785>0</P23785>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23786>0</P23786>
-
-<!--Name -->
-<!-- String -->
-<P23787></P23787>
-
-<!-- UserID -->
-<!-- String -->
-<P23788></P23788>
-<!-- EXT MPK 159 -->
-
-<!-- Key Mode. -->
-<!-- 0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23790>0</P23790>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23791>0</P23791>
-
-<!-- Name -->
-<!-- String -->
-<P23792></P23792>
-
-<!-- UserID -->
-<!-- String -->
-<P23793></P23793>
-
-<!-- EXT MPK 160 -->
-<!-- Key Mode. -->
-<!--0 - Speed Dial, 1 - BLF, 3 - eventlist BLF, 4 - Speed Dial via active account, 5 - DialDTMF, 8 - Call Transfer, 9 - CallPark, 10 - Call Intercom -->
-<!-- Number: 0, 1, 3, 4, 5, 8, 9, 10 -->
-<P23795>0</P23795>
-
-<!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-<!-- Number: 0 - 5 -->
-<P23796>0</P23796>
-
-<!-- Name -->
-<!-- String -->
-<P23797></P23797>
-
-<!--UserID -->
-<!-- String -->
-<P23798></P23798>
+<!-- Advanced Settings - MPK EXT 1 Settings -->
+
+<!-- The MPKs in this section are for the GXP2200EXT 1 -->
+
+{assign var=key_types value=["speed dial"=>0, "blf"=>1, "eventlist blf"=>3,"speed dial active"=>4,"dial dtmf"=>5,"transfer"=>8,"call park"=>9,"intercom"=>10,"multicast paging"=>13,"call log"=>15]}
+{$start_id=23000}
+{for $exp=1 to 160}
+{$pid=$exp*5-5}
+<!-- EXT MPK {$exp} -->
+{if isset($keys.expansion.$exp.device_key_category) && isset($keys.expansion.$exp.device_key_type) && $keys.expansion.$exp.device_key_type|in_array:$key_types}
+<P{$start_id+$pid}>{$key_types[$keys.expansion.$exp.device_key_type]}</P{$start_id+$pid}>
+<P{$start_id+$pid+1}>{$keys.expansion.$exp.device_key_line}</P{$start_id+$pid+1}>
+<P{$start_id+$pid+2}>{$keys.expansion.$exp.device_key_label}</P{$start_id+$pid+2}>
+<P{$start_id+$pid+3}>{$keys.expansion.$exp.device_key_value}</P{$start_id+$pid+3}>
+{else}
+<P{$start_id+$pid}>0</P{$start_id+$pid}>
+<P{$start_id+$pid+1}>0</P{$start_id+$pid+1}>
+<P{$start_id+$pid+2}></P{$start_id+$pid+2}>
+<P{$start_id+$pid+3}></P{$start_id+$pid+3}>
+{/if}
+
+{/for}
 
 </config>
 </gs_provision>

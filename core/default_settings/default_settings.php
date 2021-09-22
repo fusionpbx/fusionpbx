@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,6 +50,11 @@
 		$domain_uuid = $_POST['domain_uuid'];
 		$default_settings = $_POST['default_settings'];
 	}
+
+//sanitize the variables
+	$action = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $action);
+	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
 
 //process the http post data by action
 	if ($action != '' && is_array($default_settings) && @sizeof($default_settings) != 0) {
@@ -179,6 +184,42 @@
 		unset($default_setting_categories, $default_setting_category, $category);
 	}
 
+//get the list of installed apps from the core and mod directories
+	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+	$x=0;
+	foreach ($config_list as $config_path) {
+		include($config_path);
+		$x++;
+	}
+	$x = 0;
+	foreach ($apps as $app) {
+		if (is_array($app['default_settings'])) {
+			foreach ($app['default_settings'] as $setting) {
+				$setting_array[$x] = ($setting);
+				$setting_array[$x]['app_uuid'] = $app['uuid'];
+				$x++;
+			}
+		}
+	}
+
+//create a function to find matching row in array and return the row or boolean
+	function find_in_array($search_array, $field, $value, $type = 'boolean') {
+		foreach($search_array as $row) {
+			if ($row[$field] == $value) {
+				if ($type == 'boolean') {
+					return true;
+				}
+				if ($type == 'row') {
+					return $row;
+				}
+				break;
+			}
+		}
+		if ($type == 'boolean') {
+			return false;
+		}
+	}
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -279,8 +320,35 @@
 		$x = 0;
 		foreach ($default_settings as $row) {
 			$default_setting_category = strtolower($row['default_setting_category']);
+			$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
 
 			$label_default_setting_category = $row['default_setting_category'];
+			$label_default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $label_default_setting_category);
+
+			//check if the default setting uuid exists in the array
+			$field = find_in_array($setting_array, 'default_setting_uuid',  $row['default_setting_uuid'], 'row');
+			unset($setting_bold, $enabled_bold, $default_value, $default_enabled);
+			if (is_array($field)) {
+				if ($row['default_setting_value'] !== $field['default_setting_value']) {
+					$setting_bold = 'font-weight:bold;';
+				}
+				if (strlen($field['default_setting_value']) > 0) {
+					$default_value = 'Default: '.$field['default_setting_value'];
+				}
+				else {
+					$default_value = 'Default: null';
+				}
+				if ($row['default_setting_enabled'] != $field['default_setting_enabled']) {
+					$default_enabled = $field['default_setting_enabled'];
+					$enabled_bold = true;
+				}
+			}
+			else {
+				$default_value = 'Custom';
+				$setting_bold = 'font-weight:bold;';
+			}
+			unset($field);
+
 			switch (strtolower($label_default_setting_category)) {
 				case "api" : $label_default_setting_category = "API"; break;
 				case "cdr" : $label_default_setting_category = "CDR"; break;
@@ -343,7 +411,8 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='hide-sm-dn'>".escape($row['default_setting_name'])."</td>\n";
-			echo "	<td class='overflow no-wrap'>\n";
+			echo "	<td class='overflow no-wrap' title=\"".escape($default_value)."\" style=\"".$setting_bold."\">\n";
+
 			$category = $row['default_setting_category'];
 			$subcategory = $row['default_setting_subcategory'];
 			$name = $row['default_setting_name'];
@@ -418,10 +487,15 @@
 			echo "	</td>\n";
 			if (permission_exists('default_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				if (isset($enabled_bold)) {
+					echo button::create(['type'=>'submit','class'=>'link','style'=>'font-weight:bold', 'label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				}
+				else {
+					echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['default_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				}
 			}
 			else {
-				echo "	<td class='center'>\n";
+				echo "	<td class='center' title=\"".escape($default_enabled)."\" style=\"".$setting_bold."\">\n";
 				echo $text['label-'.$row['default_setting_enabled']];
 			}
 			echo "	</td>\n";

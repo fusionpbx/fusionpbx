@@ -2,7 +2,7 @@
 	
 	//application details
 		$apps[$x]['name'] = "Domain Settings";
-		$apps[$x]['guid'] = "b31e723a-bf70-670c-a49b-470d2a232f71";
+		$apps[$x]['uuid'] = "b31e723a-bf70-670c-a49b-470d2a232f71";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";

@@ -163,7 +163,7 @@
     <P3>{$account.1.display_name}</P3>
     <!--  Voice Mail UserID -->
     <!--  String -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
     <!--  Account 1/Network Settings -->
     <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
@@ -302,7 +302,7 @@
     <P134></P134>
     <!--  Conference URI -->
     <!--  String -->
-    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2350></P2350>
@@ -600,7 +600,7 @@
     <P407>{$account.2.display_name}</P407>
     <!--  Voice Mail UserID -->
     <!--  String -->
-    <P426>*97</P426>
+    <P426>{$voicemail_number}</P426>
     <!--  Account 2/Network Settings -->
     <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
@@ -736,7 +736,7 @@
     <P444></P444>
     <!--  Conference URI -->
     <!--  String -->
-    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2450></P2450>
@@ -1000,7 +1000,7 @@
     <!--  Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P1415>0</P1415>
+    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
     <!--  IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
     <!--  Number: 0, 1, 2 -->
     <!--  Mandatory -->
@@ -1556,7 +1556,9 @@
     <!--  Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    <P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+    <P1439>{$grandstream_headset_ring}</P1439>
+{/if}
     <!--  Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!--  Number: 0, 1, 2 -->
     <!--  Mandatory -->

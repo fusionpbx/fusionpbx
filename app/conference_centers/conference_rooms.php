@@ -73,22 +73,6 @@
 		exit;
 	}
 
-//get the meeting_uuid using the pin number
-	$search = preg_replace('{\D}', '', $_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql = "select meeting_uuid ";
-		$sql .= "from v_meetings ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ( ";
-		$sql .= "moderator_pin = :search ";
-		$sql .= "or participant_pin = :search ";
-		$sql .= ") ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['search'] = '%'.$search.'%';
-		$database = new database;
-		$meeting_uuid = $database->select($sql, $parameters, 'column');
-	}
-
 /*
 //if the $_GET array exists then process it
 	if (count($_GET) > 0 && strlen($_GET["search"]) == 0) {
@@ -100,7 +84,6 @@
 			$mute = $_GET["mute"];
 			$sounds = $_GET["sounds"];
 			$enabled = $_GET["enabled"];
-			$meeting_uuid = $_GET["meeting_uuid"];
 
 		//record announcement
 			if ($record == "true" && is_uuid($meeting_uuid)) {
@@ -188,9 +171,6 @@
 	$conference_center = new conference_centers;
 	$conference_center->db = $db;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
-	if (strlen($meeting_uuid) > 0) {
-		$conference_center->meeting_uuid = $meeting_uuid;
-	}
 	if (strlen($search) > 0) {
 		$conference_center->search = $search;
 	}
@@ -211,9 +191,6 @@
 	$conference_center->offset = $offset;
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
-	if (strlen($meeting_uuid) > 0) {
-		$conference_center->meeting_uuid = $meeting_uuid;
-	}
 	if (strlen($search) > 0) {
 		$conference_center->search = $search;
 	}
@@ -297,7 +274,6 @@
 		echo "	</th>\n";
 	}
 	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
-	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
 	echo "<th>".$text['label-name']."</th>\n";
 	echo "<th>".$text['label-moderator-pin']."</th>\n";
 	echo "<th>".$text['label-participant-pin']."</th>\n";
@@ -326,7 +302,6 @@
 	if (is_array($result) > 0) {
 		$x = 0;
 		foreach ($result as $row) {
-			$meeting_uuid = $row['meeting_uuid'];
 			$conference_room_name = $row['conference_room_name'];
 			$moderator_pin = $row['moderator_pin'];
 			$participant_pin = $row['participant_pin'];
@@ -345,14 +320,12 @@
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='conference_rooms[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='conference_rooms[$x][uuid]' value='".escape($row['conference_room_uuid'])."' />\n";
-				echo "		<input type='hidden' name='conference_rooms[$x][meeting_uuid]' value='".escape($meeting_uuid)."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td><a href='".$list_row_url."'>".escape($conference_room_name)."</a>&nbsp;</td>\n";
 			echo "	<td>".$moderator_pin."</td>\n";
 			echo "	<td>".$participant_pin."</td>\n";
 			//echo "	<td>".escape($row['conference_center_uuid'])."&nbsp;</td>\n";
-			//echo "	<td>".escape($row['meeting_uuid'])."&nbsp;</td>\n";
 			//echo "	<td>".escape($row['profile'])."&nbsp;</td>\n";
 
 			if (permission_exists('conference_room_edit')) {
@@ -471,8 +444,15 @@
 				echo "	<td class='center'>0</td>\n";
 			}
 			echo "	<td class='no-link no-wrap'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['meeting_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
-			echo "		<a href='conference_sessions.php?id=".urlencode($row['meeting_uuid'])."'>".$text['label-sessions']."</a>\n";
+			if (permission_exists('conference_interactive_view')) {
+				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>&nbsp;\n";
+			}
+			if (permission_exists('conference_cdr_view')) {	
+				echo "		<a href='/app/conference_cdr/conference_cdr.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['button-cdr']."</a>\n";
+			}
+			if (permission_exists('conference_session_view')) {	
+				echo "		<a href='conference_sessions.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['label-sessions']."</a>\n";
+			}
 			echo "	</td>\n";
 
 			if (permission_exists('conference_room_enabled')) {

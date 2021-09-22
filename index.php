@@ -17,16 +17,17 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
+
 //include root
 	include "root.php";
 
-// start the session
+//start the session
 	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
@@ -47,7 +48,7 @@
 		exit;
 	}
 
-// if not logged in, clear the session variables
+//if not logged in, clear the session variables
 	//if (strlen($_SESSION["username"]) == 0) {
 	//	session_unset();
 	//	session_destroy();
@@ -56,9 +57,9 @@
 //adds multiple includes
 	require_once "resources/require.php";
 
-// if logged in, redirect to login destination
-	if (isset($_SESSION["username"]) && (strlen($_SESSION["username"]) > 0)) {
-		if (strlen($_SESSION['login']['destination']['url']) > 0) {
+//if logged in, redirect to login destination
+	if (isset($_SESSION["username"])) {
+		if (isset($_SESSION['login']['destination']['url'])) {
 			header("Location: ".$_SESSION['login']['destination']['url']);
 		} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_settings/user_dashboard.php")) {
 			header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");

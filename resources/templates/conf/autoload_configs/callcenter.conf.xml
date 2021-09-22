@@ -1,0 +1,16 @@
+<configuration name="callcenter.conf" description="CallCenter">
+	<settings>
+		<!--<param name="odbc-dsn" value="$${dsn}"/>-->
+		<!--<param name="dbname" value="/usr/local/freeswitch/db/call_center.db"/>-->
+	</settings>
+	<queues>
+	</queues>
+	<!-- WARNING: Configuration of XML Agents will be updated into the DB upon restart. -->
+	<!-- WARNING: Configuration of XML Tiers will reset the level and position if those were supplied. -->
+	<!-- WARNING: Agents and Tiers XML config shouldn't be used in a multi FS shared DB setup (Not currently supported anyway) -->
+	<agents>
+	</agents>
+	<!-- If no level or position is provided, they will default to 1.  You should do this to keep db value on restart. -->
+	<tiers>
+	</tiers>
+</configuration>

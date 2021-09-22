@@ -295,14 +295,19 @@
 				}
 			}
 
-		//redirect the user
-			if (check_str($_REQUEST["rdr"]) !== 'n'){
-				$path = check_str($_POST["path"]);
-				if (isset($path) && !empty($path) && $path!="index2.php" && $path!="/install.php") {
-					header("Location: ".$path);
-					exit();
+		//if logged in, redirect to login destination
+			if (!isset($_REQUEST["key"])) {
+				if (isset($_SESSION['login']['destination']['url'])) {
+					header("Location: ".$_SESSION['login']['destination']['url']);
+				} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/user_settings/user_dashboard.php")) {
+					header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+				}
+				else {
+					require_once "resources/header.php";
+					require_once "resources/footer.php";
 				}
 			}
+
 	}
 
 //set the time zone

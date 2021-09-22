@@ -337,6 +337,7 @@
 								directory_exten_visible = row.directory_exten_visible;
 								limit_max = row.limit_max;
 								call_timeout = row.call_timeout;
+								max_registrations = row.max_registrations;
 								limit_destination = row.limit_destination;
 								sip_force_contact = row.sip_force_contact;
 								sip_force_expires = row.sip_force_expires;
@@ -379,7 +380,9 @@
 								presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 
 							--set the dial_string
-								if (string.len(row.dial_string) > 0) then
+								if (do_not_disturb == "true") then
+									dial_string = "!USER_BUSY";
+								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
@@ -530,6 +533,7 @@
 							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[								<param name="max-registrations-per-extension" value="]] .. max_registrations .. [["/>]]);
 							for key,row in pairs(extension_settings) do
 								if (row.extension_setting_type == 'param') then
 									table.insert(xml, [[								<param name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);

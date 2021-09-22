@@ -8,7 +8,7 @@ local is_absolute_path = require "resources.functions.is_absolute_path"
 function find_file(dbh, domain_name, domain_uuid, file_name)
 	-- if we specify e.g. full path
 	if (is_absolute_path(file_name) and file.exists(file_name)) then
-		log.debugf('found file `%s` in file system', file_name)
+		log.debugf('[find_file.lua] found file `%s` in file system', file_name)
 		return file_name
 	end
 
@@ -18,9 +18,13 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 	if file_name_only == file_name then -- this can be recordings
 		local full_path = recordings_dir .. "/" .. domain_name .. "/" .. file_name
 		if file.exists(full_path) then
-			log.debugf('resolve `%s` as recording `%s`', file_name, full_path)
+			log.debugf('[find_file.lua] `%s` as recording `%s`', file_name, full_path)
 			file_name, found = full_path, true
-		else -- recordings may be in database
+		else 
+			--send debug info to the log
+			log.debugf('[find_file.lua] `%s` as recording `%s`', file_name, full_path)
+
+			-- recordings may be in database
 			local settings = Settings.new(dbh, domain_name, domain_uuid)
 			local storage_type = settings:get('recordings', 'storage_type', 'text') or ''
 			if storage_type == 'base64' then
@@ -37,7 +41,7 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 				dbh:release();
 
 				if recording_base64 and #recording_base64 > 32 then
-					log.debugf('resolve `%s` as recording `%s`(base64)', file_name, full_path)
+					log.debugf('[find_file.lua] `%s` as recording `%s`(base64)', file_name, full_path)
 					file_name, found, is_base64 = full_path, true, true
 					file.write_base64(file_name, recording_base64)
 				end
@@ -65,7 +69,7 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 		if sounds_dir then
 			found = file.exists(sounds_dir.. "/" ..file_name_only)
 			if found then
-				log.debugf('resolve `%s` as sound `%s`', file_name, found)
+				log.debugf('[find_file.lua] `%s` as sound `%s`', file_name, found)
 				file_name, found = found, true
 			end
 		end

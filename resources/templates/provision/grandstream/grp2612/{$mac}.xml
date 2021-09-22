@@ -27,12 +27,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.1.sip_transport != 'dns srv'}
     <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+    <P47>{$account.1.server_address}</P47>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.1.server_address_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
     <P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
 {else}
     <P2312>{$account.1.server_address_secondary}</P2312>
@@ -41,7 +45,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.1.outbound_proxy_primary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
     <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
     <P48>{$account.1.outbound_proxy_primary}</P48>
@@ -50,7 +54,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.1.outbound_proxy_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
     <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
 {else}
     <P2333>{$account.1.outbound_proxy_secondary}</P2333>
@@ -78,7 +82,7 @@
 
     <!-- # Voice Mail Access Number -->
     <!-- # String -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
 
     <!-- # Account Display -->
     <!-- # Number: 0, 1. 0 - User Name, 1 - User ID. Default is 0 -->
@@ -354,7 +358,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -985,12 +989,16 @@
 
     <!-- # SIP Server -->
     <!-- # String -->
+{if $account.2.sip_transport != 'dns srv'}
     <P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+{else}
+    <P402>{$account.2.server_address}</P402>
+{/if}
 
     <!-- # Secondary SIP Server -->
     <!-- # String -->
     
-{if isset($account.2.server_address_secondary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.server_address_secondary)}
     <P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
 {else}
     <P2412>{$account.2.server_address_secondary}</P2412>
@@ -999,7 +1007,7 @@
     <!-- # Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.2.outbound_proxy_primary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
     <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
 {else}
     <P403>{$account.2.outbound_proxy_primary}</P403>
@@ -1008,7 +1016,7 @@
     <!-- # Backup Outbound Proxy -->
     <!-- # String -->
     
-{if isset($account.2.outbound_proxy_secondary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
     <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
 {else}
     <P2433>{$account.2.outbound_proxy_secondary}</P2433>
@@ -1036,7 +1044,7 @@
 
     <!-- # Voice Mail UserID -->
     <!-- # String -->
-    <P426>*97</P426>
+    <P426>{$voicemail_number}</P426>
 
     <!-- # Account Display -->
     <!-- # Number: 0, 1. 0 - User Name, 1 - User ID. Default is 0 -->
@@ -1308,7 +1316,7 @@
 
     <!-- # Conference URI -->
     <!-- # String -->
-    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
     <!-- # Music On Hold URI -->
     <!-- # String -->
@@ -1919,7 +1927,7 @@
     <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1415>2</P1415>
+    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
     <!-- # IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
@@ -3936,7 +3944,9 @@
     <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+    <P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
     <!-- # Group Listen with Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -4348,7 +4358,7 @@
     <!-- # Use Long Label. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8346>0</P8346>
+    <P8346>{$grandstream_long_label}</P8346>
 
     <!-- # Call Screen Settings -->
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->

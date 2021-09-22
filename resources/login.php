@@ -152,7 +152,7 @@
 								$email_body = str_replace('${domain}', $domain_name, $email_body);
 
 							//send reset link
-								if (send_email($email, $email_subject, $email_body)) {
+								if (send_email($email, $email_subject, $email_body, $eml_error)) {
 									//email sent
 										message::add($text['message-reset_link_sent'], 'positive', 2500);
 								}
@@ -242,8 +242,15 @@
 //set variable if not set
 	if (!isset($_SESSION['login']['domain_name_visible']['boolean'])) { $_SESSION['login']['domain_name_visible']['boolean'] = null; }
 
-//set a default login destination
-	if (strlen($_SESSION['login']['destination']['url']) == 0) {
+//santize the login destination url and set a default value
+	if (isset($_SESSION['login']['destination']['url'])) {
+		$destination_path = parse_url($_SESSION['login']['destination']['url'])['path'];
+		$destination_query = parse_url($_SESSION['login']['destination']['url'])['query'];
+		$destination_path = preg_replace('#[^a-zA-Z0-9_\-\./]#', '', $destination_path);
+		$destination_query = preg_replace('#[^a-zA-Z0-9_\-\./&=]#', '', $destination_query);
+		$_SESSION['login']['destination']['url'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
+	}
+	else {
 		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
 	}
 

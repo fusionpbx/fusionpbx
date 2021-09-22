@@ -38,10 +38,9 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.mkdir";
 
+--initialize the objects
 	local Database = require "resources.functions.database";
-
 	local log = require "resources.functions.log".call_flow_monitor
-
 	local presence_in = require "resources.functions.presence_in"
 
 --make sure the scripts/run dir exists
@@ -66,6 +65,7 @@
 	file:close()
 
 	log.notice("Start")
+
 --monitor the call flows status
 	local sql = "select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code," ..
 		"f.call_flow_status, f.call_flow_label, f.call_flow_alternate_label "..
@@ -96,7 +96,7 @@
 
 					-- turn the lamp
 						presence_in.turn_lamp( call_flow_status == "false",
-							call_flow_feature_code.."@"..domain_name,
+							'flow+'..call_flow_feature_code.."@"..domain_name,
 							call_flow_uuid
 						);
 

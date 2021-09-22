@@ -152,9 +152,14 @@
 					end
 			end
 
+		--get the channels
+			api = freeswitch.API();
+			cmd_string = "show channels";
+			channel_result = api:executeString(cmd_string);
+
 		--originate the calls
 			destination_count = 0;
-			api = freeswitch.API();
+
 			for index,value in pairs(destination_table) do
 				for destination in each_number(value) do
 
@@ -163,39 +168,29 @@
 
 					--prevent calling the user that initiated the page
 					if (sip_from_user ~= destination) then
-						--cmd = "username_exists id "..destination.."@"..domain_name;
-						--reply = trim(api:executeString(cmd));
-						--if (reply == "true") then
-							destination_status = "show channels like "..destination.."@";
-							reply = trim(api:executeString(destination_status));
-							if (reply == "0 total.") then
-								freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-								if destination == sip_from_user then
-									--this destination is the caller that initated the page
-								else
-									--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-									api:executeString(cmd_string);
-									destination_count = destination_count + 1;
-								end
-								--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
-							else
- 								--look inside the reply to check for the correct domain_name
-								if string.find(reply, domain_name, nil, true) then
-									--found: user is busy
-								else
- 									--not found
-									if (destination == tonumber(sip_from_user)) then
-										--this destination is the caller that initated the page
-									else
-										--originate the call
-										cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-										api:executeString(cmd_string);
-										destination_count = destination_count + 1;
-									end
-								end
+
+						--loop through channels to determine if destination is available or busy
+						destination_status = 'available';
+						channel_array = explode("\n", channel_result);
+						for index,row in pairs(channel_array) do
+							if string.find(row, destination..'@'..domain_name, nil, true) then
+								destination_status = 'busy';
 							end
-						--end
+						end
+
+						--if available then page then originate the call with auto answer
+						if (destination_status == 'available') then
+							freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
+							if destination == sip_from_user then
+								--this destination is the caller that initated the page
+							else
+								--originate the call
+								cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+								api:executeString(cmd_string);
+								destination_count = destination_count + 1;
+							end
+						end
+
 					end
 				end
 			end

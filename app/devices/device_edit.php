@@ -324,11 +324,28 @@
 								if (permission_exists('device_line_password')) {
 									$array['devices'][0]['device_lines'][$y]['password'] = $row["password"];
 								}
-								$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+								if (permission_exists('device_line_shared')) {
+									$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+								}
 								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
-								$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
-								$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
-								$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+								if (permission_exists('device_line_port')) {
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
+								}
+								else {
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
+								}
+								if (permission_exists('device_line_transport')) {
+													$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+								}
+								else {
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_transport']['text'];
+								}
+								if (permission_exists('device_line_register_expires')) {
+									$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+								}
+								else {
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_register_expires']['numeric'];
+								}
 								$y++;
 							}
 						}
@@ -976,7 +993,9 @@
 		if (permission_exists('device_line_password')) {
 			echo "				<td class='vtable'>".$text['label-password']."</td>\n";
 		}
-		echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		if (permission_exists('device_line_port')) {
+			echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		}
 		if (permission_exists('device_line_transport')) {
 			echo "				<td class='vtable'>".$text['label-sip_transport']."</td>\n";
 		}
@@ -1128,9 +1147,11 @@
 					echo "			</td>\n";
 				}
 
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
-				echo "			</td>\n";
+				if (permission_exists('device_line_port')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
+					echo "			</td>\n";
+				}
 
 				if (permission_exists('device_line_transport')) {
 					echo "			<td align='left'>\n";

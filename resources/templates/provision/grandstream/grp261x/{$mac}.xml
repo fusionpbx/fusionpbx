@@ -249,7 +249,7 @@
 		<item name="account.{$line}.sip.blf.eventlist.autoProvision">Disabled</item>
 
 		<!-- Conference URI -->
-		<item name="account.{$line}.sip.conferenceUri">{if $nway_conference == true}nway{$row.user_id}@{$row.server_address}{/if}</item>
+		<item name="account.{$line}.sip.conferenceUri">{if $nway_conference == 'true'}nway{$row.user_id}@{$row.server_address}{/if}</item>
 
 		<!-- Music On Hold URI -->
 		<item name="account.{$line}.sip.musicOnHoldUri"></item>
@@ -370,7 +370,7 @@
 
 		<!-- Accept Incoming SIP from Proxy Only  -->
 		<!-- Yes, No -->
-		<item name="account.{$line}.sip.validate.incomingServer">No</item>
+		<item name="account.{$line}.sip.validate.incomingServer">Yes</item>
 
 		<!-- Authenticate Incoming INVITE -->
 		<!-- Yes, No -->
@@ -737,7 +737,17 @@
 		<!-- Ethernet Settings -->
 		<!-- Preferred Internet Protocol -->
 		<!-- BothAndPreferIPv4, BothAndPreferIPv6, IPv4Only, IPv6Only -->
-		<item name="network.internetProtocol">IPv4Only</item>
+		{if $grandstream_ipv_mode=='0'}
+		    <item name="network.internetProtocol">BothAndPreferIPv4</item>
+		    {elseif $grandstream_ipv_mode=='1'}
+		    <item name="network.internetProtocol">BothAndPreferIPv6</item>
+		    {elseif $grandstream_ipv_mode=='2'}
+		    <item name="network.internetProtocol">IPv4Only</item>
+		    {elseif $grandstream_ipv_mode=='3'}
+		    <item name="network.internetProtocol">IPv6Only</item>
+		    {else}
+		    <item name="network.internetProtocol">BothAndPreferIPv4</item>
+		{/if}
 
 		<!-- IPv4 Address Type -->
 		<!-- DHCP, StaticIP, PPPoE -->

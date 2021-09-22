@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -140,7 +140,7 @@
 	}
 
 //prepare smtp server settings
-	// load default smtp settings
+	//load default smtp settings
 	if ($_SESSION['email']['smtp_hostname']['text'] != '') { 
 		$smtp['hostname'] = $_SESSION['email']['smtp_hostname']['text'];
 	}
@@ -165,7 +165,7 @@
 		$smtp['from_name'] = $_SESSION['voicemail']['smtp_from_name']['text'];
 	}
 
-	// overwrite with domain-specific smtp server settings, if any
+	//overwrite with domain-specific smtp server settings, if any
 	if (is_uuid($headers["X-FusionPBX-Domain-UUID"])) {
 		$sql = "select domain_setting_subcategory, domain_setting_value ";
 		$sql .= "from v_domain_settings ";
@@ -184,7 +184,7 @@
 		}
 		unset($sql, $parameters, $result, $row);
 	}
-	// value adjustments
+	//value adjustments
 	$smtp['auth'] 		= ($smtp['auth'] == "true") ? true : false;
 	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
 	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
@@ -193,6 +193,8 @@
 //send the email
 	include_once "resources/phpmailer/class.phpmailer.php";
 	include_once "resources/phpmailer/class.smtp.php";
+
+//create the mail object
 	$mail = new PHPMailer();
 	if (isset($_SESSION['email']['method'])) {
 		switch ($_SESSION['email']['method']['text']) {
@@ -206,21 +208,21 @@
 		$mail->IsSMTP();
 	}
 
-// optional bypass TLS certificate check e.g. for self-signed certificates
+//optional bypass TLS certificate check e.g. for self-signed certificates
 	if (isset($_SESSION['email']['smtp_validate_certificate'])) {
-	    if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
-
-		    // this is needed to work around TLS certificate problems
-		    $mail->SMTPOptions = array(
-			    'ssl' => array(
-			    'verify_peer' => false,
-			    'verify_peer_name' => false,
-			    'allow_self_signed' => true
-			    )
-		    );
-	    }
+		if ($_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+			// this is needed to work around TLS certificate problems
+			$mail->SMTPOptions = array(
+				'ssl' => array(
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true
+				)
+			);
+		}
 	}
 
+//smtp connection details
 	$mail->SMTPAuth = $smtp['auth'];
 	if (isset($smtp['hostname'])) { 
 		$mail->Hostname = $smtp['hostname'];
@@ -236,7 +238,7 @@
 	}
 	$mail->SMTPDebug  = 2;
 
-//send context to the temp log
+//add information to the log
 	if (sizeof($headers)>0) {
 		foreach ($headers as $header => $value) {
 			echo $header.": ".$value."\n";
@@ -259,17 +261,19 @@
 	}
 	$mail->Subject = $subject;
 
-	$to = trim($to, "<> ");
+//add the reciepients
+	$to = trim($to, "<>");
+	$to = str_replace(" ", "", $to);
 	$to = str_replace(";", ",", $to);
 	$to_array = explode(",", $to);
-	if (count($to_array) == 0) {
+	if (count($to_array) == 1) {
 		$mail->AddAddress($to);
 	}
 	else {
 		foreach ($to_array as $to_row) {
 			if (strlen($to_row) > 0) {
 				echo "Add Address: $to_row\n";
-				$mail->AddAddress(trim($to_row));
+				$mail->AddBCC(trim($to_row));
 			}
 		}
 	}
@@ -291,6 +295,7 @@
 				//inline
 			$bodypart = $parts_array["BodyPart"];
 			$bodylength = $parts_array["BodyLength"];
+
 			if (strlen($file) > 0) {
 				//get the file information
 					$file_ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -342,7 +347,7 @@
 		$mail->isHTML(true);
 	}
 	else {
-		// $mail->Body = ($body != '') ? $body : $body_plain;
+		//$mail->Body = ($body != '') ? $body : $body_plain;
 		$mail->Body = $body_plain."\n\n$transcription";
 		$mail->AltBody = $body_plain."\n\n$transcription";
 		$mail->isHTML(false);
@@ -359,7 +364,7 @@
 			echo "Retained in v_email_logs \n";
 		}
 		else {
-			// log/store message in database for review
+			//log the message in database for review
 			if (!isset($email_log_uuid)) {
 				//build insert array
 					$email_log_uuid = uuid();
@@ -372,15 +377,18 @@
 					$array['email_logs'][0]['type'] = $headers["X-FusionPBX-Email-Type"];
 					$array['email_logs'][0]['status'] = 'failed';
 					$array['email_logs'][0]['email'] = str_replace("'", "''", $msg);
+
 				//grant temporary permissions
 					$p = new permissions;
 					$p->add('email_log_add', 'temp');
+
 				//execute insert
 					$database = new database;
 					$database->app_name = 'v_mailto';
 					$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 					$database->save($array);
 					unset($array);
+
 				//revoke temporary permissions
 					$p->delete('email_log_add', 'temp');
 			}

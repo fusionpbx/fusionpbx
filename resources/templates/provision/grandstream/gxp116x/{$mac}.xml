@@ -50,7 +50,7 @@
 
 <!--  Voice Mail UserID -->
 <!--  String -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 
 <!--  Account 1/Network Settings -->
@@ -227,7 +227,7 @@
 
 <!--  Conference URI -->
 <!--  String -->
-<P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!--  Music On Hold URI -->
 <!--  String -->
@@ -554,7 +554,7 @@
 <!--  Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P1415>0</P1415>
+{if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
 <!--  IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
 <!--  Number: 0, 1, 2 -->
@@ -1298,7 +1298,9 @@
 <!--  Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!--  Number: 0, 1 -->
 <!--  Mandatory -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!--  Headset TX gain(db). 1 - -6 decibel, 0 - 0 decibel, 2 - +6 decibel. Default is 0 -->
 <!--  Number: 0, 1, 2 -->

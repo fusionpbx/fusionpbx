@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2021
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -124,11 +124,22 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+	$parameters['time_zone'] = $time_zone;
+
 //get the list
 	$sql = "select ";
 	$sql .= "domain_uuid, ";
 	$sql .= "user_log_uuid, ";
 	$sql .= "timestamp, ";
+	$sql .= "to_char(timezone(:time_zone, timestamp), 'DD Mon YYYY') as date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, timestamp), 'HH12:MI:SS am') as time_formatted, \n";
 	$sql .= "username, ";
 	$sql .= "type, ";
 	$sql .= "result, ";
@@ -214,7 +225,8 @@
 	if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
-	echo th_order_by('timestamp', $text['label-timestamp'], $order_by, $order);
+	echo "<th class='left'>".$text['label-date']."</th>\n";
+	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
 	echo th_order_by('result', $text['label-result'], $order_by, $order);
@@ -241,7 +253,8 @@
 			if ($_GET['show'] == 'all' && permission_exists('user_log_all')) {
 				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			}
-			echo "	<td>".escape($row['timestamp'])."</td>\n";
+			echo "	<td>".escape($row['date_formatted'])."</td>\n";
+			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";
 			echo "	<td>".escape($row['result'])."</td>\n";

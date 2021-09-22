@@ -45,7 +45,7 @@
 
 				--play the greeting
 					dtmf_digits = '';
-					if (string.len(greeting_id) > 0) then
+					if (string.len(greeting_id) > 0 and greeting_id ~= "default") then
 
 						--sleep
 							session:execute("playback","silence_stream://200");

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -173,12 +173,11 @@
 
 		//call forward config
 			if (permission_exists('call_forward')) {
-
 				//sanitize the destinations
-				$forward_all_destination = str_replace('$', '', $forward_all_destination);
-				$forward_busy_destination = str_replace('$', '', $forward_busy_destination);
-				$forward_no_answer_destination = str_replace('$', '', $forward_no_answer_destination);
-				$forward_user_not_registered_destination = str_replace('$', '', $forward_user_not_registered_destination);
+				$forward_all_destination = preg_replace('#[^\*0-9]#', '', $forward_all_destination);
+				$forward_busy_destination = preg_replace('#[^\*0-9]#', '', $forward_busy_destination);
+				$forward_no_answer_destination = preg_replace('#[^\*0-9]#', '', $forward_no_answer_destination);
+				$forward_user_not_registered_destination = preg_replace('#[^\*0-9]#', '', $forward_user_not_registered_destination);
 
 				//build the array
 				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -198,7 +197,6 @@
 				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 				$array['extensions'][0]['extension_uuid'] = $extension_uuid;
 				$array['extensions'][0]['do_not_disturb'] = $dnd_enabled;
-				$array['extensions'][0]['dial_string'] = $dnd_enabled == "true" ? "error/user_busy" : '';
 			}
 
 		//follow me config
@@ -234,9 +232,8 @@
 					$destination_found = false;
 					foreach ($destinations as $field) {
 						if ($field['destination'] != '') {
-
 							//sanitize the destination
-							$field['destination'] = str_replace('$', '', $field['destination']);
+							$field['destination'] = preg_replace('#[^\*0-9]#', '', $field['destination']);
 
 							//build the array
 							$array['follow_me'][0]['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];

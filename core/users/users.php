@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -86,7 +86,7 @@
 		$search =  strtolower($_GET["search"]);
 		$sql_search = " (";
 		$sql_search .= "	lower(username) like :search ";
-		$sql_search .= "	or lower(groups) like :search ";
+		$sql_search .= "	or lower(group_names) like :search ";
 		$sql_search .= "	or lower(contact_organization) like :search ";
 		$sql_search .= "	or lower(contact_name) like :search ";
 		//$sql_search .= "	or lower(user_status) like :search ";
@@ -129,7 +129,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_name, domain_uuid, user_uuid, username, groups, ";
+	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
 	$sql .= "contact_organization,contact_name, cast(user_enabled as text) ";
 	$sql .= "from view_users ";
 	if ($_GET['show'] == "all" && permission_exists('user_all')) {
@@ -233,7 +233,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
-	echo th_order_by('groups', $text['label-groups'], $order_by, $order, null, null, $param);
+	echo th_order_by('group_names', $text['label-groups'], $order_by, $order, null, null, $param);
 	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
 	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
 	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
@@ -269,7 +269,7 @@
 				echo "	".escape($row['username']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['groups'])."</td>\n";
+			echo "	<td>".escape($row['group_names'])."</td>\n";
 			echo "	<td>".escape($row['contact_organization'])."</td>\n";
 			echo "	<td>".escape($row['contact_name'])."</td>\n";
 			//echo "	<td>".escape($row['contact_name_given'])."</td>\n";

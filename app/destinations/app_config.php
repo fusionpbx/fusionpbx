@@ -90,6 +90,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_import";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_export";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_upload";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -125,6 +128,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_user_uuid";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_emergency";
@@ -221,6 +227,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_fax";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "fax_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "user_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_users";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "user_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_type";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_name";

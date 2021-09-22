@@ -60,6 +60,7 @@
   <section name="languages" description="Language Management">
     <X-PRE-PROCESS cmd="include" data="languages/de/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/en/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="languages/es/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/fr/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/ru/*.xml"/>
     <X-PRE-PROCESS cmd="include" data="languages/he/*.xml"/>
