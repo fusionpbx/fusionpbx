@@ -202,11 +202,12 @@
 						if ($_SESSION['domain_uuid'] == $row['domain_uuid']) {
 							$device_uuid = $row['device_uuid'];
 							$device_domain_name = $row['device_domain_name'];
+							$device_unique = true;
 						}
 						else {
 							$device_domain_name = $row['device_domain_name'];
+							$device_unique = false;
 						}
-						$device_unique = false;
 					}
 					else {
 						$device_unique = true;
