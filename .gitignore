@@ -15,3 +15,4 @@ app/provision/calls/
 app/provision/corefiles/
 app/provision/directories/
 app/provision/phoneconfigs/
+app/email_queue/
