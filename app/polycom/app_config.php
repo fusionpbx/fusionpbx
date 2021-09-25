@@ -510,5 +510,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3600";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Subscribe expire time in seconds. Default 3600";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "47ba0c8b-544f-48d0-a24a-41df52426a7d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_ring_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ringer8";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring tone.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8eee26a4-0769-4f14-80df-3ebe33bed4ef";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_ring_type_private";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ringer7";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring tone.";
 
 ?>
