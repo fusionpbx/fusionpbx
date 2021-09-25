@@ -1,8 +1,6 @@
 <context name="{v_context}">
     <extension name="DEFAULT_CALLER_ID" continue="true" uuid="063ef517-d8ba-48a7-91c2-f3111db581d7"  enabled="true" order="21">
         <condition field="" expression="">
-            <action application="set" data="default_outbound_caller_id_number=" inline="true"/>
-            <action application="set" data="default_emergency_caller_id_number=" inline="true"/>
         </condition>
     </extension>
 </context>
