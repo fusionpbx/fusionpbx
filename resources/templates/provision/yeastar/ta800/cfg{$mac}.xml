@@ -2,7 +2,7 @@
 <system>
 <lansettings>
   <dhcp>yes</dhcp>
-  <hostname>TA200</hostname>
+  <hostname>TA800</hostname>
   <ipaddress></ipaddress>
   <subnetmask></subnetmask>
   <gateway></gateway>

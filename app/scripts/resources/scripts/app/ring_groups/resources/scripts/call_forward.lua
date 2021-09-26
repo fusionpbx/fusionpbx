@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2017
+--	Copyright (C) 2010-2021
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -61,8 +61,8 @@
 	local domain_name         = session:getVariable("domain_name");
 	local ring_group_number   = session:getVariable("ring_group_number");
 	local ring_group_uuid     = session:getVariable("ring_group_uuid");
-	local request_id          = session:getVariable("request_id");
 	local forward_destination = session:getVariable("forward_destination");
+	local forward_reset       = session:getVariable("forward_reset");
 
 --set the sounds path for the language, dialect and voice
 	local default_language = session:getVariable("default_language") or 'en';
@@ -74,14 +74,6 @@
 
 --connect to the database
 	local dbh = Database.new('system');
-
--- user hangup
-	if not session:ready() then return end
-
-	if (request_id ~= 'true') and empty(ring_group_number) and empty(ring_group_uuid) then
-		log.warning('can not detect ring group number. Please specify one of this var: ring_group_number, ring_group_uuid or request_id.')
-		return
-	end
 
 --check pin code
 	if not empty(pin_number) then
@@ -99,7 +91,7 @@
 	end
 
 --get ring group number
-	if request_id == 'true' then
+	if empty(ring_group_number) then
 		--get the ring group extension number
 			local min_digits = 2;
 			local max_digits = 20;
@@ -110,6 +102,9 @@
 			if not session:ready() then return end
 	end
 
+--user hangup
+	if not session:ready() then return end
+
 --search ring_group in database
 	local sql = [[SELECT ring_group_uuid as uuid, ring_group_forward_enabled as forward_enabled,
 		ring_group_forward_destination as forward_destination, ring_group_extension as extension
@@ -117,7 +112,7 @@
 		WHERE domain_uuid = :domain_uuid
 	]]
 	local params = {domain_uuid = domain_uuid}
-	if (request_id == "true") or (empty(ring_group_uuid)) then
+	if (not empty(ring_group_number) or empty(ring_group_uuid)) then
 		sql = sql .. " AND ring_group_extension=:extension"
 		params.extension = ring_group_number
 	else
@@ -135,7 +130,7 @@
 -- user hangup
 	if not session:ready() then return end
 
--- get destination number form database if it not provided
+-- get destination number from the database if it not provided
 	if enabled == 'toggle' and empty(forward_destination) then
 		forward_destination = ring_group.forward_destination
 	end
@@ -159,17 +154,23 @@
 			if not session:ready() then return end
 	end
 
+--set the values based on conditions
+	forward_enabled = (enabled == 'true') and 'true' or 'false';
+	if (forward_enabled == 'false' and forward_reset == 'true') then
+		forward_destination = '';
+	end
+
 --update ring group call farward in database
 	local sql = [[UPDATE v_ring_groups
 	SET
-		ring_group_forward_enabled = :enabled,
-		ring_group_forward_destination = :destination
+		ring_group_forward_enabled = :forward_enabled,
+		ring_group_forward_destination = :forward_destination
 	WHERE
-		ring_group_uuid = :uuid]]
+		ring_group_uuid = :ring_group_uuid]]
 	local params = {
-		enabled = (enabled == 'true') and 'true' or 'false',
-		destination = forward_destination,
-		uuid = ring_group.uuid,
+		forward_enabled = forward_enabled,
+		forward_destination = forward_destination,
+		ring_group_uuid = ring_group.uuid,
 	}
 	if (debug["sql"]) then
 		log.noticef("SQL: %s; params: %s", sql, json.encode(params));
@@ -188,7 +189,6 @@
 		--notify the caller
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 	else
-			
 		--set forward_all_enabled
 			channel_display(session:get_uuid(), "Cancelled")
 		--notify the caller
@@ -196,5 +196,4 @@
 	end
 
 -- BLF for display CF status
-	blf.forward(enabled == 'true', ring_group.extension, nil,
-		ring_group.forward_destination, forward_destination, domain_name)
+	blf.forward(enabled == 'true', ring_group.extension, nil, ring_group.forward_destination, forward_destination, domain_name)
