@@ -1,8 +1,8 @@
 <context name="{v_context}">
-    <extension name="DEFAULT_CALLER_ID" continue="true" app_uuid="3b290b41-cec8-467d-8b12-d51cdc74a81e" destination="false" order="21">
+    <extension name="DEFAULT_CALLER_ID" continue="true" app_uuid="3b290b41-cec8-467d-8b12-d51cdc74a81e" destination="false" order="19">
         <condition>
-            <action application="set" data="default_outbound_caller_id_number=${default_outbound_caller_id_number}" inline="true"/>
-            <action application="set" data="default_emergency_caller_id_number=${default_emergency_caller_id_number}" inline="true"/>
+            <action application="set" data="default_outbound_caller_id_number=" inline="true"/>
+            <action application="set" data="default_emergency_caller_id_number=" inline="true"/>
         </condition>
     </extension>
 </context>
