@@ -442,7 +442,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 			if (is_array($ivrs) && sizeof($ivrs) != 0) {
 				echo "	<optgroup label='".$text['label-ivr_menus']."'>\n";
 				foreach ($ivrs as &$row) {
-					$selected = ($call_block_app == 'ivrs' && $call_block_data == $row['ivr_menu_extension']) ? "selected='selected'" : null;
+					$selected = ($call_block_app == 'ivr' && $call_block_data == $row['ivr_menu_extension']) ? "selected='selected'" : null;
 					echo "		<option value='ivr:".urlencode($row["ivr_menu_extension"])."' ".$selected.">".escape($row['ivr_menu_name'])." ".escape($row['ivr_menu_extension'])."</option>\n";
 				}
 				echo "	</optgroup>\n";
