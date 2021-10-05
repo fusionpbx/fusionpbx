@@ -338,13 +338,13 @@
 													$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
 								}
 								else {
-									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_transport']['text'];
+									$array['devices'][0]['device_lines'][$y]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
 								}
 								if (permission_exists('device_line_register_expires')) {
 									$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
 								}
 								else {
-									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_register_expires']['numeric'];
+									$array['devices'][0]['device_lines'][$y]['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric'];
 								}
 								$y++;
 							}
