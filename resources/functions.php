@@ -724,23 +724,38 @@ function switch_module_is_running($fp, $mod) {
 //switch_module_is_running('mod_spidermonkey');
 
 //format a number (n) replace with a number (r) remove the number
-function format_string ($format, $data) {
+function format_string($format, $data) {
+	//preset values
 	$x=0;
 	$tmp = '';
-	for ($i = 0; $i <= strlen($format); $i++) {
-		$tmp_format = strtolower(substr($format, $i, 1));
-		if ($tmp_format == 'x') {
-			$tmp .= substr($data, $x, 1);
-			$x++;
-		}
-		elseif ($tmp_format == 'r') {
-			$x++;
-		}
-		else {
-			$tmp .= $tmp_format;
+
+	//count the characters
+	$format_count = substr_count($format, 'x');
+	$format_count = $format_count + substr_count($format, 'R');
+	$format_count = $format_count + substr_count($format, 'r');
+
+	//format the string if it matches
+	if ($format_count == strlen($data)) {
+		for ($i = 0; $i <= strlen($format); $i++) {
+			$tmp_format = strtolower(substr($format, $i, 1));
+			if ($tmp_format == 'x') {
+				$tmp .= substr($data, $x, 1);
+				$x++;
+			}
+			elseif ($tmp_format == 'r') {
+				$x++;
+			}
+			else {
+				$tmp .= $tmp_format;
+			}
 		}
 	}
-	return $tmp;
+	if (strlen($tmp) == 0) {
+		return $data;
+	}
+	else {
+		return $tmp;
+	}
 }
 
 //get the format and use it to format the phone number
