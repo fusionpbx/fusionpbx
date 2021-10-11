@@ -81,9 +81,14 @@
 	}
 
 	if (!function_exists('check_cidr')) {
-		function check_cidr ($cidr,$ip_address) {
-			list ($subnet, $mask) = explode ('/', $cidr);
-			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+		function check_cidr($cidr, $ip_address) {
+			if (isset($cidr) && strlen($cidr) > 0) {
+				list ($subnet, $mask) = explode ('/', $cidr);
+				return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+			}
+			else {
+				return false;
+			}
 		}
 	}
 
