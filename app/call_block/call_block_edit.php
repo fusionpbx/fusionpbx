@@ -272,6 +272,17 @@
 		$extensions = $database->select($sql, $parameters);
 	}
 
+//get the ivr's
+if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) {
+	$sql = "select ivr_menu_uuid,ivr_menu_name, ivr_menu_extension, ivr_menu_description from v_ivr_menus ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	// $sql .= "and enabled = 'true' ";
+	$sql .= "order by ivr_menu_extension asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$ivrs = $database->select($sql, $parameters);
+}
+
 //get the voicemails
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
 	$sql .= "from v_voicemails ";
@@ -394,7 +405,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	function call_block_action_select($label = false) {
-		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $voicemails;
+		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails;
 		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
 		if ($label) {
 			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
@@ -423,6 +434,16 @@
 				foreach ($extensions as &$row) {
 					$selected = ($call_block_app == 'extension' && $call_block_data == $row['extension']) ? "selected='selected'" : null;
 					echo "		<option value='extension:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
+				}
+				echo "	</optgroup>\n";
+			}
+		}
+		if (permission_exists('call_block_ivr')) {
+			if (is_array($ivrs) && sizeof($ivrs) != 0) {
+				echo "	<optgroup label='".$text['label-ivr_menus']."'>\n";
+				foreach ($ivrs as &$row) {
+					$selected = ($call_block_app == 'ivr' && $call_block_data == $row['ivr_menu_extension']) ? "selected='selected'" : null;
+					echo "		<option value='ivr:".urlencode($row["ivr_menu_extension"])."' ".$selected.">".escape($row['ivr_menu_name'])." ".escape($row['ivr_menu_extension'])."</option>\n";
 				}
 				echo "	</optgroup>\n";
 			}
