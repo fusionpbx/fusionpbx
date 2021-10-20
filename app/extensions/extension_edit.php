@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -134,6 +134,11 @@
 			$dial_string = $_POST["dial_string"];
 			$enabled = $_POST["enabled"];
 			$description = $_POST["description"];
+
+			//outbound caller id number - only allow numeric and +
+			if (strlen($outbound_caller_id_number) > 0) {
+				$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
+			}
 
 			$voicemail_id = $extension;
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
@@ -795,6 +800,11 @@
 			$description = $row["description"];
 		}
 		unset($sql, $parameters, $row);
+
+	//outbound caller id number - only allow numeric and +
+		if (strlen($outbound_caller_id_number) > 0) {
+			$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
+		}
 
 	//get the voicemail data
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
