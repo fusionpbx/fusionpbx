@@ -332,25 +332,19 @@
 									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
 								}
 								else {
-									if ($action == "add") {
-										$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
-									}
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
 								}
 								if (permission_exists('device_line_transport')) {
-									$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+													$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
 								}
 								else {
-									if ($action == "add") {
-										$array['devices'][0]['device_lines'][$y]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
-									}
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_transport']['text'];
 								}
 								if (permission_exists('device_line_register_expires')) {
 									$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
 								}
 								else {
-									if ($action == "add") {
-										$array['devices'][0]['device_lines'][$y]['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric'];
-									}
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_register_expires']['numeric'];
 								}
 								$y++;
 							}
@@ -712,6 +706,47 @@
 		echo "</script>";
 	}
 
+//Javascript for drop down list
+?>
+<script>
+	var Objs;
+	function changeToInput_condition_field_1(obj, num){
+		tb=document.createElement('INPUT');
+		tb.type='text';
+		tb.name=obj.name;
+		tb.className='formfld';
+		tb.setAttribute('id', 'condition_field_' + num);
+		tb.setAttribute('style', 'width: 240px;');
+		tb.value=obj.options[obj.selectedIndex].value;
+		document.getElementById('btn_select_to_input_condition_field_' + num).style.visibility = 'hidden';
+		document.getElementById('btn_select_to_input_condition_field_' + num).style.display = 'none';
+		tbb=document.createElement('INPUT');
+		tbb.setAttribute('class', 'btn');
+		tbb.setAttribute('style', 'margin-left: 0px; float: right;');
+		tbb.type='button';
+		tbb.value=$("<div />").html('&#9665;').text();
+		tbb.objs=[obj,tb,tbb];
+		tbb.onclick=function(){ Replace_condition_field_1(this.objs, num); }
+		obj.parentNode.insertBefore(tb,obj);
+		obj.parentNode.insertBefore(tbb,obj);
+		obj.parentNode.removeChild(obj);
+		//Replace_condition_field_1(this.objs, num);
+	}
+	
+	function Replace_condition_field_1(obj, num){		
+		obj[2].parentNode.insertBefore(obj[0],obj[2]);
+		obj[0].parentNode.removeChild(obj[1]);
+		obj[0].parentNode.removeChild(obj[2]);
+		document.getElementById('btn_select_to_input_condition_field_' + num).style.visibility = 'visible';
+		document.getElementById('btn_select_to_input_condition_field_' + num).style.display = 'inline';
+		document.getElementById('btn_select_to_input_condition_field_' + num).setAttribute('style', 'margin-left: 0px;');
+		document.getElementById('condition_field_' + num).style.display = 'inline';
+		document.getElementById('condition_field_' + num).style.float = 'left';
+	}
+	</script>
+	<?php
+
+
 //add the QR code
 	if (permission_exists("device_line_password") && $device_template == "grandstream/wave") {
 		//set the mode
@@ -825,6 +860,14 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>$button_margin,'onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 			unset($button_margin);
 		}
+		
+		//echo button::create(['type'=>'button','label'=>'Preview','icon'=>'fax','style'=>$button_margin,'link'=>""]);
+		echo "<button onClick='(function(){ $(\"#dialog\").dialog(); })();' type='button' alt='Preview' title='Preview' class='btn btn-default' style='margin-left: 15px; '><span class='fas fa-fax fa-fw'></span><span class='button-label hide-md-dn pad'>Preview</span></button>";
+		
+		echo "<div style='display: none; background-color: #ffffff; font-family: Open Sans; color: #303030; width: 0px; height: 0px;' id='dialog' title='Preview' align='center'>";
+		echo "Phone Preview";
+		echo "</div>";
+		
 		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
 		unset($button_margin);
 		if (permission_exists("device_files")) {
@@ -1584,8 +1627,66 @@
 			//show alls rows in the array
 				echo "<tr>\n";
 
-				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
+				echo "<td align='left' nowrap='nowrap' >\n";
+				//echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
+				//Add drop down list
+				//get the list
+				$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
+				$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+				$sql .= "from v_default_settings WHERE ";
+				
+				$sql .= "lower(default_setting_category) = :default_setting_category ";
+				$parameters['default_setting_category'] = strtolower("provision");
+
+				$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
+				$sql .= limit_offset($rows_per_page, $offset);
+				$database = new database;
+				$default_settings = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+				//
+				$mySelectVisible = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px;'>";
+				$mySelectHidden = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px; display: none;'>";
+				$mySelect = "<option value=''>--Select--</option>";
+				$isSelected = false;
+				if (is_array($default_settings) && @sizeof($default_settings) != 0) {
+					//$x = 0;
+					foreach ($default_settings as $rowSelect) {
+						
+						if ( escape($row['device_setting_subcategory']) == escape($rowSelect['default_setting_subcategory'])){
+							$mySelect .= "<option selected value='".escape($rowSelect['default_setting_subcategory'])."'>".escape($rowSelect['default_setting_subcategory'])."</option>";
+							$isSelected = true;
+						}
+						else {
+							$mySelect .= "<option value='".escape($rowSelect['default_setting_subcategory'])."'>".escape($rowSelect['default_setting_subcategory'])."</option>";
+						}
+						
+					}
+				}
+				unset($default_settings);
+				$mySelect .= "</select>";
+				
+				if ($isSelected) {
+					echo $mySelectVisible;
+					echo $mySelect;
+					
+					echo "<input style='margin-left: 0px; float: right; display: inline-block;' type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;'>\n";
+				}
+				else if ( strlen(escape($row['device_setting_subcategory'])) > 0 ) {
+					echo $mySelectHidden;
+					echo $mySelect;
+					
+					echo "<input type='text' value='".escape($row['device_setting_subcategory'])."' name='device_settings[".$x."][device_setting_subcategory]' class='formfld' id='condition_field_".$x."' style='width: 240px;' />";
+					
+					echo "<input id='btn".$x."' type='button' class='btn' style='margin-left: 0px; float: right; display: inline-block;' value='&#9665;' onclick='function hw(){ var objArray = []; objArray.push(document.getElementById(\"btn".$x."\").previousElementSibling.previousElementSibling,document.getElementById(\"btn".$x."\").previousElementSibling,document.getElementById(\"btn".$x."\")); Replace_condition_field_1( objArray, ".$x.") };hw();' />\n";
+					echo "<input type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;' style='visibility: hidden; display: none;'>\n";
+				}
+				else {
+					echo $mySelectVisible;
+					echo $mySelect;
+					
+					echo "<input style='margin-left: 0px; float: right; display: inline-block;' type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;'>\n";
+				}				
+				
 				echo "</td>\n";
 
 				echo "<td align='left'>\n";
