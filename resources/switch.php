@@ -432,27 +432,20 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		$hostname = 'unknown';
 	}
 
-	$sql = "select d.dialplan_uuid, ";
-	$sql .= "d.dialplan_name, "; 
-	$sql .= "dd.dialplan_detail_uuid, ";
-	$sql .= "dd.dialplan_detail_tag, ";
-	$sql .= "dd.dialplan_detail_type, ";
-	$sql .= "dd.dialplan_detail_data , ";
-	$sql .= "d.dialplan_continue ";
-	$sql .= "from v_dialplans d, v_dialplan_details dd  ";
-	$sql .= "where d.dialplan_uuid = dd.dialplan_uuid ";
-	if (is_uuid($domain_uuid)) {
-		$sql .= "and (d.domain_uuid = :domain_uuid or d.domain_uuid is null) ";
-		$parameters['domain_uuid'] = $domain_uuid;
-	}
-	else {
-		$sql .= "and (d.domain_uuid is null) ";
-	}
-	$sql .= "and (hostname = :hostname or hostname is null) ";
-	$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	$sql .= "and d.dialplan_enabled = 'true' ";
-	$sql .= "order by d.domain_uuid,  d.dialplan_order, dd.dialplan_detail_order ";
-	$parameters['hostname'] = $hostname;
+	$parameters['domain_uuid'] = $domain_uuid;
+
+        $sql = "select vdp.dialplan_order, vdp.dialplan_uuid, vdp1.dialplan_detail_uuid, vdp1.dialplan_detail_tag, vdp1.dialplan_detail_type, vdp1.dialplan_detail_data, vdp1.dialplan_detail_group, vdp1.dialplan_detail_order ";
+        $sql .= "from v_dialplan_details as vdp1, v_dialplan_details as vdp2, v_dialplans as vdp ";
+        $sql .= "where 1=1 ";
+        $sql .= "and vdp.domain_uuid=:domain_uuid ";
+        $sql .= "and vdp.app_uuid='8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+        $sql .= "and vdp.dialplan_enabled='true' ";
+        $sql .= "and vdp1.dialplan_uuid = vdp.dialplan_uuid ";
+        $sql .= "and (vdp1.dialplan_detail_type = 'destination_number' or vdp1.dialplan_detail_type = 'bridge') ";
+        $sql .= "and vdp2.dialplan_uuid = vdp.dialplan_uuid ";
+        $sql .= "and vdp2.dialplan_detail_type = 'bridge' ";
+        $sql .= "and vdp1.dialplan_detail_group = vdp2.dialplan_detail_group ";
+        $sql .= "order by dialplan_order, dialplan_detail_group, dialplan_detail_order ";
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
