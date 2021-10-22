@@ -51,6 +51,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "group_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "group_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_member_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "3b4acc6d-827b-f537-bf21-0093d94ffec7";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
