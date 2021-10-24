@@ -43,56 +43,85 @@
 
 --include json library
 	local json
+
 	if (debug["sql"]) then
 		json = require "resources.functions.lunajson"
 	end
 
---connect to the database
+--connect to the database and checked for cached value
+	freeswitch.consoleLog("NOTICE", "[cidlookup] checking for cached CNAM value in database for " .. caller .. "\n");
+
 	local Database = require "resources.functions.database";
 	dbh = Database.new('system');
-	if (database["type"] == "mysql") then
-		sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family) AS name FROM v_contacts ";
-	elseif (database["type"] == "pgsql") then
-		sql = "SELECT CASE WHEN contact_name_given = '' THEN v_contacts.contact_organization ELSE v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family END AS name FROM v_contacts ";
-	else
-		sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family AS name FROM v_contacts ";
-	end
-	sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
-	sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid AND v_destinations.destination_number = :callee ";
+
+	sql = "SELECT cnam, extract (epoch from date)  as date from v_cnam WHERE phone_number LIKE :caller";
 
 	local params;
-	if ((not domain_uuid) or (domain_uuid == "")) then
-		sql = sql .. "WHERE  v_contact_phones.phone_number = :caller ";
-		params = {caller = caller, callee = callee};
-	else
-		sql = sql .. "WHERE  v_contacts.domain_uuid = :domain_uuid and v_contact_phones.phone_number = :caller ";
-		params = {caller = caller, domain_uuid = domain_uuid, callee = callee};
-	end
+	params = {caller = '%'..caller..'%'};
 
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[cidlookup] SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
 	end
 
 	dbh:query(sql, params, function(row)
-		name = row.name;
+		name = row.cnam;
+		date = row.date;
 	end);
 
+	--freeswitch.consoleLog("NOTICE", "[cidlookup] Date is  " .. date .. "\n");
+	--freeswitch.consoleLog("NOTICE", "[cidlookup] Current Date is  " .. os.time() .. "\n");
+	--freeswitch.consoleLog("NOTICE", "[cidlookup] Diff Date is  " .. os.time()-date .. "\n");
+
 	if (name == nil) then
-		freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db is nil\n");
-	else
-		freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db: "..name.."\n");
+		freeswitch.consoleLog("NOTICE", "[cidlookup] CNAM not found in db. Sending API request to get CNAM\n");
+	-- if cnam found and it's created less than 90 days ago (7776000 seconds)
+	elseif ((os.time() - date) < 7776000) then
+		freeswitch.consoleLog("NOTICE", "[cidlookup] CNAM Found in DB. Age: " .. (os.time() - date)/86400 .. " days. Using cached value - "..name.."\n");
+	-- if cnam found but is older than 90 days (7776000 seconds)
+	elseif ((os.time() - date) >= 7776000) then
+		freeswitch.consoleLog("NOTICE", "[cidlookup] CNAM Found in DB. Age: " .. (os.time() - date)/86400 .. " days. Seding API request to update\n");
+		name = nil;
+
+                -- Deleting cached CNAM from database
+                sql = "delete from v_cnam where phone_number LIKE :phone_number"
+                params = {phone_number = '%'..caller..'%'};
+
+                if (debug["sql"]) then
+                	freeswitch.consoleLog("WARNING", "[cidlookup]  NEMERALD_DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
+                end
+
+                dbh:query(sql, params)
 	end
 
---check if there is a record, if it not then use cidlookup
+--check if there is a record, if it doesn't exist then use cidlookup
 	if ((name == nil) or (string.len(name) == 0)) then
 		cidlookup_exists = api:executeString("module_exists mod_cidlookup");
 		if (cidlookup_exists == "true") then
 		    name = api:executeString("cidlookup " .. caller);
 		end
-	end
 
+		-- if cnam retrieved from API add it to database
+		if ((name ~= nil) and (string.len(name) > 0)) then
+
+	                -- Inserting received CNAM to database
+        	        cnam_uuid = api:executeString("create_uuid")
+                	sql = "insert into v_cnam (cnam_uuid,phone_number,cnam,date) "
+                	sql = sql .. "values (:cnam_uuid,:phone_number,:cnam,'NOW()')"
+
+                	params = {cnam_uuid = cnam_uuid; phone_number = caller; cnam = name};
+
+                	if (debug["sql"]) then
+                        	freeswitch.consoleLog("WARNING", "[cidlookup]  NEMERALD_DEBUG SQL: "..sql.."; params:" .. json.encode(params) .. "\n");
+                	end
+
+                	dbh:query(sql, params)
+                	freeswitch.consoleLog("NOTICE", "[cidlookup] CNAM retrieved from API and added to database : phone number - " .. caller .. "; name - " .. name .. "\n");
+		end
+	end
 --set the caller id name
-	if ((name ~= nil) and (string.len(name) > 0)) then
+	if (name == 'UNKNOWN') then
+		freeswitch.consoleLog("NOTICE", "[cidlookup] Cnam is UNKNOWN. Ignoring..")
+	elseif ((name ~= nil) and (string.len(name) > 0)) then
 		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates false");
 
 		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
