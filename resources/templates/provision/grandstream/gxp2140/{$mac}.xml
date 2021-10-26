@@ -28,7 +28,7 @@
     <!-- # SIP Server -->
     <!-- # String -->
 {if $account.1.sip_transport != 'dns srv'}
-    <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+    <P47>{$account.1.server_address_primary}:{$account.1.sip_port}</P47>
 {else}
     <P47>{$account.1.server_address}</P47>
 {/if}
