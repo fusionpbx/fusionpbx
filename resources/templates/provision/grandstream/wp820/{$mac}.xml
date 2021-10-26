@@ -2166,11 +2166,11 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 <!-- # Reboot -->
-<P1409>0</P1409>
+<!--<P1409>0</P1409>-->
 
 <!-- # ACS URL -->
 <!-- # String  -->
-<P4503>https://acs.gdms.cloud</P4503>
+<!--<P4503>https://acs.gdms.cloud</P4503>-->
 
 <!-- # TR-069 Username -->
 <!-- # String -->
