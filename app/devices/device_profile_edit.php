@@ -600,8 +600,19 @@
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
+                                        $sql = "select effective_caller_id_name ";
+                                        $sql .= "from v_extensions ";
+                                        $sql .= "where domain_uuid= :domain_uuid ";
+                                        $sql .= "and extension= :extension ";
+                                        $parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+                                        $parameters['extension'] = $row['profile_key_value'];
+                                        $database = new database;
+                                        $profile_key_value_placeholder = $database->select($sql, $parameters, 'column');
+                                        $row['profile_key_value_placeholder'] = $profile_key_value_placeholder;
+                                        unset($sql, $parameters);
+
 		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_label]' maxlength='255' value=\"".escape($row["profile_key_label"])."\">\n";
+		echo "				<input class='formfld' placeholder=\"".escape($row["profile_key_value_placeholder"])."\" type='text' name='device_profile_keys[$x][profile_key_label]' maxlength='255' value=\"".escape($row["profile_key_label"])."\">\n";
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_icon]' maxlength='255' value=\"".escape($row["profile_key_icon"])."\">\n";
