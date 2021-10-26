@@ -709,7 +709,7 @@
 	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (permission_exists("user_edit")) {
-		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'>\n";
+		echo "		<input type='text' class='formfld' name='username' id='username' autocomplete='new-password' value='".escape($username)."' required='required'> <span class='h6'>@" . $_SESSION['domains'][$domain_uuid]['domain_name'] ."</span>\n";
 		echo "		<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 	}
 	else {
@@ -787,7 +787,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = $code == $user_language || $code == $user_settings['domain']['language']['code'] ? "selected='selected'" : null;
+			$selected = $code == $user_language || $code == $user_settings['domain']['language']['code'] || ($code == 'en-us' && $user_settings['domain']['language']['code']==null ) ? "selected='selected'" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code])." [".escape($code)."]</option>\n";
 		}
 	}
@@ -817,7 +817,7 @@
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
-		$selected = $row == $user_time_zone || $row == $user_settings['domain']['time_zone']['name'] ? "selected='selected'" : null;
+		$selected = $row == $user_time_zone || $row == $user_settings['domain']['time_zone']['name'] || ($row == 'America/Los_Angeles' && $user_settings['domain']['time_zone']['name']==null) ? "selected='selected'" : null;
 		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
 		$previous_category = $category;
 		$x++;
