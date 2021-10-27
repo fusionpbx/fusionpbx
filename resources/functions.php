@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1504,7 +1504,14 @@ function number_pad($number,$n) {
 				}
 
 				//send the email
-				$mail->Send();
+				if (!$mail->Send()) {
+					if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+						$mailer_error = $mail->ErrorInfo;
+					}
+					return false;
+				}
+
+				//cleanup the mail object
 				$mail->ClearAddresses();
 				$mail->SmtpClose();
 				unset($mail);
