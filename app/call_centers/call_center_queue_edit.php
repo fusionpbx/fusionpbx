@@ -588,6 +588,23 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//get the recordings
+	$sql = "select recording_name, recording_filename from v_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by recording_name asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$recordings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+//get the phrases
+	$sql = "select * from v_phrases ";
+	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$phrases = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
 //show the header
 	if ($action == "add") {
 		$document['title'] = $text['title-call_center_queue_add'];
@@ -1163,8 +1180,97 @@
 		echo "  ".$text['label-caller_announce_sound']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='".escape($queue_announce_sound)."'>\n";
-		echo "<br />\n";
+
+		$destination_id = "queue_announce_sound";
+		$script = "<script>\n";
+		$script .= "var objs;\n";
+		$script .= "\n";
+		$script .= "function changeToInput".$destination_id."(obj){\n";
+		$script .= "	tb=document.createElement('INPUT');\n";
+		$script .= "	tb.type='text';\n";
+		$script .= "	tb.name=obj.name;\n";
+		$script .= "	tb.className='formfld';\n";
+		$script .= "	tb.setAttribute('id', '".$destination_id."');\n";
+		$script .= "	tb.setAttribute('style', '".$select_style."');\n";
+		if ($on_change != '') {
+			$script .= "	tb.setAttribute('onchange', \"".$on_change."\");\n";
+			$script .= "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
+		}
+		$script .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
+		$script .= "	tbb=document.createElement('INPUT');\n";
+		$script .= "	tbb.setAttribute('class', 'btn');\n";
+		$script .= "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+		$script .= "	tbb.type='button';\n";
+		$script .= "	tbb.value=$('<div />').html('&#9665;').text();\n";
+		$script .= "	tbb.objs=[obj,tb,tbb];\n";
+		$script .= "	tbb.onclick=function(){ Replace".$destination_id."(this.objs); }\n";
+		$script .= "	obj.parentNode.insertBefore(tb,obj);\n";
+		$script .= "	obj.parentNode.insertBefore(tbb,obj);\n";
+		$script .= "	obj.parentNode.removeChild(obj);\n";
+		$script .= "	Replace".$destination_id."(this.objs);\n";
+		$script .= "}\n";
+		$script .= "\n";
+		$script .= "function Replace".$destination_id."(obj){\n";
+		$script .= "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[1]);\n";
+		$script .= "	obj[0].parentNode.removeChild(obj[2]);\n";
+		$script .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+		if ($on_change != '') {
+			$script .= "	".$on_change.";\n";
+		}
+		$script .= "}\n";
+		$script .= "</script>\n";
+		$script .= "\n";
+		echo $script;
+		
+		echo "<select name='queue_announce_sound' id='queue_announce_sound' class='formfld'>\n";
+		echo "	<option></option>\n";
+
+		//recordings
+		$tmp_selected = false;
+		if (is_array($recordings)) {
+			echo "<optgroup label='Recordings'>\n";
+			foreach ($recordings as &$row) {
+				$recording_name = $row["recording_name"];
+				$recording_filename = $row["recording_filename"];
+				if ($queue_announce_sound == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && strlen($queue_announce_sound) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
+				}
+				else if ($queue_announce_sound == $recording_filename && strlen($queue_announce_sound) > 0) {
+					$tmp_selected = true;
+					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
+				}
+				else {
+					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."'>".escape($recording_name)."</option>\n";
+				}
+			}
+			echo "</optgroup>\n";
+		}
+
+		if (!$tmp_selected && strlen($queue_announce_sound) > 0) {
+			echo "<optgroup label='Selected'>\n";
+			if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$queue_announce_sound)) {
+				echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($queue_announce_sound)."' selected='selected'>".escape($queue_announce_sound)."</option>\n";
+			}
+			else if (substr($queue_announce_sound, -3) == "wav" || substr($queue_announce_sound, -3) == "mp3") {
+				echo "	<option value='".escape($queue_announce_sound)."' selected='selected'>".escape($queue_announce_sound)."</option>\n";
+			}
+			else {
+				echo "	<option value='".escape($queue_announce_sound)."' selected='selected'>".escape($queue_announce_sound)."</option>\n";
+			}
+			echo "</optgroup>\n";
+		}
+		
+		unset($tmp_selected);
+
+		echo "	</select>\n";
+		echo "<input type='button' id='btn_select_to_input_".escape($destination_id)."' class='btn' name='' alt='back' onclick='changeToInput".escape($destination_id)."(document.getElementById(\"".escape($destination_id)."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
+		
+		unset($destination_id);
+
+		echo "	<br />\n";
 		echo $text['description-caller_announce_sound']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
