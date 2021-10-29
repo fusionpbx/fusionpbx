@@ -1386,10 +1386,14 @@
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
-												$primary_uuid = uuid();
+												//set a unique uuid
+													$primary_uuid = uuid();
 
 												//copy data
 													$array[$this->table][$x] = $row;
+
+												//dialplan copy should have a unique app_uuid
+													$array[$this->table][$x]['app_uuid'] = uuid();
 
 												//overwrite
 													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
@@ -1436,6 +1440,7 @@
 										$database->app_name = $this->app_name;
 										$database->app_uuid = $this->app_uuid;
 										$database->save($array);
+										//view_array($database->message);
 										unset($array);
 
 									//revoke temporary permissions
