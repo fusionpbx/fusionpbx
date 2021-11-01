@@ -309,6 +309,11 @@
 			if (permission_exists('extension_enabled')) {
 				if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			}
+			if (!permission_exists('extension_enabled')) {
+				if (strlen($enabled) == 0) {
+					$enabled = "true";
+				}
+			}	
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -510,9 +515,9 @@
 									if (permission_exists('extension_dial_string')) {
 										$array["extensions"][$i]["dial_string"] = $dial_string;
 									}
-									if (permission_exists('extension_enabled')) {
+									//if (permission_exists('extension_enabled')) {
 										$array["extensions"][$i]["enabled"] = $enabled;
-									}
+									//}
 									$array["extensions"][$i]["description"] = $description;
 
 								//assign the user to the extension
