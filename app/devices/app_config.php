@@ -3147,6 +3147,14 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "830c3a51-dd04-4ef2-af4a-7a41b702648b";
+		$vendors[$y]['functions'][$z]['label'] = "label-multicast_paging";
+		$vendors[$y]['functions'][$z]['name'] = "multicast_paging";
+		$vendors[$y]['functions'][$z]['value'] = "14";
+		$vendors[$y]['functions'][$z]['description'] = "Multicast Paging";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 
 	//algo details
 		$y++;
