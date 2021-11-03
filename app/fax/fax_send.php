@@ -310,9 +310,13 @@ if (!function_exists('fax_split_dtmf')) {
 				$page_height = 14; //in
 				break;
 			case 'letter' :
+				$page_width = 8.5; //in
+				$page_height = 11; //in
+				break;
 			default	:
 				$page_width = 8.5; //in
 				$page_height = 11; //in
+				$fax_page_size = 'letter';
 		}
 
 		//set resolution
