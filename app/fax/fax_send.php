@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,7 +53,7 @@ if (!$included) {
 		$text = $language->get();
 
 	//get the fax_extension and save it as a variable
-		if (strlen($_REQUEST["fax_extension"]) > 0) {
+		if (isset($_REQUEST["fax_extension"]) && is_numeric($_REQUEST["fax_extension"])) {
 			$fax_extension = $_REQUEST["fax_extension"];
 		}
 
@@ -214,7 +214,7 @@ if (!function_exists('fax_split_dtmf')) {
 }
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (isset($fax_extension) && is_numeric($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -222,25 +222,25 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
+				mkdir($_SESSION['switch']['storage']['dir'], 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax');
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax', 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'], 0770);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				event_socket_mkdir($fax_dir.'/'.$fax_extension);
+				mkdir($fax_dir.'/'.$fax_extension, 0770);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				event_socket_mkdir($dir_fax_inbox);
+				mkdir($dir_fax_inbox, 0770);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				event_socket_mkdir($dir_fax_sent);
+				mkdir($dir_fax_sent, 0770);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				event_socket_mkdir($dir_fax_temp);
+				mkdir($dir_fax_temp, 0770);
 			}
 	}
 
