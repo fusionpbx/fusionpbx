@@ -143,4 +143,8 @@
    <!-- Sets the sound directory. -->
    <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie" category="Sound" enabled="true" uuid="693e0d9a-dde0-4d63-80e2-5255c2dc726e"/>
 
+   <!-- Security -->
+   <X-PRE-PROCESS cmd="set" data="disable_system_api_commands=true" category="Security" enabled="true" uuid="f2f94b51-069a-4d6d-989a-1978ef77fad7"/>
+   <X-PRE-PROCESS cmd="set" data="disable_system_app_commands=true" category="Security" enabled="true" uuid="2a921f50-7954-4505-bc01-558195b3f8db"/>
+
 </include>
