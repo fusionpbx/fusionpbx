@@ -351,28 +351,10 @@ if (!function_exists('fax_split_dtmf')) {
 				$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
 				if (in_array($fax_file_extension, $disallowed_file_extensions) || $fax_file_extension == '') { continue; }
 
-				$fax_name = $_files['name'][$index];
-				$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
-				$fax_name = str_replace(" ", "_", $fax_name);
+				//use a safe file name
+				$fax_name = md5($_files['name'][$index]);
 
-				//lua doesn't seem to like special chars with env:GetHeader
-				$fax_name = str_replace(";", "_", $fax_name);
-				$fax_name = str_replace(",", "_", $fax_name);
-				$fax_name = str_replace("'", "_", $fax_name);
-				$fax_name = str_replace("!", "_", $fax_name);
-				$fax_name = str_replace("@", "_", $fax_name);
-				$fax_name = str_replace("#", "_", $fax_name);
-				$fax_name = str_replace("$", "_", $fax_name);
-				$fax_name = str_replace("%", "_", $fax_name);
-				$fax_name = str_replace("^", "_", $fax_name);
-				$fax_name = str_replace("`", "_", $fax_name);
-				$fax_name = str_replace("~", "_", $fax_name);
-				$fax_name = str_replace("&", "_", $fax_name);
-				$fax_name = str_replace("(", "_", $fax_name);
-				$fax_name = str_replace(")", "_", $fax_name);
-				$fax_name = str_replace("+", "_", $fax_name);
-				$fax_name = str_replace("=", "_", $fax_name);
-
+				//rename the file
 				$attachment_file_name = $_files['name'][$index];
 				if ($attachment_file_name != $fax_name.'.'.$fax_file_extension) {
 					rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
@@ -382,7 +364,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if (!$included) {
 					//check if directory exists
 					if (!is_dir($dir_fax_temp)) {
-						event_socket_mkdir($dir_fax_temp);
+						mkdir($dir_fax_temp, 0770);
 					}
 					//move uploaded file
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
