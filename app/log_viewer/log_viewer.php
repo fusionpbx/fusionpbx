@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,32 +44,57 @@
 	$text = $language->get();
 
 //set a default line number value (off)
-	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') { $_POST['line_number'] = 0; }
+	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') {
+		$_POST['line_number'] = 0; 
+	}
 
 //set a default ordinal (descending)
-	if (!isset($_POST['sort']) || $_POST['sort'] == '') { $_POST['sort'] = "asc"; }
+	if (!isset($_POST['sort']) || $_POST['sort'] == '') { 
+		$_POST['sort'] = "asc";
+	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { $_POST['size'] = "32"; }
+	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { 
+		$_POST['size'] = "32";
+	}
 
 //set a default filter
-	if (!isset($_POST['filter'])) { $_POST['filter'] = ""; }	
+	if (!isset($_POST['filter'])) {
+		$_POST['filter'] = '';
+	}
 
 //set default default log file
-	if (!isset($_POST['log_file']) || substr($_POST['log_file'],0,14) != "freeswitch.log") { $_POST['log_file'] = "freeswitch.log"; }	
+	if (isset($_POST['log_file'])) {
+		$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+		foreach($approved_files as $approved_file) {
+			if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_POST['log_file']) {
+				$log_file = $approved_file;
+			}
+		}
+	}
+	else {
+		$log_file = $_SESSION['switch']['log']['dir'].'/freeswitch.log';
+	}
 
 //download the log
 	if (permission_exists('log_download')) {
-		if (isset($_GET['n']) && substr($_GET['n'],0,14) == "freeswitch.log") {
-			$dir = $_SESSION['switch']['log']['dir'];
-			$filename = $_GET['n'];
-			session_cache_limiter('public');
-			$fd = fopen($dir."/".$filename, "rb");
-			header("Content-Type: binary/octet-stream");
-			header("Content-Length: " . filesize($tmp."/".$filename));
-			header('Content-Disposition: attachment; filename="'.$filename.'"');
-			fpassthru($fd);
-			exit;
+		if (isset($_GET['n'])) {
+			if (isset($filename)) { unset($filename); }
+			$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+			foreach($approved_files as $approved_file) {
+				if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_GET['n']) {
+					$filename = $approved_file;
+				}
+			}
+			if (isset($filename) && file_exists($filename)) {
+				session_cache_limiter('public');
+				$fd = fopen($filename, "rb");
+				header("Content-Type: binary/octet-stream");
+				header("Content-Length: " . filesize($filename));
+				header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+				fpassthru($fd);
+				exit;
+			}
 		}
 	}
 
@@ -83,10 +108,10 @@
 	echo "	<div class='actions'>\n";
 	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
 	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
-	$files = scandir($_SESSION['switch']['log']['dir']);
-	foreach($files as $file) if (substr($file,0,14) == "freeswitch.log") {
-			$selected = ($file == $_POST['log_file']) ? "selected='selected'" : "";
-			echo "			<option value='".$file."'".$selected.">".$file."</option>";
+	$files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+	foreach($files as $file) {
+		$selected = ($file == $log_file) ? "selected='selected'" : "";
+		echo "			<option value='".basename($file)."'".$selected.">".basename($file)."</option>";
 	}
 	echo "			</select>\n";
 	echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
@@ -95,7 +120,7 @@
 	echo 		$text['label-display']." <input type='text' class='formfld' style='width: 50px; text-align: center;' name='size' value=\"".escape($_POST['size'])."\" onclick='this.select();'> ".$text['label-size'];
 	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','name'=>'submit']);
 	if (permission_exists('log_download')) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.$_POST['log_file']]);
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'log_viewer.php?a=download&n='.basename($log_file)]);
 	}
 	echo 		"</form>\n";
 	echo "	</div>\n";
@@ -115,9 +140,6 @@
 		$default_type = 'normal';
 		$default_font = 'monospace';
 		$default_file_size = '512000';
-		if (substr($_POST['log_file'],0,14) == "freeswitch.log") {
-			$log_file = $_SESSION['switch']['log']['dir']."/".$_POST['log_file'];
-		}
 
 		//put the color matches here...
 		$array_filter[0]['pattern'] = '[NOTICE]';
