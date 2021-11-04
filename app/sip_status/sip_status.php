@@ -88,9 +88,9 @@
 			
 			//turn into array
 				$profilesA = array();
-					foreach($xml->profile as $profile) {
-						$profilesA[] = $profile;
-					}
+				foreach($xml->profile as $profile) {
+					$profilesA[] = $profile;
+				}
 			
 			//sort the array
 				function sortXML($a, $b) {
