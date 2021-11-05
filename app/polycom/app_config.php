@@ -526,5 +526,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ringer7";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the ring tone.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "574902f5-3cf5-4ec6-9d75-701f4321ac41";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_polling_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rel";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the polling mode. rel, abs, or random"
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8083e4b7-d9d3-4a88-b74e-d2c32923e515";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_polling_period";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "86400";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the polling period in seconds when using rel (or random) mode. Only an integer >= 3600 is valid"
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b0a5c71b-32f8-4436-ac86-cc4da35acdec";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_polling_timerandomend";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "04:00";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the time to stop polling when using random mode";
 
 ?>
