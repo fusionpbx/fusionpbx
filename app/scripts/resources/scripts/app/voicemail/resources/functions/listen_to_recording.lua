@@ -193,7 +193,7 @@
 		--process the dtmf
 			if (session:ready()) then
 				if (dtmf_digits == "1") then
-					listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
+					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
 				elseif (dtmf_digits == "2") then
 					message_saved(voicemail_id, uuid);
 					session:execute("playback", "phrase:voicemail_ack:saved");
@@ -217,7 +217,6 @@
 				elseif (dtmf_digits == "8") then
 					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
-					session:execute("playback", "phrase:voicemail_ack:saved");
 				elseif (dtmf_digits == "9") then
 					send_email(voicemail_id, uuid);
 					dtmf_digits = '';

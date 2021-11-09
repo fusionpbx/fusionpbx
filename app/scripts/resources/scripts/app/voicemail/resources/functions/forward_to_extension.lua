@@ -29,9 +29,6 @@
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 
-		--save the voicemail message
-			message_saved(voicemail_id, uuid);
-
 		--request the forward_voicemail_id
 			if (session:ready()) then
 				dtmf_digits = '';
@@ -167,5 +164,17 @@
 
 		--send the email with the voicemail recording attached
 			send_email(forward_voicemail_id, voicemail_message_uuid);
+
+			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-message_forwarded.wav");
+
+		--delete or save the message
+			local action = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_post_forward_action:1:2", "", "^[1-2]$");
+			if (action == "1") then
+				delete_recording(voicemail_id, uuid);
+				message_waiting(voicemail_id, domain_uuid);
+			else
+				message_saved(voicemail_id, uuid);
+				session:execute("playback", "phrase:voicemail_ack:saved");
+			end
 
 	end
