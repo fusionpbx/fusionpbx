@@ -273,7 +273,15 @@
 		foreach ($to_array as $to_row) {
 			if (strlen($to_row) > 0) {
 				echo "Add Address: $to_row\n";
-				$mail->AddBCC(trim($to_row));
+				if ($_SESSION['email']['address_type']['text'] == 'add_address') {
+					$mail->AddAddress(trim($to_row));
+				}
+				elseif ($_SESSION['email']['address_type']['text'] == 'add_bcc') {
+					$mail->AddBCC(trim($to_row));
+				}
+				else {
+					$mail->AddAddress(trim($to_row));
+				}
 			}
 		}
 	}
