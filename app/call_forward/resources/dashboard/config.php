@@ -3,7 +3,7 @@
 $array['dashboard'][$x]['dashboard_uuid'] = 'ba60799a-1c40-44a8-80ef-c2be4f4692fb';
 $array['dashboard'][$x]['dashboard_name'] = 'Call Forward';
 $array['dashboard'][$x]['dashboard_path'] = 'app/call_forward/resources/dashboard/call_forward.php';
-$array['dashboard'][$x]['dashboard_order'] = '0';
+$array['dashboard'][$x]['dashboard_order'] = '130';
 $array['dashboard'][$x]['dashboard_enabled'] = 'true';
 $array['dashboard'][$x]['dashboard_description'] = 'Call routing for extension using Call forward, Follow Me and Do Not Disturb.';
 $y = 0;
