@@ -3,8 +3,8 @@
 $array['dashboard'][$x]['dashboard_uuid'] = '2f7a90cc-8d60-4df4-98ee-2ef4000afac7';
 $array['dashboard'][$x]['dashboard_name'] = 'Domain Limits';
 $array['dashboard'][$x]['dashboard_path'] = 'app/domain_limits/resources/dashboard/domain_limits.php';
-$array['dashboard'][$x]['dashboard_order'] = '180';
-$array['dashboard'][$x]['dashboard_enabled'] = 'true';
+$array['dashboard'][$x]['dashboard_order'] = '120';
+$array['dashboard'][$x]['dashboard_enabled'] = 'false';
 $array['dashboard'][$x]['dashboard_description'] = '';
 $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'e99eb62e-4150-42a8-8c0c-4a264245f12a';
