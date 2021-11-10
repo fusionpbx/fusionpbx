@@ -50,6 +50,11 @@ if ($domains_processed == 1) {
 			$x++;
 		}
 
+	//add the temporary permissions
+		$p = new permissions;
+		$p->add('dashboard_add', 'temp');
+		$p->add('dashboard_group_add', 'temp');
+
 	//save the data
 		$database = new database;
 		$database->app_name = 'dashboard';
@@ -58,6 +63,10 @@ if ($domains_processed == 1) {
 		//$result = $database->message;
 		//view_array($result);
 		//exit;
+
+	//delete the temporary permissions
+		$p->delete('dashboard_add', 'temp');
+		$p->delete('dashboard_group_add', 'temp');
 
 }
 
