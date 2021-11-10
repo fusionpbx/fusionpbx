@@ -101,14 +101,14 @@
 
 		//update the session array
 			foreach ($array['extensions'] as $row) {
-					$x=0;
-					foreach ($_SESSION['user']['extension'] as $field) {
-						if ($field['extension_uuid'] == $row['extension_uuid']) {
-							$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-							$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-						}
-						$x++;
+				$x=0;
+				foreach ($_SESSION['user']['extension'] as $field) {
+					if ($field['extension_uuid'] == $row['extension_uuid']) {
+						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
+						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
 					}
+					$x++;
+				}
 			}
 
 		//remove the temporary permission

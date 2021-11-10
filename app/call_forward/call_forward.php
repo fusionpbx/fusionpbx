@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,7 +41,7 @@
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/calls');
+	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
 
 //get posted data
 	if (is_array($_POST['extensions'])) {
@@ -73,7 +73,7 @@
 				break;
 		}
 
-		header('Location: calls.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_forward.php'.($search != '' ? '?search='.urlencode($search) : null));
 		exit;
 	}
 
@@ -200,7 +200,7 @@
 		echo "	<div class='heading'><b>".$text['header-call_forward']."</b></div>\n";
 		echo "	<div class='actions'>\n";
 		if ($num_rows > 10) {
-			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'project-diagram','collapse'=>false,'link'=>PROJECT_PATH.'/app/calls/calls.php']);
+			echo button::create(['type'=>'button','label'=>$text['button-view_all'],'icon'=>'project-diagram','collapse'=>false,'link'=>PROJECT_PATH.'/app/call_forward/call_forward.php']);
 		}
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
@@ -231,7 +231,7 @@
 		}
 		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'calls.php','style'=>($search == '' ? 'display: none;' : null)]);
+		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
 		if ($paging_controls_mini != '') {
 			echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 		}
@@ -284,7 +284,7 @@
 	if (is_array($extensions)) {
 		$x = 0;
 		foreach($extensions as $row) {
-			$list_row_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
+			$list_row_url = PROJECT_PATH."/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid']."&return_url=".urlencode($_SERVER['REQUEST_URI']);
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (!$is_included && $extensions) {
 				echo "	<td class='checkbox'>\n";
