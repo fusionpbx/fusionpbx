@@ -95,7 +95,7 @@ if (!class_exists('dashboard')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if ($record['checked'] == 'true' && is_uuid($record['dashboard_uuid'])) {
 										$array[$this->table][$x]['dashboard_uuid'] = $record['dashboard_uuid'];
 									}
 
