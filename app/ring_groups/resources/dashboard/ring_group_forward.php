@@ -59,8 +59,8 @@
 
 //find the path
 	switch ($_SERVER['REQUEST_URI']) {
-		case PROJECT_PATH."/app/dashboard/index.php":
-			$validated_path = PROJECT_PATH."/app/dashboard/index.php";
+		case PROJECT_PATH."/core/dashboard/index.php":
+			$validated_path = PROJECT_PATH."/core/dashboard/index.php";
 			break;
 		case PROJECT_PATH."/app/ring_groups/ring_group_forward.php":
 			$validated_path = PROJECT_PATH."/app/ring_groups/ring_group_forward.php";
@@ -107,7 +107,7 @@
 
 			//set message
 				message::add($text['message-update']);
-				$validated_path = PROJECT_PATH."/app/dashboard/index.php";
+				$validated_path = PROJECT_PATH."/core/dashboard/index.php";
 
 			//redirect the user
 				header("Location: ".$validated_path);
