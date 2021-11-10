@@ -194,7 +194,6 @@
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
-		$sql .= " dashboard_groups, ";
 		$sql .= " dashboard_order, ";
 		$sql .= " cast(dashboard_enabled as text), ";
 		$sql .= " dashboard_description ";
