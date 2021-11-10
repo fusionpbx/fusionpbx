@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "19806921-e8ed-dcff-b325-dd3e5da4959d";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.2";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Call Forward, Follow Me and Do Not Disturb.";
