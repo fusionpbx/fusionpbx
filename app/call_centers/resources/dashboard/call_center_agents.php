@@ -28,7 +28,6 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('call_center_queue_view')) {

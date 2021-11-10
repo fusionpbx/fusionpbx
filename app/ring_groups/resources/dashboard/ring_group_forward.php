@@ -59,14 +59,14 @@
 
 //find the path
 	switch ($_SERVER['REQUEST_URI']) {
-		case PROJECT_PATH."/core/user_settings/user_dashboard.php":
-			$validated_path = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+		case PROJECT_PATH."/app/dashboard/index.php":
+			$validated_path = PROJECT_PATH."/app/dashboard/index.php";
 			break;
 		case PROJECT_PATH."/app/ring_groups/ring_group_forward.php":
 			$validated_path = PROJECT_PATH."/app/ring_groups/ring_group_forward.php";
 			break;
 		default:
-			$validated_path = PROJECT_PATH."/app/ring_groups/ring_group_forward.php";
+			$validated_path = PROJECT_PATH."/app/ring_groups/resources/dashboard/ring_group_forward.php";
 	}
 
 //update ring group forwarding
@@ -107,6 +107,7 @@
 
 			//set message
 				message::add($text['message-update']);
+				$validated_path = PROJECT_PATH."/app/dashboard/index.php";
 
 			//redirect the user
 				header("Location: ".$validated_path);
