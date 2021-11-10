@@ -24,7 +24,18 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		echo "<span class='hud_title' style='cursor: default;'>".$text['label-system_status']."</span>";
+		//cpu usage
+		if (stristr(PHP_OS, 'Linux')) {
+			$result = shell_exec('ps -A -o pcpu');
+			$percent_cpu = 0;
+			foreach (explode("\n", $result) as $value) {
+				if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
+			}
+			$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
+			$cores = count(explode("\n", $result));
+			if ($percent_cpu > 1) { $percent_cpu = $percent_cpu / $cores; }
+			$percent_cpu = round($percent_cpu, 2);
+		}
 
 		//disk usage
 		if (PHP_OS == 'FreeBSD' || PHP_OS == 'Linux') {
@@ -37,14 +48,130 @@
 			}
 
 			if ($percent_disk_usage != '') {
-				echo "<span class='hud_stat' onclick=\"$('#hud_system_status_details').slideToggle('fast');\">".$percent_disk_usage."</span>";
-				echo "<span class='hud_stat_title' onclick=\"$('#hud_system_status_details').slideToggle('fast');\" style='cursor: default;'>".$text['label-disk_usage']." (%)</span>\n";
+				echo "
+					<div style='display: flex; flex-wrap: wrap; justify-content: center;'>
+						<div style='width: 175; height: 175; margin: 5 25;'><canvas id='cpu_usage_chart'></canvas></div>
+						<div style='width: 175; height: 175; margin: 5 25;'><canvas id='disk_usage_chart'>%</canvas></div>
+					</div>
+
+					<script>
+						var ctx = document.getElementById('cpu_usage_chart').getContext('2d');
+
+						var cpu_chart_bgc;
+						if (".$percent_cpu." <= 50) {
+							cpu_chart_bgc = '#03c04a';
+						} else if (".$percent_cpu." <= 70 && ".$percent_cpu." > 50) {
+							cpu_chart_bgc = '#ff9933';
+						} else if (".$percent_cpu." > 70) {
+							cpu_chart_bgc = '#ea4c46';
+						}
+
+						const chart_counter_2 = {
+							id: 'chart_counter_2',
+							beforeDraw(chart, args, options){
+								const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+								ctx.font = (chart_font_size - 7) + 'px ' + chart_font_family;
+								ctx.textBaseline = 'middle';
+								ctx.textAlign = 'center';
+								ctx.fillStyle = chart_font_color;
+								ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
+								ctx.save();
+							}
+						};
+
+						const cpu_usage_data = {
+							datasets: [{
+								data:[".$percent_cpu.", 100 - ".$percent_cpu."],
+								backgroundColor : [cpu_chart_bgc, '#d4d4d4'],
+								borderColor : 'rgba(0,0,0,0)',
+								cutout: chart_cutout
+							}]
+						};
+
+						const cpu_usage_config = {
+							type: 'doughnut',
+							data: cpu_usage_data,
+							options: {
+								responsive: true,
+								maintainAspectRatio: false,
+								circumference: 180,
+								rotation: 270,
+								plugins: {
+									chart_counter_2: {
+										chart_text: ".$percent_cpu.",
+									},
+									legend: {
+										display: false,
+									},
+									tooltip: {
+										yAlign: 'bottom',
+										displayColors: false,
+									},
+									title: {
+									display: true,
+										text: '".$text['label-processor_usage']."'
+									}
+								}
+							},
+							plugins: [chart_counter_2],
+						};
+
+						const cpu_usage_chart = new Chart(
+							ctx,
+							cpu_usage_config
+						);
+
+						var disk_chart_bgc;
+						if (".$percent_disk_usage." < 60) {
+							disk_chart_bgc = '#03c04a';
+						} else if (".$percent_disk_usage." < 80 && ".$percent_disk_usage." > 60) {
+							disk_chart_bgc = '#ff9933';
+						} else if (".$percent_disk_usage." >= 80) {
+							disk_chart_bgc = '#ea4c46';
+						}
+
+						const disk_chart_config = {
+							type: 'doughnut',
+							data: {
+								datasets: [{
+									data:[".$percent_disk_usage.", 100 - ".$percent_disk_usage."],
+									backgroundColor: [disk_chart_bgc, '#d4d4d4'],
+									borderColor: 'rgba(0,0,0,0)',
+									cutout: chart_cutout
+								}]
+							},
+							options: {
+								responsive: true,
+								maintainAspectRatio: false,
+								circumference: 180,
+								rotation: 270,
+								plugins: {
+									chart_counter_2: {
+										chart_text: ".$percent_disk_usage.",
+									},
+									legend: {
+										display: false
+									},
+									title: {
+										display: true,
+										text: '".$text['label-disk_usage']."'
+									}
+								}
+							},
+							plugins: [chart_counter_2],
+						};
+
+						const disk_usage_chart = new Chart(
+							document.getElementById('disk_usage_chart'),
+							disk_chart_config
+						);
+					</script>
+				";
+			    }
 			}
 		}
 
-		echo "<span class='hud_stat' onclick=\"$('#hud_system_status_details').slideToggle('fast');\">".$num_rows."</span>";
-
-		echo "<div class='hud_details hud_box' id='hud_system_status_details'>";
+		echo "<div class='hud_details' id='hud_".$n."_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
@@ -122,15 +249,6 @@
 
 		//cpu usage
 			if (stristr(PHP_OS, 'Linux')) {
-				$result = shell_exec('ps -A -o pcpu');
-				$percent_cpu = 0;
-				foreach (explode("\n", $result) as $value) {
-					if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
-				}
-				$result = trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
-				$cores = count(explode("\n", $result));
-				if ($percent_cpu > 1) { $percent_cpu = $percent_cpu / $cores; }
-				$percent_cpu = round($percent_cpu, 2);
 				if ($percent_cpu != '') {
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-processor_usage']."</td>\n";
