@@ -52,7 +52,7 @@
 			}
 
 		//add doughnut chart
-			?>
+			echo "
 				<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
 					<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
 				</div>
@@ -97,7 +97,7 @@
 						new_messages_config
 					);
 				</script>
-			<?php
+			";
 
 			echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 			if (sizeof($voicemails) > 0) {
