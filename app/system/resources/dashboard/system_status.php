@@ -171,7 +171,7 @@
 		}
 	}
 
-	echo "<div class='hud_details' id='hud_".$n."_details'>";
+	echo "<div class='hud_details' id='hud_system_status_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
