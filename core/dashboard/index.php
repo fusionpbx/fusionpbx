@@ -96,6 +96,29 @@
 //include chart.js
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
 
+//chart variables
+	?>
+	<script>
+		var chart_font_family = 'Arial';
+		var chart_font_size = '30';
+		var chart_font_color = '#444';
+		var chart_cutout = '75%';
+
+		const chart_counter = {
+			id: 'chart_counter',
+			beforeDraw(chart, args, options){
+				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+				ctx.font = chart_font_size + 'px ' + chart_font_family;
+				ctx.textBaseline = 'middle';
+				ctx.textAlign = 'center';
+				ctx.fillStyle = chart_font_color;
+				ctx.fillText(options.chart_text, width / 2, top + (height / 2));
+				ctx.save();
+			}
+		};
+	</script>
+	<?php
+
 //start the content
 	/*
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
