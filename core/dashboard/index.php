@@ -93,6 +93,9 @@
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
 
+//include chart.js
+	echo "<script src='/resources/chartjs/chart.min.js'></script>";
+
 //start the content
 	/*
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
