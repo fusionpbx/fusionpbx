@@ -23,7 +23,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "92c8ffdb-3c82-4f08-aec0-82421ec41bb5";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/core/user_settings/user_dashboard.php";
+	$apps[$x]['menu'][$y]['path'] = "/core/dashboard/";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";
