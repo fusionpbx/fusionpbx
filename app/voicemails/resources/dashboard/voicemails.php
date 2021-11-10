@@ -51,10 +51,53 @@
 				}
 			}
 
-			echo "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php';\">".$text['label-voicemail']."</span>";
+		//add doughnut chart
+			?>
+				<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
+					<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
+				</div>
 
-			echo "<span class='hud_stat' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">".$messages['new']."</span>";
-			echo "<span class='hud_stat_title' onclick=\"$('#hud_voicemail_details').slideToggle('fast');\">".$text['label-new_messages']."</span>\n";
+				<script>
+					var new_messages_bgc = ['#ff9933', '#d4d4d4'];
+
+					const new_messages_data = {
+						datasets: [{
+							data:[".$messages['new'].", 0.00001],
+							borderColor: 'rgba(0,0,0,0)',
+							backgroundColor: [new_messages_bgc[0], new_messages_bgc[1]],
+							cutout: chart_cutout
+						}]
+					};
+
+					const new_messages_config = {
+						type: 'doughnut',
+						data: new_messages_data,
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							plugins: {
+								chart_counter: {
+									chart_text: ".$messages['new'].",
+								},
+								legend: {
+									display: false
+								},
+								title: {
+									display: true,
+									text: '".$text['label-new_messages']."',
+									fontFamily: chart_font_family
+								}
+							}
+						},
+						plugins: [chart_counter],
+					};
+
+					const new_messages_chart = new Chart(
+						document.getElementById('new_messages_chart'),
+						new_messages_config
+					);
+				</script>
+			<?php
 
 			echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 			if (sizeof($voicemails) > 0) {
