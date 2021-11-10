@@ -73,10 +73,51 @@
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		echo "<span class='hud_title' onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php';\">".$text['label-recent_calls']."</span>";
+		echo "
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
+				<div style='width: 175px; height: 175px;'><canvas id='recent_calls_chart'></canvas></div>
+			</div>
 
-		echo "<span class='hud_stat' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\">".$num_rows."</span>";
-		echo "<span class='hud_stat_title' onclick=\"$('#hud_recent_calls_details').slideToggle('fast');\">".$text['label-last_24_hours']."</span>\n";
+			<script>
+				var recent_calls_bgc = ['#2a9df4', '#d4d4d4'];
+
+				const recent_calls_data = {
+					datasets: [{
+						data:[".$num_rows.", 0.00001],
+						borderColor: 'rgba(0,0,0,0)',
+						backgroundColor: [recent_calls_bgc[0], recent_calls_bgc[1]],
+						cutout: chart_cutout
+					}]
+				};
+
+				const recent_calls_config = {
+					type: 'doughnut',
+					data: recent_calls_data,
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							chart_counter: {
+								chart_text: ".$num_rows."
+							},
+							legend: {
+								display: false
+							},
+							title: {
+								display: true,
+								text: '".$text['label-recent_calls']."'
+							}
+						}
+					},
+					plugins: [chart_counter],
+				};
+
+				const recent_calls_chart = new Chart(
+					document.getElementById('recent_calls_chart'),
+					recent_calls_config
+				);
+			</script>
+		";
 
 		echo "<div class='hud_details hud_box' id='hud_recent_calls_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
