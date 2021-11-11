@@ -51,8 +51,8 @@
 		if ($percent_disk_usage != '') {
 			echo "
 				<div style='display: flex; flex-wrap: wrap; justify-content: center;'>
-					<div style='width: 175; height: 175; margin: 5 25;'><canvas id='cpu_usage_chart'></canvas></div>
-					<div style='width: 175; height: 175; margin: 5 25;'><canvas id='disk_usage_chart'>%</canvas></div>
+					<div style='width: 175px; height: 175px; margin: 5px 25px;'><canvas id='cpu_usage_chart'></canvas></div>
+					<div style='width: 175px; height: 175px; margin: 5px 25px;'><canvas id='disk_usage_chart'>%</canvas></div>
 				</div>
 
 				<script>
