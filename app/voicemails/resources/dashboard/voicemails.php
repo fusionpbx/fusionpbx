@@ -55,52 +55,50 @@
 	}
 
 //add doughnut chart
-	echo "
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
-			<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
-		</div>
+	?>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+		<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
+	</div>
 
-		<script>
-			var new_messages_bgc = ['#ff9933', '#d4d4d4'];
+	<script>
+		const new_messages_data = {
+			datasets: [{
+				data: ['<?php echo $messages['new']; ?>', 0.00001],
+				borderColor: 'rgba(0,0,0,0)',
+				backgroundColor: ['#ff9933', '#d4d4d4'],
+				cutout: chart_cutout
+			}]
+		};
 
-			const new_messages_data = {
-				datasets: [{
-					data:[".$messages['new'].", 0.00001],
-					borderColor: 'rgba(0,0,0,0)',
-					backgroundColor: [new_messages_bgc[0], new_messages_bgc[1]],
-					cutout: chart_cutout
-				}]
-			};
-
-			const new_messages_config = {
-				type: 'doughnut',
-				data: new_messages_data,
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: ".$messages['new'].",
-						},
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: '".$text['label-new_messages']."',
-							fontFamily: chart_font_family
-						}
+		const new_messages_config = {
+			type: 'doughnut',
+			data: new_messages_data,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					chart_counter: {
+						chart_text: '<?php echo $messages['new']; ?>',
+					},
+					legend: {
+						display: false
+					},
+					title: {
+						display: true,
+						text: '<?php echo $text['label-new_messages']; ?>',
+						fontFamily: chart_font_family
 					}
-				},
-				plugins: [chart_counter],
-			};
+				}
+			},
+			plugins: [chart_counter],
+		};
 
-			const new_messages_chart = new Chart(
-				document.getElementById('new_messages_chart'),
-				new_messages_config
-			);
-		</script>
-	";
+		const new_messages_chart = new Chart(
+			document.getElementById('new_messages_chart'),
+			new_messages_config
+		);
+	</script>
+	<?php
 
 	echo "<div class='hud_details hud_box' id='hud_voicemail_details'>";
 	if (sizeof($voicemails) > 0) {
