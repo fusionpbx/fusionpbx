@@ -48,7 +48,7 @@
 			if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 		}
 
-		if ($percent_disk_usage != '') 
+		if ($percent_disk_usage != '') {
 			//add half doughnut charts
 			?>
 			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 8px'>
