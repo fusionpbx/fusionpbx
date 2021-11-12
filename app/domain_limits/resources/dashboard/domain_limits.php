@@ -19,6 +19,8 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
 //domain limits
+	echo "<div class='hud_box'>\n";
+
 	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 		$c = 0;
 		$row_style["0"] = "row_style0";
@@ -47,11 +49,55 @@
 			$show_stat = false;
 		}
 
-		echo "<span class='hud_title' ".$onclick.">".$text['label-domain_limits']."</span>";
-
 		if ($show_stat) {
-			echo "<span class='hud_stat' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">".$hud_stat."</span>";
-			echo "<span class='hud_stat_title' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\">".$hud_stat_title."</span>\n";
+			//add doughnut chart
+			?>
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+				<div style='width: 175px; height: 175px;'>
+					<canvas id='domain_limits_chart'></canvas>
+					<span style='color: rgb(125,125,125);'><?php echo $hud_stat_title;?></span>
+				</div>
+			</div>
+
+			<script>
+				const domain_limits_data = {
+					datasets: [{
+						data:['<?php echo $hud_stat; ?>', 0.00001],
+						borderColor: 'rgba(0,0,0,0)',
+						backgroundColor: ['#2a9df4', '#d4d4d4'],
+						cutout: chart_cutout
+					}]
+				};
+	
+				const domain_limits_config = {
+					type: 'doughnut',
+					data: domain_limits_data,
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							chart_counter: {
+								chart_text: '<?php echo $hud_stat; ?>',
+							},
+							legend: {
+								display: false
+							},
+							title: {
+								display: true,
+								text: '<?php echo $text['label-domain_limits']; ?>',
+								fontFamily: chart_font_family
+							}
+						}
+					},
+					plugins: [chart_counter],
+				};
+	
+				const domain_limits_chart = new Chart(
+					document.getElementById('domain_limits_chart'),
+					domain_limits_config
+				);
+			</script>
+			<?php
 		}
 
 		echo "<div class='hud_details hud_box' id='hud_domain_limits_details'>";
@@ -111,7 +157,8 @@
 		echo "</div>";
 		$n++;
 
-		echo "			<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_domain_limits_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "</div>\n";
 	}
 
 ?>
