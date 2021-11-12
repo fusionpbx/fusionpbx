@@ -74,51 +74,50 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
-			<div style='width: 175px; height: 175px;'><canvas id='recent_calls_chart'></canvas></div>
-		</div>
+//add doughnut chart
+	?>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+		<div style='width: 175px; height: 175px;'><canvas id='recent_calls_chart'></canvas></div>
+	</div>
 
-		<script>
-			var recent_calls_bgc = ['#2a9df4', '#d4d4d4'];
+	<script>
+		const recent_calls_data = {
+			datasets: [{
+				data: ['<?php echo $num_rows; ?>', 0.00001],
+				borderColor: 'rgba(0,0,0,0)',
+				backgroundColor: ['#2a9df4', '#d4d4d4'],
+				cutout: chart_cutout
+			}]
+		};
 
-			const recent_calls_data = {
-				datasets: [{
-					data:[".$num_rows.", 0.00001],
-					borderColor: 'rgba(0,0,0,0)',
-					backgroundColor: [recent_calls_bgc[0], recent_calls_bgc[1]],
-					cutout: chart_cutout
-				}]
-			};
-
-			const recent_calls_config = {
-				type: 'doughnut',
-				data: recent_calls_data,
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: ".$num_rows."
-						},
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: '".$text['label-recent_calls']."'
-						}
+		const recent_calls_config = {
+			type: 'doughnut',
+			data: recent_calls_data,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					chart_counter: {
+						chart_text: '<?php echo $num_rows; ?>'
+					},
+					legend: {
+						display: false
+					},
+					title: {
+						display: true,
+						text: '<?php echo $text['label-recent_calls']; ?>'
 					}
-				},
-				plugins: [chart_counter],
-			};
+				}
+			},
+			plugins: [chart_counter],
+		};
 
-			const recent_calls_chart = new Chart(
-				document.getElementById('recent_calls_chart'),
-				recent_calls_config
-			);
-		</script>
-	";
+		const recent_calls_chart = new Chart(
+			document.getElementById('recent_calls_chart'),
+			recent_calls_config
+		);
+	</script>
+	<?php
 
 	echo "<div class='hud_details hud_box' id='hud_recent_calls_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
