@@ -116,6 +116,19 @@
 				ctx.save();
 			}
 		};
+
+		const chart_counter_2 = {
+			id: 'chart_counter_2',
+			beforeDraw(chart, args, options){
+				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
+				ctx.font = (chart_font_size - 7) + 'px ' + chart_font_family;
+				ctx.textBaseline = 'middle';
+				ctx.textAlign = 'center';
+				ctx.fillStyle = chart_font_color;
+				ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
+				ctx.save();
+			}
+		};
 	</script>
 	<?php
 
