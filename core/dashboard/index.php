@@ -119,28 +119,6 @@
 	</script>
 	<?php
 
-//start the content
-	/*
-	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
-	echo "	<tr>\n";
-	echo "		<td valign='top'>";
-	echo "			<b>".$text['title-dashboard']."</b><br />";
-	echo "		</td>\n";
-	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
-	if ($_SESSION['theme']['menu_style']['text'] != 'side') {
-		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' valign='top'>";
-	echo "			".$text['description-dashboard'];
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br />";
-	*/
-
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
@@ -156,22 +134,76 @@
 	echo "</div>\n";
 
 //display login message
-	//if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
-	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
-	//}
+	if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
+		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
+	}
+
+?>
+
+<style>
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.widget {
+  /*background-color: #eee*/
+}
+
+.widgets {
+  max-width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 1rem;
+  grid-column: auto;
+}
+
+/* Screen smaller than 550px? 1 columns */
+@media (max-width: 575px) {
+  .widgets { grid-template-columns: repeat(1, 1fr); }
+  .col-num { grid-column: span 1; }
+}
+
+/* Screen larger than 550px? 2 columns */
+@media (min-width: 575px) {
+  .widgets { grid-template-columns: repeat(2, 1fr); }
+  .col-num { grid-column: span 2; }
+}
+
+/* Screen larger than 1300px? 3 columns */
+@media (min-width: 1300px) {
+  .widgets { grid-template-columns: repeat(3, 1fr); }
+  .col-num { grid-column: span 2; }
+}
+
+/* Screen larger than 1500px? 4 columns */
+@media (min-width: 1500px) {
+  .widgets { grid-template-columns: repeat(4, 1fr); }
+  .col-num { grid-column: span 2; }
+}
+
+/* Screen larger than 2000px? 5 columns */
+@media (min-width: 2000px) {
+  .widgets { grid-template-columns: repeat(5, 1fr); }
+  .col-num { grid-column: span 2; }
+}
+
+</style>
+
+<?php
 
 //include the dashboards
-	echo "<div class='row' style='padding: 0 10px;'>\n";
-	$n = 0;
+	echo "<div class='widgets' style='padding: 0 5px;'>\n";
+	$x = 0;
 	foreach($dashboard as $row) {
-		echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3' style='margin: 15px 0 30px 0;'>\n";
-		echo "	<div class='row' style='padding: 0 10px;'>\n";
-		echo "		<div class='col-md-12' style='padding: 0;'>\n";
-						include($row['dashboard_path']);
-		echo "		</div>\n";
-		echo "	</div>\n";
+		//if ($x > 3) { $class = 'col-num'; }
+		//echo "<div class='widget $class'>";
+		echo "<div class='widget'>";
+			include($row['dashboard_path']);
 		echo "</div>\n";
-		$n++;
+		$x++;
 	}
 	echo "</div>\n";
 
