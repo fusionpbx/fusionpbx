@@ -48,126 +48,112 @@
 			if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 		}
 
-		if ($percent_disk_usage != '') {
-			echo "
-				<div style='display: flex; flex-wrap: wrap; justify-content: center;'>
-					<div style='width: 175px; height: 175px; margin: 5px 25px;'><canvas id='cpu_usage_chart'></canvas></div>
-					<div style='width: 175px; height: 175px; margin: 5px 25px;'><canvas id='disk_usage_chart'>%</canvas></div>
-				</div>
+		if ($percent_disk_usage != '') 
+			//add half doughnut charts
+			?>
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 8px'>
+				<div style='width: 175px; height: 175px; margin: 0 auto;'><canvas id='cpu_usage_chart'></canvas></div>
+				<div style='width: 175px; height: 175px; margin: 0 auto;'><canvas id='disk_usage_chart'></canvas></div>
+			</div>
 
-				<script>
-					var ctx = document.getElementById('cpu_usage_chart').getContext('2d');
+			<script>
+				var cpu_chart_background_color;
+				if ('<?php echo $percent_cpu; ?>' <= 50) {
+					cpu_chart_background_color = '#03c04a';
+				} else if ('<?php echo $percent_cpu; ?>' <= 70 && '<?php echo $percent_cpu; ?>' > 50) {
+					cpu_chart_background_color = '#ff9933';
+				} else if ('<?php echo $percent_cpu; ?>' > 70) {
+					cpu_chart_background_color = '#ea4c46';
+				}
 
-					var cpu_chart_bgc;
-					if (".$percent_cpu." <= 50) {
-						cpu_chart_bgc = '#03c04a';
-					} else if (".$percent_cpu." <= 70 && ".$percent_cpu." > 50) {
-						cpu_chart_bgc = '#ff9933';
-					} else if (".$percent_cpu." > 70) {
-						cpu_chart_bgc = '#ea4c46';
-					}
+				const cpu_usage_data = {
+					datasets: [{
+						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
+						backgroundColor: [cpu_chart_background_color, '#d4d4d4'],
+						borderColor: 'rgba(0,0,0,0)',
+						cutout: chart_cutout
+					}]
+				};
 
-					const chart_counter_2 = {
-						id: 'chart_counter_2',
-						beforeDraw(chart, args, options){
-							const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-							ctx.font = (chart_font_size - 7) + 'px ' + chart_font_family;
-							ctx.textBaseline = 'middle';
-							ctx.textAlign = 'center';
-							ctx.fillStyle = chart_font_color;
-							ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
-							ctx.save();
+				const cpu_usage_config = {
+					type: 'doughnut',
+					data: cpu_usage_data,
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						circumference: 180,
+						rotation: 270,
+						plugins: {
+							chart_counter_2: {
+								chart_text: '<?php echo $percent_cpu; ?>'
+							},
+							legend: {
+								display: false,
+							},
+							tooltip: {
+								yAlign: 'bottom',
+								displayColors: false,
+							},
+							title: {
+							display: true,
+								text: '<?php echo $text['label-processor_usage']; ?>'
+							}
 						}
-					};
+					},
+					plugins: [chart_counter_2],
+				};
 
-					const cpu_usage_data = {
+				const cpu_usage_chart = new Chart(
+					document.getElementById('cpu_usage_chart'),
+					cpu_usage_config
+				);
+
+				var disk_chart_background_color;
+				if ('<?php echo $percent_disk_usage; ?>' < 60) {
+					disk_chart_background_color = '#03c04a';
+				} else if ('<?php echo $percent_disk_usage; ?>' < 80 && '<?php echo $percent_disk_usage; ?>' > 60) {
+					disk_chart_background_color = '#ff9933';
+				} else if ('<?php echo $percent_disk_usage; ?>' >= 80) {
+					disk_chart_background_color = '#ea4c46';
+				}
+
+				const disk_chart_config = {
+					type: 'doughnut',
+					data: {
 						datasets: [{
-							data:[".$percent_cpu.", 100 - ".$percent_cpu."],
-							backgroundColor : [cpu_chart_bgc, '#d4d4d4'],
-							borderColor : 'rgba(0,0,0,0)',
+							data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
+							backgroundColor: [disk_chart_background_color, '#d4d4d4'],
+							borderColor: 'rgba(0,0,0,0)',
 							cutout: chart_cutout
 						}]
-					};
-
-					const cpu_usage_config = {
-						type: 'doughnut',
-						data: cpu_usage_data,
-						options: {
-							responsive: true,
-							maintainAspectRatio: false,
-							circumference: 180,
-							rotation: 270,
-							plugins: {
-								chart_counter_2: {
-									chart_text: ".$percent_cpu.",
-								},
-								legend: {
-									display: false,
-								},
-								tooltip: {
-									yAlign: 'bottom',
-									displayColors: false,
-								},
-								title: {
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						circumference: 180,
+						rotation: 270,
+						plugins: {
+							chart_counter_2: {
+								chart_text: '<?php echo $percent_disk_usage; ?>'
+							},
+							legend: {
+								display: false
+							},
+							title: {
 								display: true,
-									text: '".$text['label-processor_usage']."'
-								}
+								text: '<?php echo $text['label-disk_usage']; ?>'
 							}
-						},
-						plugins: [chart_counter_2],
-					};
+						}
+					},
+					plugins: [chart_counter_2],
+				};
 
-					const cpu_usage_chart = new Chart(
-						ctx,
-						cpu_usage_config
-					);
-
-					var disk_chart_bgc;
-					if (".$percent_disk_usage." < 60) {
-						disk_chart_bgc = '#03c04a';
-					} else if (".$percent_disk_usage." < 80 && ".$percent_disk_usage." > 60) {
-						disk_chart_bgc = '#ff9933';
-					} else if (".$percent_disk_usage." >= 80) {
-						disk_chart_bgc = '#ea4c46';
-					}
-
-					const disk_chart_config = {
-						type: 'doughnut',
-						data: {
-							datasets: [{
-								data:[".$percent_disk_usage.", 100 - ".$percent_disk_usage."],
-								backgroundColor: [disk_chart_bgc, '#d4d4d4'],
-								borderColor: 'rgba(0,0,0,0)',
-								cutout: chart_cutout
-							}]
-						},
-						options: {
-							responsive: true,
-							maintainAspectRatio: false,
-							circumference: 180,
-							rotation: 270,
-							plugins: {
-								chart_counter_2: {
-									chart_text: ".$percent_disk_usage.",
-								},
-								legend: {
-									display: false
-								},
-								title: {
-									display: true,
-									text: '".$text['label-disk_usage']."'
-								}
-							}
-						},
-						plugins: [chart_counter_2],
-					};
-
-					const disk_usage_chart = new Chart(
-						document.getElementById('disk_usage_chart'),
-						disk_chart_config
-					);
-				</script>
-			";
+				const disk_usage_chart = new Chart(
+					document.getElementById('disk_usage_chart'),
+					disk_chart_config
+				);
+			</script>
+			<?php
 		}
 	}
 
