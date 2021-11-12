@@ -74,51 +74,51 @@
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "
-		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
-			<div style='width: 175px; height: 175px;'><canvas id='missed_calls_chart'></canvas></div>
-		</div>
 
-		<script>
-			var missed_calls_bgc = ['#FF595a', '#d4d4d4'];
+//add doughnut chart
+	?>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+		<div style='width: 175px; height: 175px;'><canvas id='missed_calls_chart'></canvas></div>
+	</div>
 
-			const missed_calls_data = {
-				datasets: [{
-					data:[".$num_rows.", 0.00001],
-					borderColor: 'rgba(0,0,0,0)',
-					backgroundColor: [missed_calls_bgc[0], missed_calls_bgc[1]],
-					cutout: chart_cutout
-				}]
-			};
+	<script>
+		const missed_calls_data = {
+			datasets: [{
+				data: ['<?php echo $num_rows; ?>', 0.00001],
+				borderColor: 'rgba(0,0,0,0)',
+				backgroundColor: ['#ff595a', '#d4d4d4'],
+				cutout: chart_cutout
+			}]
+		};
 
-			const missed_calls_config = {
-				type: 'doughnut',
-				data: missed_calls_data,
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						chart_counter: {
-							chart_text: ".$num_rows."
-						},
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: '".$text['label-missed_calls']."'
-						}
+		const missed_calls_config = {
+			type: 'doughnut',
+			data: missed_calls_data,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					chart_counter: {
+						chart_text: '<?php echo $num_rows; ?>'
+					},
+					legend: {
+						display: false
+					},
+					title: {
+						display: true,
+						text: '<?php echo $text['label-missed_calls']; ?>'
 					}
-				},
-				plugins: [chart_counter],
-			};
+				}
+			},
+			plugins: [chart_counter],
+		};
 
-			const missed_calls_chart = new Chart(
-				document.getElementById('missed_calls_chart'),
-				missed_calls_config
-			);
-		</script>
-	";
+		const missed_calls_chart = new Chart(
+			document.getElementById('missed_calls_chart'),
+			missed_calls_config
+		);
+	</script>
+	<?php
 
 	echo "<div class='hud_details hud_box' id='hud_missed_calls_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
