@@ -289,57 +289,56 @@
 
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
-		echo "
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom:10px;'>
-				<div style='width: 250px; height: 175px;'><canvas id='system_count_chart'></canvas></div>
-			</div>
+		//add doughnut chart
+		?>
+		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+			<div style='width: 250px; height: 175px;'><canvas id='system_count_chart'></canvas></div>
+		</div>
 
-			<script>
-				var system_count_bgc = ['#d4d4d4', '#2a9df4'];
+		<script>
+			const system_count_data = {
+				labels: ['InActive: <?php echo $domain_inactive; ?>', 'Active: <?php echo $domain_active; ?>'],
+				datasets: [{
+					data: ['<?php echo $domain_inactive; ?>', '<?php echo $domain_active; ?>'],
+					borderColor: 'rgba(0,0,0,0)',
+					backgroundColor: ['#d4d4d4', '#2a9df4'],
+					cutout: chart_cutout
+				}]
+			};
 
-				const system_count_data = {
-					labels: ['InActive: ".$domain_inactive."', 'Active: ".$domain_active."'],
-					datasets: [{
-						data:[".$domain_inactive.", ".$domain_active."],
-						borderColor: 'rgba(0,0,0,0)',
-						backgroundColor: ['#d4d4d4', '#2a9df4'],
-						cutout: chart_cutout
-					}]
-				};
-
-				const system_count_config = {
-					type: 'doughnut',
-					data: system_count_data,
-					options: {
-					responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							chart_counter: {
-								chart_text: ".$domain_total."
-							},
-							legend: {
-							position: 'right',
-								reverse: true,
-								labels: {
-									usePointStyle: true,
-									pointStyle: 'rect'
-								}
-							},
-							title: {
-								display: true,
-								text: '".$text['label-system_counts']."'
+			const system_count_config = {
+				type: 'doughnut',
+				data: system_count_data,
+				options: {
+				responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						chart_counter: {
+							chart_text: '<?php echo $domain_total; ?>'
+						},
+						legend: {
+						position: 'right',
+							reverse: true,
+							labels: {
+								usePointStyle: true,
+								pointStyle: 'rect'
 							}
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-system_counts']; ?>'
 						}
-					},
-					plugins: [chart_counter],
-				};
+					}
+				},
+				plugins: [chart_counter],
+			};
 
-				const system_count_chart = new Chart(
-					document.getElementById('system_count_chart'),
-					system_count_config
-				);
-			</script>
-		";
+			const system_count_chart = new Chart(
+				document.getElementById('system_count_chart'),
+				system_count_config
+			);
+		</script>
+		<?php
 	}
 
 	echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
