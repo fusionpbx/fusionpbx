@@ -251,7 +251,7 @@
 		$_SESSION['login']['destination']['url'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
 	else {
-		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/dashboard/";
 	}
 
 //add the header
