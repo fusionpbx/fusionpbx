@@ -80,7 +80,7 @@
 					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
 				}
 				else {
-					header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+					header("Location: ".PROJECT_PATH."/core/dashboard/");
 				}
 				exit;
 		}
