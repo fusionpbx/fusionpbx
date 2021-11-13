@@ -85,12 +85,9 @@
 			}
 		}
 
-		//set message
-			//...
-
 		//redirect
-			header('Location: '.PROJECT_PATH.'/core/user_settings/user_dashboard.php');
-			exit;
+		header('Location: '.PROJECT_PATH.'/core/dashboard/');
+		exit;
 	}
 
 //get the agent list from event socket
