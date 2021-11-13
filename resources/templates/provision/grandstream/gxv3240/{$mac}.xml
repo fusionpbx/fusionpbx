@@ -4088,7 +4088,11 @@
 
 <!-- Disable Active MPK. 0 - No, 1 - Yes. Default value is 0. -->
 <!-- Number: 0, 1 -->
-<P6764>0</P6764>
+{if isset($grandstream_disable_active_mpk_page)}
+    <P6764>{$grandstream_disable_active_mpk_page}</P6764>
+{else}
+    <P6764>0</P6764>
+{/if}
 
 <!-- Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
