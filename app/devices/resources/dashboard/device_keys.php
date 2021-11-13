@@ -66,9 +66,9 @@
 
 				//validate the token
 					$token = new token;
-					if (!$token->validate('/app/devices/device_dashboard.php') && !$token->validate('login')) {
+					if (!$token->validate('/app/devices/resources/dashboard/device_keys.php') && !$token->validate('login')) {
 						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.PROJECT_PATH."/core/user_settings/user_dashboard.php");
+						header('Location: '.PROJECT_PATH."/core/dashboard/");
 						exit;
 					}
 
@@ -431,7 +431,7 @@
 
 //create token
 	$object = new token;
-	$token = $object->create('/app/devices/device_dashboard.php');
+	$token = $object->create('/app/devices/resources/dashboard/device_keys.php');
 
 //show the content
 	echo "<div class='action_bar sub'>\n";
