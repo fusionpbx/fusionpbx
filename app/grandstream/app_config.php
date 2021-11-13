@@ -782,5 +782,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Accept Incoming SIP from Proxy Only. 0 - No, 1 - Yes. Default is 0";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2aebb9db-ade3-4983-bffc-a53be0ad30d2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_disable_active_mpk_page";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Active MPK Page. 0 - No, 1 - Yes. Default is 0";
+		$y++;
 
 ?>
