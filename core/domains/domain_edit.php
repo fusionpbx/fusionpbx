@@ -153,6 +153,14 @@
 								$dialplans->is_empty = "dialplan_xml";
 								$array = $dialplans->xml();
 							}
+
+						//create the recordings directory for the new domain.
+							if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
+								if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
+								}
+							}
+
 					}
 					else {
 						message::add($text['message-domain_exists'],'negative');
