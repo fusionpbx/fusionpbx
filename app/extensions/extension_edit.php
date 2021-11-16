@@ -1454,7 +1454,7 @@
 		if (permission_exists('emergency_caller_id_select')) {
 			if (count($emergency_destinations) > 0) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
-				if (permission_exists('emergency_caller_id_select_blank')) {
+				if (permission_exists('emergency_caller_id_select_empty')) {
 					echo "		<option value=''></option>\n";
 				}
 				foreach ($emergency_destinations as &$row) {
