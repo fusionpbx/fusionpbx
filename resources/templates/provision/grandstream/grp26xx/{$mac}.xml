@@ -214,7 +214,15 @@
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P130>{$tp}</P130>
 
     <!-- # SIP Listening Mode.  -->
@@ -1195,7 +1203,15 @@
 {if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P448>{$tp}</P448>
 
     <!-- # SIP Listening Mode.  -->
@@ -2166,7 +2182,15 @@
 {if $account.3.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.3.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.3.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.3.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.3.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P548>{$tp}</P548>
 
     <!-- # SIP Listening Mode.  -->
@@ -3139,7 +3163,15 @@
 {if $account.4.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.4.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.4.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.4.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.4.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P648>{$tp}</P648>
 
     <!-- # SIP Listening Mode.  -->
@@ -4114,7 +4146,15 @@
 {if $account.5.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.5.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.5.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.5.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.5.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P748>{$tp}</P748>
 
     <!-- # SIP Listening Mode.  -->
