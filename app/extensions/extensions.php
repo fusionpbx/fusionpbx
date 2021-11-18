@@ -326,7 +326,7 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 					echo "<label class='text-success'>Online (".$found_count.") </label>";
 				}
 				else {
-					echo "<label class='text-warning'>Offline</label>";
+					echo "<label class='text-danger'>Offline</label>";
 				}
 				unset($extension_number, $extension_number_alias, $found_count, $array);
 				echo "&nbsp;</td>\n";
