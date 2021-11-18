@@ -265,7 +265,7 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
 	}
 	if (permission_exists('extension_registered')) {
-		echo "<th>".$text['label-is_registered']."</th>\n";
+		echo "<th>Status</th>\n";
  	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
@@ -323,10 +323,10 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 					}
 				}
 				if ($found_count > 0) {
-					echo $text['label-true']." (".$found_count.")";
+					echo "<div class='text-success'>Online (".$found_count.") </div>";
 				}
 				else {
-					echo $text['label-false'];
+					echo "Offline";
 				}
 				unset($extension_number, $extension_number_alias, $found_count, $array);
 				echo "&nbsp;</td>\n";
