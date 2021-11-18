@@ -323,10 +323,10 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 					}
 				}
 				if ($found_count > 0) {
-					echo "<div class='text-success'>Online (".$found_count.") </div>";
+					echo "<label class='text-success'>Online (".$found_count.") </label>";
 				}
 				else {
-					echo "Offline";
+					echo "<label class='text-warning'>Offline</label>";
 				}
 				unset($extension_number, $extension_number_alias, $found_count, $array);
 				echo "&nbsp;</td>\n";
