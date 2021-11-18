@@ -29,8 +29,11 @@
 		$show_stat = true;
 		if (permission_exists('extension_view')) {
 			$sql = "select count(extension_uuid) from v_extensions ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
-			$extension_total = $database->select($sql, null, 'column');
+			$extension_total = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
 			$hud_stat = $extension_total;
@@ -38,8 +41,11 @@
 		}
 		else if (permission_exists('destination_view')) {
 			$sql = "select count(destination_uuid) from v_destinations ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$database = new database;
-			$destination_total = $database->select($sql, null, 'column');
+			$destination_total = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
 
 			$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/destinations/destinations.php'\"";
 			$hud_stat = $destination_total;
