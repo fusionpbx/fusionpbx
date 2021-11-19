@@ -296,9 +296,9 @@
 		</div>
 
 		<script>
-			var system_counts_context = document.getElementById('system_counts_chart').getContext('2d');
+			var system_counts_chart_context = document.getElementById('system_counts_chart').getContext('2d');
 
-			const system_counts_data = {
+			const system_counts_chart_data = {
 				labels: ['InActive: <?php echo $domain_inactive; ?>', 'Active: <?php echo $domain_active; ?>'],
 				datasets: [{
 					data: ['<?php echo $domain_inactive; ?>', '<?php echo $domain_active; ?>'],
@@ -312,9 +312,9 @@
 				}]
 			};
 
-			const system_counts_config = {
+			const system_counts_chart_config = {
 				type: 'doughnut',
-				data: system_counts_data,
+				data: system_counts_chart_data,
 				options: {
 				responsive: true,
 					maintainAspectRatio: false,
@@ -340,8 +340,8 @@
 			};
 
 			const system_counts_chart = new Chart(
-				system_counts_context,
-				system_counts_config
+				system_counts_chart_context,
+				system_counts_chart_config
 			);
 		</script>
 		<?php
