@@ -798,5 +798,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Disable Active MPK Page. 0 - No, 1 - Yes. Default is 0";
 		$y++;
-
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b5f14c6f-c697-44d4-828a-b0125ce042bb";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_voicemail_id";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "*98";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow override on voicemail button by specifing a featurecode plus the extenaion. Example would be *98101 to program voicemail button on phone to be 101's voicemail";
+                $y++;
 ?>
