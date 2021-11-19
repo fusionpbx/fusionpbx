@@ -1,25 +1,25 @@
 <?php
 
-$text['title-devices']['en-us'] = "Redirection Service Settings";
-$text['title-devices']['en-gb'] = "";
-$text['title-devices']['ar-eg'] = "";
-$text['title-devices']['de-at'] = ""; //copied from de-de
-$text['title-devices']['de-ch'] = ""; //copied from de-de
-$text['title-devices']['de-de'] = "";
-$text['title-devices']['es-cl'] = "";
-$text['title-devices']['es-mx'] = ""; //copied from es-cl
-$text['title-devices']['fr-ca'] = ""; //copied from fr-fr
-$text['title-devices']['fr-fr'] = "";
-$text['title-devices']['he-il'] = "";
-$text['title-devices']['it-it'] = "";
-$text['title-devices']['nl-nl'] = "";
-$text['title-devices']['pl-pl'] = "";
-$text['title-devices']['pt-br'] = ""; //copied from pt-pt
-$text['title-devices']['pt-pt'] = "";
-$text['title-devices']['ro-ro'] = "";
-$text['title-devices']['ru-ru'] = "";
-$text['title-devices']['sv-se'] = "";
-$text['title-devices']['uk-ua'] = "";
+$text['title-redirection_service']['en-us'] = "Redirection Service Settings";
+$text['title-redirection_service']['en-gb'] = "";
+$text['title-redirection_service']['ar-eg'] = "";
+$text['title-redirection_service']['de-at'] = ""; //copied from de-de
+$text['title-redirection_service']['de-ch'] = ""; //copied from de-de
+$text['title-redirection_service']['de-de'] = "";
+$text['title-redirection_service']['es-cl'] = "";
+$text['title-redirection_service']['es-mx'] = ""; //copied from es-cl
+$text['title-redirection_service']['fr-ca'] = ""; //copied from fr-fr
+$text['title-redirection_service']['fr-fr'] = "";
+$text['title-redirection_service']['he-il'] = "";
+$text['title-redirection_service']['it-it'] = "";
+$text['title-redirection_service']['nl-nl'] = "";
+$text['title-redirection_service']['pl-pl'] = "";
+$text['title-redirection_service']['pt-br'] = ""; //copied from pt-pt
+$text['title-redirection_service']['pt-pt'] = "";
+$text['title-redirection_service']['ro-ro'] = "";
+$text['title-redirection_service']['ru-ru'] = "";
+$text['title-redirection_service']['sv-se'] = "";
+$text['title-redirection_service']['uk-ua'] = "";
 
 
 ?>
