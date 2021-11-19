@@ -1,3 +1,5 @@
+<?php
+
 $text['title-devices']['en-us'] = "Redirection Service Settings";
 $text['title-devices']['en-gb'] = "";
 $text['title-devices']['ar-eg'] = "";
@@ -18,3 +20,6 @@ $text['title-devices']['ro-ro'] = "";
 $text['title-devices']['ru-ru'] = "";
 $text['title-devices']['sv-se'] = "";
 $text['title-devices']['uk-ua'] = "";
+
+
+?>
