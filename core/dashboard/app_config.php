@@ -115,7 +115,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the group uuid.';
 		$z++;
 
-	//defualt settings
+	//default settings
 		$y=0;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8e44f758-e2ec-41e0-aa81-464fefb3bdb3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
