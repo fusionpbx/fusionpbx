@@ -83,7 +83,7 @@
 
 				const cpu_usage_chart_config = {
 					type: 'doughnut',
-					data: cpu_chart_usage_data,
+					data: cpu_usage_chart_data,
 					options: {
 						responsive: true,
 						maintainAspectRatio: false,
