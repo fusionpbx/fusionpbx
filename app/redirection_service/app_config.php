@@ -76,5 +76,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
+	//permission details
+	$y=0;
+	$apps[$x]['permissions'][$y]['name'] = "redirection_service_view";
+	$apps[$x]['permissions'][$y]['menu']['uuid'] = "7342cdef-803d-415a-8a9c-f0686c8f1c55";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>
