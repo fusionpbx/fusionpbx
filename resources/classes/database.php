@@ -1787,8 +1787,8 @@ include "root.php";
 														if (strlen($array_value) == 0) {
 															$sql .= "null, ";
 														}
-														elseif ($array_value === "now()") {
-															$sql .= "now(), ";
+														elseif (strtolower(substr($array_value, 0, 5)) === "now()") {
+															$sql .= "$array_value, ";
 														}
 														elseif ($array_value === "user_uuid()") {
 															$sql .= ':'.$array_key.", ";
