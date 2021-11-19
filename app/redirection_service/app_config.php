@@ -66,6 +66,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "device_vendor";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";	
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_mac_address";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "redirection enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
