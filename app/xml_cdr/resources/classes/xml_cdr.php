@@ -1012,7 +1012,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				$sql .= " and missed_call = false \n";
+				$sql .= " and (answer_stamp is not null and bridge_uuid is not null) \n";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
