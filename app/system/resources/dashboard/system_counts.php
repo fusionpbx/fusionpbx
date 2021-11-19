@@ -292,23 +292,29 @@
 		//add doughnut chart
 		?>
 		<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
-			<div style='width: 250px; height: 175px;'><canvas id='system_count_chart'></canvas></div>
+			<div style='width: 250px; height: 175px;'><canvas id='system_counts_chart'></canvas></div>
 		</div>
 
 		<script>
-			const system_count_data = {
+			var system_counts_context = document.getElementById('system_counts_chart').getContext('2d');
+
+			const system_counts_data = {
 				labels: ['InActive: <?php echo $domain_inactive; ?>', 'Active: <?php echo $domain_active; ?>'],
 				datasets: [{
 					data: ['<?php echo $domain_inactive; ?>', '<?php echo $domain_active; ?>'],
-					borderColor: 'rgba(0,0,0,0)',
-					backgroundColor: ['#d4d4d4', '#2a9df4'],
+					backgroundColor: [
+						'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>', 
+						'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>'
+					],
+					borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
+					borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
 					cutout: chart_cutout
 				}]
 			};
 
-			const system_count_config = {
+			const system_counts_config = {
 				type: 'doughnut',
-				data: system_count_data,
+				data: system_counts_data,
 				options: {
 				responsive: true,
 					maintainAspectRatio: false,
@@ -333,9 +339,9 @@
 				plugins: [chart_counter],
 			};
 
-			const system_count_chart = new Chart(
-				document.getElementById('system_count_chart'),
-				system_count_config
+			const system_counts_chart = new Chart(
+				system_counts_context,
+				system_counts_config
 			);
 		</script>
 		<?php
