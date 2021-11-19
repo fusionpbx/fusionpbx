@@ -81,18 +81,22 @@
 	</div>
 
 	<script>
-		const recent_calls_data = {
+		var recent_calls_chart_context = document.getElementById('recent_calls_chart').getContext('2d');
+
+		const recent_calls_chart_data = {
 			datasets: [{
 				data: ['<?php echo $num_rows; ?>', 0.00001],
-				borderColor: 'rgba(0,0,0,0)',
-				backgroundColor: ['#2a9df4', '#d4d4d4'],
+				backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
+				'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
+				borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
+				borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
 				cutout: chart_cutout
 			}]
 		};
 
-		const recent_calls_config = {
+		const recent_calls_chart_config = {
 			type: 'doughnut',
-			data: recent_calls_data,
+			data: recent_calls_chart_data,
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -113,8 +117,8 @@
 		};
 
 		const recent_calls_chart = new Chart(
-			document.getElementById('recent_calls_chart'),
-			recent_calls_config
+			recent_calls_chart_context,
+			recent_calls_chart_config
 		);
 	</script>
 	<?php
