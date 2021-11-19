@@ -62,9 +62,9 @@
 
 
 	<script>
-		var new_messages_context = document.getElementById('new_messages_chart').getContext('2d');
+		var new_messages_chart_context = document.getElementById('new_messages_chart').getContext('2d');
 
-		const new_messages_data = {
+		const new_messages_chart_data = {
 			datasets: [{
 				data: ['<?php echo $messages['new']; ?>', 0.00001],
 				backgroundColor: [
@@ -77,9 +77,9 @@
 			}]
 		};
  
-		const new_messages_config = {
+		const new_messages_chart_config = {
 			type: 'doughnut',
-			data: new_messages_data,
+			data: new_messages_chart_data,
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -101,8 +101,8 @@
 		};
 
 		const new_messages_chart = new Chart(
-			new_messages_context,
-			new_messages_config
+			new_messages_chart_context,
+			new_messages_chart_config
 		);
 	</script>
 	<?php
