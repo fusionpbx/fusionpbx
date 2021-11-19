@@ -82,9 +82,9 @@
 	</div>
 
 	<script>
-		var missed_calls_context = document.getElementById('missed_calls_chart').getContext('2d');
+		var missed_calls_chart_context = document.getElementById('missed_calls_chart').getContext('2d');
 
-		const missed_calls_data = {
+		const missed_calls_chart_data = {
 			datasets: [{
 				data: ['<?php echo $num_rows; ?>', 0.00001],
 				backgroundColor: [
@@ -97,9 +97,9 @@
 			}]
 		};
 
-		const missed_calls_config = {
+		const missed_calls_chart_config = {
 			type: 'doughnut',
-			data: missed_calls_data,
+			data: missed_calls_chart_data,
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -120,8 +120,8 @@
 		};
 
 		const missed_calls_chart = new Chart(
-			missed_calls_context,
-			missed_calls_config
+			missed_calls_chart_context,
+			missed_calls_chart_config
 		);
 	</script>
 	<?php
