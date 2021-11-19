@@ -57,27 +57,33 @@
 			</div>
 
 			<script>
-				var cpu_chart_background_color;
+				var cpu_usage_chart_context = document.getElementById('cpu_usage_chart').getContext('2d');
+
+				var cpu_usage_chart_background_color;
 				if ('<?php echo $percent_cpu; ?>' <= 50) {
-					cpu_chart_background_color = '#03c04a';
+					cpu_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color']['text']; ?>';
 				} else if ('<?php echo $percent_cpu; ?>' <= 70 && '<?php echo $percent_cpu; ?>' > 50) {
-					cpu_chart_background_color = '#ff9933';
+					cpu_usage_chart_background_color = '#ff9933';
 				} else if ('<?php echo $percent_cpu; ?>' > 70) {
-					cpu_chart_background_color = '#ea4c46';
+					cpu_usage_chart_background_color = '#ea4c46';
 				}
 
-				const cpu_usage_data = {
+				const cpu_usage_chart_data = {
 					datasets: [{
 						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
-						backgroundColor: [cpu_chart_background_color, '#d4d4d4'],
-						borderColor: 'rgba(0,0,0,0)',
+						backgroundColor: [
+							cpu_usage_chart_background_color,
+							'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
+						],
+						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
 						cutout: chart_cutout
 					}]
 				};
 
-				const cpu_usage_config = {
+				const cpu_usage_chart_config = {
 					type: 'doughnut',
-					data: cpu_usage_data,
+					data: cpu_chart_usage_data,
 					options: {
 						responsive: true,
 						maintainAspectRatio: false,
@@ -104,29 +110,35 @@
 				};
 
 				const cpu_usage_chart = new Chart(
-					document.getElementById('cpu_usage_chart'),
-					cpu_usage_config
+					cpu_usage_chart_context,
+					cpu_usage_chart_config
 				);
 
-				var disk_chart_background_color;
+				var disk_usage_chart_context = document.getElementById('disk_usage_chart').getContext('2d');
+
+				var disk_usage_chart_background_color;
 				if ('<?php echo $percent_disk_usage; ?>' < 60) {
-					disk_chart_background_color = '#03c04a';
+					disk_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color']['text']; ?>';
 				} else if ('<?php echo $percent_disk_usage; ?>' < 80 && '<?php echo $percent_disk_usage; ?>' > 60) {
-					disk_chart_background_color = '#ff9933';
+					disk_usage_chart_background_color = '#ff9933';
 				} else if ('<?php echo $percent_disk_usage; ?>' >= 80) {
-					disk_chart_background_color = '#ea4c46';
+					disk_usage_chart_background_color = '#ea4c46';
 				}
 
-				const disk_chart_config = {
+				const disk_usage_chart_data = {
+					datasets: [{
+						data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
+						backgroundColor: [disk_usage_chart_background_color,
+						'<?php echo $_SESSION['dashboard']['disk_usage_chart_sub_background_color']['text']; ?>'],
+						borderColor: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['disk_usage_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				};
+
+				const disk_usage_chart_config = {
 					type: 'doughnut',
-					data: {
-						datasets: [{
-							data: ['<?php echo $percent_disk_usage; ?>', 100 - '<?php echo $percent_disk_usage; ?>'],
-							backgroundColor: [disk_chart_background_color, '#d4d4d4'],
-							borderColor: 'rgba(0,0,0,0)',
-							cutout: chart_cutout
-						}]
-					},
+					data: disk_usage_chart_data,
 					options: {
 						responsive: true,
 						maintainAspectRatio: false,
@@ -149,8 +161,8 @@
 				};
 
 				const disk_usage_chart = new Chart(
-					document.getElementById('disk_usage_chart'),
-					disk_chart_config
+					disk_usage_chart_context,
+					disk_usage_chart_config
 				);
 			</script>
 			<?php
