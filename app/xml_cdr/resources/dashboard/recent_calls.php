@@ -81,9 +81,9 @@
 	</div>
 
 	<script>
-		var recent_calls_context = document.getElementById('recent_calls_chart').getContext('2d');
+		var recent_calls_chart_context = document.getElementById('recent_calls_chart').getContext('2d');
 
-		const recent_calls_data = {
+		const recent_calls_chart_data = {
 			datasets: [{
 				data: ['<?php echo $num_rows; ?>', 0.00001],
 				backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
@@ -94,9 +94,9 @@
 			}]
 		};
 
-		const recent_calls_config = {
+		const recent_calls_chart_config = {
 			type: 'doughnut',
-			data: recent_calls_data,
+			data: recent_calls_chart_data,
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -117,8 +117,8 @@
 		};
 
 		const recent_calls_chart = new Chart(
-			recent_calls_context,
-			recent_calls_config
+			recent_calls_chart_context,
+			recent_calls_chart_config
 		);
 	</script>
 	<?php
