@@ -99,19 +99,19 @@
 //chart variables
 	?>
 	<script>
-		var chart_font_family = 'Arial';
-		var chart_font_size = '30';
-		var chart_font_color = '#444';
+		var chart_text_font = 'arial';
+		var chart_text_size = '<?php echo $_SESSION['dashboard']['chart_text_size']['text']; ?>';
+		var chart_text_color = '<?php echo $_SESSION['dashboard']['chart_text_color']['text']; ?>';
 		var chart_cutout = '75%';
 
 		const chart_counter = {
 			id: 'chart_counter',
 			beforeDraw(chart, args, options){
 				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = chart_font_size + 'px ' + chart_font_family;
+				ctx.font = chart_text_size + 'px ' + chart_text_font;
 				ctx.textBaseline = 'middle';
 				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_font_color;
+				ctx.fillStyle = chart_text_color;
 				ctx.fillText(options.chart_text, width / 2, top + (height / 2));
 				ctx.save();
 			}
@@ -121,10 +121,10 @@
 			id: 'chart_counter_2',
 			beforeDraw(chart, args, options){
 				const {ctx, chartArea: {top, right, bottom, left, width, height} } = chart;
-				ctx.font = (chart_font_size - 7) + 'px ' + chart_font_family;
+				ctx.font = (chart_text_size - 7) + 'px ' + chart_text_font;
 				ctx.textBaseline = 'middle';
 				ctx.textAlign = 'center';
-				ctx.fillStyle = chart_font_color;
+				ctx.fillStyle = chart_text_color;
 				ctx.fillText(options.chart_text + '%', width / 2, top + (height / 2) + 35);
 				ctx.save();
 			}
