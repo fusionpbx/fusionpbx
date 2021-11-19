@@ -60,19 +60,26 @@
 		<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
 	</div>
 
+
 	<script>
-		const new_messages_data = {
+		var new_messages_chart_context = document.getElementById('new_messages_chart').getContext('2d');
+
+		const new_messages_chart_data = {
 			datasets: [{
 				data: ['<?php echo $messages['new']; ?>', 0.00001],
-				borderColor: 'rgba(0,0,0,0)',
-				backgroundColor: ['#ff9933', '#d4d4d4'],
+				backgroundColor: [
+					'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>', 
+					'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
+				],
+				borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
+				borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
 				cutout: chart_cutout
 			}]
 		};
-
-		const new_messages_config = {
+ 
+		const new_messages_chart_config = {
 			type: 'doughnut',
-			data: new_messages_data,
+			data: new_messages_chart_data,
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -86,7 +93,7 @@
 					title: {
 						display: true,
 						text: '<?php echo $text['label-new_messages']; ?>',
-						fontFamily: chart_font_family
+						fontFamily: chart_text_font
 					}
 				}
 			},
@@ -94,8 +101,8 @@
 		};
 
 		const new_messages_chart = new Chart(
-			document.getElementById('new_messages_chart'),
-			new_messages_config
+			new_messages_chart_context,
+			new_messages_chart_config
 		);
 	</script>
 	<?php
