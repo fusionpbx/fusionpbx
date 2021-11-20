@@ -61,11 +61,11 @@
 
 				var cpu_usage_chart_background_color;
 				if ('<?php echo $percent_cpu; ?>' <= 50) {
-					cpu_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color']['text']; ?>';
+					cpu_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
 				} else if ('<?php echo $percent_cpu; ?>' <= 70 && '<?php echo $percent_cpu; ?>' > 50) {
-					cpu_usage_chart_background_color = '#ff9933';
+					cpu_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]; ?>';
 				} else if ('<?php echo $percent_cpu; ?>' > 70) {
-					cpu_usage_chart_background_color = '#ea4c46';
+					cpu_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
 				}
 
 				const cpu_usage_chart_data = {
@@ -118,11 +118,11 @@
 
 				var disk_usage_chart_background_color;
 				if ('<?php echo $percent_disk_usage; ?>' < 60) {
-					disk_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color']['text']; ?>';
+					disk_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]; ?>';
 				} else if ('<?php echo $percent_disk_usage; ?>' < 80 && '<?php echo $percent_disk_usage; ?>' > 60) {
-					disk_usage_chart_background_color = '#ff9933';
+					disk_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]; ?>';
 				} else if ('<?php echo $percent_disk_usage; ?>' >= 80) {
-					disk_usage_chart_background_color = '#ea4c46';
+					disk_usage_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]; ?>';
 				}
 
 				const disk_usage_chart_data = {
