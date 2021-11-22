@@ -155,9 +155,16 @@
 							}
 
 						//create the recordings directory for the new domain.
-							if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
-								if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+							if (isset($_SESSION['switch']['recordings']['dir']) && strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
 									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
+								}
+							}
+
+						//create the voicemail directory for the new domain.
+							if (isset($_SESSION['switch']['voicemail']['dir']) && strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
+									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
 								}
 							}
 
