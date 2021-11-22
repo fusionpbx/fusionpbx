@@ -124,9 +124,9 @@
 	if ((name ~= nil) and (string.len(name) > 0)) then
 		api:executeString("uuid_setvar " .. uuid .. " ignore_display_updates false");
 	
-		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
+		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name .. "\n");
 		api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 
-		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+		freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " effective_caller_id_name " .. name .. "\n");
 		api:executeString("uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
 	end
