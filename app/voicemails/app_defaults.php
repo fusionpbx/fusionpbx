@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,23 +27,43 @@
 //process this only one time
 if ($domains_processed == 1) {
 
-	// define initial, get current, define correct languages folder paths
+	//make sure the voicemail directory exists
+	$sql = "select d.domain_name, v.voicemail_id \n";
+	$sql .= "from v_voicemails as v, v_domains as d \n";
+	$sql .= "where voicemail_enabled = 'true' \n";
+	$sql .= "and v.domain_uuid = d.domain_uuid \n";
+	$database = new database;
+	$voicemails = $database->select($sql, null, 'all');
+	unset($sql, $parameters);
+	if (is_array($voicemails) && @sizeof($voicemails) != 0) {
+		foreach($voicemails as $row) {
+			if (is_numeric($row['voicemail_id'])) {
+				if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'])) {
+					mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770);
+				}
+			}
+		}
+	}
+
+	//define initial, get current, define correct languages folder paths
 	$switch_configuration_dir = $_SESSION['switch']['conf']['dir'] != '' ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
 	$switch_phrases_dir_initial = $switch_configuration_dir.'/lang';
 	$switch_phrases_dir_current = $_SESSION['switch']['phrases']['dir'];
 	$switch_phrases_dir_correct = $switch_configuration_dir.'/languages';
 
-	// ensure switch using languages (not lang) folder
+	//ensure switch using languages (not lang) folder
 	if ($switch_phrases_dir_current == $switch_phrases_dir_initial) {
-		// rename languages folder, if necessary
+		//rename languages folder, if necessary
 		if (file_exists($switch_phrases_dir_current) && !file_exists($switch_phrases_dir_correct)) {
 			rename($switch_phrases_dir_current, $switch_phrases_dir_correct);
 		}
-		// update default setting value
+
+		//update default setting value
 		if (file_exists($switch_phrases_dir_correct)) {
-			// session
+			//get the phrases directory
 			$_SESSION['switch']['phrases']['dir'] = $switch_phrases_dir_correct;
-			// database
+
+			//update phrases with the correct path
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_value = '".$switch_phrases_dir_correct."', ";
 			$sql .= "default_setting_enabled = true ";
@@ -58,7 +78,7 @@ if ($domains_processed == 1) {
 	}
 
 	if (file_exists($switch_phrases_dir_correct)) {
-		// update language path in main switch xml file
+		//update language path in main switch xml file
 		if (file_exists($switch_configuration_dir.'/freeswitch.xml')) {
 			$switch_xml_content = file_get_contents($switch_configuration_dir.'/freeswitch.xml');
 			$switch_xml_content = str_replace('data="lang/', 'data="languages/', $switch_xml_content);
@@ -91,4 +111,4 @@ if ($domains_processed == 1) {
 
 }
 
-?>
+?
