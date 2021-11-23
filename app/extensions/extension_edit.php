@@ -588,7 +588,7 @@
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
-								// build voicemail
+								//add  the voicemail to the array
 									if ($voicemail_id !== NULL) {
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
@@ -609,7 +609,7 @@
 												$voicemail_tutorial = 'true';
 											}
 
-										//add the voicemail
+										//add the voicemail to the array
 											$array["voicemails"][$i]["domain_uuid"] = $domain_uuid;
 											$array["voicemails"][$i]["voicemail_uuid"] = $voicemail_uuid;
 											$array["voicemails"][$i]["voicemail_id"] = $voicemail_id;
@@ -627,6 +627,14 @@
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
+
+										//make sure the voicemail directory exists
+											if (is_numeric($voicemail_id)) {
+												if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+													mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
+												}
+											}
+
 									}
 							}
 
