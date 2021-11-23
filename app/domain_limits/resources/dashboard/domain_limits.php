@@ -91,7 +91,7 @@
 							title: {
 								display: true,
 								text: '<?php echo $text['label-domain_limits']; ?>',
-								fontFamily: chart_font_family
+								fontFamily: chart_text_font
 							}
 						}
 					},
