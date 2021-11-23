@@ -550,5 +550,37 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "04:00";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the time to stop polling when using random mode";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb4fe110-bb83-4b64-a39b-c879ebcc8af7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_app_file_path_4x";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "4.0.15/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "4.x firmware is stored in this subdirectory of /app/polycom/resources/firmware/, ex:/app/polycom/resources/firmware/4.0.15/";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "134483f0-aa0c-44a9-9a4f-eb03be30c1c2";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_app_file_path_5x";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5.9.7/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "5.x firmware is stored in this subdirectory of /app/polycom/resources/firmware/, ex:/app/polycom/resources/firmware/5.9.6/";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cc3fcaa0-a809-4235-9a95-f5d6426fcafa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_app_file_path_6x";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "6.4.1/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "6.x firmware is stored in this subdirectory of /app/polycom/resources/firmware/, ex:/app/polycom/resources/firmware/6.4.1/";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "828f52cf-4ac8-403c-95f1-34c71cdcd046";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_provision_app_include";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "if enabled, renders the APPLICATION tag in provisioning file. This allows polycom phones to load firmware files from the server.";
 
 ?>
