@@ -210,6 +210,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	pre {
 		white-space: pre-wrap;
+		color: <?php echo ($_SESSION['theme']['pre_text_color']['text'] != '') ? $_SESSION['theme']['pre_text_color']['text'] : '#5f5f5f'; ?>;
 		}
 
 	div#footer {
