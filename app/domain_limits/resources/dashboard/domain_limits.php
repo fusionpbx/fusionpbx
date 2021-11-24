@@ -66,7 +66,9 @@
 			</div>
 
 			<script>
-				const domain_limits_data = {
+				var domain_limits_chart_context = document.getElementById('domain_limits_chart').getContext('2d');
+
+				const domain_limits_chart_data = {
 					datasets: [{
 						data:['<?php echo $hud_stat; ?>', 0.00001],
 						borderColor: 'rgba(0,0,0,0)',
@@ -75,9 +77,9 @@
 					}]
 				};
 	
-				const domain_limits_config = {
+				const domain_limits_chart_config = {
 					type: 'doughnut',
-					data: domain_limits_data,
+					data: domain_limits_chart_data,
 					options: {
 						responsive: true,
 						maintainAspectRatio: false,
@@ -99,8 +101,8 @@
 				};
 	
 				const domain_limits_chart = new Chart(
-					document.getElementById('domain_limits_chart'),
-					domain_limits_config
+					domain_limits_chart_context,
+					domain_limits_chart_config
 				);
 			</script>
 			<?php
