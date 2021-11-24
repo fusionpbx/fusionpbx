@@ -128,7 +128,7 @@
 	require_once "resources/header.php";
 
 //include sortablejs
-	echo "<script src='resources/sortablejs/sortable.min.js'></script>";
+	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
 
 //include chart.js
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
@@ -267,81 +267,80 @@
 	}
 	echo "</div>\n";
 
+//begin edit
+	if ($_GET['edit'] == 'true') {
+		?>
+
+		<style>
+		/*To prevent user selecting inside the drag source*/
+		[draggable] {
+		  -moz-user-select: none;
+		  -khtml-user-select: none;
+		  -webkit-user-select: none;
+		  user-select: none;
+		}
+
+		.widget {
+			cursor: move;
+		}
+
+		.hud_box {
+			transition: 0.2s;
+		}
+
+		.hud_box:hover {
+			box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+			transform: scale(1.03, 1.03);
+			transition: 0.2s;
+		}
+
+		.hud_box .hud_box:hover {
+			transform: none;
+			box-shadow: none;
+		}
+
+		.ghost {
+			border: 3px dashed rgba(0,0,0,1);
+			opacity: 0.2;
+		}
+		</style>
+
+		<script>
+		var widgets = document.getElementById('widgets');
+		var sortable = Sortable.create(widgets, {
+			animation: 150,
+			draggable: ".widget",
+			preventOnFilter: true,
+			ghostClass: 'ghost',
+			onChange: function (evt) {
+				//re-render chart when dragged
+				if (evt.item.id != 'ring_group_forward' && evt.item.id != 'call_forward') {
+					let chart = eval(evt.item.id + "_chart");
+					let context = eval(evt.item.id + "_chart_context");
+					let config = eval(evt.item.id + "_chart_config");
+			
+					let chart_status = Chart.getChart(context);
+					if (chart_status != undefined) {
+						chart_status.destroy();
+					}
+					chart.options.animation = { duration: 0 };
+					chart = new Chart(context, config);
+				}
+			},
+			onSort: function (evt) {
+				let widget_ids = document.querySelectorAll("#widgets > div[id]");
+				let widget_ids_list = [];
+				for (let i = 0; i < widget_ids.length; i++) {
+					widget_ids_list.push(widget_ids[i].id);
+				}
+				document.getElementById('widget_order').value = widget_ids_list;
+			},
+		});
+		</script>
+		<?php
+	} //end edit
+
 //show the footer
 	require_once "resources/footer.php";
 
-//begin edit
-	if ($_GET['edit'] == 'true') {
-
-?>
-
-<style>
-/*To prevent user selecting inside the drag source*/
-[draggable] {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.widget {
-	cursor: move;
-}
-
-.hud_box {
-	transition: 0.2s;
-}
-
-.hud_box:hover {
-	box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-	transform: scale(1.03, 1.03);
-	transition: 0.2s;
-}
-
-.hud_box .hud_box:hover {
-	transform: none;
-	box-shadow: none;
-}
-
-.ghost {
-	border: 3px dashed rgba(0,0,0,1);
-	opacity: 0.2;
-}
-</style>
-
-<script>
-var widgets = document.getElementById('widgets');
-var sortable = Sortable.create(widgets, {
-	animation: 150,
-	draggable: ".widget",
-	preventOnFilter: true,
-	ghostClass: 'ghost',
-	onChange: function (evt) {
-		//re-render chart when dragged
-		if (evt.item.id != 'ring_group_forward' && evt.item.id != 'call_forward') {
-			let chart = eval(evt.item.id + "_chart");
-			let context = eval(evt.item.id + "_chart_context");
-			let config = eval(evt.item.id + "_chart_config");
-	
-			let chart_status = Chart.getChart(context);
-			if (chart_status != undefined) {
-				chart_status.destroy();
-			}
-			chart.options.animation = { duration: 0 };
-			chart = new Chart(context, config);
-		}
-	},
-	onSort: function (evt) {
-		let widget_ids = document.querySelectorAll("#widgets > div[id]");
-		let widget_ids_list = [];
-		for (let i = 0; i < widget_ids.length; i++) {
-			widget_ids_list.push(widget_ids[i].id);
-		}
-		document.getElementById('widget_order').value = widget_ids_list;
-		console.log(widget_ids_list);
-	},
-});
-</script>
-<?php
-	}
 ?>
