@@ -100,7 +100,6 @@
 		extension = row.extension;
 		number_alias = row.number_alias or '';
 		accountcode = row.accountcode;
-		follow_me_uuid = row.follow_me_uuid or nil;
 		do_not_disturb = row.do_not_disturb;
 		forward_all_destination = row.forward_all_destination;
 		forward_all_enabled = row.forward_all_enabled;
@@ -111,7 +110,6 @@
 	if (session:ready()) then
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] do_not_disturb "..do_not_disturb.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..extension.."\n");
-		freeswitch.consoleLog("NOTICE", "[do_not_disturb] follow_me_uuid "..follow_me_uuid.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..accountcode.."\n");
 		--freeswitch.consoleLog("NOTICE", "[do_not_disturb] enabled before "..enabled.."\n");
 	end
@@ -155,28 +153,12 @@
 			end
 	end
 
---update follow me
-	if (follow_me_uuid ~= nil and enabled == 'true') then
-		local sql = "update v_follow_me ";
-		sql = sql .. "set follow_me_enabled = 'false' ";
-		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
-		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params);
-	end
-
 --update the extension
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
-		sql = sql .. "follow_me_enabled = 'false', ";
-		sql = sql .. "dial_string = '!USER_BUSY', ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else
-		sql = sql .. "dial_string = null, ";
 		sql = sql .. "do_not_disturb = 'false' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -187,7 +169,7 @@
 	end
 	dbh:query(sql, params);
 
---determine whether to update the dial string
+--update the user and agent status
 	sql = "select * from v_extension_users as e, v_users as u ";
 	sql = sql .. "where e.extension_uuid = :extension_uuid ";
 	sql = sql .. "and e.user_uuid = u.user_uuid ";
@@ -203,7 +185,6 @@
 				api:execute("callcenter_config", "agent set status "..row.username.."@"..domain_name.." '"..user_status.."'");
 			end
 
-		--update the database user_status
 			if (enabled == "true") then
 				user_status = "Do Not Disturb";
 			else

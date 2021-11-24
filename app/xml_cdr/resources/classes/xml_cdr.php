@@ -340,14 +340,12 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set missed calls
-						$missed_call = 'false';
-						if ($xml->variables->missed_call == 'true') {
-							$missed_call = 'true';
+						if (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
+							//answered call
+							$missed_call = 'false';
 						}
-						elseif ($xml->variables->cc_side != "agent" && strlen($xml->variables->originating_leg_uuid) == 0 && $xml->variables->call_direction != 'outbound' && strlen($xml->variables->answer_stamp) == 0) {
-							$missed_call = 'true';
-						}
-						elseif ($xml->variables->voicemail_action == "save" && strlen($xml->variables->bridge_uuid) > 0) {
+						else {
+							//missed call
 							$missed_call = 'true';
 						}
 
@@ -1012,7 +1010,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				$sql .= " and missed_call = false \n";
+				$sql .= " and (answer_stamp is not null and bridge_uuid is not null) \n";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}

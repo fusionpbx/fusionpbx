@@ -135,6 +135,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
+
 			//set message
 				message::add($text['message-update']);
 

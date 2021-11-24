@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -135,6 +135,11 @@
 			$enabled = $_POST["enabled"];
 			$description = $_POST["description"];
 
+			//outbound caller id number - only allow numeric and +
+			if (strlen($outbound_caller_id_number) > 0) {
+				$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
+			}
+
 			$voicemail_id = $extension;
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 				$voicemail_id = $number_alias;
@@ -225,6 +230,7 @@
 		//set the variables
 			$extension_uuid = $_REQUEST["id"];
 			$user_uuid = $_REQUEST["delete_uuid"];
+
 		//delete the group from the users
 			$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
@@ -582,7 +588,7 @@
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
-								// build voicemail
+								//add  the voicemail to the array
 									if ($voicemail_id !== NULL) {
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
@@ -603,7 +609,7 @@
 												$voicemail_tutorial = 'true';
 											}
 
-										//add the voicemail
+										//add the voicemail to the array
 											$array["voicemails"][$i]["domain_uuid"] = $domain_uuid;
 											$array["voicemails"][$i]["voicemail_uuid"] = $voicemail_uuid;
 											$array["voicemails"][$i]["voicemail_id"] = $voicemail_id;
@@ -621,6 +627,14 @@
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
+
+										//make sure the voicemail directory exists
+											if (is_numeric($voicemail_id)) {
+												if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+													mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
+												}
+											}
+
 									}
 							}
 
@@ -795,6 +809,11 @@
 			$description = $row["description"];
 		}
 		unset($sql, $parameters, $row);
+
+	//outbound caller id number - only allow numeric and +
+		if (strlen($outbound_caller_id_number) > 0) {
+			$outbound_caller_id_number = preg_replace('#[^\+0-9]#', '', $outbound_caller_id_number);
+		}
 
 	//get the voicemail data
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
@@ -996,7 +1015,7 @@
 			unset($button_margin);
 		}
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../call_forward/call_forward_edit.php?id='.urlencode($extension_uuid)]);
 			unset($button_margin);
 		}
 		if (permission_exists('extension_setting_view')) {
@@ -1469,7 +1488,9 @@
 		if (permission_exists('emergency_caller_id_select')) {
 			if (count($emergency_destinations) > 0) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
-				//echo "	<option value=''></option>\n"; Don't allow no selection when validating emergency numbers this way
+				if (permission_exists('emergency_caller_id_select_empty')) {
+					echo "		<option value=''></option>\n";
+				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(strlen($tmp) == 0){
