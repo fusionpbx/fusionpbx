@@ -85,6 +85,40 @@
 	$dashboard = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get http post variables and set them to php variables
+	if (count($_POST) > 0 && permission_exists('dashboard_edit')) {
+		//set the variables from the http values
+		if (isset($_POST["widget_order"])) {
+			$widgets = explode(",", $_POST["widget_order"]);
+			$dashboard_order = '0';
+			$x = 0;
+			foreach($widgets as $widget) {
+				foreach($dashboard as $row) {
+					$dashboard_name = strtolower($row['dashboard_name']);
+					$dashboard_name = str_replace(" ", "_", $dashboard_name);
+					if ($widget == $dashboard_name) {
+						$dashboard_order = $dashboard_order + 10;
+						$array['dashboard'][$x]['dashboard_name'] = $row['dashboard_name'];
+						$array['dashboard'][$x]['dashboard_uuid'] = $row['dashboard_uuid'];
+						$array['dashboard'][$x]['dashboard_order'] = $dashboard_order;
+						$x++;
+					}
+				}
+			}
+
+			//save the data
+			$database = new database;
+			$database->app_name = 'dashboard';
+			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
+			$database->save($array);
+
+			//redirect the browser
+			message::add($text['message-update']);
+			header("Location: /core/dashboard/index.php");
+			return;
+		}
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -92,6 +126,9 @@
 //load the header
 	$document['title'] = $text['title-dashboard'];
 	require_once "resources/header.php";
+
+//include sortablejs
+	echo "<script src='resources/sortablejs/sortable.min.js'></script>";
 
 //include chart.js
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
@@ -133,6 +170,7 @@
 	<?php
 
 //show the content
+	echo "<form id='dashboard' method='POST'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -140,15 +178,24 @@
 		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {
+		if ($_GET['edit'] == 'true') {
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','name'=>'btn_back','link'=>'index.php']);
+			echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'btn_save']);
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'id'=>'btn_edit','name'=>'btn_edit','link'=>'index.php?edit=true']);
+		}
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'dashboard.php']);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both; text-align: left;'>".$text['description-dashboard']."</div>\n";
 	echo "</div>\n";
+	echo "<input type='hidden' id='widget_order' name='widget_order' value='' />\n";
+	echo "</form>\n";
 
 //display login message
 	if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
-		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
+		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
 	}
 
 ?>
@@ -208,12 +255,12 @@
 <?php
 
 //include the dashboards
-	echo "<div class='widgets' style='padding: 0 5px;'>\n";
+	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach($dashboard as $row) {
-		//if ($x > 3) { $class = 'col-num'; }
-		//echo "<div class='widget $class'>";
-		echo "<div class='widget'>";
+		$dashboard_name = strtolower($row['dashboard_name']);
+		$dashboard_name = str_replace(" ", "_", $dashboard_name);
+		echo "<div class='widget' id='".$dashboard_name."' draggable='true'>\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
@@ -223,4 +270,78 @@
 //show the footer
 	require_once "resources/footer.php";
 
+//begin edit
+	if ($_GET['edit'] == 'true') {
+
+?>
+
+<style>
+/*To prevent user selecting inside the drag source*/
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.widget {
+	cursor: move;
+}
+
+.hud_box {
+	transition: 0.2s;
+}
+
+.hud_box:hover {
+	box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+	transform: scale(1.03, 1.03);
+	transition: 0.2s;
+}
+
+.hud_box .hud_box:hover {
+	transform: none;
+	box-shadow: none;
+}
+
+.ghost {
+	border: 3px dashed rgba(0,0,0,1);
+	opacity: 0.2;
+}
+</style>
+
+<script>
+var widgets = document.getElementById('widgets');
+var sortable = Sortable.create(widgets, {
+	animation: 150,
+	draggable: ".widget",
+	preventOnFilter: true,
+	ghostClass: 'ghost',
+	onChange: function (evt) {
+		//re-render chart when dragged
+		if (evt.item.id != 'ring_group_forward' && evt.item.id != 'call_forward') {
+			let chart = eval(evt.item.id + "_chart");
+			let context = eval(evt.item.id + "_chart_context");
+			let config = eval(evt.item.id + "_chart_config");
+	
+			let chart_status = Chart.getChart(context);
+			if (chart_status != undefined) {
+				chart_status.destroy();
+			}
+			chart.options.animation = { duration: 0 };
+			chart = new Chart(context, config);
+		}
+	},
+	onSort: function (evt) {
+		let widget_ids = document.querySelectorAll("#widgets > div[id]");
+		let widget_ids_list = [];
+		for (let i = 0; i < widget_ids.length; i++) {
+			widget_ids_list.push(widget_ids[i].id);
+		}
+		document.getElementById('widget_order').value = widget_ids_list;
+		console.log(widget_ids_list);
+	},
+});
+</script>
+<?php
+	}
 ?>
