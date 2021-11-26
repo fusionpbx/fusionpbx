@@ -435,6 +435,7 @@ include "root.php";
 							$templates['Yealink SIP-T29G'] = 'yealink/t29g';
 							$templates['yealink SIP-T29P'] = 'yealink/t29p';
 							$templates['Yealink SIP-T32G'] = 'yealink/t32g';
+							$templates['Yealink SIP-T33G'] = 'yealink/t33g';
 							$templates['Yealink SIP-T38G'] = 'yealink/t38g';
 							$templates['Yealink SIP-T40P'] = 'yealink/t40p';
 							$templates['Yealink SIP-T41G'] = 'yealink/t41g';
