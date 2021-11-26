@@ -123,6 +123,7 @@
 	require_once "resources/functions.php";
 	if ($config_exists) {
 		require "resources/pdo.php";
+		require_once "resources/cidr.php";
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
