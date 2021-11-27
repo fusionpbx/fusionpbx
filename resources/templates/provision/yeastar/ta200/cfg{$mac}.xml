@@ -45,9 +45,11 @@
 </dateandtime>
 </system>
 <gateway>
-<fxsport itemcount="2">
-  <fxsport0>
-    <idx>1</idx>
+<fxsport itemcount="{count($lines)}">
+{assign var=x value=0}
+{foreach $lines as $row}
+  <fxsport{$x}>
+    <idx>{$x+1}</idx>
     <modulestatus>up</modulestatus>
     <channel>1</channel>
     <name></name>
@@ -65,11 +67,11 @@
     <txgain>40</txgain>
     <voiptemplate>1</voiptemplate>
     <failovervoiptemplate></failovervoiptemplate>
-    <registerusername>{$user_id_1}</registerusername>
-    <registerauthname>{$auth_id_1}</registerauthname>
+    <registerusername>{$row.user_id}</registerusername>
+    <registerauthname>{$row.auth_id}</registerauthname>
     <registerfromuser></registerfromuser>
     <registeronlinenumber></registeronlinenumber>
-    <registerauthpassword>{$user_password_1}</registerauthpassword>
+    <registerauthpassword>{$row.password}</registerauthpassword>
     <isfax>no</isfax>
     <forwardmoh>none</forwardmoh>
     <dialpatternidx>1</dialpatternidx>
@@ -97,59 +99,9 @@
     <number></number>
     <enableechotraining>yes</enableechotraining>
     <sendflash>no</sendflash>
-  </fxsport0>
-  <fxsport1>
-    <idx>2</idx>
-    <modulestatus>up</modulestatus>
-    <channel>2</channel>
-    <name></name>
-    <rxflash>1000</rxflash>
-    <maxcallduration>6000</maxcallduration>
-    <callwaiting>yes</callwaiting>
-    <dnd>no</dnd>
-    <ringout>30</ringout>
-    <alwaysforward>no</alwaysforward>
-    <noanswerforward>yes</noanswerforward>
-    <busyforward>yes</busyforward>
-    <forwarddesttype>number</forwarddesttype>
-    <forwarddest></forwarddest>
-    <rxgain>40</rxgain>
-    <txgain>40</txgain>
-    <voiptemplate>2</voiptemplate>
-    <failovervoiptemplate></failovervoiptemplate>
-    <registerusername>{$user_id_2}</registerusername>
-    <registerauthname>{$auth_id_2}</registerauthname>
-    <registerfromuser></registerfromuser>
-    <registeronlinenumber></registeronlinenumber>
-    <registerauthpassword>{$user_password_2}</registerauthpassword>
-    <isfax>no</isfax>
-    <forwardmoh>none</forwardmoh>
-    <dialpatternidx>2</dialpatternidx>
-    <enableforwardprompt>no</enableforwardprompt>
-    <didnumber></didnumber>
-    <enablehotline>no</enablehotline>
-    <hotlinenum></hotlinenum>
-    <hotlinedialdelay>2</hotlinedialdelay>
-    <mwisendtype>disable</mwisendtype>
-    <cidsignalling>bell</cidsignalling>
-    <ciddtmflength>120</ciddtmflength>
-    <ciddtmfinterval>120</ciddtmfinterval>
-    <answeronpolarityswitch>no</answeronpolarityswitch>
-    <hanguponpolarityswitch>no</hanguponpolarityswitch>
-    <enablemwi>yes</enablemwi>
-    <minrxflash>300</minrxflash>
-    <cidmode>default</cidmode>
-    <cidsendingmode>ring</cidsendingmode>
-    <cidtype>bell</cidtype>
-    <enablemeteringpluse>no</enablemeteringpluse>
-    <meteringfreqency>12khz</meteringfreqency>
-    <cadenceactivetime>2000</cadenceactivetime>
-    <cadenceinactivetime>2000</cadenceinactivetime>
-    <meteringamplitude>500</meteringamplitude>
-    <number></number>
-    <enableechotraining>yes</enableechotraining>
-    <sendflash>no</sendflash>
-  </fxsport1>
+  </fxsport{$x}>
+  {assign var=x value=$x+1}
+{/foreach}
 </fxsport>
 <voiptrunktemplate itemcount="2">
   <voiptrunktemplate0>
@@ -157,8 +109,8 @@
     <type>SIP</type>
     <templatename>VoIPServer1</templatename>
     <domain></domain>
-    <host>{$server_address_1}</host>
-    <port>5060</port>
+    <host>{$account.1.server_address}</host>
+    <port>{$account.1.sip_port}</port>
     <transport>udp</transport>
     <enableregister>portregister</enableregister>
     <enablesrtp>no</enablesrtp>
@@ -196,8 +148,8 @@
     <type>SIP</type>
     <templatename>VoIPServer2</templatename>
     <domain></domain>
-    <host>{$server_address_2}</host>
-    <port>5060</port>
+    <host>{$account.2.server_address}</host>
+    <port>{$account.2.sip_port}</port>
     <transport>udp</transport>
     <enableregister>portregister</enableregister>
     <enablesrtp>no</enablesrtp>

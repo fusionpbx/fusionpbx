@@ -215,7 +215,7 @@
 			$database = new database;
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows == 0) {
-				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, calling_code) values ";
+				$sql = "insert into v_countries (country_uuid, country, iso_a2, iso_a3, num, country_code) values ";
 				$sql .= "('".uuid()."', 'Afghanistan', 'AF', 'AFG', 4, '93'), ";
 				$sql .= "('".uuid()."', 'Albania', 'AL', 'ALB', 8, '355'), ";
 				$sql .= "('".uuid()."', 'Algeria', 'DZ', 'DZA', 12, '213'), ";
@@ -486,6 +486,21 @@
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
+
+		//set domain > time_zone to UTC if not set
+			$sql = "update v_default_settings set ";
+			$sql .= "default_setting_value = 'UTC', ";
+			$sql .= "default_setting_enabled = 'true' ";
+			$sql .= "where ( ";
+			$sql .= "	default_setting_value is null or ";
+			$sql .= "	default_setting_value = '' ";
+			$sql .= ") ";
+			$sql .= "and default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'time_zone' ";
+			$sql .= "and default_setting_name = 'name' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
 
 	}
 

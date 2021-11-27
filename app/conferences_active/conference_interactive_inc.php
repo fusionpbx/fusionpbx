@@ -44,12 +44,15 @@
 	$text = $language->get();
 
 //get the http get or post and set it as php variables
-	if (is_uuid($_REQUEST["c"])) {
-		$conference_uuid = $_REQUEST["c"];
+	if (is_numeric($_REQUEST["c"])) {
+		$conference_id = $_REQUEST["c"];
+	}
+	elseif (is_uuid($_REQUEST["c"])) {
+		$conference_id = $_REQUEST["c"];
 	}
 
 //replace the space with underscore
-	$conference_name = $conference_uuid.'@'.$_SESSION['domain_name'];
+	$conference_name = $conference_id.'@'.$_SESSION['domain_name'];
 
 //create the conference list command
 	$switch_cmd = "conference '".$conference_name."' xml_list";
@@ -198,12 +201,11 @@
 					}
 					else {
 						echo "<i class='fas fa-user fa-fw' title=\"".$text['label-participant']."\"></i>";
-
 					}
 					echo "</td>\n";
 					$talking_icon = "<span class='far fa-comment' style='font-size: 14px; margin: -2px 10px -2px 15px; visibility: ".($flag_talking == "true" ? 'visible' : 'hidden').";' align='absmiddle' title=\"".$text['label-talking']."\">";
-					echo "<td ".$list_row_onclick." ".$list_row_title." class='no-wrap'>".escape($caller_id_name).$talking_icon."</td>\n";
-					echo "<td ".$list_row_onclick." ".$list_row_title.">".escape($caller_id_number)."</td>\n";
+					echo "<td ".$list_row_onclick." ".$list_row_title." class='no-wrap'>".escape(urldecode($caller_id_name)).$talking_icon."</td>\n";
+					echo "<td ".$list_row_onclick." ".$list_row_title.">".escape(urldecode($caller_id_number))."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".escape($join_time_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-xs'>".escape($last_talking_formatted)."</td>\n";
 					echo "<td ".$list_row_onclick." ".$list_row_title." class='hide-sm-dn'>".$text['label-'.(($flag_has_floor == "true") ? 'yes' : 'no')]."</td>\n";

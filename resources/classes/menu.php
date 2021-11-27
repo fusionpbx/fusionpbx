@@ -951,7 +951,7 @@ if (!class_exists('menu')) {
 						$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
 						switch ($_SESSION['theme']['menu_brand_type']['text']) {
 							case 'text':
-								$html .= "			<a class='navbar-brand-text'  href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
+								$html .= "			<a class='navbar-brand-text' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 								break;
 							case 'image_text':
 								$menu_brand_image = ($_SESSION['theme']['menu_brand_image']['text'] != '') ? escape($_SESSION['theme']['menu_brand_image']['text']) : PROJECT_PATH."/themes/default/images/logo.png";
@@ -1023,6 +1023,7 @@ if (!class_exists('menu')) {
 									$mod_a_2 = '#';
 								}
 								$mod_a_3 = ($menu_sub['menu_item_category'] == 'external') ? "target='_blank' " : null;
+								$menu_sub_icon = null;
 								if ($_SESSION['theme']['menu_sub_icons']['boolean'] != 'false') {
 									if ($menu_sub['menu_item_icon'] != '' && substr_count($menu_sub['menu_item_icon'], 'fa-') > 0) {
 										$menu_sub_icon = "<span class='fas ".escape($menu_sub['menu_item_icon'])."'></span>";
@@ -1077,57 +1078,54 @@ if (!class_exists('menu')) {
 		public function menu_vertical($menu_array) {
 
 			//menu brand image and/or text
+				$html .= "	<div id='menu_side_control_container'>\n";
+				$html .= "		<div class='menu_side_control_state' style='float: right; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."'>\n";
+				if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
+					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='padding: 8px 15px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i class='fas fa-bars fa-fw'></i></a>\n";
+				}
+				if ($_SESSION['theme']['menu_side_pin']['boolean'] == 'true') {
+					$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_expanded' onclick=\"menu_side_state_set('expanded');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='padding: 8px 14px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-pin_menu']."\"><i class='fas fa-toggle-off fa-sm fa-fw'></i></a>\n";
+					$html .= "		<a class='menu_side_item_main' id='menu_side_state_set_contracted' onclick=\"menu_side_state_set('contracted');\" oncontextmenu=\"menu_side_state_set('delete'); return false;\" style='padding: 8px 14px 8px 16px !important; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? 'display: none' : null)."' title=\"".$this->text['theme-label-unpin_menu']."\"><i class='fas fa-toggle-on fa-sm fa-fw'></i></a>\n";
+				}
+				$html .= "		</div>\n";
 				if ($_SESSION['theme']['menu_brand_type']['text'] == 'none') {
-					$html = "	<div style='height: 75px;'>\n";
-					$html .= 		"<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='fas fa-chevron-left' style='z-index: 99800; padding-left: 3px;'></i></a>";
-					$html .= 		"<a class='menu_side_item_main menu_side_expand' onclick='menu_side_expand();'><i class='fas fa-bars' style='z-index: 99800; padding-left: 3px;'></i></a>";
-					$html .= 	"</div>\n";
+					$html .= "		<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='".($_SESSION['theme']['menu_side_pin']['boolean'] == 'true' ? "max-width: calc(100% - 50px);" : null)." ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."' title=\"".$this->text['theme-label-contract_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
 				}
-				else {
-					$html = "	<div id='menu_side_brand_container'>\n";
-					//menu toggle buttons
-						if ($_SESSION['theme']['menu_brand_type']['text'] != 'none') {
-							$html .= "		<div style='float: right; margin-right: -20px; margin-top: -20px;'>\n";
-							$html .= "			<a class='menu_side_item_main menu_side_contract' onclick='menu_side_contract();' style='display: none;'><i class='fas fa-chevron-left'></i></a>\n";
-							$html .= "		</div>\n";
-						}
-					//show the menu brand image and/or text
-						$menu_brand_image_contracted =  $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
-						$menu_brand_image_expanded =  $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
-						$menu_brand_text = ($_SESSION['theme']['menu_brand_text']['text'] != '') ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
-						if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
-							$html .= "		<a href='".PROJECT_PATH."/' style='text-decoration: none;'>";
-							$html .= 			"<img id='menu_brand_image_contracted' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
-							$html .= 			"<img id='menu_brand_image_expanded' style='display: none;' src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
-							$html .= 		"</a>\n";
-						}
-						else if ($_SESSION['theme']['menu_brand_type']['text'] == 'image_text') {
-							$html .= "		<a href='".PROJECT_PATH."/' style='text-decoration: none;'>";
-							$html .= 			"<img id='menu_brand_image_contracted' style='width: 20px; margin-left: -2px; margin-top: -5px;' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
-							$html .= 			"<span class='menu_brand_text' style='display: none;'>".$menu_brand_text."</span>";
-							$html .= 		"</a>\n";
-						}
-						else if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
-							$html .= "		<a class='menu_brand_text' style='display: none;' href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
-						}
-					$html .= "	</div>\n";
+				$menu_brand_text = $_SESSION['theme']['menu_brand_text']['text'] != '' ? escape($_SESSION['theme']['menu_brand_text']['text']) : "FusionPBX";
+				if ($_SESSION['theme']['menu_brand_type']['text'] == 'text') {
+					$html .= "		<a class='menu_brand_text' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." href='".PROJECT_PATH."/'>".$menu_brand_text."</a>\n";
 				}
+				if ($_SESSION['theme']['menu_brand_type']['text'] == 'image' || $_SESSION['theme']['menu_brand_type']['text'] == 'image_text' || $_SESSION['theme']['menu_brand_type']['text'] == '') {
+					$menu_brand_image_contracted = $_SESSION['theme']['menu_side_brand_image_contracted']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_contracted']['text'] : PROJECT_PATH."/themes/default/images/logo_side_contracted.png";
+					$menu_brand_image_expanded = $_SESSION['theme']['menu_side_brand_image_expanded']['text'] != '' ? $_SESSION['theme']['menu_side_brand_image_expanded']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+					$html .= "		<a class='menu_brand_image' href='".PROJECT_PATH."/'>";
+					$html .= 			"<img id='menu_brand_image_contracted' style='".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "display: none;" : null)."' src='".escape($menu_brand_image_contracted)."' title=\"".escape($menu_brand_text)."\">";
+					$html .= 			"<img id='menu_brand_image_expanded' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null)." src='".escape($menu_brand_image_expanded)."' title=\"".escape($menu_brand_text)."\">";
+					$html .= 		"</a>\n";
+				}
+// 				else {
+// 					$html .= "		<a class='menu_side_item_main menu_side_expand' ".($_SESSION['theme']['menu_side_state']['text'] == 'expanded' ? "style='display: none';" : null)." onclick='menu_side_expand();' title=\"".$this->text['theme-label-expand_menu']."\"><i class='fas fa-bars fa-fw' style='z-index: 99800; padding-left: 1px;'></i></a>";
+// 				}
+				$html .= "	</div>\n";
 			//main menu items
 				if (is_array($menu_array) && sizeof($menu_array) != 0) {
 					foreach ($menu_array as $menu_index_main => $menu_item_main) {
 						$menu_target = ($menu_item_main['menu_item_category'] == 'external') ? '_blank' : '';
-						$html .= "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); $('#sub_".$menu_item_main['menu_item_uuid']."').slideToggle(180, function() { if (!$(this).is(':hidden')) { $('.menu_side_sub').not($(this)).slideUp(180); } });\"")." title=\"".$menu_item_main['menu_language_title']."\">";
-						if ($menu_item_main['menu_item_icon'] != '') {
-							$html .= "<i class='fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
+						$html .= "	<a class='menu_side_item_main' ".($menu_item_main['menu_item_link'] != '' ? "href='".$menu_item_main['menu_item_link']."' target='".$menu_target."'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('".$menu_item_main['menu_item_uuid']."');\"")." title=\"".$menu_item_main['menu_language_title']."\">";
+						if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0 && $_SESSION['theme']['menu_side_item_main_sub_icons']['boolean'] == 'true') {
+							$html .= "	<div class='menu_side_item_main_sub_icons' style='float: right; margin-right: -1px; ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "display: none;" : null)."'><i id='sub_arrow_".$menu_item_main['menu_item_uuid']."' class='sub_arrows fas fa-".($_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] != '' ? $_SESSION['theme']['menu_side_item_main_sub_icon_expand']['text'] : 'chevron-down')." fa-xs'></i></div>\n";
 						}
-						$html .= "<span class='menu_side_item_title' style='display: none;'>".$menu_item_main['menu_language_title']."</span>";
+						if ($menu_item_main['menu_item_icon'] != '') {
+							$html .= "<i class='menu_side_item_icon fas ".$menu_item_main['menu_item_icon']." fa-fw' style='z-index: 99800; margin-right: 8px;'></i>";
+						}
+						$html .= "<span class='menu_side_item_title' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null).">".$menu_item_main['menu_language_title']."</span>";
 						$html .= "</a>\n";
 						//sub menu items
 							if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
 								$html .= "	<div id='sub_".$menu_item_main['menu_item_uuid']."' class='menu_side_sub' style='display: none;'>\n";
 								foreach ($menu_item_main['menu_items'] as $menu_index_sub => $menu_item_sub) {
 									$html .= "		<a class='menu_side_item_sub' ".($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null)." href='".$menu_item_sub['menu_item_link']."'>";
-									$html .= 			"<span class='menu_side_item_title' style='display: none;'>".$menu_item_sub['menu_language_title']."</span>";
+									$html .= 			"<span class='menu_side_item_title' ".($_SESSION['theme']['menu_side_state']['text'] != 'expanded' ? "style='display: none;'" : null).">".$menu_item_sub['menu_language_title']."</span>";
 									$html .= 		"</a>\n";
 								}
 								$html .= "	</div>\n";
@@ -1136,30 +1134,42 @@ if (!class_exists('menu')) {
 					$html .= "	<div style='height: 100px;'></div>\n";
 				}
 			$html .= "</div>\n";
-			$html .= "<div id='content_container' style='padding: 0; width: calc(100% - ".(is_numeric($_SESSION['theme']['menu_side_width_contracted']['text']) ? $_SESSION['theme']['menu_side_width_contracted']['text'] : '55')."px); float: right; padding-top: 0px; text-align: center;'>\n";
-			$html .= "	<div id='content_header'>\n";
+			if ($_SESSION['theme']['menu_side_state']['text'] != 'expanded' && $_SESSION['theme']['menu_side_state']['text'] != 'hidden') {
+				$content_container_onclick = "onclick=\"clearTimeout(menu_side_contract_timer); if ($(window).width() >= 576) { menu_side_contract(); }\"";
+			}
+			$html .= "<div id='content_container' ".$content_container_onclick.">\n";
+			$html .= "	<div id='body_header'>\n";
 			//header: left
 				$html .= "<div class='float-left'>\n";
+				$html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($_SESSION['theme']['menu_side_state']['text'] != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
+				$body_header_brand_text = $_SESSION['theme']['body_header_brand_text']['text'] != '' ? escape($_SESSION['theme']['body_header_brand_text']['text']) : "FusionPBX";
+				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'image' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
+					$body_header_brand_image = $_SESSION['theme']['body_header_brand_image']['text'] != '' ? $_SESSION['theme']['body_header_brand_image']['text'] : PROJECT_PATH."/themes/default/images/logo_side_expanded.png";
+					$html .= 	"<div id='body_header_brand_image'>";
+					$html .= 		"<a href='".PROJECT_PATH."/'><img id='body_header_brand_image' src='".escape($body_header_brand_image)."' title=\"".escape($body_header_brand_text)."\"></a>";
+					$html .= 	"</div>";
+				}
+				if ($_SESSION['theme']['body_header_brand_type']['text'] == 'text' || $_SESSION['theme']['body_header_brand_type']['text'] == 'image_text') {
+					$html .= 	"<div id='body_header_brand_text'><a href='".PROJECT_PATH."/'>".$body_header_brand_text."</a></div>";
+				}
 				$html .= "</div>\n";
 			//header: right
-				$html .= "<span class='float-right' style='white-space: nowrap;'>";
+				$html .= "<div class='float-right' style='white-space: nowrap;'>";
 				//current user
-					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 85%;'>\n";
-					$html .= "<strong>".$this->text['theme-label-user']."</strong>: ";
-					$html .= "<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION['username']."</a>";
+					$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
+					$html .= "	<a href='".PROJECT_PATH."/core/users/user_edit.php?id=user' title=\"".$this->text['theme-label-user']."\"><i class='fas fa-".($_SESSION['theme']['body_header_icon_user']['text'] != '' ? $_SESSION['theme']['body_header_icon_user']['text'] : 'user-circle')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".$_SESSION['username']."</a>";
 					$html .= "</span>\n";
 				//domain name/selector (sm+)
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
-						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 85%;'>\n";
-						$html .= "<strong>".$this->text['theme-label-domain']."</strong>: ";
-						$html .= "<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
+						$html .= "	<a href='#' id='header_domain_selector_domain' title='".$this->text['theme-label-open_selector']."'><i class='fas fa-".($_SESSION['theme']['body_header_icon_domain']['text'] != '' ? $_SESSION['theme']['body_header_icon_domain']['text'] : 'globe-americas')." fa-lg fa-fw' style='margin-top: 6px; margin-right: 5px;'></i>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "</span>\n";
 					}
 				//logout icon
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$html .= "<a id='header_logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
 					}
-				$html .= "</span>";
+				$html .= "</div>";
 			$html .= "	</div>\n";
 
 			//modal for logout icon (above)

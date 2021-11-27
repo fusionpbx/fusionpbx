@@ -1,3 +1,4 @@
+ 
 <?php
 /*
 	FusionPBX
@@ -23,11 +24,11 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the dialplan class
 	if (!class_exists('dialplan')) {
 		class dialplan {
+
 			//variables
 			public $result;
 			public $domain_uuid;
@@ -118,6 +119,10 @@ include "root.php";
 					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
 				//revoke temporary permissions
 					$p->delete('dialplan_add', 'temp');
 			}
@@ -146,88 +151,6 @@ include "root.php";
 					$p->delete('dialplan_edit', 'temp');
 			}
 
-			public function dialplan_detail_add() {
-				//build insert array
-					$dialplan_detail_uuid = uuid();
-					$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-					$array['dialplan_details'][0]['domain_uuid'] = !$this->dialplan_global ? $this->domain_uuid : null;
-					$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-					$array['dialplan_details'][0]['dialplan_detail_tag'] = $this->dialplan_detail_tag;
-					$array['dialplan_details'][0]['dialplan_detail_order'] = $this->dialplan_detail_order;
-					$array['dialplan_details'][0]['dialplan_detail_type'] = $this->dialplan_detail_type;
-					$array['dialplan_details'][0]['dialplan_detail_data'] = $this->dialplan_detail_data;
-					$array['dialplan_details'][0]['dialplan_detail_break'] = strlen($this->dialplan_detail_break) != 0 ? $this->dialplan_detail_break : null;
-					$array['dialplan_details'][0]['dialplan_detail_inline'] = strlen($this->dialplan_detail_inline) != 0 ? $this->dialplan_detail_inline : null;
-					$array['dialplan_details'][0]['dialplan_detail_group'] = strlen($this->dialplan_detail_group) != 0 ? $this->dialplan_detail_group : null;
-				//grant temporary permissions
-					$p = new permissions;
-					$p->add('dialplan_detail_add', 'temp');
-				//execute insert
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-					$database->save($array);
-					unset($array);
-				//revoke temporary permissions
-					$p->delete('dialplan_detail_add', 'temp');
-			}
-
-			public function dialplan_detail_update() {
-				//build update array
-					$array['dialplan_details'][0]['dialplan_detail_uuid'] = $this->dialplan_detail_uuid;
-					$array['dialplan_details'][0]['dialplan_detail_tag'] = $this->dialplan_detail_tag;
-					$array['dialplan_details'][0]['dialplan_detail_order'] = $this->dialplan_detail_order;
-					$array['dialplan_details'][0]['dialplan_detail_type'] = $this->dialplan_detail_type;
-					$array['dialplan_details'][0]['dialplan_detail_data'] = $this->dialplan_detail_data;
-					if (strlen($this->dialplan_detail_break) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_break'] = $this->dialplan_detail_break;
-					}
-					if (strlen($this->dialplan_detail_inline) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_inline'] = $this->dialplan_detail_inline;
-					}
-					if (strlen($this->dialplan_detail_group) != 0) {
-						$array['dialplan_details'][0]['dialplan_detail_group'] = $this->dialplan_detail_group;
-					}
-				//grant temporary permissions
-					$p = new permissions;
-					$p->add('dialplan_detail_edit', 'temp');
-				//execute update
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-					$database->save($array);
-					unset($array);
-				//revoke temporary permissions
-					$p->delete('dialplan_detail_edit', 'temp');
-			}
-
-			public function restore_advanced_xml() {
-				$switch_dialplan_dir = $this->switch_dialplan_dir;
-				if (is_dir($switch_dialplan_dir)) {
-					//copy resources/templates/conf to the freeswitch conf dir
-						if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
-							$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
-						}
-						else {
-							$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
-						}
-					//get the contents of the dialplan/default.xml
-						$file_default_path = $src_dir.'/dialplan/default.xml';
-						$file_default_contents = file_get_contents($file_default_path);
-					//prepare the file contents and the path
-						//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-							$file_default_contents = str_replace("{v_domain}", $_SESSION['domain_name'], $file_default_contents);
-						//set the file path
-							$file_path = $switch_dialplan_dir.'/'.$_SESSION['domain_name'].'.xml';
-					//write the default dialplan
-						$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
-						fwrite($fh, $file_default_contents);
-						fclose($fh);
-					//set the message
-						$this->result['dialplan']['restore']['msg'] = "Default Restored";
-				}
-			}
-
 			private function app_uuid_exists() {
 				$sql = "select count(*) from v_dialplans ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -254,13 +177,57 @@ include "root.php";
 				//set the row id
 					$x = 0;
 
+				//get the array of xml files
+					$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+				
+				//add a band-aid for CLI editors with faulty syntax highlighting
+					/* **/
+
+				//build the dialplan xml array
+					/*
+					foreach ($xml_list as $xml_file) {
+						$xml_string = file_get_contents($xml_file);
+
+						//prepare the xml
+						if (strlen($xml_string) > 0) {
+							//replace the variables
+								$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
+								$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
+								$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
+							//convert the xml string to an xml object
+								$xml = simplexml_load_string($xml_string);
+							//convert to json
+								$json = json_encode($xml);
+							//convert to an array
+								$dialplan = json_decode($json, true);
+						}
+						if (strlen($this->json) > 0) {
+							//convert to an array
+								$dialplan = json_decode($json, true);
+						}
+						$_SESSION['dialplans']['default'][] = $dialplan;
+					}
+					*/
+
+				//create the database object
+					$database = new database;
+
 				//loop through each domain
 					foreach ($domains as $domain) {
+						//debug info
+							//echo "domain name ".$domain['domain_name']."\n";
 
-						//get the array of xml files
-							$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+						//determine if the dialplan already exists
+							$sql = "select app_uuid from v_dialplans ";
+							$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$sql .= "and app_uuid is not null ";
+							$parameters['domain_uuid'] = $domain['domain_uuid'];
+							//$database = new database;
+							$app_uuids = $database->select($sql, $parameters, 'all');
+							unset($parameters);
 
 						//process the dialplan xml files
+							//foreach ($_SESSION['dialplans']['default'] as $dialplan) {
 							foreach ($xml_list as $xml_file) {
 								//get the xml string
 									$xml_string = file_get_contents($xml_file);
@@ -271,13 +238,16 @@ include "root.php";
 											$length = (is_numeric($_SESSION["security"]["pin_length"]["var"])) ? $_SESSION["security"]["pin_length"]["var"] : 8;
 											$xml_string = str_replace("{v_context}", $domain['domain_name'], $xml_string);
 											$xml_string = str_replace("{v_pin_number}", generate_password($length, 1), $xml_string);
-											$xml_string = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $xml_string);
+
 										//convert the xml string to an xml object
 											$xml = simplexml_load_string($xml_string);
+
 										//convert to json
 											$json = json_encode($xml);
+
 										//convert to an array
 											$dialplan = json_decode($json, true);
+
 									}
 									if (strlen($this->json) > 0) {
 										//convert to an array
@@ -294,17 +264,18 @@ include "root.php";
 									}
 
 								//determine if the dialplan already exists
-									$sql = "select count(*) from v_dialplans ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and app_uuid = :app_uuid ";
-									$parameters['domain_uuid'] = $domain['domain_uuid'];
-									$parameters['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
-									$database = new database;
-									$app_uuid_exists = $database->select($sql, $parameters, 'column') > 0 ? true : false;
-									unset($parameters);
+									$app_uuid_exists = false;
+									foreach($app_uuids as $row) {
+										if ($dialplan['extension']['@attributes']['app_uuid'] == $row['app_uuid']) {
+											$app_uuid_exists = true;
+										}
+									}
 
 								//check if the dialplan exists
 									if (!$app_uuid_exists) {
+										
+										//debug info
+											//echo "	dialplan name ".$dialplan['extension']['@attributes']['name']." not found\n";
 
 										//dialplan global
 											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
@@ -397,6 +368,12 @@ include "root.php";
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
 																}
 																$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+																if (isset($row2['@attributes']['enabled'])) {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
+																}
+																else {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																}
 																$y++;
 
 																//increase the order number
@@ -418,6 +395,12 @@ include "root.php";
 																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = null;
 																}
 																$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = $group;
+																if (isset($row2['@attributes']['enabled'])) {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row2['@attributes']['enabled'];
+																}
+																else {
+																	$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+																}
 																$y++;
 
 																//increase the order number
@@ -457,7 +440,7 @@ include "root.php";
 
 						//save the data
 							if (is_array($array)) {
-								$database = new database;
+								//$database = new database;
 								$database->app_name = 'dialplans';
 								$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 								$database->save($array);
@@ -469,6 +452,14 @@ include "root.php";
 							$p->delete('dialplan_edit', 'temp');
 							$p->delete('dialplan_detail_add', 'temp');
 							$p->delete('dialplan_detail_edit', 'temp');
+
+						//add dialplan xml when the dialplan_xml is null
+							$this->source = 'details';
+							$this->destination = 'database';
+							$this->context = $domain['domain_name'];
+							$this->is_empty = 'dialplan_xml';
+							$this->xml();
+
 					} //foreach domains
 			}
 
@@ -616,7 +607,7 @@ include "root.php";
 										$sql .= "where dialplan_context = :dialplan_context ";
 									}
 									else {
-										$sql .= "where (dialplan_context = :dialplan_context or dialplan_context = '\${domain_name}') ";
+										$sql .= "where (dialplan_context = :dialplan_context or dialplan_context = '\${domain_name}' or dialplan_context = 'global') ";
 									}
 									$sql .= "and dialplan_enabled = 'true' ";
 									$parameters['dialplan_context'] = $this->context;
@@ -630,7 +621,7 @@ include "root.php";
 							$sql .= "dialplan_order asc ";
 							$database = new database;
 							$results = $database->select($sql, $parameters, 'all');
-							if (is_array($result) && @sizeof($result) != 0) {
+							if (is_array($results) && @sizeof($results) != 0) {
 								foreach ($results as $row) {
 									$dialplans[$row["dialplan_uuid"]] = $row["dialplan_xml"];
 								}
@@ -642,42 +633,43 @@ include "root.php";
 					if ($this->source == "details") {
 
 						//get the data using a join between the dialplans and dialplan details tables
-							$sql = "select ";
-							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, ";
-							$sql .= "p.dialplan_continue, p.dialplan_order, p.dialplan_enabled, p.dialplan_description, ";
-							$sql .= "s.dialplan_detail_uuid, s.dialplan_detail_tag, s.dialplan_detail_type, s.dialplan_detail_data, ";
-							$sql .= "s.dialplan_detail_break, s.dialplan_detail_inline, s.dialplan_detail_group, s.dialplan_detail_order ";
-							$sql .= "from v_dialplans as p, v_dialplan_details as s ";
-							$sql .= "where p.dialplan_uuid = s.dialplan_uuid ";
+							$sql = "select \n";
+							$sql .= "p.domain_uuid, p.dialplan_uuid, p.app_uuid, p.dialplan_context, p.dialplan_name, p.dialplan_number, \n";
+							$sql .= "p.dialplan_continue, p.dialplan_order, p.dialplan_enabled, p.dialplan_description, \n";
+							$sql .= "s.dialplan_detail_uuid, s.dialplan_detail_tag, s.dialplan_detail_type, s.dialplan_detail_data, \n";
+							$sql .= "s.dialplan_detail_break, s.dialplan_detail_inline, s.dialplan_detail_group, s.dialplan_detail_order, s.dialplan_detail_enabled \n";
+							$sql .= "from v_dialplans as p, v_dialplan_details as s \n";
+							$sql .= "where p.dialplan_uuid = s.dialplan_uuid \n";
 							if ($this->is_empty == "dialplan_xml") {
-								$sql .= "and p.dialplan_xml is null ";
+								$sql .= "and p.dialplan_xml is null \n";
 							}
 							if (isset($this->context)) {
 								if ($this->context == "public" || substr($this->context, 0, 7) == "public@" || substr($this->context, -7) == ".public") {
-									$sql .= "and p.dialplan_context = :dialplan_context ";
+									$sql .= "and p.dialplan_context = :dialplan_context \n";
 								}
 								else {
-									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}') ";
+									$sql .= "and (p.dialplan_context = :dialplan_context or p.dialplan_context = '\${domain_name}' or dialplan_context = 'global') \n";
 								}
-								$sql .= "and p.dialplan_enabled = 'true' ";
+								$sql .= "and p.dialplan_enabled = 'true' \n";
 								$parameters['dialplan_context'] = $this->context;
 							}
 							if (is_uuid($this->uuid)) {
-								$sql .= "and p.dialplan_uuid = :dialplan_uuid ";
-								$sql .= "and s.dialplan_uuid = :dialplan_uuid ";
+								$sql .= "and p.dialplan_uuid = :dialplan_uuid \n";
+								$sql .= "and s.dialplan_uuid = :dialplan_uuid \n";
 								$parameters['dialplan_uuid'] = $this->uuid;
 							}
-							$sql .= "order by ";
-							$sql .= "p.dialplan_order asc, ";
-							$sql .= "p.dialplan_name asc, ";
-							$sql .= "p.dialplan_uuid asc, ";
-							$sql .= "s.dialplan_detail_group asc, ";
-							$sql .= "case s.dialplan_detail_tag ";
-							$sql .= "when 'condition' then 1 ";
-							$sql .= "when 'action' then 2 ";
-							$sql .= "when 'anti-action' then 3 ";
-							$sql .= "else 100 end, ";
-							$sql .= "s.dialplan_detail_order asc ";
+							$sql .= "and (s.dialplan_detail_enabled = 'true' or s.dialplan_detail_enabled is null) \n";
+							$sql .= "order by \n";
+							$sql .= "p.dialplan_order asc, \n";
+							$sql .= "p.dialplan_name asc, \n";
+							$sql .= "p.dialplan_uuid asc, \n";
+							$sql .= "s.dialplan_detail_group asc, \n";
+							$sql .= "case s.dialplan_detail_tag \n";
+							$sql .= "when 'condition' then 1 \n";
+							$sql .= "when 'action' then 2 \n";
+							$sql .= "when 'anti-action' then 3 \n";
+							$sql .= "else 100 end, \n";
+							$sql .= "s.dialplan_detail_order asc \n";
 							$database = new database;
 							$results = $database->select($sql, $parameters, 'all');
 							unset($sql, $parameters);
@@ -1100,9 +1092,6 @@ include "root.php";
 										$p->delete('dialplan_delete', 'temp');
 										$p->delete('dialplan_detail_delete', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -1110,6 +1099,11 @@ include "root.php";
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message
@@ -1200,9 +1194,6 @@ include "root.php";
 									//revoke temporary permissions
 										$p->delete('dialplan_detail_delete', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -1270,9 +1261,11 @@ include "root.php";
 								}
 								if (is_array($uuids) && @sizeof($uuids) != 0) {
 									$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_context from v_".$this->table." ";
-									$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									if (!permission_exists('dialplan_all')) {
+										$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									}
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
@@ -1309,9 +1302,6 @@ include "root.php";
 									//revoke temporary permissions
 										$p->delete('dialplan_edit', 'temp');
 
-									//synchronize the xml config
-										save_dialplan_xml();
-
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 											$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
@@ -1319,6 +1309,11 @@ include "root.php";
 											foreach ($dialplan_contexts as $dialplan_context) {
 												$cache->delete("dialplan:".$dialplan_context);
 											}
+										}
+
+									//clear the destinations session array
+										if (isset($_SESSION['destinations']['array'])) {
+											unset($_SESSION['destinations']['array']);
 										}
 
 									//set message
@@ -1391,10 +1386,25 @@ include "root.php";
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
-												$primary_uuid = uuid();
+												//set a unique uuid
+													$primary_uuid = uuid();
 
 												//copy data
 													$array[$this->table][$x] = $row;
+
+												//app_uuid needs to be unique for copied dialplans
+													//except for inbound and outbound routes, fifo, time conditions
+													$app_uuid = $row['app_uuid'];
+													switch ($app_uuid) {
+														case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": break;
+														case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": break;
+														case "16589224-c876-aeb3-f59f-523a1c0801f7": break;
+														case "4b821450-926b-175a-af93-a03c441818b1": break;
+														default: $app_uuid = uuid();
+													}
+	
+												//dialplan copy should have a unique app_uuid
+													$array[$this->table][$x]['app_uuid'] = $app_uuid;
 
 												//overwrite
 													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
@@ -1441,13 +1451,11 @@ include "root.php";
 										$database->app_name = $this->app_name;
 										$database->app_uuid = $this->app_uuid;
 										$database->save($array);
+										//view_array($database->message);
 										unset($array);
 
 									//revoke temporary permissions
 										$p->delete('dialplan_detail_add', 'temp');
-
-									//synchronize the xml config
-										save_dialplan_xml();
 
 									//clear the cache
 										if (is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {

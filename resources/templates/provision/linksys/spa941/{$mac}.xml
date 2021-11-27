@@ -267,7 +267,7 @@
 <Language_Selection group="Regional/Miscellaneous"/>
 <Default_Character_Encoding group="Regional/Miscellaneous">ISO-8859-1</Default_Character_Encoding>
 <Station_Name group="Phone/General">{$device_label}</Station_Name>
-<Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
+<Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General"/>
 <BMP_Picture_Download_URL group="Phone/General"/>
 <Select_Logo group="Phone/General">Default</Select_Logo>
@@ -729,6 +729,5 @@
 <Speaker_Volume group="User/Audio_Volume">8</Speaker_Volume>
 <Handset_Volume group="User/Audio_Volume">12</Handset_Volume>
 <Headset_Volume group="User/Audio_Volume">10</Headset_Volume>
-<LCD_Contrast group="User/Audio_Volume">8</LCD_Contrast>
-<Back_Light_Timer group="User/Audio_Volume">10 s</Back_Light_Timer>
+<Lcd_Contrast group="User/Audio_Volume">0</Lcd_Contrast>
 </flat-profile>

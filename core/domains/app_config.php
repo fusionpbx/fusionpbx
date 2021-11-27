@@ -2,7 +2,7 @@
 
 	//application details
 		$apps[$x]['name'] = "Domains";
-		$apps[$x]['guid'] = "8b91605b-f6d2-42e6-a56d-5d1ded01bb44";
+		$apps[$x]['uuid'] = "8b91605b-f6d2-42e6-a56d-5d1ded01bb44";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "1.0";
@@ -82,7 +82,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the domain name.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the status of the domain.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_description";

@@ -71,7 +71,12 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
+	if (isset($_GET["order_by"])) {
+		$order_by = $_GET["order_by"];
+	}
+	else {
+		$order_by = 'sip_profile_name';
+	}
 	$order = $_GET["order"];
 
 //add the search string
@@ -127,6 +132,9 @@
 	}
 	if (permission_exists('sip_profile_delete') && $sip_profiles) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
+	if (permission_exists('sofia_global_setting_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>'code','collapse'=>'hide-xs','link'=>'/app/sofia_global_settings/sofia_global_settings.php']);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";

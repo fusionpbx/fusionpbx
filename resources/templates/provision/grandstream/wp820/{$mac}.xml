@@ -26,31 +26,39 @@
 
 <!-- # Account Name -->
 <!-- # String -->
-<P270>{$display_name_1}</P270>
+<P270>{$account.1.display_name}</P270>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P47>{$server_address_1}</P47>
+{if $account.1.sip_transport != 'dns srv'}
+<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2312>{$secondary_server_address_1}</P2312>
-
+    
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
+    <P2312>{$account.1.server_address_secondary}:{$account.1.sip_port}</P2312>
+{else}
+    <P2312>{$account.1.server_address_secondary}</P2312>
+{/if}
 <!-- # SIP User ID -->
 <!-- # String -->
-<P35>{$user_id_1}</P35>
+<P35>{$account.1.user_id}</P35>
 
 <!-- # SIP Authenticate ID -->
 <!-- # String -->
-<P36>{$auth_id_1}</P36>
+<P36>{$account.1.auth_id}</P36>
 
 <!-- # SIP Authenticate Password -->
 <!-- # String -->
-<P34>{$user_password_1}</P34>
+<P34>{$account.1.password}</P34>
 
 <!-- # Name -->
 <!-- # String -->
-<P3>{$display_name_1}</P3>
+<P3>{$account.1.display_name}</P3>
 
 <!-- # TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
@@ -59,25 +67,34 @@
 
 <!-- # Voice Mail Access Number -->
 <!-- # String -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- # Network Settings -->
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P48>{$outbound_proxy_1}</P48>
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
+    <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
+{else}
+    <P48>{$account.1.outbound_proxy_primary}</P48>
+{/if}
 
 <!-- # Secondary Outbound Proxy -->
 <!-- # String -->
-<P2333></P2333>
+    
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
+    <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
+{else}
+    <P2333>{$account.1.outbound_proxy_secondary}</P2333>
+{/if}
 
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_dns_mode)}
-<P103>{$grandstream_dns_mode}</P103>
+    <P103>{$grandstream_dns_mode}</P103>
 {else}
-<P103>0</P103>
+    <P103>0</P103>
 {/if}
 
 <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -88,10 +105,11 @@
 <!-- # NAT Traversal. 0 - No, 1 - STUN, 2 - keep alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
+
 {if isset($grandstream_nat_traversal)}
-<P52>{$grandstream_nat_traversal}</P52>
+    <P52>{$grandstream_nat_traversal}</P52>
 {else}
-<P52>0</P52>
+    <P52>0</P52>
 {/if}
 
 <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -116,10 +134,10 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-{if isset($register_expires_1)}
-<P32>{$register_expires_1}</P32>
+{if isset($account.1.register_expires)}
+    <P32>{$account.1.register_expires}</P32>
 {else}
-<P32>2</P32>
+    <P32>2</P32>
 {/if}
 
 <!-- # Re-register Before Expiration (in seconds). Default is 0 second -->
@@ -157,9 +175,9 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 {if isset($subscribe_mwi)}
-<P99>1</P99>
+    <P99>1</P99>
 {else}
-<P99>0</P99>
+    <P99>0</P99>
 {/if}
 
 <!-- # Use Privacy Header -->
@@ -403,9 +421,9 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P443>{$grandstream_srtp}</P443>
+    <P443>{$grandstream_srtp}</P443>
 {else}
-<P443>0</P443>
+    <P443>0</P443>
 {/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -542,19 +560,19 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone (Cannot be provisioned by config template currently) -->
 
@@ -636,39 +654,46 @@
 <!-- # Account Active. 0 - No, 1 - Yes. Default is 1 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-{if isset($user_password_2)}
-<P401>1</P401>
+{if isset($account.2.password)}
+    <P401>1</P401>
 {else}
-<P401>0</P401>
+    <P401>0</P401>
 {/if}
 
 <!-- # Account Name -->
 <!-- # String -->
-<P417>{$display_name_2}</P417>
+<P417>{$account.2.display_name}</P417>
 
 <!-- # SIP Server -->
 <!-- # String -->
-<P402>{$server_address_2}</P402>
+{if $account.2.sip_transport != 'dns srv'}
+<P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+{else}
+<P402>{$account.2.server_address}</P402>
+{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
-<P2412></P2412>
-
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.server_address_secondary)}
+    <P2412>{$account.2.server_address_secondary}:{$account.2.sip_port}</P2412>
+{else}
+    <P2412>{$account.2.server_address_secondary}</P2412>
+{/if}
 <!-- # SIP User ID -->
 <!-- # String -->
-<P404>{$user_id_2}</P404>
+<P404>{$account.2.user_id}</P404>
 
 <!-- # SIP Authenticate ID -->
 <!-- # String -->
-<P405>{$auth_id_2}</P405>
+<P405>{$account.2.auth_id}</P405>
 
 <!-- # SIP Authenticate Password -->
 <!-- # String -->
-<P406>{$user_password_2}</P406>
+<P406>{$account.2.password}</P406>
 
 <!-- # Name -->
 <!-- # String -->
-<P407>{$display_name_2}</P407>
+<P407>{$account.2.display_name}</P407>
 
 <!-- # TEL URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->
@@ -677,25 +702,33 @@
 
 <!-- # Voice Mail Access Number -->
 <!-- # String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 <!-- # Network Settings -->
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-<P403>{$outbound_proxy_2}</P403>
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
+    <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
+{else}
+    <P403>{$account.2.outbound_proxy_primary}</P403>
+{/if}
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-<P2433></P2433>
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
+    <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
+{else}
+    <P2433>{$account.2.outbound_proxy_secondary}</P2433>
+{/if}
 
 <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_dns_mode)}
-<P408>{$grandstream_dns_mode}</P408>
+    <P408>{$grandstream_dns_mode}</P408>
 {else}
-<P408>0</P408>
+    <P408>0</P408>
 {/if}
 
 <!-- # DNS SRV Fail-over Mode. 0 - Default, 1 - Saved one until DNS TTL, 2 - Saved one until no response. Default is 0 -->
@@ -707,9 +740,9 @@
 <!-- # Number: 0, 1, 2, 3, 4, 5 -->
 <!-- # Mandatory -->
 {if isset($grandstream_nat_traversal)}
-<P414>{$grandstream_nat_traversal}</P414>
+    <P414>{$grandstream_nat_traversal}</P414>
 {else}
-<P414>0</P414>
+    <P414>0</P414>
 {/if}
 
 <!-- # Proxy-Require (A SIP extension to enable firewall penetration). Max length is 64 characters -->
@@ -734,10 +767,10 @@
 <!-- # Register Expiration (in minutes). Default is 60. Max about 45 days -->
 <!-- # Number: 1 - 64800 -->
 <!-- # Mandatory -->
-{if isset($register_expires_2)}
-<P412>{$register_expires_2}</P412>
+{if isset($account.2.register_expires)}
+    <P412>{$account.2.register_expires}</P412>
 {else}
-<P412>2</P412>
+    <P412>2</P412>
 {/if}
 
 <!-- # Re-register Before Expiration (in seconds). Default is 0 second -->
@@ -775,9 +808,9 @@
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
 {if isset($subscribe_mwi)}
-<P415>1</P415>
+    <P415>1</P415>
 {else}
-<P415>0</P415>
+    <P415>0</P415>
 {/if}
 
 <!-- # Use Privacy Header -->
@@ -1021,9 +1054,9 @@
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
 {if isset($grandstream_srtp)}
-<P183>{$grandstream_srtp}</P183>
+    <P183>{$grandstream_srtp}</P183>
 {else}
-<P183>0</P183>
+    <P183>0</P183>
 {/if}
 
 <!-- # SRTP Key Length. 0 - AES 128&256 bit, 1 - AES 128 bit, 2 - AES 256 bit. Default is 0 -->
@@ -1160,7 +1193,7 @@
 
 <!-- # Match Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # -1 - No Ringtone. Default is 0. -->
@@ -1170,23 +1203,23 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone -->
 <!-- # -1 - No Rington Default is 0. -->
 <!-- # Number: -->
 <!-- # Mandatory -->
-<P1491>0</P1491>
+<P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone -->
 <!-- # -1 - No Ringtone Default is 0. -->
 <!-- # Number: -->
 <!-- # Mandatory -->
-<P1493>0</P1493>
+<P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
 <!-- ############################################################### -->
 <!-- # Account 2/Advanced Settings -->
@@ -1352,7 +1385,9 @@
 <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- # Offhook Auto Dial -->
 <!-- # String -->
@@ -1849,9 +1884,9 @@
 <!-- # Assign NTP Server Address  -->
 <!-- # String -->
 {if isset($ntp_server_primary)}
-<P30>{$ntp_server_primary}</P30>
+    <P30>{$ntp_server_primary}</P30>
 {else}
-<P30>pool.ntp.org</P30>
+    <P30>pool.ntp.org</P30>
 {/if}
 
 <!-- # DHCP Option 42 to override NTP server. 0 - No, 1 - Yes. Default is 1 -->
@@ -1963,9 +1998,11 @@
 
 <!-- # Time Zone -->
 {if isset($grandstream_timezone) }
-<P64>{$grandstream_timezone}</P64>
+    <P64>{$grandstream_timezone}</P64>
+{elseif isset($grandstream_gxp_time_zone) }
+    <P64>{$grandstream_gxp_time_zone}</P64>
 {else}
-<!-- # P64 = PST8PDT -->
+    <P64>auto</P64>
 {/if}
 
 <!-- # Time Display Format. 0 - 12 Hour, 1 - 24 Hour -->
@@ -2074,7 +2111,11 @@
 <!-- #################################################################### -->
 <!-- # New Admin Password  Default value is admin -->
 <!-- # String -->
-<P2>{$admin_password}</P2>
+{if isset($admin_password)}
+    <P2>{$admin_password}</P2>
+{else}
+    <P2>{$mac|replace:'-':''}</P2>
+{/if}
 
 <!-- #################################################################### -->
 <!-- # System Settings/Security Settings/SIP TLS                       ## -->
@@ -2235,7 +2276,7 @@
 <P237></P237>
 {elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
@@ -2312,13 +2353,13 @@
 <!-- # When set to Yes(1), it will override the configured provision path and method -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- # Allow DHCP Option 120 to Override SIP Server -->
 <!-- # 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1411>0</P1411>
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
 <!-- # Allow DHCP Option 242 (Avaya IP Phones). 0 - Disabled, 1 - Enabled. Default value is 1. -->
 <!-- # Number: 0, 1 -->
@@ -2360,9 +2401,9 @@
 <!-- # Number: 0, 1 , 2, 3, 4 -->
 <!-- # Mandatory -->
 {if isset($grandstream_syslog_level)}
-<P208>{$grandstream_syslog_level}</P208>
+    <P208>{$grandstream_syslog_level}</P208>
 {else}
-<P208>0</P208>
+    <P208>0</P208>
 {/if}
 
 <!-- # Syslog Keyword Filtering -->
@@ -2487,9 +2528,9 @@
 <!-- # Number: 0, 120, 240, 360, 480, 720 -->
 <!-- # Mandatory -->
 {if isset($grandstream_phonebook_download_interval)}
-<P332>{$grandstream_phonebook_download_interval}</P332>
+    <P332>{$grandstream_phonebook_download_interval}</P332>
 {else}
-<P332>0</P332>
+    <P332>0</P332>
 {/if}
 
 <!-- ################## -->

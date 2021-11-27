@@ -56,6 +56,7 @@
 	if (is_array($_POST)) {
 		$group_uuid = $_POST["group_uuid"];
 		$group_name = $_POST["group_name"];
+		$group_name_previous = $_POST["group_name_previous"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$group_level = $_POST["group_level"];
 		$group_protected = $_POST["group_protected"];
@@ -136,6 +137,22 @@
 			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 			$database->save($array);
 
+		//update group name in group permissions if group name changed
+			if ($group_name != $group_name_previous) {
+				$sql = "update v_group_permissions ";
+				$sql .= "set group_name = :group_name ";
+				$sql .= "where group_name = :group_name_previous ";
+				$sql .= "and group_uuid = :group_uuid ";
+				$parameters['group_name'] = $group_name;
+				$parameters['group_name_previous'] = $group_name_previous;
+				$parameters['group_uuid'] = $group_uuid;
+				$database = new database;
+				$database->app_name = 'Group Manager';
+				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters, $database);
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -147,7 +164,7 @@
 				header('Location: group_edit.php?id='.urlencode($group_uuid));
 				return;
 			}
-	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
+	}
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
@@ -227,6 +244,7 @@
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='group_name' maxlength='255' value='".escape($group_name)."'>\n";
+	echo "	<input type='hidden' name='group_name_previous' value='".escape($group_name)."'>\n";
 	echo "<br />\n";
 	echo $text['description-group_name']."\n";
 	echo "</td>\n";

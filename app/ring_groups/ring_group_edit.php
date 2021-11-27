@@ -246,7 +246,8 @@
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
 			//if (strlen($ring_group_greeting) == 0) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
-			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
+			if (strlen($ring_group_call_timeout) == 0) { $msg .= $text['message-call_timeout']."<br>\n"; }
+			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout_action']."<br>\n"; }
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
 			//if (strlen($ring_group_cid_number_prefix) == 0) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
 			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
@@ -323,8 +324,12 @@
 			$array['ring_groups'][0]["ring_group_greeting"] = $ring_group_greeting;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
 			$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
-			$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
-			$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+			if (permission_exists('ring_group_caller_id_name')) {
+				$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
+			}
+			if (permission_exists('ring_group_caller_id_number')) {
+				$array["ring_groups"][0]["ring_group_caller_id_number"] = $ring_group_caller_id_number;
+			}
 			if (permission_exists('ring_group_cid_name_prefix')) {
 				$array["ring_groups"][0]["ring_group_cid_name_prefix"] = $ring_group_cid_name_prefix;
 			}
@@ -427,15 +432,17 @@
 				$obj->delete_destinations($ring_group_destinations_delete);
 			}
 
-		//save the xml
-			save_dialplan_xml();
-
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$ring_group_context);
+
+		//clear the destinations session array
+			if (isset($_SESSION['destinations']['array'])) {
+				unset($_SESSION['destinations']['array']);
+			}
 
 		//set the message
 			if ($action == "add") {
@@ -495,6 +502,9 @@
 //set the default
 	if (strlen($ring_group_ringback) == 0) {
 		$ring_group_ringback = '${us-ring}';
+	}
+	if (strlen($ring_group_call_timeout) == 0) {
+		$ring_group_call_timeout = '30';
 	}
 
 //get the ring group destination array
@@ -829,7 +839,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-call_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

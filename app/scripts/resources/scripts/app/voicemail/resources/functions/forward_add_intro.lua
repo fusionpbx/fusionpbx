@@ -31,7 +31,7 @@
 
 		--request whether to add the intro
 			--To add an introduction to this message press 1
-			add_intro_id = session:playAndGetDigits(1, 1, 3, 5000, "#*", "phrase:voicemail_forward_prepend:1:2", "phrase:invalid_entry", "\\d+");
+			add_intro_id = session:playAndGetDigits(1, 1, 3, 5000, "#*", "phrase:voicemail_forward_prepend:1:2", "", "\\d+");
 			freeswitch.consoleLog("notice", "[voicemail][forward add intro] "..add_intro_id.."\n");
 			if (add_intro_id == '1') then
 
@@ -48,7 +48,9 @@
 
 				--record your message at the tone press any key or stop talking to end the recording
 					if (session:ready()) then
-						session:sayPhrase("voicemail_record_greeting", "", "en")
+						session:execute("playback", "phrase:voicemail_record_greeting");
+						session:execute("sleep", "1000");
+						session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 					end
 
 				--set the file full path

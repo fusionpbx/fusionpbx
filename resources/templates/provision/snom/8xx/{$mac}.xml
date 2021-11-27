@@ -2,8 +2,8 @@
 <settings>
 <phone-settings e="2">
 <language perm="">English</language>
-<update_policy perm="">auto_update</update_policy>
-<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
+<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
 <dhcp perm="R">on</dhcp>
 <timezone perm="">{$snom_time_zone}</timezone>
 <firmware_status perm="R">http://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
@@ -39,35 +39,35 @@
 <user_host idx="1" perm="">{$user.1.server_address}</user_host>
 <user_server_type idx="1" perm="">Default</user_server_type>
 <user_srtp idx="1" perm="">off</user_srtp>
-<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="2" perm="">{$user.2.display_name}</user_realname>
 <user_name idx="2" perm="">{$user.2.user_id}</user_name>
 <user_pass idx="2" perm="">{$user.2.password}</user_pass>
 <user_host idx="2" perm="">{$user.2.server_address}</user_host>
 <user_server_type idx="2" perm="">Default</user_server_type>
 <user_srtp idx="2" perm="">off</user_srtp>
-<user_mailbox idx="2" perm="">*97</user_mailbox>
+<user_mailbox idx="2" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="3" perm="">{$user.3.display_name}</user_realname>
 <user_name idx="3" perm="">{$user.3.user_id}</user_name>
 <user_pass idx="3" perm="">{$user.3.password}</user_pass>
 <user_host idx="3" perm="">{$user.3.server_address}</user_host>
 <user_server_type idx="3" perm="">Default</user_server_type>
 <user_srtp idx="3" perm="">off</user_srtp>
-<user_mailbox idx="3" perm="">*97</user_mailbox>
+<user_mailbox idx="3" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="4" perm="">{$user.4.display_name}</user_realname>
 <user_name idx="4" perm="">{$user.4.user_id}</user_name>
 <user_pass idx="4" perm="">{$user.4.password}</user_pass>
 <user_host idx="4" perm="">{$user.4.server_address}</user_host>
 <user_server_type idx="4" perm="">Default</user_server_type>
 <user_srtp idx="4" perm="">off</user_srtp>
-<user_mailbox idx="4" perm="">*97</user_mailbox>
+<user_mailbox idx="4" perm="">{$voicemail_number}</user_mailbox>
 <user_realname idx="5" perm="">{$user.5.display_name}</user_realname>
 <user_name idx="5" perm="">{$user.5.user_id}</user_name>
 <user_pass idx="5" perm="">{$user.5.password}</user_pass>
 <user_host idx="5" perm="">{$user.5.server_address}</user_host>
 <user_server_type idx="5" perm="">Default</user_server_type>
 <user_srtp idx="5" perm="">off</user_srtp>
-<user_mailbox idx="5" perm="">*97</user_mailbox>
+<user_mailbox idx="5" perm="">{$voicemail_number}</user_mailbox>
 <user_symmetrical_rtp idx="1" perm="">on</user_symmetrical_rtp>
 <user_ice idx="1" perm="">off</user_ice>
 <stun_server idx="1" perm=""></stun_server>

@@ -63,6 +63,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "dialplan_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_xml";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -225,6 +228,10 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_detail_order";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_detail_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

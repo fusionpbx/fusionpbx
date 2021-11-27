@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,7 +51,7 @@
 //get fax server uuid, set connection parameters
 	if (is_uuid($fax_uuid)) {
 
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('fax_extension_view')) {
 			//show all fax extensions
 			$sql = "select * from v_fax ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -86,7 +86,7 @@
 			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
 		}
 		else {
-			if (!if_group("superadmin") && !if_group("admin")) {
+			if (!permission_exists('fax_extension_view')) {
 				echo "access denied";
 				exit;
 			}

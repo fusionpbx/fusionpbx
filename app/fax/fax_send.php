@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,6 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Errol Samuels <voiptology@gmail.com>
+	Corey Moullas <cmoullas@emak.tech>
 */
 
 if (!isset($included)) { $included = false; }
@@ -52,14 +53,14 @@ if (!$included) {
 		$text = $language->get();
 
 	//get the fax_extension and save it as a variable
-		if (strlen($_REQUEST["fax_extension"]) > 0) {
+		if (isset($_REQUEST["fax_extension"]) && is_numeric($_REQUEST["fax_extension"])) {
 			$fax_extension = $_REQUEST["fax_extension"];
 		}
 
 	//pre-populate the form
 		if (is_uuid($_REQUEST['id']) && $_POST["persistformvar"] != "true") {
 			$fax_uuid = $_REQUEST["id"];
-			if (if_group("superadmin") || if_group("admin")) {
+			if (permission_exists('fax_extension_view_domain')) {
 				//show all fax extensions
 				$sql = "select fax_uuid, fax_extension, fax_caller_id_name, fax_caller_id_number, ";
 				$sql .= "fax_toll_allow, accountcode, fax_send_greeting ";
@@ -95,7 +96,7 @@ if (!$included) {
 					$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
-				if (!if_group("superadmin") && !if_group("admin")) {
+				if (!permission_exists('fax_extension_view_domain')) {
 					echo "access denied";
 					exit;
 				}
@@ -213,7 +214,7 @@ if (!function_exists('fax_split_dtmf')) {
 }
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (isset($fax_extension) && is_numeric($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -221,25 +222,25 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
+				mkdir($_SESSION['switch']['storage']['dir'], 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax');
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax', 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'], 0770);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				event_socket_mkdir($fax_dir.'/'.$fax_extension);
+				mkdir($fax_dir.'/'.$fax_extension, 0770);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				event_socket_mkdir($dir_fax_inbox);
+				mkdir($dir_fax_inbox, 0770);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				event_socket_mkdir($dir_fax_sent);
+				mkdir($dir_fax_sent, 0770);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				event_socket_mkdir($dir_fax_temp);
+				mkdir($dir_fax_temp, 0770);
 			}
 	}
 
@@ -267,7 +268,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$token = new token;
 				if (!$token->validate($_SERVER['PHP_SELF'])) {
 					message::add($text['message-invalid_token'],'negative');
-					header('Location: fax_send.php');
+					header('Location: fax_send.php'.(is_uuid($fax_uuid) ? '?id='.$fax_uuid : null));
 					exit;
 				}
 
@@ -309,9 +310,13 @@ if (!function_exists('fax_split_dtmf')) {
 				$page_height = 14; //in
 				break;
 			case 'letter' :
+				$page_width = 8.5; //in
+				$page_height = 11; //in
+				break;
 			default	:
 				$page_width = 8.5; //in
 				$page_height = 11; //in
+				$fax_page_size = 'letter';
 		}
 
 		//set resolution
@@ -346,36 +351,20 @@ if (!function_exists('fax_split_dtmf')) {
 				$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
 				if (in_array($fax_file_extension, $disallowed_file_extensions) || $fax_file_extension == '') { continue; }
 
-				$fax_name = $_files['name'][$index];
-				$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
-				$fax_name = str_replace(" ", "_", $fax_name);
+				//use a safe file name
+				$fax_name = md5($_files['name'][$index]);
 
-				//lua doesn't seem to like special chars with env:GetHeader
-				$fax_name = str_replace(";", "_", $fax_name);
-				$fax_name = str_replace(",", "_", $fax_name);
-				$fax_name = str_replace("'", "_", $fax_name);
-				$fax_name = str_replace("!", "_", $fax_name);
-				$fax_name = str_replace("@", "_", $fax_name);
-				$fax_name = str_replace("#", "_", $fax_name);
-				$fax_name = str_replace("$", "_", $fax_name);
-				$fax_name = str_replace("%", "_", $fax_name);
-				$fax_name = str_replace("^", "_", $fax_name);
-				$fax_name = str_replace("`", "_", $fax_name);
-				$fax_name = str_replace("~", "_", $fax_name);
-				$fax_name = str_replace("&", "_", $fax_name);
-				$fax_name = str_replace("(", "_", $fax_name);
-				$fax_name = str_replace(")", "_", $fax_name);
-				$fax_name = str_replace("+", "_", $fax_name);
-				$fax_name = str_replace("=", "_", $fax_name);
-
+				//rename the file
 				$attachment_file_name = $_files['name'][$index];
-				rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				if ($attachment_file_name != $fax_name.'.'.$fax_file_extension) {
+					rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				}
 				unset($attachment_file_name);
 
 				if (!$included) {
 					//check if directory exists
 					if (!is_dir($dir_fax_temp)) {
-						event_socket_mkdir($dir_fax_temp);
+						mkdir($dir_fax_temp, 0770);
 					}
 					//move uploaded file
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
@@ -394,12 +383,8 @@ if (!function_exists('fax_split_dtmf')) {
 				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
 					chdir($dir_fax_temp);
 
-					//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_name).".pdf -- ".correct_path($fax_name).".pdf -c quit");
-					// echo($cmd . "<br/>\n");
-					//exec($cmd);
-
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_name).".tif -- ".correct_path($fax_name).".pdf -c quit");
+					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
@@ -456,38 +441,49 @@ if (!function_exists('fax_split_dtmf')) {
 
 			//logo
 			$display_logo = false;
-			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] == '') {
-				$logo = PROJECT_PATH."/app/fax/resources/images/logo.jpg";
+			if (!is_array($_SESSION['fax']['cover_logo'])) {
+				$logo = $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fax/resources/images/logo.jpg";
 				$display_logo = true;
 			}
-			if (!isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
-				$logo = '';
-				$display_logo = false;
+			else if (is_null($_SESSION['fax']['cover_logo']['text'])) {
+				$logo = ''; //explicitly empty
 			}
-			else if (isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
-				$logo = $_SESSION['fax']['cover_logo']['text'];
-				if (substr($logo, 0, 4) == 'http') {
-					$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
-					$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
-					if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
-						if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
-							$raw = file_get_contents($logo);
-							if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
-								$logo = $dir_fax_temp.'/'.$remote_filename;
-							}
-							else {
-								unset($logo);
-							}
-						}
-						else {
-							$logo = $dir_fax_temp.'/'.$remote_filename;
-						}
+			else if ($_SESSION['fax']['cover_logo']['text'] != '') {
+				if (substr($_SESSION['fax']['cover_logo']['text'], 0, 4) == 'http') {
+					$logo = $_SESSION['fax']['cover_logo']['text'];
+				}
+				else if (substr($_SESSION['fax']['cover_logo']['text'], 0, 1) == '/') {
+					if (substr($_SESSION['fax']['cover_logo']['text'], 0, strlen($_SERVER['DOCUMENT_ROOT'])) != $_SERVER['DOCUMENT_ROOT']) {
+						$logo = $_SERVER['DOCUMENT_ROOT'].$_SESSION['fax']['cover_logo']['text'];
 					}
 					else {
-						unset($logo);
+						$logo = $_SESSION['fax']['cover_logo']['text'];
 					}
 				}
-				$display_logo = true;
+			}
+			if (isset($logo) && $logo) {
+				$logo_dirname = strtolower(pathinfo($logo, PATHINFO_DIRNAME));
+				$logo_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
+				$logo_fileext = pathinfo($logo_filename, PATHINFO_EXTENSION);
+				if (in_array($logo_fileext, ['gif','jpg','jpeg','png','bmp'])) {
+					if (file_exists($logo_dirname.'/'.$logo_filename)) {
+						$logo = $logo_dirname.'/'.$logo_filename;
+						$display_logo = true;	
+					}
+					else {
+						$raw = file_get_contents($logo);
+						if (file_put_contents($dir_fax_temp.'/'.$logo_filename, $raw)) {
+							$logo = $dir_fax_temp.'/'.$logo_filename;
+							$display_logo = true;
+						}
+						else {
+							unset($logo);
+						}
+					}
+				}
+				else {
+					unset($logo);
+				}
 			}
 
 			if ($display_logo) {
@@ -623,7 +619,7 @@ if (!function_exists('fax_split_dtmf')) {
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf')) {
 				chdir($dir_fax_temp);
 
-				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
+				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
 				// echo($cmd . "<br/>\n");
 				exec($cmd);
 				if (is_array($tif_files) && sizeof($tif_files) > 0) {
@@ -650,41 +646,14 @@ if (!function_exists('fax_split_dtmf')) {
 				@unlink($tif_file);
 			}
 
-			//generate pdf (a work around, as tiff2pdf was improperly inverting the colors)
+			//generate pdf from tif
 			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
-			// echo($cmd . "<br/>\n");
 			exec($cmd);
-
-			chdir($dir_fax_temp);
-
-			//$cmd = gs_cmd("-q -sDEVICE=psmono -r".$gs_r." -g".$gs_g." -dNOPAUSE -dBATCH -dSAFER -sOutputFile=".correct_path($fax_instance_uuid).".pdf -- ".correct_path($fax_instance_uuid).".pdf -c quit");
-			// echo($cmd . "<br/>\n");
-			//exec($cmd);
-
-			//convert pdf to tif
-			$cmd = gs_cmd('-q -sDEVICE=tiffg32d -r'.$gs_r.' -g'.$gs_g.' -dBATCH -dPDFFitPage -dNOPAUSE -sOutputFile='.
-				correct_path($fax_instance_uuid.'_temp.tif').
-				' -- '.$fax_instance_uuid.'.pdf -c quit');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
-
-			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
-				' -w '.$page_width.
-				' -l '.$page_height.
-				' -f -o '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'_temp.tif');
-			// echo($cmd . "<br/>\n");
-			exec($cmd);
-
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
 		}
 		else {
 			if (!$included) {
@@ -758,16 +727,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-		$dial_string  = "for_fax=1,";
-		$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-		$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-		$dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$dial_string .= "fax_file='"                     . $fax_file                . "',";
+		$tmp_dial_string  = "for_fax=1,";
+		$tmp_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
+		$tmp_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$tmp_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$tmp_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$tmp_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$tmp_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$tmp_dial_string .= "fax_file='"                     . $fax_file                . "',";
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
@@ -793,6 +762,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			if ($fax_send_mode != 'queue') {
+				$dial_string = $tmp_dial_string;
 				$dial_string .= $fax_variables;
 				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
 				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
@@ -817,6 +787,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else { // enqueue
 				$wav_file = ''; //! @todo add custom message
+				$dial_string = $tmp_dial_string;
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
 		}
@@ -917,8 +888,7 @@ if (!$included) {
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 		echo "</div>\n";
-
-		echo $text['description-2']." ".(if_group('superadmin') ? $text['description-3'] : null)."\n";
+		echo $text['description-2']." ".(permission_exists('fax_extension_view_domain') ? $text['description-3'] : null)."\n";
 		echo "<br /><br />\n";
 
 		echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
@@ -1102,38 +1072,44 @@ if (!$included) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-fax-subject']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
-		echo "	<br />\n";
-		echo "	".$text['description-fax-subject']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_subject')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-fax-subject']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
+			echo "	<br />\n";
+			echo "	".$text['description-fax-subject']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		".$text['label-fax-message']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
-		echo "<br />\n";
-		echo "	".$text['description-fax-message']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_message')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "		".$text['label-fax-message']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
+			echo "<br />\n";
+			echo "	".$text['description-fax-message']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-fax-footer']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$_SESSION['fax']['cover_footer']['text']."</textarea>\n";
-		echo "	<br />\n";
-		echo "	".$text['description-fax-footer']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('fax_footer')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-fax-footer']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$_SESSION['fax']['cover_footer']['text']."</textarea>\n";
+			echo "	<br />\n";
+			echo "	".$text['description-fax-footer']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "</table>";
 		echo "<br /><br />\n";

@@ -136,15 +136,17 @@ if (!class_exists('conferences')) {
 									$p->delete('dialplan_detail_delete', 'temp');
 									$p->delete('dialplan_delete', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-delete']);
@@ -225,15 +227,17 @@ if (!class_exists('conferences')) {
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
+									}
 
 								//set message
 									message::add($text['message-toggle']);
@@ -363,15 +367,12 @@ if (!class_exists('conferences')) {
 									$p->delete('conference_user_add', 'temp');
 									$p->delete('dialplan_add', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
 								//clear the cache
 									$cache = new cache;
-									$cache->delete("dialplan:".$_SESSION["context"]);
+									$cache->delete("dialplan:".$_SESSION["domain_name"]);
 
 								//set message
 									message::add($text['message-copy']);

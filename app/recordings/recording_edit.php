@@ -55,10 +55,18 @@
 		$recording_name = $_POST["recording_name"];
 		$recording_description = $_POST["recording_description"];
 
-		//clean the recording filename and name
-		$recording_filename = str_replace(" ", "_", $recording_filename);
-		$recording_filename = str_replace("'", "", $recording_filename);
-		$recording_name = str_replace("'", "", $recording_name);
+		//sanitize recording filename and name
+		$recording_filename_ext = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
+		if (!in_array($recording_filename_ext, ['wav','mp3','ogg'])) {
+			$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
+			$recording_filename = str_replace('.', '', $recording_filename);
+		}
+		$recording_filename = str_replace("\\", '', $recording_filename);
+		$recording_filename = str_replace('/', '', $recording_filename);
+		$recording_filename = str_replace('..', '', $recording_filename);
+		$recording_filename = str_replace(' ', '_', $recording_filename);
+		$recording_filename = str_replace("'", '', $recording_filename);
+		$recording_name = str_replace("'", '', $recording_name);
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -127,6 +135,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
+
 			//set message
 				message::add($text['message-update']);
 
@@ -140,7 +149,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$recording_uuid = $_GET["id"];
-		$sql = "select * from v_recordings ";
+		$sql = "select recording_name, recording_filename, recording_description from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and recording_uuid = :recording_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;

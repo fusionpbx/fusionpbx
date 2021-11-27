@@ -896,7 +896,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='from_row'>\n";
-	$i=1;
+	$i=2;
 	while($i<=99) {
 		$selected = ($i == $from_row) ? "selected" : null;
 		echo "			<option value='$i' ".$selected.">$i</option>\n";
@@ -916,6 +916,7 @@
 	echo "    <select class='formfld' style='width:40px;' name='data_delimiter'>\n";
 	echo "    <option value=','>,</option>\n";
 	echo "    <option value='|'>|</option>\n";
+	echo "    <option value='	'>TAB</option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-import_delimiter']."\n";

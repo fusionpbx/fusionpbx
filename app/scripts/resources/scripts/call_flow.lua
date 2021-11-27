@@ -144,6 +144,7 @@
 		--display label on Phone (if support)
 			if (session:ready()) then
 				if #active_flow_label > 0 then
+					session:sleep(1000);
 					local api = freeswitch.API();
 					local reply = api:executeString("uuid_display "..session:get_uuid().." "..active_flow_label);
 				end

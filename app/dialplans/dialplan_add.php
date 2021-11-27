@@ -80,7 +80,7 @@
 	}
 
 //set the default
-	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['context']; }
+	if (strlen($dialplan_context) == 0) { $dialplan_context = $_SESSION['domain_name']; }
 
 //add or update data from http post
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -184,9 +184,6 @@
 			$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 			$database->save($array);
 			unset($array);
-
-		//synchronize the xml config
-			save_dialplan_xml();
 	
 		//clear the cache
 			$cache = new cache;

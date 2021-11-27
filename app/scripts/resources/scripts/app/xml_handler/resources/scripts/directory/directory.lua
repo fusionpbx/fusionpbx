@@ -29,7 +29,7 @@
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set the default
-	continue = true;
+continue = true;
 
 --get the action
 	action = params:getHeader("action");
@@ -312,6 +312,7 @@
 								password = row.password;
 								mwi_account = row.mwi_account;
 								auth_acl = row.auth_acl;
+
 							--variables
 								sip_from_user = row.extension;
 								sip_from_number = (#number_alias > 0) and number_alias or row.extension;
@@ -336,6 +337,7 @@
 								directory_exten_visible = row.directory_exten_visible;
 								limit_max = row.limit_max;
 								call_timeout = row.call_timeout;
+								max_registrations = row.max_registrations;
 								limit_destination = row.limit_destination;
 								sip_force_contact = row.sip_force_contact;
 								sip_force_expires = row.sip_force_expires;
@@ -356,8 +358,11 @@
 							-- get the follow me information
 								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
 									follow_me_uuid = row.follow_me_uuid;
-									follow_me_enabled = row.follow_me_enabled;
-									--follow_me_destinations= row.follow_me_destinations;
+									if (do_not_disturb == "true" or forward_all_enabled == "true") then
+										follow_me_enabled = "false";
+									else
+										follow_me_enabled = row.follow_me_enabled;
+									end
 								end
 
 							-- check matching UserID and AuthName
@@ -378,7 +383,9 @@
 								presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 
 							--set the dial_string
-								if (string.len(row.dial_string) > 0) then
+								if (do_not_disturb == "true") then
+									dial_string = "!USER_BUSY";
+								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
@@ -394,6 +401,9 @@
 												contact = trim(api:execute("sofia_contact", destination));
 												array = explode('/',contact);
 												local profile, proxy = array[2], database_hostname;
+												if (profile == 'user_not_registered') then
+													profile = 'internal';
+												end
 												dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .."}sofia/" .. profile .. "/" .. destination .. ";fs_path=sip:" .. proxy;
 												--freeswitch.consoleLog("notice", "[xml_handler][directory] dial_string " .. dial_string .. "\n");
 											end
@@ -406,6 +416,25 @@
 											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
+						end);
+					end
+
+				--get the extension settings from the database
+					if (extension_uuid) then
+						local sql = "SELECT * FROM v_extension_settings "
+							.. "WHERE extension_uuid = :extension_uuid "
+							.. "and extension_setting_enabled = 'true' ";
+						local params = {extension_uuid=extension_uuid};
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+						end
+						extension_settings = {}
+						dbh:query(sql, params, function(row)
+							table.insert(extension_settings, {
+								extension_setting_type = row.extension_setting_type,
+								extension_setting_name = row.extension_setting_name,
+								extension_setting_value = row.extension_setting_value
+							});
 						end);
 					end
 
@@ -507,6 +536,12 @@
 							table.insert(xml, [[								<param name="verto-dialplan" value="XML"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-methods" value="verto"/>]]);
 							table.insert(xml, [[								<param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/>]]);
+							table.insert(xml, [[								<param name="max-registrations-per-extension" value="]] .. max_registrations .. [["/>]]);
+							for key,row in pairs(extension_settings) do
+								if (row.extension_setting_type == 'param') then
+									table.insert(xml, [[								<param name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
+								end
+							end
 							table.insert(xml, [[							</params>]]);
 							table.insert(xml, [[							<variables>]]);
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
@@ -642,6 +677,11 @@
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
 							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
+							for key,row in pairs(extension_settings) do
+								if (row.extension_setting_type == 'variable') then
+									table.insert(xml, [[								<variable name="]]..row.extension_setting_name..[[" value="]]..row.extension_setting_value..[["/>]]);
+								end
+							end
 							table.insert(xml, [[							</variables>]]);
 							table.insert(xml, [[						</user>]]);
 							table.insert(xml, [[					</users>]]);

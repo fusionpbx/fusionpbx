@@ -28,7 +28,6 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/functions/save_phrases_xml.php";
 
 //check permissions
 	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
@@ -175,6 +174,11 @@
 						$cache = new cache;
 						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
 
+					//clear the destinations session array
+						if (isset($_SESSION['destinations']['array'])) {
+							unset($_SESSION['destinations']['array']);
+						}
+
 					//send a redirect
 						message::add($text['message-add']);
 						header("Location: phrase_edit.php?id=".$phrase_uuid);
@@ -237,12 +241,14 @@
 							$obj->delete_details($phrase_details_delete);
 						}
 
-					//save the xml to the file system if the phrase directory is set
-						save_phrases_xml();
-
 					//clear the cache
 						$cache = new cache;
 						$cache->delete("languages:".$phrase_language.".".$phrase_uuid);
+
+					//clear the destinations session array
+						if (isset($_SESSION['destinations']['array'])) {
+							unset($_SESSION['destinations']['array']);
+						}
 
 					//send a redirect
 						message::add($text['message-update']);
@@ -290,8 +296,8 @@
 		unset($sql, $parameters);
 	}
 
-//get the recordings
-	$sql = "select * from v_recordings ";
+//get the recording names from the database.
+	$sql = "select recording_name, recording_filename from v_recordings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];

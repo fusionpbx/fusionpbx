@@ -45,9 +45,10 @@
 		//$apps[$x]['destinations'][$y]['sql'] = "select bridge_name, bridge_destination, bridge_description from v_bridges ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
 		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
+		$apps[$x]['destinations'][$y]['field']['bridge_uuid'] = "bridge_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "bridge_name";
-		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
 		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge \${destination}";

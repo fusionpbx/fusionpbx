@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,7 +48,18 @@ if ($domains_processed == 1) {
 		$sql .= "		where \n";
 		$sql .= "		ug.group_uuid = g.group_uuid \n";
 		$sql .= "		and u.user_uuid = ug.user_uuid \n";
-		$sql .= "	) AS groups, \n";
+		$sql .= "	) AS group_names, \n";
+		$sql .= "	( \n";
+		$sql .= "		select \n";
+		$sql .= "		string_agg(g.group_uuid::text, ', ') \n";
+		//$sql .= "		array_agg(g.group_uuid::text) \n";
+		$sql .= "		from \n";
+		$sql .= "		v_user_groups as ug, \n";
+		$sql .= "		v_groups as g \n";
+		$sql .= "		where \n";
+		$sql .= "		ug.group_uuid = g.group_uuid \n";
+		$sql .= "		and u.user_uuid = ug.user_uuid \n";
+		$sql .= "	) AS group_uuids, \n";
 		$sql .= "	( \n";
 		$sql .= "		SELECT group_level \n";
 		$sql .= "		FROM v_user_groups ug, v_groups g \n";

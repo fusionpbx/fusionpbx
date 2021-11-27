@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "95788e50-9500-079e-2807-fd530b0ea370";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Queues for managing inbound calls and routing those calls to available agents.";
@@ -35,11 +35,12 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_centers";
 		$apps[$x]['destinations'][$y]['name'] = "call_centers";
-		$apps[$x]['destinations'][$y]['sql'] = "select queue_extension as destination, queue_description as  description from v_call_center_queues";
+		$apps[$x]['destinations'][$y]['sql'] = "select queue_name as name, queue_extension as destination, queue_extension as extension, queue_description as  description from v_call_center_queues";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "queue_name asc";
 		$apps[$x]['destinations'][$y]['field']['name'] = "queue_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "queue_extension";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "queue_extension";
 		$apps[$x]['destinations'][$y]['field']['description'] = "queue_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
@@ -120,6 +121,26 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_outbound_caller_id_name";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_outbound_caller_id_number";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_announce_position";
+		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_announce_sound";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_announce_frequency";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 	//default settings
 		$y = 0;
@@ -146,6 +167,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bc73c8eb-f3eb-4182-adc0-9ac5aeedae2a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "agent_contact_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "user";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: user (default)";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
@@ -244,6 +273,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_no_answer_delay_time";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "agent_record";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_call_center_queues";
@@ -316,6 +349,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_time_base_score_sec";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Used to set the time base score of the Call Center to prioritize one call center over another.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_max_wait_time";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -357,6 +394,18 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_cid_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_outbound_caller_id_name";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_outbound_caller_id_number";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "queue_announce_position";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

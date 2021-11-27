@@ -16,7 +16,7 @@
 <dnd_off_code perm=""></dnd_off_code>
 <phone_type perm="">snom720</phone_type>
 <codec_tos perm="">160</codec_tos>
-<setting_server perm="RW">http://{$domain_name}/app/provision/index.php?mac={$mac}</setting_server>
+<setting_server perm="RW">http://{$domain_name}/app/provision/{literal}{mac}{/literal}.xml</setting_server>
 <pnp_config perm="">on</pnp_config>
 <dst perm="">3600 03.05.07 02:00:00 10.05.07 03:00:00</dst>
 <timezone perm="">{$snom_time_zone}</timezone>
@@ -625,7 +625,7 @@
 <user_expiry idx="10" perm="">3600</user_expiry>
 <user_expiry idx="11" perm="">3600</user_expiry>
 <user_expiry idx="12" perm="">3600</user_expiry>
-<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_mailbox idx="1" perm="">{$voicemail_number}</user_mailbox>
 <user_mailbox idx="2" perm=""></user_mailbox>
 <user_mailbox idx="3" perm=""></user_mailbox>
 <user_mailbox idx="4" perm=""></user_mailbox>

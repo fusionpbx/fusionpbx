@@ -24,7 +24,7 @@
     <!-- #802.1Q/VLAN Tag (VLAN classification for RTP) -->
     <!-- # Number: 0 to 4094 -->
     <!-- # Mandatory -->
-    <P51>0</P51>
+    <P51>{$grandstream_lan_port_vlan}</P51>
 
     <!-- # Layer 2 QoS.  -->
     <!-- # SIP 802.1p priority value (0 - 7) -->
@@ -105,7 +105,7 @@
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
 
@@ -142,7 +142,7 @@
     <!-- # When set to Yes(1), it will override the configured provision path and method. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- # Number: 0, 1 -->
@@ -536,7 +536,11 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
+{if $account.1.sip_transport != 'dns srv'}
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -563,7 +567,7 @@
     <!-- # Allow DHCP Option 120( override SIP server )  0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1411>0</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
     <!-- # SIP Transport 0 - UDP, 1 - TCP, 2 - TLS -->
     <!-- # Number: 0, 1, 2 -->
@@ -1013,13 +1017,13 @@
     <!-- # Mandatory -->
     <P72>1</P72>
 
-<!-- Dial Plan -->
-<!--  String -->
+    <!-- Dial Plan -->
+    <!--  String -->
 	
 {if isset($grandstream_dial_plan) }
-<P4200>{$grandstream_dial_plan}</P4200>
+    <P4200>{$grandstream_dial_plan}</P4200>
 {else}
-<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+    <P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
 {/if}
 
     <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
@@ -1052,7 +1056,11 @@
     <!-- # Enable Session Timer. 0 - No, 1 - Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P2395>1</P2395>
+    {if isset($grandstream_session_timer)}
+	<P2395>{$grandstream_session_timer}</P2395>
+    {else}
+	<P2395>1</P2395>
+    {/if}
 
     <!-- # Session Expiration (in seconds. default 180 seconds. Allowed value: 90-64800) -->
     <!-- # Number: 90-64800 -->
@@ -1105,7 +1113,7 @@
     <P2359>0</P2359>
 
     <!-- # Conference URI -->
-    <P2318></P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- ################################################################################# -->
     <!-- # Codec/Voice Quality settings                                                  # -->
@@ -1289,7 +1297,11 @@
     <!-- # Loop Current Disconnect. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset($grandstream_loop_current_disconnect)}
+    <P892>{$grandstream_loop_current_disconnect}</P892>
+    {else}
     <P892>0</P892>
+    {/if}
 
     <!-- # Play busy/reorder tone before Loop Current Disconnect. 0 - No, 1 - Yes. Default is 0.  -->
     <!-- # Number: 0, 1 -->
@@ -1433,7 +1445,11 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
+{if $account.2.sip_transport != 'dns srv'}
 <P747>{$account.2.server_address}:{$account.2.sip_port}</P747>
+{else}
+<P747>{$account.2.server_address}</P747>
+{/if}
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -1501,7 +1517,11 @@
     <!-- # DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
+{if isset($grandstream_dns_mode)}
+    <P702>{$grandstream_dns_mode}</P702>
+{else}
     <P702>0</P702>
+{/if}
 
     <!-- # Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
     <!-- # Number: 0, 1, 2 -->
@@ -1896,7 +1916,12 @@
 
     <!-- # Dial Plan  -->
     <!-- # String -->
-    <P4201>{ x+ | \+x+ | *x+ | *xx*x+ }</P4201>
+
+{if isset($grandstream_dial_plan) }
+    <P4201>{$grandstream_dial_plan}</P4201>
+{else}
+    <P4201>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4201>
+{/if}	  
 
     <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -1974,7 +1999,7 @@
     <P2459>0</P2459>
 
     <!-- #Conference URI -->
-    <P2418></P2418>
+    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
     <!-- ################################################################################# -->
     <!-- # Codec/Voice Quality settings                                                  # -->
@@ -2350,7 +2375,7 @@
     <!-- # Internet Protocol. 0 - Both, prefer IPv4, 1 - Both, prefer IPv6, 2 - IPv4 Only, 3 - IPv6 Only. Default is IPv4 Only -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1415>2</P1415>
+    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
     <!-- # IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
     <!-- # Number: 0, 1, 2 -->

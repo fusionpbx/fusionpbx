@@ -34,6 +34,7 @@ if (!class_exists('schema')) {
 			public $apps;
 			public $db_type;
 			public $result;
+			public $data_types;
 
 		//class constructor
 			public function __construct() {
@@ -49,7 +50,12 @@ if (!class_exists('schema')) {
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
-					include($config_path);
+					try {
+					    include($config_path);
+					}
+					catch (Exception $e) {
+					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+					}
 					$x++;
 				}
 				$this->apps = $apps;
@@ -381,7 +387,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= ");\n\n";
+							$sql .= ");\n";
 							return $sql;
 						}
 					}
@@ -452,7 +458,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= " FROM tmp_".$table.";\n\n";
+							$sql .= " FROM tmp_".$table.";\n";
 							return $sql;
 						}
 					}
@@ -463,8 +469,9 @@ if (!class_exists('schema')) {
 			public function schema ($format = '') {
  
  				//set the global variable
-					global $db, $upgrade_data_types, $text,$output_format;
-					if ($format=='') $format = $output_format;
+					global $db, $text, $output_format;
+
+					if ($format == '') $format = $output_format;
 
 				//get the db variables
 					require_once "resources/classes/config.php";
@@ -519,7 +526,12 @@ if (!class_exists('schema')) {
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 					$x=0;
 					foreach ($config_list as &$config_path) {
-						include($config_path);
+						try {
+							include($config_path);
+						}
+						catch (Exception $e) {
+						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+						}
 						$x++;
 					}
 
@@ -665,7 +677,7 @@ if (!class_exists('schema')) {
 
 												//change the data type if it has been changed
 													//if the data type in the app db array is different than the type in the database then change the data type
-													if ($upgrade_data_types) {
+													if ($this->data_types) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
@@ -677,37 +689,24 @@ if (!class_exists('schema')) {
 																	$sql_update .= "AS uuid);\n";
 																}
 																else {
-																	if ($db_field_type == "integer" && strtolower($field_type) == "serial") {
-																		//field type has not changed
-																	}
-																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") {
-																		//field type has not changed
-																	}
-																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") {
-																		//field type has not changed
-																	}
-																	else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
-																		//field type has not changed
-																	}
-																	else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") {
-																		//field type has not changed
-																	}
-																	else if ($db_field_type == "character" && strtolower($field_type) == "char") {
-																		//field type has not changed
-																	}
+																	//field type has not changed
+																	if ($db_field_type == "integer" && strtolower($field_type) == "serial") { }
+																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") { }
+																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") { }
+																	else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") { }
+																	else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") { }
+																	else if ($db_field_type == "character" && strtolower($field_type) == "char") { }
+																	//field type has changed
 																	else {
 																		switch ($field_type) {
+																			case 'numeric':	$using = $field_name."::numeric"; break;
 																			case 'timestamp':
-																			case 'datetime':
-																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::timestamp without time zone;\n";
-																				break;
-																			case 'timestamptz':
-																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." USING ".$field_name."::timestamp with time zone;\n";
-																				break;
-																			default:
-																				//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
-																				$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
+																			case 'datetime': $using = $field_name."::timestamp without time zone"; break;
+																			case 'timestamptz': $using = $field_name."::timestamp with time zone"; break;
+																			case 'boolean': $using = $field_name."::boolean"; break;
+																			default: unset($using);
 																		}
+																		$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." ".($using ? "USING ".$using : null).";\n";
 																	}
 																}
 															}
@@ -893,11 +892,11 @@ if (!class_exists('schema')) {
 									try {
 										$this->db->query(trim($sql));
 										if ($format == "text") {
-											$response .= "	$sql\n";
+											$response .= "	$sql;\n";
 										}
 									}
 									catch (PDOException $error) {
-										$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
+										$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
 									}
 								}
 							}

@@ -29,7 +29,6 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
-	require_once "resources/functions/save_phrases_xml.php";
 
 //check the permission
 	if (!permission_exists('phrase_view')) {
@@ -55,21 +54,21 @@
 				if (permission_exists('phrase_add')) {
 					$obj = new phrases;
 					$obj->copy($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('phrase_edit')) {
 					$obj = new phrases;
 					$obj->toggle($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 			case 'delete':
 				if (permission_exists('phrase_delete')) {
 					$obj = new phrases;
 					$obj->delete($phrases);
-					save_phrases_xml();
+					//save_phrases_xml();
 				}
 				break;
 		}

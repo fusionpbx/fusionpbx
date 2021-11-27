@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -61,7 +61,7 @@
 
 			//update the domain session variables
 				$domain_uuid = $_GET["domain_uuid"];
-			        $_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+				$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
@@ -80,7 +80,7 @@
 					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
 				}
 				else {
-					header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+					header("Location: ".PROJECT_PATH."/core/dashboard/");
 				}
 				exit;
 		}
@@ -164,7 +164,11 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(domain_uuid)', '*', $sql);
+	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
+	$sql .= "from v_domains ";
+	if (isset($sql_search)) {
+		$sql .= "where ".$sql_search;
+	}
 	$sql .= order_by($order_by, $order, 'domain_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -229,6 +233,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('domain_name', $text['label-domain_name'], $order_by, $order);
+	echo "<th class='center'>".$text['label-tools']."</th>";
 	echo th_order_by('domain_enabled', $text['label-domain_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-domain_description']."</th>\n";
 	if (permission_exists('domain_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
@@ -260,15 +265,23 @@
 				echo "	".escape($row['domain_name']);
 			}
 			echo "	</td>\n";
+			echo "	<td class='no-link center'>\n";
+			echo "		<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".escape($row['domain_uuid'])."&domain_change=true'>".$text['label-manage']."</a>";
+			if (permission_exists('domain_setting_view')) {
+				$list_setting_url = PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".urlencode($row['domain_uuid']);
+				echo "&nbsp;&nbsp; <a href='".$list_setting_url."'\">".$text['button-settings'];
+			}
+			echo "	</td>\n";
 			if (permission_exists('domain_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['domain_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo "	</td>\n";
 			}
 			else {
 				echo "	<td class='center'>\n";
 				echo $text['label-'.$row['domain_enabled']];
+				echo "	</td>\n";
 			}
-			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['domain_description'])."</td>\n";
 			if (permission_exists('domain_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";

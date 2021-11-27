@@ -16,7 +16,7 @@
 --
 --      The Initial Developer of the Original Code is
 --      Mark J Crane <markjcrane@fusionpbx.com>
---      Copyright (C) 2013 - 2014
+--      Copyright (C) 2013 - 2021
 --      the Initial Developer. All Rights Reserved.
 --
 --      Contributor(s):
@@ -72,11 +72,11 @@
 	end
 
 --get the events
-	--if (user == nil) then 		
+	--if (user == nil) then
 		--serialize the data for the console
 			--freeswitch.consoleLog("notice","[events] " .. event:serialize("xml") .. "\n");
 			--freeswitch.consoleLog("notice","[evnts] " .. event:serialize("json") .. "\n");
-	
+
 		--get the event variables
 			user            = event:getHeader("user");
 			host            = event:getHeader("host");
@@ -87,7 +87,7 @@
 			action_name     = event:getHeader("Action-Name");
 			action_value    = event:getHeader("Action-Value")
 			ring_count      = event:getHeader("ringCount")
-	
+
 		--send to the log
 			--freeswitch.consoleLog("notice","[events] user: " .. user .. "\n");
 			--freeswitch.consoleLog("notice","[events] host: " .. host .. "\n");
@@ -96,7 +96,7 @@
 			--if (action_name ~= nil) then freeswitch.consoleLog("notice","[events] action_name: " .. action_name .. "\n"); end
 			--if (action_value ~= nil) then freeswitch.consoleLog("notice","[events] action_value: " .. action_value .. "\n"); end
 	--end
-	
+
 	--get the domain uuid from the host
 		local sql = "select * from v_domains ";
 		sql = sql .. "where domain_name = :domain_name ";
@@ -112,19 +112,20 @@
 		if (user ~= nil and domain_name ~= nil) then
 			do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout = notify.get_db_values(user, domain_name)
 		end
-		
+
 	--get sip profile
 		if (user ~= nil and host ~= nil) then
-			sip_profile = notify.get_profile(user, host);
+			sip_profiles = notify.get_profiles(user, host);
 		end
-			
+
 	--DND
-	
+		if (sip_profiles ~= nil) then
 		--DND enabled
-			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true" and sip_profile ~= nil) then
+			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true") then
 				--set a variable
-					dial_string = "error/user_busy";
+					dial_string = "!USER_BUSY";
 					do_not_disturb = "true";
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = :do_not_disturb, ";
@@ -152,16 +153,16 @@
 							dbh:query(sql, params);
 						end
 					end
-			
+
 				--send notify to the phone
-					notify.dnd(user, host, sip_profile, do_not_disturb);	
-				
+					notify.dnd(user, host, sip_profiles, do_not_disturb);
 			end
 
 		--DND disabled
-			if (feature_action == "SetDoNotDisturb" and feature_enabled == "false" and sip_profile ~= nil ) then
+			if (feature_action == "SetDoNotDisturb" and feature_enabled == "false") then
 					--set a variable
 						do_not_disturb = "false";
+
 					--update the extension
 						sql = "update v_extensions set ";
 						sql = sql .. "do_not_disturb = :do_not_disturb, ";
@@ -176,61 +177,24 @@
 						dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.dnd(user, host, sip_profile, do_not_disturb);	
-		
+					notify.dnd(user, host, sip_profiles, do_not_disturb);
+
 			end
 
 	--Call Forward
-		
+
 		--Call Formward All enabled
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_immediate" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_immediate") then
 				--set a variable
 					forward_all_destination = action_value;
 					forward_all_enabled = "true";
 					forward_immediate_destination = action_value;
 					forward_immediate_enabled = "true";
-					
-				--get the caller_id for outbound call
-					local forward_caller_id = ""
-					if not empty(forward_caller_id_uuid) then
-						local sql = "select destination_number, destination_description,"..
-							"destination_caller_id_number, destination_caller_id_name " ..
-							"from v_destinations where domain_uuid = :domain_uuid and " ..
-							"destination_type = 'inbound' and destination_uuid = :destination_uuid";
-						local params = {domain_uuid = domain_uuid; destination_uuid = forward_caller_id_uuid}
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
-						end
-						local row = dbh:first_row(sql, params)
-						if row then
-							local caller_id_number = row.destination_caller_id_number
-							if empty(caller_id_number) then
-								caller_id_number = row.destination_number
-							end
-				
-							local caller_id_name = row.destination_caller_id_name
-							if empty(caller_id_name) then
-								caller_id_name = row.destination_description
-							end
-				
-							if not empty(caller_id_number) then
-								forward_caller_id = forward_caller_id ..
-									 ",outbound_caller_id_number=" .. caller_id_number ..
-									 ",origination_caller_id_number=" .. caller_id_number
-							end
-				
-							if not empty(caller_id_name) then
-								forward_caller_id = forward_caller_id ..
-									 ",outbound_caller_id_name=" .. caller_id_name ..
-									 ",origination_caller_id_name=" .. caller_id_name
-							end
-						end
-					end
-				
+
 				--set the dial string
 					if feature_enabled == "true" then
 						local destination_extension, destination_number_alias
-				
+
 						--used for number_alias to get the correct user
 						local sql = "select extension, number_alias from v_extensions ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -244,56 +208,56 @@
 							destination_extension = row.extension;
 							destination_number_alias = row.number_alias or '';
 						end);
-				
+
 						if (destination_user ~= nil) then
 							cmd = "user_exists id ".. destination_user .." "..domain_name;
 						else
 							cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 						end
 						local user_exists = trim(api:executeString(cmd));
-				
 					end
-					
-					--update the extension
-						sql = "update v_extensions set ";
-						sql = sql .. "do_not_disturb = 'false', ";
-						sql = sql .. "forward_all_enabled = 'true', ";
-						sql = sql .. "forward_all_destination = :forward_all_destination, ";
-						sql = sql .. "dial_string = null ";
-						sql = sql .. "where domain_uuid = :domain_uuid ";
-						sql = sql .. "and extension_uuid = :extension_uuid ";
-						local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, forward_all_destination = forward_all_destination};
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
-						end
-						dbh:query(sql, params);
-						
-					--update follow me
-						if (follow_me_uuid ~= nil) then
-							if (string.len(follow_me_uuid) > 0) then
-								local sql = "update v_follow_me set ";
-								sql = sql .. "follow_me_enabled = 'false' ";
-								sql = sql .. "where domain_uuid = :domain_uuid ";
-								sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
-								local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-								if (debug["sql"]) then
-									freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
-								end
-								dbh:query(sql, params);
+
+				--update the extension
+					sql = "update v_extensions set ";
+					sql = sql .. "do_not_disturb = 'false', ";
+					sql = sql .. "forward_all_enabled = 'true', ";
+					sql = sql .. "forward_all_destination = :forward_all_destination, ";
+					sql = sql .. "dial_string = null ";
+					sql = sql .. "where domain_uuid = :domain_uuid ";
+					sql = sql .. "and extension_uuid = :extension_uuid ";
+					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, forward_all_destination = forward_all_destination};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params);
+
+				--update follow me
+					if (follow_me_uuid ~= nil) then
+						if (string.len(follow_me_uuid) > 0) then
+							local sql = "update v_follow_me set ";
+							sql = sql .. "follow_me_enabled = 'false' ";
+							sql = sql .. "where domain_uuid = :domain_uuid ";
+							sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
+							local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
 							end
+							dbh:query(sql, params);
 						end
-					
-					--send notify to the phone
-						notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);	
+					end
+
+				--send notify to the phone
+					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
 
 		--Call Formward All disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate") then
 				--set a variable				
 					forward_all_destination = action_value;
 					forward_all_enabled = "false";
 					forward_immediate_enabled = "false";
 					forward_immediate_destination = action_value;
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
@@ -311,19 +275,20 @@
 						freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
 					dbh:query(sql, params);
-					
-					--send notify to the phone
-						if (forward_immediate_destination == nil) then 
-							forward_immediate_destination = " ";
-						end
-						notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);					
+
+				--send notify to the phone
+					if (forward_immediate_destination == nil) then
+						forward_immediate_destination = " ";
+					end
+					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
-			
+
 		--Call Formward BUSY enable
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_busy" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
 					forward_busy_enabled = "true";
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
@@ -336,16 +301,17 @@
 						freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
 					dbh:query(sql, params);
-					
+
 				--send notify to the phone
-					notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);
+					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
-			
+
 		--Call Formward BUSY disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_busy" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
 					forward_busy_enabled = "false";
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
@@ -362,17 +328,18 @@
 						freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
 					dbh:query(sql, params);
-					
+
 				--send notify to the phone
-					notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);					
+					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
 
 		--Call Formward NO ANSWER enable
-			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_no_answer" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
 					forward_no_answer_enabled = "true";
 					call_timeout = ring_count * 6;
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
@@ -388,14 +355,15 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			end
-			
+
 		--Call Formward NO ANSWER disable
-			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_no_answer" and sip_profile ~= nil) then
+			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
 					forward_no_answer_enabled = "false";
+
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
@@ -414,28 +382,28 @@
 					dbh:query(sql, params);
 
 				--send notify to the phone
-					notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);					
+					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			end			
 	
 	--No feature event (phone boots): Send all values
 		if (feature_enabled == nil) then
 			--Do Not Disturb
-					--notify.dnd(user, host, sip_profile, do_not_disturb);
+				--notify.dnd(user, host, sip_profiles, do_not_disturb);
 
 			--Forward all
-					forward_immediate_enabled = forward_all_enabled;
-					forward_immediate_destination = forward_all_destination;
-					--notify.forward_immediate(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				forward_immediate_enabled = forward_all_enabled;
+				forward_immediate_destination = forward_all_destination;
+				--notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 
 			--Forward busy
-					--notify.forward_busy(user, host, sip_profile, forward_busy_enabled, forward_busy_destination);
+				--notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 
 			--Forward No Answer
-					ring_count = math.ceil (call_timeout / 6);
-					--notify.forward_no_answer(user, host, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+				ring_count = math.ceil (call_timeout / 6);
+				--notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			notify.init(user, 
 				host, 
-				sip_profile, 
+				sip_profiles,
 				forward_immediate_enabled, 
 				forward_immediate_destination, 
 				forward_busy_enabled, 
@@ -445,9 +413,9 @@
 				ring_count, 
 				do_not_disturb);
 		end
-		
---		feature_event_notify.init(user, host, sip_profile, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
-	
+
+--		feature_event_notify.init(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, ring_count, do_not_disturb)
+	end
 	--clear the cache
 		if (feature_enabled ~= nil) then
 			cache.del("directory:"..user.."@"..host)

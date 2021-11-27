@@ -56,7 +56,7 @@
     <!-- Authenticate Password, MaxLength unlimited -->
     <P34>{$account.1.password}</P34>
     <!-- Voicemail UserID (User ID/extension for 3rd Party voice mail system), MaxLength 64 characters -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
     <!-- Name (DisPlay name :John Doe), MaxLength 64 characters -->
     <P3>{$account.1.display_name}</P3>
     <!-- Tel URI suPPort. 0 - disabled, 1 - User is Phone, 2 - Tel URI. Default value is 0 -->
@@ -208,7 +208,7 @@
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P66></P66>
     <!-- Dial Plan Maxlength = unlimited, default is allow all  -->
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P29>0</P29>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
@@ -222,7 +222,9 @@
     <!-- SPecial Feature.  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
     <P198>100</P198>
     <!-- Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
-    <P2325>0</P2325>
+{if isset($grandstream_feature_key_sync)}
+    <P2325>{$grandstream_feature_key_sync}</P2325>
+{/if}
     <!-- Enable Call Features. 0 - No, 1 - Yes. -->
     <P191>1</P191>
     <!-- Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
@@ -265,7 +267,7 @@
     <!-- Authenticate Password, MaxLength: unlimited -->
     <P506></P506>
     <!-- Voicemail UserID (User ID/extension for 3rd Party voice mail system, MaxLength 64 characters) -->
-    <P526>*97</P526>
+    <P526>{$voicemail_number}</P526>
     <!-- Name (DisPlay name :John Doe, MaxLength 64 characters) -->
     <P507></P507>
     <!-- Tel URL SuPPort. 0 - disabled, 1 - User is Phone, 2 - Tel URI. Default value is 0 -->
@@ -486,7 +488,9 @@
     <!--P281 -->
     <!--  Advanced Settings/ Call Features -->
     <!-- Always Ring SPeaker.  0 - No, 1 - Yes.  Default is 0. -->
-    <P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+    <P1439>{$grandstream_headset_ring}</P1439>
+{/if}
     <!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
     <P91>0</P91>
     <!-- Disable Call-Waiting Tone. 0 - No (default), 1 - Yes -->
@@ -767,7 +771,7 @@
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
     
@@ -787,9 +791,9 @@
     <P235></P235>
     <!-- DHCP OPtion 66 Override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- When set to Yes(1), it will override the configured Provision Path and method. -->
-    <P145>1</P145>
+    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
     <!-- DHCP OPtion 120 Override SIP Server. 0 - No, 1 - Yes. Default is Yes. -->
-    <P1411>1</P1411>
+    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
     <!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default is No. -->
     <P1414>0</P1414>
     <!-- Automatic UPgrade. 0 - No, 1 - Check every day, 2 - Check every week, 3 - Check at a Period Time. Default is 0. -->
@@ -865,10 +869,17 @@
     <!--P7052 = -->
     <!--  Maintenance/ Device Manager -->
     <!-- Headset TX Gain (dB), Allowed value: -6, 0, 6 -->
+{if isset($grandstream_headset_tx_gain)}
+    <P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
     <P1301>0</P1301>
+{/if}
     <!-- Headset RX Gain (dB), Allowed value: -6, 0, 6 -->
+{if isset($grandstream_headset_rx_gain)}
+    <P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
     <P1302>0</P1302>
-    <!-- Handset TX gain, 0 ?0dB, 1 ?-6dB, 2 - 6 dB, 3 - -3dB, 4 ?3dB -->
+{/if}    <!-- Handset TX gain, 0 ?0dB, 1 ?-6dB, 2 - 6 dB, 3 - -3dB, 4 ?3dB -->
     <P1464>0</P1464>
     <!-- Camera ExPosure:   Allowed value: 0 - 19 -->
     <P915>12</P915>

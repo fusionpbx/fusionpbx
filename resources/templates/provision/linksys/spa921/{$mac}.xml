@@ -10,7 +10,7 @@
 <Primary_NTP_Server>{$ntp_server_primary}</Primary_NTP_Server>
 <Secondary_NTP_Server>{$ntp_server_secondary}</Secondary_NTP_Server>
 <Upgrade_Rule></Upgrade_Rule>
-<Voice_Mail_Number>*97</Voice_Mail_Number>
+<Voice_Mail_Number>{$voicemail_number}</Voice_Mail_Number>
 <Time_Zone>{$spa_time_zone}</Time_Zone>
 <Daylight_Saving_Time_Rule>start=9/27/0/2;end=4/4/0/3;save=0</Daylight_Saving_Time_Rule>
 <Blind_Attn-Xfer_Enable_1_>No</Blind_Attn-Xfer_Enable_1_>
@@ -32,4 +32,5 @@
 <Headset_Input_Gain>6</Headset_Input_Gain>
 <Time_Format>{$spa_time_format}</Time_Format>
 <Date_Format>{$spa_date_format}</Date_Format>
+<Lcd_Contrast group="User/Audio_Volume">0</Lcd_Contrast>
 </flat-profile>

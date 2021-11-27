@@ -23,6 +23,7 @@ if (!class_exists('call_block')) {
 		/**
 		 * declare public variables
 		 */
+		public $call_block_direction;
 		public $extension_uuid;
 		public $call_block_app;
 		public $call_block_data;
@@ -307,7 +308,7 @@ if (!class_exists('call_block')) {
 
 						//get the caller id info from cdrs
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select caller_id_name, caller_id_number from v_xml_cdr ";
+								$sql = "select caller_id_name, caller_id_number, caller_destination from v_xml_cdr ";
 								$sql .= "where xml_cdr_uuid in (".implode(', ', $uuids).") ";
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
@@ -322,11 +323,17 @@ if (!class_exists('call_block')) {
 										if (permission_exists('call_block_all')) {
 											$array['call_block'][$x]['call_block_uuid'] = uuid();
 											$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+											$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 											if (is_uuid($this->extension_uuid)) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
 											}
-											$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-											$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+											if ($this->call_block_direction == 'inbound') {
+												$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+												$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+											}
+											if ($this->call_block_direction == 'outbound') {
+												$array['call_block'][$x]['call_block_number'] = trim($row["caller_destination"]);
+											}
 											$array['call_block'][$x]['call_block_count'] = 0;
 											$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 											$array['call_block'][$x]['call_block_data'] = $this->call_block_data;
@@ -340,9 +347,15 @@ if (!class_exists('call_block')) {
 													if (is_uuid($field['extension_uuid'])) {
 														$array['call_block'][$x]['call_block_uuid'] = uuid();
 														$array['call_block'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+														$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
-														$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-														$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+														if ($this->call_block_direction == 'inbound') {
+															$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
+															$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+														}
+														if ($this->call_block_direction == 'outbound') {
+															$array['call_block'][$x]['call_block_number'] = trim($row["caller_destination"]);
+														}
 														$array['call_block'][$x]['call_block_count'] = 0;
 														$array['call_block'][$x]['call_block_app'] = $this->call_block_app;
 														$array['call_block'][$x]['call_block_data'] = $this->call_block_data;

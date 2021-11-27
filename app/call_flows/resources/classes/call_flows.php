@@ -146,9 +146,6 @@ if (!class_exists('call_flows')) {
 									$p->delete('dialplan_delete', 'temp');
 									$p->delete('dialplan_detail_delete', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -159,6 +156,11 @@ if (!class_exists('call_flows')) {
 										foreach ($call_flow_contexts as $call_flow_context) {
 											$cache->delete("dialplan:".$call_flow_context);
 										}
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -241,9 +243,6 @@ if (!class_exists('call_flows')) {
 								//revoke temporary permissions
 									$p->delete('dialplan_edit', 'temp');
 
-								//syncrhonize configuration
-									save_dialplan_xml();
-
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;
 
@@ -254,6 +253,11 @@ if (!class_exists('call_flows')) {
 										foreach ($call_flow_contexts as $call_flow_context) {
 											$cache->delete("dialplan:".$call_flow_context);
 										}
+									}
+
+								//clear the destinations session array
+									if (isset($_SESSION['destinations']['array'])) {
+										unset($_SESSION['destinations']['array']);
 									}
 
 								//set message
@@ -360,9 +364,6 @@ if (!class_exists('call_flows')) {
 
 								//revoke temporary permissions
 									$p->delete('dialplan_add', 'temp');
-
-								//syncrhonize configuration
-									save_dialplan_xml();
 
 								//apply settings reminder
 									$_SESSION["reload_xml"] = true;

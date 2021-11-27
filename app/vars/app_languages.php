@@ -274,8 +274,8 @@ $text['description-variables_advanced']['ru-ru'] = "Определите зде�
 $text['description-variables_advanced']['sv-se'] = "Definiera preprocessor variabler här. Kan nås i xml konfigurationen med $.";
 $text['description-variables_advanced']['uk-ua'] = "Задайте змінні препроцесора тут. Вони будуть доступними в конфігурації XML з символом $.";
 
-$text['description-variables']['en-us'] = "Define preprocessor variables here.";
-$text['description-variables']['en-gb'] = "Define preprocessor variables here.";
+$text['description-variables']['en-us'] = "Define preprocessor variables here. A switch restart is required for changes to take effect.";
+$text['description-variables']['en-gb'] = "Define preprocessor variables here. A switch restart is required for changes to take effect.";
 $text['description-variables']['ar-eg'] = "";
 $text['description-variables']['de-at'] = "Definieren Sie Preprozessor Variablen."; //copied from de-de
 $text['description-variables']['de-ch'] = "Definieren Sie Preprozessor Variablen."; //copied from de-de

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -236,11 +236,15 @@
 							$abbrv = "11d";
 							break;
 						case "^(?:\+?1)?(\d{10})$":
-							$label = $text['label-north-america'];
+							$label = $text['label-north_america'];
 							$abbrv = "10-11d";
 							break;
 						case "^(011\d{9,17})$":
-							$label = $text['label-north-america-intl'];
+							$label = $text['label-north_america_intl'];
+							$abbrv = "011.9-17d";
+							break;
+						case "^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})$":
+							$label = $text['label-north_america_islands'];
 							$abbrv = "011.9-17d";
 							break;
 						case "^(\d{12,20})$":
@@ -262,6 +266,10 @@
 						case "(^911$|^933$)":
 							$label = $text['label-911'];
 							$abbrv = "911";
+							break;
+						case "(^988$)":
+							$label = $text['label-988'];
+							$abbrv = "988";
 							break;
 						case "^9(\d{3})$":
 							$label = $text['label-9d3'];
@@ -308,15 +316,27 @@
 	
 						if ($gateway_type == "gateway") {
 							$dialplan_name = $gateway_name.".".$abbrv;
-							$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."18002738255";
+							} else {
+								$bridge_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
+							}
 						}
 						if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
 							$extension_2_name = $gateway_2_id.".".$abbrv;
-							$bridge_2_data .= "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."18002738255";
+							} else {
+								$bridge_2_data = "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
+							}
 						}
 						if (strlen($gateway_3_name) > 0 && $gateway_3_type == "gateway") {
 							$extension_3_name = $gateway_3_id.".".$abbrv;
-							$bridge_3_data .= "sofia/gateway/".$gateway_3_id."/".$prefix_number."\$1";
+							if ($abbrv == "988") {
+								$bridge_3_data = "sofia/gateway/".$gateway_3_id."/".$prefix_number."18002738255";
+							} else {
+								$bridge_3_data = "sofia/gateway/".$gateway_3_id."/".$prefix_number."\$1";
+							}
 						}
 						if ($gateway_type == "freetdm") {
 							$dialplan_name = "freetdm.".$abbrv;
@@ -392,7 +412,7 @@
 						if (strlen($dialplan_order) == 0) {
 							$dialplan_order ='333';
 						}
-						$dialplan_context = $_SESSION['context'];
+						$dialplan_context = $_SESSION['domain_name'];
 						$dialplan_continue = 'false';
 						$app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3';
 
@@ -563,7 +583,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=true';
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'continue_on_fail=1,2,3,6,18,21,27,28,31,34,38,41,42,44,58,88,111,403,501,602,607';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						}
@@ -684,6 +704,11 @@
 				} //end foreach
 			}
 
+		//add the dialplan permission
+			$p = new permissions;
+			$p->add("dialplan_add", "temp");
+			$p->add("dialplan_detail_add", "temp");
+
 		//save to the data
 			$database = new database;
 			$database->app_name = 'outbound_routes';
@@ -699,12 +724,13 @@
 			$dialplans->uuid = $dialplan_uuid;
 			$dialplans->xml();
 
+		//remove the temporary permission
+			$p->delete("dialplan_add", "temp");
+			$p->delete("dialplan_detail_add", "temp");
+
 		//clear the cache
 			$cache = new cache;
 			$cache->delete("dialplan:".$dialplan_context);
-
-		//synchronize the xml config
-			save_dialplan_xml();
 
 		//redirect the browser
 			message::add($text['message-update']);
@@ -723,12 +749,13 @@
 	$sql = "select * from v_gateways ";
 	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= "order by domain_uuid ";
+		$sql .= "order by domain_uuid = :domain_uuid DESC, gateway ";
 	}
 	else {
 		$sql .= "and domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		
 	}
+	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
 	$gateways = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -809,50 +836,49 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
 
-	if (if_group("superadmin")) {
-		echo "<script>\n";
-		echo "var Objs;\n";
-		echo "\n";
-		echo "function changeToInput(obj){\n";
-		echo "	tb=document.createElement('INPUT');\n";
-		echo "	tb.type='text';\n";
-		echo "	tb.name=obj.name;\n";
-		echo "	tb.setAttribute('class', 'formfld');\n";
-		echo "	tb.setAttribute('style', 'width: 400px;');\n";
-		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	tbb=document.createElement('INPUT');\n";
-		echo "	tbb.setAttribute('class', 'btn');\n";
-		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
-		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
-		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
-		echo "	obj.parentNode.insertBefore(tb,obj);\n";
-		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
-		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "}\n";
-		echo "\n";
-		echo "function Replace(obj){\n";
-		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
-		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "}\n";
-		echo "function update_dialplan_expression() {\n";
-		echo "	if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
-		echo "		document.getElementById('outbound_prefix').value = '';\n";
-		echo "		$('#enter_custom_outbound_prefix_box').slideDown();\n";
-		echo "	} else { \n";
-		echo "		document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\n";
-		echo "		document.getElementById('outbound_prefix').value = '';\n";
-		echo "		$('#enter_custom_outbound_prefix_box').slideUp();\n";
-		echo "	}\n";
-		echo "}\n";
-		echo "function update_outbound_prefix() {\n";
-		echo "	document.getElementById('dialplan_expression').value += '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$' + '\\n';\n";
-		echo "}\n";
-		echo "</script>\n";
-		echo "\n";
-	}
+	echo "<script>\n";
+	echo "var Objs;\n";
+	echo "\n";
+	echo "function changeToInput(obj){\n";
+	echo "	tb=document.createElement('INPUT');\n";
+	echo "	tb.type='text';\n";
+	echo "	tb.name=obj.name;\n";
+	echo "	tb.setAttribute('class', 'formfld');\n";
+	echo "	tb.setAttribute('style', 'width: 400px;');\n";
+	echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+	echo "	tbb=document.createElement('INPUT');\n";
+	echo "	tbb.setAttribute('class', 'btn');\n";
+	echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
+	echo "	tbb.type='button';\n";
+	echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
+	echo "	tbb.objs=[obj,tb,tbb];\n";
+	echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+	echo "	obj.parentNode.insertBefore(tb,obj);\n";
+	echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+	echo "	obj.parentNode.removeChild(obj);\n";
+	echo "}\n";
+	echo "\n";
+	echo "function Replace(obj){\n";
+	echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+	echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+	echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+	echo "}\n";
+	echo "function update_dialplan_expression() {\n";
+	echo "	if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
+	echo "		document.getElementById('outbound_prefix').value = '';\n";
+	echo "		$('#enter_custom_outbound_prefix_box').slideDown();\n";
+	echo "	} else { \n";
+	echo "		document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\n";
+	echo "		document.getElementById('outbound_prefix').value = '';\n";
+	echo "		$('#enter_custom_outbound_prefix_box').slideUp();\n";
+	echo "	}\n";
+	echo "}\n";
+	echo "function update_outbound_prefix() {\n";
+	echo "	document.getElementById('dialplan_expression').value += '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$' + '\\n';\n";
+	echo "}\n";
+	echo "</script>\n";
+	echo "\n";
+
 
 	//set the onchange
 	$onchange = '';
@@ -1060,14 +1086,16 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
 	echo "	<option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
 	echo "	<option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
-	echo "	<option value='^\+?1?(\\d{10})\$'>".$text['label-north-america']."</option>\n";
-	echo "	<option value='^(011\\d{9,17})\$'>".$text['label-north-america-intl']."</option>\n";
-	echo "	<option value='^(00\\d{9,17})\$'>".$text['label-europe-intl']."</option>\n";
+	echo "	<option value='^\+?1?(\\d{10})\$'>".$text['label-north_america']."</option>\n";
+	echo "	<option value='^(011\\d{9,17})\$'>".$text['label-north_america_intl']."</option>\n";
+	echo "	<option value='^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
+	echo "	<option value='^(00\\d{9,17})\$'>".$text['label-europe_intl']."</option>\n";
 	echo "	<option value='^(\\d{12,20})\$'>".$text['label-intl']."</option>\n";
 	echo "	<option value='^(311)\$'>".$text['label-311']."</option>\n";
 	echo "	<option value='^(411)\$'>".$text['label-411']."</option>\n";
 	echo "	<option value='^(711)\$'>".$text['label-711']."</option>\n";
 	echo "	<option value='(^911\$|^933\$)'>".$text['label-911']."</option>\n";
+	echo "  <option value='(^988\$)'>".$text['label-988']."</option>\n";
 	echo "	<option value='^1?(8(00|33|44|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
 	echo "	<option value='^0118835100\d{8}\$'>".$text['label-inum']."</option>\n";
 	echo "	<option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
@@ -1081,7 +1109,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^9(\\d{10})\$'>".$text['label-9d10']."</option>\n";
 	echo "	<option value='^9(\\d{11})\$'>".$text['label-9d11']."</option>\n";
 	echo "	<option value='^9(\\d{12,20})\$'>".$text['label-9d.12-20']."</option>\n";
-	echo "	<option value='CUSTOM_PREFIX'>".$text['label-custom-outbound-prefix']."</option>\n";
+	echo "	<option value='CUSTOM_PREFIX'>".$text['label-custom_outbound_prefix']."</option>\n";
 	echo "	</select>\n";
 	echo "	<span class=\"vexpl\">\n";
 	echo "	<br />\n";

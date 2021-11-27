@@ -57,7 +57,7 @@
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"];
 	$referer_query = $_REQUEST["referer_query"];
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['voicemail_uuid'])) {
@@ -94,6 +94,7 @@
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
 			$voicemail_options_delete = $_POST["voicemail_options_delete"];
 			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"];
+
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 	}
@@ -137,6 +138,8 @@
 				//get a new voicemail_uuid
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						$voicemail_uuid = uuid();
+						//If adding a mailbox, set the default transcribe behavior
+						$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
 					}
 
 				//add common array fields
@@ -220,6 +223,13 @@
 					$p->delete('voicemail_option_add', 'temp');
 					$p->delete('voicemail_destination_add', 'temp');
 
+				//make sure the voicemail directory exists
+					if (is_numeric($voicemail_id)) {
+						if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+							mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
+						}
+					}
+
 				//remove checked voicemail options
 					if (
 						$action == 'update'
@@ -242,6 +252,11 @@
 						$obj = new voicemail;
 						$obj->voicemail_uuid = $voicemail_uuid;
 						$obj->voicemail_destinations_delete($voicemail_destinations_delete);
+					}
+
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
 					}
 
 				//set message
@@ -300,7 +315,7 @@
 //set defaults
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = "false"; }	
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: "false"; }	
 	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = "false"; }
 
 //get the greetings list
@@ -504,7 +519,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='greeting_id'>\n";
-	echo "		<option value=''></option>\n";
+	echo "		<option value=''>".$text['label-default']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;
@@ -620,7 +635,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('voicemail_sms_edit')) {
+	if (permission_exists('voicemail_sms_edit') && file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/sms/')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_sms_to']."\n";

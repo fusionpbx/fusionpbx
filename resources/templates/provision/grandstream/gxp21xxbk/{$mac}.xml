@@ -48,7 +48,7 @@
 <P237></P237>
 {elseif isset($grandstream_config_server_path)}
 <P237>{$grandstream_config_server_path}</P237>
-{else}
+{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
 {/if}
 
@@ -72,13 +72,13 @@
 <!-- When set to Yes(1), it will override the configured provision path and method -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P145>1</P145>
+{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
 
 <!-- Allow DHCP Option 120 to Override SIP Server -->
 <!-- 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1411>0</P1411>
+{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
 <!-- Number: 0, 1 -->
@@ -135,7 +135,7 @@
 <P3>{$account.1.display_name}</P3>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Account 1/Network Settings -->
 
@@ -272,7 +272,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2318></P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -503,7 +503,7 @@
 {if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
 {else}
-<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
 {/if}
 
 
@@ -530,33 +530,33 @@
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
 
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- Matching Rule 1 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1489>0</P1489>
+<P1489>{$grandstream_distinctive_ringtone_1}</P1489>
 
 <!-- Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- Matching Rule 2 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1491>0</P1491>
+<P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
 <!-- Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- Matching Rule 3 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1493>0</P1493>
+<P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
 <!-- Ring Timeout (in seconds). Default is 60 -->
 <!-- Number: 30 - 3600 -->
@@ -656,7 +656,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 
 <!-- Account 2/Network Settings -->
@@ -836,7 +836,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2418></P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -1067,7 +1067,7 @@
 {if isset($grandstream_dial_plan) }
 <P459>{$grandstream_dial_plan}</P459>
 {else}
-<P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P459>
+<P459>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P459>
 {/if}  
 
 <!-- Delayed Call Forward Wait Time (in seconds). Default 20 -->
@@ -1217,7 +1217,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P526>*97</P526>
+<P526>{$voicemail_number}</P526>
 
 
 <!-- Account 3/Network Settings -->
@@ -1399,7 +1399,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2518></P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -1647,7 +1647,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
 <!-- Matching Rule 1 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
@@ -1772,7 +1772,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P626>*97</P626>
+<P626>{$voicemail_number}</P626>
 
 
 <!-- Account 4/Network Settings -->
@@ -1955,7 +1955,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2618></P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -2324,7 +2324,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 
 <!-- Account 5/Network Settings -->
@@ -2505,7 +2505,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2718></P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -2878,7 +2878,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 
 <!-- Account 6/Network Settings -->
@@ -3062,7 +3062,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2818></P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -3772,22 +3772,46 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
 <!-- Number: 0, 1, 2 -->
 <!-- Mandatory -->
+{if isset($grandstream_headset_tx_gain)}
+<P1301>{$grandstream_headset_tx_gain}</P1301>
+{else}
 <P1301>0</P1301>
+{/if}
 
-<!-- Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
-<!-- Number: 0, 1, 2 -->
-<!-- Mandatory -->
+<!-- # Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
+<!-- # Number: 0, 1, 2 -->
+<!-- # Mandatory -->
+{if isset($grandstream_headset_rx_gain)}
+<P1302>{$grandstream_headset_rx_gain}</P1302>
+{else}
 <P1302>0</P1302>
+{/if}
 
 <!-- Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
 <!-- Number: 0, 1, 2 -->

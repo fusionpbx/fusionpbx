@@ -182,6 +182,7 @@
 							$channel_variables .= ",domain=".$_SESSION['domain_name'];
 							$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
 							$channel_variables .= ",accountcode='$broadcast_accountcode'";
+							$channel_variables .= ",toll_allow='$broadcast_toll_allow'";
 							if ($broadcast_avmd == "true") {
 								$channel_variables .= ",execute_on_answer='avmd start'";
 							}
@@ -196,7 +197,7 @@
 
 						//if the event socket connection is lost then re-connect
 							if (!$fp) {
-								$fp = eventsocket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 							}
 
 						//method 1

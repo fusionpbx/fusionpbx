@@ -57,7 +57,7 @@
     <P237></P237>
     {elseif isset($grandstream_config_server_path)}
     <P237>{$grandstream_config_server_path}</P237>
-    {else}
+    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
     {/if}
 
@@ -259,7 +259,7 @@
 
     <!-- # Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
     <!-- # BT100 only -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
 
     <!-- # SUBSCRIBE for MWI. Whether or not send SUBSCRIBE for Message Waiting Indication. -->
     <!-- # 0 - No, 1 - Yes. -->

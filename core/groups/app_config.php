@@ -51,6 +51,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "group_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "group_global";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_member_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "3b4acc6d-827b-f537-bf21-0093d94ffec7";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -170,6 +173,14 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "permission_name";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "permission_id";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "permission_protected";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "permission_assigned";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;

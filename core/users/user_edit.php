@@ -135,7 +135,9 @@
 			}
 			$group_uuid_name = $_POST["group_uuid_name"];
 			$user_enabled = $_POST["user_enabled"];
-			$api_key = $_POST["api_key"];
+			if (permission_exists('api_key')) {
+				$api_key = $_POST["api_key"];
+			}
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
@@ -151,6 +153,14 @@
 		//check required values
 			if ($username == '') {
 				$invalid[] = $text['label-username'];
+			}
+			if ($_SESSION['users']['username_format']['text'] != '' && $_SESSION['users']['username_format']['text'] != 'any') {
+				if (
+					($_SESSION['users']['username_format']['text'] == 'email' && !valid_email($username)) ||
+					($_SESSION['users']['username_format']['text'] == 'no_email' && valid_email($username))
+					) {
+					message::add($text['message-username_format_invalid'], 'negative', 7500);
+				}
 			}
 			if ((permission_exists('user_edit') && $action == 'edit' && $username != $username_old && $username != '') ||
 				(permission_exists('user_add') && $action == 'add' && $username != '')) {
@@ -490,7 +500,9 @@
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
 			if (permission_exists('user_add') || permission_exists('user_edit')) {
-				$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+				if (permission_exists('api_key')) {
+					$array['users'][$x]['api_key'] = ($api_key != '') ? $api_key : null;
+				}
 				$array['users'][$x]['user_enabled'] = $user_enabled;
 				if (permission_exists('contact_add')) {
 					$array['users'][$x]['contact_uuid'] = ($contact_uuid != '') ? $contact_uuid : null;
@@ -569,7 +581,9 @@
 	else {
 		//populate the form with values from db
 			if ($action == 'edit') {
-				$sql = "select * from v_users where user_uuid = :user_uuid ";
+				$sql = "select domain_uuid, user_uuid, username, user_email, api_key, user_enabled, contact_uuid, cast(user_enabled as text), user_status ";
+				$sql .= "from v_users ";
+				$sql .= "where user_uuid = :user_uuid ";
 				if (!permission_exists('user_all')) {
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
@@ -939,7 +953,7 @@
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 					echo escape($field['group_name']).(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 					echo "	</td>\n";
-					if (permission_exists('group_member_delete') || if_group("superadmin")) {
+					if (permission_exists('user_group_delete') || if_group("superadmin")) {
 						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
 						echo "		<a href='user_edit.php?id=".urlencode($user_uuid)."&domain_uuid=".urlencode($domain_uuid)."&group_uuid=".urlencode($field['group_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 						echo "	</td>\n";

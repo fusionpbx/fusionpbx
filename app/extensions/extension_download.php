@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -92,7 +92,6 @@
 	$available_columns[] = 'follow_me_uuid';
 	$available_columns[] = 'enabled';
 	$available_columns[] = 'description';
-	$available_columns[] = 'forward_caller_id_uuid';
 	$available_columns[] = 'absolute_codec_string';
 	$available_columns[] = 'forward_user_not_registered_destination';
 	$available_columns[] = 'forward_user_not_registered_enabled';
@@ -180,6 +179,9 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo $text['description-extension_export'];
+	echo "<br /><br />\n";
+	
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
 	echo "	<th class='checkbox'>\n";

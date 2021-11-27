@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2020
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -193,7 +193,10 @@
 					$dialplan_xml = "<extension name=\"".$conference_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$conference_extension."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
-					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_uuid."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".$conference_uuid."\" inline=\"true\"/>\n";
+					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".$conference_name."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".$conference_extension."\" inline=\"true\"/>\n";
+					$dialplan_xml .= "		<action application=\"conference\" data=\"".$conference_extension."@".$_SESSION['domain_name']."@".$conference_profile.$pin_number."+flags{'".$conference_flags."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
 
@@ -205,7 +208,7 @@
 					$array['dialplans'][0]['app_uuid'] = 'b81412e8-7253-91f4-e48e-42fc2c9a38d9';
 					$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
 					$array['dialplans'][0]['dialplan_order'] = '333';
-					$array['dialplans'][0]['dialplan_context'] = $_SESSION['context'];
+					$array['dialplans'][0]['dialplan_context'] = $_SESSION['domain_name'];
 					$array['dialplans'][0]['dialplan_enabled'] = $conference_enabled;
 					$array['dialplans'][0]['dialplan_description'] = $conference_description;
 
@@ -241,7 +244,12 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$_SESSION["context"]);
+					$cache->delete("dialplan:".$_SESSION["domain_name"]);
+
+				//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
 
 				//redirect the browser
 					header("Location: conferences.php");
@@ -321,17 +329,18 @@
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'>";
-	if ($action == "add") {
-		echo "<b>".$text['label-conference-add']."</b>";
-	}
-	if ($action == "update") {
-		echo "<b>".$text['label-conference-edit']."</b>";
-	}
+	echo "		<b>".$text['title-conference']."</b>";
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
+
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
-	if ($action == 'update' && permission_exists('conference_active_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-right: 15px;','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+	if ($action == 'update') {
+		if (permission_exists('conference_cdr_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);
+		}
+		if (permission_exists('conference_active_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'','link'=>'../conferences_active/conferences_active.php?c='.urlencode(str_replace(' ', '-', $conference_name))]);
+		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
 	echo "	</div>\n";
@@ -370,7 +379,7 @@
 	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
+	echo "	<input class='formfld' type='number' name='conference_pin_number' maxlength='255' value=\"".escape($conference_pin_number)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
