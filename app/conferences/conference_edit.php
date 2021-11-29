@@ -181,7 +181,7 @@
 					$array['conferences'][0]['conference_name'] = $conference_name;
 					$array['conferences'][0]['conference_extension'] = $conference_extension;
 					$array['conferences'][0]['conference_pin_number'] = $conference_pin_number;
-					if (permission_exists('conference_cdr_view')) {
+					if (permission_exists('conference_email_address')) {
 						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
 					}
 					$array['conferences'][0]['conference_profile'] = $conference_profile;
