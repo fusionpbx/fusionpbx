@@ -308,7 +308,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['record'] = $record;
 					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-					if (permission_exists('conference_cdr_view')) {
+					if (permission_exists('conference_room_email_address')) {
 						$array['conference_rooms'][0]['email_address'] = $email_address;
 					}
 					$array['conference_rooms'][0]['max_members'] = $max_members;
@@ -371,7 +371,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
-					if (permission_exists('conference_cdr_view')) {
+					if (permission_exists('conference_room_email_address')) {
 						$array['conference_rooms'][0]['email_address'] = $email_address;
 					}
 					if (strlen($max_members) > 0) {
@@ -614,7 +614,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>";
 	echo "	</tr>";
 
-	if (permission_exists('conference_cdr_view')) {
+	if (permission_exists('conference_room_email_address')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email_address']."\n";
