@@ -132,6 +132,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional pin number to secure access to the conference.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_email";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional email address for the conference.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_profile";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Conference Profile is a collection of settings for the conference.";
