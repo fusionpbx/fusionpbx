@@ -57,6 +57,7 @@
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
 		$conference_pin_number = $_POST["conference_pin_number"];
+		$conference_email_address = $_POST["conference_email_address"];
 		$conference_profile = $_POST["conference_profile"];
 		$conference_flags = $_POST["conference_flags"];
 		$conference_order = $_POST["conference_order"];
@@ -180,6 +181,9 @@
 					$array['conferences'][0]['conference_name'] = $conference_name;
 					$array['conferences'][0]['conference_extension'] = $conference_extension;
 					$array['conferences'][0]['conference_pin_number'] = $conference_pin_number;
+					if (permission_exists('conference_cdr_edit')) {
+						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
+					}
 					$array['conferences'][0]['conference_profile'] = $conference_profile;
 					$array['conferences'][0]['conference_flags'] = $conference_flags;
 					$array['conferences'][0]['conference_order'] = $conference_order;
@@ -273,6 +277,7 @@
 			$conference_name = $row["conference_name"];
 			$conference_extension = $row["conference_extension"];
 			$conference_pin_number = $row["conference_pin_number"];
+			$conference_email_address = $row["conference_email_address"];
 			$conference_profile = $row["conference_profile"];
 			$conference_flags = $row["conference_flags"];
 			$conference_order = $row["conference_order"];
@@ -384,6 +389,19 @@
 	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('conference_cdr_edit')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='conference_email_address' maxlength='255' value=\"".escape($conference_email_address)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (permission_exists('conference_user_add') || permission_exists('conference_user_edit')) {
 		if ($action == "update") {
