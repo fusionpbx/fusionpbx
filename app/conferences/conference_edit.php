@@ -181,7 +181,7 @@
 					$array['conferences'][0]['conference_name'] = $conference_name;
 					$array['conferences'][0]['conference_extension'] = $conference_extension;
 					$array['conferences'][0]['conference_pin_number'] = $conference_pin_number;
-					if (permission_exists('conference_cdr_edit')) {
+					if (permission_exists('conference_cdr_view')) {
 						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
 					}
 					$array['conferences'][0]['conference_profile'] = $conference_profile;
@@ -390,7 +390,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('conference_cdr_edit')) {
+	if (permission_exists('conference_cdr_view')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-email_address']."\n";
