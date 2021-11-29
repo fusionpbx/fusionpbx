@@ -147,6 +147,14 @@
     </input>
   </macro>
 
+  <macro name="voicemail_choose_standard_greeting">
+    <input pattern="^([0-9#*]):([0-9#*]):([0-9#*])$">
+      <match>
+        <action function="speak-text" data="to select a standard greeting with your number, press $1. To select a standard greeting with your name, press $2.  To select a custom greeting, press $3."/>
+      </match>
+    </input>
+  </macro>
+
   <macro name="voicemail_choose_greeting_fail">
     <input pattern="^(.*)$">
       <match>

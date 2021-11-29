@@ -269,6 +269,29 @@
     </input>
   </macro>
 
+  <macro name="voicemail_choose_standard_greeting">
+    <input pattern="^([0-9#*]):([0-9#*]):([0-9#*])$">
+      <match>
+	<!--data="to select a standard greeting with your number, press $1. To select a standard greeting with your name, press $2.  To select a custom greeting, press $3."/>-->
+        <action function="play-file" data="ivr/ivr-for.wav"/>
+        <action function="play-file" data="base256/standard.wav"/>
+        <action function="play-file" data="base256/telephone.wav"/>
+        <action function="play-file" data="ivr/ivr-number.wav"/>
+        <action function="play-file" data="voicemail/vm-greeting.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="ivr/ivr-for.wav"/>
+        <action function="play-file" data="base256/standard.wav"/>
+        <action function="play-file" data="voicemail/vm-greeting.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-choose_greeting.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$3" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
+  </macro>
+
   <macro name="voicemail_choose_greeting_fail">
     <input pattern="^(.*)$">
       <match>
