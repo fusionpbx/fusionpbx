@@ -307,6 +307,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the participant PIN number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "email_address";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional email address for the conference.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "max_members";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Limit number of people in the conference.";
