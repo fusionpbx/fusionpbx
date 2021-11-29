@@ -620,7 +620,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-email_address']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='email_address' maxlength='255' value=\"".escape($email_address)."\">\n";
+		echo "	<input class='formfld' type='text' name='email_address' maxlength='255' value=\"".escape($email_address)."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-email_address']."\n";
 		echo "</td>\n";
