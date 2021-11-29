@@ -82,9 +82,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "conference_email_address";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
