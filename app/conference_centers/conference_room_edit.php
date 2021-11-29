@@ -58,6 +58,7 @@
 		$conference_room_name = $_POST['conference_room_name'];
 		$moderator_pin = $_POST["moderator_pin"];
 		$participant_pin = $_POST["participant_pin"];
+		$email_address = $_POST["email_address"];
 		$profile = $_POST["profile"];
 		$record = $_POST["record"];
 		$user_uuid = $_POST["user_uuid"];
@@ -307,6 +308,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['record'] = $record;
 					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
+					if (permission_exists('conference_cdr_view')) {
+						$array['conference_rooms'][0]['email_address'] = $email_address;
+					}
 					$array['conference_rooms'][0]['max_members'] = $max_members;
 					$array['conference_rooms'][0]['start_datetime'] = $start_datetime;
 					$array['conference_rooms'][0]['stop_datetime'] = $stop_datetime;
@@ -367,6 +371,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$array['conference_rooms'][0]['moderator_pin'] = $moderator_pin;
 					$array['conference_rooms'][0]['participant_pin'] = $participant_pin;
+					if (permission_exists('conference_cdr_view')) {
+						$array['conference_rooms'][0]['email_address'] = $email_address;
+					}
 					if (strlen($max_members) > 0) {
 						$array['conference_rooms'][0]['max_members'] = $max_members;
 					}
@@ -453,6 +460,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$record = $row["record"];
 				$moderator_pin = $row["moderator_pin"];
 				$participant_pin = $row["participant_pin"];
+				$email_address = $row["email_address"];
 				$max_members = $row["max_members"];
 				$start_datetime = $row["start_datetime"];
 				$stop_datetime = $row["stop_datetime"];
@@ -605,6 +613,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			".$text['description-participant-pin']."\n";
 	echo "		</td>";
 	echo "	</tr>";
+
+	if (permission_exists('conference_cdr_view')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='email_address' maxlength='255' value=\"".escape($email_address)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (if_group("superadmin") || if_group("admin")) {
 		echo "	<tr>";
