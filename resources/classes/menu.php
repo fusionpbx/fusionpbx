@@ -1058,7 +1058,7 @@ if (!class_exists('menu')) {
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && $_SESSION['theme']['logout_icon_visible']['text'] == "true") {
 						$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='nav-link logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
+						$html .= "			<a class='logout_icon' href='#' title=\"".$this->text['theme-label-logout']."\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fas fa-sign-out-alt'></span></a>";
 						$html .= "		</li>\n";
 						unset($username_full);
 					}
