@@ -170,7 +170,7 @@
 	<?php
 
 //show the content
-	echo "<form id='dashboard' method='POST'>\n";
+	echo "<form id='dashboard' method='POST' onsubmit='setFormSubmitting()'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -313,16 +313,15 @@
 			preventOnFilter: true,
 			ghostClass: 'ghost',
 			onChange: function (evt) {
-				//re-render chart when dragged
-				if (evt.item.id != 'ring_group_forward' && evt.item.id != 'call_forward') {
-					let chart = eval(evt.item.id + "_chart");
+				//check if chart exists
+				let chart_status = Chart.getChart(evt.item.id + "_chart");
+				if(chart_status !== undefined && chart_status !== null) {
 					let context = eval(evt.item.id + "_chart_context");
+					let chart = Chart.getChart(context);
 					let config = eval(evt.item.id + "_chart_config");
-			
-					let chart_status = Chart.getChart(context);
-					if (chart_status != undefined) {
-						chart_status.destroy();
-					}
+
+					//re render the chart
+					chart.destroy();
 					chart.options.animation = { duration: 0 };
 					chart = new Chart(context, config);
 				}
@@ -336,6 +335,22 @@
 				document.getElementById('widget_order').value = widget_ids_list;
 			},
 		});
+
+		var formSubmitting = false;
+		var setFormSubmitting = function() { formSubmitting = true; };
+
+		window.onload = function() {
+		    window.addEventListener("beforeunload", function (e) {
+		        var confirmationMessage = 'You have unsaved changes which will not be saved.';
+
+		        if (formSubmitting) {
+		            return undefined;
+		        }
+
+		        (e || window.event).returnValue = confirmationMessage;
+		        return confirmationMessage;
+		    });
+		};
 		</script>
 		<?php
 	} //end edit
