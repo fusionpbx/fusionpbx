@@ -412,26 +412,17 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		color: <?php echo ($_SESSION['theme']['header_domain_color_hover']['text'] != '') ? $_SESSION['theme']['header_domain_color_hover']['text'] : '#1892E6'; ?>;
 		}
 
-	/* domain name/selector */
-	a.domain_selector_domain {
-		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
-		}
-
-	a.domain_selector_domain:hover,
-	a.domain_selector_domain:focus,
-	a.domain_selector_domain:active {
-		color: <?php echo ($_SESSION['theme']['domain_color_hover']['text'] != '') ? $_SESSION['theme']['domain_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
-		}
-
 	/* logout icon */
 	a.logout_icon {
 		color: <?php echo ($_SESSION['theme']['logout_icon_color']['text'] != '') ? $_SESSION['theme']['logout_icon_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
+		padding: 14px 10px;
 		}
 
 	a.logout_icon:hover,
 	a.logout_icon:focus,
 	a.logout_icon:active {
 		color: <?php echo ($_SESSION['theme']['logout_icon_color_hover']['text'] != '') ? $_SESSION['theme']['logout_icon_color_hover']['text'] : 'rgba(255,255,255,1.0)'; ?>;
+		background: <?php echo ($_SESSION['theme']['menu_main_background_color_hover']['text'] != '') ? $_SESSION['theme']['menu_main_background_color_hover']['text'] : '#fd9c03'; ?>
 		}
 
 	a#header_logout_icon {
