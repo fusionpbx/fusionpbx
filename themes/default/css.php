@@ -391,6 +391,27 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		opacity: 0.30;
 		}
 
+	/* header domain/user name */
+	ul.navbar-nav > li.nav-item > a.header_user,
+	ul.navbar-nav > li.nav-item > a.header_domain {
+		font-family: <?php echo ($_SESSION['theme']['menu_main_text_font']['text'] != '') ? $_SESSION['theme']['menu_main_text_font']['text'] : 'arial'; ?>;
+		font-size: <?php echo ($_SESSION['theme']['menu_main_text_size']['text'] != '') ? $_SESSION['theme']['menu_main_text_size']['text'] : '10.25pt'; ?>;
+		color: <?php echo ($_SESSION['theme']['menu_main_text_color']['text'] != '') ? $_SESSION['theme']['menu_main_text_color']['text'] : '#fff'; ?>;
+		padding: 10px;
+		}
+
+	ul.navbar-nav > li.nav-item:hover > a.header_user,
+	ul.navbar-nav > li.nav-item:focus > a.header_user,
+	ul.navbar-nav > li.nav-item:active > a.header_user {
+		color: <?php echo ($_SESSION['theme']['header_user_color_hover']['text'] != '') ? $_SESSION['theme']['header_user_color_hover']['text'] : '#1892E6'; ?>;
+		}
+
+	ul.navbar-nav > li.nav-item:hover > a.header_domain,
+	ul.navbar-nav > li.nav-item:focus > a.header_domain,
+	ul.navbar-nav > li.nav-item:active > a.header_domain {
+		color: <?php echo ($_SESSION['theme']['header_domain_color_hover']['text'] != '') ? $_SESSION['theme']['header_domain_color_hover']['text'] : '#1892E6'; ?>;
+		}
+
 	/* domain name/selector */
 	a.domain_selector_domain {
 		color: <?php echo ($_SESSION['theme']['domain_color']['text'] != '') ? $_SESSION['theme']['domain_color']['text'] : 'rgba(255,255,255,0.8)'; ?>;
