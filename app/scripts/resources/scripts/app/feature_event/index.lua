@@ -128,7 +128,7 @@
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = :do_not_disturb, ";
-					sql = sql .. "forward_all_enabled = 'false', ";
+					sql = sql .. "forward_all_enabled = 'false' ";
 					sql = sql .. "where domain_uuid = :domain_uuid ";
 					sql = sql .. "and extension_uuid = :extension_uuid ";
 					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, do_not_disturb = do_not_disturb};
