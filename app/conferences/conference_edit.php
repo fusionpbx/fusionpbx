@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,9 +57,10 @@
 		$conference_name = $_POST["conference_name"];
 		$conference_extension = $_POST["conference_extension"];
 		$conference_pin_number = $_POST["conference_pin_number"];
-		$conference_email_address = $_POST["conference_email_address"];
 		$conference_profile = $_POST["conference_profile"];
 		$conference_flags = $_POST["conference_flags"];
+		$conference_email_address = $_POST["conference_email_address"];
+		$conference_accountcode = $_POST["conference_accountcode"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
 		$conference_enabled = $_POST["conference_enabled"];
@@ -181,11 +182,12 @@
 					$array['conferences'][0]['conference_name'] = $conference_name;
 					$array['conferences'][0]['conference_extension'] = $conference_extension;
 					$array['conferences'][0]['conference_pin_number'] = $conference_pin_number;
+					$array['conferences'][0]['conference_profile'] = $conference_profile;
+					$array['conferences'][0]['conference_flags'] = $conference_flags;
 					if (permission_exists('conference_email_address')) {
 						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
 					}
-					$array['conferences'][0]['conference_profile'] = $conference_profile;
-					$array['conferences'][0]['conference_flags'] = $conference_flags;
+					$array['conferences'][0]['conference_accountcode'] = $conference_accountcode;
 					$array['conferences'][0]['conference_order'] = $conference_order;
 					$array['conferences'][0]['conference_description'] = $conference_description;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
@@ -277,9 +279,10 @@
 			$conference_name = $row["conference_name"];
 			$conference_extension = $row["conference_extension"];
 			$conference_pin_number = $row["conference_pin_number"];
-			$conference_email_address = $row["conference_email_address"];
 			$conference_profile = $row["conference_profile"];
 			$conference_flags = $row["conference_flags"];
+			$conference_email_address = $row["conference_email_address"];
+			$conference_accountcode = $row["conference_accountcode"];
 			$conference_order = $row["conference_order"];
 			$conference_description = $row["conference_description"];
 			$conference_enabled = $row["conference_enabled"];
@@ -390,19 +393,6 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('conference_email_address')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-email_address']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='conference_email_address' maxlength='255' value=\"".escape($conference_email_address)."\">\n";
-		echo "<br />\n";
-		echo "".$text['description-email_address']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-
 	if (permission_exists('conference_user_add') || permission_exists('conference_user_edit')) {
 		if ($action == "update") {
 			echo "	<tr>";
@@ -467,6 +457,30 @@
 	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"".escape($conference_flags)."\">\n";
 	echo "<br />\n";
 	echo "".$text['description-flags']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	if (permission_exists('conference_email_address')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='conference_email_address' maxlength='255' value=\"".escape($conference_email_address)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-accountcode']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='conference_accountcode' maxlength='255' value=\"".escape($conference_accountcode)."\">\n";
+	echo "<br />\n";
+	echo "".$text['description-accountcode']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
