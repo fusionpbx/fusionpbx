@@ -82,12 +82,12 @@
 		ring_count      = event:getHeader("ringCount")
 
 	--send to the log
-		freeswitch.consoleLog("notice","[events] user: " .. user .. "\n");
-		freeswitch.consoleLog("notice","[events] host: " .. host .. "\n");
-		if (feature_action ~= nil) then freeswitch.consoleLog("notice","[events] feature_action: " .. feature_action .. "\n");	end
-		if (feature_enabled ~= nil) then freeswitch.consoleLog("notice","[events] feature_enabled: " .. feature_enabled .. "\n"); end
-		if (action_name ~= nil) then freeswitch.consoleLog("notice","[events] action_name: " .. action_name .. "\n"); end
-		if (action_value ~= nil) then freeswitch.consoleLog("notice","[events] action_value: " .. action_value .. "\n"); end
+		-- freeswitch.consoleLog("notice","[events] user: " .. user .. "\n");
+		-- freeswitch.consoleLog("notice","[events] host: " .. host .. "\n");
+		-- if (feature_action ~= nil) then freeswitch.consoleLog("notice","[events] feature_action: " .. feature_action .. "\n");	end
+		-- if (feature_enabled ~= nil) then freeswitch.consoleLog("notice","[events] feature_enabled: " .. feature_enabled .. "\n"); end
+		-- if (action_name ~= nil) then freeswitch.consoleLog("notice","[events] action_name: " .. action_name .. "\n"); end
+		-- if (action_value ~= nil) then freeswitch.consoleLog("notice","[events] action_value: " .. action_value .. "\n"); end
 
 	--get the domain uuid from the host
 		local sql = "select * from v_domains ";
