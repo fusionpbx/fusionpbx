@@ -187,7 +187,9 @@
 					if (permission_exists('conference_email_address')) {
 						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
 					}
-					$array['conferences'][0]['conference_accountcode'] = $conference_accountcode;
+					if (permission_exists('conference_accountcode')) {
+						$array['conferences'][0]['conference_accountcode'] = $conference_accountcode;
+					}
 					$array['conferences'][0]['conference_order'] = $conference_order;
 					$array['conferences'][0]['conference_description'] = $conference_description;
 					$array['conferences'][0]['conference_enabled'] = $conference_enabled;
@@ -473,16 +475,18 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-accountcode']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_accountcode' maxlength='255' value=\"".escape($conference_accountcode)."\">\n";
-	echo "<br />\n";
-	echo "".$text['description-accountcode']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('conference_accountcode')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-accountcode']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='conference_accountcode' maxlength='255' value=\"".escape($conference_accountcode)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
