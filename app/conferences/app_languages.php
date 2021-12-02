@@ -715,6 +715,27 @@ $text['description-flags']['ru-ru'] = "Дополнительные флаги �
 $text['description-flags']['sv-se'] = "Valfria konferensflaggor. Exempel: mute|deaf|waste|moderator";
 $text['description-flags']['uk-ua'] = "";
 
+$text['description-accountcode']['en-us'] = "Enter the account code here.";
+$text['description-accountcode']['en-gb'] = "Enter the account code here.";
+$text['description-accountcode']['ar-eg'] = "";
+$text['description-accountcode']['de-at'] = "Geben Sie den Account Code hier an."; //copied from de-de
+$text['description-accountcode']['de-ch'] = "Geben Sie den Account Code hier an."; //copied from de-de
+$text['description-accountcode']['de-de'] = "Geben Sie den Account Code hier an.";
+$text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta aquí.";
+$text['description-accountcode']['es-mx'] = "Ingrese el código de cuenta aquí."; //copied from es-cl
+$text['description-accountcode']['fr-ca'] = "Entrez le code de compte ici.";
+$text['description-accountcode']['fr-fr'] = "Entrez le code de compte ici.";
+$text['description-accountcode']['he-il'] = "";
+$text['description-accountcode']['it-it'] = "Inserire qui l'account code.";
+$text['description-accountcode']['nl-nl'] = "Voer de accountcode hier in.";
+$text['description-accountcode']['pl-pl'] = "Wpisz numer billingowy (nagłówek dodany do SIP INVITE).";
+$text['description-accountcode']['pt-br'] = "Insira o código de conta aqui.";
+$text['description-accountcode']['pt-pt'] = "Introduza o código de conta aqui.";
+$text['description-accountcode']['ro-ro'] = "";
+$text['description-accountcode']['ru-ru'] = "Введите здесь код счета.";
+$text['description-accountcode']['sv-se'] = "Ange 'account code' här.";
+$text['description-accountcode']['uk-ua'] = "";
+
 $text['label-user_list']['en-us'] = "User List";
 $text['label-user_list']['en-gb'] = "User List";
 $text['label-user_list']['ar-eg'] = "";
@@ -756,5 +777,26 @@ $text['label-flags']['ro-ro'] = "";
 $text['label-flags']['ru-ru'] = "Флаги";
 $text['label-flags']['sv-se'] = "Flaggor";
 $text['label-flags']['uk-ua'] = "";
+
+$text['label-accountcode']['en-us'] = "Account Code";
+$text['label-accountcode']['en-gb'] = "Account Code";
+$text['label-accountcode']['ar-eg'] = "";
+$text['label-accountcode']['de-at'] = "Kontoschlüssel"; //copied from de-de
+$text['label-accountcode']['de-ch'] = "Kontoschlüssel"; //copied from de-de
+$text['label-accountcode']['de-de'] = "Kontoschlüssel";
+$text['label-accountcode']['es-cl'] = "Código de Cuenta";
+$text['label-accountcode']['es-mx'] = "Código de Cuenta"; //copied from es-cl
+$text['label-accountcode']['fr-ca'] = "Centre de frais"; //copied from fr-fr
+$text['label-accountcode']['fr-fr'] = "Centre de frais";
+$text['label-accountcode']['he-il'] = "קוד חשבון";
+$text['label-accountcode']['it-it'] = "Account Code";
+$text['label-accountcode']['nl-nl'] = "Accountcode";
+$text['label-accountcode']['pl-pl'] = "Numer konta billingowego";
+$text['label-accountcode']['pt-br'] = "Código de conta";
+$text['label-accountcode']['pt-pt'] = "Código de Conta";
+$text['label-accountcode']['ro-ro'] = "";
+$text['label-accountcode']['ru-ru'] = "Код Учетной Записи";
+$text['label-accountcode']['sv-se'] = "Kontokod";
+$text['label-accountcode']['uk-ua'] = "";
 
 ?>
