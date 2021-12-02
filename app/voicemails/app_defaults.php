@@ -39,7 +39,7 @@ if ($domains_processed == 1) {
 		foreach($voicemails as $row) {
 			if (is_numeric($row['voicemail_id'])) {
 				if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'])) {
-					mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770);
+					mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$row['domain_name']."/".$row['voicemail_id'], 0770, true);
 				}
 			}
 		}
