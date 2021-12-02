@@ -123,17 +123,15 @@
 		--DND enabled
 			if (feature_action == "SetDoNotDisturb" and feature_enabled == "true") then
 				--set a variable
-					dial_string = "!USER_BUSY";
 					do_not_disturb = "true";
 
 				--update the extension
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = :do_not_disturb, ";
 					sql = sql .. "forward_all_enabled = 'false', ";
-					sql = sql .. "dial_string = :dial_string ";
 					sql = sql .. "where domain_uuid = :domain_uuid ";
 					sql = sql .. "and extension_uuid = :extension_uuid ";
-					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, do_not_disturb = do_not_disturb, dial_string = dial_string};
+					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, do_not_disturb = do_not_disturb};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[feature_event] "..sql.."; params:" .. json.encode(params) .. "\n");
 					end
@@ -166,8 +164,7 @@
 					--update the extension
 						sql = "update v_extensions set ";
 						sql = sql .. "do_not_disturb = :do_not_disturb, ";
-						sql = sql .. "forward_all_enabled = 'false', ";
-						sql = sql .. "dial_string = null ";
+						sql = sql .. "forward_all_enabled = 'false' ";
 						sql = sql .. "where domain_uuid = :domain_uuid ";
 						sql = sql .. "and extension_uuid = :extension_uuid ";
 						local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, do_not_disturb = do_not_disturb};
@@ -191,7 +188,6 @@
 					forward_immediate_destination = action_value;
 					forward_immediate_enabled = "true";
 
-				--set the dial string
 					if feature_enabled == "true" then
 						local destination_extension, destination_number_alias
 
@@ -221,8 +217,7 @@
 					sql = "update v_extensions set ";
 					sql = sql .. "do_not_disturb = 'false', ";
 					sql = sql .. "forward_all_enabled = 'true', ";
-					sql = sql .. "forward_all_destination = :forward_all_destination, ";
-					sql = sql .. "dial_string = null ";
+					sql = sql .. "forward_all_destination = :forward_all_destination ";
 					sql = sql .. "where domain_uuid = :domain_uuid ";
 					sql = sql .. "and extension_uuid = :extension_uuid ";
 					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, forward_all_destination = forward_all_destination};
@@ -263,11 +258,10 @@
 					sql = sql .. "do_not_disturb = 'false', ";
 					sql = sql .. "forward_all_enabled = 'false', ";
 					if (forward_all_destination ~= nil) then
-						sql = sql .. "forward_all_destination = :forward_all_destination, ";
+						sql = sql .. "forward_all_destination = :forward_all_destination ";
 					else
-						sql = sql .. "forward_all_destination = null, ";
+						sql = sql .. "forward_all_destination = null ";
 					end
-					sql = sql .. "dial_string = null ";
 					sql = sql .. "where domain_uuid = :domain_uuid ";
 					sql = sql .. "and extension_uuid = :extension_uuid ";
 					local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid, forward_all_destination = forward_all_destination};
