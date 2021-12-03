@@ -746,7 +746,8 @@ if (!class_exists('xml_cdr')) {
 						catch(PDOException $e) {
 							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 							if(!file_exists($tmp_dir)) {
-								event_socket_mkdir($tmp_dir);
+								mkdir($tmp_dir, 0770, true);
+								
 							}
 							if ($_SESSION['cdr']['format']['text'] == "xml") {
 								$tmp_file = $uuid.'.xml';
@@ -770,7 +771,7 @@ if (!class_exists('xml_cdr')) {
 							if (strlen($uuid) > 0) {
 								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 								if(!file_exists($tmp_dir)) {
-									event_socket_mkdir($tmp_dir);
+									mkdir($tmp_dir, 0770, true);
 								}
 								if ($_SESSION['cdr']['format']['text'] == "xml") {
 									$tmp_file = $uuid.'.xml';
