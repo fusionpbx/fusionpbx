@@ -122,7 +122,7 @@
 
 		//make sure the destination directory exists
 			if (!is_dir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'])) {
-				event_socket_mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name']);
+				mkdir($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'], 0770, true);
 			}
 
 		//move the uploaded files
