@@ -26,7 +26,9 @@
 
 //if the recordings directory doesn't exist then create it
 	if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
-		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) { event_socket_mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name,02770,true); }
+		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+			mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770, true);
+		}
 	}
 
 //process one time
