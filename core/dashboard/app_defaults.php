@@ -7,6 +7,10 @@ if ($domains_processed == 1) {
 			unset($array);
 		}
 
+	//make the default groups exist
+		$group = new groups;
+		$group->defaults();
+
 	//get the groups
 		$sql = "select * from v_groups ";
 		$sql .= "where domain_uuid is null ";
