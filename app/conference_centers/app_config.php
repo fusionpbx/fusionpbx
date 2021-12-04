@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "8d083f5a-f726-42a8-9ffa-8d28f848f10e";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences Centers allows one or more audio and video conference rooms.";
@@ -205,6 +205,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Conference Sessions";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b1a4e1b7-8201-4637-b2fb-380b67112ea5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "conference_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "accountcode_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Request the account ID.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${domain_name}";
