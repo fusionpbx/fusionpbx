@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -81,10 +81,28 @@
 			if (preg_match("/.*([\"\'])bgsystem([\"\']).*>/i", $dialplan_xml)) {
 				$dialplan_valid = false;
 			}
+			if (preg_match("/.*([\"\'])bg_spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn_stream([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
 			if (preg_match("/.*{system.*/i", $dialplan_xml)) {
 				$dialplan_valid = false;
 			}
 			if (preg_match("/.*{bgsystem.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{bg_spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn_stream.*/i", $dialplan_xml)) {
 				$dialplan_valid = false;
 			}
 
