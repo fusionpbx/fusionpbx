@@ -155,7 +155,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_room_email_address";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "conference_room_accountcode";
+		$apps[$x]['permissions'][$y]['name'] = "conference_room_account_code";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -208,7 +208,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b1a4e1b7-8201-4637-b2fb-380b67112ea5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "conference_center";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "accountcode_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "account_code_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
@@ -374,10 +374,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional email address for the conference.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "account_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional accountcode for the conference.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional account code for the conference.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
