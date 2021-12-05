@@ -45,7 +45,7 @@
 
 --get the settings
 	session_enabled = settings:get('conference_center', 'session_enabled', 'boolean');
-	accountcode_enabled = settings:get('conference_center', 'accountcode_enabled', 'boolean');
+	account_code_enabled = settings:get('conference_center', 'account_code_enabled', 'boolean');
 
 --include json library
 	local json
@@ -582,23 +582,23 @@
 				member_type = "participant";
 			end
 
-		--get the accountcode
-			if (accountcode_enabled == 'true' and member_type == 'moderator') then
-				--request the accountcode
+		--get the account code
+			if (account_code_enabled == 'true' and member_type == 'moderator') then
+				--request the account code
 					min_digits = 2;
 					max_digits = 20;
-					accountcode = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
+					account_code = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
 					--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
 
 				--update the account code
 					local sql = {}
 					table.insert(sql, "update v_conference_rooms ");
-					table.insert(sql, "set accountcode = :accountcode ");
+					table.insert(sql, "set account_code = :account_code ");
 					table.insert(sql, "where conference_center_uuid = :conference_center_uuid ");
 					sql = table.concat(sql, "\n");
 					local params = {
 						conference_center_uuid = conference_center_uuid;
-						accountcode = accountcode;
+						account_code = account_code;
 					};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
