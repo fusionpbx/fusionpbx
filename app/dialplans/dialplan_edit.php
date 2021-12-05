@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -86,10 +86,35 @@
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
 			$result = event_socket_request($fp, 'api show application');
-			$_SESSION['switch']['applications'] = explode("\n\n", $result);
-			$_SESSION['switch']['applications'] = explode("\n", $_SESSION['switch']['applications'][0]);
+			
+			$show_applications = explode("\n\n", $result);
+			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
 			unset($fp);
+
+			$previous_application = null;
+			foreach($raw_applications as $row) {
+				if (strlen($row) > 0) {
+					$application_array = explode(",", $row);
+					$application = $application_array[0];
+
+					if (
+						$application != "name" 
+						&& $application != "system" 
+						&& $application != "bgsystem" 
+						&& $application != "spawn" 
+						&& $application != "bg_spawn" 
+						&& $application != "spawn_stream" 
+						&& stristr($application, "[") != true
+					) {
+						if ($application != $previous_application) {
+							$applications[] = $application;
+						}
+					}
+					$previous_application = $application;
+				}
+			}
+			$_SESSION['switch']['applications'] = $applications;
 		} else {
 			$_SESSION['switch']['applications'] = Array();
 		}
@@ -221,7 +246,13 @@
 						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
 							$dialplan_detail_type = $row["dialplan_detail_type"];
 						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_type"])) {
+							$dialplan_detail_type = $row["dialplan_detail_type"];
+						}
 						if (!preg_match("/system/i", $row["dialplan_detail_data"])) {
+							$dialplan_detail_data = $row["dialplan_detail_data"];
+						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_data"])) {
 							$dialplan_detail_data = $row["dialplan_detail_data"];
 						}
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
@@ -860,13 +891,8 @@
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 									echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
 									if (is_array($_SESSION['switch']['applications'])) {
-										foreach ($_SESSION['switch']['applications'] as $row) {
-											if (strlen($row) > 0) {
-												$application = explode(",", $row);
-												if ($application[0] != "name" && $application[0] != "system" && stristr($application[0], "[") != true) {
-													echo "	<option value='".escape($application[0])."'>".escape($application[0])."</option>\n";
-												}
-											}
+										foreach ($_SESSION['switch']['applications'] as $application) {
+											echo "	<option value='".escape($application)."'>".escape($application)."</option>\n";
 										}
 									}
 									echo "	</optgroup>\n";
