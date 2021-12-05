@@ -84,7 +84,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_email_address";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "conference_accountcode";
+		$apps[$x]['permissions'][$y]['name'] = "conference_account_code";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
@@ -148,9 +148,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional email address for the conference.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_account_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional accountcode for the conference.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Optional account code for the conference.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_flags";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

@@ -60,7 +60,7 @@
 		$conference_profile = $_POST["conference_profile"];
 		$conference_flags = $_POST["conference_flags"];
 		$conference_email_address = $_POST["conference_email_address"];
-		$conference_accountcode = $_POST["conference_accountcode"];
+		$conference_account_code = $_POST["conference_account_code"];
 		$conference_order = $_POST["conference_order"];
 		$conference_description = $_POST["conference_description"];
 		$conference_enabled = $_POST["conference_enabled"];
@@ -187,8 +187,8 @@
 					if (permission_exists('conference_email_address')) {
 						$array['conferences'][0]['conference_email_address'] = $conference_email_address;
 					}
-					if (permission_exists('conference_accountcode')) {
-						$array['conferences'][0]['conference_accountcode'] = $conference_accountcode;
+					if (permission_exists('conference_account_code')) {
+						$array['conferences'][0]['conference_account_code'] = $conference_account_code;
 					}
 					$array['conferences'][0]['conference_order'] = $conference_order;
 					$array['conferences'][0]['conference_description'] = $conference_description;
@@ -284,7 +284,7 @@
 			$conference_profile = $row["conference_profile"];
 			$conference_flags = $row["conference_flags"];
 			$conference_email_address = $row["conference_email_address"];
-			$conference_accountcode = $row["conference_accountcode"];
+			$conference_account_code = $row["conference_account_code"];
 			$conference_order = $row["conference_order"];
 			$conference_description = $row["conference_description"];
 			$conference_enabled = $row["conference_enabled"];
@@ -475,15 +475,15 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_accountcode')) {
+	if (permission_exists('conference_account_code')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-accountcode']."\n";
+		echo "	".$text['label-account_code']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='conference_accountcode' maxlength='255' value=\"".escape($conference_accountcode)."\">\n";
+		echo "	<input class='formfld' type='text' name='conference_account_code' maxlength='255' value=\"".escape($conference_account_code)."\">\n";
 		echo "<br />\n";
-		echo "".$text['description-accountcode']."\n";
+		echo "".$text['description-account_code']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

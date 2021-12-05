@@ -75,7 +75,7 @@
 		$created = $_POST["created"];
 		$created_by = $_POST["created_by"];
 		$email_address = $_POST["email_address"];
-		$accountcode = $_POST["accountcode"];
+		$account_code = $_POST["account_code"];
 		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 
@@ -325,8 +325,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (permission_exists('conference_room_email_address')) {
 						$array['conference_rooms'][0]['email_address'] = $email_address;
 					}
-					if (permission_exists('conference_room_accountcode')) {
-						$array['conference_rooms'][0]['accountcode'] = $accountcode;
+					if (permission_exists('conference_room_account_code')) {
+						$array['conference_rooms'][0]['account_code'] = $account_code;
 					}
 					$array['conference_rooms'][0]['enabled'] = $enabled;
 					$array['conference_rooms'][0]['description'] = $description;
@@ -403,8 +403,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (permission_exists('conference_room_email_address')) {
 						$array['conference_rooms'][0]['email_address'] = $email_address;
 					}
-					if (permission_exists('conference_room_accountcode')) {
-						$array['conference_rooms'][0]['accountcode'] = $accountcode;
+					if (permission_exists('conference_room_account_code')) {
+						$array['conference_rooms'][0]['account_code'] = $account_code;
 					}
 					if (strlen($enabled) > 0) {
 						$array['conference_rooms'][0]['enabled'] = $enabled;
@@ -481,7 +481,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$created = $row["created"];
 				$created_by = $row["created_by"];
 				$email_address = $row["email_address"];
-				$accountcode = $row["accountcode"];
+				$account_code = $row["account_code"];
 				$enabled = $row["enabled"];
 				$description = $row["description"];
 			}
@@ -893,15 +893,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_accountcode')) {
+	if (permission_exists('conference_room_account_code')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-accountcode']."\n";
+		echo "	".$text['label-account_code']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".escape($accountcode)."\">\n";
+		echo "	<input class='formfld' type='text' name='account_code' maxlength='255' value=\"".escape($account_code)."\">\n";
 		echo "<br />\n";
-		echo "".$text['description-accountcode']."\n";
+		echo "".$text['description-account_code']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
