@@ -332,19 +332,25 @@
 									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
 								}
 								else {
-									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
+									}
 								}
 								if (permission_exists('device_line_transport')) {
-													$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+									$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
 								}
 								else {
-									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_transport']['text'];
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_transport']['text'];
+									}
 								}
 								if (permission_exists('device_line_register_expires')) {
 									$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
 								}
 								else {
-									$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_register_expires']['numeric'];
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_register_expires']['numeric'];
+									}
 								}
 								$y++;
 							}
@@ -626,6 +632,21 @@
 	$database = new database;
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//get the list from sql database
+	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
+	$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
+	$sql .= "from v_default_settings WHERE ";
+				
+	$sql .= "lower(default_setting_category) = :default_setting_category ";
+	$parameters['default_setting_category'] = strtolower("provision");
+
+	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$database = new database;
+	$default_settings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+//
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
@@ -1629,51 +1650,37 @@
 
 				echo "<td align='left' nowrap='nowrap' >\n";
 				//echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_setting_subcategory'])."\"/>\n";
-				//Add drop down list
-				//get the list
-				$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
-				$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
-				$sql .= "from v_default_settings WHERE ";
-				
-				$sql .= "lower(default_setting_category) = :default_setting_category ";
-				$parameters['default_setting_category'] = strtolower("provision");
-
-				$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
-				$sql .= limit_offset($rows_per_page, $offset);
-				$database = new database;
-				$default_settings = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
-				//
-				$mySelectVisible = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px;'>";
-				$mySelectHidden = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px; display: none;'>";
-				$mySelect = "<option value=''>--Select--</option>";
-				$isSelected = false;
+				//Add drop down list				
+				$my_select_visible = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px;'>";
+				$my_select_hidden = "<select id='condition_field_".$x."' class='formfld' name='device_settings[".$x."][device_setting_subcategory]' style='width: 240px; display: none;'>";
+				$my_select = "<option value=''>--Select--</option>";
+				$is_selected = false;
 				if (is_array($default_settings) && @sizeof($default_settings) != 0) {
 					//$x = 0;
-					foreach ($default_settings as $rowSelect) {
+					foreach ($default_settings as $row_select) {
 						
-						if ( escape($row['device_setting_subcategory']) == escape($rowSelect['default_setting_subcategory'])){
-							$mySelect .= "<option selected value='".escape($rowSelect['default_setting_subcategory'])."'>".escape($rowSelect['default_setting_subcategory'])."</option>";
-							$isSelected = true;
+						if ( escape($row['device_setting_subcategory']) == escape($row_select['default_setting_subcategory'])){
+							$my_select .= "<option selected value='".escape($row_select['default_setting_subcategory'])."'>".escape($row_select['default_setting_subcategory'])."</option>";
+							$is_selected = true;
 						}
 						else {
-							$mySelect .= "<option value='".escape($rowSelect['default_setting_subcategory'])."'>".escape($rowSelect['default_setting_subcategory'])."</option>";
+							$my_select .= "<option value='".escape($row_select['default_setting_subcategory'])."'>".escape($row_select['default_setting_subcategory'])."</option>";
 						}
 						
 					}
 				}
 				unset($default_settings);
-				$mySelect .= "</select>";
+				$my_select .= "</select>";
 				
-				if ($isSelected) {
-					echo $mySelectVisible;
-					echo $mySelect;
+				if ($is_selected) {
+					echo $my_select_visible;
+					echo $my_select;
 					
 					echo "<input style='margin-left: 0px; float: right; display: inline-block;' type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 				}
 				else if ( strlen(escape($row['device_setting_subcategory'])) > 0 ) {
-					echo $mySelectHidden;
-					echo $mySelect;
+					echo $my_select_hidden;
+					echo $my_select;
 					
 					echo "<input type='text' value='".escape($row['device_setting_subcategory'])."' name='device_settings[".$x."][device_setting_subcategory]' class='formfld' id='condition_field_".$x."' style='width: 240px;' />";
 					
@@ -1681,8 +1688,8 @@
 					echo "<input type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;' style='visibility: hidden; display: none;'>\n";
 				}
 				else {
-					echo $mySelectVisible;
-					echo $mySelect;
+					echo $my_select_visible;
+					echo $my_select;
 					
 					echo "<input style='margin-left: 0px; float: right; display: inline-block;' type='button' id='btn_select_to_input_condition_field_".$x."' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_".$x."\"), ".$x.");this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 				}				
