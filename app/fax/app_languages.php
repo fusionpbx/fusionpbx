@@ -2164,6 +2164,27 @@ $text['label-copy']['ru-ru'] = "Copy";
 $text['label-copy']['sv-se'] = "Copy";
 $text['label-copy']['uk-ua'] = "Copy";
 
+$text['label-outbox']['en-us'] = "Outbox";
+$text['label-outbox']['en-gb'] = "Outbox";
+$text['label-outbox']['ar-eg'] = "Outbox";
+$text['label-outbox']['de-at'] = "Outbox";
+$text['label-outbox']['de-ch'] = "Outbox";
+$text['label-outbox']['de-de'] = "Outbox";
+$text['label-outbox']['es-cl'] = "Outbox";
+$text['label-outbox']['es-mx'] = "Outbox";
+$text['label-outbox']['fr-ca'] = "Outbox";
+$text['label-outbox']['fr-fr'] = "Outbox";
+$text['label-outbox']['he-il'] = "Outbox";
+$text['label-outbox']['it-it'] = "Outbox";
+$text['label-outbox']['nl-nl'] = "Outbox";
+$text['label-outbox']['pl-pl'] = "Outbox";
+$text['label-outbox']['pt-br'] = "Outbox";
+$text['label-outbox']['pt-pt'] = "Outbox";
+$text['label-outbox']['ro-ro'] = "Outbox";
+$text['label-outbox']['ru-ru'] = "Outbox";
+$text['label-outbox']['sv-se'] = "Outbox";
+$text['label-outbox']['uk-ua'] = "Outbox";
+
 $text['header-sent_faxes']['en-us'] = "Sent";
 $text['header-sent_faxes']['en-gb'] = "Sent";
 $text['header-sent_faxes']['ar-eg'] = "";
