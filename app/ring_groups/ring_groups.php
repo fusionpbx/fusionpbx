@@ -97,7 +97,7 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		if (isset($search)) {
-			$sql = "and (";
+			$sql .= "and (";
 			$sql .= "lower(ring_group_name) like :search ";
 			$sql .= "or lower(ring_group_extension) like :search ";
 			$sql .= "or lower(ring_group_description) like :search ";
@@ -127,7 +127,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($search)) {
-		$sql = "and (";
+		$sql .= "and (";
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
