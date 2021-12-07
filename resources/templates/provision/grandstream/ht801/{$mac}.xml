@@ -1199,7 +1199,7 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 {if isset($grandstream_fax_mode)}
-    <P228>1</P228>
+    <P228>{$grandstream_fax_mode}</P228>
 {else}
     <P228>0</P228>
 {/if}
