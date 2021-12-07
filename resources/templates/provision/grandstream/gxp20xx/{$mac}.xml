@@ -421,7 +421,7 @@
 <P197></P197>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -632,7 +632,7 @@
 <P418></P418>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -843,7 +843,7 @@
 <P518></P518>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P526>*97</P526>
+<P526>{$voicemail_number}</P526>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -1055,7 +1055,7 @@
 <P618></P618>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P626>*97</P626>
+<P626>{$voicemail_number}</P626>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -1266,7 +1266,7 @@
 <P1718></P1718>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -1475,7 +1475,7 @@
 <P1818></P1818>
 
 <!--  Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 <!--  Send DTMF. 8 - in audio, 1 - via RTP, 2 - via SIP INFO  -->
 <!--  11 - In Audio & RTP & SIP INFO, 9 - In Audio & RTP -->
@@ -1991,7 +1991,9 @@
 
 <!--  Headset keymode. 0 - Default Mode, 1 - Toggle Speaker(default)/Headset, 2 - Toggle Speaker/Headset(default)   -->
 <!--  Not avaliable for GXP2000 -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
 <!--  For GXP1200 and GXP280 Only; 0 = Switch, 1 = Hub -->
 <P1348>0</P1348>

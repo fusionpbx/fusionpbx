@@ -27,12 +27,16 @@
 
 <!-- Primary SIP Server -->
 <!-- String: serveraddress  -->
+{if $account.1.sip_transport != 'dns srv'}
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
 <!-- Failover SIP Server -->
 <!-- String: serveraddress  -->
 
-{if isset($account.1.server_address_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
 <P967>{$account.1.server_address_secondary}:{$account.1.sip_port}</P967>
 {else}
 <P967>{$account.1.server_address_secondary}</P967>
@@ -46,7 +50,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.1.outbound_proxy_primary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
 <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
 <P48>{$account.1.outbound_proxy_primary}</P48>
@@ -54,7 +58,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27680>*97</P27680>
+<P27680>{$voicemail_number}</P27680>
 
 <!-- ################################# -->
 <!-- #  Profile 1/Network Settings  ## -->
@@ -308,7 +312,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P243>0</P243>
+<P243>1</P243>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -539,7 +543,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory  -->
-<P4330>20</P4330>
+<P4330>300</P4330>
 
 <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
 <!-- Number: 0 to 1 -->
@@ -590,7 +594,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.2.outbound_proxy_primary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
 <P748>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P748>
 {else}
 <P748>{$account.2.outbound_proxy_primary}</P748>
@@ -598,7 +602,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27681>*97</P27681>
+<P27681>{$voicemail_number}</P27681>
 
 <!-- ################################# -->
 <!-- #  Profile 2/Network Settings  ## -->
@@ -852,7 +856,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P743>0</P743>
+<P743>1</P743>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -1069,7 +1073,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory  -->
-<P4331>20</P4331>
+<P4331>300</P4331>
 
 <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
 <!-- Number: 0 to 1 -->
@@ -1119,7 +1123,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.3.outbound_proxy_primary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_primary)}
 <P548>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P548>
 {else}
 <P548>{$account.3.outbound_proxy_primary}</P548>
@@ -1127,7 +1131,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27682>*97</P27682>
+<P27682>{$voicemail_number}</P27682>
 
 <!-- ################################# -->
 <!-- #  Profile 3/Network Settings  ## -->
@@ -1381,7 +1385,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P4043>0</P4043>
+<P4043>1</P4043>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -1598,7 +1602,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory  -->
-<P4332>20</P4332>
+<P4332>300</P4332>
 
 <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
 <!-- Number: 0 to 1 -->
@@ -1649,7 +1653,7 @@
 <!-- Outbound Proxy -->
 <!-- String: serveraddress  -->
 
-{if isset($account.4.outbound_proxy_primary)}
+{if $account.4.sip_transport != 'dns srv' && isset($account.4.outbound_proxy_primary)}
 <P603>{$account.4.outbound_proxy_primary}:{$account.4.sip_port}</P603>
 {else}
 <P603>{$account.4.outbound_proxy_primary}</P603>
@@ -1657,7 +1661,7 @@
 
 <!-- Voice Mail Access Number -->
 <!-- String -->
-<P27683>*97</P27683>
+<P27683>{$voicemail_number}</P27683>
 
 <!-- ################################# -->
 <!-- #  Profile 4/Network Settings  ## -->
@@ -1911,7 +1915,7 @@
 <!-- Allow Incoming SIP Messages from SIP Proxy Only -->
 <!-- Number: 0,1 -->
 <!-- Mandatory  -->
-<P4044>0</P4044>
+<P4044>1</P4044>
 
 <!-- Authenticate incoming INVITE  -->
 <!-- Number: 0,1 -->
@@ -2128,7 +2132,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory  -->
-<P4333>20</P4333>
+<P4333>300</P4333>
 
 <!-- Send Anonymous. 0 - no, 1 - yes (caller ID will be blocked if set to Yes). -->
 <!-- Number: 0 to 1 -->

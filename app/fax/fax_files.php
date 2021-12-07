@@ -75,7 +75,7 @@
 //get fax extension
 	if (is_uuid($_GET["id"])) {
 		$fax_uuid = $_GET["id"];
-		if (if_group("superadmin") || if_group("admin")) {
+		if (permission_exists('fax_extension_view_domain')) {
 			//show all fax extensions
 			$sql = "select fax_name, fax_extension from v_fax ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -102,7 +102,7 @@
 				$fax_extension = $row["fax_extension"];
 		}
 		else {
-			if (!if_group("superadmin") && !if_group("admin")) {
+			if (!permission_exists('fax_extension_view_domain')) {
 				echo "access denied";
 				exit;
 			}
@@ -171,19 +171,19 @@
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
+				mkdir($_SESSION['switch']['storage']['dir'], 0770, false);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				event_socket_mkdir($fax_dir.'/'.$fax_extension);
+				mkdir($fax_dir.'/'.$fax_extension, 0770, false);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				event_socket_mkdir($dir_fax_inbox);
+				mkdir($dir_fax_inbox, 0770, false);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				event_socket_mkdir($dir_fax_sent);
+				mkdir($dir_fax_sent, 0770, false);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				event_socket_mkdir($dir_fax_temp);
+				mkdir($dir_fax_temp, 0770, false);
 			}
 	}
 

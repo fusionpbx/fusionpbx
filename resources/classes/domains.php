@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -426,54 +426,34 @@ if (!class_exists('domains')) {
 		}
 
 		/**
-		 * add the default settings to the session array
+		 * add default, domain and user settings to the session array
 		 */
 		public function set() {
 
-			//connect to the database if not connected
-				if (!$this->db) {
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
-
-			//set the PDO error mode
-				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 			//get previous domains settings
-				if (strlen($_SESSION["previous_domain_uuid"]) > 0) {
+				if (is_uuid($_SESSION["previous_domain_uuid"])) {
 					$sql = "select * from v_domain_settings ";
-					$sql .= "where domain_uuid = '" . $_SESSION["previous_domain_uuid"] . "' ";
+					$sql .= "where domain_uuid = :previous_domain_uuid ";
 					$sql .= "and domain_setting_enabled = 'true' ";
-					try {
-						$prep_statement = $this->db->prepare($sql . " order by domain_setting_order asc ");
-						$prep_statement->execute();
-					}
-					catch(PDOException $e) {
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-					}
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				//unset previous domain settings	
+					$sql .= " order by domain_setting_order asc ";
+					$parameters['previous_domain_uuid'] = $_SESSION["previous_domain_uuid"];
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
+
+				//unset previous domain settings
 					foreach ($result as $row) {
 						unset($_SESSION[$row['domain_setting_category']]);
 					}
 					unset($_SESSION["previous_domain_uuid"]);
 				}
-	
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
-				try {
-					$prep_statement = $this->db->prepare($sql . " order by default_setting_order asc ");
-					$prep_statement->execute();
-				}
-				catch(PDOException $e) {
-					$prep_statement = $this->db->prepare($sql);
-					$prep_statement->execute();
-				}
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$sql .= "order by default_setting_order asc ";
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				unset($sql, $parameters);
 				//unset all settings
 				foreach ($result as $row) {
 					if ($row['default_setting_category'] != 'user') { //skip off-limit categories
@@ -507,19 +487,23 @@ if (!class_exists('domains')) {
 				}
 
 			//get the domains settings
-				if (strlen($_SESSION["domain_uuid"]) > 0) {
+				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php")) {
+					include "app/domains/resources/settings.php";
+				}
+
+			//get the domains settings
+				if (is_uuid($_SESSION["domain_uuid"])) {
+
+					//get settings from the database
 					$sql = "select * from v_domain_settings ";
-					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
+					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and domain_setting_enabled = 'true' ";
-					try {
-						$prep_statement = $this->db->prepare($sql . " order by domain_setting_order asc ");
-						$prep_statement->execute();
-					}
-					catch(PDOException $e) {
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-					}
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$sql .= " order by domain_setting_order asc ";
+					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
+
 					//unset the arrays that domains are overriding
 					foreach ($result as $row) {
 						$name = $row['domain_setting_name'];
@@ -554,21 +538,18 @@ if (!class_exists('domains')) {
 						}
 					}
 				}
+
 			//get the user settings
-				if (array_key_exists("domain_uuid",$_SESSION) and array_key_exists("user_uuid",$_SESSION) and strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0) {
+				if (array_key_exists("domain_uuid",$_SESSION) && array_key_exists("user_uuid",$_SESSION) && is_uuid($_SESSION["domain_uuid"])) {
 					$sql = "select * from v_user_settings ";
-					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
-					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
-					try {
-						$prep_statement = $this->db->prepare($sql . " order by user_setting_order asc ");
-						$prep_statement->execute();
-					}
-					catch(PDOException $e) {
-						$prep_statement = $this->db->prepare($sql);
-						$prep_statement->execute();
-					}
-					if ($prep_statement) {
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and user_uuid = :user_uuid ";
+					$sql .= " order by user_setting_order asc ";
+					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
+					$parameters['user_uuid'] = $_SESSION["user_uuid"];
+					$database = new database;
+					$result = $database->select($sql, $parameters, 'all');
+					if (is_array($result)) {
 						foreach ($result as $row) {
 							if ($row['user_setting_enabled'] == 'true') {
 								$name = $row['user_setting_name'];
@@ -599,9 +580,6 @@ if (!class_exists('domains')) {
 					}
 				}
 
-			//set the PDO error mode
-				$this->db->setAttribute(PDO::ATTR_ERRMODE, '');
-
 			//set the values from the session variables
 				if (strlen($_SESSION['domain']['time_zone']['name']) > 0) {
 					//server time zone
@@ -614,7 +592,6 @@ if (!class_exists('domains')) {
 
 			//set the context
 				$_SESSION["context"] = $_SESSION["domain_name"];
-
 		}
 
 		/**
@@ -624,7 +601,6 @@ if (!class_exists('domains')) {
 
 			//connect to the database if not connected
 				if (!$this->db) {
-					require_once "resources/classes/database.php";
 					$database = new database;
 					$database->connect();
 					$this->db = $database->db;
@@ -667,41 +643,39 @@ if (!class_exists('domains')) {
 
 			//get the domains
 				$sql = "select * from v_domains ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$domains = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset($prep_statement);
+				$database = new database;
+				$domains = $database->select($sql, null, 'all');
+				unset($sql, $parameters);
 
 			//get the domain_settings
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_setting_enabled = 'true' ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$domain_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset($prep_statement);
+				$database = new database;
+				$domain_settings = $database->select($sql, null, 'all');
+				unset($sql, $parameters);
 
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$database_default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset($prep_statement);
-
+				$database = new database;
+				$database_default_settings = $database->select($sql, null, 'all');
+				unset($sql, $parameters);
 
 			//get the domain_uuid
-				foreach($domains as $row) {
-					if (count($domains) == 1) {
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
-						$_SESSION["domain_name"] = $row['domain_name'];
-					}
-					else {
-						if (lower_case($row['domain_name']) == lower_case($domain_array[0]) || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0])) {
+				if (is_array($domains)) {
+					foreach($domains as $row) {
+						if (count($domains) == 1) {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
 							$_SESSION["domain_name"] = $row['domain_name'];
 						}
-						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
+						else {
+							if (lower_case($row['domain_name']) == lower_case($domain_array[0]) || lower_case($row['domain_name']) == lower_case('www.'.$domain_array[0])) {
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION["domain_name"] = $row['domain_name'];
+							}
+							$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+							$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
+						}
 					}
 				}
 
@@ -785,14 +759,6 @@ if (!class_exists('domains')) {
 		 */
 		public function settings() {
 
-			//connect to the database if not connected
-				if (!$this->db) {
-					require_once "resources/classes/database.php";
-					$database = new database;
-					$database->connect();
-					$this->db = $database->db;
-				}
-
 			//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
@@ -814,10 +780,9 @@ if (!class_exists('domains')) {
 			//get an array of the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "order by default_setting_category asc, default_setting_subcategory asc";
-				$prep_statement = $this->db->prepare($sql);
-				$prep_statement->execute();
-				$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				unset ($prep_statement, $sql);
+				$database = new database;
+				$default_settings = $database->select($sql, null, 'all');
+				unset($sql);
 
 			//named array
 				foreach ($default_settings as $row) {
@@ -842,13 +807,15 @@ if (!class_exists('domains')) {
 							if ($app_uuid == null) {
 								$sql = "update v_default_settings set ";
 								if ($default_setting_uuid != $row['default_setting_uuid']) {
-									$sql .= "default_setting_uuid = '".$row['default_setting_uuid']."', ";
+									$sql .= "default_setting_uuid = :default_setting_uuid, ";
 								}
-								$sql .= "app_uuid = '".$row['app_uuid']."' ";
-								$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."';";
-								//echo $category." ".$subcategory." ".$name." ".$app_uuid."\n";
-								//echo $sql."\n";
-								$this->db->exec(check_sql($sql));
+								$sql .= "app_uuid = :app_uuid ";
+								$sql .= "where default_setting_uuid = :default_setting_uuid';";
+								$parameters['default_setting_uuid'] = $row['default_setting_uuid'];
+								$parameters['app_uuid'] = $row['app_uuid'];
+								$database = new database;
+								$default_settings = $database->select($sql, $parameters, 'all');
+								unset($sql, $parameters);
 								//echo "\n";
 							}
 
@@ -878,21 +845,32 @@ if (!class_exists('domains')) {
 						$sql .= "default_setting_description ";
 						$sql .= ") values \n";
 						$sql .= "(";
-						$sql .= "'".check_str($row['default_setting_uuid'])."', ";
-						$sql .= "'".check_str($row['default_setting_category'])."', ";
-						$sql .= "'".check_str($row['default_setting_subcategory'])."', ";
-						$sql .= "'".check_str($row['default_setting_name'])."', ";
-						$sql .= "'".check_str($row['default_setting_value'])."', ";
+						$sql .= ":default_setting_uuid, ";
+						$sql .= ":default_setting_category, ";
+						$sql .= ":default_setting_subcategory, ";
+						$sql .= ":default_setting_name, ";
+						$sql .= ":default_setting_value, ";
 						if ($row['default_setting_order']) {
-							$sql .= "'".check_str($row['default_setting_order'])."', ";
+							$sql .= ":default_setting_order, ";
 						}
-						$sql .= "'".check_str($row['default_setting_enabled'])."', ";
-						$sql .= "'".check_str($row['default_setting_description'])."' ";
+						$sql .= ":default_setting_enabled, ";
+						$sql .= ":default_setting_description ";
 						$sql .= ");";
-						//echo $sql."\n";
-						$this->db->exec(check_sql($sql));
-						unset($array);
+						$parameters['default_setting_uuid'] = $row['default_setting_uuid'];
+						$parameters['default_setting_category'] = $row['default_setting_category'];
+						$parameters['default_setting_subcategory'] = $row['default_setting_subcategory'];
+						$parameters['default_setting_name'] = $row['default_setting_name'];
+						$parameters['default_setting_value'] = $row['default_setting_value'];
+						if ($row['default_setting_order']) {
+							$parameters['default_setting_order'] = $row['default_setting_order'];
+						}
+						$parameters['default_setting_enabled'] = $row['default_setting_enabled'];
+						$parameters['default_setting_description'] = $row['default_setting_description'];
+						$database = new database;
+						$default_settings = $database->select($sql, $parameters, 'all');
+						unset($sql, $parameters);
 					}
+					unset($array);
 				}		
 		} //end settings method
 	}

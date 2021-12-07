@@ -281,8 +281,9 @@
 			if (transcribe_provider == "google") then
 				local api_key = settings:get('voicemail', 'google_key', 'text') or '';
 				local transcription_server = settings:get('voicemail', 'google_url', 'text') or '';
+				transcribe_alternate_language = settings:get('voicemail', 'transcribe_alternate_language', 'text') or 'es-US';
 				if (api_key ~= '') then
-					transcribe_cmd = [[sox ]]..file_path..[[ ]]..file_path..[[.flac trim 0 00:59 && echo "{ 'config': { 'languageCode': 'en-US', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': 'es' }, 'audio': { 'content': '`base64 -w 0 ]]..file_path..[[.flac`' } }" | curl -X POST -H "Content-Type: application/json" -d @- "]]..transcription_server..[[:recognize?key=]]..api_key..[[" && rm -f ]]..file_path..[[.flac]]
+					transcribe_cmd = [[sox ]]..file_path..[[ ]]..file_path..[[.flac trim 0 00:59 && echo "{ 'config': { 'languageCode': ']]..transcribe_language..[[', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': ']]..transcribe_alternate_language..[[' }, 'audio': { 'content': '`base64 -w 0 ]]..file_path..[[.flac`' } }" | curl -X POST -H "Content-Type: application/json" -d @- "]]..transcription_server..[[:recognize?key=]]..api_key..[[" && rm -f ]]..file_path..[[.flac]]
 				end
 
 				local handle = io.popen(transcribe_cmd);
@@ -520,6 +521,7 @@
 
 		--play the beep
 			dtmf_digits = '';
+			session:execute("playback","silence_stream://200");
 			session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 
 		--start epoch
@@ -535,7 +537,6 @@
 			if (storage_path == "http_cache") then
 				result = session:recordFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, message_max_length, message_silence_threshold, message_silence_seconds);
 			else
-				mkdir(voicemail_dir.."/"..voicemail_id);
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
 					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled ~= "true") then
@@ -586,7 +587,7 @@
 
 		--if the recording is below the minimal length then re-record the message
 			if (message_length > 2) then
-				--continue
+				session:setVariable("voicemail_message_seconds", message_length);
 			else
 				if (session:ready()) then
 					--your recording is below the minimal acceptable length, please try again

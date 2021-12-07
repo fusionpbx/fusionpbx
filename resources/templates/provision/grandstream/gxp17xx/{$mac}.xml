@@ -773,7 +773,11 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
+{if $account.1.sip_transport != 'dns srv'}
 <P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+{else}
+<P47>{$account.1.server_address}</P47>
+{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -781,7 +785,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if isset($account.1.outbound_proxy_primary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
 <P48>{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</P48>
 {else}
 <P48></P48>
@@ -789,7 +793,7 @@
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-{if isset($account.1.outbound_proxy_secondary)}
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
 <P2333>{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</P2333>
 {else}
 <P2333></P2333>
@@ -817,7 +821,7 @@
 
 <!-- # Voice Mail UserID -->
 <!-- # String -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 <!-- ############################################################### -->
 <!-- # Account 1/Network Settings -->
 <!-- ############################################################### -->
@@ -1034,7 +1038,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2318></P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- # Music On Hold URI -->
 <!-- # String -->
@@ -1361,33 +1365,33 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P1489>0</P1489>
+<P1489>{$grandstream_distinctive_ringtone_1}</P1489>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- # String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- # Matching Rule 2 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P1491>0</P1491>
+<P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
 <!-- # Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- # String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- # Matching Rule 3 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P1493>0</P1493>
+<P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
 <!-- # Ring Timeout (in seconds). Default is 60 -->
 <!-- # Number: 30 - 3600 -->
@@ -1484,7 +1488,11 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
+{if $account.2.sip_transport != 'dns srv'}
 <P402>{$account.2.server_address}:{$account.2.sip_port}</P402>
+{else}
+<P402>{$account.2.server_address}</P402>
+{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -1492,7 +1500,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if isset($account.2.outbound_proxy_primary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_primary)}
 <P403>{$account.2.outbound_proxy_primary}:{$account.2.sip_port}</P403>
 {else}
 <P403></P403>
@@ -1500,7 +1508,7 @@
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-{if isset($account.2.outbound_proxy_secondary)}
+{if $account.2.sip_transport != 'dns srv' && isset($account.2.outbound_proxy_secondary)}
 <P2433>{$account.2.outbound_proxy_secondary}:{$account.2.sip_port}</P2433>
 {else}
 <P2433></P2433>
@@ -1528,7 +1536,7 @@
 
 <!-- # Voice Mail UserID -->
 <!-- # String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 <!-- ############################################################### -->
 <!-- # Account 2/Network Settings -->
 <!-- ############################################################### -->
@@ -1745,7 +1753,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2418></P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- # Music On Hold URI -->
 <!-- # String -->
@@ -2184,7 +2192,11 @@
 
 <!-- # SIP Server -->
 <!-- # String -->
+{if $account.3.sip_transport != 'dns srv'}
 <P502>{$account.3.server_address}:{$account.3.sip_port}</P502>
+{else}
+<P502>{$account.3.server_address}</P502>
+{/if}
 
 <!-- # Secondary SIP Server -->
 <!-- # String -->
@@ -2192,7 +2204,7 @@
 
 <!-- # Outbound Proxy -->
 <!-- # String -->
-{if isset($account.3.outbound_proxy_primary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_primary)}
 <P503>{$account.3.outbound_proxy_primary}:{$account.3.sip_port}</P503>
 {else}
 <P503></P503>
@@ -2200,7 +2212,7 @@
 
 <!-- # Backup Outbound Proxy -->
 <!-- # String -->
-{if isset($account.3.outbound_proxy_secondary)}
+{if $account.3.sip_transport != 'dns srv' && isset($account.3.outbound_proxy_secondary)}
 <P2533>{$account.3.outbound_proxy_secondary}:{$account.3.sip_port}</P2533>
 {else}
 <P2533></P2533>
@@ -2228,7 +2240,7 @@
 <!-- 	 -->
 <!-- # Voice Mail UserID -->
 <!-- # String -->
-<P526>*97</P526>
+<P526>{$voicemail_number}</P526>
 <!-- ############################################################### -->
 <!-- # Account 3/Network Settings -->
 <!-- ############################################################### -->
@@ -2445,7 +2457,7 @@
 
 <!-- # Conference URI -->
 <!-- # String -->
-<P2518></P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- # Music On Hold URI -->
 <!-- # String -->
@@ -2764,7 +2776,7 @@
 
 <!-- # Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- # String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
 <!-- # Matching Rule 1 Distinctive Ringtone -->
 <!-- # 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
@@ -3859,17 +3871,28 @@
 <!-- # HEADSET Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
 
-<!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
-<!-- # Number: 0, 1 -->
-<!-- # Mandatory -->
-<P1487>0</P1487>
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
 <!-- # Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!-- # Number: 0, 1 -->
 <!-- # Mandatory -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- # Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6, 3 - -9, 4 - +9, 5 - -12, 6 - -15. Default is 0 -->
 <!-- # Number: 0, 1, 2, 3, 4, 5, 6 -->
@@ -5797,7 +5820,7 @@
 <!-- # Internet Protocol. 0 - Both IPv4 and IPv6, 1 - Both, prefer IPv6 , 2 - IPv4 Only, 3 - IPv6 Only. Default is 2. -->
 <!-- # Number: 0, 1, 2, 3 -->
 <!-- # Mandatory -->
-<P1415>0</P1415>
+{if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
 
 <!-- # IPv4 Address. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
 <!-- # Number: 0, 1, 2 -->

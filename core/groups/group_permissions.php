@@ -290,6 +290,7 @@
 	echo 		"	<option value=''>".$text['label-all']."</option>\n";
 	echo 		"	<option value='assigned' ".($view == 'assigned' ? "selected='selected'" : null).">".$text['label-assigned']."</option>\n";
 	echo 		"	<option value='unassigned' ".($view == 'unassigned' ? "selected='selected'" : null).">".$text['label-unassigned']."</option>\n";
+	echo 		"	<option value='protected' ".($view == 'protected' ? "selected='selected'" : null).">".$text['label-group_protected']."</option>\n";
 	echo 		"</select>\n";
 	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn','style'=>($search != '' ? 'display: none;' : null)]);
@@ -345,7 +346,7 @@
 			}
 
 			//application permission
-			if (!$view || ($view == 'assigned' && $checked) || ($view == 'unassigned' && !$checked)) {
+			if (!$view || ($view == 'assigned' && $checked) || ($view == 'unassigned' && !$checked) || ($view == 'protected' && $protected)) {
 				echo "<tr class='list-row'>\n";
 				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
 					echo "	<td class='checkbox'>\n";

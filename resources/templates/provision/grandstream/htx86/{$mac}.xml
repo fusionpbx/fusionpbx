@@ -259,7 +259,7 @@
 
     <!-- # Voice Mail UserID (User ID/extension for 3rd party voice mail system) -->
     <!-- # BT100 only -->
-    <P33>*97</P33>
+    <P33>{$voicemail_number}</P33>
 
     <!-- # SUBSCRIBE for MWI. Whether or not send SUBSCRIBE for Message Waiting Indication. -->
     <!-- # 0 - No, 1 - Yes. -->

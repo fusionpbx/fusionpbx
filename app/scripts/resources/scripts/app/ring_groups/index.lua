@@ -47,6 +47,7 @@
 	require "resources.functions.file_exists";
 	require "resources.functions.channel_utils"
 	require "resources.functions.format_ringback"
+	require "resources.functions.send_presence";
 
 --- include libs
 	local route_to_bridge = require "resources.functions.route_to_bridge"
@@ -160,6 +161,7 @@
 		call_direction = session:getVariable("call_direction");
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4")
+		hold_music = session:getVariable("hold_music");
 	end
 
 --set caller id
@@ -325,6 +327,7 @@
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 					end
+					dbh = Database.new('system');
 					dbh:query(sql, params, function(row)
 						subject = row["template_subject"];
 						body = row["template_body"];
@@ -338,6 +341,12 @@
 						["X-FusionPBX-Email-Type"]  = 'missed';
 					}
 
+				--remove quotes from caller id name and number
+					caller_id_name = caller_id_name:gsub("'", "&#39;");
+					caller_id_name = caller_id_name:gsub([["]], "&#34;");
+					caller_id_number = caller_id_number:gsub("'", "&#39;");
+					caller_id_number = caller_id_number:gsub([["]], "&#34;");
+			
 				--prepare the subject
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
 					subject = subject:gsub("${caller_id_number}", caller_id_number);
@@ -360,8 +369,6 @@
 					body = body:gsub("&nbsp;", " ");
 					body = body:gsub("\n", "");
 					body = body:gsub("\n", "");
-					body = body:gsub("'", "&#39;");
-					body = body:gsub([["]], "&#34;");
 					body = trim(body);
 
 				--send the email
@@ -746,7 +753,7 @@
 						session:execute("set", "uuids="..uuids);
 
 					--export the ringback
-						if (ring_group_distinctive_ring ~= nil) then
+						if (ring_group_distinctive_ring and #ring_group_distinctive_ring > 0) then
 							if (local_ip_v4 ~= nil) then
 								ring_group_distinctive_ring = ring_group_distinctive_ring:gsub("${local_ip_v4}", local_ip_v4);
 							end
@@ -807,8 +814,16 @@
 							--get the extension_uuid
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
+
+							--set hold music
+							if (hold_music == nil) then
+								hold_music = '';
+							else
+								hold_music = ",hold_music="..hold_music;
+							end
+
 							--send to user
-							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid .. row.record_session .. "]user/" .. row.destination_number .. "@" .. domain_name;
+							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
 							dial_string = dial_string_to_user;
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
@@ -882,6 +897,9 @@
 				end
 			end
 
+		--release dbh before bridge
+				dbh:release();
+				
 		--session execute
 			if (session:ready()) then
 				--set the variables
@@ -974,7 +992,18 @@
 						freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 						-- log.noticef("bridge begin: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 						if (ring_group_strategy ~= "rollover") then
+							if (session:getVariable("ring_group_send_presence") == "true") then
+								session:setVariable("presence_id", ring_group_extension.."@"..domain_name);
+								send_presence(uuid, ring_group_extension.."@"..domain_name, "early");
+							end
+							
 							session:execute("bridge", app_data);
+							
+							--set the presence to terminated and unset presence_id
+							if (session:getVariable("ring_group_send_presence") == "true") then
+								session:setVariable("presence_id", "");
+								send_presence(uuid, ring_group_extension.."@"..domain_name, "terminated");
+							end
 						end
 						-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
 					end
@@ -1006,6 +1035,7 @@
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 						else
+							dbh = Database.new('system');
 							local sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 							sql = sql .. "where ring_group_uuid = :ring_group_uuid";
 							local params = {ring_group_uuid = ring_group_uuid};

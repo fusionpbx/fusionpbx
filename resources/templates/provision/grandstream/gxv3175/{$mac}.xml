@@ -38,7 +38,7 @@
 
 <!-- Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
 <!-- MaxLength 64 characters -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Name (Display name :John Doe), MaxLength 64 characters -->
 <P3>{$account.1.display_name}</P3>
@@ -943,7 +943,9 @@
 
 
 <!-- Always Ring Speaker.  0 - No, 1 - Yes.  Default is 0. -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Disable Call-Waiting. 0 - No, 1 - Yes. -->
 <P91>0</P91>

@@ -79,7 +79,8 @@
 							if (row.method == "curl") then
 								api_command_argument = api_command_argument:gsub(" ", "%%20");
 								url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/luarun?app/servers/resources/clear_cache.lua%20]]..api_command_argument;
-								api:executeString("system curl " .. url  );
+								api = freeswitch.API();
+								get_response = api:execute("curl", url);
 								freeswitch.consoleLog("INFO", "[notice] curl ".. url .. " \n");
 							end
 						end

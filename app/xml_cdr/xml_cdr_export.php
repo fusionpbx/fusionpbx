@@ -51,7 +51,7 @@
 	$export_format = $_REQUEST['export_format'];
 
 //export the csv
-	if ($export_format == 'csv') {
+	if (permission_exists('xml_cdr_export_csv') && $export_format == 'csv') {
 
 		//define file name
 			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
@@ -104,7 +104,7 @@
 	}
 
 //export as a PDF
-	if ($export_format == 'pdf') {
+	if (permission_exists('xml_cdr_export_pdf') && $export_format == 'pdf') {
 
 		//load pdf libraries
 		require_once "resources/tcpdf/tcpdf.php";
@@ -192,7 +192,7 @@
 				$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
 				$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
 				$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
-				$data_body[$p] .= '<td align="right">'.(($fields['tta'] > 0) ? $fields['tta'].'s' : null).'</td>';
+				$data_body[$p] .= '<td align="right">'.(($fields['tta'] >= 0) ? $fields['tta'].'s' : null).'</td>';
 				$seconds = ($fields['hangup_cause'] == "ORIGINATOR_CANCEL") ? $fields['duration'] : round(($fields['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 				$total['duration'] += $seconds;
 				$data_body[$p] .= '<td align="right">'.gmdate("G:i:s", $seconds).'</td>';

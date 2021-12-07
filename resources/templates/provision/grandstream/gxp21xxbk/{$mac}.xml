@@ -135,7 +135,7 @@
 <P3>{$account.1.display_name}</P3>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Account 1/Network Settings -->
 
@@ -272,7 +272,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2318></P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -530,33 +530,33 @@
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
 
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- Matching Rule 1 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1489>0</P1489>
+<P1489>{$grandstream_distinctive_ringtone_1}</P1489>
 
 <!-- Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- Matching Rule 2 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1491>0</P1491>
+<P1491>{$grandstream_distinctive_ringtone_2}</P1491>
 
 <!-- Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- Matching Rule 3 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-<P1493>0</P1493>
+<P1493>{$grandstream_distinctive_ringtone_3}</P1493>
 
 <!-- Ring Timeout (in seconds). Default is 60 -->
 <!-- Number: 30 - 3600 -->
@@ -656,7 +656,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 
 <!-- Account 2/Network Settings -->
@@ -836,7 +836,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2418></P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -1217,7 +1217,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P526>*97</P526>
+<P526>{$voicemail_number}</P526>
 
 
 <!-- Account 3/Network Settings -->
@@ -1399,7 +1399,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2518></P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -1647,7 +1647,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
 <!-- Matching Rule 1 Distinctive Ringtone -->
 <!-- 0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
@@ -1772,7 +1772,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P626>*97</P626>
+<P626>{$voicemail_number}</P626>
 
 
 <!-- Account 4/Network Settings -->
@@ -1955,7 +1955,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2618></P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -2324,7 +2324,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 
 <!-- Account 5/Network Settings -->
@@ -2505,7 +2505,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2718></P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -2878,7 +2878,7 @@
 
 <!-- Voice Mail UserID -->
 <!-- String -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 
 <!-- Account 6/Network Settings -->
@@ -3062,7 +3062,7 @@
 
 <!-- Conference URI -->
 <!-- String -->
-<P2818></P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- Music On Hold URI -->
 <!-- String -->
@@ -3772,12 +3772,28 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
 <!-- HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
 <!-- Number: 0, 1, 2 -->

@@ -324,11 +324,34 @@
 								if (permission_exists('device_line_password')) {
 									$array['devices'][0]['device_lines'][$y]['password'] = $row["password"];
 								}
-								$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+								if (permission_exists('device_line_shared')) {
+									$array['devices'][0]['device_lines'][$y]['shared_line'] = $row["shared_line"];
+								}
 								$array['devices'][0]['device_lines'][$y]['enabled'] = $row["enabled"];
-								$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
-								$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
-								$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+								if (permission_exists('device_line_port')) {
+									$array['devices'][0]['device_lines'][$y]['sip_port'] = $row["sip_port"];
+								}
+								else {
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['sip_port'] = $_SESSION['provision']['line_sip_port']['numeric'];
+									}
+								}
+								if (permission_exists('device_line_transport')) {
+									$array['devices'][0]['device_lines'][$y]['sip_transport'] = $row["sip_transport"];
+								}
+								else {
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['sip_transport'] = $_SESSION['provision']['line_sip_transport']['text'];
+									}
+								}
+								if (permission_exists('device_line_register_expires')) {
+									$array['devices'][0]['device_lines'][$y]['register_expires'] = $row["register_expires"];
+								}
+								else {
+									if ($action == "add") {
+										$array['devices'][0]['device_lines'][$y]['register_expires'] = $_SESSION['provision']['line_register_expires']['numeric'];
+									}
+								}
 								$y++;
 							}
 						}
@@ -625,20 +648,6 @@
 		}
 	}
 
-//get the sip profile name
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if ($fp) {
-		$command = "sofia_contact */".$user_id."@".$server_address;
-		$contact_string = event_socket_request($fp, "api ".$command);
-		if (substr($contact_string, 0, 5) == "sofia") {
-			$contact_array = explode("/", $contact_string);
-			$sip_profile_name = $contact_array[1];
-		}
-		else {
-			$sip_profile_name = 'internal';
-		}
-	}
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -816,7 +825,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>$button_margin,'onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 			unset($button_margin);
 		}
-		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&profile=".urlencode($sip_profile_name)."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
 		unset($button_margin);
 		if (permission_exists("device_files")) {
 			//get the template directory
@@ -886,6 +895,7 @@
 	echo "<br /><br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_mac_address']."\n";
@@ -926,9 +936,10 @@
 		echo "	".$text['label-device_template']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
+		echo "<div class='template_select_container'>";
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-		echo "	<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "	<select id='device_template' name='device_template' class='formfld' style='float: left;'>\n";
 		echo "		<option value=''></option>\n";
 		if (is_dir($template_dir) && @is_array($device_vendors)) {
 			foreach ($device_vendors as $row) {
@@ -941,6 +952,8 @@
 								if (is_dir($template_dir . '/' . $row["name"] .'/'. $dir)) {
 									if ($device_template == $row["name"]."/".$dir) {
 										echo "			<option value='".escape($row["name"])."/".escape($dir)."' selected='selected'>".escape($row["name"])."/".escape($dir)."</option>\n";
+										$current_device = escape($dir);
+										$current_device_path = $template_dir . '/' . $row["name"];
 									}
 									else {
 										echo "			<option value='".escape($row["name"])."/".escape($dir)."'>".$row["name"]."/".escape($dir)."</option>\n";
@@ -954,8 +967,54 @@
 			}
 		}
 		echo "	</select>\n";
+		echo "	<span style='float: left; clear: left;'";
 		echo "	<br />\n";
 		echo "	".$text['description-device_template']."\n";
+		echo "	</span>";
+		echo "</div>";
+		echo "
+		<style>
+			.template_select_container {
+				display: block;
+				width: auto;
+				float: left;
+			}
+		
+			.device_image {
+				max-width: 280px;
+			}
+			
+			.device_image > img {
+				position: relative;
+				max-height: 170px;
+				border-radius: 1px;
+				transition: transform .6s;
+				z-index: 2;
+			}
+			
+			.device_image > img:hover {
+				cursor: zoom-in;
+			}			
+			
+			.device_image >img:active {
+				transform: scale(3);
+				box-shadow: 0 0 10px #ccc;
+			}
+		</style>
+		";
+		
+		$device_image_path = $current_device_path . "/";
+		$device_image_name = $current_device . ".jpg";
+		$device_image_full = $device_image_path . "/" . $current_device . "/" . $device_image_name;
+		
+		if (file_exists($device_image_full))
+			{
+				$device_image = base64_encode(file_get_contents($device_image_full));
+
+		echo "<div class='device_image'>\n";
+		echo "<img src='data:image/jpg;base64," . $device_image . "' title='$current_device'>";
+		echo "</div>";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -990,7 +1049,9 @@
 		if (permission_exists('device_line_password')) {
 			echo "				<td class='vtable'>".$text['label-password']."</td>\n";
 		}
-		echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		if (permission_exists('device_line_port')) {
+			echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+		}
 		if (permission_exists('device_line_transport')) {
 			echo "				<td class='vtable'>".$text['label-sip_transport']."</td>\n";
 		}
@@ -1142,9 +1203,11 @@
 					echo "			</td>\n";
 				}
 
-				echo "			<td align='left'>\n";
-				echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
-				echo "			</td>\n";
+				if (permission_exists('device_line_port')) {
+					echo "			<td align='left'>\n";
+					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
+					echo "			</td>\n";
+				}
 
 				if (permission_exists('device_line_transport')) {
 					echo "			<td align='left'>\n";

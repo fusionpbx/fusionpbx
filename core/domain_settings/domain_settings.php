@@ -164,6 +164,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
+		echo button::create(['type'=>'button','label'=>$text['select-global'],'icon'=>$_SESSION['theme']['button_icon_all'],'style'=>'','link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
 		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
 	}
 	if (permission_exists('domain_setting_add')) {

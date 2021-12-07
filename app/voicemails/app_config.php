@@ -34,9 +34,10 @@
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "voicemails";
 		$apps[$x]['destinations'][$y]['name'] = "voicemails";
-		$apps[$x]['destinations'][$y]['sql'] = "select voicemail_id as destination, '*99' || voicemail_id as extension, voicemail_description as description from v_voicemails";
+		$apps[$x]['destinations'][$y]['sql'] = "select voicemail_uuid, voicemail_id as destination, '*99' || voicemail_id as extension, voicemail_description as description from v_voicemails";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and voicemail_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "voicemail_id asc ";
+		$apps[$x]['destinations'][$y]['field']['voicemail_uuid'] = "voicemail_uuid";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "voicemail_id";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "voicemail_id";
 		$apps[$x]['destinations'][$y]['field']['description'] = "voicemail_description";
@@ -84,10 +85,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "voicemail_message_edit";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "voicemail_message_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -301,10 +298,41 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "voicemail";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcription_enabled_default";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Transcription enabled default value.";
-		
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7bc616bb-4c9b-418b-a8e6-f865f2d5a585";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "new_messages_chart_main_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ff9933";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ff93fe10-1447-436e-a7ee-26202694fa16";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "new_messages_chart_sub_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#d4d4d4";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e9c25741-96f1-40cb-a300-37c3aee33196";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "new_messages_chart_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(0,0,0,0)";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0cd9b276-79d7-4700-82cb-5fa40f984658";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "new_messages_chart_border_width";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 	//schema details
 		$y=0;

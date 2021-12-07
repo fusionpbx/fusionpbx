@@ -145,9 +145,7 @@
 	local accountcode = row.accountcode;
 	local forward_all_enabled = row.forward_all_enabled;
 	local last_forward_all_destination = row.forward_all_destination;
-	local follow_me_uuid = row.follow_me_uuid;
 	local toll_allow = row.toll_allow or '';
-	local forward_caller_id_uuid = row.forward_caller_id_uuid;
 
 --toggle enabled
 	if enabled == "toggle" then
@@ -190,56 +188,17 @@
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 	end
 
---get the caller_id for outbound call
-	local forward_caller_id = ""
-	if enabled == "true" and not empty(forward_caller_id_uuid) then
-		local sql = "select destination_number, destination_description,"..
-			"destination_caller_id_number, destination_caller_id_name " ..
-			"from v_destinations where domain_uuid = :domain_uuid and " ..
-			"destination_type = 'inbound' and destination_uuid = :destination_uuid";
-		local params = {domain_uuid = domain_uuid; destination_uuid = forward_caller_id_uuid}
-		if (debug["sql"]) then
-			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
-		end
-		local row = dbh:first_row(sql, params)
-		if row then
-			local caller_id_number = row.destination_caller_id_number
-			if empty(caller_id_number) then
-				caller_id_number = row.destination_number
-			end
-
-			local caller_id_name = row.destination_caller_id_name
-			if empty(caller_id_name) then
-				caller_id_name = row.destination_description
-			end
-
-			if not empty(caller_id_number) then
-				forward_caller_id = forward_caller_id ..
-					 ",outbound_caller_id_number=" .. caller_id_number ..
-					 ",origination_caller_id_number=" .. caller_id_number
-			end
-
-			if not empty(caller_id_name) then
-				forward_caller_id = forward_caller_id ..
-					 ",outbound_caller_id_name=" .. caller_id_name ..
-					 ",origination_caller_id_name=" .. caller_id_name
-			end
-		end
-	end
-
 --get default caller_id for outbound call
-	if enabled == "true" and empty(forward_caller_id_uuid) then
-		if settings:get('cdr', 'call_forward_fix', 'boolean') == 'true' then
-			if not empty(row.outbound_caller_id_number) then
-				forward_caller_id = forward_caller_id ..
-					 ",outbound_caller_id_number=" .. row.outbound_caller_id_number ..
-					 ",origination_caller_id_number=" .. row.outbound_caller_id_number
-			end
-			if not empty(row.outbound_caller_id_name) then
-				forward_caller_id = forward_caller_id ..
-					 ",outbound_caller_id_name=" .. row.outbound_caller_id_name ..
-					 ",origination_caller_id_name=" .. row.outbound_caller_id_name
-			end
+	if enabled == "true" and settings:get('cdr', 'call_forward_fix', 'boolean') == 'true' then
+		if not empty(row.outbound_caller_id_number) then
+			forward_caller_id = forward_caller_id ..
+				 ",outbound_caller_id_number=" .. row.outbound_caller_id_number ..
+				 ",origination_caller_id_number=" .. row.outbound_caller_id_number
+		end
+		if not empty(row.outbound_caller_id_name) then
+			forward_caller_id = forward_caller_id ..
+				 ",outbound_caller_id_name=" .. row.outbound_caller_id_name ..
+				 ",origination_caller_id_name=" .. row.outbound_caller_id_name
 		end
 	end
 
@@ -250,19 +209,6 @@
 			channel_display(session:get_uuid(), "Cancelled")
 		--notify the caller
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
-	end
-
---disable the follow me
-	if enabled == "true" and not empty(follow_me_uuid) then
-		local sql = "update v_follow_me set ";
-		sql = sql .. "follow_me_enabled = 'false' ";
-		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
-		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		if (debug["sql"]) then
-			log.noticef("SQL: %s; params: %s", sql, json.encode(params));
-		end
-		dbh:query(sql, params);
 	end
 
 --check the destination
@@ -302,14 +248,14 @@
 
 		-- Get the sip_profile
 			if (extension ~= nil and domain_name ~= nil) then
-				sip_profile = notify.get_profile(extension, domain_name);
+				sip_profiles = notify.get_profiles(extension, domain_name);
 			end
 
-		if (sip_profile ~= nil) then 
+		if (sip_profiles ~= nil) then
 				freeswitch.consoleLog("NOTICE", "[feature_event] SIP NOTIFY: CFWD set to "..forward_all_enabled.."\n");
 
 			--Do Not Disturb
-				notify.dnd(extension, domain_name, sip_profile, do_not_disturb);
+				notify.dnd(extension, domain_name, sip_profiles, do_not_disturb);
 
 			--Forward all
 				forward_immediate_enabled = forward_all_enabled;
@@ -321,7 +267,7 @@
 					end
 
 				freeswitch.consoleLog("NOTICE", "[feature_event] forward_immediate_destination "..forward_immediate_destination.."\n");
-				notify.forward_immediate(extension, domain_name, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				notify.forward_immediate(extension, domain_name, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 
 			--Forward busy
 				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
@@ -330,7 +276,7 @@
 					end
 
 				freeswitch.consoleLog("NOTICE", "[feature_event] forward_busy_destination "..forward_busy_destination.."\n");
-				notify.forward_busy(extension, domain_name, sip_profile, forward_busy_enabled, forward_busy_destination);
+				notify.forward_busy(extension, domain_name, sip_profiles, forward_busy_enabled, forward_busy_destination);
 
 			--Forward No Answer
 				ring_count = math.ceil (call_timeout / 6);
@@ -340,7 +286,7 @@
 					end
 
 				freeswitch.consoleLog("NOTICE", "[feature_event] forward_no_answer_destination "..forward_no_answer_destination.."\n");
-				notify.forward_no_answer(extension, domain_name, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+				notify.forward_no_answer(extension, domain_name, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 		end
 	end
 

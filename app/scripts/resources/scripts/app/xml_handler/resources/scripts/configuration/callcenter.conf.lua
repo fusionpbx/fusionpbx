@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2021 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,7 @@
 					queue_name = queue_name:gsub(" ", "-");
 
 				--start the xml
-					table.insert(xml, [[                            <queue name="]]..queue_uuid..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
+					table.insert(xml, [[                            <queue name="]]..queue_extension..[[@]]..domain_name..[[" label="]]..queue_name..[[@]]..domain_name..[[">]]);
 					table.insert(xml, [[                                    <param name="strategy" value="]]..queue_strategy..[["/>]]);
 				--set ringback
 					queue_ringback = format_ringback(queue_moh_sound);
@@ -180,16 +180,21 @@
 					agent_wrap_up_time = row.agent_wrap_up_time;
 					agent_reject_delay_time = row.agent_reject_delay_time;
 					agent_busy_delay_time = row.agent_busy_delay_time;
+					agent_record = row.agent_record;
 
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 						--if you change this variable also change app/call_center/call_center_agent_edit.php
 						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
+						local record = "";
+						if (agent_record == "true") then
+							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
+						end
 						if (string.find(agent_contact, '}') == nil) then
 							--not found
 							if (string.find(agent_contact, 'sofia/gateway') == nil) then
 								--add the call_timeout
-								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
+								agent_contact = "{call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",extension_uuid="..extension_uuid..",sip_h_caller_destination=${caller_destination}"..record.."}"..agent_contact;
 							else
 								--add the call_timeout and confirm
 								agent_contact = "{"..confirm..",call_timeout="..agent_call_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination}}"..agent_contact;
@@ -250,8 +255,10 @@
 			table.insert(xml, [[                    </agents>]]);
 
 		--get the tiers
-			sql = "select * from v_call_center_tiers as t, v_domains as d ";
-			sql = sql .. "where d.domain_uuid = t.domain_uuid; ";
+			sql = "select t.domain_uuid, d.domain_name, t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension, t.tier_level, t.tier_position ";
+			sql = sql .. "from v_call_center_tiers as t, v_domains as d, v_call_center_queues as q ";
+			sql = sql .. "where d.domain_uuid = t.domain_uuid ";
+			sql = sql .. "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
@@ -262,12 +269,13 @@
 					domain_name = row.domain_name;
 					agent_uuid = row.call_center_agent_uuid;
 					queue_uuid = row.call_center_queue_uuid;
+					queue_extension = row.queue_extension;
 					tier_level = row.tier_level;
 					tier_position = row.tier_position;
 				--build the xml
 					table.insert(xml, [[                            <tier ]]);
 					table.insert(xml, [[                            	agent="]]..agent_uuid..[[" ]]);
-					table.insert(xml, [[                            	queue="]]..queue_uuid..[[" ]]);
+					table.insert(xml, [[                            	queue="]]..queue_extension..[[@]]..domain_name..[[" ]]);
 					table.insert(xml, [[                            	domain_name="]]..domain_name..[[" ]]);
 					--table.insert(xml, [[                            	agent_name="]]..agent_name..[[" ]]);
 					--table.insert(xml, [[                            	queue_name="]]..queue_name..[[" ]]);

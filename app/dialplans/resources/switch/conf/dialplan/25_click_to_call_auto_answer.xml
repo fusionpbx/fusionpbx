@@ -1,0 +1,9 @@
+<context name="{v_context}">
+  <extension name="clear_sip_auto_answer" app_uuid="90c51470-dc31-11e3-9c1a-0800200c9a66" continue="true" order="25">
+    <condition field="${click_to_call}" expression="true" />
+    <condition field="${sip_h_Call-Info}" expression="answer-after=0" >
+      <action application="export" data="sip_h_Call-Info="/>
+    </condition>
+  </extension>
+</context>
+

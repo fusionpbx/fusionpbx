@@ -2,9 +2,9 @@
 -- Name: agents; Type: TABLE; Schema: public; Owner: fusionpbx; Tablespace:
 --
 CREATE TABLE agents (
-   uuid character varying(255),
+   uuid uuid,
    name character varying(255),
-   system character varying(255),
+   instance_id character varying(255),
    type character varying(255),
    contact character varying(255),
    status character varying(255),
@@ -22,6 +22,7 @@ CREATE TABLE agents (
    calls_answered integer DEFAULT 0 NOT NULL,
    talk_time integer DEFAULT 0 NOT NULL,
    ready_time integer DEFAULT 0 NOT NULL,
+   external_calls_count INTEGER NOT NULL DEFAULT 0,
    agent_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE agents OWNER TO fusionpbx;
@@ -35,7 +36,7 @@ CREATE TABLE aliases (
     alias character varying(128),
     command character varying(4096),
     hostname character varying(256),
-alias_uuid uuid PRIMARY KEY default gen_random_uuid()
+    alias_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE aliases OWNER TO fusionpbx;
 
@@ -57,7 +58,7 @@ ALTER TABLE calls OWNER TO fusionpbx;
 --
 CREATE TABLE channels (
     channel_uuid uuid PRIMARY KEY default gen_random_uuid(),
-    uuid character varying(64),
+    uuid uuid,
     direction character varying(32),
     created character varying(128),
     created_epoch integer,
@@ -134,7 +135,7 @@ ALTER TABLE db_data OWNER TO fusionpbx;
 -- Name: db_data; Type: TABLE; Schema: public; Owner: freeswitch; Tablespace:
 --
 CREATE TABLE fifo_outbound (
-   uuid varchar(255),
+   uuid uuid,
    fifo_name varchar(255),
    originate_string varchar(255),
    simo_count integer,
@@ -169,7 +170,7 @@ ALTER TABLE fifo_outbound OWNER TO fusionpbx;
 --
 CREATE TABLE fifo_bridge (
     fifo_name varchar(1024) not null,
-    caller_uuid varchar(255) not null,
+    caller_uuid uuid not null,
     caller_caller_id_name varchar(255),
     caller_caller_id_number varchar(255),
     consumer_uuid varchar(255) not null,
@@ -184,7 +185,7 @@ ALTER TABLE fifo_bridge OWNER TO fusionpbx;
 --
 CREATE TABLE fifo_callers (
     fifo_name varchar(255) not null,
-    uuid varchar(255) not null,
+    uuid uuid not null,
     caller_caller_id_name varchar(255),
     caller_caller_id_number varchar(255),
     timestamp integer,
@@ -234,9 +235,9 @@ ALTER TABLE limit_data OWNER TO fusionpbx;
 --
 CREATE TABLE members (
    queue character varying(255),
-   system character varying(255),
-   uuid character varying(255) DEFAULT ''::character varying NOT NULL,
-   session_uuid character varying(255) DEFAULT ''::character varying NOT NULL,
+   instance_id character varying(255),
+   uuid uuid NOT NULL,
+   session_uuid VARCHAR(255) NOT NULL,
    cid_number character varying(255),
    cid_name character varying(255),
    system_epoch integer DEFAULT 0 NOT NULL,
@@ -248,7 +249,6 @@ CREATE TABLE members (
    skill_score integer DEFAULT 0 NOT NULL,
    serving_agent character varying(255),
    serving_system character varying(255),
-   instance_id character varying(255),
    state character varying(255),
    member_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
@@ -270,7 +270,7 @@ ALTER TABLE nat OWNER TO fusionpbx;
 -- Name: recovery; Type: TABLE; Schema: public; Owner: freeswitch; Tablespace:
 --
 CREATE TABLE recovery (
-    runtime_uuid character varying(255),
+    runtime_uuid uuid,
     technology character varying(255),
     profile_name character varying(255),
     hostname character varying(255),
@@ -478,7 +478,6 @@ CREATE TABLE tiers (
    level integer DEFAULT 1 NOT NULL,
    "position" integer DEFAULT 1 NOT NULL,
    tier_uuid uuid PRIMARY KEY default gen_random_uuid()
-
 );
 ALTER TABLE tiers OWNER TO fusionpbx;
 
@@ -597,7 +596,7 @@ SELECT a.uuid AS uuid,
    b.context AS b_context,
    b.read_codec AS b_read_codec,
    b.read_rate AS b_read_rate,
-b.read_bit_rate AS b_read_bit_rate,
+   b.read_bit_rate AS b_read_bit_rate,
    b.write_codec AS b_write_codec,
    b.write_rate AS b_write_rate,
    b.write_bit_rate AS b_write_bit_rate,

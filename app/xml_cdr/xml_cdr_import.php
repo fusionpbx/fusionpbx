@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,9 +34,25 @@
 		require_once "resources/require.php";
 	}
 	else {
+		//required includes
 		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/pdo.php";
+	}
+
+//check the domain cidr range 
+	if (isset($_SESSION['cdr']["cidr"]) && !defined('STDIN')) {
+		$found = false;
+		foreach($_SESSION['cdr']["cidr"] as $cidr) {
+			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
+				$found = true;
+				break;
+			}
+		}
+		if (!$found) {
+			echo "access denied";
+			exit;
+		}
 	}
 
 //increase limits
@@ -44,8 +60,9 @@
 	ini_set('memory_limit', '256M');
 	ini_set("precision", 6);
 
-//import from the file system
+//import the call detail records from HTTP POST or file system
 	$cdr = new xml_cdr;
+	$cdr->post();
 	$cdr->read_files();
 
 ?>

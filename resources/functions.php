@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -51,7 +51,7 @@
 				}
 			}
 			if ($db_type == "pgsql") {
-				$string = pg_escape_string($string);
+				$string = str_replace("'","''",$string);
 			}
 			if ($db_type == "mysql") {
 				if(function_exists('mysql_real_escape_string')){
@@ -81,9 +81,14 @@
 	}
 
 	if (!function_exists('check_cidr')) {
-		function check_cidr ($cidr,$ip_address) {
-			list ($subnet, $mask) = explode ('/', $cidr);
-			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+		function check_cidr($cidr, $ip_address) {
+			if (isset($cidr) && strlen($cidr) > 0) {
+				list ($subnet, $mask) = explode ('/', $cidr);
+				return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+			}
+			else {
+				return false;
+			}
 		}
 	}
 
@@ -724,23 +729,38 @@ function switch_module_is_running($fp, $mod) {
 //switch_module_is_running('mod_spidermonkey');
 
 //format a number (n) replace with a number (r) remove the number
-function format_string ($format, $data) {
+function format_string($format, $data) {
+	//preset values
 	$x=0;
 	$tmp = '';
-	for ($i = 0; $i <= strlen($format); $i++) {
-		$tmp_format = strtolower(substr($format, $i, 1));
-		if ($tmp_format == 'x') {
-			$tmp .= substr($data, $x, 1);
-			$x++;
-		}
-		elseif ($tmp_format == 'r') {
-			$x++;
-		}
-		else {
-			$tmp .= $tmp_format;
+
+	//count the characters
+	$format_count = substr_count($format, 'x');
+	$format_count = $format_count + substr_count($format, 'R');
+	$format_count = $format_count + substr_count($format, 'r');
+
+	//format the string if it matches
+	if ($format_count == strlen($data)) {
+		for ($i = 0; $i <= strlen($format); $i++) {
+			$tmp_format = strtolower(substr($format, $i, 1));
+			if ($tmp_format == 'x') {
+				$tmp .= substr($data, $x, 1);
+				$x++;
+			}
+			elseif ($tmp_format == 'r') {
+				$x++;
+			}
+			else {
+				$tmp .= $tmp_format;
+			}
 		}
 	}
-	return $tmp;
+	if (strlen($tmp) == 0) {
+		return $data;
+	}
+	else {
+		return $tmp;
+	}
 }
 
 //get the format and use it to format the phone number
@@ -1353,83 +1373,84 @@ function number_pad($number,$n) {
 
 			*/
 
-			include_once("resources/phpmailer/class.phpmailer.php");
-			include_once("resources/phpmailer/class.smtp.php");
+			try {
+				//include the phpmailer classes
+				include_once("resources/phpmailer/class.phpmailer.php");
+				include_once("resources/phpmailer/class.smtp.php");
 
-			$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,7}$/';
+				//regular expression to validate email addresses
+				$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,7}$/';
 
-			$mail = new PHPMailer();
-			$mail -> IsSMTP();
-			if ($_SESSION['email']['smtp_hostname']['text'] != '') {
-				$mail -> Hostname = $_SESSION['email']['smtp_hostname']['text'];
-			}
-			$mail -> Host = $_SESSION['email']['smtp_host']['text'];
-			if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
-				$mail -> Port = $_SESSION['email']['smtp_port']['numeric'];
-			}
-			if ($_SESSION['email']['smtp_auth']['text'] == "true") {
-				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
-				$mail -> Username = $_SESSION['email']['smtp_username']['text'];
-				$mail -> Password = $_SESSION['email']['smtp_password']['text'];
-			}
-			else {
-				$mail -> SMTPAuth = 'false';
-			}
-			if ($_SESSION['email']['smtp_secure']['text'] == "none") {
-				$_SESSION['email']['smtp_secure']['text'] = '';
-			}
-			if ($_SESSION['email']['smtp_secure']['text'] != '') {
-				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
-			}
-			if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
-				// bypass TLS certificate check e.g. for self-signed certificates
-				$mail -> SMTPOptions = array(
-					'ssl' => array(
-					'verify_peer' => false,
-					'verify_peer_name' => false,
-					'allow_self_signed' => true
-					)
-				);
-			}
-			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
-			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
-			$mail -> SetFrom($eml_from_address, $eml_from_name);
-			$mail -> AddReplyTo($eml_from_address, $eml_from_name);
-			$mail -> Subject = $eml_subject;
-			$mail -> MsgHTML($eml_body);
-			$mail -> Priority = $eml_priority;
-			if ($eml_read_confirmation) {
-				$mail -> AddCustomHeader('X-Confirm-Reading-To: '.$eml_from_address);
-				$mail -> AddCustomHeader('Return-Receipt-To: '.$eml_from_address);
-				$mail -> AddCustomHeader('Disposition-Notification-To: '.$eml_from_address);
-			}
-			if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
-				$mail -> SMTPDebug = $eml_debug_level;
-			}
+				//create the email object and set general settings
+				$mail = new PHPMailer();
+				$mail->IsSMTP();
+				if ($_SESSION['email']['smtp_hostname']['text'] != '') {
+					$mail->Hostname = $_SESSION['email']['smtp_hostname']['text'];
+				}
+				$mail->Host = $_SESSION['email']['smtp_host']['text'];
+				if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
+					$mail->Port = $_SESSION['email']['smtp_port']['numeric'];
+				}
+				if ($_SESSION['email']['smtp_auth']['text'] == "true") {
+					$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
+					$mail->Username = $_SESSION['email']['smtp_username']['text'];
+					$mail->Password = $_SESSION['email']['smtp_password']['text'];
+				}
+				else {
+					$mail->SMTPAuth = 'false';
+				}
+				if ($_SESSION['email']['smtp_secure']['text'] == "none") {
+					$_SESSION['email']['smtp_secure']['text'] = '';
+				}
+				if ($_SESSION['email']['smtp_secure']['text'] != '') {
+					$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
+				}
+				if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+					// bypass TLS certificate check e.g. for self-signed certificates
+					$mail->SMTPOptions = array(
+						'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+						)
+					);
+				}
+				$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
+				$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
+				$mail->SetFrom($eml_from_address, $eml_from_name);
+				$mail->AddReplyTo($eml_from_address, $eml_from_name);
+				$mail->Subject = $eml_subject;
+				$mail->MsgHTML($eml_body);
+				$mail->Priority = $eml_priority;
+				if ($eml_read_confirmation) {
+					$mail->AddCustomHeader('X-Confirm-Reading-To: '.$eml_from_address);
+					$mail->AddCustomHeader('Return-Receipt-To: '.$eml_from_address);
+					$mail->AddCustomHeader('Disposition-Notification-To: '.$eml_from_address);
+				}
+				if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
+					$mail->SMTPDebug = $eml_debug_level;
+				}
 
-			$address_found = false;
-
-			if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
-				$eml_recipients = str_replace(' ', '', $eml_recipients);
-				if (substr_count(',', $eml_recipients)) { $delim = ','; }
-				if (substr_count(';', $eml_recipients)) { $delim = ';'; }
-				if ($delim) { $eml_recipients = explode($delim, $eml_recipients); } // delimiter found, convert to array of addresses
-			}
-
-			if (is_array($eml_recipients)) { // check if multiple recipients
+				//add the email recipients
+				$address_found = false;
+				if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
+					$eml_recipients = str_replace(' ', '', $eml_recipients);
+					$eml_recipients = str_replace(array(';',','), ' ', $eml_recipients);
+					$eml_recipients = explode(' ', $eml_recipients); // convert to array of addresses
+				}
 				foreach ($eml_recipients as $eml_recipient) {
 					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
 						if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
 							switch ($eml_recipient["delivery"]) {
-								case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
+								case "cc" :		$mail->AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+								case "bcc" :	$mail->AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+								default :		$mail->AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
 							}
 							$address_found = true;
 						}
 					}
 					else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
-						$mail -> AddAddress($eml_recipient);
+						$mail->AddAddress($eml_recipient);
 						$address_found = true;
 					}
 				}
@@ -1439,46 +1460,69 @@ function number_pad($number,$n) {
 					return false;
 				}
 
-			}
-			else { // just a single e-mail address found, not an array of addresses
-				if ($eml_recipients != '' && preg_match($regexp, $eml_recipients) == 1) { // check if email syntax is valid
-					$mail -> AddAddress($eml_recipients);
+				//add email attachments
+				if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
+					foreach ($eml_attachments as $attachment) {
+						//set the name of the file
+						$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+
+						//set the mime type
+						switch (substr($attachment['name'], -4)) {
+							case ".png":
+								$attachment['mime_type'] = 'image/png';
+								break;
+							case ".pdf":
+								$attachment['mime_type'] = 'application/pdf';
+								break;
+							case ".mp3":
+								$attachment['mime_type'] = 'audio/mpeg';
+								break;
+							case ".wav":
+								$attachment['mime_type'] = 'audio/x-wav';
+								break;
+							case ".opus":
+								$attachment['mime_type'] = 'audio/opus';
+								break;
+							case ".ogg":
+								$attachment['mime_type'] = 'audio/ogg';
+								break;
+						}
+
+						//add the attachments
+						if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
+							$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+						}
+						else if ($attachment['type'] == 'string') {
+							if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
+								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
+							}
+							else {
+								$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
+							}
+						}
+					}
 				}
-				else {
-					$eml_error = "No valid e-mail address provided.";
+
+				//send the email
+				if (!$mail->Send()) {
+					if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+						$mailer_error = $mail->ErrorInfo;
+					}
 					return false;
 				}
-			}
 
-			if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
-				foreach ($eml_attachments as $attachment) {
-					$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-					if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
-						$mail -> AddAttachment($attachment['value'], $attachment['name']);
-					}
-					else if ($attachment['type'] == 'string') {
-						if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-							$mail -> AddStringAttachment(base64_decode($attachment['value']), $attachment['name']);
-						}
-						else {
-							$mail -> AddStringAttachment($attachment['value'], $attachment['name']);
-						}
-					}
-				}
-			}
+				//cleanup the mail object
+				$mail->ClearAddresses();
+				$mail->SmtpClose();
+				unset($mail);
+				return true;
 
-			if (!$mail -> Send()) {
-				$eml_error = $mail -> ErrorInfo;
+			}
+			catch (Exception $e) {
+				$eml_error = $mail->ErrorInfo;
 				return false;
 			}
-			else {
-				return true;
-			}
 
-			$mail	->	ClearAddresses();
-			$mail	->	SmtpClose();
-
-			unset($mail);
 		}
 	}
 
@@ -2203,5 +2247,46 @@ function number_pad($number,$n) {
 		return NULL;
 	    }
 	}
+
+//get accountode
+	if (!function_exists('get_accountcode')) {
+		function get_accountcode() {
+			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text']) > 0) {
+				if ($accountcode == "none") {
+					return;
+				}
+			}
+			else {
+				$accountcode = $_SESSION['domain_name'];
+			}
+			return $accountcode;
+		}
+	}
+
+// User exists
+        if (!function_exists('user_exists')) {
+                function user_exists($login, $domain_name = null) {
+                	//connect to freeswitch
+                        $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+                        if (!$fp) {
+                                return false;
+                        }
+
+               		//send the user_exists command to freeswitch
+                        if ($fp) {
+                                //build and send the mkdir command to freeswitch
+				if (is_null($domain_name)){
+					$domain_name = $_SESSION['domain_name'];
+				}
+				$switch_cmd = "user_exists id '$login' '$domain_name'";
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				fclose($fp);
+				return ($switch_result == 'true'?true:false);
+                        }
+
+			//can not create directory
+                        return null;
+                }
+        }
 
 ?>

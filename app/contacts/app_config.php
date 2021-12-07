@@ -52,6 +52,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "contact_domain_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "contact_address_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -855,11 +859,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "user_uuid";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "time_start";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamptz";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Start";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "time_stop";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "timestamp";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamptz";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Stop";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "time_description";
@@ -924,7 +932,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_users';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'user_uuid';
-
 
 	//default settings
 		$y=0;

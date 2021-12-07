@@ -78,25 +78,25 @@
 		echo "</tr>\n";
 		$x = 0;
 		foreach ($xml->conference as $row) {
+
 			//set the variables
 				$name = $row['name'];
 				$member_count = $row['member-count'];
+
 			//show the conferences that have a matching domain
 				$name_array = explode('@', $name);
 				if ($name_array[1] == $_SESSION['domain_name']) {
 					$conference_uuid = $name_array[0];
-					if (is_uuid($conference_uuid)) {
+
+					//if uuid then lookup the conference name
+					if (isset($name_array[0]) && is_uuid($name_array[0])) {
 						//check for the conference center room
 						$sql = "select ";
-						$sql .= "cr.conference_room_name, ";
-						$sql .= "v.participant_pin ";
-						$sql .= "from ";
-						$sql .= "v_meetings as v, ";
-						$sql .= "v_conference_rooms as cr ";
-						$sql .= "where ";
-						$sql .= "v.meeting_uuid = cr.meeting_uuid ";
-						$sql .= "and v.meeting_uuid = :meeting_uuid  ";
-						$parameters['meeting_uuid'] = $conference_uuid;
+						$sql .= "conference_room_name, ";
+						$sql .= "participant_pin ";
+						$sql .= "from v_conference_rooms ";
+						$sql .= "where conference_room_uuid = :conference_room_uuid ";
+						$parameters['conference_room_uuid'] = $conference_uuid;
 						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_room_name'];
@@ -124,9 +124,14 @@
 						}
 					}
 
+					//if numeric use the conference extension as the name
+					if (isset($name_array[0]) && is_numeric($name_array[0])) {
+						$conference_name = $name_array[0];
+					}
 					if (permission_exists('conference_interactive_view')) {
 						$list_row_url = 'conference_interactive.php?c='.urlencode($conference_uuid);
 					}
+
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if (permission_exists('conference_interactive_view')) {

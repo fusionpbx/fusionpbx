@@ -278,6 +278,43 @@
 	echo "</table>";
 	echo "<br /><br />\n";
 
+//call stats
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+	if (is_array($array["call-stats"])) {
+		if (is_array($array["call-stats"]['audio'])) {
+			foreach($array["call-stats"]['audio'] as $audio_direction => $stat) {
+				echo "	<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "		<tr>\n";
+				echo "			<td><b>".$text['label-call-stats'].": ".$audio_direction."</b>&nbsp;</td>\n";
+				echo "			<td>&nbsp;</td>\n";
+				echo "		</tr>\n";
+				echo "	</table>\n";
+
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "		<tr>\n";
+				echo "			<th width='30%'>".$text['label-name']."</th>\n";
+				echo "			<th width='70%'>".$text['label-value']."</th>\n";
+				echo "		</tr>\n";
+				foreach($stat as $key => $value) {
+					$value = urldecode($value);
+					echo "<tr >\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."</td>\n";
+					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($value,75,"\n", true))."&nbsp;</td>\n";
+					echo "</tr>\n";
+					$c = $c ? 0 : 1;
+				}
+				echo "		<tr>\n";
+				echo "			<td colspan='2'><br /><br /></td>\n";
+				echo "		</tr>\n";
+				echo "</table>\n";
+			}
+		}
+	}
+	echo "</table>";
+	echo "<br /><br />\n";
+
 //channel data loop
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -387,9 +424,17 @@
 
 	//foreach($array["variables"] as $key => $value) {
 	if (is_array($array["app_log"]["application"])) {
-		foreach ($array["app_log"]["application"] as $row) {
-			$app_name = $row["@attributes"]["app_name"];
-			$app_data = urldecode($row["@attributes"]["app_data"]);
+		foreach ($array["app_log"]["application"] as $key=>$row) {
+			//single app
+			if ($key === "@attributes") {
+				$app_name = $row["app_name"];
+				$app_data = urldecode($row["app_data"]);
+			}
+			//multiple apps
+			else {
+				$app_name = $row["@attributes"]["app_name"];
+				$app_data = urldecode($row["@attributes"]["app_data"]);
+			}
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($app_name)."&nbsp;</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape(wordwrap($app_data,75,"\n", true))."&nbsp;</td>\n";

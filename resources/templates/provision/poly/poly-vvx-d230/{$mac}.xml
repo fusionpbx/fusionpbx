@@ -8358,7 +8358,7 @@
     <N>VoiceService.1.VoiceProfile.1.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -8898,7 +8898,7 @@
     <N>VoiceService.1.VoiceProfile.2.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -9438,7 +9438,7 @@
     <N>VoiceService.1.VoiceProfile.3.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -9978,7 +9978,7 @@
     <N>VoiceService.1.VoiceProfile.4.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -10518,7 +10518,7 @@
     <N>VoiceService.1.VoiceProfile.5.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -11058,7 +11058,7 @@
     <N>VoiceService.1.VoiceProfile.6.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -11598,7 +11598,7 @@
     <N>VoiceService.1.VoiceProfile.7.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>
@@ -12138,7 +12138,7 @@
     <N>VoiceService.1.VoiceProfile.8.X_FeatureCode.</N>
     <P>
       <N>DirectedCallPickup</N>
-      <V X_UD="Y" X_DV="*97"/>
+      <V X_UD="Y" X_DV="{$voicemail_number}"/>
     </P>
     <P>
       <N>CallPickup</N>

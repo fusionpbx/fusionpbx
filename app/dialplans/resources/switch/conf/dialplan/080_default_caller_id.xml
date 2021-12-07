@@ -1,11 +1,15 @@
 <context name="{v_context}">
 	<extension name="default_caller_id" number="" continue="true" app_uuid="9660e536-976d-47cb-872e-85957c51bd3d" order="80">
-		<condition field="${emergency_caller_id_number}" expression="^$" break="never">
+		<condition field="${emergency_caller_id_name}" expression="^$" break="never">
 			<action application="set" data="emergency_caller_id_name=${default_emergency_caller_id_name}" inline="true"/>
+		</condition>
+		<condition field="${emergency_caller_id_number}" expression="^$" break="never">
 			<action application="set" data="emergency_caller_id_number=${default_emergency_caller_id_number}" inline="true"/>
 		</condition>
-		<condition field="${outbound_caller_id_number}" expression="^$" break="never">
+		<condition field="${outbound_caller_id_name}" expression="^$" break="never">
 			<action application="set" data="outbound_caller_id_name=${default_outbound_caller_id_name}" inline="true"/>
+		</condition>
+		<condition field="${outbound_caller_id_number}" expression="^$" break="never">
 			<action application="set" data="outbound_caller_id_number=${default_outbound_caller_id_number}" inline="true"/>
 		</condition>
 	</extension>

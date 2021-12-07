@@ -86,7 +86,7 @@
 	$sql .= "and contact_setting_name = 'array' ";
 	$sql .= "and contact_setting_value <> '' ";
 	$sql .= "and contact_setting_value is not null ";
-	if (!(if_group("superadmin") || if_group("admin"))) {
+	if (!permission_exists('contact_domain_view')) {
 		$sql .= "and ( "; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";
@@ -187,7 +187,7 @@
 	$sql = "select count(*) ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	if (!(if_group("superadmin") || if_group("admin"))) {
+	if (!permission_exists('contact_domain_view')) {
 		$sql .= "and ( "; //only contacts assigned to current user's group(s) and those not assigned to any group
 		$sql .= "	contact_uuid in ( ";
 		$sql .= "		select contact_uuid from v_contact_groups ";

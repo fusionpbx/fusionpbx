@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -86,10 +86,35 @@
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
 			$result = event_socket_request($fp, 'api show application');
-			$_SESSION['switch']['applications'] = explode("\n\n", $result);
-			$_SESSION['switch']['applications'] = explode("\n", $_SESSION['switch']['applications'][0]);
+			
+			$show_applications = explode("\n\n", $result);
+			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
 			unset($fp);
+
+			$previous_application = null;
+			foreach($raw_applications as $row) {
+				if (strlen($row) > 0) {
+					$application_array = explode(",", $row);
+					$application = $application_array[0];
+
+					if (
+						$application != "name" 
+						&& $application != "system" 
+						&& $application != "bgsystem" 
+						&& $application != "spawn" 
+						&& $application != "bg_spawn" 
+						&& $application != "spawn_stream" 
+						&& stristr($application, "[") != true
+					) {
+						if ($application != $previous_application) {
+							$applications[] = $application;
+						}
+					}
+					$previous_application = $application;
+				}
+			}
+			$_SESSION['switch']['applications'] = $applications;
 		} else {
 			$_SESSION['switch']['applications'] = Array();
 		}
@@ -221,7 +246,13 @@
 						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
 							$dialplan_detail_type = $row["dialplan_detail_type"];
 						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_type"])) {
+							$dialplan_detail_type = $row["dialplan_detail_type"];
+						}
 						if (!preg_match("/system/i", $row["dialplan_detail_data"])) {
+							$dialplan_detail_data = $row["dialplan_detail_data"];
+						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_data"])) {
 							$dialplan_detail_data = $row["dialplan_detail_data"];
 						}
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
@@ -232,6 +263,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $row["dialplan_detail_enabled"];
 					}
 					$y++;
 				}
@@ -323,7 +355,10 @@
 	}
 
 //get the dialplan details in an array
-	$sql = "select * from v_dialplan_details ";
+	$sql = "select ";
+	$sql .= "domain_uuid, dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, ";
+	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, cast(dialplan_detail_enabled as text) ";
+	$sql .= "from v_dialplan_details ";
 	$sql .= "where dialplan_uuid = :dialplan_uuid ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$parameters['dialplan_uuid'] = $dialplan_uuid;
@@ -411,6 +446,8 @@
 					$details[$group][$x]['dialplan_detail_inline'] = '';
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+					$details[$group][$x]['dialplan_detail_enabled'] = 'true';
+					
 			}
 		}
 	//sort the details array by group number
@@ -748,6 +785,7 @@
 					echo "<td class='vncellcol' style='text-align: center;'>".$text['label-inline']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-group']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-order']."</td>\n";
+					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-enabled']."</td>\n";
 					if (permission_exists('dialplan_detail_delete')) {
 						echo "<td class='vncellcol edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\" onmouseout=\"swap_display('delete_label_group_".$g."', 'delete_toggle_group_".$g."');\">\n";
 						echo "	<span id='delete_label_group_".$g."'>".$text['label-delete']."</span>\n";
@@ -768,6 +806,12 @@
 								$dialplan_detail_inline = $row['dialplan_detail_inline'];
 								$dialplan_detail_group = $row['dialplan_detail_group'];
 								$dialplan_detail_order = $row['dialplan_detail_order'];
+								$dialplan_detail_enabled = $row['dialplan_detail_enabled'];
+
+							//default to enabled true
+								if (strlen($dialplan_detail_enabled) == 0) {
+									$dialplan_detail_enabled = 'true';
+								}
 
 							//no border on last row
 								$no_border = ($index == 999) ? "border: none;" : null;
@@ -847,13 +891,8 @@
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 									echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
 									if (is_array($_SESSION['switch']['applications'])) {
-										foreach ($_SESSION['switch']['applications'] as $row) {
-											if (strlen($row) > 0) {
-												$application = explode(",", $row);
-												if ($application[0] != "name" && $application[0] != "system" && stristr($application[0], "[") != true) {
-													echo "	<option value='".escape($application[0])."'>".escape($application[0])."</option>\n";
-												}
-											}
+										foreach ($_SESSION['switch']['applications'] as $application) {
+											echo "	<option value='".escape($application)."'>".escape($application)."</option>\n";
 										}
 									}
 									echo "	</optgroup>\n";
@@ -966,6 +1005,17 @@
 								}
 								echo "	</select>\n";
 								*/
+								echo "</td>\n";
+							//enabled
+								echo "<td class='vtablerow' style='".$no_border." text-align: center;' onclick=\"label_to_form('label_dialplan_detail_enabled_".$x."','dialplan_detail_enabled_".$x."');\" nowrap='nowrap'>\n";
+								if ($element['hidden']) {
+									echo "	<label id=\"label_dialplan_detail_enabled_".$x."\">".escape($dialplan_detail_enabled)."</label>\n";
+								}
+								echo "	<select id='dialplan_detail_enabled_".$x."' name='dialplan_details[".$x."][dialplan_detail_enabled]' class='formfld' style='width: auto; ".$element['visibility']."'>\n";
+								echo "	<option></option>\n";
+								echo "	<option value='true' ".($dialplan_detail_enabled == "true" ? $selected : null).">".$text['option-true']."</option>\n";
+								echo "	<option value='false' ".($dialplan_detail_enabled == "false" ? $selected : null).">".$text['option-false']."</option>\n";
+								echo "	</select>\n";
 								echo "</td>\n";
 							//tools
 								if (permission_exists('dialplan_detail_delete')) {

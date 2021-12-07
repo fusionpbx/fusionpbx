@@ -250,7 +250,7 @@
 <P34>{$account.1.password}</P34>
 
 <!-- Voice Mail UserID -->
-<P33>*97</P33>
+<P33>{$voicemail_number}</P33>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P3>{$account.1.display_name}</P3>
@@ -555,7 +555,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2318></P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -578,7 +578,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-<P1488></P1488>
+<P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
 
 <!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
@@ -586,7 +586,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 2 -->
 <!-- String -->
-<P1490></P1490>
+<P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
 
 <!-- Matching Rule 2 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
@@ -594,7 +594,7 @@
 
 <!-- Matching Incoming Caller ID. Matching Rule 3 -->
 <!-- String -->
-<P1492></P1492>
+<P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
 
 <!-- Matching Rule 3 Distinctive Ringtone. See ring tone options and value in the Ring Tone Value Table below -->
 <!-- String -->
@@ -686,7 +686,7 @@
 <P406>{$account.2.password}</P406>
 
 <!-- Voice Mail UserID -->
-<P426>*97</P426>
+<P426>{$voicemail_number}</P426>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P407>{$account.2.display_name}</P407>
@@ -973,7 +973,7 @@
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2418></P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1109,7 +1109,7 @@
 <P506>{$account.3.password}</P506>
 
 <!-- Voice Mail UserID -->
-<P526>*97</P526> =
+<P526>{$voicemail_number}</P526> =
 
 <!-- Name (Display name: John Doe) -->
 <P507>{$account.3.display_name}</P507>
@@ -1401,7 +1401,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2518></P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -1425,7 +1425,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Matching Incoming Caller ID. Matching Rule 1 -->
 <!-- String -->
-<P1500></P1500>
+<P1500>{$grandstream_distinctive_ringtone_name_1}</P1500>
 
 <!-- Matching Rule 1 Distinctive Ringtone. See ring tone options and value in the Ring Tone value table below -->
 <!-- String -->
@@ -1536,7 +1536,7 @@ VNumber: 0, 1, 2. -->
 <P606>{$user_password_4}</P606>
 
 <!-- Voice Mail UserID -->
-<P606>*97</P606>
+<P606>{$voicemail_number}</P606>
 
 <!-- Name (Display Name, e.g., John Doe) -->
 <P606>{$display_name_4}</P606>
@@ -1831,7 +1831,7 @@ VNumber: 0, 1, 2. -->
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2618></P2618>
+<P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
 
 <!-- Account Ring Tone. See ring tone options and value in the Ring Tone value table below -->
 <P623>content://settings/system/ringtone</P623>
@@ -1965,7 +1965,7 @@ VNumber: 0, 1, 2. -->
 <P1706>{$user_password_5}</P1706>
 
 <!-- Voice Mail UserID -->
-<P1726>*97</P1726>
+<P1726>{$voicemail_number}</P1726>
 
 <!-- Name (Display name, e.g., John Doe) -->
 <P1707>{$display_name_5}</P1707>
@@ -2256,7 +2256,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2718></P2718>
+<P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2391,7 +2391,7 @@ Account 5 Codec Settings
 <P1806>{$user_password_6}</P1806>
 
 <!-- Voice Mail UserID -->
-<P1826>*97</P1826>
+<P1826>{$voicemail_number}</P1826>
 
 <!-- Name (Display name :John Doe) -->
 <P1807>{$display_name_6}</P1807>
@@ -2682,7 +2682,7 @@ Account 5 Codec Settings
 
 <!-- Conference-URI -->
 <!-- String -->
-<P2818></P2818>
+<P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
 
 <!-- Broadsoft Call Center. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -2830,7 +2830,9 @@ Account 5 Codec Settings
 
 <!-- Always Ring Speaker. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1439>0</P1439>
+{if isset($grandstream_headset_ring)}
+<P1439>{$grandstream_headset_ring}</P1439>
+{/if}
 
 <!-- Auto Conference. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- Number: 0, 1 -->
@@ -3547,13 +3549,23 @@ Account 5 Codec Settings
 <P1302>0</P1302>
 {/if}
 
-<!-- Headset Type. 0 - Normal Headset, 1 - Plantronics EHS. Default value is 0 -->
-<!-- Number: 0, 1 -->
-<P1487>0</P1487>
-
 <!-- Headset Key Mode. 0 - Default Mode, 1 - Toggle Headset/Speaker. Default value is 0 -->
 <!-- Number: 0, 1 -->
-<P1312>0</P1312>
+{if isset($grandstream_headset_key_mode)}
+    <P1312>{$grandstream_headset_key_mode}</P1312>
+{/if}
+
+    <!-- # Headset Type. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+{if isset($grandstream_headset_type)}
+    <P6779>{$grandstream_headset_type}</P6779>
+
+    <!-- # EHS Headset Ring Tone. 0 - Normal, 1 - Plantronics EHS. Default is 0 -->
+    <!-- # Number: 0, 1 -->
+    <!-- # Mandatory -->
+    <P1487>{$grandstream_headset_type}</P1487>
+{/if}
 
 <!-- Advanced Settings - MPK LCD Settings -->
 

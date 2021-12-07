@@ -135,6 +135,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
+
 			//set message
 				message::add($text['message-update']);
 
@@ -148,7 +149,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$recording_uuid = $_GET["id"];
-		$sql = "select * from v_recordings ";
+		$sql = "select recording_name, recording_filename, recording_description from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and recording_uuid = :recording_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;

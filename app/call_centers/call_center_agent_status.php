@@ -80,8 +80,11 @@
 	$call_center_tiers = csv_to_named_array($event_socket_str, '|');
 
 //get the call center queues from the database
-	$sql = "select * from v_call_center_queues ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql = "select q.*, d.domain_name ";
+	$sql .= "from v_call_center_queues as q, v_domains as d ";
+	$sql .= "where q.domain_uuid = :domain_uuid ";
+	$sql .= "and d.domain_uuid = :domain_uuid ";
+	$sql .= "and q.domain_uuid = d.domain_uuid ";
 	$sql .= "order by queue_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
@@ -93,8 +96,11 @@
 	$x = 0;
 	if (is_array($call_center_queues)) {
 		foreach ($call_center_queues as $queue) {
+			//set the queue id
+			$queue_id = $queue['queue_extension'].'@'.$queue['domain_name'];
+
 			//get the queue list from event socket
-			$switch_cmd = "callcenter_config queue list agents ".$queue['call_center_queue_uuid'];
+			$switch_cmd = "callcenter_config queue list agents ".$queue_id;
 			$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 			$queue_list = csv_to_named_array($event_socket_str, '|');
 			$call_center_queues[$x]['queue_list'] = $queue_list;
@@ -158,7 +164,7 @@
 //use the http post array to change the status
 	if (is_array($_POST['agents'])) {
 		foreach($_POST['agents'] as $row) {
-			if (strlen($row['agent_status']) > 0) {
+			if (isset($row['agent_status'])) {
 				//agent set status
 					if ($fp) {
 						//set the user_status
@@ -217,6 +223,17 @@
 							}
 							//echo $command."\n";
 
+						//get the queue_id
+							if (isset($row['queue_uuid']) && is_uuid($row['queue_uuid'])) {
+								if (is_array($call_center_queues)) {
+									foreach ($call_center_queues as $queue) {
+										if ($queue['call_center_queue_uuid'] == $row['queue_uuid']) {
+											$queue_id = $queue['queue_extension'].'@'.$queue['domain_name'];
+										}
+									}
+								}
+							}
+
 						//set the agent status to available and assign the agent to the queue with the tier
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Available') {
 								//set the call center status
@@ -225,7 +242,7 @@
 
 								//assign the agent to the queue
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "api callcenter_config tier add ".$row['queue_uuid']." ".$row['agent_uuid']." 1 1";
+									$command = "api callcenter_config tier add ".$queue_id." ".$row['agent_uuid']." 1 1";
 									//echo $command."<br />\n";
 									$response = event_socket_request($fp, $command);
 								}
@@ -234,7 +251,7 @@
 						//un-assign the agent from the queue
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
 								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
-									$command = "api callcenter_config tier del ".$row['queue_uuid']." ".$row['agent_uuid'];
+									$command = "api callcenter_config tier del ".$queue_id." ".$row['agent_uuid'];
 									//echo $command."<br />\n";
 									$response = event_socket_request($fp, $command);
 								}

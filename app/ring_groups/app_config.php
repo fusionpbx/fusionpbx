@@ -46,6 +46,9 @@
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name} \${description}";
 
+	//cache details
+		$apps[$x]['cache']['key'] = "dialplan.\${ring_group_context}";
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_view";

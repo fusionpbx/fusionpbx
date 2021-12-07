@@ -93,6 +93,7 @@
 		$agent_wrap_up_time = $_POST["agent_wrap_up_time"];
 		$agent_reject_delay_time = $_POST["agent_reject_delay_time"];
 		$agent_busy_delay_time = $_POST["agent_busy_delay_time"];
+		$agent_record = $_POST["agent_record"];
 		//$agent_logout = $_POST["agent_logout"];
 	}
 
@@ -174,6 +175,7 @@
 			$array['call_center_agents'][0]['agent_wrap_up_time'] = $agent_wrap_up_time;
 			$array['call_center_agents'][0]['agent_reject_delay_time'] = $agent_reject_delay_time;
 			$array['call_center_agents'][0]['agent_busy_delay_time'] = $agent_busy_delay_time;
+			$array['call_center_agents'][0]['agent_record'] = $agent_record;
 			if (is_uuid($user_uuid)) {
 				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 				$array['users'][0]['user_uuid'] = $user_uuid;
@@ -205,7 +207,6 @@
 			}
 			else {
 				//add the call_timeout and confirm
-				$agent_contact = $first.',call_timeout='.$agent_call_timeout.$last;
 				$agent_contact = "{".$confirm.",call_timeout=".$agent_call_timeout.",sip_invite_domain=".$_SESSION['domain_name']."}".$agent_contact;
 			}
 		}
@@ -301,6 +302,7 @@
 			$agent_wrap_up_time = $row["agent_wrap_up_time"];
 			$agent_reject_delay_time = $row["agent_reject_delay_time"];
 			$agent_busy_delay_time = $row["agent_busy_delay_time"];
+			$agent_record = $row["agent_record"];
 			//$agent_logout = $row["agent_logout"];
 		}
 		unset($sql, $parameters, $row);
@@ -529,7 +531,7 @@
 	echo "	".$text['label-no_answer_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_no_answer_delay_time' maxlength='255' min='1' step='1' value='".escape($agent_no_answer_delay_time)."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_no_answer_delay_time' maxlength='255' min='0' step='1' value='".escape($agent_no_answer_delay_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-no_answer_delay_time']."\n";
 	echo "</td>\n";
@@ -551,7 +553,7 @@
 	echo "	".$text['label-wrap_up_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_wrap_up_time' maxlength='255' min='1' step='1' value='".escape($agent_wrap_up_time)."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_wrap_up_time' maxlength='255' min='0' step='1' value='".escape($agent_wrap_up_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-wrap_up_time']."\n";
 	echo "</td>\n";
@@ -562,7 +564,7 @@
 	echo "	".$text['label-reject_delay_time']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='agent_reject_delay_time' maxlength='255' min='1' step='1' value='".escape($agent_reject_delay_time)."'>\n";
+	echo "  <input class='formfld' type='number' name='agent_reject_delay_time' maxlength='255' min='0' step='1' value='".escape($agent_reject_delay_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-reject_delay_time']."\n";
 	echo "</td>\n";
@@ -576,6 +578,20 @@
 	echo "  <input class='formfld' type='number' name='agent_busy_delay_time' maxlength='255' min='1' step='1' value='".escape($agent_busy_delay_time)."'>\n";
 	echo "<br />\n";
 	echo $text['description-busy_delay_time']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-record_template']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='agent_record'>\n";
+	echo "	<option value='true' ".($agent_record == "true" ?  "selected='selected'" : '')." >".$text['option-true']."</option>\n";
+	echo "	<option value='false' ".($agent_record != "true" ?  "selected='selected'" : '').">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-record_template']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -100,7 +100,6 @@
 		extension = row.extension;
 		number_alias = row.number_alias or '';
 		accountcode = row.accountcode;
-		follow_me_uuid = row.follow_me_uuid;
 		do_not_disturb = row.do_not_disturb;
 		forward_all_destination = row.forward_all_destination;
 		forward_all_enabled = row.forward_all_enabled;
@@ -111,7 +110,6 @@
 	if (session:ready()) then
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] do_not_disturb "..do_not_disturb.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] extension "..extension.."\n");
-		freeswitch.consoleLog("NOTICE", "[do_not_disturb] follow_me_uuid "..follow_me_uuid.."\n");
 		freeswitch.consoleLog("NOTICE", "[do_not_disturb] accountcode "..accountcode.."\n");
 		--freeswitch.consoleLog("NOTICE", "[do_not_disturb] enabled before "..enabled.."\n");
 	end
@@ -155,28 +153,12 @@
 			end
 	end
 
---update follow me
-	if (follow_me_uuid ~= nil and enabled == 'true') then
-		local sql = "update v_follow_me ";
-		sql = sql .. "set follow_me_enabled = 'false' ";
-		sql = sql .. "where domain_uuid = :domain_uuid ";
-		sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
-		local params = {domain_uuid = domain_uuid, follow_me_uuid = follow_me_uuid};
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."; params:" .. json.encode(params) .. "\n");
-		end
-		dbh:query(sql, params);
-	end
-
 --update the extension
 	sql = "update v_extensions set ";
 	if (enabled == "true") then
-		sql = sql .. "follow_me_enabled = 'false', ";
-		sql = sql .. "dial_string = 'error/user_busy', ";
 		sql = sql .. "do_not_disturb = 'true', ";
 		sql = sql .. "forward_all_enabled = 'false' ";
 	else
-		sql = sql .. "dial_string = null, ";
 		sql = sql .. "do_not_disturb = 'false' ";
 	end
 	sql = sql .. "where domain_uuid = :domain_uuid ";
@@ -187,7 +169,7 @@
 	end
 	dbh:query(sql, params);
 
---determine whether to update the dial string
+--update the user and agent status
 	sql = "select * from v_extension_users as e, v_users as u ";
 	sql = sql .. "where e.extension_uuid = :extension_uuid ";
 	sql = sql .. "and e.user_uuid = u.user_uuid ";
@@ -203,7 +185,6 @@
 				api:execute("callcenter_config", "agent set status "..row.username.."@"..domain_name.." '"..user_status.."'");
 			end
 
-		--update the database user_status
 			if (enabled == "true") then
 				user_status = "Do Not Disturb";
 			else
@@ -227,15 +208,15 @@
 
 		-- Get the sip_profile
 		if (extension ~= nil and domain_name ~= nil) then
-			sip_profile = notify.get_profile(extension, domain_name);
+			sip_profiles = notify.get_profiles(extension, domain_name);
 		end
 
 		-- check if not nil
-		if (sip_profile ~= nil) then 
+		if (sip_profiles ~= nil) then
 				freeswitch.consoleLog("NOTICE", "[feature_event] SIP NOTIFY: CFWD set to "..forward_all_enabled.."\n");
 
 			--Do Not Disturb
-				notify.dnd(extension, domain_name, sip_profile, do_not_disturb);
+				notify.dnd(extension, domain_name, sip_profiles, do_not_disturb);
 
 			--Forward all
 				forward_immediate_enabled = forward_all_enabled;
@@ -246,7 +227,7 @@
 						forward_immediate_destination = '0';
 					end
 
-				notify.forward_immediate(extension, domain_name, sip_profile, forward_immediate_enabled, forward_immediate_destination);
+				notify.forward_immediate(extension, domain_name, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 
 			--Forward busy
 				--workaround for freeswitch not sending NOTIFY when destination values are nil. Send 0.
@@ -254,7 +235,7 @@
 						forward_busy_destination = '0';
 					end
 
-				notify.forward_busy(extension, domain_name, sip_profile, forward_busy_enabled, forward_busy_destination);
+				notify.forward_busy(extension, domain_name, sip_profiles, forward_busy_enabled, forward_busy_destination);
 
 			--Forward No Answer
 				ring_count = math.ceil (call_timeout / 6);
@@ -263,7 +244,7 @@
 						forward_no_answer_destination = '0';
 					end
 
-				notify.forward_no_answer(extension, domain_name, sip_profile, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
+				notify.forward_no_answer(extension, domain_name, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 		end
 	end
 

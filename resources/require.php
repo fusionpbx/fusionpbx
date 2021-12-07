@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@
 	include "root.php";
 
 //find and include the config.php file
-    $config_exists = false;
+	$config_exists = false;
 	if (file_exists("/etc/fusionpbx/config.php")) {
 		$config_exists = true;
 		include "/etc/fusionpbx/config.php";
@@ -43,28 +43,7 @@
 	}
 
 //class auto loader
-	if (!class_exists('auto_loader')) {
-		class auto_loader {
-			public function __construct() {
-				spl_autoload_register(array($this, 'loader'));
-			}
-			private function loader($class_name) {
-				//use glob to get classes (note: GLOB_BRACE doesn't work on some systems)
-					$results_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
-					$results_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
-					$results = array_merge((array)$results_1,(array)$results_2);
-					unset($results_1, $results_2);
-
-				//include the class
-					foreach ($results as &$class_file) {
-						if (!class_exists($class_name)) {
-							include $class_file;
-						}
-					}
-					unset($results);
-			}
-		}
-	}
+	include "resources/classes/auto_loader.php";
 	$autoload = new auto_loader();
 
 //additional includes
@@ -72,6 +51,7 @@
 	require_once "resources/functions.php";
 	if ($config_exists) {
 		require "resources/pdo.php";
+		require_once "resources/cidr.php";
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
 			require_once "resources/switch.php";
 		}
