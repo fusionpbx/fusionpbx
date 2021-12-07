@@ -66,7 +66,7 @@
 				}
 
 			// build full path
-				if (substr($recording_filename,0,1) == '/'){
+				if (substr($recording_filename,-1) == '/'){
 					$full_recording_path = $path.$recording_filename;
 				}
 				else {
