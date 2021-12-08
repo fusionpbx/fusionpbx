@@ -295,7 +295,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 	/* main menu logo */
 	img.navbar-logo {
 		border: none;
-		height: 27px;
+		height: 40px;
 		width: auto;
 		padding: 0 10px 0 7px;
 		margin-top: -2px;
