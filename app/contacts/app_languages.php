@@ -6412,4 +6412,25 @@ $text['label-contact']['ru-ru'] = "Контакт";
 $text['label-contact']['sv-se'] = "Kontakt";
 $text['label-contact']['uk-ua'] = "Контакт";
 
+$text['label-permissions']['en-us'] = "Permissions";
+$text['label-permissions']['en-gb'] = "Permissions";
+$text['label-permissions']['ar-eg'] = "";
+$text['label-permissions']['de-at'] = "Berechtigungen"; //copied from de-de
+$text['label-permissions']['de-ch'] = "Berechtigungen"; //copied from de-de
+$text['label-permissions']['de-de'] = "Berechtigungen";
+$text['label-permissions']['es-cl'] = "Permisos";
+$text['label-permissions']['es-mx'] = "Permisos"; //copied from es-cl
+$text['label-permissions']['fr-ca'] = "Permissions"; //copied from fr-fr
+$text['label-permissions']['fr-fr'] = "Permissions";
+$text['label-permissions']['he-il'] = "הרשאות";
+$text['label-permissions']['it-it'] = "Permessi";
+$text['label-permissions']['nl-nl'] = "";
+$text['label-permissions']['pl-pl'] = "Uprawnienia";
+$text['label-permissions']['pt-br'] = "Permissões"; //copied from pt-pt
+$text['label-permissions']['pt-pt'] = "Permissões";
+$text['label-permissions']['ro-ro'] = "";
+$text['label-permissions']['ru-ru'] = "Права";
+$text['label-permissions']['sv-se'] = "Rättigheter";
+$text['label-permissions']['uk-ua'] = "Привілеї";
+
 ?>
