@@ -31,6 +31,14 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e46af53d-0dd7-4b2b-9806-f790a477f245";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_visible";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the visibility of the name of the domain currently being managed.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4c8df6ee-5858-40ee-b90f-b3b1d066a91c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_color";
@@ -70,14 +78,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fd9c03";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for header user name.";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e46af53d-0dd7-4b2b-9806-f790a477f245";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_domain_visible";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the visibility of the name of the domain currently being managed.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b999bb99-2224-48f0-8a61-38c4f75c9869";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
