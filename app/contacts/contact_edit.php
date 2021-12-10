@@ -415,7 +415,7 @@
 			$y = 0;
 			if (is_array($contact_settings)) {
 				foreach ($contact_settings as $row) {
-					if (strlen($row['contact_setting_name']) > 0) {
+					if (strlen($row['contact_setting_category']) > 0 && strlen($row['contact_setting_subcategory']) > 0 && strlen($row['contact_setting_name']) > 0) {
 						$array['contacts'][0]['contact_settings'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_settings'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_settings'][$y]['contact_setting_uuid'] = $row["contact_setting_uuid"];
@@ -1601,7 +1601,7 @@ if (permission_exists('contact_phone_view')) {
 		//echo 				$text['description-phone_extension']."\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label'>\n";
+		echo "		<div class='label vncellreq'>\n";
 		echo "			".$text['label-phone_number']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
@@ -1808,7 +1808,7 @@ if (permission_exists('contact_address_view')) {
 		echo "			</select>\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label'>\n";
+		echo "		<div class='label vncellreq'>\n";
 		echo "			".$text['label-address_address']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
@@ -1944,7 +1944,7 @@ if (permission_exists('contact_email_view')) {
 		echo "				<input class='formfld' type='text' name='contact_emails[$x][email_label]' placeholder='".escape($text['label-email_label'])."' maxlength='255' value=\"".escape($row["email_label"])."\">\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label'>\n";
+		echo "		<div class='label vncellreq'>\n";
 		echo "			".$text['label-email_address']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
@@ -2058,11 +2058,10 @@ if (permission_exists('contact_url_view')) {
 		//echo "				<input type='button' id='btn_toggle_label' class='btn' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle_custom('url_label');\">\n";
 		echo "			</div>\n";
 
-		echo "			<div class='label'>\n";
+		echo "			<div class='label vncellreq'>\n";
 		echo "				".$text['label-url_address']."\n";
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
-
 		echo "					<input class='formfld' type='text' name='contact_urls[$x][url_address]' placeholder='http://...' maxlength='255' value=\"".escape($row["url_address"])."\">\n";
 		echo "			</div>\n";
 
@@ -2115,7 +2114,6 @@ if (permission_exists('contact_relation_view')) {
 
 		$x = 0;
 		foreach($contact_relations as $row) {
-
 			$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid <> :contact_uuid ";
@@ -2127,7 +2125,9 @@ if (permission_exists('contact_relation_view')) {
 
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='heading'>\n";
-			echo "			<b style='float: left;'>".$text['label-contact_relation_label']."</b>\n";
+			echo "			<b style='float: left;'>\n";
+			echo "				".$text['label-contact_relation_label']."\n";
+			echo "			</b>\n";
 			if (permission_exists('contact_relation_delete')) {
 				echo "		<div class='checkbox' style='margin-left: 8px; margin-top: 4px; float: left;'>\n";
 				echo "			<input type='checkbox' name='contact_relations[$x][checked]' id='checkbox_".$x."' class='chk_delete checkbox_relations' value='true' onclick=\"edit_delete_action('relations');\">\n";
@@ -2138,13 +2138,12 @@ if (permission_exists('contact_relation_view')) {
 			}
 			echo "		</div>\n";
 			echo "		<div style='clear: both;'></div>\n";
-	
-			echo "		<div class='label'>\n";
+
+			echo "		<div class='label vncellreq'>\n";
 			echo "			".$text['label-contact_relation_label']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-	
-	
+
 			//if there are no custom labels add defaults
 			if (is_array($_SESSION["contact"]["relation_label"])) {
 				$relation_labels = $_SESSION["contact"]["url_label"];
@@ -2173,7 +2172,7 @@ if (permission_exists('contact_relation_view')) {
 			echo "		</div>\n";
 	
 	
-			echo "		<div class='label'>\n";
+			echo "		<div class='label vncellreq'>\n";
 			echo "			".$text['label-contact_relation_contact']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
@@ -2236,14 +2235,14 @@ if (permission_exists('contact_setting_view')) {
 		echo "				<input class='formfld' type='text' name='contact_settings[$x][contact_setting_category]'  placeholder='' maxlength='255' value=\"".escape($row["contact_setting_category"])."\">\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label'>\n";
+		echo "		<div class='label vncellreq'>\n";
 		echo "			".$text['label-contact_setting_subcategory']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
 		echo "				<input class='formfld' type='text' name='contact_settings[$x][contact_setting_subcategory]' placeholder='' maxlength='255' value=\"".escape($row["contact_setting_subcategory"])."\">\n";
 		echo "		</div>\n";
 
-		echo "		<div class='label'>\n";
+		echo "		<div class='label vncellreq'>\n";
 		echo "			".$text['label-name']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
@@ -2425,7 +2424,7 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		</select>\n";
 		echo "	</div>\n";
 
-		echo "	<div class='label'>\n";
+		echo "	<div class='label vncellreq'>\n";
 		echo "		".$text['label-description']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
@@ -2461,7 +2460,7 @@ if (permission_exists('contact_time_view')) {
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 
-		echo "	<div class='label'>\n";
+		echo "	<div class='label vncellreq'>\n";
 		echo "		".$text['label-time_start']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
@@ -2519,7 +2518,7 @@ if (permission_exists('contact_note_view')) {
 		echo "	</div>\n";
 		echo "	<div style='clear: both;'></div>\n";
 
-		echo "	<div class='label'>\n";
+		echo "	<div class='label vncellreq'>\n";
 		echo "		".$text['label-contact_note']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap' style='float: left;'>\n";
