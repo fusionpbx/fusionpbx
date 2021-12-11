@@ -280,9 +280,11 @@
 										//dialplan global
 											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
 												$dialplan_global = true;
+												$dialplan_context = 'global';
 											}
 											else {
 												$dialplan_global = false;
+												$dialplan_context = $dialplan['@attributes']['name'];
 											}
 
 										//set the domain_uuid
@@ -301,7 +303,7 @@
 											$array['dialplans'][$x]['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
 											$array['dialplans'][$x]['dialplan_name'] = $dialplan['extension']['@attributes']['name'];
 											$array['dialplans'][$x]['dialplan_number'] = $dialplan['extension']['@attributes']['number'];
-											$array['dialplans'][$x]['dialplan_context'] = $dialplan['@attributes']['name'];
+											$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 											if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
 												$array['dialplans'][$x]['dialplan_destination'] = $dialplan['extension']['@attributes']['destination'];
 											}
