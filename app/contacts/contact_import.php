@@ -55,7 +55,7 @@
 	}
 
 //set the max php execution time
-	ini_set('max_execution_time',7200);
+	ini_set('max_execution_time', 7200);
 
 //get the http get values and set them as php variables
 	$action = $_POST["action"];
@@ -77,7 +77,6 @@
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
 			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-			unset($_POST['txtCommand']);
 			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
@@ -301,8 +300,10 @@
 				//set the starting identifiers
 					$row_id = 0;
 					$row_number = 1;
+					$previous_field_name = '';
 
 				//loop through the array
+					
 					while (($line = fgets($handle, 4096)) !== false) {
 						if ($from_row <= $row_number) {
 							//format the data
@@ -310,7 +311,7 @@
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -318,15 +319,22 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
-									
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
-	
+
+									if ($previous_field_name == $field_name) {
+										$field_name_sequence_count++;
+									}
+									else {
+										$field_name_sequence_count = 0;
+									}
+
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
 										$result[$key] = preg_replace('{(?!^\+)[\D]}', '', $result[$key]);
 									}
-	
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
@@ -337,12 +345,12 @@
 											if ($field_name != "username" && $field_name != "group_name") {
 												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
 												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-												if ($field_name == 'phone_number') {
-													$array[$parent][$row_id][$table_name][$y]['phone_label'] = $labels[$key];
+												if (substr($field_name, 0, 6)  == 'phone_') {
+													$array[$parent][$row_id][$table_name][$y][$key] = $labels[$key];
 												}
 											}
 										}
-	
+
 										if ($field_name == "group_name") {
 											foreach ($groups as $field) {
 												if ($field['group_name'] == $result[$key]) {
@@ -353,7 +361,7 @@
 												}
 											}
 										}
-	
+
 										if ($field_name == "username") {
 											foreach ($users as $field) {
 												if ($field['username'] == $result[$key]) {
@@ -365,9 +373,10 @@
 											}
 										}
 									}
+									$previous_field_name = $field;
 									if (is_array($array[$parent][$row_id])) { $y++; }
 								}
-	
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
 
