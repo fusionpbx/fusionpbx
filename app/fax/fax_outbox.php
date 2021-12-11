@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,38 +47,7 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//additional includes
-	$document['title'] = 'Fax Outbox';
-	require_once "resources/header.php";
-
-//show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>Fax Outbox</b></div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "This is the Fax Outbox\n";
-	echo "<br /><br />\n";
-
-	//echo "<form id='form_list' method='post'>\n";
-	echo "<form id='form_list' onsubmit='mySubmit()' method='post'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-	
-	echo "<input type='hidden' id='myId' name='myId' value='' />";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-
-	echo "	<th>Destination</th>";
-	echo "	<th>Status</th>";
-	echo "	<th>Preview</th>";
-	echo "	<th>Path</th>";
-	
-	echo "</tr>\n";
-	
-	
-	//get fax extension
+//get fax extensions
 	if (is_uuid($_REQUEST["id"])) {
 		$fax_uuid = $_REQUEST["id"];
 		if (permission_exists('fax_extension_view_domain')) {
@@ -104,8 +73,8 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			//set database fields as variables
-				$fax_name = $row["fax_name"];
-				$faxext = $row["fax_extension"];
+			$fax_name = $row["fax_name"];
+			$fax_extension = $row["fax_extension"];
 		}
 		else {
 			if (!permission_exists('fax_extension_view_domain')) {
@@ -115,10 +84,6 @@
 		}
 		unset($sql, $parameters, $row);
 	}
-	
-	
-	
-	$myId = $_SESSION['/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/temp'];
 
 	$sql = "select * from v_fax_files ";
 	$sql .= "where fax_uuid = :fax_uuid ";
@@ -129,10 +94,8 @@
 	$database = new database;
 	$fax_files = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-	
 
-//Test if currently sending:
-//set the command
+//check if currently sending a fax
 	$switch_cmd = 'show channels as json';
 
 //create the event socket connection
@@ -141,61 +104,79 @@
 //send the event socket command and get the array
 	if ($fp) {
 		$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
-		
 		$results = json_decode($json, "true");
 	}
 
-if (isset($results["rows"])) {
-	
-	if (is_array($results["rows"]) && @sizeof($results["rows"]) != 0) {
-		$x = 0;
-		foreach ($results["rows"] as $row) {
-			
-			$file = basename($row['application_data']);
-			if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
-				$file_name = substr($file, 0, (strlen($file) -4));
-			}
-			
-			
-			if (strlen($row['fax_base64']) <= 0) {
-				echo "<tr class='list-row' >\n";
+//additional includes
+	$document['title'] = 'Fax Outbox';
+	require_once "resources/header.php";
 
-				echo "<td>".$row['dest']."</td>";
-				echo "<td>Sending...</td>";
-				echo "<td><a href='https://dev.auravoice.us/app/fax/fax_files.php?id=".$_REQUEST["id"]."&a=download&type=fax_sent&t=bin&ext=".$faxext."&filename=".$file_name.".tif'>Fax PDF - ".$file_name."</a></td>";
-				echo "<td>".$row['application_data']."</td>";
-				echo "</tr>\n";
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>Fax Outbox</b></div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "Show active faxes that are currently sending.\n";
+	echo "<br /><br />\n";
+
+	//echo "<form id='form_list' method='post'>\n";
+	echo "<form id='form_list' onsubmit='' method='post'>\n";
+	echo "	<input type='hidden' id='action' name='action' value=''>\n";
+	echo "	<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+	//echo "	<input type='hidden' id='my_id' name='my_id' value='' />";
+
+	echo "	<table class='list'>\n";
+	echo "		<tr class='list-header'>\n";
+	echo "			<th>Destination</th>";
+	echo "			<th>Status</th>";
+	echo "			<th>Preview</th>";
+	echo "			<th>Path</th>";
+	echo "		</tr>\n";
+
+//loop through the faxes
+	if (isset($results["rows"])) {
+		if (is_array($results["rows"]) && @sizeof($results["rows"]) != 0) {
+			$x = 0;
+			foreach ($results["rows"] as $row) {
+				$file = basename($row['application_data']);
+				if (strtolower(substr($file, -3)) == "tif" || strtolower(substr($file, -3)) == "pdf") {
+					$file_name = substr($file, 0, (strlen($file) -4));
+				}
+
+				if (strlen($row['fax_base64']) <= 0) {
+					echo "	<tr class='list-row' >\n";
+					echo "	<td>".escape($row['dest'])."</td>";
+					echo "	<td>Sending...</td>";
+					echo "	<td>\n";
+					echo "		<a href='/app/fax/fax_files.php?id=".urlencode($_REQUEST["id"])."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".tif'>Fax PDF - ".urlencode($file_name)."</a>\n";
+					echo "	</td>\n";
+					echo "	<td>".escape($row['application_data'])."</td>";
+					echo "	</tr>\n";
+				}
+				$x++;
 			}
-			$x++;
 		}
 	}
-}
-	
-	echo "</table>\n";
-	echo "<br />\n";
-
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
+	echo "	</table>\n";
+	echo "	<br />\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
-
 	echo "<span id='output'></span>\n";
-	echo "<script type='text/javascript'>\n";	
-    echo "function AutoRefresh( t ) { setTimeout('location.reload(true);', t); }";
-	echo "AutoRefresh(10000);";
-	
+	echo "<script type='text/javascript'>\n";
+	echo "	function AutoRefresh( t ) { setTimeout('location.reload(true);', t); }";
+	echo "	AutoRefresh(10000);";
 	echo "</script>\n";
 
+	//$my_id = $_SESSION['/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/temp'];
+	//if (file_exists('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/temp/'.$my_id.'.tif')) {
+	//	rename('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/temp/'.$my_id.'.tif', '/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/sent/'.$my_id.'.tif');
+	//}
 
-	if (file_exists('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/temp/'.$myId.'.tif')) {
-		rename('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/temp/'.$myId.'.tif', '/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/sent/'.$myId.'.tif');
-	}
-	
-	if (file_exists('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/temp/'.$myId.'.pdf')) {
-		rename('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/temp/'.$myId.'.pdf', '/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$faxext.'/sent/'.$myId.'.pdf');
-	}
-
-
+	//if (file_exists('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/temp/'.$my_id.'.pdf')) {
+	//	rename('/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/temp/'.$my_id.'.pdf', '/var/lib/freeswitch/storage/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/sent/'.$my_id.'.pdf');
+	//}
 
 //include the footer
 	require_once "resources/footer.php";
