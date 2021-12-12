@@ -207,8 +207,8 @@
 				foreach($schema as $row) {
 					echo "			<optgroup label='".$row['table']."'>\n";
 					foreach($row['fields'] as $field) {
-						if ($field == 'phone_label') { continue; }
- 						if ($field == 'contact_url') { continue; } // can remove this after field is removed from the table
+						//if ($field == 'phone_label') { continue; }
+ 						//if ($field == 'contact_url') { continue; } // can remove this after field is removed from the table
 						$selected = '';
 						if ($field == $line_field) {
 							$selected = "selected='selected'";
@@ -220,9 +220,9 @@
 					echo "			</optgroup>\n";
 				}
 				echo "		</select>\n";
-				echo "		<select class='formfld' style='display: none;' id='labels_$x' name='labels[$x]'>\n";
-				echo 			is_array($label_options) ? implode("\n", $label_options) : null;
-				echo "		</select>\n";
+				//echo "		<select class='formfld' style='display: none;' id='labels_$x' name='labels[$x]'>\n";
+				//echo 			is_array($label_options) ? implode("\n", $label_options) : null;
+				//echo "		</select>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				$x++;
@@ -300,10 +300,8 @@
 				//set the starting identifiers
 					$row_id = 0;
 					$row_number = 1;
-					$previous_field_name = '';
 
 				//loop through the array
-					
 					while (($line = fgets($handle, 4096)) !== false) {
 						if ($from_row <= $row_number) {
 							//format the data
@@ -320,15 +318,14 @@
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
 
+									//add fields to the stack
+									$stack[$table_name][$field_name][] = null;
+
+									//set the ordinal ID
+									$id = count($stack[$table_name][$field_name]) - 1;
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
-
-									if ($previous_field_name == $field_name) {
-										$field_name_sequence_count++;
-									}
-									else {
-										$field_name_sequence_count = 0;
-									}
 
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
@@ -343,11 +340,11 @@
 										}
 										else {
 											if ($field_name != "username" && $field_name != "group_name") {
-												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-												if (substr($field_name, 0, 6)  == 'phone_') {
-													$array[$parent][$row_id][$table_name][$y][$key] = $labels[$key];
-												}
+												$array[$parent][$row_id][$table_name][$id]['domain_uuid'] = $domain_uuid;
+												$array[$parent][$row_id][$table_name][$id][$field_name] = $result[$key];
+												//if ($field_name == 'phone_number') {
+												//	$array[$parent][$row_id][$table_name][$id]['phone_label'] = $labels[$key];
+												//}
 											}
 										}
 
@@ -355,9 +352,9 @@
 											foreach ($groups as $field) {
 												if ($field['group_name'] == $result[$key]) {
 													//$array[$parent][$row_id]['contact_group_uuid'] = uuid();
-													$array[$parent][$row_id]['contact_groups'][$y]['domain_uuid'] = $domain_uuid;
+													$array[$parent][$row_id]['contact_groups'][$id]['domain_uuid'] = $domain_uuid;
 													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-													$array[$parent][$row_id]['contact_groups'][$y]['group_uuid'] = $field['group_uuid'];
+													$array[$parent][$row_id]['contact_groups'][$id]['group_uuid'] = $field['group_uuid'];
 												}
 											}
 										}
@@ -365,21 +362,22 @@
 										if ($field_name == "username") {
 											foreach ($users as $field) {
 												if ($field['username'] == $result[$key]) {
-													//$array[$parent][$row_id]['contact_users'][$y]['contact_group_uuid'] = uuid();
-													$array[$parent][$row_id]['contact_users'][$y]['domain_uuid'] = $domain_uuid;
+													//$array[$parent][$row_id]['contact_users'][$id]['contact_group_uuid'] = uuid();
+													$array[$parent][$row_id]['contact_users'][$id]['domain_uuid'] = $domain_uuid;
 													//$array['contact_groups'][$x]['contact_uuid'] = $row['contact_uuid'];
-													$array[$parent][$row_id]['contact_users'][$y]['user_uuid'] = $field['user_uuid'];
+													$array[$parent][$row_id]['contact_users'][$id]['user_uuid'] = $field['user_uuid'];
 												}
 											}
 										}
 									}
-									$previous_field_name = $field;
 									if (is_array($array[$parent][$row_id])) { $y++; }
 								}
 
+							//debug information
+								//view_array($stack);
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
-
 									//save to the data
 										$database = new database;
 										$database->app_name = 'contacts';
@@ -392,12 +390,12 @@
 									//set the row id back to 0
 										$row_id = 0;
 								}
-	
+
 						} //if ($from_row <= $row_number)
+						unset($stack);
 						$row_number++;
 						$row_id++;
 					} //end while
-
 					fclose($handle);
 
 				//save to the data
