@@ -318,6 +318,9 @@
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
 
+									//get the parent table name
+									$parent = get_parent($schema, $table_name);
+
 									//add fields to the stack
 									if (isset($field_count[$table_name][$field_name])) {
 										$field_count[$table_name][$field_name]++;
@@ -328,9 +331,6 @@
 
 									//set the ordinal ID
 									$id = $field_count[$table_name][$field_name];
-
-									//get the parent table name
-									$parent = get_parent($schema, $table_name);
 
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
