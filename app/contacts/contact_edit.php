@@ -2159,7 +2159,7 @@ if (permission_exists('contact_relation_view')) {
 			foreach($relation_labels as $label) {
 				$relation_label_options[] = "<option value='".escape($label)."' ".(($label == $row['relation_label']) ? "selected='selected'" : null).">".escape($label)."</option>";
 			}
-			$relation_label_found = (in_array($relation_label, $$relation_labels)) ? true : false;
+			$relation_label_found = (in_array($relation_label, $relation_labels)) ? true : false;
 			echo "			<select class='formfld' ".((!$relation_label_found && $relation_label != '') ? "style='display: none;'" : "style='auto;'")." name='contact_relations[$x][relation_label]' id='relation_label' onchange=\"getElementById('relation_label_custom').value='';\">\n";
 			echo "				<option value=''></option>\n";
 			echo 		(is_array($relation_label_options)) ? implode("\n", $relation_label_options) : null;
