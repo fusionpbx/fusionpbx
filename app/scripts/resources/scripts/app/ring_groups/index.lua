@@ -822,7 +822,7 @@
 							if (ext_hold_music ~= nil and ext_hold_music ~= '') then
 								hold_music_string = ",hold_music="..ext_hold_music;
 							elseif (hold_music ~= nil and hold_music ~= '') then
-								hold_music_string = ",hold_music="..hold_music_string;
+								hold_music_string = ",hold_music="..hold_music;
 							else
 								hold_music = '';
 							end
