@@ -290,6 +290,17 @@
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
 
+									//count the field names
+									if (isset($field_count[$table_name][$field_name])) {
+										$field_count[$table_name][$field_name]++;
+									}
+									else {
+										$field_count[$table_name][$field_name] = 0;
+									}
+
+									//set the ordinal ID
+									$id = $field_count[$table_name][$field_name];
+
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
@@ -310,14 +321,14 @@
 											}
 										}
 										else {
-											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+											$array[$parent][$row_id][$table_name][$id]['domain_uuid'] = $domain_uuid;
+											$array[$parent][$row_id][$table_name][$id][$field_name] = $result[$key];
 										}
 
 										if ($field_name == "username") {
 											foreach ($users as $field) {
 												if ($field['username'] == $result[$key]) {
-													$array[$table_name][$row_id]['device_user_uuid'] = $field['user_uuid'];
+													$array[$parent][$table_name][$id]['device_user_uuid'] = $field['user_uuid'];
 												}
 											}
 										}
@@ -344,6 +355,9 @@
 									unset($sql, $parameters);
 								}
 
+							//debug information
+								//view_array($field_count);
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
 
@@ -359,16 +373,14 @@
 								}
 
 						} //if ($from_row <= $row_id)
+						unset($field_count);
 						$row_number++;
 						$row_id++;
 					} //end while
 					fclose($handle);
 
 				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
+					//view_array($array);
 
 				//save to the data
 					if (is_array($array)) {
