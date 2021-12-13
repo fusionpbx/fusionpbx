@@ -321,7 +321,7 @@
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
 
-									//add fields to the stack
+									//count the field names
 									if (isset($field_count[$table_name][$field_name])) {
 										$field_count[$table_name][$field_name]++;
 									}
