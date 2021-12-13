@@ -319,10 +319,15 @@
 									//echo "field_name: $field_name<br />\n";
 
 									//add fields to the stack
-									$stack[$table_name][$field_name][] = null;
+									if (isset($field_count[$table_name][$field_name])) {
+										$field_count[$table_name][$field_name]++;
+									}
+									else {
+										$field_count[$table_name][$field_name] = 0;
+									}
 
 									//set the ordinal ID
-									$id = count($stack[$table_name][$field_name]) - 1;
+									$id = $field_count[$table_name][$field_name];
 
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
@@ -374,7 +379,7 @@
 								}
 
 							//debug information
-								//view_array($stack);
+								//view_array($field_count);
 
 							//process a chunk of the array
 								if ($row_id === 1000) {
@@ -392,11 +397,14 @@
 								}
 
 						} //if ($from_row <= $row_number)
-						unset($stack);
+						unset($field_count);
 						$row_number++;
 						$row_id++;
 					} //end while
 					fclose($handle);
+
+				//debug information
+					//view_array($array);
 
 				//save to the data
 					if (is_array($array)) {
