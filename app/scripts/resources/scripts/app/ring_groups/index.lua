@@ -810,20 +810,25 @@
 						row.record_session = record_session
 
 					--process according to user_exists, sip_uri, external number
+						hold_music_string = '';         -- reset it on each iteration
 						if (user_exists == "true") then
 							--get the extension_uuid
 							cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 							extension_uuid = trim(api:executeString(cmd));
+							cmd = "user_data ".. destination_number .."@"..domain_name.." var hold_music";
+							ext_hold_music = trim(api:executeString(cmd));
 
 							--set hold music
-							if (hold_music == nil) then
-								hold_music = '';
+							if (ext_hold_music ~= nil and ext_hold_music ~= '') then
+								hold_music_string = ",hold_music="..ext_hold_music;
+							elseif (hold_music ~= nil and hold_music ~= '') then
+								hold_music_string = ",hold_music="..hold_music_string;
 							else
-								hold_music = ",hold_music="..hold_music;
+								hold_music = '';
 							end
 
 							--send to user
-							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music .."]user/" .. row.destination_number .. "@" .. domain_name;
+							local dial_string_to_user = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid=".. extension_uuid .. row.record_session .. hold_music_string .."]user/" .. row.destination_number .. "@" .. domain_name;
 							dial_string = dial_string_to_user;
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
