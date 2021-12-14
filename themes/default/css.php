@@ -1959,12 +1959,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
-		-webkit-box-shadow: 0 0 3px #e5e9f0;
-		-moz-box-shadow: 0 0 3px #e5e9f0;
-		box-shadow: 0 0 3px #e5e9f0;
+		-webkit-box-shadow: 0 0 3px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
+		-moz-box-shadow: 0 0 3px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
+		box-shadow: 0 0 10px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
 		border-width: 1px 3px;
-		border-color: #b9c5d8 #c5d1e5;
-		background-color: #e5eaf5;
+		border-color: <?php echo $_SESSION['theme']['form_table_label_required_border_color']['text']; ?>;
+		background-color: <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
 		cursor: default;
 		}
 
@@ -1978,12 +1978,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
-		-webkit-box-shadow: 0 0 3px #e5e9f0;
-		-moz-box-shadow: 0 0 3px #e5e9f0;
-		box-shadow: 0 0 3px #e5e9f0;
+		-webkit-box-shadow: 0 0 3px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
+		-moz-box-shadow: 0 0 3px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
+		box-shadow: 0 0 3px <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
 		border-width: 1px 3px;
-		border-color: #b9c5d8 #c5d1e5;
-		background-color: #e5eaf5;
+		border-color: <?php echo $_SESSION['theme']['operator_panel_inactive_border_color']['text']; ?>;
+		background-color: <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
 		cursor: not-allowed;
 		}
 		
@@ -1999,7 +1999,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			top: 0;
 			left: 0;
 			right: 0;
-			background: rgba(255, 255, 255, 0.5);
+			background: <?php echo $_SESSION['theme']['operator_panel_inactive_background_color']['text']; ?>;
 		}
 
 	div.op_state_active {
@@ -2020,7 +2020,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
-		background-color: #e5eaf5;
+		background-color: <?php echo $_SESSION['theme']['form_table_label_background_color']['text']; ?>;
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
@@ -2051,7 +2051,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
-		background-color: #f0f2f6;
+		background-color:  <?php echo $_SESSION['theme']['form_table_field_background_color']['text']; ?>;
 		}
 
 	td.op_state_ringing {

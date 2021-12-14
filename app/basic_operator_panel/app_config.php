@@ -75,5 +75,21 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set if extensions are grouped by call_group when viewing all extensions.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b9d34460-db41-40d5-becd-5da037fa8942";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_inactive_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(255, 255, 255, 0.5)";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set background color (and opacity) of inactive extensions.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9cb6477d-0454-4b9c-b0fb-11c258d4f35f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_inactive_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#b9c5d8";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set border color (and opacity) of inactive extensions.";
+		$y++;
 
 ?>
