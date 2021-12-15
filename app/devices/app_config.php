@@ -536,6 +536,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the outbound proxy.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "label";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the label.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "display_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the display name.";
