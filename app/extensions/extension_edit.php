@@ -611,7 +611,7 @@
 													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
-													$array["devices"][$j]["device_lines"][0]["display_label"] = $line_label;
+													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
 													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
