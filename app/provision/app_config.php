@@ -247,6 +247,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "23769e34-5643-4587-a8a3-cfc77e05ae01";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_label";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable this to change the extension label from a name to a number";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "931d6cc7-ca82-4813-ae92-7015e0c2ea1b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "http_domain_filter";
