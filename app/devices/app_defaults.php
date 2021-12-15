@@ -16,7 +16,7 @@
 	The Original Code is FusionPBX
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,13 +26,20 @@
 if ($domains_processed == 1) {
 
 	//set all lines to enabled (true) where null or empty string
-		$sql = "update v_device_lines set ";
-		$sql .= "enabled = 'true' ";
-		$sql .= "where enabled is null ";
-		$sql .= "or enabled = '' ";
+		$sql = "select device_line_uuid from v_device_lines ";
+		$sql .= "where enabled is null or enabled = '' ";
 		$database = new database;
-		$database->execute($sql);
-		unset($sql);
+		$device_lines = $database->select($sql, null, 'all');
+		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+			$sql = "update v_device_lines set ";
+			$sql .= "enabled = 'true' ";
+			$sql .= "where enabled is null ";
+			$sql .= "or enabled = '' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+		}
+		unset($sql, $device_lines);
 
 	//set the device key vendor
 		$sql = "select * from v_device_keys as k, v_devices as d ";
