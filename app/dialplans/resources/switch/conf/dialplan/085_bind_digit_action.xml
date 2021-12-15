@@ -16,5 +16,10 @@
 			<!-- <action application="bind_digit_action" data="local,*0,exec:execute_extension,conf_xfer_from_dialplan XML conf-xfer@${domain_name},${bind_target},${bind_action_target}"/> -->
 			<action application="digit_action_set_realm" data="local"/>
 		</condition>
+		<condition field="${user_exists}" expression="true"/>
+		<condition field="${from_user_exists}" expression="true">
+			<action application="set" data="bridge_pre_execute_bleg_app=lua"/>
+			<action application="set" data="bridge_pre_execute_bleg_data=bind_digit_bleg.lua ${context}"/>
+		</condition>
 	</extension>
 </context>
