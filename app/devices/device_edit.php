@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -128,6 +128,7 @@
 			//$server_address = $_POST["server_address"];
 			//$outbound_proxy_primary = $_POST["outbound_proxy_primary"];
 			//$outbound_proxy_secondary = $_POST["outbound_proxy_secondary"];
+			//$label = $_POST["label"];
 			//$display_name = $_POST["display_name"];
 			//$user_id = $_POST["user_id"];
 			//$auth_id = $_POST["auth_id"];
@@ -316,6 +317,7 @@
 								} else if ($new_line && isset($_SESSION['provision']['server_address_secondary'])) {
 									$array['devices'][0]['device_lines'][$y]['server_address_secondary'] = $_SESSION['provision']['server_address_secondary']['text'];
 								}
+								$array['devices'][0]['device_lines'][$y]['label'] = $row["label"];
 								$array['devices'][0]['device_lines'][$y]['display_name'] = $row["display_name"];
 								$array['devices'][0]['device_lines'][$y]['user_id'] = $row["user_id"];
 								if (permission_exists('device_line_auth_id')) {
@@ -547,6 +549,7 @@
 	$device_lines[$x]['outbound_proxy_secondary'] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 	$device_lines[$x]['server_address_primary'] = $_SESSION['provision']['server_address_primary']['text'];
 	$device_lines[$x]['server_address_secondary'] = $_SESSION['provision']['server_address_secondary']['text'];
+	$device_lines[$x]['label'] = '';
 	$device_lines[$x]['display_name'] = '';
 	$device_lines[$x]['user_id'] = '';
 	$device_lines[$x]['auth_id'] = '';
@@ -1041,6 +1044,7 @@
 		if (permission_exists('device_line_outbound_proxy_secondary')) {
 			echo "				<td class='vtable'>".$text['label-outbound_proxy_secondary']."</td>\n";
 		}
+		echo "				<td class='vtable'>".$text['label-label']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-user_id']."</td>\n";
 		if (permission_exists('device_line_auth_id')) {
@@ -1180,6 +1184,10 @@
 					}
 					echo "			</td>\n";
 				}
+
+				echo "			<td align='left'>\n";
+				echo "				<input class='formfld' style='min-width: 75px; width: 100%;' type='text' name='device_lines[".$x."][label]' maxlength='255' value=\"".escape($row['label'])."\"/>\n";
+				echo "			</td>\n";
 
 				echo "			<td align='left'>\n";
 				echo "				<input class='formfld' style='min-width: 75px; width: 100%;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".escape($row['display_name'])."\"/>\n";
