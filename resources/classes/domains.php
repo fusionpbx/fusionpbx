@@ -25,6 +25,8 @@
 	sreis
 */
 
+// close session to prevent php locking
+session_write_close();
 
 /**
  * domains class
