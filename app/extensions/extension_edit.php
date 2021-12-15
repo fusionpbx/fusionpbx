@@ -556,7 +556,7 @@
 
 												//get the dislplay label
 												if ($_SESSION['provision']['line_label']['text'] == 'auto') {
-													$line_label = $name;
+													$line_label = $extension;
 												}
 												else {
 													$line_label = $_SESSION['provision']['line_label']['text'];
