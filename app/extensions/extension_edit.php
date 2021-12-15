@@ -537,6 +537,55 @@
 													$device_vendor = device::get_vendor($device_mac_address);	
 												}
 
+												//determine the name
+												if (strlen($effective_caller_id_name) > 0) {
+													$name = $effective_caller_id_name;
+												}
+												elseif (strlen($directory_first_name) > 0 && strlen($directory_last_name) > 0) {
+													$name = $directory_first_name.' '.$directory_last_name;
+												}
+												elseif (strlen($directory_first_name) > 0) {
+													$name = $directory_first_name;
+												}
+												elseif (strlen($directory_first_name) > 0) {
+													$name = $directory_first_name.' '.$directory_last_name;
+												}
+												else {
+													$name = '';
+												}
+
+												//get the dislplay label
+												if ($_SESSION['provision']['line_label']['text'] == 'auto') {
+													$line_label = $name;
+												}
+												else {
+													$line_label = $_SESSION['provision']['line_label']['text'];
+													$line_label = str_replace("\${name}", $name, $line_label);
+													$line_label = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_label);
+													$line_label = str_replace("\${first_name}", $directory_first_name, $line_label);
+													$line_label = str_replace("\${last_name}", $directory_last_name, $line_label);
+													$line_label = str_replace("\${user_id}", $extension, $line_label);
+													$line_label = str_replace("\${auth_id}", $extension, $line_label);
+													$line_label = str_replace("\${extension}", $extension, $line_label);
+													$line_label = str_replace("\${description}", $description, $line_label);
+												}
+
+												//get the dislplay name
+												if ($_SESSION['provision']['line_display_name']['text'] == 'auto') {
+													$line_display_name = $name;
+												}
+												else {
+													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
+													$line_display_name = str_replace("\${name}", $name, $display_name);
+													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
+													$line_display_name = str_replace("\${first_name}", $directory_first_name, $line_display_name);
+													$line_display_name = str_replace("\${last_name}", $directory_last_name, $line_display_name);
+													$line_display_name = str_replace("\${user_id}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${auth_id}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${extension}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${description}", $description, $line_display_name);
+												}
+
 												//send a message to the user the device is not unique
 												if (!$device_unique) {
 													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
@@ -562,7 +611,8 @@
 													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
-													$array["devices"][$j]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
+													$array["devices"][$j]["device_lines"][0]["display_label"] = $line_label;
+													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["password"] = $password;
