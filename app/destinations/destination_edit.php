@@ -167,7 +167,7 @@
 				$sql = "select count(*) from v_destinations ";
 				$sql .= "where (destination_prefix || destination_area_code || destination_number = :destination_number) ";
 				$sql .= "and destination_type = 'inbound' ";
-				$parameters['destination_number'] = $destination_number;
+				$parameters['destination_number'] = $destination_prefix . $destination_area_code . $destination_number;
 				$database = new database;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
