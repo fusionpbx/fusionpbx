@@ -576,7 +576,7 @@
 												}
 												else {
 													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
-													$line_display_name = str_replace("\${name}", $name, $display_name);
+													$line_display_name = str_replace("\${name}", $name, $line_display_name);
 													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
 													$line_display_name = str_replace("\${first_name}", $directory_first_name, $line_display_name);
 													$line_display_name = str_replace("\${last_name}", $directory_last_name, $line_display_name);
