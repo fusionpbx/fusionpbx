@@ -41,6 +41,20 @@ if ($domains_processed == 1) {
 		}
 		unset($sql, $device_lines);
 
+	//set label to user_id if the label is null
+		$sql = "select device_line_uuid from v_device_lines ";
+		$sql .= "where label is null ";
+		$database = new database;
+		$device_lines = $database->select($sql, null, 'all');
+		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+			foreach($device_lines as $row) {
+				$sql = "update v_device_lines ";
+				$sql .= "set label = user_id ";
+				$sql .= "where label is null ";
+				$database->execute($sql);
+			}
+		}
+
 	//set the device key vendor
 		$sql = "select * from v_device_keys as k, v_devices as d ";
 		$sql .= "where d.device_uuid = k.device_uuid  ";
