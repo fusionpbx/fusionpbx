@@ -51,6 +51,7 @@
 		context = session:getVariable("context");
 		call_block = session:getVariable("call_block");
 		extension_uuid = session:getVariable("extension_uuid");
+		hold_music = session:getVariable("hold_music");
 	end
 
 --set default variables
@@ -172,9 +173,9 @@
 				end
 				if (call_block_app ~= nil and call_block_app == 'hold') then
 					if (session:ready()) then
-						session:execute("respond", '600');
 						session:execute('set', 'call_block_uuid='..call_block_uuid);
 						session:execute('set', 'call_block_app=hold');
+						session:execute("playback", hold_music);
 						freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: Hold\n");
 					end
 				end
