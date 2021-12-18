@@ -579,37 +579,71 @@ if (!class_exists('extension')) {
 										$parameters['extension_uuid'] = $record['uuid'];
 										$database = new database;
 										$row = $database->select($sql, $parameters, 'row');
+										//for use below and to clear cache (bottom)
+										$extensions[$x] = $row;
 										if (is_array($row) && @sizeof($row) != 0) {
 
-											//for use below and to clear cache (bottom)
-												$extensions[$x] = $row;
+											//curl hit deleteAllUserDetails
+											$ext_curl = $extensions[$x]['extension'];
+											$dom_curl = $extensions[$x]['user_context'];
+											
+											$curl = curl_init();
 
-											//build delete array
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-												$array['extension_users'][$x]['extension_uuid'] = $record['uuid'];
+											curl_setopt_array($curl, array(
+											CURLOPT_URL => "https://api.us.nemerald.net/api/v1/deleteAllUserDetails",
+											CURLOPT_RETURNTRANSFER => true,
+											CURLOPT_ENCODING => "",
+											CURLOPT_MAXREDIRS => 10,
+											CURLOPT_TIMEOUT => 30,
+											CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+											CURLOPT_CUSTOMREQUEST => "POST",
+											CURLOPT_POSTFIELDS => " {\r\n\r\n\"domain_name\": \"$dom_curl\",\r\n\r\n\"extension\": \"$ext_curl\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
+											CURLOPT_HTTPHEADER => array(
+												"content-type: application/json",
+												"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+											),
+											));
+											
+											$response = curl_exec($curl);
+											$err = curl_error($curl);
+											
+											curl_close($curl);
+											// echo  " {\r\n\r\n\"domain_name\": \"$dom_curl\",\r\n\r\n\"extension\": \"$ext_curl\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}";
+											// exit();
+											if ($err) {
+												echo  "cURL Error #:" . $err;
+												exit();
+											} else {
 
-											//include follow me destinations, if exists
-												if (is_uuid($extensions[$x]['follow_me_uuid'])) {
-													$array['follow_me'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
-													$array['follow_me_destinations'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
-												}
+												//build delete array
+													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+													$array['extension_users'][$x]['extension_uuid'] = $record['uuid'];
 
-											//include ring group destinations, if exists
-												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
-													$array['ring_group_destinations'][$x]['destination_number'] = $extensions[$x]['extension'];
-													$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-													if (is_numeric($extensions[$x]['number_alias'])) {
-														$array['ring_group_destinations'][$y]['destination_number'] = $extensions[$x]['number_alias'];
-														$array['ring_group_destinations'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+												//include follow me destinations, if exists
+													if (is_uuid($extensions[$x]['follow_me_uuid'])) {
+														$array['follow_me'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
+														$array['follow_me_destinations'][$x]['follow_me_uuid'] = $extensions[$x]['follow_me_uuid'];
 													}
-													$y++;
-												}
 
-											//create array of voicemail ids
-												if ($this->delete_voicemail && permission_exists('voicemail_delete')) {
-													if (is_numeric($extensions[$x]['extension'])) { $voicemail_ids[] = $extensions[$x]['extension']; }
-													if (is_numeric($extensions[$x]['number_alias'])) { $voicemail_ids[] = $extensions[$x]['number_alias']; }
-												}
+												//include ring group destinations, if exists
+													if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ring_groups/app_config.php")) {
+														$array['ring_group_destinations'][$x]['destination_number'] = $extensions[$x]['extension'];
+														$array['ring_group_destinations'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+														
+														if (is_numeric($extensions[$x]['number_alias'])) {
+															$array['ring_group_destinations'][$y]['destination_number'] = $extensions[$x]['number_alias'];
+															$array['ring_group_destinations'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
+															
+														}
+														$y++;
+													}
+
+												//create array of voicemail ids
+													if ($this->delete_voicemail && permission_exists('voicemail_delete')) {
+														if (is_numeric($extensions[$x]['extension'])) { $voicemail_ids[] = $extensions[$x]['extension']; }
+														if (is_numeric($extensions[$x]['number_alias'])) { $voicemail_ids[] = $extensions[$x]['number_alias']; }
+													}
+											}
 
 										}
 										unset($sql, $parameters, $row);
@@ -618,6 +652,7 @@ if (!class_exists('extension')) {
 							}
 
 						//delete the checked rows
+
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//delete extension voicemail boxes

@@ -42,6 +42,39 @@ else {
 	exit;
 }
 
+//curl hit addDestinationToApi
+function addDestinationToApi($destination){
+
+	$post_data = [ 'cloud_id'=>'NEMERALDWHITELABEL', 'destination'=>$destination, 'url'=>'https://broker1.us.nemerald.net' ];
+	$request_headers = ['Secret-Key:jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy', "content-type:application/json",];
+	$curl = curl_init();
+
+	curl_setopt_array($curl, array(
+	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionDestinationToApi",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "POST",
+	CURLOPT_POSTFIELDS => " {\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"destination\": \"$destination\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
+	CURLOPT_HTTPHEADER => array(
+		"content-type: application/json",
+		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+	),
+	));
+
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+
+	if ($err) {
+	return "cURL Error #:" . $err;
+	} else {
+	return  $response;
+	}
+}
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -115,6 +148,7 @@ else {
 			header( 'Location: sms.php') ;
 
 		}
+		addDestinationToApi($destination);
 	} elseif (count($_POST) > 0 && $action == "update") {
 			$destination = str_replace(' ','-',check_str($_POST["destination"]));
 			$carrier = check_str($_POST["carrier"]);
@@ -144,8 +178,15 @@ else {
 
 			error_log($sql_insert);
 			unset ($prep_statement);
+			addDestinationToApi($destination);
+			exit();
 			header( 'Location: sms.php') ;
 	}
+
+
+
+	
+	
 
 //include the header
 	require_once "resources/header.php";
