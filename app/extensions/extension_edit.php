@@ -73,6 +73,57 @@
 		}
 	}
 
+function add_user_to_api($voicemail_mail_to){
+	
+	$curl = curl_init();
+
+	curl_setopt_array($curl, array(
+	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionUserToApi",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "POST",
+	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
+	CURLOPT_HTTPHEADER => array(
+		"content-type: application/json",
+		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+	),
+	));
+
+	
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+}
+
+function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
+	
+	$curl = curl_init();
+
+	curl_setopt_array($curl, array(
+	CURLOPT_URL => "https://broker1.us.nemerald.net/api/v1/updateClouduser",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "POST",
+	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
+	CURLOPT_HTTPHEADER => array(
+		"content-type: application/json",
+		"secret-key: adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18"
+	),
+	));
+
+
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+}
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 
@@ -143,6 +194,21 @@
 			}
 
 			$voicemail_id = $extension;
+
+			if (is_uuid($_REQUEST["id"])) {
+				
+				update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to);
+				add_user_to_api($voicemail_mail_to);
+
+
+				// if ($err) {
+				// echo "cURL Error #:" . $err;
+				// } else {
+				// return  $response;
+				// }
+
+			}
+
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 				$voicemail_id = $number_alias;
 			}
@@ -1022,6 +1088,7 @@
 		$document['title'] = $text['title-extension-add'];
 	}
 
+	echo "<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/130527/qrcode.js'></script> <script src='https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js'></script>";
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
 	echo "function enable_change(enable_over) {\n";
@@ -1057,6 +1124,8 @@
 	
 	echo "</script>";
 
+	
+
 	echo "<form method='post' name='frm' id='frm'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -1073,6 +1142,8 @@
 
 	
 	if ($action == 'update') {
+		echo button::create(['type'=>'button','label'=>'Send Email','id'=>'send_email']);
+
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','style'=>$button_margin,'link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
@@ -1724,6 +1795,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
+		echo "    <input class='formfld' type='hidden' name='voicemail_mail_to_old' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
