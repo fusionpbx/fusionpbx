@@ -48,6 +48,7 @@
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
 		$page = $_REQUEST['page'];
+
 	}
 	else {
 		$action = "add";
@@ -72,6 +73,57 @@
 		}
 	}
 
+function add_user_to_api($voicemail_mail_to){
+	
+	$curl = curl_init();
+
+	curl_setopt_array($curl, array(
+	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionUserToApi",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "POST",
+	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
+	CURLOPT_HTTPHEADER => array(
+		"content-type: application/json",
+		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+	),
+	));
+
+	
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+}
+
+function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
+	
+	$curl = curl_init();
+
+	curl_setopt_array($curl, array(
+	CURLOPT_URL => "https://broker1.us.nemerald.net/api/v1/updateClouduser",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "POST",
+	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
+	CURLOPT_HTTPHEADER => array(
+		"content-type: application/json",
+		"secret-key: adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18"
+	),
+	));
+
+
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+}
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 
@@ -142,6 +194,21 @@
 			}
 
 			$voicemail_id = $extension;
+
+			if (is_uuid($_REQUEST["id"])) {
+				
+				update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to);
+				add_user_to_api($voicemail_mail_to);
+
+
+				// if ($err) {
+				// echo "cURL Error #:" . $err;
+				// } else {
+				// return  $response;
+				// }
+
+			}
+
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 				$voicemail_id = $number_alias;
 			}
@@ -1024,6 +1091,7 @@
 		$document['title'] = $text['title-extension-add'];
 	}
 
+	echo "<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/130527/qrcode.js'></script> <script src='https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js'></script>";
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
 	echo "function enable_change(enable_over) {\n";
@@ -1056,7 +1124,385 @@
 	echo "		}\n";
 	echo "	}\n";
 	echo "}\n";
+	
+	echo "
+	
+		$(document).ready(function(){\n";
+			
+		echo "
+		old_email = '$voicemail_mail_to';
+		send_email_data = {};
+		$('#send_email').on('click', function() { 
+			
+			extension_to_send ='input[name=\"extension\"]'
+			extension_to_send =$(extension_to_send).val();
+			data = {
+
+				extension: extension_to_send
+
+			}
+			
+			$.ajax({
+					url: 'https://broker1.us.nemerald.net/api/v1/getAccountDetail',
+					type: 'POST',
+					dataType: 'json',
+					headers: {
+					
+						'Secret-Key': 'adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18',
+						'Content-Type':'application/json'
+						
+					},
+					data: JSON.stringify(data),
+					success: function(response){
+						// if(response.hasOwnProperty('recepient')){
+						// 	$('#s_email').val(response.recepient)
+
+						// }else{
+						// 	mail = $('input[name=\"voicemail_mail_to\"]').val();
+						// 	$('#s_email').val(mail)
+						// }
+						mail = $('input[name=\"voicemail_mail_to\"]').val();
+						$('#s_email').val(mail)
+						send_email_data = response;
+						generate_qr(response.qrCode);
+						get_email_templates();
+						$('#s_email_sub').val('');
+						CKEDITOR.instances.s_email_body.setData('');
+						$('.temp_name').val('');
+						$('.add_temp_div').css('display','none')
+						$('.add_temp_update_div').css('display','none')
+						$('#emailModal').modal('show');
+						
+					}
+			});
+				
+		});
+
+		$('#send_qr_email').on('click', function() { 
+			
+			extension_to_send ='input[name=\"extension\"]'
+			extension_to_send =$(extension_to_send).val();
+			check = 0
+			if( $('#s_email').val() == ''){
+
+				check = 1
+
+				alert('To email is required')
+
+			}
+
+			if( $('#s_sub').val() == ''){
+
+				check = 1
+
+				alert('Subject is required')
+
+			}
+			
+
+			if(CKEDITOR.instances.s_email_body.getData() == ''){
+
+				check = 1
+				alert('Email body is required')
+
+			}
+			
+			
+			data = {
+
+				'cloud_username': send_email_data.cloud_username,
+
+				'extension_uuid' : send_email_data.extension_uuid,
+
+				'recepient' : $('#s_email').val(),
+
+				'cc' : $('#s_cc').val(),
+
+				'body': CKEDITOR.instances.s_email_body.getData(),
+
+				'subject': $('#s_email_sub').val()
+
+			}
+
+			
+
+			if(send_email_data.hasOwnProperty('new_password')){
+				data['cloud_password'] = send_email_data.new_password;
+				data['qr_value'] = send_email_data.new_qr_code;
+			}else{
+				data['cloud_password'] = send_email_data.cloud_password;
+				data['qr_value'] = send_email_data.qrCode;
+			}
+			data['body'] = data['body'].replace(/USERNAME_HERE/g, send_email_data.cloud_username);
+			data['body'] = data['body'].replace(/PASSWORD_HERE/g, data['cloud_password']);
+			if(check == 0){
+				$.ajax({
+						url: 'https://broker1.us.nemerald.net/api/v1/sendQrEmail',
+						type: 'POST',
+						dataType: 'json',
+						headers: {
+						
+							'Secret-Key': 'adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18',
+							'Content-Type':'application/json'
+							
+						},
+						data: JSON.stringify(data),
+						success: function(response){
+							
+							$('#emailModal').modal('hide');
+							//update_email($('#s_email').val());
+							$('#s_email').val('');
+							$('#s_email_sub').val('');
+							CKEDITOR.instances.s_email_body.setData('');
+							$('#s_cc').val('');
+
+							data2 = {
+
+								'cloud_username': send_email_data.cloud_username,
+				
+								'cloud_id' : 'NEMERALDWHITELABEL',
+				
+								'url' :  'https://broker1.us.nemerald.net'
+				
+							}
+
+							if(!send_email_data.hasOwnProperty('new_password')){
+
+								data2 = {
+
+									'cloud_username': send_email_data.cloud_username,
+					
+									'cloud_id' : 'NEMERALDWHITELABEL',
+					
+									'url' :  'https://broker1.us.nemerald.net'
+					
+								}
+
+								add_user_to_api(data2);
+							}
+
+							
+							
+							
+						}
+				});
+			}
+		});
+
+			
+		open = 0;
+		uopen = 0;
+
+		$('body').on('click', '#open_temp', function() { 
+			
+			if(open==0){
+				$('.add_temp_div').css('display','flex')
+				$('.add_temp_update_div').css('display','none')
+				$('#open_temp i').attr('class','fa fa-minus-circle');
+				open=1
+			}else{
+				$('.add_temp_div').css('display','none')
+				$('.add_temp_update_div').css('display','none')
+				$('#open_temp i').attr('class','fa fa-plus-circle');
+				open=0
+			};
+			$('#s_email_sub').val('');
+			CKEDITOR.instances.s_email_body.setData('');
+			$('.temp_name').val('');
+			$('.temp_name').attr('readonly',false);
+			
+
+		});
+		$('body').on('click', '.old_temp', function() { 
+
+			old_body  = $(this).data('body');
+			old_sub = $(this).data('sub');
+			temp_name =  $(this).data('name');
+			
+
+			CKEDITOR.instances.s_email_body.setData(old_body);
+			$('#s_email_sub').val(old_sub);
+			$('.temp_name').val(temp_name);
+			$('.temp_name').attr('readonly',true);
+			
+			$('.add_temp_update_div').css('display','flex')
+			$('.add_temp_div').css('display','none')
+			open = 0
+			$('#open_temp i').attr('class','fa fa-plus-circle');
+
+		});
+
+		$('body').on('click', '.old_temp_del', function() { 
+
+			old_sub = $(this).data('id');
+			del_id = {
+				'id': old_sub
+			}
+			$.ajax({
+				url: 'https://api.us.nemerald.net/api/v1/deleteFusionEmailTemplate',
+				type: 'POST',
+				dataType: 'json',
+				headers: {
+				
+					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
+					'Content-Type':'application/json'
+					
+				},
+				data: JSON.stringify(del_id),
+				success: function(response){
+					CKEDITOR.instances.s_email_body.setData('')
+					$('#s_email_sub').val('');
+					$('.temp_name').val('');
+					$('.add_temp_div').css('display','none')
+					$('.add_temp_update_div').css('display','none')
+					open = 0
+					get_email_templates();
+
+					
+				}
+			});
+
+
+		});
+
+		$('#add_temp').on('click', function() { 
+
+			if($('.temp_name').val()!=''){
+				temp = {
+					'subject':$('#s_email_sub').val(),
+					'name'   :$('.temp_name').val(),
+					'body'   :CKEDITOR.instances.s_email_body.getData()
+				}
+				$.ajax({
+					url: 'https://api.us.nemerald.net/api/v1/fusionEmailTemplateCreateUpdate',
+					type: 'POST',
+					dataType: 'json',
+					headers: {
+					
+						'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
+						'Content-Type':'application/json'
+						
+					},
+					data: JSON.stringify(temp),
+					success: function(response){
+						
+						get_email_templates();
+
+						
+					}
+				});
+			}else{
+				alert('Template Name field is empty')
+			}
+		});
+
+		$('#update_temp').on('click', function() { 
+
+			temp = {
+				'subject':$('#s_email_sub').val(),
+				'name'   :$('.temp_name').val(),
+				'body'   :$('#s_email_body').val()
+			}
+			$.ajax({
+				url: 'https://api.us.nemerald.net/api/v1/fusionEmailTemplateCreateUpdate',
+				type: 'POST',
+				dataType: 'json',
+				headers: {
+				
+					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
+					'Content-Type':'application/json'
+					
+				},
+				data: JSON.stringify(temp),
+				success: function(response){
+					
+					get_email_templates();
+					alert('Template updated successfully')
+
+					
+				}
+			});
+
+		});
+		
+
+		function generate_qr(qrCode){
+		
+			// Clear Previous QR Code
+			$('#qrcode').empty();
+			
+			// Set Size to Match User Input
+			$('#qrcode').css({
+			'width' : 256,
+			'height' : 256
+			})
+			
+			// Generate and Output QR Code
+			$('#qrcode').qrcode({width: $('.qr-size').val(),height: $('.qr-size').val(),text: qrCode});
+			
+		}
+		function add_user_to_api(data2){
+
+			$.ajax({
+				url: 'https://api.us.nemerald.net/api/v1/addFusionUserToApi',
+				type: 'POST',
+				dataType: 'json',
+				headers: {
+				
+					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
+					'Content-Type':'application/json'
+					
+				},
+				data: JSON.stringify(data2),
+				success: function(response){
+					
+					console.log('addUserToApi');
+					
+				}
+			});
+
+		}
+
+		function get_email_templates(){
+
+			$.ajax({
+				url: 'https://api.us.nemerald.net/api/v1/getFusionEmailTemplates',
+				type: 'GET',
+				dataType: 'json',
+				headers: {
+				
+					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
+
+					
+				},
+				success: function(response){
+					
+					html='';
+					response.forEach(function(item) {
+
+						html += '<div id=\"d1\"><span style=\"cursor: pointer;\" class=\"old_temp\" data-id=\"'+item.id+'\" data-name=\"'+item.name+'\" data-sub=\"'+item.subject+'\" data-body=\"'+item.body+'\">'+item.name+'</span> <i  data-id=\"'+item.id+'\" class=\"fas fa-times-circle old_temp_del\" style=\"cursor: pointer;\"></i></div>&nbsp;&nbsp;';
+
+					});
+					
+					
+					$('#temp_list').html(html);
+					console.log('get_email_templates');
+					
+				}
+			});
+
+		}
+
+		
+
+		
+		";
+		
+		
+	echo"});";
 	echo "</script>";
+
+	
 
 	echo "<form method='post' name='frm' id='frm'>\n";
 
@@ -1071,7 +1517,11 @@
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'extensions.php'.(is_numeric($page) ? '?page='.$page : null)]);
+
+	
 	if ($action == 'update') {
+		echo button::create(['type'=>'button','label'=>'Send Email','id'=>'send_email']);
+
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'info-circle','style'=>$button_margin,'link'=>'../xml_cdr/xml_cdr.php?extension_uuid='.urlencode($extension_uuid)]);
@@ -1181,7 +1631,145 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+	echo "
+		<style>	
+			.qr-code-generator * {
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				}
+				
+				#qrcode {
+				width: 128px;
+				height: 128px;
+				margin: 0 auto;
+				text-align: center;
+				}
+				
+				#qrcode a {
+				font-size: 0.8em;
+				}
+				
+				.qr-url, .qr-size {
+				padding: 0.5em;
+				border: 1px solid #ddd;
+				border-radius: 2px;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				}
+				
+				.qr-url {
+				width: 79%;
+				}
+				
+				.qr-size {
+				width: 20%;
+				}
+				
+				.generate-qr-code {
+				display: block;
+				width: 100%;
+				margin: 0.5em 0 0;
+				padding: 0.25em;
+				font-size: 1.2em;
+				border: none;
+				cursor: pointer;
+				background-color: #e5554e;
+				color: #fff;
+				}
+				#d1 {
+				text-align: center;
+				border: 1px solid teal;
+				border-radius: 15px;
+				button: transparent;
+				padding: 10px;
+				}
+				  
+		
+		</style>
+		<!-- Modal -->
+		<div class='modal fade' id='emailModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+		<div class='modal-dialog'>
+			<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title' id='exampleModalLabel'>Send Email</h5>
+				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+				<span aria-hidden='true'>&times;</span>
+				</button>
+			</div>
+			<div class='modal-body'>
+				
+				<div class='col-md-5' style='padding: 0;float:left; top: 50px; z-index: 1;'>
+					<div class='form-group'>
+						<label for='s_email'>Email</label>
+						<input type='email' class='form-control' id='s_email' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group'>
+						<label for='s_cc'>cc</label>
+						<input type='text' class='form-control' id='s_cc' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group'>
+						<label for='s_email_sub'>Subject</label>
+						<input type='text' class='form-control' id='s_email_sub' style='font-size: 11px;padding: 6px;'>
+					</div>
+				</div>
+				<div class='col-md-6' style='float:left'>
+					<div class='form-group'>
+						<div class='qr-code-generator'>
 
+							<input type='hidden' class='qr-url' placeholder='URL or Text'>
+
+							<div id='qrcode'></div>
+
+						</div>
+					</div>
+				</div>
+				
+				<div class='col-md-12' style='padding: 0;'>
+					<div class='form-group'>
+						<div class='col-md-3' style='float:right;text-align: end;margin-right: -16px;'>
+							<button type='button' id='open_temp' class='btn btn-sm btn-primary' style='margin-top: -8px; font-size: 12px; '><i class='fa fa-plus-circle' aria-hidden='true'></i></button>
+						</div>
+						<div class='col-md-3' style='float:left; padding-left: 0px;'>
+							<label for='s_email_body'>Body</label>
+						</div>
+						<div class='row form-group col-md-12 add_temp_div' style='padding-right: 0; padding-left: 0;display:none;'>
+							<div class='col-md-8' style='float:left;'>
+								<input type='text' class='form-control temp_name' placeholder='Template Name' style='font-size: 11px;padding: 6px;'>
+							</div>
+							<div class='col-md-4' style='float:left;'>
+								<button type='button' id='add_temp' class='btn btn-sm btn-primary' style='font-size: 12px;'>Save</button>
+							</div>
+						</div>
+						<div class='row form-group col-md-12 add_temp_update_div' style='padding-right: 0; padding-left: 0;display:none;'>
+							<div class='col-md-8' style='float:left;'>
+								<input type='text' class='form-control temp_name'  placeholder='Template Name' style='font-size: 11px;padding: 6px;'>
+							</div>
+							<div class='col-md-4' style='float:left;'>
+								<button type='button' id='update_temp' class='btn btn-sm btn-primary' style='font-size: 12px;'>Update</button>
+							</div>
+						</div>
+						<div class='row form-group col-md-12' style='margin: 0;padding:0;' >
+							<textarea class='form-control' name='editor' id='s_email_body' rows='6' style='font-size: 11px;padding: 6px;'></textarea>
+							<script>
+									CKEDITOR.replace( 'editor' );
+	
+							</script>
+						</div>
+					</div>
+				</div>
+				<div class='col-md-12' id='temp_list' style='display: inline-flex'>
+					
+				</div>
+				
+			</div>
+			<div class='modal-footer'>
+				<button type='button' id='send_qr_email' class='btn btn-primary'>Send</button>
+			</div>
+			</div>
+		</div>
+		</div>";
 	if (permission_exists('extension_user_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".($action == "update" ? $text['label-users'] : $text['label-user'])."</td>";
@@ -1723,6 +2311,7 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
+		echo "    <input class='formfld' type='hidden' name='voicemail_mail_to_old' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
