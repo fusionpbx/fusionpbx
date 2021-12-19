@@ -10,8 +10,8 @@
 		$text['title-dashboard']['el-gr'] = "Πίνακας ελέγχου";
 		$text['title-dashboard']['es-cl'] = "Dashboard Usuario";
 		$text['title-dashboard']['es-mx'] = "Dashboard Usuario"; //copied from es-cl
-		$text['title-dashboard']['fr-ca'] = "Tableau de bord de l'utilisateur"; //copied from fr-fr
-		$text['title-dashboard']['fr-fr'] = "Tableau de bord de l'utilisateur";
+		$text['title-dashboard']['fr-ca'] = "Tableau de bord"; //copied from fr-fr
+		$text['title-dashboard']['fr-fr'] = "Tableau de bord";
 		$text['title-dashboard']['he-il'] = "ממשק משתמש";
 		$text['title-dashboard']['it-it'] = "Pannello di Controllo";
 		$text['title-dashboard']['nl-nl'] = "";
@@ -52,7 +52,7 @@
 		$text['label-group_uuid']['de-de'] = '';
 		$text['label-group_uuid']['es-cl'] = '';
 		$text['label-group_uuid']['es-mx'] = '';
-		$text['label-group_uuid']['fr-ca'] = '';
+		$text['label-group_uuid']['fr-ca'] = 'UUID De Groupe';
 		$text['label-group_uuid']['fr-fr'] = '';
 		$text['label-group_uuid']['he-il'] = '';
 		$text['label-group_uuid']['it-it'] = '';
@@ -72,7 +72,7 @@
 		$text['description-group_uuid']['de-de'] = '';
 		$text['description-group_uuid']['es-cl'] = '';
 		$text['description-group_uuid']['es-mx'] = '';
-		$text['description-group_uuid']['fr-ca'] = '';
+		$text['description-group_uuid']['fr-ca'] = 'Saisissez l UUID De Groupe';
 		$text['description-group_uuid']['fr-fr'] = '';
 		$text['description-group_uuid']['he-il'] = '';
 		$text['description-group_uuid']['it-it'] = '';
@@ -92,7 +92,7 @@
 		$text['label-dashboard_name']['de-de'] = '';
 		$text['label-dashboard_name']['es-cl'] = '';
 		$text['label-dashboard_name']['es-mx'] = '';
-		$text['label-dashboard_name']['fr-ca'] = '';
+		$text['label-dashboard_name']['fr-ca'] = 'Nom';
 		$text['label-dashboard_name']['fr-fr'] = '';
 		$text['label-dashboard_name']['he-il'] = '';
 		$text['label-dashboard_name']['it-it'] = '';
@@ -112,7 +112,7 @@
 		$text['description-dashboard_name']['de-de'] = '';
 		$text['description-dashboard_name']['es-cl'] = '';
 		$text['description-dashboard_name']['es-mx'] = '';
-		$text['description-dashboard_name']['fr-ca'] = '';
+		$text['description-dashboard_name']['fr-ca'] = 'Saisissez le nom du widget du tableau de bord.';
 		$text['description-dashboard_name']['fr-fr'] = '';
 		$text['description-dashboard_name']['he-il'] = '';
 		$text['description-dashboard_name']['it-it'] = '';
@@ -132,7 +132,7 @@
 		$text['label-dashboard_path']['de-de'] = '';
 		$text['label-dashboard_path']['es-cl'] = '';
 		$text['label-dashboard_path']['es-mx'] = '';
-		$text['label-dashboard_path']['fr-ca'] = '';
+		$text['label-dashboard_path']['fr-ca'] = 'Chemin';
 		$text['label-dashboard_path']['fr-fr'] = '';
 		$text['label-dashboard_path']['he-il'] = '';
 		$text['label-dashboard_path']['it-it'] = '';
@@ -152,7 +152,7 @@
 		$text['description-dashboard_path']['de-de'] = '';
 		$text['description-dashboard_path']['es-cl'] = '';
 		$text['description-dashboard_path']['es-mx'] = '';
-		$text['description-dashboard_path']['fr-ca'] = '';
+		$text['description-dashboard_path']['fr-ca'] = 'Entrez le chemin du widget du tableau de bord.';
 		$text['description-dashboard_path']['fr-fr'] = '';
 		$text['description-dashboard_path']['he-il'] = '';
 		$text['description-dashboard_path']['it-it'] = '';
@@ -172,7 +172,7 @@
 		$text['label-dashboard_groups']['de-de'] = '';
 		$text['label-dashboard_groups']['es-cl'] = '';
 		$text['label-dashboard_groups']['es-mx'] = '';
-		$text['label-dashboard_groups']['fr-ca'] = '';
+		$text['label-dashboard_groups']['fr-ca'] = 'Groupes';
 		$text['label-dashboard_groups']['fr-fr'] = '';
 		$text['label-dashboard_groups']['he-il'] = '';
 		$text['label-dashboard_groups']['it-it'] = '';
@@ -192,7 +192,7 @@
 		$text['description-dashboard_groups']['de-de'] = '';
 		$text['description-dashboard_groups']['es-cl'] = '';
 		$text['description-dashboard_groups']['es-mx'] = '';
-		$text['description-dashboard_groups']['fr-ca'] = '';
+		$text['description-dashboard_groups']['fr-ca'] = 'Ajoutez les groupes autorisés à accéder à ce widget.';
 		$text['description-dashboard_groups']['fr-fr'] = '';
 		$text['description-dashboard_groups']['he-il'] = '';
 		$text['description-dashboard_groups']['it-it'] = '';
@@ -212,7 +212,7 @@
 		$text['label-dashboard_order']['de-de'] = '';
 		$text['label-dashboard_order']['es-cl'] = '';
 		$text['label-dashboard_order']['es-mx'] = '';
-		$text['label-dashboard_order']['fr-ca'] = '';
+		$text['label-dashboard_order']['fr-ca'] = 'Ordre';
 		$text['label-dashboard_order']['fr-fr'] = '';
 		$text['label-dashboard_order']['he-il'] = '';
 		$text['label-dashboard_order']['it-it'] = '';
@@ -232,7 +232,7 @@
 		$text['description-dashboard_order']['de-de'] = '';
 		$text['description-dashboard_order']['es-cl'] = '';
 		$text['description-dashboard_order']['es-mx'] = '';
-		$text['description-dashboard_order']['fr-ca'] = '';
+		$text['description-dashboard_order']['fr-ca'] = 'Saisissez l ordre du widget du tableau de bord.';
 		$text['description-dashboard_order']['fr-fr'] = '';
 		$text['description-dashboard_order']['he-il'] = '';
 		$text['description-dashboard_order']['it-it'] = '';
@@ -252,7 +252,7 @@
 		$text['label-dashboard_enabled']['de-de'] = '';
 		$text['label-dashboard_enabled']['es-cl'] = '';
 		$text['label-dashboard_enabled']['es-mx'] = '';
-		$text['label-dashboard_enabled']['fr-ca'] = '';
+		$text['label-dashboard_enabled']['fr-ca'] = 'Activé';
 		$text['label-dashboard_enabled']['fr-fr'] = '';
 		$text['label-dashboard_enabled']['he-il'] = '';
 		$text['label-dashboard_enabled']['it-it'] = '';
@@ -272,7 +272,7 @@
 		$text['description-dashboard_enabled']['de-de'] = '';
 		$text['description-dashboard_enabled']['es-cl'] = '';
 		$text['description-dashboard_enabled']['es-mx'] = '';
-		$text['description-dashboard_enabled']['fr-ca'] = '';
+		$text['description-dashboard_enabled']['fr-ca'] = 'Entrez le widget de tableau de bord activé.';
 		$text['description-dashboard_enabled']['fr-fr'] = '';
 		$text['description-dashboard_enabled']['he-il'] = '';
 		$text['description-dashboard_enabled']['it-it'] = '';
@@ -292,7 +292,7 @@
 		$text['label-dashboard_description']['de-de'] = '';
 		$text['label-dashboard_description']['es-cl'] = '';
 		$text['label-dashboard_description']['es-mx'] = '';
-		$text['label-dashboard_description']['fr-ca'] = '';
+		$text['label-dashboard_description']['fr-ca'] = 'Description';
 		$text['label-dashboard_description']['fr-fr'] = '';
 		$text['label-dashboard_description']['he-il'] = '';
 		$text['label-dashboard_description']['it-it'] = '';
@@ -312,7 +312,7 @@
 		$text['description-dashboard_description']['de-de'] = '';
 		$text['description-dashboard_description']['es-cl'] = '';
 		$text['description-dashboard_description']['es-mx'] = '';
-		$text['description-dashboard_description']['fr-ca'] = '';
+		$text['description-dashboard_description']['fr-ca'] = 'Saisissez la description du widget du tableau de bord.';
 		$text['description-dashboard_description']['fr-fr'] = '';
 		$text['description-dashboard_description']['he-il'] = '';
 		$text['description-dashboard_description']['it-it'] = '';
