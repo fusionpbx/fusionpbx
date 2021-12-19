@@ -72,7 +72,7 @@
 		$text['description-group_uuid']['de-de'] = '';
 		$text['description-group_uuid']['es-cl'] = '';
 		$text['description-group_uuid']['es-mx'] = '';
-		$text['description-group_uuid']['fr-ca'] = 'Saisissez l UUID De Groupe';
+		$text['description-group_uuid']['fr-ca'] = "Saisissez l'UUID De Groupe";
 		$text['description-group_uuid']['fr-fr'] = '';
 		$text['description-group_uuid']['he-il'] = '';
 		$text['description-group_uuid']['it-it'] = '';
