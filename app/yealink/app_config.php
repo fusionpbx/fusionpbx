@@ -822,6 +822,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language used in phone interface.";
+		$y++;		
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3f7a5ed6-364c-4d5c-ba7e-4c6e9bdf9131";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dialplan_dialnow_delay";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Time in second till dialnow activates.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b2d1e9c4-7097-4fc8-bb14-5aba6df4ef32";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
