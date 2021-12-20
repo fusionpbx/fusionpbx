@@ -275,7 +275,7 @@
 
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
-						mkdir($stream_path, 0770, false);
+						mkdir($stream_path, 0770, true);
 					}
 					if (is_dir($stream_path)) {
 						if (copy($stream_file_name_temp, $stream_path.'/'.$stream_file_name)) {
