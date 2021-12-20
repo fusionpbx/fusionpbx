@@ -376,7 +376,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ab7e165f-dbca-403c-ab87-88378be5bace";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "133980e3-b303-446c-a26a-74fd043f5a96";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "missed_calls_chart_border_width";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -408,7 +408,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "72c549b5-2456-4b80-b821-ce9d8d69252d";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6c30efe1-51a6-4281-96eb-1d942bdabec6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recent_calls_chart_border_width";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
