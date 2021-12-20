@@ -162,7 +162,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_order'] = "10";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d82957f6-c546-4453-ac27-dd05ee4f57e6";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "acb9d242-5f93-4bb7-a135-64eeefa15fd0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "disk_usage_chart_main_background_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
