@@ -780,8 +780,18 @@
 					}
 				//start
 					if (permission_exists('xml_cdr_start')) {
-						$content .= "	<td class='middle right no-wrap'>".$row['start_date_formatted']."</td>\n";
-						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$row['start_time_formatted']."</td>\n";
+						$tmp_year = date("Y", strtotime($row['start_stamp']));
+						$tmp_month = date("M", strtotime($row['start_stamp']));
+						$tmp_day = date("d", strtotime($row['start_stamp']));
+						$tmp_start_epoch_date = escape(date("j M Y", $row['start_epoch']));
+						if ($_SESSION['domain']['time_format']['text'] == '12h') {
+							$tmp_start_epoch_time = escape(date("g:i:s a", $row['start_epoch']));
+						}
+						else {
+							$tmp_start_epoch_time = escape(date("H:i:s", $row['start_epoch']));
+						}
+						$content .= "	<td class='middle right no-wrap'>".$tmp_start_epoch_date."</td>\n";
+						$content .= "	<td class='middle right no-wrap hide-md-dn'>".$tmp_start_epoch_time."</td>\n";
 					}
 				//tta (time to answer)
 					if (permission_exists('xml_cdr_tta')) {
