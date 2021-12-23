@@ -459,6 +459,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "contact_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_label";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom label for the number";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_type_voice";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for voice calls.";
@@ -475,13 +479,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for text messages.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_label";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_speed_dial";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom label for the number";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the speed dial.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_primary";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_country_code";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary number.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the country code.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -491,10 +495,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_speed_dial";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the speed dial.";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_primary";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Designate a primary number.";
 		$z++;
+		
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "phone_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
