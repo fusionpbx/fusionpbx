@@ -2001,6 +2001,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 			left: 0;
 			right: 0;
 			background: <?php echo $_SESSION['theme']['form_table_field_background_color']['text']; ?>;
+			opacity: 0.5;
 		}
 
 	div.op_state_active {
