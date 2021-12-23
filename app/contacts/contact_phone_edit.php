@@ -333,7 +333,6 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-phone_number']."\n";
