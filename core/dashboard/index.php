@@ -70,6 +70,7 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_order, \n";
 	$sql .= "cast(dashboard_enabled as text), \n";
 	$sql .= "dashboard_description \n";
@@ -209,7 +210,7 @@
 }
 
 .widget {
-  /*background-color: #eee*/
+  /*background-color: #eee;*/
 }
 
 .widgets {
@@ -224,18 +225,56 @@
 @media (max-width: 575px) {
   .widgets { grid-template-columns: repeat(1, 1fr); }
   .col-num { grid-column: span 1; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			if (is_numeric($dashboard_column_span)) {
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span 1;\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 550px? 2 columns */
 @media (min-width: 575px) {
   .widgets { grid-template-columns: repeat(2, 1fr); }
   .col-num { grid-column: span 2; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_column_span = 1;
+			if (is_numeric($dashboard_column_span)) {
+				if ($row['dashboard_column_span'] > 2) {
+					$dashboard_column_span = 2;
+				}
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 1300px? 3 columns */
 @media (min-width: 1300px) {
   .widgets { grid-template-columns: repeat(3, 1fr); }
   .col-num { grid-column: span 2; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_column_span = $row['dashboard_column_span'];
+			if (is_numeric($dashboard_column_span)) {
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 1500px? 4 columns */
@@ -295,8 +334,8 @@
 		}
 
 		.hud_box .hud_box:hover {
-			transform: none;
 			box-shadow: none;
+			transform: none;
 		}
 
 		.ghost {
@@ -306,6 +345,7 @@
 		</style>
 
 		<script>
+		//make widgets draggable
 		var widgets = document.getElementById('widgets');
 		var sortable = Sortable.create(widgets, {
 			animation: 150,
@@ -336,21 +376,24 @@
 			},
 		});
 
+		/*
+		//warn the user before leaving the page
 		var formSubmitting = false;
 		var setFormSubmitting = function() { formSubmitting = true; };
 
 		window.onload = function() {
-		    window.addEventListener("beforeunload", function (e) {
-		        var confirmationMessage = 'You have unsaved changes which will not be saved.';
+			window.addEventListener("beforeunload", function (e) {
+				var confirmationMessage = 'You have unsaved changes which will not be saved.';
 
-		        if (formSubmitting) {
-		            return undefined;
-		        }
+				if (formSubmitting) {
+					return undefined;
+				}
 
-		        (e || window.event).returnValue = confirmationMessage;
-		        return confirmationMessage;
-		    });
+				(e || window.event).returnValue = confirmationMessage;
+				return confirmationMessage;
+			});
 		};
+		*/
 		</script>
 		<?php
 	} //end edit
