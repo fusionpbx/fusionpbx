@@ -658,14 +658,14 @@
 		$contact_phones[$x]['contact_uuid'] = $contact_uuid;
 		$contact_phones[$x]['contact_phone_uuid'] = uuid();
 		$contact_phones[$x]['phone_label'] = '';
-		$contact_phones[$x]['phone_country_code'] = '';
-		$contact_phones[$x]['phone_number'] = '';
-		$contact_phones[$x]['phone_extension'] = '';
-		$contact_phones[$x]['phone_speed_dial'] = '';
 		$contact_phones[$x]['phone_type_voice'] = '';
 		$contact_phones[$x]['phone_type_fax'] = '';
 		$contact_phones[$x]['phone_type_video'] = '';
 		$contact_phones[$x]['phone_type_text'] = '';
+		$contact_phones[$x]['phone_speed_dial'] = '';
+		$contact_phones[$x]['phone_country_code'] = '';
+		$contact_phones[$x]['phone_number'] = '';
+		$contact_phones[$x]['phone_extension'] = '';
 		$contact_phones[$x]['phone_primary'] = '';
 		$contact_phones[$x]['phone_description'] = '';
 	}

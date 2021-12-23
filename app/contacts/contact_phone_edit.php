@@ -59,12 +59,12 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST) && @sizeof($_POST) != 0) {
+		$phone_label = $_POST["phone_label"];
+		$phone_label_custom = $_POST["phone_label_custom"];
 		$phone_type_voice = $_POST["phone_type_voice"];
 		$phone_type_fax = $_POST["phone_type_fax"];
 		$phone_type_video = $_POST["phone_type_video"];
 		$phone_type_text = $_POST["phone_type_text"];
-		$phone_label = $_POST["phone_label"];
-		$phone_label_custom = $_POST["phone_label_custom"];
 		$phone_speed_dial = $_POST["phone_speed_dial"];
 		$phone_country_code = $_POST["phone_country_code"];
 		$phone_number = $_POST["phone_number"];
@@ -161,11 +161,11 @@
 					if (is_array($array) && @sizeof($array) != 0) {
 						$array['contact_phones'][0]['contact_uuid'] = $contact_uuid;
 						$array['contact_phones'][0]['domain_uuid'] = $domain_uuid;
+						$array['contact_phones'][0]['phone_label'] = $phone_label;
 						$array['contact_phones'][0]['phone_type_voice'] = $phone_type_voice ? 1 : null;
 						$array['contact_phones'][0]['phone_type_fax'] = $phone_type_fax ? 1 : null;
 						$array['contact_phones'][0]['phone_type_video'] = $phone_type_video ? 1 : null;
 						$array['contact_phones'][0]['phone_type_text'] = $phone_type_text ? 1 : null;
-						$array['contact_phones'][0]['phone_label'] = $phone_label;
 						$array['contact_phones'][0]['phone_speed_dial'] = $phone_speed_dial;
 						$array['contact_phones'][0]['phone_country_code'] = $phone_country_code;
 						$array['contact_phones'][0]['phone_number'] = $phone_number;
@@ -198,11 +198,11 @@
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
+			$phone_label = $row["phone_label"];
 			$phone_type_voice = $row["phone_type_voice"];
 			$phone_type_fax = $row["phone_type_fax"];
 			$phone_type_video = $row["phone_type_video"];
 			$phone_type_text = $row["phone_type_text"];
-			$phone_label = $row["phone_label"];
 			$phone_speed_dial = $row["phone_speed_dial"];
 			$phone_country_code = $row["phone_country_code"];
 			$phone_number = $row["phone_number"];
