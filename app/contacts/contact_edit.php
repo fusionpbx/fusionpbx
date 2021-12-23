@@ -319,13 +319,14 @@
 						$array['contacts'][0]['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_phones'][$y]['contact_phone_uuid'] = $row["contact_phone_uuid"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_label'] = $row["phone_label"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_number'] = $row["phone_number"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_extension'] = $row["phone_extension"];
-						$array['contacts'][0]['contact_phones'][$y]['phone_speed_dial'] = $row["phone_speed_dial"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_voice'] = $row["phone_type_voice"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_fax'] = $row["phone_type_fax"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_video'] = $row["phone_type_video"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_type_text'] = $row["phone_type_text"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_speed_dial'] = $row["phone_speed_dial"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_country_code'] = $row["phone_country_code"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_number'] = $row["phone_number"];
+						$array['contacts'][0]['contact_phones'][$y]['phone_extension'] = $row["phone_extension"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_primary'] = $row["phone_primary"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_description'] = $row["phone_description"];
 						$y++;
@@ -657,6 +658,7 @@
 		$contact_phones[$x]['contact_uuid'] = $contact_uuid;
 		$contact_phones[$x]['contact_phone_uuid'] = uuid();
 		$contact_phones[$x]['phone_label'] = '';
+		$contact_phones[$x]['phone_country_code'] = '';
 		$contact_phones[$x]['phone_number'] = '';
 		$contact_phones[$x]['phone_extension'] = '';
 		$contact_phones[$x]['phone_speed_dial'] = '';
@@ -1598,6 +1600,14 @@ if (permission_exists('contact_phone_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		echo "				<input class='formfld' type='text' name='contact_phones[$x][phone_speed_dial]' placeholder='' maxlength='255' style='' value=\"".escape($row["phone_speed_dial"])."\">\n";
 		//echo 				$text['description-phone_extension']."\n";
+		echo "		</div>\n";
+
+		echo "		<div class='label'>\n";
+		echo "			".$text['label-phone_country_code']."\n";
+		echo "		</div>\n";
+		echo "		<div class='field no-wrap'>\n";
+		echo "				<input class='formfld' type='text' name='contact_phones[$x][phone_country_code]' placeholder='' maxlength='6' style='' value=\"".escape($row["phone_country_code"])."\">\n";
+		//echo 				$text['description-phone_country_code']."\n";
 		echo "		</div>\n";
 
 		echo "		<div class='label required'>\n";
