@@ -57,7 +57,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'voicemail_greetings';
 					$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 				//revoke temporary permissions
 					$p->delete('voicemail_greeting_edit', 'temp');
@@ -99,7 +99,7 @@ if ($domains_processed == 1) {
 							$database = new database;
 							$database->app_name = 'voicemail_greetings';
 							$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 						//revoke temporary permissions
 							$p->delete('voicemail_greeting_edit', 'temp');
@@ -141,7 +141,7 @@ if ($domains_processed == 1) {
 							$database = new database;
 							$database->app_name = 'voicemail_greetings';
 							$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 						//revoke temporary permissions
 							$p->delete('voicemail_greeting_edit', 'temp');
