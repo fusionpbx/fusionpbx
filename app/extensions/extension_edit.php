@@ -200,13 +200,6 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 				update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to);
 				add_user_to_api($voicemail_mail_to);
 
-
-				// if ($err) {
-				// echo "cURL Error #:" . $err;
-				// } else {
-				// return  $response;
-				// }
-
 			}
 
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
