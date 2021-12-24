@@ -77,7 +77,7 @@
 						$database = new database;
 						$database->app_name = 'access_controls';
 						$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-						$database->save($array);
+						$database->save($array, false);
 						unset($array);
 
 						$p->delete('access_control_add', 'temp');
@@ -114,7 +114,7 @@
 							$database = new database;
 							$database->app_name = 'access_controls';
 							$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 
 							$p->delete('access_control_node_add', 'temp');
