@@ -81,7 +81,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'vars';
 				$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-				$database->save($array);
+				$database->save($array, false);
 				$message = $database->message;
 
 			//revoke temporary permissions
@@ -183,7 +183,7 @@ if ($domains_processed == 1) {
 						$database = new database;
 						$database->app_name = 'vars';
 						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-						$database->save($array);
+						$database->save($array, false);
 						unset($array);
 					//revoke temporary permissions
 						$p->delete("var_add", "temp");
@@ -226,7 +226,7 @@ if ($domains_processed == 1) {
 							$database = new database;
 							$database->app_name = 'vars';
 							$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 						//revoke temporary permissions
 							$p->delete("var_add", "temp");

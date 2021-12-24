@@ -55,7 +55,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'call_centers';
 				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-				$database->save($array);
+				$database->save($array, false);
 				$response = $database->message;
 				unset($array);
 
@@ -153,7 +153,7 @@ if ($domains_processed == 1) {
 			}
 		}
 		unset ($prep_statement);
-	
+
 	//save the array to the database
 		if (is_array($array)) {
 			//add the dialplan permission
@@ -165,7 +165,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'call_centers';
 				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-				$database->save($array);
+				$database->save($array, false);
 				$message = $database->message;
 
 			//remove the temporary permission

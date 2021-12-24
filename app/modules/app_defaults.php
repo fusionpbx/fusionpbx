@@ -53,7 +53,7 @@
 					$database = new database;
 					$database->app_name = 'modules';
 					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 				}
 			}

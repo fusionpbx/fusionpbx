@@ -90,7 +90,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('phrase_detail_edit', 'temp');
@@ -128,7 +128,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('phrase_detail_edit', 'temp');

@@ -87,7 +87,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'contacts';
 					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('contact_email_add', 'temp');
@@ -148,7 +148,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'contacts';
 					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('contact_url_add', 'temp');
@@ -213,7 +213,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'contacts';
 				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 
 				$array['contact_groups'][0]['contact_group_uuid'] = $row["contact_group_uuid"];

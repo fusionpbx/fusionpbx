@@ -100,7 +100,7 @@ if ($domains_processed == 1) {
 							$database = new database;
 							$database->app_name = 'app_name';
 							$database->app_uuid = 'app_uuid';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 
 							$p->add('music_on_hold_delete', 'temp');

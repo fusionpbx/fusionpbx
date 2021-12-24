@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,7 +59,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'ivr_menus';
 			$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 	
 			$p->delete('ivr_menu_edit', 'temp');
