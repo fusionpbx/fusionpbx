@@ -55,7 +55,7 @@ if ($domains_processed == 1) {
 		$database = new database;
 		$database->app_name = 'software';
 		$database->app_uuid = 'b88c795f-7dea-4fc8-9ab7-edd555242cff';
-		$database->save($array);
+		$database->save($array, false);
 		unset($array);
 
 		//remove the temporary permission
