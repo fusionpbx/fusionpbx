@@ -57,7 +57,7 @@
 					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('extension_edit', 'temp');
