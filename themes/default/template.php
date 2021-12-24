@@ -919,10 +919,9 @@
 		}
 
 		function list_form_submit(form_id) {
-			//alert(form_id);
 			document.getElementById(form_id).submit();
 		}
-		
+
 		function list_search_reset() {
 			document.getElementById('btn_reset').style.display = 'none';
 			document.getElementById('btn_search').style.display = '';
