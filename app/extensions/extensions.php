@@ -67,7 +67,6 @@
 						$obj->delete_voicemail = true;
 					}
 					$obj->delete($extensions);
-
 				}
 				break;
 		}
