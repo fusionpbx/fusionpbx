@@ -42,8 +42,7 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-	// print_r($_POST);
-	// exit();
+
 //get posted data
 	if (is_array($_POST['extensions'])) {
 		$action = $_POST['action'];
