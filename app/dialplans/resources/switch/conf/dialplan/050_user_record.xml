@@ -46,6 +46,7 @@
 			<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true"/>
 			<action application="set" data="record_name=${uuid}.${record_ext}" inline="true"/>
 			<!--<action application="set" data="record_name=${destination_number}-${caller_id_number}_${strftime(%Y-%m-%d %H:%M)}.${record_ext}" inline="true"/>-->
+			<action application="mkdir" data="${record_path}"/>
 			<action application="set" data="recording_follow_transfer=true" inline="true"/>
 			<action application="bind_digit_action" data="local,*5,api:uuid_record,${uuid} mask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self"/>
 			<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self"/>
