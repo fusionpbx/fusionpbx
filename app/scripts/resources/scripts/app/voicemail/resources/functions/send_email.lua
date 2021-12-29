@@ -225,6 +225,7 @@
 
 				--send the email
 					send_mail(headers,
+						nil,
 						voicemail_mail_to,
 						{subject, body},
 						(voicemail_file == "attach") and file
