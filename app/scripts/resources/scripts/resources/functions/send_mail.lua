@@ -32,8 +32,8 @@ if (email_queue_enabled == 'true') then
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
 		if (email_from == nil or email_from == "") then
-			local email_from = settings:get('email', 'smtp_from', 'text');
-			local from_name = settings:get('email', 'smtp_from_name', 'text');
+			email_from = settings:get('email', 'smtp_from', 'text');
+			from_name = settings:get('email', 'smtp_from_name', 'text');
 		end
 
 		if (email_from == nil or email_from == "") then
