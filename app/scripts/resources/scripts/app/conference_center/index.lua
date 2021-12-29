@@ -110,10 +110,11 @@
 					link_address = http_protocol.."://"..domain_name..project_path;
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"na",';
-					headers = headers..'"X-FusionPBX-Email-Type":"conference"}';
+					headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = 'na';
+					headers["X-FusionPBX-Email-Type"]  = 'conference';
 
 				--remove quotes from caller id name and number
 					caller_id_name = caller_id_name:gsub("'", "&#39;");
@@ -152,14 +153,22 @@
 
 				--send the email
 					if (string.len(attachment) > 4) then
-						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."' '"..attachment.."'";
+						send_mail(headers,
+							email,
+							email,
+							{subject, body},
+							attachment
+							);
 					else
-						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."'";
+						send_mail(headers,
+							email,
+							email,
+							{subject, body}
+							);
 					end
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. email .. " " .. subject .. " " .. body .. "\n");
 					end
-					result = api:executeString(cmd);
 			end
 
 	end

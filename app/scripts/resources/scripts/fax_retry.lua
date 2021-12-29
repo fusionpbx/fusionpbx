@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2019
+--	Copyright (C) 2010 - 2021
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -153,10 +153,10 @@
 		ignore_early_media = "false";
 		if (settings['fax']['variable'] ~= nil) then
 			for i, var in ipairs(settings.fax.variable) do
-		  		--freeswitch.consoleLog("notice", "variable #" .. i .. ": " .. var .. "\n");
-		  		if (var == "ignore_early_media=true") then
-		  			ignore_early_media = "true";
-		  		end
+				--freeswitch.consoleLog("notice", "variable #" .. i .. ": " .. var .. "\n");
+				if (var == "ignore_early_media=true") then
+					ignore_early_media = "true";
+				end
 			end
 		end
 	end
@@ -487,10 +487,15 @@
 	freeswitch.consoleLog("INFO","[FAX] mailto_address: ".. email_address .."\n");
 	freeswitch.consoleLog("INFO","[FAX] hangup_cause_q850: '" .. hangup_cause_q850 .. "'\n");
 	
--- build headers
+-- set the type
 	email_type = "email2fax";
-	x_headers = 'X-Headers: {"X-FusionPBX-Email-Type":"'..email_type..'",';
-	x_headers = x_headers..'"X-FusionPBX-Domain-UUID":"'..domain_uuid..'"}';	
+
+--prepare the headers
+	headers = {}
+	headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+	headers["X-FusionPBX-Domain-Name"] = domain_name;
+	headers["X-FusionPBX-Email-Type"]  = email_type;
+	headers["X-FusionPBX-Email-From"]  = from_address;
 
 -- if the fax failed then try again
 	if (fax_success == "0") then
@@ -570,12 +575,14 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY_STATS FAILURE BAD NUMBER: GATEWAY[".. fax_uri .."]");
 
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email(email_address,
-									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_invalid.."\n"..x_headers,
-									email_body_fail_invalid,
-									fax_file
-								);
+
+				--send the email
+				send_mail(headers,
+					from_address,
+					email_address,
+					{email_subject_fail_invalid, email_body_fail_invalid},
+					fax_file
+				);
 
 			--busy number
 			elseif (fax_retry_attempts == 17) then
@@ -583,12 +590,14 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE BUSY: GATEWAY[".. fax_uri .."], BUSY NUMBER");
 
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email(email_address,
-									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_busy.."\n"..x_headers,
-									email_body_fail_busy,
-									fax_file
-								);
+
+				--send the email
+				send_mail(headers,
+					from_address,
+					email_address,
+					{email_subject_fail_busy, email_body_fail_busy},
+					fax_file
+				);
 
 			else
 				--the fax failed completely. send a message
@@ -596,12 +605,14 @@
 				freeswitch.consoleLog("INFO", "[FAX] RETRY STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success");
 
 				email_address = email_address:gsub("\\,", ",");
-				freeswitch.email(email_address,
-									email_address,
-									"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_fail_default.."\n"..x_headers,
-									email_body_fail_default,
-									fax_file
-								);
+
+				--send the email
+				send_mail(headers,
+					from_address,
+					email_address,
+					{email_subject_fail_default, email_body_fail_default},
+					fax_file
+				);
 
 				fax_retry_attempts = fax_retry_attempts + 1;
 
@@ -644,12 +655,13 @@
 		freeswitch.consoleLog("INFO", "[FAX] RETRY STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]");
 		email_address = email_address:gsub("\\,", ",");
 
-		freeswitch.email(email_address,
-				email_address,
-				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: "..email_subject_success_default.."\n"..x_headers,
-				email_body_success_default,
-				fax_file:gsub(".tif",".pdf",x)
-			);
+		--send the email
+		send_mail(headers,
+			from_address,
+			email_address,
+			{email_subject_success_default, email_body_success_default},
+			fax_file:gsub(".tif",".pdf")
+		);
 
 		if (settings['fax']['keep_local']['boolean'] ~= "nil") then
 			if (settings['fax']['keep_local']['boolean'] == "false") then

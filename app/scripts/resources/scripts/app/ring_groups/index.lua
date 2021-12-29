@@ -372,14 +372,16 @@
 					body = trim(body);
 
 				--send the email
-					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[missed call]: "..mail_to.." '"..subject.."' '"..body.."'\n");
-					end
-
 					send_mail(headers,
+						nil,
 						mail_to,
 						{subject, body}
 					);
+
+				--send the debug info
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[missed call]: "..mail_to.." '"..subject.."' '"..body.."'\n");
+					end
 			end
 		end
 	end

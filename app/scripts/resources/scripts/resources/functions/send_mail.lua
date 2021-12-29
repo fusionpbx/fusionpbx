@@ -8,7 +8,7 @@ local settings = Settings.new(db, domain_name, domain_uuid)
 local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 
 if (email_queue_enabled == 'true') then
-	function send_mail(headers, email_address, email_message, email_file)
+	function send_mail(headers, email_from, email_address, email_message, email_file)
 
 		--include json library
 		local json
@@ -31,8 +31,10 @@ if (email_queue_enabled == 'true') then
 		local db = dbh or Database.new('system');
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
-		local email_from = settings:get('email', 'smtp_from', 'text');
-		local from_name = settings:get('email', 'smtp_from_name', 'text');
+		if (email_from == nil or email_from == "") then
+			local email_from = settings:get('email', 'smtp_from', 'text');
+			local from_name = settings:get('email', 'smtp_from_name', 'text');
+		end
 
 		if (email_from == nil or email_from == "") then
 			email_from = address;
