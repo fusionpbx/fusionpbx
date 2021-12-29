@@ -105,6 +105,7 @@
 				--send the emails
 					send_mail(headers,
 						missed_call_data,
+						missed_call_data,
 						{subject, body}
 					);
 
