@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<root_super_search>
+	<item id_name="local_directory_search" display_name="Local Directory" priority="1" enable="1" />
+	<item id_name="calllog_search" display_name="History" priority="2" enable="1" />
+	<item id_name="remote_directory_search" display_name="Remote Phone Book" priority="3" enable="1" />
+	<!-- <item id_name="ldap_search" display_name="LDAP" priority="4" enable="0" dev="T19 T21 T23 T40 T40G T27 T27G T29 T41 T42 T42S T41S T46 T46S T54S T52 T48 T48S T49 T61 T66 T69 T69S CP860 DECT CP920 T54W T53W T53 T57W"/> -->
+</root_super_search>
