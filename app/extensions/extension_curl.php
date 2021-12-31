@@ -6,7 +6,6 @@
     $curl = curl_init();
     $err = "";
     $response = "";
-
     $s_type = $_POST['s_type'];
     $a_type = $_POST['a_type'];
 

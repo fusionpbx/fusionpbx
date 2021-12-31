@@ -74,11 +74,28 @@
 	}
 
 function add_user_to_api($voicemail_mail_to){
-	
+	$s_type = "api_secret_key";
+    $a_type = "api_url";
+
+    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+            UNION ALL
+            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+    
+    $parameters['a_type'] = $a_type;
+    $parameters['s_type'] = $s_type;
+    
+    $database = new database;
+    $result = $database->select($sql, $parameters, 'all');
+    unset($sql, $parameters);
+
+    $path = $result[0]['default_setting_value'];
+    $key = $result[1]['default_setting_value'];
+
+    
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionUserToApi",
+	CURLOPT_URL => $path."addFusionUserToApi",
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -88,7 +105,7 @@ function add_user_to_api($voicemail_mail_to){
 	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
-		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+		"secret-key: $key"
 	),
 	));
 
@@ -101,10 +118,29 @@ function add_user_to_api($voicemail_mail_to){
 
 function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	
+	$s_type = "broker_secret_key";
+    $a_type = "broker_url";
+
+    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+            UNION ALL
+            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+    
+    $parameters['a_type'] = $a_type;
+    $parameters['s_type'] = $s_type;
+    
+    $database = new database;
+    $result = $database->select($sql, $parameters, 'all');
+    unset($sql, $parameters);
+
+    $path = $result[0]['default_setting_value'];
+    $key = $result[1]['default_setting_value'];
+
+    
+
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	CURLOPT_URL => "https://broker1.us.nemerald.net/api/v1/updateClouduser",
+	CURLOPT_URL => $path."updateClouduser",
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -114,7 +150,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
-		"secret-key: adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18"
+		"secret-key: $key"
 	),
 	));
 

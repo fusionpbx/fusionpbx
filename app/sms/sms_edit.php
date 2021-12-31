@@ -34,6 +34,8 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once  '../../resources/classes/database.php';
+
 if (permission_exists('sms_add') || permission_exists('sms_edit')) {
 	//access granted
 }
@@ -45,12 +47,27 @@ else {
 //curl hit addDestinationToApi
 function addDestinationToApi($destination){
 
-	$post_data = [ 'cloud_id'=>'NEMERALDWHITELABEL', 'destination'=>$destination, 'url'=>'https://broker1.us.nemerald.net' ];
-	$request_headers = ['Secret-Key:jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy', "content-type:application/json",];
+	$s_type = "api_secret_key";
+    $a_type = "api_url";
+
+    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+            UNION ALL
+            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+    
+    $parameters['a_type'] = $a_type;
+    $parameters['s_type'] = $s_type;
+    
+    $database = new database;
+    $result = $database->select($sql, $parameters, 'all');
+    unset($sql, $parameters);
+
+    $path = $result[0]['default_setting_value'];
+    $key = $result[1]['default_setting_value'];
+
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionDestinationToApi",
+	CURLOPT_URL => $path."addFusionDestinationToApi",
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -60,7 +77,7 @@ function addDestinationToApi($destination){
 	CURLOPT_POSTFIELDS => " {\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"destination\": \"$destination\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
-		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+		"secret-key: $key"
 	),
 	));
 
