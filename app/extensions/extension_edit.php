@@ -74,11 +74,28 @@
 	}
 
 function add_user_to_api($voicemail_mail_to){
-	
+	$s_type = "api_secret_key";
+    $a_type = "api_url";
+
+    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+            UNION ALL
+            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+    
+    $parameters['a_type'] = $a_type;
+    $parameters['s_type'] = $s_type;
+    
+    $database = new database;
+    $result = $database->select($sql, $parameters, 'all');
+    unset($sql, $parameters);
+
+    $path = $result[0]['default_setting_value'];
+    $key = $result[1]['default_setting_value'];
+
+    
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	CURLOPT_URL => "https://api.us.nemerald.net/api/v1/addFusionUserToApi",
+	CURLOPT_URL => $path."addFusionUserToApi",
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -88,7 +105,7 @@ function add_user_to_api($voicemail_mail_to){
 	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
-		"secret-key: jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy"
+		"secret-key: $key"
 	),
 	));
 
@@ -101,10 +118,29 @@ function add_user_to_api($voicemail_mail_to){
 
 function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	
+	$s_type = "broker_secret_key";
+    $a_type = "broker_url";
+
+    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+            UNION ALL
+            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+    
+    $parameters['a_type'] = $a_type;
+    $parameters['s_type'] = $s_type;
+    
+    $database = new database;
+    $result = $database->select($sql, $parameters, 'all');
+    unset($sql, $parameters);
+
+    $path = $result[0]['default_setting_value'];
+    $key = $result[1]['default_setting_value'];
+
+    
+
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	CURLOPT_URL => "https://broker1.us.nemerald.net/api/v1/updateClouduser",
+	CURLOPT_URL => $path."updateClouduser",
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -114,7 +150,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
-		"secret-key: adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18"
+		"secret-key: $key"
 	),
 	));
 
@@ -1136,24 +1172,12 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 			}
 			
 			$.ajax({
-					url: 'https://broker1.us.nemerald.net/api/v1/getAccountDetail',
+					url: 'extension_curl.php',
 					type: 'POST',
+					data: {data:data, path:'getAccountDetail', s_type:'broker_secret_key', a_type:'broker_url'},
 					dataType: 'json',
-					headers: {
-					
-						'Secret-Key': 'adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18',
-						'Content-Type':'application/json'
-						
-					},
-					data: JSON.stringify(data),
 					success: function(response){
-						// if(response.hasOwnProperty('recepient')){
-						// 	$('#s_email').val(response.recepient)
 
-						// }else{
-						// 	mail = $('input[name=\"voicemail_mail_to\"]').val();
-						// 	$('#s_email').val(mail)
-						// }
 						mail = $('input[name=\"voicemail_mail_to\"]').val();
 						$('#s_email').val(mail)
 						send_email_data = response;
@@ -1230,16 +1254,10 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 			data['body'] = data['body'].replace(/PASSWORD_HERE/g, data['cloud_password']);
 			if(check == 0){
 				$.ajax({
-						url: 'https://broker1.us.nemerald.net/api/v1/sendQrEmail',
+						url: 'extension_curl.php',
 						type: 'POST',
+						data: {data:data, path:'sendQrEmail', s_type:'broker_secret_key', a_type:'broker_url'},
 						dataType: 'json',
-						headers: {
-						
-							'Secret-Key': 'adfhaiajHHISIkanjdUHIDJnknifhsihHHifks0878798NDnjhHNHDO!@najdah18',
-							'Content-Type':'application/json'
-							
-						},
-						data: JSON.stringify(data),
 						success: function(response){
 							
 							$('#emailModal').modal('hide');
@@ -1332,16 +1350,10 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 				'id': old_sub
 			}
 			$.ajax({
-				url: 'https://api.us.nemerald.net/api/v1/deleteFusionEmailTemplate',
+				url: 'extension_curl.php',
 				type: 'POST',
+				data: {data:del_id, path:'deleteFusionEmailTemplate', s_type:'api_secret_key', a_type:'api_url'},
 				dataType: 'json',
-				headers: {
-				
-					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
-					'Content-Type':'application/json'
-					
-				},
-				data: JSON.stringify(del_id),
 				success: function(response){
 					CKEDITOR.instances.s_email_body.setData('')
 					$('#s_email_sub').val('');
@@ -1367,16 +1379,10 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 					'body'   :CKEDITOR.instances.s_email_body.getData()
 				}
 				$.ajax({
-					url: 'https://api.us.nemerald.net/api/v1/fusionEmailTemplateCreateUpdate',
+					url: 'extension_curl.php',
 					type: 'POST',
+					data: {data:temp, path:'fusionEmailTemplateCreateUpdate', s_type:'api_secret_key', a_type:'api_url'},
 					dataType: 'json',
-					headers: {
-					
-						'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
-						'Content-Type':'application/json'
-						
-					},
-					data: JSON.stringify(temp),
 					success: function(response){
 						
 						get_email_templates();
@@ -1397,16 +1403,10 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 				'body'   :$('#s_email_body').val()
 			}
 			$.ajax({
-				url: 'https://api.us.nemerald.net/api/v1/fusionEmailTemplateCreateUpdate',
+				url: 'extension_curl.php',
 				type: 'POST',
+				data: {data:temp, path:'fusionEmailTemplateCreateUpdate', s_type:'api_secret_key', a_type:'api_url'},
 				dataType: 'json',
-				headers: {
-				
-					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
-					'Content-Type':'application/json'
-					
-				},
-				data: JSON.stringify(temp),
 				success: function(response){
 					
 					get_email_templates();
@@ -1437,16 +1437,10 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 		function add_user_to_api(data2){
 
 			$.ajax({
-				url: 'https://api.us.nemerald.net/api/v1/addFusionUserToApi',
+				url: 'extension_curl.php',
 				type: 'POST',
+				data: {data:data2, path:'addFusionUserToApi', s_type:'api_secret_key', a_type:'api_url'},
 				dataType: 'json',
-				headers: {
-				
-					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
-					'Content-Type':'application/json'
-					
-				},
-				data: JSON.stringify(data2),
 				success: function(response){
 					
 					console.log('addUserToApi');
@@ -1459,15 +1453,11 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 		function get_email_templates(){
 
 			$.ajax({
-				url: 'https://api.us.nemerald.net/api/v1/getFusionEmailTemplates',
-				type: 'GET',
+				url: 'extension_curl.php',
+				type: 'POST',
+				data: {data:[], path:'getFusionEmailTemplates', s_type:'api_secret_key', a_type:'api_url', action:'1'},
 				dataType: 'json',
-				headers: {
-				
-					'Secret-Key': 'jshj&(BJfr5675bngFRTGhj)&bD$^fg^&g*(JKhkgh%^fh%^56RY%^fy',
 
-					
-				},
 				success: function(response){
 					
 					html='';
