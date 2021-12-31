@@ -195,7 +195,7 @@ function addDestinationToApi($destination){
 
 			error_log($sql_insert);
 			unset ($prep_statement);
-			echo addDestinationToApi($destination);
+			addDestinationToApi($destination);
 			// exit();
 			header( 'Location: sms.php') ;
 	}
