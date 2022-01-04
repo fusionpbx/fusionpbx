@@ -405,7 +405,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T46U(T43U,T46U,T41U,T48U,T42U)-108.86.0.20.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T46U firmware ROM";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T48U firmware ROM";
 	    	$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6b70cfeb-2124-42dc-ba8b-6cd77da3fa5f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
