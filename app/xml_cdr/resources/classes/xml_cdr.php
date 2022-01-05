@@ -298,14 +298,26 @@ if (!class_exists('xml_cdr')) {
 			//process data if the call detail record is not a duplicate
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
-					//get the caller details
+					//get the caller ID
 						$caller_id_name = urldecode($xml->variables->caller_id_name);
 						$caller_id_number = urldecode($xml->variables->caller_id_number);
-						if (isset($xml->variables->effective_caller_id_name)) {
+
+					//if the call is outbound use the external caller ID
+						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-						if (isset($xml->variables->effective_caller_id_number)) {
+						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
+
+					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
+						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
+						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
+						if (urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name) && isset($xml->variables->sip_from_display)) {
+							$caller_id_name = urldecode($xml->variables->sip_from_display);
+						}
+						if (urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name) && isset($xml->variables->sip_from_user)) {
+							$caller_id_number = urldecode($xml->variables->sip_from_user);
 						}
 
 					//get the values from the callflow.
@@ -315,12 +327,6 @@ if (!class_exists('xml_cdr')) {
 								$context = urldecode($row->caller_profile->context);
 								$destination_number = urldecode($row->caller_profile->destination_number);
 								$network_addr = urldecode($row->caller_profile->network_addr);
-							}
-							if (strlen($caller_id_name) == 0) {
-								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
-							}
-							if (strlen($caller_id_number) == 0) {
-								$caller_id_number = urldecode($row->caller_profile->caller_id_number);
 							}
 							$i++;
 						}
@@ -371,13 +377,13 @@ if (!class_exists('xml_cdr')) {
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
 						$this->array[$key]['start_epoch'] = $start_epoch;
-						$this->array[$key]['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : '';
+						$this->array[$key]['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
 						$answer_epoch = urldecode($xml->variables->answer_epoch);
 						$this->array[$key]['answer_epoch'] = $answer_epoch;
-						$this->array[$key]['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : '';
+						$this->array[$key]['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : null;
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key]['end_epoch'] = $end_epoch;
-						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : '';
+						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
 						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
