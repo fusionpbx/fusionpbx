@@ -637,7 +637,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_device_profiles";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "device_profile_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_device_keys";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_devices";
@@ -672,6 +672,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_device_profiles";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "device_profile_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "device_key_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
