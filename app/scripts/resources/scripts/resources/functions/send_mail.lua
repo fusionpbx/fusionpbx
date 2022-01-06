@@ -159,7 +159,7 @@ else
 		local sendmail = require "sendmail"
 		local uuid = require "uuid"
 
-		function send_mail(headers, address, message, file)
+		function send_mail(headers, from, address, message, file)
 			local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 			local domain_name = headers["X-FusionPBX-Domain-Name"]
 			local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
@@ -229,7 +229,7 @@ else
 	end
 
 	if freeswitch then
-		function send_mail(headers, address, message, file)
+		function send_mail(headers, from, address, message, file)
 			local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 			local domain_name = headers["X-FusionPBX-Domain-Name"]
 			local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
@@ -242,15 +242,22 @@ else
 			end
 			xheaders = xheaders:sub(1,-2) .. '}'
 
-			local from = settings:get('email', 'smtp_from', 'text')
-			local from_name = settings:get('email', 'smtp_from_name', 'text')
+			if (from == nil or from == "") then
+				from = settings:get('email', 'smtp_from', 'text')
+				from_name = settings:get('email', 'smtp_from_name', 'text')
+			end
 			if from == nil or from == "" then
 				from = address
 			elseif from_name ~= nil and from_name ~= "" then
 				from = from_name .. "<" .. from .. ">"
 			end
+
 			local subject = message[1]
 			local body = message[2] or ''
+			
+			--debug info
+			--freeswitch.consoleLog("notice", "[voicemail] from: " .. from .. "\n");
+			--freeswitch.consoleLog("notice", "[voicemail] subject: " .. subject .. "\n");
 
 			local mail_headers =
 				"To: ".. address .. "\n" ..

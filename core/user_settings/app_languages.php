@@ -2499,4 +2499,46 @@ $text['description-user_setting-add']['ru-ru'] = "Добавьте параме�
 $text['description-user_setting-add']['sv-se'] = "Lägg till en inställning för denna användare.";
 $text['description-user_setting-add']['uk-ua'] = "";
 
+$text['label-active']['en-us'] = "Active";
+$text['label-active']['en-gb'] = "Active";
+$text['label-active']['ar-eg'] = "";
+$text['label-active']['de-at'] = "Aktiv"; //copied from de-de
+$text['label-active']['de-ch'] = "Aktiv"; //copied from de-de
+$text['label-active']['de-de'] = "Aktiv";
+$text['label-active']['es-cl'] = "";
+$text['label-active']['es-mx'] = "";
+$text['label-active']['fr-ca'] = "Actif";
+$text['label-active']['fr-fr'] = "Actif";
+$text['label-active']['he-il'] = "";
+$text['label-active']['it-it'] = "Attivo";
+$text['label-active']['nl-nl'] = "";
+$text['label-active']['pl-pl'] = "";
+$text['label-active']['pt-br'] = "";
+$text['label-active']['pt-pt'] = "";
+$text['label-active']['ro-ro'] = "";
+$text['label-active']['ru-ru'] = "Активные";
+$text['label-active']['sv-se'] = "Aktiv";
+$text['label-active']['uk-ua'] = "";
+
+$text['label-inactive']['en-us'] = "InActive";
+$text['label-inactive']['en-gb'] = "InActive";
+$text['label-inactive']['ar-eg'] = "";
+$text['label-inactive']['de-at'] = "InAktiv"; //copied from de-de
+$text['label-inactive']['de-ch'] = "InAktiv"; //copied from de-de
+$text['label-inactive']['de-de'] = "InAktiv";
+$text['label-inactive']['es-cl'] = "";
+$text['label-inactive']['es-mx'] = "";
+$text['label-inactive']['fr-ca'] = "InActif";
+$text['label-inactive']['fr-fr'] = "InActif";
+$text['label-inactive']['he-il'] = "";
+$text['label-inactive']['it-it'] = "Non Attivo";
+$text['label-inactive']['nl-nl'] = "";
+$text['label-inactive']['pl-pl'] = "";
+$text['label-inactive']['pt-br'] = "";
+$text['label-inactive']['pt-pt'] = "";
+$text['label-inactive']['ro-ro'] = "";
+$text['label-inactive']['ru-ru'] = "Неактивный";
+$text['label-inactive']['sv-se'] = "InAktiv";
+$text['label-inactive']['uk-ua'] = "";
+
 ?>

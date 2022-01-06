@@ -299,7 +299,7 @@
 			var system_counts_chart_context = document.getElementById('system_counts_chart').getContext('2d');
 
 			const system_counts_chart_data = {
-				labels: ['InActive: <?php echo $domain_inactive; ?>', 'Active: <?php echo $domain_active; ?>'],
+				labels: ['<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>', '<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>'],
 				datasets: [{
 					data: ['<?php echo $domain_inactive; ?>', '<?php echo $domain_active; ?>'],
 					backgroundColor: [
