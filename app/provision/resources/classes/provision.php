@@ -1194,7 +1194,7 @@ include "root.php";
 					else {
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "file not found ".$template_dir."/".$device_template ."/".$file;
+							$this->http_error('404');
 							if ($_SESSION['provision']['debug']['boolean'] == 'true') {
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";
