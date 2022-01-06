@@ -278,7 +278,7 @@
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -361,6 +361,35 @@
 							//process a chunk of the array
 								if ($row_id === 1000) {
 
+									//remove sub table data if it doesn't have more details than domain_uuid an device_uuid
+										$x = 0;
+										foreach ($array['devices'] as $row) {
+											//remove empty device keys
+											if (isset($row['device_keys'])) {
+												$y = 0;
+												foreach ($row['device_keys'] as &$sub_row) {
+													if (count($sub_row) == 2) {
+														unset($array['devices'][$x]['device_keys']);
+													}
+													$y++;
+												}
+											}
+
+											//remove empty device lines
+											if (isset($row['device_lines'])) {
+												$y = 0;
+												foreach ($row['device_lines'] as &$sub_row) {
+													if (count($sub_row) == 2) {
+														unset($array['devices'][$x]['device_lines']);
+													}
+													$y++;
+												}
+											}
+
+											//increment device id
+											$x++;
+										}
+
 									//save to the data
 										$database->save($array);
 										//$message = $database->message;
@@ -379,6 +408,35 @@
 					} //end while
 					fclose($handle);
 
+				//remove sub table data if it doesn't have more details than domain_uuid an device_uuid
+					$x = 0;
+					foreach ($array['devices'] as $row) {
+						//remove empty device keys
+						if (isset($row['device_keys'])) {
+							$y = 0;
+							foreach ($row['device_keys'] as &$sub_row) {
+								if (count($sub_row) == 2) {
+									unset($array['devices'][$x]['device_keys']);
+								}
+								$y++;
+							}
+						}
+
+						//remove empty device lines
+						if (isset($row['device_lines'])) {
+							$y = 0;
+							foreach ($row['device_lines'] as &$sub_row) {
+								if (count($sub_row) == 2) {
+									unset($array['devices'][$x]['device_lines']);
+								}
+								$y++;
+							}
+						}
+
+						//increment device id
+						$x++;
+					}
+
 				//debug info
 					//view_array($array);
 
@@ -386,6 +444,7 @@
 					if (is_array($array)) {
 						$database->save($array);
 						//$message = $database->message;
+						//view_array($message);
 					}
 				
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {
