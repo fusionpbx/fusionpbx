@@ -125,6 +125,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '2ecbcfa1-8884-45dd-8509-3c4826e7fde7';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'carriers';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'array';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'signalwire';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'true';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e997203c-ca48-45b4-828d-e347ff66fa7c';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'twilio_api_url';
