@@ -1,6 +1,12 @@
 <?php
 
 if ($domains_processed == 1) {
+	
+	//get all of the sofia global default settings
+		$sql = "select sofia_global_setting_uuid ";
+		$sql .= "from v_sofia_global_settings \n";
+		$database = new database;
+		$sofia_global_settings = $database->select($sql, null, 'all');
 
 	//build array
 		$x = 0;
@@ -28,19 +34,35 @@ if ($domains_processed == 1) {
 		$array['sofia_global_settings'][$x]['global_setting_enabled'] = 'false';
 		$array['sofia_global_settings'][$x]['global_setting_description'] = '';
 
-	//grant temporary permissions
-		$p = new permissions;
-		$p->add('sofia_global_setting_add', 'temp');
+	//removes settings from the array that are already in the database
+		$x = 0;
+		foreach($sofia_global_settings as $row) {
+			$x = 0;
+			foreach ($array['sofia_global_settings'] as $sub_row) {
+				if ($row['sofia_global_setting_uuid'] == $sub_row['sofia_global_setting_uuid']) {
+					unset($array['sofia_global_settings'][$x]);
+				}
+				$x++;
+			}
+		}
 
-	//execute insert
-		$database = new database;
-		$database->app_name = 'sofia_global_settings';
-		$database->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
-		$database->save($array, false);
-		unset($array);
+	//add settings that are not in the database
+		if (count($array['sofia_global_settings']) > 0) {
+			//grant temporary permissions
+				$p = new permissions;
+				$p->add('sofia_global_setting_add', 'temp');
 
-	//revoke temporary permissions
-		$p->delete('sofia_global_setting_add', 'temp');
+			//execute insert
+				$database = new database;
+				$database->app_name = 'sofia_global_settings';
+				$database->app_uuid = '240c25a3-a2cf-44ea-a300-0626eca5b945';
+				$database->save($array, false);
+				unset($array);
+
+			//revoke temporary permissions
+				$p->delete('sofia_global_setting_add', 'temp');
+		}
+
 }
 
 ?>
