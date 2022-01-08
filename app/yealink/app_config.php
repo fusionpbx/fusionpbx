@@ -63,7 +63,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-12 Hour, 1-24 Hour";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "166b27d118604154-88d3-5e15781e7bbb";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "166b27d1-1860-4154-88d3-5e15781e7bbb";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_date_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -79,7 +79,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT Rport. 0-Disabled (default), 1-Enabled.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "70894b7b-2edd-41ad8526060589df4e11";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "70894b7b-2edd-41ad-8526-060589df4e11";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_session_timer";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
@@ -87,7 +87,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SIP Session Timers";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa200d6f-c04842039838-8dd05fa31bd5";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aa200d6f-c048-4203-9838-8dd05fa31bd5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_retransmission";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
@@ -167,7 +167,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Default 0";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be02b916-3419-4bc7-881e46711134577c";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be02b916-3419-4bc7-881e-46711134577c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_blf_led_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
@@ -319,7 +319,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T33G firmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "758509689226450f-a3e1-414ec1d610ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75850968-9226-450f-a3e1-414ec1d610ee";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t38g";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -335,7 +335,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T40G firmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5d9b7ea-8e3b44289845438be7be0baa";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5d9b7ea-8e3b-4428-9845-438be7be0baa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t40p";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -351,7 +351,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T41P firmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9480f346-c038-462b-b440329383290b84";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9480f346-c038-462b-b440-329383290b84";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t41s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -479,7 +479,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T52Sfirmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7378c0b632424989-8af6-903dfb437285";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7378c0b6-3242-4989-8af6-903dfb437285";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -487,7 +487,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware tested 2017-11-26";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e9319412127245a";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e93-19412127245a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t56a";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
