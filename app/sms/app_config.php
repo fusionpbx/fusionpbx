@@ -267,6 +267,24 @@
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
 
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '023c12dc-17d0-46d3-9419-a8286e83e19e';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_access_key';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'On SignalWires LaML API, the AccountSid and Project ID are the same thing.';
+		$y++;
+
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '44d268b2-65ae-480f-9c9b-841c0cb445b0';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_secret_key';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = 'YourAuthToken';
+		$y++;
+
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '4a86c939-9d80-4da7-bbda-49d6bf1c3882';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'bandwidth_access_key';
