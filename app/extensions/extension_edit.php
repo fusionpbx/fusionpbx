@@ -90,7 +90,8 @@ function add_user_to_api($voicemail_mail_to){
 
     $path = $result[0]['default_setting_value'];
     $key = $result[1]['default_setting_value'];
-
+	
+	$n_path = str_replace("/api/v1/","",$path);
     
 	$curl = curl_init();
 
@@ -102,7 +103,7 @@ function add_user_to_api($voicemail_mail_to){
 	CURLOPT_TIMEOUT => 30,
 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"https://broker1.us.nemerald.net\"\r\n\r\n}",
+	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"$n_path\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
 		"secret-key: $key"
