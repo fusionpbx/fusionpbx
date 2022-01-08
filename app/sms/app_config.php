@@ -142,6 +142,16 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
 		$y++;
+
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = 'e0059b1b-4d9d-436b-b47a-0c9dc801fdda';
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'signalwire_api_url';
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = 'text';
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'https://example.signalwire.com/api/laml/2010-04-01/Accounts/{AccountSid}/Messages.json';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = 'false';
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = '';
+		$y++;
+
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = '957b31ab-bc8e-4bff-8366-59f17e658550';
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = 'sms';
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = 'plivo_api_url';
