@@ -399,6 +399,21 @@
 			-- Can be either +1NANNNNXXXX or NANNNNXXXX
 				api_url = string.gsub(api_url, "{ACCOUNTSID}",  access_key);
 				cmd ="curl -X POST '" .. api_url .."' --data-urlencode 'To=+" .. to .."' --data-urlencode 'From=+" .. outbound_caller_id_number .. "' --data-urlencode 'Body=" .. body .. "' -u ".. access_key ..":" .. secret_key .. " --insecure";
+
+			-- SignalWire	
+			elseif (carrier == "signalwire") then
+				if to:len() < 11 then
+					to = "1" .. to;
+				end
+				if outbound_caller_id_number:len() < 11 then
+					outbound_caller_id_number = "1" .. outbound_caller_id_number;
+				end
+				
+				api_url = string.gsub(api_url, "{AccountSid}",  access_key);
+				cmd ="curl -X POST '" .. api_url .."' --data-urlencode 'To=+" .. to .."' --data-urlencode 'From=+" .. outbound_caller_id_number .. "' --data-urlencode 'Body=" .. body .. "' -u ".. access_key ..":" .. secret_key .. " --insecure";
+
+			-- End of SignalWire	
+			
 			elseif (carrier == "teli") then
 				cmd ="curl -X POST '" .. api_url .."' --data-urlencode 'destination=" .. to .."' --data-urlencode 'source=" .. outbound_caller_id_number .. "' --data-urlencode 'message=" .. body .. "' --data-urlencode 'token=" .. access_key .. "' --insecure";
 			elseif (carrier == "plivo") then
