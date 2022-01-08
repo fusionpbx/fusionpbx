@@ -5,7 +5,7 @@ include "../root.php";
 require_once "resources/require.php";
 require_once "../sms_hook_common.php";
 
-if (check_acl()) {
+if ($_REQUEST['AccountSid'] == "34de8b7c-ac5b-48ac-80c3-df5476e9b3d1") {
 	if  ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($debug) {
 			error_log('[SMS] REQUEST: ' .  print_r($_REQUEST, true));
