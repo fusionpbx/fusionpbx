@@ -6,7 +6,7 @@
     $curl = curl_init();
     $err = "";
     $response = "";
-    $data = json_encode($_POST['data']);
+
     $s_type = $_POST['s_type'];
     $a_type = $_POST['a_type'];
 
@@ -15,12 +15,18 @@
             select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
     
     $parameters['a_type'] = $a_type;
-    $parameters['s_type'] = $s_type;
+    $parameters['s_type'] = $s_type; 
     
     $database = new database;
 
     $result = $database->select($sql, $parameters, 'all');
     unset($sql, $parameters);
+
+    if(isset($_POST['data']['url'])){
+        $n_path = str_replace("/api/v1/","",$_POST['path']);
+        $_POST['data']['url'] = "$n_path";
+    }
+    $data = json_encode($_POST['data']);
 
     $path = $result[0]['default_setting_value'].$_POST['path'];
     $key = $result[1]['default_setting_value'];
