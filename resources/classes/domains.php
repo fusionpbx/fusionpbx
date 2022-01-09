@@ -780,8 +780,8 @@ if (!class_exists('domains')) {
 					if (is_array($app['default_settings'])) {
 						foreach ($app['default_settings'] as $row) {
 							if (!isset($setting[$row['default_setting_uuid']])) {
-								$array[$x] = $row;
-								$array[$x]['app_uuid'] = $app['uuid'];
+								$array['default_settings'][$x] = $row;
+								$array['default_settings'][$x]['app_uuid'] = $app['uuid'];
 								$x++;
 							}
 						}
