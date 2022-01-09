@@ -266,10 +266,11 @@ else
 				"X-Headers: " .. xheaders
 
 			if file then
-				freeswitch.email(address, from, mail_headers, body, file)
+				ok = freeswitch.email(address, from, mail_headers, body, file)
 			else
-				freeswitch.email(address, from, mail_headers, body)
+				ok = freeswitch.email(address, from, mail_headers, body)
 			end
+			return ok
 		end
 	end
 
