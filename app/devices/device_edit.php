@@ -636,17 +636,14 @@
 //get the list from sql database
 	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
 	$sql .= "default_setting_value, cast(default_setting_enabled as text), default_setting_description ";
-	$sql .= "from v_default_settings WHERE ";
-				
-	$sql .= "lower(default_setting_category) = :default_setting_category ";
+	$sql .= "from v_default_settings ";	
+	$sql .= "where lower(default_setting_category) = :default_setting_category ";
 	$parameters['default_setting_category'] = strtolower("provision");
-
 	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
 	$default_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
-//
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
