@@ -43,11 +43,10 @@
 		json = require "resources.functions.lunajson"
 	end
 
---define the explode function
+--additional includes
 	require "resources.functions.explode";
-
---array count
 	require "resources.functions.count";
+	require "resources.functions.send_mail";
 
 --show all channel variables
 	--dat = env:serialize()
@@ -90,10 +89,6 @@
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
-
---prepare to get the settings
-	local Settings = require "resources.functions.lazy_settings"
-	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
 --set default values
 	default_language = 'en';
@@ -328,9 +323,21 @@
 
 --get the from address
 	if (from_address == nil) then
-		from_address = settings:get('fax', 'smtp_from', 'text');
+		if (settings['fax'] ~= nil) then
+			if (settings['fax']['smtp_from'] ~= nil) then
+				if (settings['fax']['smtp_from']['text'] ~= nil) then
+					smtp_from = settings['fax']['smtp_from']['text'];
+				end
+			end
+		end
 		if (from_address == nil) then
-			from_address = settings:get('email', 'smtp_from', 'text');
+			if (settings['email'] ~= nil) then
+				if (settings['email']['smtp_from'] ~= nil) then
+					if (settings['email']['smtp_from']['text'] ~= nil) then
+						smtp_from = settings['email']['smtp_from']['text'];
+					end
+				end
+			end
 		end
 	end
 
@@ -508,6 +515,7 @@
 	headers["X-FusionPBX-Domain-Name"] = domain_name;
 	headers["X-FusionPBX-Email-Type"]  = email_type;
 	headers["X-FusionPBX-Email-From"]  = from_address;
+	headers["X-FusionPBX-Call-UUID"] = uuid;
 
 --if the fax failed then try again
 	if (fax_success == "0") then
