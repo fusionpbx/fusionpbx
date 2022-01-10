@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2021
+--	Copyright (C) 2010 - 2022
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -49,11 +49,11 @@
 --array count
 	require "resources.functions.count";
 
--- show all channel variables
+--show all channel variables
 	--dat = env:serialize()
 	--freeswitch.consoleLog("INFO","[FAX] info:\n" .. dat .. "\n")
 
--- example channel variables relating to fax
+--example channel variables relating to fax
 	--variable_fax_success: 0
 	--variable_fax_result_code: 49
 	--variable_fax_result_text: The%20call%20dropped%20prematurely
@@ -66,7 +66,7 @@
 	--variable_fax_bad_rows: 0
 	--variable_fax_transfer_rate: 14400
 
--- set channel variables to lua variables
+--set channel variables to lua variables
 	uuid = env:getHeader("uuid");
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -90,6 +90,10 @@
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
+
+--prepare to get the settings
+	local Settings = require "resources.functions.lazy_settings"
+	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
 --set default values
 	default_language = 'en';
@@ -322,6 +326,14 @@
 	end
 	--do not use apostrophies in message, they are not escaped and the mail will fail.
 
+--get the from address
+	if (from_address == nil) then
+		from_address = settings:get('fax', 'smtp_from', 'text');
+		if (from_address == nil) then
+			from_address = settings:get('email', 'smtp_from', 'text');
+		end
+	end
+
 --get the templates
 	local sql = "SELECT * FROM v_email_templates ";
 	sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -467,7 +479,7 @@
 		end
 	end
 
--- send the selected variables to the console
+--send the selected variables to the console
 	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","[FAX] Success: '" .. fax_success .. "'\n");
 	end
@@ -487,7 +499,7 @@
 	freeswitch.consoleLog("INFO","[FAX] mailto_address: ".. email_address .."\n");
 	freeswitch.consoleLog("INFO","[FAX] hangup_cause_q850: '" .. hangup_cause_q850 .. "'\n");
 	
--- set the type
+--set the type
 	email_type = "email2fax";
 
 --prepare the headers
@@ -497,7 +509,7 @@
 	headers["X-FusionPBX-Email-Type"]  = email_type;
 	headers["X-FusionPBX-Email-From"]  = from_address;
 
--- if the fax failed then try again
+--if the fax failed then try again
 	if (fax_success == "0") then
 		--DEBUG
 		--email_cmd = "/bin/echo '"..email_subject_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
