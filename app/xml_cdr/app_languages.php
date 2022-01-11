@@ -2791,7 +2791,7 @@ $text['description-aloc']['pt-pt'] = "Duração média da conversa";
 $text['description-aloc']['ro-ro'] = "Durata medie a conversației";
 $text['description-aloc']['ru-ru'] = "Средняя продолжительность разговора";
 $text['description-aloc']['sv-se'] = "Genomsnittlig konversationslängd";
-$text['description-aloc']['uk-ua'] = "Середня тривалість розмови";=
+$text['description-aloc']['uk-ua'] = "Середня тривалість розмови";
 
 $text['button-archive']['en-us'] = "Archive";
 $text['button-archive']['en-gb'] = "Archive";
