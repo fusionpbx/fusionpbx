@@ -79,7 +79,7 @@
   <!-- Function Keys. View Key Types here: https://service.snom.com/display/wiki/Function+Key+Types -->
   <functionKeys e="2"> {assign var="maxKeys" value=77 - count($lines)}
     {foreach $lines as $row}
-      <fkey idx="{$row.line_number-1}" context="{$row.line_number}" label="{$row.display_name}" perm="RW">line</fkey>
+      <fkey idx="{$row.line_number-1}" context="{$row.line_number}" label="" perm="RW">line</fkey>
       {if $row@index eq 11}{break}{/if}
     {/foreach}
     {foreach $keys["line"] as $row}
