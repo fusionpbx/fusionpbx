@@ -1167,7 +1167,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 			data = {
 
 				extension: extension_to_send,
-				domain_uuid: domain_uuid
+				domain_uuid: '".$domain_uuid."'
 
 			}
 			
