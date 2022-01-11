@@ -23,8 +23,15 @@
     unset($sql, $parameters);
 
     if(isset($_POST['data']['url'])){
-        $n_path = str_replace("/api/v1/","",$_POST['path']);
-        $_POST['data']['url'] = "$n_path";
+        $a_type = "broker_url";
+        $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
+        $parameters['a_type'] = $a_type;  
+        $database = new database;
+        $result = $database->select($sql1, $parameters, 'all');
+        unset($sql1, $parameters);
+        $path1 = $result[0]['default_setting_value'];
+        $broker_url = str_replace("/api/v1/","",$path1);
+        $_POST['data']['url'] = "$broker_url";
     }
     $data = json_encode($_POST['data']);
 
