@@ -197,7 +197,7 @@
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
 	echo "		<th class='center'>".$text['label-busy']."</th>\n";
-	echo "		<th class='center'>".$text['label-aloc']."</th>\n";
+	echo "		<th class='center' title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "		<th class='center'>".$text['label-inbound_calls']."</th>\n";
 	echo "		<th class='center'>".$text['label-inbound_duration']."</th>\n";
 	echo "		<th class='center'>".$text['label-outbound_calls']."</th>\n";
