@@ -64,7 +64,14 @@ function addDestinationToApi($destination){
     $path = $result[0]['default_setting_value'];
     $key = $result[1]['default_setting_value'];
 
-	$n_path = str_replace("/api/v1/","",$path);
+	$a_type = "broker_url";
+    $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
+    $parameters['a_type'] = $a_type;  
+	$database = new database;
+    $result = $database->select($sql1, $parameters, 'all');
+    unset($sql1, $parameters);
+    $path1 = $result[0]['default_setting_value'];
+	$broker_url = str_replace("/api/v1/","",$path1);
 
 	$curl = curl_init();
 
@@ -76,7 +83,7 @@ function addDestinationToApi($destination){
 	CURLOPT_TIMEOUT => 30,
 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => " {\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"destination\": \"$destination\",\r\n\r\n\"url\": \"\"$n_path\"\r\n\r\n}",
+	CURLOPT_POSTFIELDS => " {\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"destination\": \"$destination\",\r\n\r\n\"url\": \"\"$broker_url\"\r\n\r\n}",
 	CURLOPT_HTTPHEADER => array(
 		"content-type: application/json",
 		"secret-key: $key"
