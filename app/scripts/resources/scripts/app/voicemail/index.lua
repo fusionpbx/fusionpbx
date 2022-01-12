@@ -383,16 +383,8 @@
 		if (session ~= nil and session:ready()) then
 			--check the voicemail password
 				if (voicemail_id) then
-					if (voicemail_authorized) then
-						if (voicemail_authorized == "true") then
-							if (voicemail_id == user_name or voicemail_id == sip_number_alias) then
-								--skip the password check
-							else
-								check_password(voicemail_id, password_tries);
-							end
-						else
-							check_password(voicemail_id, password_tries);
-						end
+					if (voicemail_authorized == "true") then
+						--skip the password check
 					else
 						check_password(voicemail_id, password_tries);
 					end
