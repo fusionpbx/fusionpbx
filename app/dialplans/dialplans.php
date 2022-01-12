@@ -285,13 +285,13 @@
 	if ($order) {
 		echo 	"<input type='hidden' name='order' value='".escape($order)."'>";
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	$params[] = "app_uuid=".urlencode($app_uuid);
 	if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
 	if ($order) { $params[] = "order=".urlencode($order); }
 	if ($_GET['show'] && permission_exists('dialplan_all')) { $params[] = "show=".urlencode($_GET['show']); }
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php'.($params ? '?'.implode('&', $params) : null),'style'=>($search == '' ? 'display: none;' : null)]);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php'.($params ? '?'.implode('&', $params) : null),'style'=>($search == '' ? 'display: none;' : null)]);
 	unset($params);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
