@@ -241,7 +241,7 @@
 			($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_add')) ||
 			permission_exists('dialplan_add')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (
 			($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
@@ -250,7 +250,7 @@
 			($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit')) ||
 			permission_exists('dialplan_edit')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 		}
 		if (
 			($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_delete')) ||
@@ -259,7 +259,7 @@
 			($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_delete')) ||
 			permission_exists('dialplan_delete')
 			) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
@@ -357,7 +357,7 @@
 		permission_exists('dialplan_add') || permission_exists('dialplan_edit') || permission_exists('dialplan_delete')
 		) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($dialplans ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($dialplans ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
@@ -414,7 +414,7 @@
 				($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && (permission_exists('time_condition_add') || permission_exists('time_condition_edit') || permission_exists('time_condition_delete')))
 				) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='dialplans[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='dialplans[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='dialplans[$x][uuid]' value='".escape($row['dialplan_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
