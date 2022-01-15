@@ -234,7 +234,7 @@
 
 		//check for all required data
 			$msg = '';
-			if (strlen($contact_type) == 0) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
+			//if (strlen($contact_type) == 0) { $msg .= $text['message-required']." ".$text['label-contact_type']."<br>\n"; }
 			//if (strlen($contact_title) == 0) { $msg .= $text['message-required']." ".$text['label-contact_title']."<br>\n"; }
 			//if (strlen($contact_role) == 0) { $msg .= $text['message-required']." ".$text['label-contact_role']."<br>\n"; }
 			//if (strlen($contact_category) == 0) { $msg .= $text['message-required']." ".$text['label-contact_category']."<br>\n"; }
