@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
 --	the Initial Developer. All Rights Reserved.
 
 -- load config
@@ -34,8 +34,12 @@
 	domain_name = session:getVariable("domain_name");
 	domain_uuid = session:getVariable("domain_uuid");
 	context = session:getVariable("context");
+	permissions = session:getVariable("permissions")
 	user = session:getVariable("sip_auth_username")
 		or session:getVariable("username");
+
+--set the default
+	if (not permissions) then permissions = 'false'; end
 
 --get the argv values
 	destination = argv[2];
@@ -64,38 +68,50 @@
 			local dbh = Database.new('system');
 
 		-- search for the phone number in database using the speed dial
-			local sql = [[
-				-- find all contacts with correct user or withot users and groups at all
-				select t0.phone_number --, t6.extension, 'GROUP:' || t3.group_name as user_name
-				from v_contact_phones t0
-				inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
-				left outer join v_contact_groups t2 on t1.contact_uuid = t2.contact_uuid
-				left outer join v_user_groups t3 on t2.group_uuid = t3.group_uuid
-				left outer join v_users t4 on t3.user_uuid = t4.user_uuid
-				left outer join v_extension_users t5 on t4.user_uuid = t5.user_uuid
-				left outer join v_extensions t6 on t5.extension_uuid = t6.extension_uuid
-				where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
-					and ( (1 = 0)
-						or (t6.domain_uuid = :domain_uuid and (t6.extension = :user or t6.number_alias = :user))
-						or (t2.contact_uuid is null and not exists(select 1 from v_contact_users t where t.contact_uuid = t0.contact_uuid) )
-					)
+			if (permissions == 'true') then
+				--advanced, check on user and group permissions
+				sql = [[
+					-- find all contacts with correct user or withot users and groups at all
+					select t0.phone_number --, t6.extension, 'GROUP:' || t3.group_name as user_name
+					from v_contact_phones t0
+					inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
+					left outer join v_contact_groups t2 on t1.contact_uuid = t2.contact_uuid
+					left outer join v_user_groups t3 on t2.group_uuid = t3.group_uuid
+					left outer join v_users t4 on t3.user_uuid = t4.user_uuid
+					left outer join v_extension_users t5 on t4.user_uuid = t5.user_uuid
+					left outer join v_extensions t6 on t5.extension_uuid = t6.extension_uuid
+					where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
+						and ( (1 = 0)
+							or (t6.domain_uuid = :domain_uuid and (t6.extension = :user or t6.number_alias = :user))
+							or (t2.contact_uuid is null and not exists(select 1 from v_contact_users t where t.contact_uuid = t0.contact_uuid))
+						)
 
-				union
+					union
 
-				-- find all contacts with correct group or withot users and groups at all
-				select t0.phone_number -- , t5.extension, 'USER:' || t3.username as user_name
-				from v_contact_phones t0
-				inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
-				left outer join v_contact_users t2 on t1.contact_uuid = t2.contact_uuid
-				left outer join v_users t3 on t2.user_uuid = t3.user_uuid
-				left outer join v_extension_users t4 on t3.user_uuid = t4.user_uuid
-				left outer join v_extensions t5 on t4.extension_uuid = t5.extension_uuid
-				where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
-					and ( (1 = 0)
-						or (t5.domain_uuid = :domain_uuid and (t5.extension = :user or t5.number_alias = :user))
-						or (t2.contact_user_uuid is null and not exists(select 1 from v_contact_groups t where t.contact_uuid = t0.contact_uuid))
-					)
-			]];
+					-- find all contacts with correct group or withot users and groups at all
+					select t0.phone_number -- , t5.extension, 'USER:' || t3.username as user_name
+					from v_contact_phones t0
+					inner join v_contacts t1 on t0.contact_uuid = t1.contact_uuid
+					left outer join v_contact_users t2 on t1.contact_uuid = t2.contact_uuid
+					left outer join v_users t3 on t2.user_uuid = t3.user_uuid
+					left outer join v_extension_users t4 on t3.user_uuid = t4.user_uuid
+					left outer join v_extensions t5 on t4.extension_uuid = t5.extension_uuid
+					where t0.domain_uuid = :domain_uuid and t0.phone_speed_dial = :phone_speed_dial
+						and ( (1 = 0)
+							or (t5.domain_uuid = :domain_uuid and (t5.extension = :user or t5.number_alias = :user))
+							or (t2.contact_user_uuid is null and not exists(select 1 from v_contact_groups t where t.contact_uuid = t0.contact_uuid))
+						)
+				]];
+				log.noticef("[speed dial] advanced");
+			else
+				-- simple, skip looking up user or group permissions
+				sql = [[select phone_number
+					from v_contact_phones
+					where domain_uuid = :domain_uuid 
+					and phone_speed_dial = :phone_speed_dial
+					]];
+				log.noticef("[speed dial] simple");
+			end
 			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid, user = user};
 
 			if (debug["sql"]) then
