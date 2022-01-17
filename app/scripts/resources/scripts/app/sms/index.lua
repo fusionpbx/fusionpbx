@@ -414,8 +414,18 @@
 
 			-- End of SignalWire	
 			
+			-- Teli
 			elseif (carrier == "teli") then
+				if to:len() < 11 then
+					to = "1" .. to;
+				end
+				if outbound_caller_id_number:len() < 11 then
+					outbound_caller_id_number = "1" .. outbound_caller_id_number;
+				end
 				cmd ="curl -X POST '" .. api_url .."' --data-urlencode 'destination=" .. to .."' --data-urlencode 'source=" .. outbound_caller_id_number .. "' --data-urlencode 'message=" .. body .. "' --data-urlencode 'token=" .. access_key .. "' --insecure";
+
+			-- End of Teli
+			
 			elseif (carrier == "plivo") then
 				if to:len() <11 then
 					to = "1"..to;
