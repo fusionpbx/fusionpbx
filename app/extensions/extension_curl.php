@@ -22,6 +22,10 @@
     $result = $database->select($sql, $parameters, 'all');
     unset($sql, $parameters);
 
+    
+    $path = $result[0]['default_setting_value'].$_POST['path'];
+    $key = $result[1]['default_setting_value'];
+
     if(isset($_POST['data']['url'])){
         $a_type = "broker_url";
         $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
@@ -35,8 +39,6 @@
     }
     $data = json_encode($_POST['data']);
 
-    $path = $result[0]['default_setting_value'].$_POST['path'];
-    $key = $result[1]['default_setting_value'];
     if(!isset($_POST['action'])){
         
         curl_setopt_array($curl, array(
