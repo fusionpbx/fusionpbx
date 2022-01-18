@@ -313,11 +313,13 @@ if (!class_exists('xml_cdr')) {
 					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
 						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
 						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
-						if (urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name) && isset($xml->variables->sip_from_display)) {
-							$caller_id_name = urldecode($xml->variables->sip_from_display);
-						}
-						if (urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name) && isset($xml->variables->sip_from_user)) {
-							$caller_id_number = urldecode($xml->variables->sip_from_user);
+						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) { 
+							if (isset($xml->variables->sip_from_display)) {
+								$caller_id_name = urldecode($xml->variables->sip_from_display);
+							}
+							if (isset($xml->variables->sip_from_user)) {
+								$caller_id_number = urldecode($xml->variables->sip_from_user);
+							}
 						}
 
 					//get the values from the callflow.
