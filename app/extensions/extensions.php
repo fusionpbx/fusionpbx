@@ -173,6 +173,9 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extensions']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
+
+	echo "<input class='btn btn-default' value='".$text['button-additional_fields']."' type='button' onclick='(function(){document.getElementById(\"choiceDiv\").style.display = \"inline-block\";return false;})();return false;'></input>";
+
 	if (permission_exists('extension_import') && (!is_numeric($_SESSION['limit']['extensions']['numeric']) || $total_extensions < $_SESSION['limit']['extensions']['numeric'])) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'extension_imports.php']);
 	}
@@ -215,6 +218,27 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
+
+	//
+	echo "<div id='choiceDiv' style='border: 1px solid #000000; padding: 5px; display: none; margin-right: 85%; margin-top: 25px;'>";	
+	echo "<select id='choice' multiple style='width: 300px;' ><option value=''>--".$text['label-select']."--</option>"; //multiple
+	echo "<option value='number_alias'>number_alias</option>";
+	echo "<option value='directory_visible'>directory_visible</option>";
+	echo "<option value='directory_exten_visible'>directory_exten_visible</option>";
+	echo "<option value='user_record'>user_record</option>";
+	echo "<option value='do_not_disturb'>do_not_disturb</option>";
+	echo "<option value='forward_all_enabled'>forward_all_enabled</option>";
+	echo "<option value='forward_busy_enabled'>forward_busy_enabled</option>";
+	echo "<option value='forward_no_answer_enabled'>forward_no_answer_enabled</option>";
+	echo "<option value='forward_user_not_registered_enabled'>forward_user_not_registered_enabled</option>";
+	echo "<option value='follow_me_enabled'>follow_me_enabled</option>";
+	echo "</select>&nbsp;";
+	echo "<br />";
+	echo "<span style='float: left;'>".$text['label-ctrl']."</span>";
+	echo "<input class='btn btn-default' value='".$text['label-select']."' type='button' onclick='getValue();'></input>";	
+	echo "</div>";	
+	//
+
 	echo "</div>\n";
 
 	if (permission_exists('extension_enabled') && $extensions) {
@@ -256,6 +280,26 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+
+	//
+	if(isset($_GET['col1'])){
+		echo th_order_by($_GET['col1'], $_GET['col1'], $order_by, $order);
+		//echo "<th>" + $_GET['col1'] + "</th>\n";
+	}
+	if(isset($_GET['col2'])){
+		echo th_order_by($_GET['col2'], $_GET['col2'], $order_by, $order);
+	}
+	if(isset($_GET['col3'])){
+		echo th_order_by($_GET['col3'], $_GET['col3'], $order_by, $order);
+	}
+	if(isset($_GET['col4'])){
+		echo th_order_by($_GET['col4'], $_GET['col4'], $order_by, $order);
+	}
+	if(isset($_GET['col5'])){
+		echo th_order_by($_GET['col5'], $_GET['col5'], $order_by, $order);
+	}
+	//
+
 	echo th_order_by('effective_caller_id_name', $text['label-effective_cid_name'], $order_by, $order, null, "class='hide-xs'");
 	if (permission_exists("outbound_caller_id_name")) {
 		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'");
@@ -299,6 +343,24 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 			}
 			echo "	</td>\n";
 
+			//
+			if(isset($_GET['col1'])){
+				echo "<td>".$row[$_GET['col1']]."</td>\n";
+			}
+			if(isset($_GET['col2'])){
+				echo "<td>".$row[$_GET['col2']]."</td>\n";
+			}
+			if(isset($_GET['col3'])){
+				echo "<td>".$row[$_GET['col3']]."</td>\n";
+			}
+			if(isset($_GET['col4'])){
+				echo "<td>".$row[$_GET['col4']]."</td>\n";
+			}
+			if(isset($_GET['col5'])){
+				echo "<td>".$row[$_GET['col5']]."</td>\n";
+			}
+			//
+			
 			echo "	<td class='hide-xs'>".escape($row['effective_caller_id_name'])."&nbsp;</td>\n";
 			if (permission_exists("outbound_caller_id_name")) {
 				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
@@ -360,6 +422,24 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 	echo "</form>\n";
 
 	unset($extensions);
+
+	//javascript
+	echo "<script type='text/javascript'>";
+	echo "function getValue(){";
+	echo "var val = document.getElementById('choice'), trend, i;";
+	echo "var arr = window.location.href.split('?');";
+	echo "var win = arr[0] + '?';";
+	echo "var count = 1;";
+	echo "for(i = 0; i < val.length; i++) {";
+	echo "trend = val[i];";
+	echo "if (trend.selected) {";
+	echo "win += 'col' + count + '=' + trend.value + '&';";
+	echo "count++;";
+	echo "}";
+	echo "}";
+	echo "window.location = win;";
+	echo "}";
+	echo "</script>";
 
 //show the footer
 	require_once "resources/footer.php";
