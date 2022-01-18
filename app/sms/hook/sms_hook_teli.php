@@ -4,8 +4,8 @@ include "../root.php";
 
 require_once "resources/require.php";
 require_once "../sms_hook_common.php";
-error_log('[SMS] REQUEST: ' .  print_r($_REQUEST, true));
-if(check_acl()) {
+
+if($_REQUEST['type'] == "sms" && $_REQUEST['unique_id']) {
 		if ($debug) {
 			error_log('[SMS] REQUEST: ' .  print_r($_REQUEST, true));
 		}
