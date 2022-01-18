@@ -2523,6 +2523,27 @@ $text['label-device_vendor']['ru-ru'] = "Производитель";
 $text['label-device_vendor']['sv-se'] = "Tillverkare";
 $text['label-device_vendor']['uk-ua'] = "";
 
+$text['label-device_location']['en-us'] = "Location";
+$text['label-device_location']['en-gb'] = "Location";
+$text['label-device_location']['ar-eg'] = "Location";
+$text['label-device_location']['de-at'] = "Ort"; //copied from de-de
+$text['label-device_location']['de-ch'] = "Ort"; //copied from de-de
+$text['label-device_location']['de-de'] = "Ort";
+$text['label-device_location']['es-cl'] = "Ubicación";
+$text['label-device_location']['es-mx'] = "Ubicación"; //copied from es-cl
+$text['label-device_location']['fr-ca'] = "Situation géographique";
+$text['label-device_location']['fr-fr'] = "Emplacement";
+$text['label-device_location']['he-il'] = "מקום";
+$text['label-device_location']['it-it'] = "Ubicazione";
+$text['label-device_location']['nl-nl'] = "Location";
+$text['label-device_location']['pl-pl'] = "Location";
+$text['label-device_location']['pt-br'] = "Localização"; //copied from pt-pt
+$text['label-device_location']['pt-pt'] = "Localização";
+$text['label-device_location']['ro-ro'] = "Location";
+$text['label-device_location']['ru-ru'] = "Местоположение";
+$text['label-device_location']['sv-se'] = "Location";
+$text['label-device_location']['uk-ua'] = "Location";
+
 $text['label-device_key_vendor']['en-us'] = "Vendor";
 $text['label-device_key_vendor']['en-gb'] = "Vendor";
 $text['label-device_key_vendor']['ar-eg'] = "";
