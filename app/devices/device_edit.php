@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -115,6 +115,7 @@
 			$device_username = $_POST["device_username"];
 			$device_password = $_POST["device_password"];
 			$device_vendor = $_POST["device_vendor"];
+			$device_location = $_POST["device_location"];
 			$device_uuid_alternate = $_POST["device_uuid_alternate"];
 			$device_model = $_POST["device_model"];
 			$device_firmware_version = $_POST["device_firmware_version"];
@@ -256,6 +257,9 @@
 					}
 					if (permission_exists('device_vendor')) {
 						$array['devices'][0]['device_vendor'] = $device_vendor;
+					}
+					if (permission_exists('device_location')) {
+						$array['devices'][0]['device_location'] = $device_location;
 					}
 					if (permission_exists('device_alternate') && is_uuid($device_uuid_alternate)) {
 						$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
@@ -502,6 +506,7 @@
 			$device_username = $row["device_username"];
 			$device_password = $row["device_password"];
 			$device_vendor = $row["device_vendor"];
+			$device_location = $row["device_location"];
 			$device_uuid_alternate = $row["device_uuid_alternate"];
 			$device_model = $row["device_model"];
 			$device_firmware_version = $row["device_firmware_version"];
@@ -1750,6 +1755,19 @@
 		echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"".escape($device_vendor)."\"/>\n";
 		echo "<br />\n";
 		echo $text['description-device_vendor']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('device_location')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_location']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_location' maxlength='255' value=\"".escape($device_location)."\"/>\n";
+		echo "<br />\n";
+		echo $text['description-device_location']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
