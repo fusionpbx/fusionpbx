@@ -103,6 +103,9 @@
 		message::add($message, 'negative', 5000);
 	}
 
+//define registration object
+	$registration = new registrations;
+
 //include the header
 	$document['title'] = $text['title-sip_status'];
 	require_once "resources/header.php";
@@ -248,7 +251,7 @@
 			echo "	<div class='heading'><b><a href='javascript:void(0);' onclick=\"$('#".escape($sip_profile_name)."').slideToggle();\">".$text['title-sofia-status-profile']." ".urlencode($sip_profile_name)."</a></b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo button::create(['type'=>'button','label'=>$text['button-flush_registrations'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=flush_inbound_reg']);
-			echo button::create(['type'=>'button','label'=>$text['button-registrations'],'icon'=>'phone-alt','collapse'=>'hide-xs','link'=>PROJECT_PATH.'/app/registrations/registrations.php?profile='.urlencode($sip_profile_name)]);
+			echo button::create(['type'=>'button','label'=>$text['button-registrations'].' ('.$registration->count($sip_profile_name).')','icon'=>'phone-alt','collapse'=>'hide-xs','link'=>PROJECT_PATH.'/app/registrations/registrations.php?profile='.urlencode($sip_profile_name)]);
 			if ($profile_state == 'stopped') {
 				echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=start']);
 			}
