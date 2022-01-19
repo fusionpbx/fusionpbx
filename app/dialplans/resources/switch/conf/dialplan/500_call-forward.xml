@@ -5,7 +5,7 @@
 			<action application="set" data="enabled=true"/>
 			<action application="lua" data="call_forward.lua $1"/>
 		</condition>
-		<condition field="destination_number" expression="^\*72" break="on-true">
+		<condition field="destination_number" expression="^\*72$" break="on-true">
 			<action application="set" data="request_id=false"/>
 			<action application="set" data="enabled=true"/>
 			<action application="lua" data="call_forward.lua"/>
