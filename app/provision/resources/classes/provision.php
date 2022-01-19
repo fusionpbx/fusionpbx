@@ -356,15 +356,16 @@ include "root.php";
 								//set the variables from values in the database
 									$device_uuid = $row["device_uuid"];
 									$device_label = $row["device_label"];
-									if (strlen($row["device_vendor"]) > 0) {
-										$device_vendor = strtolower($row["device_vendor"]);
-									}
+									$device_template = $row["device_template"];
+									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_user_uuid = $row["device_user_uuid"];
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
+									if (strlen($row["device_vendor"]) > 0) {
+										$device_vendor = strtolower($row["device_vendor"]);
+									}
+									$device_location = $row["device_location"];
 									$device_enabled = $row["device_enabled"];
-									$device_template = $row["device_template"];
-									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
 							}
 							unset($row);
@@ -380,12 +381,13 @@ include "root.php";
 								$row = $database->select($sql, $parameters, 'row');
 								if (is_array($row) && sizeof($row) != 0) {
 									$device_label = $row["device_label"];
-									$device_vendor = strtolower($row["device_vendor"]);
-									$device_model = $row["device_model"];
-									$device_firmware_version = $row["device_firmware_version"];
-									$device_enabled = $row["device_enabled"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
+									$device_model = $row["device_model"];
+									$device_firmware_version = $row["device_firmware_version"];
+									$device_vendor = strtolower($row["device_vendor"]);
+									$device_location = strtolower($row["device_location"]);
+									$device_enabled = $row["device_enabled"];
 									$device_description = $row["device_description"];
 								}
 								unset($row, $parameters);
@@ -590,11 +592,13 @@ include "root.php";
 								if (is_array($row) && sizeof($row) != 0) {
 									if ($row["device_enabled"] == "true") {
 										$device_label = $row["device_label"];
+										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
+										$device_location = strtolower($row["device_location"]);
+										$device_vendor = strtolower($row["device_vendor"]);
 										$device_enabled = $row["device_enabled"];
 										//keep the original template
-										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_description = $row["device_description"];
 									}
 								}
@@ -1125,6 +1129,8 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+					$view->assign("location",$device_location);
+					$view->assign("device_location",$device_location);
 					$view->assign("microtime",microtime(true));
 
 				//personal ldap password
