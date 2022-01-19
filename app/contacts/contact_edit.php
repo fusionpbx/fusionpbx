@@ -1502,6 +1502,21 @@ if (permission_exists('contact_user_view') || permission_exists('contact_group_v
 }
 
 if (permission_exists('contact_phone_view')) {
+
+	echo "<script type=\"text/javascript\">\n";
+	echo "function send_cmd(url) {\n";
+	echo "	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari\n";
+	echo "		xmlhttp=new XMLHttpRequest();\n";
+	echo "	}\n";
+	echo "	else {// code for IE6, IE5\n";
+	echo "		xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\n";
+	echo "	}\n";
+	echo "	xmlhttp.open(\"GET\",url,true);\n";
+	echo "	xmlhttp.send(null);\n";
+	echo "	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	echo "}\n";
+	echo "</script>\n";
+
 	$x = 0;
 	foreach($contact_phones as $row) {
 		echo "	<div class='form_set'>\n";
@@ -1516,6 +1531,28 @@ if (permission_exists('contact_phone_view')) {
 			echo "				<input type='hidden' name='contact_phones[$x][uuid]' value='".escape($row['contact_phone_uuid'])."' />\n";
 			echo "			</div>\n";
 		}
+		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
+		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'])."'>\n";
+		echo "					<i class='fas fa-search fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
+		echo "				</a>\n";
+
+		$call = "send_cmd('";
+		$call .= PROJECT_PATH."/app/click_to_call/click_to_call.php";
+		$call .= "?src_cid_name=".urlencode($row['phone_number']);
+		$call .= "&src_cid_number=".urlencode($row['phone_number']);
+		$call .= "&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name']);
+		$call .= "&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number']);
+		$call .= "&src=".urlencode($_SESSION['user']['extension'][0]['user']);
+		$call .= "&dest=".urlencode($row['phone_number']);
+		$call .= "&rec=false";
+		$call .= "&ringback=us-ring";
+		$call .= "&auto_answer=true";
+		$call .= "');";
+		echo "				<a href='' onclick=\"".$call."\">\n";
+		echo "					<i class='fas fa-phone fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'])."\"></i>\n";
+		echo "				</a>\n";
+
+		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<br>\n";
 		echo "		<div style='clear: both; margin-bottom: 25px;'></div>\n";
@@ -1938,6 +1975,11 @@ if (permission_exists('contact_email_view')) {
 			echo "				<input type='hidden' name='contact_emails[$x][uuid]' value='".escape($row['contact_email_uuid'])."' />\n";
 			echo "			</div>\n";
 		}
+		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
+		echo "				<a href='mailto:".escape($row['email_address'])."'>\n";
+		echo "					<i class='fas fa-envelope fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;' title=\"".escape($row["email_label"])."\"></i>\n";
+		echo "				</a>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'></div>\n";
 
@@ -2025,6 +2067,11 @@ if (permission_exists('contact_url_view')) {
 			echo "				<input type='hidden' name='contact_urls[$x][uuid]' value='".escape($row['contact_url_uuid'])."' />\n";
 			echo "			</div>\n";
 		}
+		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
+		echo "				<a href='".escape($row['url_address'])."' target='_blank'>\n";
+		echo "					<span class='fas fa-link fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;' title=\"".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."\"></span>\n";
+		echo "				</a>\n";
+		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'></div>\n";
 		echo "			<input type='hidden' name='contact_urls[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
