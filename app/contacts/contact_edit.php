@@ -1533,7 +1533,7 @@ if (permission_exists('contact_phone_view')) {
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
 		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'])."'>\n";
-		echo "					<i class='fas fa-search fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
+		echo "					<i class='fas fa-search fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
 		echo "				</a>\n";
 
 		$call = "send_cmd('";
@@ -1549,7 +1549,7 @@ if (permission_exists('contact_phone_view')) {
 		$call .= "&auto_answer=true";
 		$call .= "');";
 		echo "				<a href='' onclick=\"".$call."\">\n";
-		echo "					<i class='fas fa-phone fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'])."\"></i>\n";
+		echo "					<i class='fas fa-phone fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 7px;' title=\"".urlencode($row['phone_number'])."\"></i>\n";
 		echo "				</a>\n";
 
 		echo "			</div>\n";
@@ -1977,7 +1977,7 @@ if (permission_exists('contact_email_view')) {
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
 		echo "				<a href='mailto:".escape($row['email_address'])."'>\n";
-		echo "					<i class='fas fa-envelope fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;' title=\"".escape($row["email_label"])."\"></i>\n";
+		echo "					<i class='fas fa-envelope fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 5px; margin-left: 3px;' title=\"".escape($row["email_label"])."\"></i>\n";
 		echo "				</a>\n";
 		echo "			</div>\n";
 		echo "		</div>\n";
@@ -2069,7 +2069,7 @@ if (permission_exists('contact_url_view')) {
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
 		echo "				<a href='".escape($row['url_address'])."' target='_blank'>\n";
-		echo "					<span class='fas fa-link fa-xs' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;' title=\"".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."\"></span>\n";
+		echo "					<span class='fas fa-link fa-fw' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;' title=\"".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."\"></span>\n";
 		echo "				</a>\n";
 		echo "			</div>\n";
 		echo "		</div>\n";
