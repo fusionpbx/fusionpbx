@@ -82,17 +82,23 @@
 
 //get the count
 	$sql = "select count(call_recording_uuid) from v_call_recordings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where true ";
+	if ($_GET['show'] != "all" || !permission_exists('call_recording_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (isset($sql_search)) {
 		$sql .= $sql_search;
 	}
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
+	$param = "&search=".urlencode($search);
+	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
+		$param .= "&show=all";
+	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -157,6 +163,9 @@
 		echo "	</th>\n";
 		$col_count++;
 	}
+	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+	}
 	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-40'");
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
@@ -187,6 +196,15 @@
 				echo "		<input type='checkbox' name='call_recordings[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='call_recordings[$x][uuid]' value='".escape($row['call_recording_uuid'])."' />\n";
 				echo "	</td>\n";
+			}
+			if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
+				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td class='overflow'>".escape($row['call_recording_name'])."</td>\n";
 			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
