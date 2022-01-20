@@ -229,13 +229,13 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if ($_GET['show'] == "all" && permission_exists('voicemail_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
-	}
 	if (permission_exists('voicemail_edit') || permission_exists('voicemail_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($voicemails ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
+	}
+	if ($_GET['show'] == "all" && permission_exists('voicemail_all')) {
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 	}
 	echo th_order_by('voicemail_id', $text['label-voicemail_id'], $order_by, $order);
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order, null, "class='hide-sm-dn'");
