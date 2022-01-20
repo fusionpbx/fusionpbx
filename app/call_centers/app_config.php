@@ -66,6 +66,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_center_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_agent_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "597c483a-51a9-f95a-8d54-ea7d87ada2b8";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";

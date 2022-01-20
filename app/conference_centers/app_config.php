@@ -64,6 +64,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "conference_center_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_room_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "95f88726-4706-43f0-b52b-9504a0b8046f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
