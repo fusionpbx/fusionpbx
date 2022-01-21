@@ -227,9 +227,4 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
-//include the footer
-	if (!$is_included) {
-		require_once "resources/footer.php";
-	}
-
 ?>
