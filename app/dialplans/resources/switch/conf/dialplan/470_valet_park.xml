@@ -18,7 +18,7 @@
 			<action application="transfer" data="${referred_by_user} XML ${context}"/>
 			<anti-action application="set" data="effective_caller_id_name=${cond ${regex ${direction} | inbound} == true ? 'park#${caller_id_name}' : 'park#${callee_id_name}'}" inline="true"/>
 			<anti-action application="set" data="valet_parking_timeout=180"/>
-			<anti-action application="set" data="valet_hold_music=${hold_music}"/>
+			<anti-action application="set" data="valet_hold_music=${user_data ${referred_by_user}@${domain_name} var hold_music}"/>
 			<anti-action application="set" data="valet_parking_orbit_exten=${referred_by_user}"/>
 			<anti-action application="answer" data=""/>
 			<anti-action application="valet_park" data="park@${domain_name} *${park_lot}"/>
