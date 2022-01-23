@@ -122,7 +122,7 @@
     <P134></P134>
     <!-- Conference URI -->
     <!-- String -->
-    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2350></P2350>
@@ -559,7 +559,7 @@
     <P444></P444>
     <!-- Conference URI -->
     <!-- String -->
-    <P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2450></P2450>
@@ -991,7 +991,7 @@
     <P544></P544>
     <!-- Conference URI -->
     <!-- String -->
-    <P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+    <P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2550></P2550>
@@ -1421,7 +1421,7 @@
     <P644></P644>
     <!-- Conference URI -->
     <!-- String -->
-    <P2618>{if $nway_conference == true}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
+    <P2618>{if $nway_conference == 'true'}nway{$account.4.user_id}@{$account.4.server_address}{/if}</P2618>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2650></P2650>
@@ -1845,7 +1845,7 @@
     <P1744></P1744>
     <!-- Conference URI -->
     <!-- String -->
-    <P2718>{if $nway_conference == true}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
+    <P2718>{if $nway_conference == 'true'}nway{$account.5.user_id}@{$account.5.server_address}{/if}</P2718>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2750></P2750>
@@ -2276,7 +2276,7 @@
     <P1844></P1844>
     <!-- Conference URI -->
     <!-- String -->
-    <P2818>{if $nway_conference == true}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
+    <P2818>{if $nway_conference == 'true'}nway{$account.6.user_id}@{$account.6.server_address}{/if}</P2818>
     <!-- Music On Hold URI -->
     <!-- String -->
     <P2850></P2850>

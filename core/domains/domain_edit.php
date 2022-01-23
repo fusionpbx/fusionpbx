@@ -153,6 +153,21 @@
 								$dialplans->is_empty = "dialplan_xml";
 								$array = $dialplans->xml();
 							}
+
+						//create the recordings directory for the new domain.
+							if (isset($_SESSION['switch']['recordings']['dir']) && strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+								if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
+									mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770);
+								}
+							}
+
+						//create the voicemail directory for the new domain.
+							if (isset($_SESSION['switch']['voicemail']['dir']) && strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+								if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name)) {
+									mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$domain_name, 0770);
+								}
+							}
+
 					}
 					else {
 						message::add($text['message-domain_exists'],'negative');

@@ -102,6 +102,7 @@
 			$fax_uuid = $_POST["fax_uuid"];
 			$provider_uuid = $_POST["provider_uuid"];
 			$user_uuid = $_POST["user_uuid"];
+			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
 			$destination_enabled = $_POST["destination_enabled"];
 			$destination_description = $_POST["destination_description"];
@@ -189,6 +190,11 @@
 				return;
 			}
 
+		//get the uuid
+			if ($action == "update" && is_uuid($_POST["destination_uuid"])) {
+				$destination_uuid = $_POST["destination_uuid"];
+			}
+
 		//get the destination row values
 			if ($action == 'update' && is_uuid($destination_uuid)) {
 				$sql = "select * from v_destinations ";
@@ -199,9 +205,16 @@
 				unset($sql, $parameters);
 			}
 
-		//get the dialplan_uuid from the database
+		//get the destination settings from the database
 			if (is_array($row) && @sizeof($row) != 0) {
+				//get the dialplan_uuid from the database
 				$dialplan_uuid = $row["dialplan_uuid"];
+
+				//if the destination_number is not set then get it from the database
+				if (!isset($destination_number)) {
+					$destination_prefix = $row["destination_prefix"];
+					$destination_number = $row["destination_number"];
+				}
 			}
 
 		//if the user doesn't have the correct permission then 
@@ -362,7 +375,7 @@
 							}
 
 						//build the xml dialplan
-							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan["dialplan_name"]."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
@@ -700,6 +713,9 @@
 							if (permission_exists('user_edit')) {
 								$array['destinations'][$x]["user_uuid"] = $user_uuid;
 							}
+							if (permission_exists('group_edit')) {
+								$array['destinations'][$x]["group_uuid"] = $group_uuid;
+							}
 							$array['destinations'][$x]["destination_type"] = $destination_type;
 							if (permission_exists('destination_condition_field')) {
 								$array['destinations'][$x]["destination_condition_field"] = $destination_condition_field;
@@ -728,11 +744,19 @@
 							if (permission_exists('destination_emergency')){
 								$array['destinations'][$x]["destination_type_emergency"] = $destination_type_emergency ? 1 : null;
 							}
-							if ($destination->valid($destination_app.':'.$destination_data)) {
+							if (strlen($destination_app) == 0) {
+								$array['destinations'][$x]["destination_app"] = null;
+								$array['destinations'][$x]["destination_data"] = null;
+							}
+							elseif ($destination->valid($destination_app.':'.$destination_data)) {
 								$array['destinations'][$x]["destination_app"] = $destination_app;
 								$array['destinations'][$x]["destination_data"] = $destination_data;
 							}
-							if ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
+							if (strlen($destination_alternate_app) == 0) {
+								$array['destinations'][$x]["destination_alternate_app"] = null;
+								$array['destinations'][$x]["destination_alternate_data"] = null;
+							}
+							elseif ($destination->valid($destination_alternate_app.':'.$destination_alternate_data)) {
 								$array['destinations'][$x]["destination_alternate_app"] = $destination_alternate_app;
 								$array['destinations'][$x]["destination_alternate_data"] = $destination_alternate_data;
 							}
@@ -768,14 +792,19 @@
 
 				//clear the cache
 					$cache = new cache;
-					$cache->delete("dialplan:".$destination_context);
-					if (isset($destination_number) && is_numeric($destination_number)) {
-						$cache->delete("dialplan:".$destination_context.":".$destination_number);
+					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'multiple') {
+						$cache->delete("dialplan:".$destination_context);
 					}
-					if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
-						$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'single') {
+						if (isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
+						}
+						if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+						}
 					}
-			}
+
+			} //if $destination_type == inbound
 
 		//save the outbound destination
 			if ($destination_type == 'outbound') {
@@ -821,7 +850,7 @@
 						unset($_SESSION['destinations']['array']);
 					}
 
-			}
+			} //if destination_type == outbound
 
 		//redirect the user
 			if ($action == "add") {
@@ -871,6 +900,7 @@
 				$fax_uuid = $row["fax_uuid"];
 				$provider_uuid = $row["provider_uuid"];
 				$user_uuid = $row["user_uuid"];
+				$group_uuid = $row["group_uuid"];
 				$currency = $row["currency"];
 				$destination_sell = $row["destination_sell"];
 				$destination_buy = $row["destination_buy"];
@@ -970,6 +1000,17 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
+
+//get the groups list
+	if (permission_exists('group_edit')) {
+		$sql = "select group_uuid, domain_uuid, group_name, group_description from v_groups ";
+		$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
+		$sql .= "order by group_name asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$groups = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
@@ -1281,6 +1322,28 @@
 		unset($users);
 		echo "			<br>\n";
 		echo "			".$text['description-user']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('group_edit')) {
+		echo "<tr id='tr_group'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-group']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name=\"group_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "		<option value=\"\"></option>\n";
+		foreach($groups as $field) {
+			if ($field['group_uuid'] == $group_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "		<option value='".escape($field['group_uuid'])."' $selected>".escape($field['group_name'])."</option>\n";
+		}
+		echo "		</select>";
+		unset($groups);
+		echo "		<br>\n";
+		echo "		".$text['description-group']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	echo "<tr id='tr_cid_name_prefix'>\n";

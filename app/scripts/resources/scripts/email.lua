@@ -1,6 +1,6 @@
 --	email.lua
 --	Part of FusionPBX
---	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010 - 291 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,9 @@
 --Example
 	--luarun email.lua to@domain.com from@domain.com 'headers' 'subject' 'body'
 
+--- include libs
+	local send_mail = require 'resources.functions.send_mail'
+
 --get the argv values
 	script_name = argv[0];
 	to = argv[1];
@@ -58,19 +61,19 @@
 
 --send the email
 	if (file == nil) then
-		freeswitch.email(to,
+		send_mail(headers,
 			from,
-			"To: "..to.."\nFrom: "..from.."\nX-Headers: "..headers.."\nSubject: "..subject,
-			body
-			);
+			to,
+			{subject, body}
+		);
 	else
 		if (convert_cmd == nil) then
-			freeswitch.email(to,
+			send_mail(headers,
 				from,
-				"To: "..to.."\nFrom: "..from.."\nX-Headers: "..headers.."\nSubject: "..subject,
-				body,
+				to,
+				{subject, body},
 				file
-				);
+			);
 		else
 			freeswitch.email(to,
 				from,
@@ -83,7 +86,3 @@
 		end
 	end
 
---delete the file
-	if (delete == "true") then
-		os.remove(file);
-	end

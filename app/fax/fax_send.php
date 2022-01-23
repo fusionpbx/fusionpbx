@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,7 +53,7 @@ if (!$included) {
 		$text = $language->get();
 
 	//get the fax_extension and save it as a variable
-		if (strlen($_REQUEST["fax_extension"]) > 0) {
+		if (isset($_REQUEST["fax_extension"]) && is_numeric($_REQUEST["fax_extension"])) {
 			$fax_extension = $_REQUEST["fax_extension"];
 		}
 
@@ -214,7 +214,7 @@ if (!function_exists('fax_split_dtmf')) {
 }
 
 //get the fax extension
-	if (strlen($fax_extension) > 0) {
+	if (isset($fax_extension) && is_numeric($fax_extension)) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
 			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
@@ -222,25 +222,25 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir']);
+				mkdir($_SESSION['switch']['storage']['dir'], 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax')) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax');
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax', 0770);
 			}
 			if (!is_dir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'])) {
-				event_socket_mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name']);
+				mkdir($_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'], 0770);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
-				event_socket_mkdir($fax_dir.'/'.$fax_extension);
+				mkdir($fax_dir.'/'.$fax_extension, 0770);
 			}
 			if (!is_dir($dir_fax_inbox)) {
-				event_socket_mkdir($dir_fax_inbox);
+				mkdir($dir_fax_inbox, 0770);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				event_socket_mkdir($dir_fax_sent);
+				mkdir($dir_fax_sent, 0770);
 			}
 			if (!is_dir($dir_fax_temp)) {
-				event_socket_mkdir($dir_fax_temp);
+				mkdir($dir_fax_temp, 0770);
 			}
 	}
 
@@ -310,9 +310,13 @@ if (!function_exists('fax_split_dtmf')) {
 				$page_height = 14; //in
 				break;
 			case 'letter' :
+				$page_width = 8.5; //in
+				$page_height = 11; //in
+				break;
 			default	:
 				$page_width = 8.5; //in
 				$page_height = 11; //in
+				$fax_page_size = 'letter';
 		}
 
 		//set resolution
@@ -347,28 +351,10 @@ if (!function_exists('fax_split_dtmf')) {
 				$disallowed_file_extensions = explode(',','sh,ssh,so,dll,exe,bat,vbs,zip,rar,z,tar,tbz,tgz,gz');
 				if (in_array($fax_file_extension, $disallowed_file_extensions) || $fax_file_extension == '') { continue; }
 
-				$fax_name = $_files['name'][$index];
-				$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
-				$fax_name = str_replace(" ", "_", $fax_name);
+				//use a safe file name
+				$fax_name = md5($_files['name'][$index]);
 
-				//lua doesn't seem to like special chars with env:GetHeader
-				$fax_name = str_replace(";", "_", $fax_name);
-				$fax_name = str_replace(",", "_", $fax_name);
-				$fax_name = str_replace("'", "_", $fax_name);
-				$fax_name = str_replace("!", "_", $fax_name);
-				$fax_name = str_replace("@", "_", $fax_name);
-				$fax_name = str_replace("#", "_", $fax_name);
-				$fax_name = str_replace("$", "_", $fax_name);
-				$fax_name = str_replace("%", "_", $fax_name);
-				$fax_name = str_replace("^", "_", $fax_name);
-				$fax_name = str_replace("`", "_", $fax_name);
-				$fax_name = str_replace("~", "_", $fax_name);
-				$fax_name = str_replace("&", "_", $fax_name);
-				$fax_name = str_replace("(", "_", $fax_name);
-				$fax_name = str_replace(")", "_", $fax_name);
-				$fax_name = str_replace("+", "_", $fax_name);
-				$fax_name = str_replace("=", "_", $fax_name);
-
+				//rename the file
 				$attachment_file_name = $_files['name'][$index];
 				if ($attachment_file_name != $fax_name.'.'.$fax_file_extension) {
 					rename($dir_fax_temp.'/'.$attachment_file_name, $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
@@ -378,7 +364,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if (!$included) {
 					//check if directory exists
 					if (!is_dir($dir_fax_temp)) {
-						event_socket_mkdir($dir_fax_temp);
+						mkdir($dir_fax_temp, 0770);
 					}
 					//move uploaded file
 					move_uploaded_file($_files['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
@@ -826,6 +812,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+				//header("Location: fax_outbox.php?id=".$fax_uuid);
 			}
 			exit;
 		}

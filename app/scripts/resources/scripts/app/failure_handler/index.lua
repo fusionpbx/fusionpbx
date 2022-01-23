@@ -102,8 +102,9 @@
 					body = body:gsub("\n", "");
 					body = trim(body);
 
-				--send the emails
+				--send the email
 					send_mail(headers,
+						nil,
 						missed_call_data,
 						{subject, body}
 					);

@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2019
+--	Copyright (C) 2010-2021
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -82,24 +82,6 @@
 	local follow_me_uuid = row.follow_me_uuid;
 	local follow_me_enabled = row.follow_me_enabled;
 
---determine whether to update the dial string
-	sql = "select follow_me_enabled, cid_name_prefix, cid_number_prefix, dial_string "
-	sql = sql .. "from v_follow_me ";
-	sql = sql .. "where domain_uuid = :domain_uuid ";
-	sql = sql .. "and follow_me_uuid = :follow_me_uuid ";
-	local params = {domain_uuid=domain_uuid, follow_me_uuid=follow_me_uuid};
-	if (debug["sql"]) then
-		log.notice("SQL: %s; params: %s", sql, json.encode(params));
-	end
-
-	row = dbh:first_row(sql, params)
-	if not row then return end
-
-	--local follow_me_enabled = row.follow_me_enabled;
-	local cid_name_prefix = row.cid_name_prefix;
-	local cid_number_prefix = row.cid_number_prefix;
-	local dial_string = row.dial_string;
-
 --set follow me
 	if (follow_me_enabled == "false") then
 		--update the display and play a message
@@ -120,7 +102,6 @@
 
 --enable or disable follow me
 	sql = "update v_follow_me set ";
-	sql = sql .. "dial_string = null, ";
 	if (follow_me_enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false' ";
 	else
@@ -136,7 +117,6 @@
 
 --update the extension
 	sql = "update v_extensions set ";
-	sql = sql .. "dial_string = null, ";
 	sql = sql .. "do_not_disturb = 'false', ";
 	if (follow_me_enabled == "true") then
 		sql = sql .. "follow_me_enabled = 'false', ";

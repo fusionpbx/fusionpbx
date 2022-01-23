@@ -161,15 +161,17 @@
 				}
 			}
 			$y = 0;
-			foreach ($device_profile_settings as $row) {
-				if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
-					$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
-					$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
-					$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
-					$y++;
+			if (permission_exists("device_profile_setting_edit")) {
+				foreach ($device_profile_settings as $row) {
+					if (strlen($row['profile_setting_name']) > 0 && strlen($row['profile_setting_enabled']) > 0) {
+						$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
+						$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_value"] = $row["profile_setting_value"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_enabled"] = $row["profile_setting_enabled"];
+						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
+						$y++;
+					}
 				}
 			}
 
@@ -629,64 +631,66 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_profile_settings']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<table>\n";
-	echo "		<tr>\n";
-	echo "			<th class='vtablereq'>".$text['label-device_setting_name']."</th>\n";
-	echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-enabled']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
-	if (is_array($device_profile_settings) && @sizeof($device_profile_settings) > 1 && permission_exists('device_profile_setting_delete')) {
-		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_settings', 'delete_toggle_settings');\" onmouseout=\"swap_display('delete_label_settings', 'delete_toggle_settings');\">\n";
-		echo "				<span id='delete_label_settings'>".$text['label-delete']."</span>\n";
-		echo "				<span id='delete_toggle_settings'><input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"edit_all_toggle('settings');\"></span>\n";
-		echo "			</td>\n";
-	}
-	echo "		</tr>\n";
-	$x = 0;
-	foreach($device_profile_settings as $row) {
+	if (permission_exists('device_profile_setting_edit')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-device_profile_settings']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<table>\n";
 		echo "		<tr>\n";
-		echo "			<input type='hidden' name='device_profile_settings[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
-		echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
-		echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_setting_uuid]' value=\"".(is_uuid($row["device_profile_setting_uuid"]) ? $row["device_profile_setting_uuid"] : uuid())."\">\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_name]' maxlength='255' value=\"".escape($row["profile_setting_name"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_value]' maxlength='255' value=\"".escape($row["profile_setting_value"])."\">\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
-		echo "					<option value='true'>".$text['label-true']."</option>\n";
-		echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "				</select>\n";
-		echo "			</td>\n";
-		echo "			<td class='formfld'>\n";
-		echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
-		echo "			</td>\n";
+		echo "			<th class='vtablereq'>".$text['label-device_setting_name']."</th>\n";
+		echo "			<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
+		echo "			<td class='vtable'>".$text['label-enabled']."</td>\n";
+		echo "			<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
 		if (is_array($device_profile_settings) && @sizeof($device_profile_settings) > 1 && permission_exists('device_profile_setting_delete')) {
-			if (is_uuid($row["device_profile_setting_uuid"])) {
-				echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-				echo "				<input type='checkbox' name='device_profile_settings_delete[".$x."][checked]' value='true' class='chk_delete checkbox_settings' onclick=\"edit_delete_action('settings');\">\n";
-				echo "				<input type='hidden' name='device_profile_settings_delete[".$x."][uuid]' value='".escape($row['device_profile_setting_uuid'])."' />\n";
-			}
-			else {
-				echo "			<td>\n";
-			}
+			echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_settings', 'delete_toggle_settings');\" onmouseout=\"swap_display('delete_label_settings', 'delete_toggle_settings');\">\n";
+			echo "				<span id='delete_label_settings'>".$text['label-delete']."</span>\n";
+			echo "				<span id='delete_toggle_settings'><input type='checkbox' id='checkbox_all_settings' name='checkbox_all' onclick=\"edit_all_toggle('settings');\"></span>\n";
 			echo "			</td>\n";
 		}
 		echo "		</tr>\n";
-		$x++;
+		$x = 0;
+		foreach($device_profile_settings as $row) {
+			echo "		<tr>\n";
+			echo "			<input type='hidden' name='device_profile_settings[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
+			echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
+			echo "			<input type='hidden' name='device_profile_settings[$x][device_profile_setting_uuid]' value=\"".(is_uuid($row["device_profile_setting_uuid"]) ? $row["device_profile_setting_uuid"] : uuid())."\">\n";
+			echo "			<td class='formfld'>\n";
+			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_name]' maxlength='255' value=\"".escape($row["profile_setting_name"])."\">\n";
+			echo "			</td>\n";
+			echo "			<td class='formfld'>\n";
+			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_value]' maxlength='255' value=\"".escape($row["profile_setting_value"])."\">\n";
+			echo "			</td>\n";
+			echo "			<td class='formfld'>\n";
+			echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
+			echo "					<option value='true'>".$text['label-true']."</option>\n";
+			echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "				</select>\n";
+			echo "			</td>\n";
+			echo "			<td class='formfld'>\n";
+			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
+			echo "			</td>\n";
+			if (is_array($device_profile_settings) && @sizeof($device_profile_settings) > 1 && permission_exists('device_profile_setting_delete')) {
+				if (is_uuid($row["device_profile_setting_uuid"])) {
+					echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
+					echo "				<input type='checkbox' name='device_profile_settings_delete[".$x."][checked]' value='true' class='chk_delete checkbox_settings' onclick=\"edit_delete_action('settings');\">\n";
+					echo "				<input type='hidden' name='device_profile_settings_delete[".$x."][uuid]' value='".escape($row['device_profile_setting_uuid'])."' />\n";
+				}
+				else {
+					echo "			<td>\n";
+				}
+				echo "			</td>\n";
+			}
+			echo "		</tr>\n";
+			$x++;
+		}
+		echo "	</table>\n";
+		echo "<br />\n";
+		echo $text['description-profile_setting_description']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "	</table>\n";
-	echo "<br />\n";
-	echo $text['description-profile_setting_description']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('device_profile_domain')) {
 		echo "<tr>\n";

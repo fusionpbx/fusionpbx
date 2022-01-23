@@ -32,7 +32,7 @@
 	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
-		$apps[$x]['destinations'][$y]['label'] = "call_flows";
+		$apps[$x]['destinations'][$y]['label'] = "call_flow_destination";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_name asc";
@@ -40,6 +40,20 @@
 		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "call_flow_extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "call_flow_extension";
+		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "call_flow_feature_code";
+		$apps[$x]['destinations'][$y]['name'] = "call_flows";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_name asc";
+		$apps[$x]['destinations'][$y]['field']['call_flow_uuid'] = "call_flow_uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "call_flow_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "call_flow_feature_code";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "call_flow_feature_code";
 		$apps[$x]['destinations'][$y]['field']['context'] = "call_flow_context";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
@@ -63,6 +77,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_flow_all";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_context";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";

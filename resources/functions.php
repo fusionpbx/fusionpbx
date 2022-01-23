@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -81,9 +81,14 @@
 	}
 
 	if (!function_exists('check_cidr')) {
-		function check_cidr ($cidr,$ip_address) {
-			list ($subnet, $mask) = explode ('/', $cidr);
-			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+		function check_cidr($cidr, $ip_address) {
+			if (isset($cidr) && strlen($cidr) > 0) {
+				list ($subnet, $mask) = explode ('/', $cidr);
+				return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+			}
+			else {
+				return false;
+			}
 		}
 	}
 
@@ -724,23 +729,38 @@ function switch_module_is_running($fp, $mod) {
 //switch_module_is_running('mod_spidermonkey');
 
 //format a number (n) replace with a number (r) remove the number
-function format_string ($format, $data) {
+function format_string($format, $data) {
+	//preset values
 	$x=0;
 	$tmp = '';
-	for ($i = 0; $i <= strlen($format); $i++) {
-		$tmp_format = strtolower(substr($format, $i, 1));
-		if ($tmp_format == 'x') {
-			$tmp .= substr($data, $x, 1);
-			$x++;
-		}
-		elseif ($tmp_format == 'r') {
-			$x++;
-		}
-		else {
-			$tmp .= $tmp_format;
+
+	//count the characters
+	$format_count = substr_count($format, 'x');
+	$format_count = $format_count + substr_count($format, 'R');
+	$format_count = $format_count + substr_count($format, 'r');
+
+	//format the string if it matches
+	if ($format_count == strlen($data)) {
+		for ($i = 0; $i <= strlen($format); $i++) {
+			$tmp_format = strtolower(substr($format, $i, 1));
+			if ($tmp_format == 'x') {
+				$tmp .= substr($data, $x, 1);
+				$x++;
+			}
+			elseif ($tmp_format == 'r') {
+				$x++;
+			}
+			else {
+				$tmp .= $tmp_format;
+			}
 		}
 	}
-	return $tmp;
+	if (strlen($tmp) == 0) {
+		return $data;
+	}
+	else {
+		return $tmp;
+	}
 }
 
 //get the format and use it to format the phone number
@@ -1484,7 +1504,14 @@ function number_pad($number,$n) {
 				}
 
 				//send the email
-				$mail->Send();
+				if (!$mail->Send()) {
+					if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+						$mailer_error = $mail->ErrorInfo;
+					}
+					return false;
+				}
+
+				//cleanup the mail object
 				$mail->ClearAddresses();
 				$mail->SmtpClose();
 				unset($mail);

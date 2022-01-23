@@ -31,7 +31,7 @@
 
 		--request whether to add the intro
 			--To add an introduction to this message press 1
-			add_intro_id = session:playAndGetDigits(1, 1, 3, 5000, "#*", "phrase:voicemail_forward_prepend:1:2", "phrase:invalid_entry", "\\d+");
+			add_intro_id = session:playAndGetDigits(1, 1, 3, 5000, "#*", "phrase:voicemail_forward_prepend:1:2", "", "\\d+");
 			freeswitch.consoleLog("notice", "[voicemail][forward add intro] "..add_intro_id.."\n");
 			if (add_intro_id == '1') then
 

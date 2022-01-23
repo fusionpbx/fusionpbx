@@ -225,7 +225,9 @@
 		cmd = cmd .. "fax_prefix=false ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	result = api:execute("system", cmd);
+	local handle = io.popen(cmd);
+	result = handle:read("*a");
+	handle:close();
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";

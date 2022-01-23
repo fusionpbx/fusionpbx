@@ -1113,7 +1113,7 @@
     <P2359>0</P2359>
 
     <!-- # Conference URI -->
-    <P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 
     <!-- ################################################################################# -->
     <!-- # Codec/Voice Quality settings                                                  # -->
@@ -1199,7 +1199,7 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 {if isset($grandstream_fax_mode)}
-    <P228>1</P228>
+    <P228>{$grandstream_fax_mode}</P228>
 {else}
     <P228>0</P228>
 {/if}

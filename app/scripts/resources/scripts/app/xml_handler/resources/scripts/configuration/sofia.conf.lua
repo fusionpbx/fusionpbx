@@ -64,13 +64,18 @@
 			table.insert(xml, [[<document type="freeswitch/xml">]]);
 			table.insert(xml, [[	<section name="configuration">]]);
 			table.insert(xml, [[		<configuration name="sofia.conf" description="sofia Endpoint">]]);
+
+		--gt the global settings
+			sql = "select * from v_sofia_global_settings ";
+			sql = sql .. "where global_setting_enabled = 'true' ";
+			sql = sql .. "order by global_setting_name asc ";
+			local params = {};
+			x = 0;
 			table.insert(xml, [[			<global_settings>]]);
-			table.insert(xml, [[				<param name="log-level" value="0"/>]]);
-			--table.insert(xml, [[				<param name="auto-restart" value="false"/>]]);
-			table.insert(xml, [[				<param name="debug-presence" value="0"/>]]);
-			--table.insert(xml, [[				<param name="capture-server" value="udp:homer.domain.com:5060"/>]]);
+			dbh:query(sql, params, function(row)
+					table.insert(xml, [[				<param name="]]..row.global_setting_name..[[" value="]]..row.global_setting_value..[["/>]]);
+			end)
 			table.insert(xml, [[			</global_settings>]]);
-			table.insert(xml, [[			<profiles>]]);
 
 		--set defaults
 			previous_sip_profile_name = "";
@@ -89,6 +94,7 @@
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
 			end
 			x = 0;
+			table.insert(xml, [[			<profiles>]]);
 			dbh:query(sql, params, function(row)
 				--set as variables
 					sip_profile_uuid = row.sip_profile_uuid;

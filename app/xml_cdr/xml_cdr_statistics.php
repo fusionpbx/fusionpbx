@@ -154,107 +154,117 @@
 	echo "<br /><br />\n";
 
 	?>
+	<script src='/resources/chartjs/chart.min.js'></script>
+	<script src='/resources/chartjs/chartjs-adapter-date-fns.bundle.min.js'></script>
 
-	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.time.js"></script>
-	<div align='center'>
-	<table>
-		<tr>
-			<td align='left' colspan='2'>
-				<div id="placeholder-legend" style="padding:2px;margin-bottom: 8px;border-radius: 3px 3px 3px 3px;border: 1px solid #E6E6E6;display: inline-block;margin: 0 auto;"></div>
-			</td>
-		</tr>
-		<tr>
-			<td align='left'>
-				<div id="placeholder" style="width:700px;height:180px;margin-right:25px;"></div>
-			</td>
-			<td align='left' valign='top'>
-				<p id="choices"></p>
-			</td>
-		</tr>
-	</table>
+	<div align='center' style="justify-content: center;">
+		<div style="max-width: 100%; width: 800px; height: 280px;">
+			<canvas id="cdr_stats_chart" style="width: 100%; height: 100%;"></canvas>
+		</div>
 	</div>
+
 	<script type="text/javascript">
-	$(function () {
-		var datasets = {
-			"volume": {
-				label: "Volume",
-				data: <?php echo json_encode($graph['volume']); ?>
-			},
-			"minutes": {
-				label: "Minutes",
-				data: <?php echo json_encode($graph['minutes']); ?>
-			},
-			"call_per_min": {
-				label: "Calls Per Min",
-				data: <?php echo json_encode($graph['call_per_min']); ?>
-			},
-			"missed": {
-				label: "Missed",
-				data: <?php echo json_encode($graph['missed']); ?>
-			},
-			"asr": {
-				label: "ASR",
-				data: <?php echo json_encode($graph['asr']); ?>
-			},
-			"aloc": {
-				label: "ALOC",
-				data: <?php echo json_encode($graph['aloc']); ?>
-			},
+		var ctx = document.getElementById("cdr_stats_chart").getContext('2d');
+
+		const cdr_stats_data = {
+			datasets: [
+				{
+					label: "Volume",
+					data: <?php echo json_encode($graph['volume']); ?>,
+					backgroundColor: "#EDC240",
+					borderColor: "#EDC240",
+					fill: false
+				},
+				{
+					label: "Minutes",
+					data: <?php echo json_encode($graph['minutes']); ?>,
+					backgroundColor: "#AFD8F8",
+					borderColor: "#AFD8F8",
+					fill: false
+				},
+				{
+					label: "Calls Per Min",
+					data: <?php echo json_encode($graph['call_per_min']); ?>,
+					backgroundColor: "#CB4B4B",
+					borderColor: "#CB4B4B",
+					fill: false
+				},
+				{
+					label: "Missed",
+					data: <?php echo json_encode($graph['missed']); ?>,
+					backgroundColor: "#4DA74D",
+					borderColor: "#4DA74D",
+					fill: false
+				},
+				{
+					label: "ASR",
+					data: <?php echo json_encode($graph['asr']); ?>,
+					backgroundColor: "#9440ED",
+					borderColor: "#9440ED",
+					fill: false
+				},
+				{
+					label: "ALOC",
+					data: <?php echo json_encode($graph['aloc']); ?>,
+					backgroundColor: "#BD9B33",
+					borderColor: "#BD9B33",
+					fill: false
+				}
+			]
 		};
 
-		// hard-code color indices to prevent them from shifting as
-		// countries are turned on/off
-		var i = 0;
-		$.each(datasets, function(key, val) {
-			val.color = i;
-			++i;
-		});
-
-		// insert checkboxes
-		var choiceContainer = $("#choices");
-		$.each(datasets, function(key, val) {
-			choiceContainer.append('<br /><span style="white-space: nowrap;"><input type="checkbox" name="' + key +
-								   '" checked="checked" id="id' + key + '">&nbsp;' +
-								   '<label for="id' + key + '">'
-									+ val.label + '</label></span>');
-		});
-		choiceContainer.find("input").on('click', plotAccordingToChoices);
-
-		function plotAccordingToChoices() {
-			var data = [];
-			choiceContainer.find("input:checked").each(function () {
-				var key = $(this).attr("name");
-				if (key && datasets[key])
-					data.push(datasets[key]);
-			});
-
-			if (data.length > 0)
-				$.plot($("#placeholder"), data, {
-					legend:{
-						show: true,
-						noColumns: 10,
-						container: $("#placeholder-legend"),
-						placement: 'outsideGrid',
+		const cdr_stats_config = {
+			type: 'line',
+			data: cdr_stats_data,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: true,
+						labels: {
+							usePointStyle: true,
+							pointStyle: 'rect',
+							color: '#444',
+							boxWidth: 15
+						}
+					}
+				},
+				scales: {
+					x: {
+						type: "time",
 					},
-					yaxis: { min: 0 },
-					<?php
-					if ($hours <= 48) {
-						echo "xaxis: {mode: \"time\",timeformat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+					y: {
+						min: 0
 					}
-					else if ($hours > 48 && $hours < 168) {
-						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+				},
+				elements: {
+					line: {
+						tension: 0.3
 					}
-					else {
-						echo "xaxis: {mode: \"time\",timeformat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+				}
+			},
+			scales: {
+				<?php
+				if ($hours <= 48) {
+					echo "xAxes: {type: \"time\",timeFormat: \"%d:%H\",minTickSize: [1, \"hour\"]}";
+				}
+				else if ($hours > 48 && $hours < 168) {
+					echo "xAxes: {type: \"time\",timeFormat: \"%m:%d\",minTickSize: [1, \"day\"]}";
+				}
+				else {
+					echo "xAxes: {type: \"time\",timeFormat: \"%m:%d\",minTickSize: [1, \"month\"]}";
+				}
+				?>,
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
 					}
-					?>
-				});
-		}
+				}]
+			}
+		};
 
-		plotAccordingToChoices();
-	});
+		const cdr_stats_chart = new Chart(ctx, cdr_stats_config);
 	</script>
 
 	<?php
@@ -270,7 +280,7 @@
 	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
 	echo "	<th class='center'>".$text['table-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
-	echo "	<th>ALOC</th>\n";
+	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
 
 	$i = 0;

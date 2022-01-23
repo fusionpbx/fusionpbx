@@ -96,6 +96,9 @@
 
 		--get the timeout destination
 			timeout_destination = session:getVariable("timeout_destination");
+			
+		--get the previous menu location
+			previous_menu = session:getVariable("rdnis");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -191,22 +194,31 @@
 		digit_timeout = "500";
 		max_digits = 1;
 		max_tries = 1;
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-to_select_entry.wav", "", "\\d+");
-		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-to_select_entry.wav", "", "\\d+|\\*");
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+|\\*");
 		end
-		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/1.wav", "", "\\d+");
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/1.wav", "", "\\d+|\\*");
 		end
-		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-for_next.wav", "", "\\d+");
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-for_next.wav", "", "\\d+|\\*");
 		end
-		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+|\\*");
 		end
-		if (string.len(dtmf_digits) == 0) then
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/6.wav", "", "\\d+|\\*");
+		end
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/ivr/ivr-to_return_to_previous_menu.wav", "", "\\d+|\\*");
+		end
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+|\\*");
+		end
+		if (string.len(dtmf_digits) == 0 and dtmf_digits~="*") then
 			digit_timeout = "5000";
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/6.wav", "", "\\d+");
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/star.wav", "", "\\d+|\\*");
 		end
 		return dtmf_digits;
 	end
@@ -216,7 +228,18 @@
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
 		directory_prompt = directory_prompt or sounds_dir.."/directory/dir-enter_person_first_or_last.wav";
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", directory_prompt, "", "\\d+");
+		session:setVariable("read_terminator_used", "");
+		
+		dtmf_digits = session:read(min_digits, max_digits, directory_prompt, digit_timeout, "#*");
+		
+		--allow exit to previous menu
+			if (session:getVariable("read_terminator_used")) then
+				terminator = session:getVariable("read_terminator_used");
+				if (terminator == "*") then
+					session:execute("transfer",previous_menu);
+				end
+			end
+
 		return dtmf_digits;
 	end
 
@@ -335,6 +358,11 @@
 							if (dtmf_digits == "1") then
 								session:execute("transfer", row.extension.." XML "..row.context);
 							end
+							
+						--if * is pressed, transfer to referred extension
+							if (dtmf_digits == "*") then
+								session:execute("transfer",previous_menu);
+							end
 					end
 					found = true;
 				end
@@ -365,7 +393,7 @@
 			--directory[x] = row;
 		--variables
 			effective_caller_id_name = row.effective_caller_id_name;
-			if (row.directory_first_name) then
+			if (row.directory_first_name ~= nil) and (row.directory_first_name ~= "") then
 				first_name = row.directory_first_name;
 				last_name = row.directory_last_name;
 			else

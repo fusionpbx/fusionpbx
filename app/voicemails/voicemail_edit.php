@@ -57,7 +57,7 @@
 //get http variables and set them to php variables
 	$referer_path = $_REQUEST["referer_path"];
 	$referer_query = $_REQUEST["referer_query"];
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 
 		//process the http post data by submitted action
 			if ($_POST['action'] != '' && is_uuid($_POST['voicemail_uuid'])) {
@@ -94,6 +94,7 @@
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
 			$voicemail_options_delete = $_POST["voicemail_options_delete"];
 			$voicemail_destinations_delete = $_POST["voicemail_destinations_delete"];
+
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 	}
@@ -221,6 +222,13 @@
 				//revoke any temporary permissions granted
 					$p->delete('voicemail_option_add', 'temp');
 					$p->delete('voicemail_destination_add', 'temp');
+
+				//make sure the voicemail directory exists
+					if (is_numeric($voicemail_id)) {
+						if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+							mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770);
+						}
+					}
 
 				//remove checked voicemail options
 					if (

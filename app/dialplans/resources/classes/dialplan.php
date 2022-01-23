@@ -280,9 +280,11 @@
 										//dialplan global
 											if (isset($dialplan['extension']['@attributes']['global']) && $dialplan['extension']['@attributes']['global'] == "true") {
 												$dialplan_global = true;
+												$dialplan_context = 'global';
 											}
 											else {
 												$dialplan_global = false;
+												$dialplan_context = $dialplan['@attributes']['name'];
 											}
 
 										//set the domain_uuid
@@ -301,7 +303,7 @@
 											$array['dialplans'][$x]['app_uuid'] = $dialplan['extension']['@attributes']['app_uuid'];
 											$array['dialplans'][$x]['dialplan_name'] = $dialplan['extension']['@attributes']['name'];
 											$array['dialplans'][$x]['dialplan_number'] = $dialplan['extension']['@attributes']['number'];
-											$array['dialplans'][$x]['dialplan_context'] = $dialplan['@attributes']['name'];
+											$array['dialplans'][$x]['dialplan_context'] = $dialplan_context;
 											if (strlen($dialplan['extension']['@attributes']['destination']) > 0) {
 												$array['dialplans'][$x]['dialplan_destination'] = $dialplan['extension']['@attributes']['destination'];
 											}
@@ -1386,10 +1388,25 @@
 										if (is_array($rows) && @sizeof($rows) != 0) {
 											$y = 0;
 											foreach ($rows as $x => $row) {
-												$primary_uuid = uuid();
+												//set a unique uuid
+													$primary_uuid = uuid();
 
 												//copy data
 													$array[$this->table][$x] = $row;
+
+												//app_uuid needs to be unique for copied dialplans
+													//except for inbound and outbound routes, fifo, time conditions
+													$app_uuid = $row['app_uuid'];
+													switch ($app_uuid) {
+														case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": break;
+														case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": break;
+														case "16589224-c876-aeb3-f59f-523a1c0801f7": break;
+														case "4b821450-926b-175a-af93-a03c441818b1": break;
+														default: $app_uuid = uuid();
+													}
+	
+												//dialplan copy should have a unique app_uuid
+													$array[$this->table][$x]['app_uuid'] = $app_uuid;
 
 												//overwrite
 													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
@@ -1436,6 +1453,7 @@
 										$database->app_name = $this->app_name;
 										$database->app_uuid = $this->app_uuid;
 										$database->save($array);
+										//view_array($database->message);
 										unset($array);
 
 									//revoke temporary permissions

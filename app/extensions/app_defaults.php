@@ -29,7 +29,9 @@
 
 		//create the directory
 			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-				if (!is_dir($_SESSION['switch']['extensions']['dir'])) { event_socket_mkdir($_SESSION['switch']['extensions']['dir']); }
+				if (!is_dir($_SESSION['switch']['extensions']['dir'])) {
+					mkdir($_SESSION['switch']['extensions']['dir'], 0770, false);
+				}
 			}
 
 		//update the directory first and last names
@@ -55,7 +57,7 @@
 					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('extension_edit', 'temp');

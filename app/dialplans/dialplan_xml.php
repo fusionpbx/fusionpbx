@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,6 +46,109 @@
 	if (is_uuid($_REQUEST['app_uuid'])) {
 		$app_uuid = $_REQUEST['app_uuid'];
 	}
+	$dialplan_xml = $_REQUEST['dialplan_xml'];
+
+//process the HTTP POST
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dialplans.php');
+				exit;
+			}
+
+		//get the dialplan xml
+			if (is_uuid($dialplan_uuid)) {
+				$sql = "select * from v_dialplans ";
+				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row) && @sizeof($row) != 0) {
+					$app_uuid = $row["app_uuid"];
+					$dialplan_context = $row["dialplan_context"];
+				}
+				unset($sql, $parameters, $row);
+			}
+
+		//validate the xml
+			$dialplan_valid = true;
+			if (preg_match("/.*([\"\'])system([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])bgsystem([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])bg_spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*([\"\'])spawn_stream([\"\']).*>/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{system.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{bgsystem.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{bg_spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+			if (preg_match("/.*{spawn_stream.*/i", $dialplan_xml)) {
+				$dialplan_valid = false;
+			}
+
+		//disable xml entities and load the xml object to test if the xml is valid
+			libxml_disable_entity_loader(true);
+			$xml = simplexml_load_string($dialplan_xml, 'SimpleXMLElement', LIBXML_NOCDATA);
+			if (!$xml) {
+				//$errors = libxml_get_errors();
+				$dialplan_valid = false;
+			}
+
+		//save the xml to the database
+			if ($dialplan_valid) {
+				//build the dialplan array
+					$x = 0;
+					//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
+					$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
+					$array['dialplans'][$x]["dialplan_xml"] =  $dialplan_xml;
+
+				//save to the data
+					$database = new database;
+					$database->app_name = 'dialplans';
+					$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+					$database->save($array);
+					unset($array);
+
+				//clear the cache
+					$cache = new cache;
+					if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
+						$dialplan_context = "*";
+					}
+					$cache->delete("dialplan:".$dialplan_context);
+
+				//save the message to a session variable
+					message::add($text['message-update']);
+			}
+			else {
+				//save the message to a session variable
+					message::add($text['message-failed'], 'negative');
+			}
+
+		//redirect the user
+			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
+			exit;
+
+	}
 
 //get the dialplan xml
 	if (is_uuid($dialplan_uuid)) {
@@ -66,46 +169,6 @@
 			$dialplan_description = $row["dialplan_description"];
 		}
 		unset($sql, $parameters, $row);
-	}
-
-//process the HTTP POST
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-		
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: dialplans.php');
-				exit;
-			}
-
-		//build the dialplan array
-			$x = 0;
-			//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
-			$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
-			$array['dialplans'][$x]["dialplan_xml"] =  $_REQUEST['dialplan_xml'];
-
-		//save to the data
-			$database = new database;
-			$database->app_name = 'dialplans';
-			$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-			$database->save($array);
-			unset($array);
-
-		//clear the cache
-			$cache = new cache;
-			if ($dialplan_context == "\${domain_name}" or $dialplan_context == "global") {
-				$dialplan_context = "*";
-			}
-			$cache->delete("dialplan:".$dialplan_context);
-
-		//save the message to a session variable
-			message::add($text['message-update']);
-
-		//redirect the user
-			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
-			exit;
-
 	}
 
 //add multi-lingual support

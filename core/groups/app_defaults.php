@@ -93,7 +93,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'groups';
 			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 		}
 

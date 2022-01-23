@@ -75,5 +75,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set if extensions are grouped by call_group when viewing all extensions.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a9ccd174-5ae1-4f90-8ee2-b79a183a04f8";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_main_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#ffffff";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set main background color (and opacity) of extensions";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b9d34460-db41-40d5-becd-5da037fa8942";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_sub_background_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#e5eaf5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set sub background color (and opacity) of extensions";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9cb6477d-0454-4b9c-b0fb-11c258d4f35f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "operator_panel_border_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#b9c5d8";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set border color (and opacity) of extensions";
+		$y++;
 
 ?>

@@ -268,7 +268,7 @@
 <P188>0</P188>
 <!--  Conference URI -->
 <!--  String -->
-<P2318>{if $nway_conference == true}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+<P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
 <!--  Music On Hold URI -->
 <!--  String -->
 <P2350></P2350>
@@ -880,7 +880,7 @@
 <P488>0</P488>
 <!--  Conference URI -->
 <!--  String -->
-<P2418>{if $nway_conference == true}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+<P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
 <!--  Music On Hold URI -->
 <!--  String -->
 <P2450></P2450>
@@ -1457,7 +1457,7 @@
 <P2589>0</P2589>
 <!--  Conference URI -->
 <!--  String -->
-<P2518>{if $nway_conference == true}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
+<P2518>{if $nway_conference == 'true'}nway{$account.3.user_id}@{$account.3.server_address}{/if}</P2518>
 <!--  Music On Hold URI -->
 <!--  String -->
 <P2550></P2550>

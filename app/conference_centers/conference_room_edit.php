@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -58,6 +58,7 @@
 		$conference_room_name = $_POST['conference_room_name'];
 		$moderator_pin = $_POST["moderator_pin"];
 		$participant_pin = $_POST["participant_pin"];
+		
 		$profile = $_POST["profile"];
 		$record = $_POST["record"];
 		$user_uuid = $_POST["user_uuid"];
@@ -73,6 +74,8 @@
 		$mute = $_POST["mute"];
 		$created = $_POST["created"];
 		$created_by = $_POST["created_by"];
+		$email_address = $_POST["email_address"];
+		$account_code = $_POST["account_code"];
 		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 
@@ -319,6 +322,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$array['conference_rooms'][0]['mute'] = $mute;
 					$array['conference_rooms'][0]['created'] = 'now()';
 					$array['conference_rooms'][0]['created_by'] = $_SESSION['user_uuid'];
+					if (permission_exists('conference_room_email_address')) {
+						$array['conference_rooms'][0]['email_address'] = $email_address;
+					}
+					if (permission_exists('conference_room_account_code')) {
+						$array['conference_rooms'][0]['account_code'] = $account_code;
+					}
 					$array['conference_rooms'][0]['enabled'] = $enabled;
 					$array['conference_rooms'][0]['description'] = $description;
 
@@ -391,6 +400,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$array['conference_rooms'][0]['mute'] = $mute;
 					}
 					$array['conference_rooms'][0]['sounds'] = $sounds;
+					if (permission_exists('conference_room_email_address')) {
+						$array['conference_rooms'][0]['email_address'] = $email_address;
+					}
+					if (permission_exists('conference_room_account_code')) {
+						$array['conference_rooms'][0]['account_code'] = $account_code;
+					}
 					if (strlen($enabled) > 0) {
 						$array['conference_rooms'][0]['enabled'] = $enabled;
 					}
@@ -465,6 +480,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$mute = $row["mute"];
 				$created = $row["created"];
 				$created_by = $row["created_by"];
+				$email_address = $row["email_address"];
+				$account_code = $row["account_code"];
 				$enabled = $row["enabled"];
 				$description = $row["description"];
 			}
@@ -550,7 +567,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_rooms.php']);
 	if (is_uuid($conference_room_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'style'=>'margin-left: 15px;','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_room_uuid)]);
-		echo button::create(['type'=>'button','label'=>$text['button-sessions'],'icon'=>'list','link'=>'conference_sessions.php?id='.urlencode($conference_room_uuid)]);
+		if (permission_exists('conference_session_view')) {
+			echo button::create(['type'=>'button','label'=>$text['button-sessions'],'icon'=>'list','link'=>'conference_sessions.php?id='.urlencode($conference_room_uuid)]);
+		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
@@ -857,6 +876,32 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>\n";
 		echo "<br />\n";
 		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('conference_room_email_address')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='email_address' maxlength='255' value=\"".escape($email_address)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('conference_room_account_code')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-account_code']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='account_code' maxlength='255' value=\"".escape($account_code)."\">\n";
+		echo "<br />\n";
+		echo "".$text['description-account_code']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
