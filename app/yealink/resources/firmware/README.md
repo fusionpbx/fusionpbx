@@ -11,11 +11,11 @@ cp960-73.80.0.25.rom
 
 **T27P** (EoL)  
 [SIP-T27P Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1257&parentcateid=1301&cateid=1257&BaseInfoCateId=1257&Cate_Id=1257&index=3)  
-[T27-45.83.0.139.rom](https://www.dropbox.com/s/sfl8rifpbx03tl6/T27-45.83.0.139.rom?dl=0) This is non-published version that supports Dual Registration
+[T27-45.83.0.139.rom](/app/yealink/resources/firmware/T27-45.83.0.139.rom) This is non-published version that supports Dual Registration
 
 **T29G** (EoL)  
 [SIP-T29G Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1257&parentcateid=1301&cateid=1257&BaseInfoCateId=1257&Cate_Id=1257&index=3)  
-[T29-46.83.0.144.rom](https://www.dropbox.com/s/l3p2bxl8m4dc4of/T29-46.83.0.144.rom?dl=0) This is non-published version that supports Dual Registration
+[T29-46.83.0.144.rom](/app/yealink/resources/firmware/T29-46.83.0.144.rom) This is non-published version that supports Dual Registration
 
 **T38G** (EoL)  
 [SIP-T38G Downloads Page](http://support.yealink.com/documentFront/forwardToDocumentDetailPage?documentId=13)  
@@ -29,33 +29,33 @@ t40g-76.81.0.110.rom
 [SIP-T40P Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1375&parentcateid=1299&cateid=1375&BaseInfoCateId=1375&Cate_Id=1375&index=3)  
 t40p-54.81.0.110.rom  
 
-**T41P**  
+**T41P** (EoL)  
 [SIP-T41P Product Page](http://yealink.com/product_info.aspx?ProductsCateID=313&parentcateid=1299&cateid=313&BaseInfoCateId=313&Cate_Id=313&index=3)  
-[T41-36.83.0.139.rom](https://www.dropbox.com/s/tnpr33h2b600tci/T41-36.83.0.139.rom?dl=0) This is non-published version that supports Dual Registration
+[T41-36.83.0.139.rom](/app/yealink/resources/firmware/T41-36.83.0.139.rom) This is non-published version that supports Dual Registration
 
 **T41S**  
 [SIP-T41S Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1481&parentcateid=1299&cateid=1481&BaseInfoCateId=1481&Cate_Id=1481&index=3)  
 t41s-66.81.0.110.rom  
 
-**T42G**  
+**T42G**(EoL)  
 [SIP-T42G Product Page](http://yealink.com/product_info.aspx?ProductsCateID=312&parentcateid=1299&cateid=312&BaseInfoCateId=312&Cate_Id=312&index=3)  
-[T42-29.83.0.139.rom](https://www.dropbox.com/s/j2eyip6y5xqmf95/T42-29.83.0.139.rom?dl=0) This is non-published version that supports Dual Registration
+[T42-29.83.0.139.rom](/app/yealink/resources/firmware/T42-29.83.0.139.rom) This is non-published version that supports Dual Registration
 
 **T42S**  
 [SIP-T42S Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1480&parentcateid=1299&cateid=1480&BaseInfoCateId=1480&Cate_Id=1480&index=3)  
 t42s-66.81.0.110.rom  
 
-**T46G**  
+**T46G**(EoL)  
 [SIP-T46G Product Page](http://yealink.com/product_info.aspx?ProductsCateID=310&parentcateid=1299&cateid=310&BaseInfoCateId=310&Cate_Id=310&index=3)  
-[T46-28.83.0.144.rom](https://www.dropbox.com/s/op5vvm64whfu0cb/T46-28.83.0.144.rom?dl=0) This is non-published version that supports Dual Registration
+[T46-28.83.0.144.rom](/app/yealink/resources/firmware/T46-28.83.0.144.rom) This is non-published version that supports Dual Registration
 
 **T46S**  
 [SIP-T46S Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1479&parentcateid=1299&cateid=1479&BaseInfoCateId=1479&Cate_Id=1479&index=3)  
 t46s-66.81.0.110.rom  
 
-**T48G**  
+**T48G**(EoL)  
 [SIP-T48G Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1206&parentcateid=1299&cateid=1206&BaseInfoCateId=1206&Cate_Id=1206&index=3)  
-[T48-35.83.0.144.rom](https://www.dropbox.com/s/ungmyza1b79jed1/T48-35.83.0.144.rom?dl=0) This is non-published version that supports Dual Registration
+[T48-35.83.0.144.rom](/app/yealink/resources/firmware/T48-35.83.0.144.rom) This is non-published version that supports Dual Registration
 
 **T48S**  
 [SIP-T48S Product Page](http://yealink.com/product_info.aspx?ProductsCateID=1478&parentcateid=1299&cateid=1478&BaseInfoCateId=1478&Cate_Id=1478&index=3)  
