@@ -1,4 +1,25 @@
+
+   
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
 RewriteEngine    On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
 
 #REST api
 RewriteRule ^(.*)/api/(.*)$                                                     $1/api/index.php?rewrite_uri=$2 [QSA]
@@ -47,3 +68,5 @@ Options -Indexes
 php_value upload_max_filesize   25M
 php_value post_max_size         35M
 php_value memory_limit          512M
+
+</IfModule>
