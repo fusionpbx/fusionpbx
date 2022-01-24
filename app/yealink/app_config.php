@@ -965,7 +965,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Only Accept Trusted Certificates 0-Disabled (default), 1-Enabled, ";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Only Accept Trusted Certificates 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e1d03aea-1563-4c57-86de-4d4d274b8352";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
