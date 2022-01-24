@@ -303,7 +303,11 @@ include "root.php";
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
 						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
 						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
-						if (isset($value)) { $provision[$key] = $value; }
+						if (isset($value)) {
+							$value = str_replace('${domain_name}', $domain_name, $value);
+							$value = str_replace('{$domain_name}', $domain_name, $value); 
+							$provision[$key] = $value;
+						}
 						unset($value);
 					}
 				}
