@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,6 +57,8 @@
 		$sql_search .= "	or lower(t.transaction_address) like :search ";
 		$sql_search .= "	or lower(t.transaction_type) like :search ";
 		$sql_search .= "	or cast(t.transaction_date as text) like :search ";
+		$sql_search .= "	or lower(t.transaction_old) like :search ";
+		$sql_search .= "	or lower(t.transaction_new) like :search ";
 		$sql_search .= "	or lower(u.username) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
