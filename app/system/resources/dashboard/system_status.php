@@ -38,7 +38,7 @@
 		if ($percent_disk_usage != '') {
 			//add half doughnut chart
 			?>
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 8px'>
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
 				<div style='width: 175px; height: 175px;'><canvas id='system_status_chart'></canvas></div>
 			</div>
 
