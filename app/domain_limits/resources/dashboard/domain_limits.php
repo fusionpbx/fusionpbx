@@ -19,9 +19,8 @@
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
 //domain limits
-	echo "<div class='hud_box'>\n";
-
 	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
+		echo "<div class='hud_box'>\n";
 		$c = 0;
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
@@ -58,10 +57,10 @@
 		if ($show_stat) {
 			//add doughnut chart
 			?>
-			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
+			<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 25px;'>
 				<div style='width: 175px; height: 175px;'>
 					<canvas id='domain_limits_chart'></canvas>
-					<span style='color: rgb(125,125,125);'><?php echo $hud_stat_title;?></span>
+					<div style='color: rgb(125,125,125); margin-top: 2px;'><?php echo $hud_stat_title;?></div>
 				</div>
 			</div>
 
