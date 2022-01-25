@@ -299,7 +299,11 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		echo "<div class='widget' id='".$dashboard_name."' draggable='true'>\n";
+		$draggable = '';
+		if ($_GET['edit'] == 'true') {
+			$draggable = "draggable='true'";
+		}
+		echo "<div class='widget' id='".$dashboard_name."' ".$draggable.">\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
