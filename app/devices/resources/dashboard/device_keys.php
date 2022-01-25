@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2021
+	Portions created by the Initial Developer are Copyright (C) 2016-2022
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -231,7 +231,9 @@
 											$array['device_keys'][0]['device_key_line'] = $device_key_line;
 											$array['device_keys'][0]['device_key_value'] = $device_key_value;
 											$array['device_keys'][0]['device_key_label'] = $device_key_label;
-											$array['device_keys'][0]['device_key_icon'] = $device_key_icon;
+											if (permission_exists('device_key_icon')) {
+												$array['device_keys'][0]['device_key_icon'] = $device_key_icon;
+											}
 											$array['device_keys'][0]['device_key_category'] = $device_key_category;
 											$array['device_keys'][0]['device_key_vendor'] = $device_key_vendor;
 
@@ -252,7 +254,9 @@
 										$array['device_keys'][0]['device_key_type'] = $device_key_type;
 										$array['device_keys'][0]['device_key_value'] = $device_key_value;
 										$array['device_keys'][0]['device_key_label'] = $device_key_label;
-										$array['device_keys'][0]['device_key_icon'] = $device_key_icon;
+										if (permission_exists('device_key_icon')) {
+											$array['device_keys'][0]['device_key_icon'] = $device_key_icon;
+										}
 								}
 								if ($save) {
 									//add the temporary permissions
@@ -470,7 +474,9 @@
 					}
 					echo "		<th>".$text['label-device_key_value']."</th>\n";
 					echo "		<th>".$text['label-device_key_label']."</th>\n";
-					echo "		<th class='shrink'>".$text['label-device_key_icon']."</th>\n";
+					if (permission_exists('device_key_icon')) {
+						echo "		<th class='shrink'>".$text['label-device_key_icon']."</th>\n";
+					}
 					echo "	</tr>\n";
 				}
 
@@ -610,11 +616,13 @@
 				echo "		</td>\n";
 				echo "		<td class='input'>\n";
 				echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_label]' maxlength='255' value=\"".$row['device_key_label']."\">\n";
-				echo "		</td>\n";
-				echo "		<td class='input'>\n";
-				echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_icon]' maxlength='255' value=\"".$row['device_key_icon']."\">\n";
 				echo "			<input type='hidden' name='device_keys[".$x."][device_profile_uuid]' value=\"".$row['device_profile_uuid']."\">\n";
 				echo "		</td>\n";
+				if (permission_exists('device_key_icon')) {
+					echo "		<td class='input'>\n";
+					echo "			<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='device_keys[".$x."][device_key_icon]' maxlength='255' value=\"".$row['device_key_icon']."\">\n";
+					echo "		</td>\n";
+				}
 				echo "	</tr>\n";
 
 			//set the previous vendor

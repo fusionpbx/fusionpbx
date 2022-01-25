@@ -391,7 +391,9 @@
 								}
 								//$array['devices'][0]['device_keys'][$y]['device_key_protected'] = $row["device_key_protected"];
 								$array['devices'][0]['device_keys'][$y]['device_key_label'] = $row["device_key_label"];
-								$array['devices'][0]['device_keys'][$y]['device_key_icon'] = $row["device_key_icon"];
+								if (permission_exists('device_key_icon')) {
+									$array['devices'][0]['device_keys'][$y]['device_key_icon'] = $row["device_key_icon"];
+								}
 								$y++;
 							}
 						}
@@ -1335,7 +1337,9 @@
 				echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 			}
 			echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
-			echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+			if (permission_exists('device_key_icon')) {
+				echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+			}
 			if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 				echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
 				echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
@@ -1367,7 +1371,9 @@
 						echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 					}
 					echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
-					echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+					if (permission_exists('device_key_icon')) {
+						echo "				<td class='vtable'>".$text['label-device_key_icon']."</td>\n";
+					}
 					if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 						echo "				<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_keys', 'delete_toggle_keys');\" onmouseout=\"swap_display('delete_label_keys', 'delete_toggle_keys');\">\n";
 						echo "					<span id='delete_label_keys'>".$text['label-delete']."</span>\n";
@@ -1579,10 +1585,12 @@
 				echo "<td align='left'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
-				
-				echo "<td align='left'>\n";
-				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
-				echo "</td>\n";
+
+				if (permission_exists('device_key_icon')) {
+					echo "<td align='left'>\n";
+					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_icon]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_icon'])."\"/>\n";
+					echo "</td>\n";
+				}
 
 				if (is_array($device_keys) && @sizeof($device_keys) > 1 && permission_exists('device_key_delete')) {
 					if (is_uuid($row['device_key_uuid'])) {
