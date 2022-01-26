@@ -8464,7 +8464,7 @@
     <!-- # Show Label Background. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8345>0</P8345>
+    <P8345>{$grandstream_label_background}</P8345>
 
     <!-- # Use Long Label. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
