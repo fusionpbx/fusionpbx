@@ -115,6 +115,7 @@
 				max_digits = 20;
 				session:sleep(1000);
 				recording_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
+				session:setVariable("recording_id", recording_id);
 				recording_name = recording_prefix..recording_id.."."..record_ext;
 			elseif (tonumber(recording_id) ~= nil) then
 				recording_name = recording_prefix..recording_id.."."..record_ext;
