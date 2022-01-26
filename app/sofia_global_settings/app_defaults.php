@@ -33,6 +33,18 @@ if ($domains_processed == 1) {
 		$array['sofia_global_settings'][$x]['global_setting_value'] = 'udp:127.0.0.1:9060';
 		$array['sofia_global_settings'][$x]['global_setting_enabled'] = 'false';
 		$array['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$x++;
+		$array['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'b27af7db-4ba5-452b-a5ed-a922c8f201aa';
+		$array['sofia_global_settings'][$x]['global_setting_name'] = 'inbound-reg-in-new-thread';
+		$array['sofia_global_settings'][$x]['global_setting_value'] = 'true';
+		$array['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
+		$array['sofia_global_settings'][$x]['global_setting_description'] = '';
+		$x++;
+		$array['sofia_global_settings'][$x]['sofia_global_setting_uuid'] = 'cd33b89f-55ef-4b47-833a-538dba70e27e';
+		$array['sofia_global_settings'][$x]['global_setting_name'] = 'max-reg-threads';
+		$array['sofia_global_settings'][$x]['global_setting_value'] = '8';
+		$array['sofia_global_settings'][$x]['global_setting_enabled'] = 'true';
+		$array['sofia_global_settings'][$x]['global_setting_description'] = '';
 
 	//removes settings from the array that are already in the database
 		$x = 0;
