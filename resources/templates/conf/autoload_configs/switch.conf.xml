@@ -160,6 +160,11 @@
 		<!-- Allow multiple registrations to the same account in the central registration table -->
 		<!-- <param name="multiple-registrations" value="true"/> -->
 
+		<!-- Event handler uses event queue when set to true. False uses a threaded solution. -->
+		<param name="events-use-dispatch" value="false"/>
+
+		<!-- SWITCH default is 1. Use this number of thread on startup. -->
+		<param name="initial-event-threads" value="8"/>
 	</settings>
 
 </configuration>
