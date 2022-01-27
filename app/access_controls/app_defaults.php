@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,8 +46,10 @@
 				else {
 					$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
 					$xml_string .= "	<network-lists>\n";
-					$xml_string .= "		<list name=\"lan\" default=\"allow\">\n";
-					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.42.42/32\"/>\n";
+					$xml_string .= "		<list name=\"rfc1918\" default=\"allow\">\n";
+					$xml_string .= "			<node type=\"allow\" cidr=\"10.0.0.0/8\"/>\n";
+					$xml_string .= "			<node type=\"allow\" cidr=\"172.16.0.0/12\"/>\n";
+					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.0.0/16\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "		<list name=\"domains\" default=\"deny\">\n";
 					$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";

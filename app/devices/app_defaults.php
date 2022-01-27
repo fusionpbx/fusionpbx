@@ -252,7 +252,11 @@ if ($domains_processed == 1) {
 
 		}
 		unset($num_rows);
-
+	
+	//where the device lines label is null set the value to the display name to maintain the original behavior
+		$sql = "update v_device_lines set label = display_name where label is null;\n";
+		$database->execute($sql);
+		unset($sql);
 }
 
 ?>
