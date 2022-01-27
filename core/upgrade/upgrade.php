@@ -80,6 +80,7 @@
 
 //restore the default menu
 	if ($upgrade_type == 'menu') {
+
 		//get the menu uuid and language
 		$sql = "select menu_uuid, menu_language from v_menus ";
 		$sql .= "where menu_name = :menu_name ";
@@ -91,14 +92,22 @@
 			$menu_language = $row["menu_language"];
 		}
 		unset($sql, $parameters, $row);
+
+		//show the menu
+		if (isset($argv[2]) && $argv[2] == 'view') {
+			print_r($_SESSION["menu"]);
+		}
+
+		//set the menu back to default
+		if (isset($argv[2]) && (is_null($argv[2]) || $argv[2] == 'default')) {
+			//restore the menu
+			$included = true;
+			require_once("core/menu/menu_restore_default.php");
+			unset($sel_menu);
 		
-		//restore the menu
-		$included = true;
-		require_once("core/menu/menu_restore_default.php");
-		unset($sel_menu);
-	
-		//send message to the console
-		echo $text['message-upgrade_menu']."\n";
+			//send message to the console
+			echo $text['message-upgrade_menu']."\n";
+		}
 	}
 
 //restore the default permissions
