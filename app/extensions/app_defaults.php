@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,6 +91,11 @@
 				$database->execute($sql);
 				unset($sql);
 			}
+		
+		//do not disturb no longer uses the extension dial_string set the value to null
+			$sql = "update v_extensions set dial_string = null where (dial_string = '!USER_BUSY' or dial_string = 'error/user_busy');\n";
+			$database->execute($sql);
+			unset($sql);
 
 	}
 
