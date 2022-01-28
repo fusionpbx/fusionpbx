@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -676,7 +676,9 @@
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
-											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
+											if ($action == 'add') {
+												$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
+											}
 
 										//make sure the voicemail directory exists
 											if (is_numeric($voicemail_id)) {
