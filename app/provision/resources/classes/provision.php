@@ -306,7 +306,6 @@ include "root.php";
 						if (isset($value)) {
 							$value = str_replace('${domain_name}', $domain_name, $value);
 							$value = str_replace('${mac_address}', $mac, $value);
-							$value = str_replace('${mac}', $mac, $value);
 							$provision[$key] = $value;
 						}
 						unset($value);
