@@ -305,7 +305,7 @@ include "root.php";
 						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
 						if (isset($value)) {
 							$value = str_replace('${domain_name}', $domain_name, $value);
-							$value = str_replace('{$domain_name}', $domain_name, $value); 
+							$value = str_replace('${mac_address}', $mac, $value);
 							$provision[$key] = $value;
 						}
 						unset($value);

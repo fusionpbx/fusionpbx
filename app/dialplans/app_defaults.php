@@ -101,7 +101,8 @@
 		unset($sql);
 
 		//change dialplan context ${domain_name} to global
-		$sql = "update v_dialplans set dialplan_context = 'global' where dialplan_context = '${domain_name}';\n";
+		$sql = "update v_dialplans set dialplan_context = 'global' ";
+		$sql .= "where dialplan_context = '\${domain_name}';\n";
 		$database->execute($sql);
 		unset($sql);
 

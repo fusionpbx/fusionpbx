@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -110,6 +110,7 @@
 			$voicemail_password = $_POST["voicemail_password"];
 			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
+			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$user_context = $_POST["user_context"];
@@ -657,6 +658,10 @@
 											if (!is_uuid($voicemail_uuid)) {
 												$voicemail_uuid = uuid();
 												$voicemail_tutorial = 'true';
+												//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
+												if (!permission_exists('voicemail_transcription_enabled') && isset($_SESSION['voicemail']['transcription_enabled_default']['boolean'])) {
+													$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
+												}
 											}
 
 										//add the voicemail to the array
@@ -669,6 +674,7 @@
 											//$array["voicemails"][$i]["voicemail_alternate_greet_id"] = $alternate_greet_id;
 											$array["voicemails"][$i]["voicemail_mail_to"] = $voicemail_mail_to;
 											//$array["voicemails"][$i]["voicemail_attach_file"] = $voicemail_attach_file;
+											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
 											$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
 											if (permission_exists('voicemail_local_after_email')) {
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
@@ -676,7 +682,6 @@
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
-											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
 
 										//make sure the voicemail directory exists
 											if (is_numeric($voicemail_id)) {
@@ -867,23 +872,23 @@
 
 	//get the voicemail data
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
-			//get the voicemails
-				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and voicemail_id = :voicemail_id ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && @sizeof($row) != 0) {
-					$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
-					$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
-					$voicemail_file = $row["voicemail_file"];
-					$voicemail_local_after_email = $row["voicemail_local_after_email"];
-					$voicemail_enabled = $row["voicemail_enabled"];
-					$voicemail_tutorial = $row["voicemail_tutorial"];
-				}
-				unset($sql, $parameters, $row);
+			$sql = "select * from v_voicemails ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
+				$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
+				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+				$voicemail_file = $row["voicemail_file"];
+				$voicemail_local_after_email = $row["voicemail_local_after_email"];
+				$voicemail_enabled = $row["voicemail_enabled"];
+				$voicemail_tutorial = $row["voicemail_tutorial"];
+			}
+			unset($sql, $parameters, $row);
 		}
 
 	}
@@ -996,6 +1001,7 @@
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
 	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
 
 //create token
@@ -1714,6 +1720,22 @@
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if (permission_exists('voicemail_transcription_enabled') && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == "true") {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-voicemail_transcription_enabled']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' name='voicemail_transcription_enabled' id='voicemail_transcription_enabled'>\n";
+			echo "    	<option value='true' ".(($voicemail_transcription_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "    	<option value='false' ".(($voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "	</select>\n";
+			echo "<br />\n";
+			echo $text['description-voicemail_transcription_enabled']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
