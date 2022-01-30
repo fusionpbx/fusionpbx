@@ -28,9 +28,9 @@ if ($domains_processed == 1) {
 
 	//create phrases folder and add include line in xml for each language found
 		/*
-		if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
-			if (is_readable($_SESSION['switch']['phrases']['dir'])) {
-				$conf_lang_folders = glob($_SESSION['switch']['phrases']['dir']."/*");
+		if (strlen($_SESSION['switch']['languages']['dir']) > 0) {
+			if (is_readable($_SESSION['switch']['languages']['dir'])) {
+				$conf_lang_folders = glob($_SESSION['switch']['languages']['dir']."/*");
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
