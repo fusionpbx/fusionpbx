@@ -258,7 +258,7 @@ if (!class_exists('switch_settings')) {
 				}
 
 			//set the default settings
-				if (is_array($array) {
+				if (is_array($array)) {
 					foreach ($array as $row) {
 						if (!isset($_SESSION['switch'][$row['default_setting_subcategory']])) {
 							if ($row['default_setting_enabled'] != "false") {
