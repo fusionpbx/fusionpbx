@@ -45,16 +45,6 @@ if ($domains_processed == 1) {
 		}
 	}
 
-	//change the switch phrases to switch languages
-	$sql = "update v_default_settings ";
-	$sql .= "set default_setting_subcategory = 'languages' ";
-	$sql .= "where default_setting_category = 'switch' ";
-	$sql .= "and default_setting_subcategory = 'phrases' ";
-	$sql .= "and default_setting_name = 'dir' ";
-	$database = new database;
-	$database->execute($sql);
-	unset($sql);
-
 	//define initial, get current, define correct languages folder paths
 	$switch_configuration_dir = $_SESSION['switch']['conf']['dir'] != '' ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
 	$switch_languages_dir_initial = $switch_configuration_dir.'/lang';
@@ -119,6 +109,14 @@ if ($domains_processed == 1) {
 	unset($switch_configuration_dir, $switch_languages_dir_initial, $switch_languages_dir_current, $switch_languages_dir_correct);
 	unset($switch_xml_content, $folder_contents, $language_abbreviation, $language_xml_path, $language_xml_content, $voicemail_xml_source, $voicemail_xml_target);
 
+	//delete the switch phrases in favor of switch languages
+	$sql = "delete from v_default_settings ";
+	$sql .= "where default_setting_category = 'switch' ";
+	$sql .= "and default_setting_subcategory = 'phrases' ";
+	$sql .= "and default_setting_name = 'dir' ";
+	$database = new database;
+	$database->execute($sql);
+	unset($sql);
 }
 
 ?>
