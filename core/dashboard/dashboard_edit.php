@@ -55,6 +55,7 @@
 		$dashboard_name = $_POST["dashboard_name"];
 		$dashboard_path = $_POST["dashboard_path"];
 		$dashboard_groups = $_POST["dashboard_groups"];
+		$dashboard_column_span = $_POST["dashboard_column_span"];
 		$dashboard_order = $_POST["dashboard_order"];
 		$dashboard_enabled = $_POST["dashboard_enabled"];
 		$dashboard_description = $_POST["dashboard_description"];
@@ -151,6 +152,7 @@
 			$array['dashboard'][0]['dashboard_uuid'] = $dashboard_uuid;
 			$array['dashboard'][0]['dashboard_name'] = $dashboard_name;
 			$array['dashboard'][0]['dashboard_path'] = $dashboard_path;
+			$array['dashboard'][0]['dashboard_column_span'] = $dashboard_column_span;
 			$array['dashboard'][0]['dashboard_order'] = $dashboard_order;
 			$array['dashboard'][0]['dashboard_enabled'] = $dashboard_enabled;
 			$array['dashboard'][0]['dashboard_description'] = $dashboard_description;
@@ -194,6 +196,7 @@
 		$sql .= " dashboard_uuid, ";
 		$sql .= " dashboard_name, ";
 		$sql .= " dashboard_path, ";
+		$sql .= " dashboard_column_span, ";
 		$sql .= " dashboard_order, ";
 		$sql .= " cast(dashboard_enabled as text), ";
 		$sql .= " dashboard_description ";
@@ -206,6 +209,7 @@
 			$dashboard_name = $row["dashboard_name"];
 			$dashboard_path = $row["dashboard_path"];
 			$dashboard_groups = $row["dashboard_groups"];
+			$dashboard_column_span = $row["dashboard_column_span"];
 			$dashboard_order = $row["dashboard_order"];
 			$dashboard_enabled = $row["dashboard_enabled"];
 			$dashboard_description = $row["dashboard_description"];
@@ -371,6 +375,24 @@
 	}
 	echo "<br />\n";
 	echo $text['description-dashboard_groups']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-dashboard_column_span']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select name='dashboard_column_span' class='formfld'>\n";
+	$i=1;
+	while ($i<=5) {
+		$selected = ($i == $dashboard_column_span) ? "selected" : null;
+		echo "		<option value='$i' ".$selected.">$i</option>\n";
+		$i++;
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-dashboard_column_span']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

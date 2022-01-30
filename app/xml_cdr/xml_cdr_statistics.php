@@ -280,7 +280,7 @@
 	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
 	echo "	<th class='center'>".$text['table-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
-	echo "	<th>ALOC</th>\n";
+	echo "	<th title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "</tr>\n";
 
 	$i = 0;

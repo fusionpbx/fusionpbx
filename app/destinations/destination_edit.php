@@ -102,6 +102,7 @@
 			$fax_uuid = $_POST["fax_uuid"];
 			$provider_uuid = $_POST["provider_uuid"];
 			$user_uuid = $_POST["user_uuid"];
+			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
 			$destination_enabled = $_POST["destination_enabled"];
 			$destination_description = $_POST["destination_description"];
@@ -374,7 +375,7 @@
 							}
 
 						//build the xml dialplan
-							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan["dialplan_name"]."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
@@ -712,6 +713,9 @@
 							if (permission_exists('user_edit')) {
 								$array['destinations'][$x]["user_uuid"] = $user_uuid;
 							}
+							if (permission_exists('group_edit')) {
+								$array['destinations'][$x]["group_uuid"] = $group_uuid;
+							}
 							$array['destinations'][$x]["destination_type"] = $destination_type;
 							if (permission_exists('destination_condition_field')) {
 								$array['destinations'][$x]["destination_condition_field"] = $destination_condition_field;
@@ -896,6 +900,7 @@
 				$fax_uuid = $row["fax_uuid"];
 				$provider_uuid = $row["provider_uuid"];
 				$user_uuid = $row["user_uuid"];
+				$group_uuid = $row["group_uuid"];
 				$currency = $row["currency"];
 				$destination_sell = $row["destination_sell"];
 				$destination_buy = $row["destination_buy"];
@@ -995,6 +1000,17 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
+
+//get the groups list
+	if (permission_exists('group_edit')) {
+		$sql = "select group_uuid, domain_uuid, group_name, group_description from v_groups ";
+		$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
+		$sql .= "order by group_name asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$groups = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
@@ -1306,6 +1322,28 @@
 		unset($users);
 		echo "			<br>\n";
 		echo "			".$text['description-user']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('group_edit')) {
+		echo "<tr id='tr_group'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-group']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name=\"group_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "		<option value=\"\"></option>\n";
+		foreach($groups as $field) {
+			if ($field['group_uuid'] == $group_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "		<option value='".escape($field['group_uuid'])."' $selected>".escape($field['group_name'])."</option>\n";
+		}
+		echo "		</select>";
+		unset($groups);
+		echo "		<br>\n";
+		echo "		".$text['description-group']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	echo "<tr id='tr_cid_name_prefix'>\n";

@@ -631,7 +631,11 @@
     <!-- # Jitter Buffer Type. 0 - Fixed, 1 - Adaptive. Default is 1 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
+    {if isset ($grandstream_jitter_adapt)}
+    <P133>{$grandstream_jitter_adapt}</P133>
+    {else}
     <P133>1</P133>
+    {/if}
 
     <!-- # Jitter Buffer Length. 0 - 100ms, 1 - 200ms, 2 - 300ms, 3 - 400ms, 4 - 500ms, 5 - 600ms, 6 - 700ms, 7 - 800ms -->
     <!-- # Default is 2 -->
@@ -8433,11 +8437,13 @@
     <!-- ############################################################################## -->
     <!-- # Server Path -->
     <!-- # String -->
-    <P337></P337>
-
-    <!-- # Softkey Label -->
-    <!-- # String -->
-    <P352>XMLApp</P352>
+{if isset($xmlappurl)}
+    <P337>{$xmlappurl}?token={$xmlapptoken}</P337>
+    <P352>{$xmlapp}</P352>
+{elseif isset($xmlapp)}
+    <P337>https://{$server_address_1}/app/change-caller-id/app.php?token={$xmlapptoken}</P337>
+    <P352>{$xmlapp}</P352>
+{/if}
 
     <!-- # Default Background Color -->
     <!-- # String -->
@@ -8458,7 +8464,7 @@
     <!-- # Show Label Background. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8345>0</P8345>
+    <P8345>{$grandstream_label_background}</P8345>
 
     <!-- # Use Long Label. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -8469,8 +8475,12 @@
     <!-- # Key Mode. 1 - Line Mode, 2 - Account Mode. Default is 1 -->
     <!-- # Number: 1, 2 -->
     <!-- # Mandatory -->
+    {if isset ($grandstream_key_mode)}
+    <P8369>{$grandstream_key_mode}</P8369>
+    {else}
     <P8369>1</P8369>
-
+    {/if}
+    
     <!-- # Transfer Mode via VPK. 0 - Blind Transfer, 1 - Attended Transfer, 2 - New Call. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->

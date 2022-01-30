@@ -31,6 +31,14 @@
 
 	//default settings
 		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e46af53d-0dd7-4b2b-9806-f790a477f245";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_visible";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the visibility of the name of the domain currently being managed.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4c8df6ee-5858-40ee-b90f-b3b1d066a91c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "background_color";
@@ -55,13 +63,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a secondary background color, for a gradient effect.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e46af53d-0dd7-4b2b-9806-f790a477f245";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "18a0c698-738e-4d88-a592-115dde20730f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_visible";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_user_visible";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the visibility of the name of the domain currently being managed.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the visibility of the username currently logged in.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "425427bb-ac21-4c8f-9ec3-ef8fecd78f8f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_user_color_hover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fd9c03";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for header user name.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b999bb99-2224-48f0-8a61-38c4f75c9869";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "header_domain_color_hover";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#fd9c03";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the text hover color (and opacity) for header domain name.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4a92f422-934f-4ae9-b918-fa932cb1e089";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";

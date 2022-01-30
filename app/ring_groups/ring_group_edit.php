@@ -772,7 +772,7 @@
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
 		$i=0;
-		while ($i <= 300) {
+		while ($i <= 999) {
 			if ($i == $row['destination_delay']) {
 				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}
@@ -786,7 +786,7 @@
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_timeout]' class='formfld' style='width:55px'>\n";
 		$i = 5;
-		while($i <= 300) {
+		while($i <= 999) {
 			if ($i == $row['destination_timeout']) {
 				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}

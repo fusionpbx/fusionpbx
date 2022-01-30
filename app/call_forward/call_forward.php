@@ -229,9 +229,9 @@
 		if ($_GET['show'] == 'all' && permission_exists('call_forward_all')) {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
-		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
+		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
 		if ($paging_controls_mini != '') {
 			echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 		}

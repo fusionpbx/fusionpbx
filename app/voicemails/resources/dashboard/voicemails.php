@@ -56,7 +56,7 @@
 
 //add doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
 		<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
 	</div>
 

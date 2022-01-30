@@ -964,7 +964,9 @@ if (!function_exists('save_sip_profile_xml')) {
 
 		// make profile dir if needed
 			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
-			if (!is_readable($profile_dir)) { event_socket_mkdir($profile_dir); }
+			if (!is_readable($profile_dir)) {
+				mkdir($profile_dir, 0770, false);
+			}
 
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles";
@@ -1021,7 +1023,9 @@ if (!function_exists('save_sip_profile_xml')) {
 						}
 
 					//if the directory does not exist then create it
-						if (!is_readable($profile_dir.'/'.$sip_profile_name)) { event_socket_mkdir($profile_dir.'/'.$sip_profile_name); }
+						if (!is_readable($profile_dir.'/'.$sip_profile_name)) {
+							mkdir($profile_dir.'/'.$sip_profile_name, 0770, false);
+						}
 
 				}
 				unset($result, $row);

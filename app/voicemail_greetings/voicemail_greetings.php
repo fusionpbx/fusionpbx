@@ -182,7 +182,7 @@
 
 						if ($num_rows == 0 && !file_exists($v_greeting_dir.'/'.$file_name)) {
 							//move the uploaded greeting
-								event_socket_mkdir($v_greeting_dir);
+								mkdir($v_greeting_dir, 0770, false);
 								if ($file_ext == '.wav' || $file_ext == '.mp3') {
 									move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$file_name);
 								}

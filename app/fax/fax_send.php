@@ -812,6 +812,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+				//header("Location: fax_outbox.php?id=".$fax_uuid);
 			}
 			exit;
 		}

@@ -50,7 +50,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'provision';
 				$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('device_add', 'temp');
@@ -76,7 +76,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'provision';
 			$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 
 		//grant temporary permissions
