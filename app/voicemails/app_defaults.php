@@ -47,7 +47,7 @@ if ($domains_processed == 1) {
 
 	//change the switch phrases to switch languages
 	$sql = "update v_default_settings ";
-	$sql .= "set default_setting_value = 'languages' ";
+	$sql .= "set default_setting_subcategory = 'languages' ";
 	$sql .= "where default_setting_category = 'switch' ";
 	$sql .= "and default_setting_subcategory = 'phrases' ";
 	$sql .= "and default_setting_name = 'dir' ";
