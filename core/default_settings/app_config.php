@@ -214,6 +214,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aba1680c-ac78-4d20-adfe-17231aef70fe";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_crypto_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e1c17089-1e75-4e46-9e59-4748bb6a6cec";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "smtp_validate_certificate";
