@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Einstellungen des Benutzerkontos können durch den Benutzer geändert werden.";
 		$apps[$x]['description']['es-cl'] = "La configuración de la cuenta puede ser modificada por el usuario.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "L'usager peut modifier la configuration de son compte";
 		$apps[$x]['description']['fr-fr'] = "L'usager peut modifier la configuration de son compte";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
