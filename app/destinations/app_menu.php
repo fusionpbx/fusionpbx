@@ -9,7 +9,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Ziele";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Destinos";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Destinos";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Cibler";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Destinations";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Destinations";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "יעד";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Destinazioni";
