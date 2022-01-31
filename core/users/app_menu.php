@@ -8,7 +8,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benutzerverwaltung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Gestor de Usuarios";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Utilisteurs";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des utilisteurs";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל משתמש";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Utenti";
