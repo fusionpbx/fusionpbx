@@ -1392,12 +1392,12 @@ function number_pad($number,$n) {
 					$mail->Port = $_SESSION['email']['smtp_port']['numeric'];
 				}
 				if ($_SESSION['email']['smtp_auth']['text'] == "true") {
-					$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['text'];
+					$mail->SMTPAuth = true;
 					$mail->Username = $_SESSION['email']['smtp_username']['text'];
 					$mail->Password = $_SESSION['email']['smtp_password']['text'];
 				}
 				else {
-					$mail->SMTPAuth = 'false';
+					$mail->SMTPAuth = false;
 				}
 				if ($_SESSION['email']['smtp_secure']['text'] == "none") {
 					$_SESSION['email']['smtp_secure']['text'] = '';
@@ -1405,16 +1405,24 @@ function number_pad($number,$n) {
 				if ($_SESSION['email']['smtp_secure']['text'] != '') {
 					$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
 				}
+
 				if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
-					// bypass TLS certificate check e.g. for self-signed certificates
-					$mail->SMTPOptions = array(
-						'ssl' => array(
-						'verify_peer' => false,
-						'verify_peer_name' => false,
-						'allow_self_signed' => true
-						)
-					);
+					//bypass certificate check e.g. for self-signed certificates
+					$smtp_options['ssl']['verify_peer'] = false;
+					$smtp_options['ssl']['verify_peer_name'] = false;
+					$smtp_options['ssl']['allow_self_signed'] = true;
 				}
+
+				//used to set the SSL version
+				if (isset($_SESSION['email']['smtp_crypto_method'])) {
+					$smtp_options['ssl']['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
+				}
+
+				//add SMTP Options if the array exists
+				if (is_array($smtp_options)) {
+					$mail->SMTPOptions = $smtp_options;
+				}
+
 				$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
 				$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
 				$mail->SetFrom($eml_from_address, $eml_from_name);
