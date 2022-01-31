@@ -78,9 +78,11 @@
 
 //prepare to page the results
 	$sql = "select count(*) from v_email_logs ";
-	$sql .= "where true ";
-	if ($_REQUEST['show'] != 'all' && !permission_exists('email_log_all')) {
-		$sql .= "and domain_uuid = :domain_uuid ";
+	if ($_REQUEST['show'] == 'all' && permission_exists('email_log_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (strlen($search) > 0) {
@@ -106,10 +108,12 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select count(*) from v_email_logs ";
-	$sql .= "where true ";
-	if ($_REQUEST['show'] != 'all' && !permission_exists('email_log_all')) {
-		$sql .= "and domain_uuid = :domain_uuid ";
+	$sql = "select * from v_email_logs ";
+	if ($_REQUEST['show'] == 'all' && permission_exists('email_log_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (strlen($search) > 0) {
