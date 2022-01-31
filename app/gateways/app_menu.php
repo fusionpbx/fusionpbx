@@ -8,7 +8,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Gateways";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Pasarelas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "Pasarelas";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Passerelles";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Passerelles";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gateways";
