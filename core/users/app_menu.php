@@ -34,7 +34,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Kontoeinstellungen";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Config de Cuenta";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Paramètre du Compte";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Configuration du Compte";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הגדרת חשבון";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Impostazioni Utente";
