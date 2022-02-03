@@ -15,7 +15,7 @@
 
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
+--	Portions created by the Initial Developer are Copyright (C) 2019 - 2022
 --	the Initial Developer. All Rights Reserved.
 
 -- load config
@@ -34,9 +34,9 @@
 	domain_name = session:getVariable("domain_name");
 	domain_uuid = session:getVariable("domain_uuid");
 	context = session:getVariable("context");
-	permissions = session:getVariable("permissions")
-	user = session:getVariable("sip_auth_username")
-		or session:getVariable("username");
+	permissions = session:getVariable("permissions");
+	global = session:getVariable("global") or 'false';
+	user = session:getVariable("sip_auth_username") or session:getVariable("username");
 
 --set the default
 	if (not permissions) then permissions = 'false'; end
@@ -52,7 +52,7 @@
 	if value then
 		local t = json.decode(value)
 		if not (t and t.phone_number) then
-			log.warningf("can not decode value from cache: %s", value)
+			log.warningf("can not decode value from the cache: %s", value)
 			value = nil
 		else
 			value = t
@@ -105,14 +105,18 @@
 				log.noticef("[speed dial] advanced");
 			else
 				-- simple, skip looking up user or group permissions
-				sql = [[select phone_number
-					from v_contact_phones
-					where domain_uuid = :domain_uuid 
-					and phone_speed_dial = :phone_speed_dial
-					]];
+				sql = "select phone_number ";
+				sql = sql .. "from v_contact_phones ";
+				if (global == 'true') then
+					sql = sql .. "where phone_speed_dial = :phone_speed_dial ";
+					params = {phone_speed_dial = destination};
+				else
+					sql = sql .. "where domain_uuid = :domain_uuid ";
+					sql = sql .. "and phone_speed_dial = :phone_speed_dial ";
+					params = {phone_speed_dial = destination, domain_uuid = domain_uuid};
+				end
 				log.noticef("[speed dial] simple");
 			end
-			local params = {phone_speed_dial = destination, domain_uuid = domain_uuid, user = user};
 
 			if (debug["sql"]) then
 				log.noticef("SQL: %s; params: %s", sql, json.encode(params));
