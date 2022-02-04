@@ -32,7 +32,7 @@
 	//destination details
 		$y=0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
-		$apps[$x]['destinations'][$y]['label'] = "call_flow_extension";
+		$apps[$x]['destinations'][$y]['label'] = "call_flows";
 		$apps[$x]['destinations'][$y]['name'] = "call_flows";
 		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid as uuid, call_flow_extension as destination, call_flow_context as context from v_call_flows ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
@@ -47,8 +47,8 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
-		$apps[$x]['destinations'][$y]['label'] = "call_flow_feature";
-		$apps[$x]['destinations'][$y]['name'] = "call_flow_feature";
+		$apps[$x]['destinations'][$y]['label'] = "call_flows";
+		$apps[$x]['destinations'][$y]['name'] = "call_flows";
 		$apps[$x]['destinations'][$y]['sql'] = "select call_flow_name as name, call_flow_uuid as uuid, call_flow_extension as extension, call_flow_feature_code as destination, call_flow_context as context from v_call_flows ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and call_flow_enabled = 'true' ";
 		$apps[$x]['destinations'][$y]['order_by'] = "call_flow_extension asc";
@@ -87,10 +87,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_flow_destinations";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "call_flow_feature_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
