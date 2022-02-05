@@ -557,7 +557,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 		//get the email template from the database
-			if (isset($email_address) && strlen($email_address) > 0) {
+			if (isset($fax_email) && strlen($fax_email) > 0) {
 				$sql = "select template_subject, template_body from v_email_templates ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and template_language = :template_language ";
