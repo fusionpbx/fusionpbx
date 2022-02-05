@@ -549,7 +549,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$language_code = $_SESSION['domain']['language']['code'];
 
 		//get the template subcategory
-			if ($fax_relay == 'yes') {
+			if ($fax_relay == 'true') {
 				$template_subcategory = 'relay';
 			}
 			else {
