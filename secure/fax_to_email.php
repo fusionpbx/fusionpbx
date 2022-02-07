@@ -110,8 +110,9 @@ if (!function_exists('tiff2pdf')) {
 		$fax_file_name = $tiff_file['filename'];
 		$pdf_file_name = path_join( $dir_fax, $fax_file_name . '.pdf' );
 
-		if (file_exists($pdf_file_name))
+		if (file_exists($pdf_file_name)) {
 			return $pdf_file_name;
+		}
 
 		$dir_fax_temp = $_SESSION['server']['temp']['dir'];
 		if (!$dir_fax_temp){
@@ -604,10 +605,28 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the email
 			if (isset($fax_email) && strlen($fax_email) > 0) {
+				//add the attachments
+				if (strlen($fax_file_name) > 0) {
+					if ($pdf_file && file_exists($pdf_file)) {
+						$mail->AddAttachment($pdf_file); // pdf attachment
+					}
+					else {
+						$mail->AddAttachment($fax_file); // tif attachment
+					}
+				}
+
 				//add the attachment
-				$email_attachments[0]['type'] = 'file';
-				$email_attachments[0]['name'] = $fax_file_name;
-				$email_attachments[0]['value'] = $fax_file;
+				if (strlen($fax_file_name) > 0) {
+					$email_attachments[0]['type'] = 'file';
+					if ($pdf_file && file_exists($pdf_file)) {
+						$email_attachments[0]['name'] = $fax_file_name;
+						$email_attachments[0]['value'] = $pdf_file;
+					}
+					else {
+						$email_attachments[0]['name'] = $fax_file_name;
+						$email_attachments[0]['value'] = $fax_file;
+					}
+				}
 
 				//$email_response = send_email($email_address, $email_subject, $email_body);
 				$email_response = !send_email($fax_email, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, 3, $email_attachments) ? false : true;
