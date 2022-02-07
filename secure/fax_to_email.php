@@ -605,16 +605,6 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the email
 			if (isset($fax_email) && strlen($fax_email) > 0) {
-				//add the attachments
-				if (strlen($fax_file_name) > 0) {
-					if ($pdf_file && file_exists($pdf_file)) {
-						$mail->AddAttachment($pdf_file); // pdf attachment
-					}
-					else {
-						$mail->AddAttachment($fax_file); // tif attachment
-					}
-				}
-
 				//add the attachment
 				if (strlen($fax_file_name) > 0) {
 					$email_attachments[0]['type'] = 'file';
