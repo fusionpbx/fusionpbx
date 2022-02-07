@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Zeigt den SIP-Status an.";
 		$apps[$x]['description']['es-cl'] = "Muestra información del sistema como RAM, CPU y Disco Duro";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Affiche les informations système telles que les informations sur la RAM, le processeur et le disque dur.";
+		$apps[$x]['description']['fr-fr'] = "Affiche les informations système telles que les informations sur la RAM, le processeur et le disque dur.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Toont de systeem informatie zoals RAM, CPU en Harddisk informatie.";
