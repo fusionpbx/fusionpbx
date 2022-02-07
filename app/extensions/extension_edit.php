@@ -1160,6 +1160,344 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	echo "	}\n";
 	echo "}\n";
 	
+	echo "
+	
+		$(document).ready(function(){\n";
+			
+		echo "
+		old_email = '$voicemail_mail_to';
+		send_email_data = {};
+		old_temp = [];
+		$('#send_email').on('click', function() { 
+			
+			extension_to_send ='input[name=\"extension\"]'
+			extension_to_send =$(extension_to_send).val();
+			domain_uuid = $('select[name=domain_uuid]').val();
+			data = {
+
+				extension: extension_to_send,
+				domain_uuid: '".$domain_uuid."'
+
+			}
+			
+			$.ajax({
+					url: 'extension_curl.php',
+					type: 'POST',
+					data: {data:data, path:'getAccountDetail', s_type:'broker_secret_key', a_type:'broker_url'},
+					dataType: 'json',
+					success: function(response){
+
+						mail = $('input[name=\"voicemail_mail_to\"]').val();
+						$('#s_email').val(mail)
+						send_email_data = response;
+						generate_qr(response.qrCode);
+						get_email_templates();
+						$('#s_email_sub').val('');
+						$('.temp_name').val('');
+						$('.add_temp_div').css('display','none')
+						if(send_email_data.hasOwnProperty('new_password')){
+							$('#open_temp').show();
+							$('#open_temp i').attr('class','fa fa-plus-circle');
+							$('.cloud_username').val(send_email_data.cloud_username);
+							$('.cloud_password').val(send_email_data.cloud_password);
+							$('.qr-code-generator_div').show();
+							$('.qr-code-generator_adjacent_div').removeClass('col-md-12');
+							$('.qr-code-generator_adjacent_div').addClass('col-md-5');
+						}else{
+							$('#open_temp').hide();
+							$('.qr-code-generator_div').hide();
+							$('.qr-code-generator_adjacent_div').addClass('col-md-12');
+							$('.qr-code-generator_adjacent_div').removeClass('col-md-5');
+						}
+						$('#emailModal').modal('show');
+						
+					}
+			});
+				
+		});
+
+		$('#send_qr_email').on('click', function() { 
+			$('.old_temp').trigger('click');
+			extension_to_send ='input[name=\"extension\"]'
+			extension_to_send =$(extension_to_send).val();
+			check = 0
+			if( $('#s_email').val() == ''){
+
+				check = 1
+
+				alert('To email is required')
+
+			}
+
+			if( $('#s_sub').val() == ''){
+
+				check = 1
+
+				alert('Subject is required')
+
+			}
+			
+
+			if($('#template_body').html() == ''){
+
+				check = 1
+				alert('Email body is required')
+
+			}
+			
+			
+			data = {
+
+				'cloud_username': send_email_data.cloud_username,
+
+				'extension_uuid' : send_email_data.extension_uuid,
+
+				'recepient' : $('#s_email').val(),
+
+				'cc' : $('#s_cc').val(),
+
+				'bcc' : $('#s_bcc').val(),
+
+				'body': $('#template_body').html(),
+
+				'subject': $('#s_email_sub').val()
+
+			}
+
+			
+
+			if(send_email_data.hasOwnProperty('new_password')){
+				data['cloud_password'] = send_email_data.new_password;
+				data['qr_value'] = send_email_data.new_qr_code;
+			}else{
+				data['cloud_password'] = send_email_data.cloud_password;
+				data['qr_value'] = send_email_data.qrCode;
+			}
+			data['body'] = data['body'].replace(/USERNAME_HERE/g, send_email_data.cloud_username);
+			data['body'] = data['body'].replace(/PASSWORD_HERE/g, data['cloud_password']);
+			if(check == 0){
+				$.ajax({
+						url: 'extension_curl.php',
+						type: 'POST',
+						data: {data:data, path:'sendQrEmail', s_type:'broker_secret_key', a_type:'broker_url'},
+						dataType: 'json',
+						success: function(response){
+							
+							$('#emailModal').modal('hide');
+							//update_email($('#s_email').val());
+							$('#s_email').val('');
+							$('#s_email_sub').val('');
+							$('#template_body').html('');
+							$('#s_cc').val('');
+							$('#s_bcc').val('');
+
+							data2 = {
+
+								'cloud_username': send_email_data.cloud_username,
+				
+								'cloud_id' : 'NEMERALDWHITELABEL',
+				
+								'url' :  ''
+				
+							}
+
+							if(!send_email_data.hasOwnProperty('new_password')){
+
+								data2 = {
+
+									'cloud_username': send_email_data.cloud_username,
+					
+									'cloud_id' : 'NEMERALDWHITELABEL',
+					
+									'url' :  ''
+					
+								}
+
+								add_user_to_api(data2);
+							}
+
+							
+							
+							
+						}
+				});
+			}
+		});
+
+			
+		open = 0;
+		uopen = 0;
+
+		$('body').on('click', '#open_temp', function() { 
+			
+			if(open==0){
+				$('.add_temp_div').css('display','flex')
+				
+				$('#open_temp').text('Hide Credentials');
+				open=1
+			}else{
+				$('.add_temp_div').css('display','none')
+		
+				$('#open_temp').text('Show Credentials');
+				open=0
+			};
+			
+
+		});
+		$('body').on('click', '.old_temp', function() { 
+
+			old_id  = $(this).data('id');
+			old_temp_obj = old_temp.find(i => i.id === old_id);
+			old_sub = $(this).data('sub');
+			temp_name =  $(this).data('name');
+			$('#s_email_sub').val(old_sub);
+			$('#template_body').html(old_temp_obj.body);
+			$('.add_temp_div').css('display','none')
+			
+
+		});
+
+		$('body').on('click', '.old_temp_del', function() { 
+
+			old_sub = $(this).data('id');
+			del_id = {
+				'id': old_sub
+			}
+			$.ajax({
+				url: 'extension_curl.php',
+				type: 'POST',
+				data: {data:del_id, path:'deleteFusionEmailTemplate', s_type:'api_secret_key', a_type:'api_url'},
+				dataType: 'json',
+				success: function(response){
+					CKEDITOR.instances.s_email_body.setData('')
+					$('#s_email_sub').val('');
+					$('.temp_name').val('');
+					$('.add_temp_div').css('display','none')
+					
+					open = 0
+					get_email_templates();
+
+					
+				}
+			});
+
+
+		});
+
+		$('#add_temp').on('click', function() { 
+
+			if($('.temp_name').val()!=''){
+				temp = {
+					'subject':$('#s_email_sub').val(),
+					'name'   :$('.temp_name').val(),
+					'body'   :CKEDITOR.instances.s_email_body.getData()
+				}
+				$.ajax({
+					url: 'extension_curl.php',
+					type: 'POST',
+					data: {data:temp, path:'fusionEmailTemplateCreateUpdate', s_type:'api_secret_key', a_type:'api_url'},
+					dataType: 'json',
+					success: function(response){
+						
+						get_email_templates();
+
+						
+					}
+				});
+			}else{
+				alert('Template Name field is empty')
+			}
+		});
+
+		$('#update_temp').on('click', function() { 
+
+			temp = {
+				'subject':$('#s_email_sub').val(),
+				'name'   :$('.temp_name').val(),
+				'body'   :$('#s_email_body').val()
+			}
+			$.ajax({
+				url: 'extension_curl.php',
+				type: 'POST',
+				data: {data:temp, path:'fusionEmailTemplateCreateUpdate', s_type:'api_secret_key', a_type:'api_url'},
+				dataType: 'json',
+				success: function(response){
+					
+					get_email_templates();
+					alert('Template updated successfully')
+
+					
+				}
+			});
+
+		});
+		
+
+		function generate_qr(qrCode){
+		
+			// Clear Previous QR Code
+			$('#qrcode').empty();
+			
+			// Set Size to Match User Input
+			$('#qrcode').css({
+			'width' : 256,
+			'height' : 256
+			})
+			
+			// Generate and Output QR Code
+			$('#qrcode').qrcode({width: $('.qr-size').val(),height: $('.qr-size').val(),text: qrCode});
+			
+		}
+		function add_user_to_api(data2){
+
+			$.ajax({
+				url: 'extension_curl.php',
+				type: 'POST',
+				data: {data:data2, path:'addFusionUserToApi', s_type:'api_secret_key', a_type:'api_url'},
+				dataType: 'json',
+				success: function(response){
+					
+					// console.log('addUserToApi');
+					
+				}
+			});
+
+		}
+
+		function get_email_templates(){
+
+			$.ajax({
+				url: 'extension_curl.php',
+				type: 'POST',
+				data: {data:[], path:'getFusionEmailTemplates', s_type:'api_secret_key', a_type:'api_url', action:'1'},
+				dataType: 'json',
+
+				success: function(response){
+					
+					html='';
+					response.forEach(function(item) {
+
+						old_temp.push({id : item.id, name:item.name, body:item.body });
+						html += '<div class=\"d1\"><span style=\"cursor: pointer;\" class=\"old_temp\" data-id=\"'+item.id+'\" data-name=\"'+item.name+'\" data-sub=\"'+item.subject+'\" >'+item.name+'</span></div>';
+
+					});
+					
+					
+					$('#temp_list').html(html);
+					// console.log('get_email_templates');
+					
+				}
+			});
+
+		}
+
+		
+
+		
+		";
+		
+		
+	echo"});";
 	echo "</script>";
 
 	
@@ -1180,7 +1518,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 
 	
 	if ($action == 'update') {
-		echo button::create(['type'=>'button','label'=>'Send Email','id'=>'send_email']);
+		echo button::create(['type'=>'button','label'=>'APP CREDENTIALS','id'=>'send_email']);
 
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
@@ -1291,7 +1629,141 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	
+	echo "
+		<style>	
+			.qr-code-generator * {
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				}
+				
+				#qrcode {
+				width: 128px;
+				height: 128px;
+				margin: 0 auto;
+				text-align: center;
+				}
+				
+				#qrcode a {
+				font-size: 0.8em;
+				}
+				
+				.qr-url, .qr-size {
+				padding: 0.5em;
+				border: 1px solid #ddd;
+				border-radius: 2px;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				}
+				
+				.qr-url {
+				width: 79%;
+				}
+				
+				.qr-size {
+				width: 20%;
+				}
+				
+				.generate-qr-code {
+				display: block;
+				width: 100%;
+				margin: 0.5em 0 0;
+				padding: 0.25em;
+				font-size: 1.2em;
+				border: none;
+				cursor: pointer;
+				background-color: #e5554e;
+				color: #fff;
+				}
+				.d1 {
+				    text-align: center;
+					border: 1px solid teal;
+					border-radius: 15px;
+					padding: 9px;
+					margin: 2px;
+				}
+				  
+		
+		</style>
+		<!-- Modal -->
+		<div class='modal fade' id='emailModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+		<div class='modal-dialog' style='margin-top: 100px;'>
+			<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title' id='exampleModalLabel'>APP CREDENTIALS</h5>
+				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+				<span aria-hidden='true'>&times;</span>
+				</button>
+			</div>
+			<div class='modal-body'>
+				
+				<div class='col-md-5 qr-code-generator_adjacent_div' style='padding: 0;float:left; z-index: 1;top: 50px;'>
+					<div class='form-group' >
+						<label for='s_email'>Email</label>
+						<input type='email' class='form-control' id='s_email' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group' >
+						<label for='s_cc'>cc</label>
+						<input type='text' class='form-control' id='s_cc' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group' >
+						<label for='s_bcc'>bcc</label>
+						<input type='text' class='form-control' id='s_bcc' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group' style='margin-bottom: 10px; display:none;'>
+						<label for='s_email_sub'>Subject</label>
+						<input type='text' class='form-control' id='s_email_sub' style='font-size: 11px;padding: 6px;' readonly>
+					</div>
+				</div>
+				<div class='col-md-6 qr-code-generator_div' style='float:left'>
+					<div class='form-group'>
+						<div class='qr-code-generator'>
+
+							<input type='hidden' class='qr-url' placeholder='URL or Text'>
+
+							<div id='qrcode'></div>
+
+						</div>
+					</div>
+				</div>
+				
+				<div class='col-md-12' style='padding: 0;'>
+					<div class='form-group'>
+						<div class='col-md-4' style='float:right;text-align: end;margin-right: -16px;'>
+							<button type='button' id='open_temp' class='btn btn-sm btn-primary' title='Cloud Credentials' style='margin-top: -8px; font-size: 12px; '>
+								Show Credentials
+							</button>
+						</div>
+						<div class='row form-group col-md-12 add_temp_div' style='padding-right: 0; padding-left: 0;display:none;'>
+							<div class='col-md-6' style='float:left;'>
+								<label for='cloud_username'>Cloud Username</label>
+								<input type='text' class='form-control cloud_username'  style='font-size: 11px;padding: 6px;' readonly>
+							</div>
+							<div class='col-md-6' style='float:left;'>
+								<label for='cloud_password'>Cloud Password</label>
+								<input type='text' class='form-control cloud_password'  style='font-size: 11px;padding: 6px;' readonly>
+							</div>
+						</div>
+						
+						<div class='row form-group col-md-12' style='margin: 0;padding:0;' >
+							<div id='template_body' style='display:none; width: 100%;height: 200px;border: 2px solid #f5ebeb;overflow-y: scroll; padding: 10px;'></div>
+						</div>
+					</div>
+				</div>
+				<div class='col-md-12' id='temp_list' style='display: none;flex-wrap: wrap;padding: 0px;'>
+					
+				</div>
+				
+			</div>
+			<div class='modal-footer' style='border-top: 0;display: block;'>
+				<center>
+					<button type='button' id='send_qr_email' class='btn btn-primary'>Send</button>
+				</center>
+			</div>
+			</div>
+		</div>
+		</div>";
 	if (permission_exists('extension_user_edit')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".($action == "update" ? $text['label-users'] : $text['label-user'])."</td>";
