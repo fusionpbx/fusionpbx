@@ -1167,6 +1167,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 		echo "
 		old_email = '$voicemail_mail_to';
 		send_email_data = {};
+		old_temp = [];
 		$('#send_email').on('click', function() { 
 			
 			extension_to_send ='input[name=\"extension\"]'
@@ -1192,10 +1193,22 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 						generate_qr(response.qrCode);
 						get_email_templates();
 						$('#s_email_sub').val('');
-						CKEDITOR.instances.s_email_body.setData('');
 						$('.temp_name').val('');
 						$('.add_temp_div').css('display','none')
-						$('.add_temp_update_div').css('display','none')
+						if(send_email_data.hasOwnProperty('new_password')){
+							$('#open_temp').show();
+							$('#open_temp i').attr('class','fa fa-plus-circle');
+							$('.cloud_username').val(send_email_data.cloud_username);
+							$('.cloud_password').val(send_email_data.cloud_password);
+							$('.qr-code-generator_div').show();
+							$('.qr-code-generator_adjacent_div').removeClass('col-md-12');
+							$('.qr-code-generator_adjacent_div').addClass('col-md-5');
+						}else{
+							$('#open_temp').hide();
+							$('.qr-code-generator_div').hide();
+							$('.qr-code-generator_adjacent_div').addClass('col-md-12');
+							$('.qr-code-generator_adjacent_div').removeClass('col-md-5');
+						}
 						$('#emailModal').modal('show');
 						
 					}
@@ -1204,7 +1217,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 		});
 
 		$('#send_qr_email').on('click', function() { 
-			
+			$('.old_temp').trigger('click');
 			extension_to_send ='input[name=\"extension\"]'
 			extension_to_send =$(extension_to_send).val();
 			check = 0
@@ -1225,7 +1238,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 			}
 			
 
-			if(CKEDITOR.instances.s_email_body.getData() == ''){
+			if($('#template_body').html() == ''){
 
 				check = 1
 				alert('Email body is required')
@@ -1243,7 +1256,9 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 
 				'cc' : $('#s_cc').val(),
 
-				'body': CKEDITOR.instances.s_email_body.getData(),
+				'bcc' : $('#s_bcc').val(),
+
+				'body': $('#template_body').html(),
 
 				'subject': $('#s_email_sub').val()
 
@@ -1272,8 +1287,9 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 							//update_email($('#s_email').val());
 							$('#s_email').val('');
 							$('#s_email_sub').val('');
-							CKEDITOR.instances.s_email_body.setData('');
+							$('#template_body').html('');
 							$('#s_cc').val('');
+							$('#s_bcc').val('');
 
 							data2 = {
 
@@ -1316,38 +1332,28 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 			
 			if(open==0){
 				$('.add_temp_div').css('display','flex')
-				$('.add_temp_update_div').css('display','none')
-				$('#open_temp i').attr('class','fa fa-minus-circle');
+				
+				$('#open_temp').text('Hide Credentials');
 				open=1
 			}else{
 				$('.add_temp_div').css('display','none')
-				$('.add_temp_update_div').css('display','none')
-				$('#open_temp i').attr('class','fa fa-plus-circle');
+		
+				$('#open_temp').text('Show Credentials');
 				open=0
 			};
-			$('#s_email_sub').val('');
-			CKEDITOR.instances.s_email_body.setData('');
-			$('.temp_name').val('');
-			$('.temp_name').attr('readonly',false);
 			
 
 		});
 		$('body').on('click', '.old_temp', function() { 
 
-			old_body  = $(this).data('body');
+			old_id  = $(this).data('id');
+			old_temp_obj = old_temp.find(i => i.id === old_id);
 			old_sub = $(this).data('sub');
 			temp_name =  $(this).data('name');
-			
-
-			CKEDITOR.instances.s_email_body.setData(old_body);
 			$('#s_email_sub').val(old_sub);
-			$('.temp_name').val(temp_name);
-			$('.temp_name').attr('readonly',true);
-			
-			$('.add_temp_update_div').css('display','flex')
+			$('#template_body').html(old_temp_obj.body);
 			$('.add_temp_div').css('display','none')
-			open = 0
-			$('#open_temp i').attr('class','fa fa-plus-circle');
+			
 
 		});
 
@@ -1367,7 +1373,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 					$('#s_email_sub').val('');
 					$('.temp_name').val('');
 					$('.add_temp_div').css('display','none')
-					$('.add_temp_update_div').css('display','none')
+					
 					open = 0
 					get_email_templates();
 
@@ -1471,7 +1477,8 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 					html='';
 					response.forEach(function(item) {
 
-						html += '<div id=\"d1\"><span style=\"cursor: pointer;\" class=\"old_temp\" data-id=\"'+item.id+'\" data-name=\"'+item.name+'\" data-sub=\"'+item.subject+'\" data-body=\"'+item.body+'\">'+item.name+'</span> <i  data-id=\"'+item.id+'\" class=\"fas fa-times-circle old_temp_del\" style=\"cursor: pointer;\"></i></div>&nbsp;&nbsp;';
+						old_temp.push({id : item.id, name:item.name, body:item.body });
+						html += '<div class=\"d1\"><span style=\"cursor: pointer;\" class=\"old_temp\" data-id=\"'+item.id+'\" data-name=\"'+item.name+'\" data-sub=\"'+item.subject+'\" >'+item.name+'</span></div>';
 
 					});
 					
@@ -1511,7 +1518,7 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 
 	
 	if ($action == 'update') {
-		echo button::create(['type'=>'button','label'=>'Send Email','id'=>'send_email']);
+		echo button::create(['type'=>'button','label'=>'APP CREDENTIALS','id'=>'send_email']);
 
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
@@ -1669,43 +1676,47 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 				background-color: #e5554e;
 				color: #fff;
 				}
-				#d1 {
-				text-align: center;
-				border: 1px solid teal;
-				border-radius: 15px;
-				button: transparent;
-				padding: 10px;
+				.d1 {
+				    text-align: center;
+					border: 1px solid teal;
+					border-radius: 15px;
+					padding: 9px;
+					margin: 2px;
 				}
 				  
 		
 		</style>
 		<!-- Modal -->
 		<div class='modal fade' id='emailModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-		<div class='modal-dialog'>
+		<div class='modal-dialog' style='margin-top: 100px;'>
 			<div class='modal-content'>
 			<div class='modal-header'>
-				<h5 class='modal-title' id='exampleModalLabel'>Send Email</h5>
+				<h5 class='modal-title' id='exampleModalLabel'>APP CREDENTIALS</h5>
 				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
 				<span aria-hidden='true'>&times;</span>
 				</button>
 			</div>
 			<div class='modal-body'>
 				
-				<div class='col-md-5' style='padding: 0;float:left; top: 50px; z-index: 1;'>
-					<div class='form-group'>
+				<div class='col-md-5 qr-code-generator_adjacent_div' style='padding: 0;float:left; z-index: 1;top: 50px;'>
+					<div class='form-group' >
 						<label for='s_email'>Email</label>
 						<input type='email' class='form-control' id='s_email' placeholder='' style='font-size: 11px;padding: 6px;'>
 					</div>
-					<div class='form-group'>
+					<div class='form-group' >
 						<label for='s_cc'>cc</label>
 						<input type='text' class='form-control' id='s_cc' placeholder='' style='font-size: 11px;padding: 6px;'>
 					</div>
-					<div class='form-group'>
+					<div class='form-group' >
+						<label for='s_bcc'>bcc</label>
+						<input type='text' class='form-control' id='s_bcc' placeholder='' style='font-size: 11px;padding: 6px;'>
+					</div>
+					<div class='form-group' style='margin-bottom: 10px; display:none;'>
 						<label for='s_email_sub'>Subject</label>
-						<input type='text' class='form-control' id='s_email_sub' style='font-size: 11px;padding: 6px;'>
+						<input type='text' class='form-control' id='s_email_sub' style='font-size: 11px;padding: 6px;' readonly>
 					</div>
 				</div>
-				<div class='col-md-6' style='float:left'>
+				<div class='col-md-6 qr-code-generator_div' style='float:left'>
 					<div class='form-group'>
 						<div class='qr-code-generator'>
 
@@ -1719,44 +1730,36 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 				
 				<div class='col-md-12' style='padding: 0;'>
 					<div class='form-group'>
-						<div class='col-md-3' style='float:right;text-align: end;margin-right: -16px;'>
-							<button type='button' id='open_temp' class='btn btn-sm btn-primary' style='margin-top: -8px; font-size: 12px; '><i class='fa fa-plus-circle' aria-hidden='true'></i></button>
-						</div>
-						<div class='col-md-3' style='float:left; padding-left: 0px;'>
-							<label for='s_email_body'>Body</label>
+						<div class='col-md-4' style='float:right;text-align: end;margin-right: -16px;'>
+							<button type='button' id='open_temp' class='btn btn-sm btn-primary' title='Cloud Credentials' style='margin-top: -8px; font-size: 12px; '>
+								Show Credentials
+							</button>
 						</div>
 						<div class='row form-group col-md-12 add_temp_div' style='padding-right: 0; padding-left: 0;display:none;'>
-							<div class='col-md-8' style='float:left;'>
-								<input type='text' class='form-control temp_name' placeholder='Template Name' style='font-size: 11px;padding: 6px;'>
+							<div class='col-md-6' style='float:left;'>
+								<label for='cloud_username'>Cloud Username</label>
+								<input type='text' class='form-control cloud_username'  style='font-size: 11px;padding: 6px;' readonly>
 							</div>
-							<div class='col-md-4' style='float:left;'>
-								<button type='button' id='add_temp' class='btn btn-sm btn-primary' style='font-size: 12px;'>Save</button>
-							</div>
-						</div>
-						<div class='row form-group col-md-12 add_temp_update_div' style='padding-right: 0; padding-left: 0;display:none;'>
-							<div class='col-md-8' style='float:left;'>
-								<input type='text' class='form-control temp_name'  placeholder='Template Name' style='font-size: 11px;padding: 6px;'>
-							</div>
-							<div class='col-md-4' style='float:left;'>
-								<button type='button' id='update_temp' class='btn btn-sm btn-primary' style='font-size: 12px;'>Update</button>
+							<div class='col-md-6' style='float:left;'>
+								<label for='cloud_password'>Cloud Password</label>
+								<input type='text' class='form-control cloud_password'  style='font-size: 11px;padding: 6px;' readonly>
 							</div>
 						</div>
+						
 						<div class='row form-group col-md-12' style='margin: 0;padding:0;' >
-							<textarea class='form-control' name='editor' id='s_email_body' rows='6' style='font-size: 11px;padding: 6px;'></textarea>
-							<script>
-									CKEDITOR.replace( 'editor' );
-	
-							</script>
+							<div id='template_body' style='display:none; width: 100%;height: 200px;border: 2px solid #f5ebeb;overflow-y: scroll; padding: 10px;'></div>
 						</div>
 					</div>
 				</div>
-				<div class='col-md-12' id='temp_list' style='display: inline-flex'>
+				<div class='col-md-12' id='temp_list' style='display: none;flex-wrap: wrap;padding: 0px;'>
 					
 				</div>
 				
 			</div>
-			<div class='modal-footer'>
-				<button type='button' id='send_qr_email' class='btn btn-primary'>Send</button>
+			<div class='modal-footer' style='border-top: 0;display: block;'>
+				<center>
+					<button type='button' id='send_qr_email' class='btn btn-primary'>Send</button>
+				</center>
 			</div>
 			</div>
 		</div>
