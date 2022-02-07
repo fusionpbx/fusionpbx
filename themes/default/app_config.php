@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Standard Theme";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Thème par Défaut";
+		$apps[$x]['description']['fr-fr'] = "Thème par Défaut";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "";
