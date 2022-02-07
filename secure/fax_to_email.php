@@ -609,11 +609,11 @@ if (!function_exists('fax_split_dtmf')) {
 				if (strlen($fax_file_name) > 0) {
 					$email_attachments[0]['type'] = 'file';
 					if ($pdf_file && file_exists($pdf_file)) {
-						$email_attachments[0]['name'] = $fax_file_name;
+						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
 						$email_attachments[0]['value'] = $pdf_file;
 					}
 					else {
-						$email_attachments[0]['name'] = $fax_file_name;
+						$email_attachments[0]['name'] = $fax_file_name.'.tif';
 						$email_attachments[0]['value'] = $fax_file;
 					}
 				}
