@@ -21,6 +21,8 @@
 		$array['email_templates'][$x]['template_body'] .= "\${fax_file_warning}<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = "html";
+		$array['email_templates'][$x]['template_enabled'] = "true";
 		$x++;
 
 		$array['email_templates'][$x]['email_template_uuid'] = '9817e168-8d02-4b9f-a21b-e867241d68db';
@@ -39,6 +41,8 @@
 		$array['email_templates'][$x]['template_body'] .= "<br>This message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = "html";
+		$array['email_templates'][$x]['template_enabled'] = "true";
 		$x++;
 
 		$array['email_templates'][$x]['email_template_uuid'] = 'a70a73d0-e10b-40ee-9a02-308de200ea84';
@@ -56,6 +60,8 @@
 		$array['email_templates'][$x]['template_body'] .= "\${fax_file_warning}<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = "html";
+		$array['email_templates'][$x]['template_enabled'] = "true";
 		$x++;
 
 		$array['email_templates'][$x]['email_template_uuid'] = '819979a1-281c-4c10-b036-3cea084dc42b';
@@ -74,6 +80,8 @@
 		$array['email_templates'][$x]['template_body'] .= "<br>This message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.<br>";
 		$array['email_templates'][$x]['template_body'] .= "</body>\n";
 		$array['email_templates'][$x]['template_body'] .= "</html>\n";
+		$array['email_templates'][$x]['template_type'] = "html";
+		$array['email_templates'][$x]['template_enabled'] = "true";
 
 		//build array of email template uuids
 		foreach ($array['email_templates'] as $row) {
