@@ -284,7 +284,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 }
 
 //get the ring groups
-if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) {
+if (permission_exists('call_block_all') || permission_exists('call_block_ring_group')) {
 	$sql = "select ring_group_uuid,ring_group_name, ring_group_extension, ring_group_description from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	// $sql .= "and ring_group_enabled = 'true' ";
@@ -416,7 +416,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	function call_block_action_select($label = false) {
-		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails;
+		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails, $ring_groups;
 		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
 		if ($label) {
 			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
@@ -459,7 +459,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 				echo "	</optgroup>\n";
 			}
 		}
-		if (permission_exists('call_block_ring_groups')) {
+		if (permission_exists('call_block_ring_group')) {
 			if (is_array($ring_groups) && sizeof($ring_groups) != 0) {
 				echo "	<optgroup label='".$text['label-ring_groups']."'>\n";
 				foreach ($ring_groups as &$row) {
