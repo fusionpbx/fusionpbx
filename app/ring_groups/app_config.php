@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Ein Werkzeug um mehrere Nebenstellen anzurufen.";
 		$apps[$x]['description']['es-cl'] = "Una herramienta para llamar a múltiples extensiones";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "Outil pour appeler plusieurs extensions"; 
 		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
