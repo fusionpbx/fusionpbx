@@ -16,8 +16,8 @@
 		$apps[$x]['description']['de-de'] = "Sprach-Mailbox verwalten.";
 		$apps[$x]['description']['es-cl'] = "";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
+		$apps[$x]['description']['fr-ca'] = "Gérer les boîtes vocales";
+		$apps[$x]['description']['fr-fr'] = "Gérer les boîtes vocales";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
 		$apps[$x]['description']['nl-nl'] = "Beheer antwoordapparaten";
