@@ -16,7 +16,7 @@
 		$apps[$x]['description']['de-de'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['es-cl'] = "Administrador de mensajes de bienvenida de correo de voz para extensiones.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-ca'] = "Accueil messagerie Vocale";
 		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
