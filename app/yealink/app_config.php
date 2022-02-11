@@ -1481,5 +1481,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*73";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e7091a9-6a1c-478c-9a4b-39dd93f19f94";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_udp_update_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT keep-alive; 0-Disabled, 1-Default (default), 2-Option, 3-Notify";	
 
 ?>
