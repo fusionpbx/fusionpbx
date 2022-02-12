@@ -634,6 +634,12 @@
 		echo "    	<option value='fixed' ".($default_setting_value == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
 		echo "    </select>\n";
 	}
+	elseif ($category == "theme" && $subcategory == "menu_side_item_main_sub_close" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='automatic'>".$text['option-automatic']."</option>\n";
+		echo "    	<option value='manual' ".($default_setting_value == "manual" ? "selected='selected'" : null).">".$text['option-manual']."</option>\n";
+		echo "    </select>\n";
+	}
 	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='image' ".(($default_setting_value == "image") ? "selected='selected'" : null).">".$text['label-image']."</option>\n";
