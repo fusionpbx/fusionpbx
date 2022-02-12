@@ -1919,6 +1919,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the submenu indicator icon to use for the contract action (default: chevron-up).";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "65398bd8-3a00-4c01-a632-53ef4f0ce5f9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_side_item_main_sub_close";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "automatic";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set how an open submenu closes when a different one is opened (default: automatic).";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "97a620e1-d7b2-4550-8648-726c3029143d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "action_bar_border_top";
