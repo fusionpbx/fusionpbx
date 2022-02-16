@@ -1015,8 +1015,8 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " and missed_call = false \n";
 				$sql .= " and hangup_cause != 'LOSE_RACE' \n";
 				$sql .= " and originating_leg_uuid IS NULL \n";
-				$sql .= " and (answer_stamp IS NOT NULL and bridge_uuid IS NOT NULL) \n";
 				$sql .= " and (cc_side IS NULL or cc_side !='agent')";
+				$sql .= " and (answer_stamp IS NOT NULL and bridge_uuid IS NOT NULL) \n";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 				}
