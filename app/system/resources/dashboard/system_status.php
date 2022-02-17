@@ -46,11 +46,11 @@
 				var system_status_chart_context = document.getElementById('system_status_chart').getContext('2d');
 
 				var system_status_chart_background_color;
-				if ('<?php echo $percent_disk_usage; ?>' < 60) {
+				if ('<?php echo $percent_disk_usage; ?>' <= 80) {
 					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][0]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' < 80 && '<?php echo $percent_disk_usage; ?>' > 60) {
+				} else if ('<?php echo $percent_disk_usage; ?>' <= 90) {
 					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][1]; ?>';
-				} else if ('<?php echo $percent_disk_usage; ?>' >= 80) {
+				} else if ('<?php echo $percent_disk_usage; ?>' > 90) {
 					system_status_chart_background_color = '<?php echo $_SESSION['dashboard']['disk_usage_chart_main_background_color'][2]; ?>';
 				}
 
