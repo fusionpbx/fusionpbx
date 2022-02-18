@@ -896,7 +896,7 @@ include "root.php";
 						if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 							//get the contacts assigned to the groups and add to the contacts array
 								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_groups']['boolean'] == "true") {
-									$this->contact_append($contact, $line, $domain_uuid, $device_user_uuid, 'groups');
+									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
 								}
 	
 							//get the contacts assigned to the user and add to the contacts array
