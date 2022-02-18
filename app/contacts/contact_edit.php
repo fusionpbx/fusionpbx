@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -379,7 +379,7 @@
 						$y++;
 					}
 				}
-				
+
 			}
 
 			$y = 0;
@@ -1371,134 +1371,135 @@ echo "		</div>\n";
 echo "	</div>\n";
 unset($contact_note);
 
-if (permission_exists('contact_user_view') || permission_exists('contact_group_view')) {
-	echo "	<div class='form_set'>\n";
-	echo "		<div class='heading'>\n";
-	echo "			<b>".$text['label-permissions']."</b>\n";
-	echo "		</div>\n";
-	echo "		<div style='clear: both;'></div>\n";
+if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+	if (permission_exists('contact_user_view') || permission_exists('contact_group_view')) {
+		echo "	<div class='form_set'>\n";
+		echo "		<div class='heading'>\n";
+		echo "			<b>".$text['label-permissions']."</b>\n";
+		echo "		</div>\n";
+		echo "		<div style='clear: both;'></div>\n";
 
-	if (permission_exists('contact_user_edit')) {
-		echo "		<div class='label' valign='top'>".$text['label-users']."</div>\n";
-		echo "		<div class='field no-wrap' align='left'>";
-		if ($action == "update" && is_array($contact_users_assigned) && @sizeof($contact_users_assigned) != 0) {
-			echo "			<div class='vtable'>".$text['label-username']."\n";
-			if ($contact_users_assigned && permission_exists('contact_user_delete')) {
-				//echo "			<div class='edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_users', 'delete_toggle_users');\" onmouseout=\"swap_display('delete_label_users', 'delete_toggle_users');\">\n";
-				echo "			<div style='float: right;'\">\n";
-				echo "				<span>".$text['label-delete']."</span>\n";
-				//echo "				<span id='delete_label_users'>".$text['label-delete']."</span>\n";
-				//echo "				<span id='delete_toggle_users'><input type='checkbox' id='checkbox_all_users' name='checkbox_all' onclick=\"edit_all_toggle('users');\"></span>\n";
-				echo "			</div>\n";
-			}
-			echo "		</div>\n";
-			foreach ($contact_users_assigned as $x => $field) {
-				echo "		<div class='vtable'>".escape($field['username'])."\n";
+		if (permission_exists('contact_user_edit')) {
+			echo "		<div class='label' valign='top'>".$text['label-users']."</div>\n";
+			echo "		<div class='field no-wrap' align='left'>";
+			if ($action == "update" && is_array($contact_users_assigned) && @sizeof($contact_users_assigned) != 0) {
+				echo "			<div class='vtable'>".$text['label-username']."\n";
 				if ($contact_users_assigned && permission_exists('contact_user_delete')) {
-					if (is_uuid($field['contact_user_uuid'])) {
-						echo "		<div style='text-align: center; padding-bottom: 3px; float: right; margin-right: 10px;'>\n";
-						//echo "			<input type='checkbox' name='contact_users_delete[".$x."][checked]' value='true' class='chk_delete checkbox_users' onclick=\"edit_delete_action('users');\">\n";
-						//echo "			<input type='hidden' name='contact_users_delete[".$x."][uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
-						echo "			<input type='checkbox' name='contact_users[".$x."][checked]' value='true' class='chk_delete checkbox_users' onclick=\"edit_delete_action('users');\">\n";
-						echo "			<input type='hidden' name='contact_users[".$x."][uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
-						echo "			<input type='hidden' name='contact_users[$x][domain_uuid]' value=\"".escape($_SESSION['domain_uuid'])."\">\n";
-						echo "			<input type='hidden' name='contact_users[$x][contact_user_uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
-						echo "			<input type='hidden' name='contact_users[$x][contact_uuid]' value='".escape($field['contact_uuid'])."' />\n";
-					}
-					else {
-						echo "		<div>\n";
+					//echo "			<div class='edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_users', 'delete_toggle_users');\" onmouseout=\"swap_display('delete_label_users', 'delete_toggle_users');\">\n";
+					echo "			<div style='float: right;'\">\n";
+					echo "				<span>".$text['label-delete']."</span>\n";
+					//echo "				<span id='delete_label_users'>".$text['label-delete']."</span>\n";
+					//echo "				<span id='delete_toggle_users'><input type='checkbox' id='checkbox_all_users' name='checkbox_all' onclick=\"edit_all_toggle('users');\"></span>\n";
+					echo "			</div>\n";
+				}
+				echo "		</div>\n";
+				foreach ($contact_users_assigned as $x => $field) {
+					echo "		<div class='vtable'>".escape($field['username'])."\n";
+					if ($contact_users_assigned && permission_exists('contact_user_delete')) {
+						if (is_uuid($field['contact_user_uuid'])) {
+							echo "		<div style='text-align: center; padding-bottom: 3px; float: right; margin-right: 10px;'>\n";
+							//echo "			<input type='checkbox' name='contact_users_delete[".$x."][checked]' value='true' class='chk_delete checkbox_users' onclick=\"edit_delete_action('users');\">\n";
+							//echo "			<input type='hidden' name='contact_users_delete[".$x."][uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
+							echo "			<input type='checkbox' name='contact_users[".$x."][checked]' value='true' class='chk_delete checkbox_users' onclick=\"edit_delete_action('users');\">\n";
+							echo "			<input type='hidden' name='contact_users[".$x."][uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
+							echo "			<input type='hidden' name='contact_users[$x][domain_uuid]' value=\"".escape($_SESSION['domain_uuid'])."\">\n";
+							echo "			<input type='hidden' name='contact_users[$x][contact_user_uuid]' value='".escape($field['contact_user_uuid'])."' />\n";
+							echo "			<input type='hidden' name='contact_users[$x][contact_uuid]' value='".escape($field['contact_uuid'])."' />\n";
+						}
+						else {
+							echo "		<div>\n";
+						}
+						echo "	</div>\n";
 					}
 					echo "	</div>\n";
 				}
-				echo "	</div>\n";
 			}
-		}
-		if (permission_exists('contact_user_add')) {
-			echo "		<div class='vtable' style='border-bottom: none;'>\n";
-			echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
-			echo "				<option value=''></option>\n";
-			foreach ($users as $field) {
-				if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
-				echo "					<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
-			}
-			echo "			</select>\n";
-			if ($action == "update") {
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
-			}
-			unset($users);
-			echo "		</div>\n";
-		}
-		echo "			".$text['description-users']."\n";
-		echo "		</div>\n";
-	}
-
-	if (permission_exists('contact_group_view')) {
-		echo "	<div class='label'>".$text['label-groups']."</div>";
-		echo "	<div class='field no-wrap'>";
-		if (is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
-			echo "		<div class='vtable'>".$text['label-group']."\n";
-			if ($contact_groups_assigned && permission_exists('contact_group_delete')) {
-				//echo "		<div class='edit_delete_checkbox_all' style='float: right;' onmouseover=\"swap_display('delete_label_groups', 'delete_toggle_groups');\" onmouseout=\"swap_display('delete_label_groups', 'delete_toggle_groups');\">\n";
-				echo "		<div style='float: right;'\">\n";
-				echo "			<span>".$text['label-delete']."</span>\n";
-				//echo "			<span id='delete_label_groups'>".$text['label-delete']."</span>\n";
-				//echo "			<span id='delete_toggle_groups' style='margin-right: 10px;'><input type='checkbox' id='checkbox_all_groups' name='checkbox_all' onclick=\"edit_all_toggle('groups');\"></span>\n";
-				echo "		</div>\n";
-			}
-			echo "		</div>\n";
-			foreach ($contact_groups_assigned as $x => $field) {
-				if (strlen($field['group_name']) > 0) {
-					echo "		<div class='vtable'>".escape($field['group_name'])."\n";
-					if (permission_exists('contact_group_delete')) {
-						if (is_uuid($field['contact_group_uuid'])) {
-							echo "		<div style='text-align: center; padding-bottom: 3px; float: right; margin-right: 10px;'>";
-							//echo "			<input type='checkbox' name='contact_groups_delete[".$x."][checked]' value='true' class='chk_delete checkbox_groups' onclick=\"edit_delete_action('groups');\">\n";
-							//echo "			<input type='hidden' name='contact_groups_delete[".$x."][uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
-							echo "			<input type='checkbox' name='contact_groups[".$x."][checked]' value='true' class='chk_delete checkbox_groups' onclick=\"edit_delete_action('groups');\">\n";
-							echo "			<input type='hidden' name='contact_groups[".$x."][uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
-							echo "			<input type='hidden' name='contact_groups[$x][domain_uuid]' value=\"".escape($_SESSION['domain_uuid'])."\">\n";
-							echo "			<input type='hidden' name='contact_groups[$x][contact_group_uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
-							echo "			<input type='hidden' name='contact_groups[$x][contact_uuid]' value='".escape($contact_uuid)."' />\n";
-						}
-						else {
-							echo "		<div>";
-						}
-						echo "		</div>\n";
-					}
-					echo "		</div>\n";
+			if (permission_exists('contact_user_add')) {
+				echo "		<div class='vtable' style='border-bottom: none;'>\n";
+				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
+				echo "				<option value=''></option>\n";
+				foreach ($users as $field) {
+					if (in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
+					echo "					<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
-			}
-		}
-
-		if (permission_exists('contact_group_add')) {
-			if (is_array($contact_groups_available) && @sizeof($contact_groups_available) != 0) {
-				echo "	<div class='vtable' style='border-bottom: none;'>\n";
-
-				echo "		<select name='contact_group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
-				echo "			<option value=''></option>\n";
-				foreach ($contact_groups_available as $field) {
-					if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
-					if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin"))) { continue; }	//only show admin group to admins
-					echo "			<option value='".escape($field['group_uuid'])."'>".escape($field['group_name'])."</option>\n";
-				}
-				echo "		</select>";
+				echo "			</select>\n";
 				if ($action == "update") {
 					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
 				}
-				echo "	</div>\n";
+				unset($users);
+				echo "		</div>\n";
 			}
+			echo "			".$text['description-users']."\n";
+			echo "		</div>\n";
 		}
-		echo "		".$text['description-groups']."\n";
+
+		if (permission_exists('contact_group_view')) {
+			echo "	<div class='label'>".$text['label-groups']."</div>";
+			echo "	<div class='field no-wrap'>";
+			if (is_array($contact_groups_assigned) && @sizeof($contact_groups_assigned) != 0) {
+				echo "		<div class='vtable'>".$text['label-group']."\n";
+				if ($contact_groups_assigned && permission_exists('contact_group_delete')) {
+					//echo "		<div class='edit_delete_checkbox_all' style='float: right;' onmouseover=\"swap_display('delete_label_groups', 'delete_toggle_groups');\" onmouseout=\"swap_display('delete_label_groups', 'delete_toggle_groups');\">\n";
+					echo "		<div style='float: right;'\">\n";
+					echo "			<span>".$text['label-delete']."</span>\n";
+					//echo "			<span id='delete_label_groups'>".$text['label-delete']."</span>\n";
+					//echo "			<span id='delete_toggle_groups' style='margin-right: 10px;'><input type='checkbox' id='checkbox_all_groups' name='checkbox_all' onclick=\"edit_all_toggle('groups');\"></span>\n";
+					echo "		</div>\n";
+				}
+				echo "		</div>\n";
+				foreach ($contact_groups_assigned as $x => $field) {
+					if (strlen($field['group_name']) > 0) {
+						echo "		<div class='vtable'>".escape($field['group_name'])."\n";
+						if (permission_exists('contact_group_delete')) {
+							if (is_uuid($field['contact_group_uuid'])) {
+								echo "		<div style='text-align: center; padding-bottom: 3px; float: right; margin-right: 10px;'>";
+								//echo "			<input type='checkbox' name='contact_groups_delete[".$x."][checked]' value='true' class='chk_delete checkbox_groups' onclick=\"edit_delete_action('groups');\">\n";
+								//echo "			<input type='hidden' name='contact_groups_delete[".$x."][uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
+								echo "			<input type='checkbox' name='contact_groups[".$x."][checked]' value='true' class='chk_delete checkbox_groups' onclick=\"edit_delete_action('groups');\">\n";
+								echo "			<input type='hidden' name='contact_groups[".$x."][uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
+								echo "			<input type='hidden' name='contact_groups[$x][domain_uuid]' value=\"".escape($_SESSION['domain_uuid'])."\">\n";
+								echo "			<input type='hidden' name='contact_groups[$x][contact_group_uuid]' value='".escape($field['contact_group_uuid'])."' />\n";
+								echo "			<input type='hidden' name='contact_groups[$x][contact_uuid]' value='".escape($contact_uuid)."' />\n";
+							}
+							else {
+								echo "		<div>";
+							}
+							echo "		</div>\n";
+						}
+						echo "		</div>\n";
+					}
+				}
+			}
+
+			if (permission_exists('contact_group_add')) {
+				if (is_array($contact_groups_available) && @sizeof($contact_groups_available) != 0) {
+					echo "	<div class='vtable' style='border-bottom: none;'>\n";
+					echo "		<select name='contact_group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+					echo "			<option value=''></option>\n";
+					foreach ($contact_groups_available as $field) {
+						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
+						if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin"))) { continue; }	//only show admin group to admins
+						echo "			<option value='".escape($field['group_uuid'])."'>".escape($field['group_name'])."</option>\n";
+					}
+					echo "		</select>";
+					if ($action == "update") {
+						echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+					}
+					echo "	</div>\n";
+				}
+			}
+			echo "		".$text['description-groups']."\n";
+			echo "	</div>\n";
+		}
+
+		echo "		<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";
+		echo "			&nbsp;\n";
+		echo "		</div>\n";
+		echo "		<div class='field empty_row' style='grid-row: 4 / span 99;'>\n";
+		echo "		</div>\n";
+
 		echo "	</div>\n";
 	}
-
-	echo "		<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";
-	echo "			&nbsp;\n";
-	echo "		</div>\n";
-	echo "		<div class='field empty_row' style='grid-row: 4 / span 99;'>\n";
-	echo "		</div>\n";
-
-	echo "	</div>\n";
 }
 
 if (permission_exists('contact_phone_view')) {
@@ -1693,7 +1694,7 @@ if (permission_exists('contact_phone_view')) {
 		echo "				<input class='formfld' type='text' name='contact_phones[$x][phone_description]' placeholder='' maxlength='255' value=\"".escape($row["phone_description"])."\">\n";
 		//echo 				$text['description-phone_description']."\n";
 		echo "		</div>\n";
-	
+
 		echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
 		echo "			&nbsp;\n";
 		echo "		</div>\n";
@@ -1883,7 +1884,7 @@ if (permission_exists('contact_address_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<input class='formfld' type='text' name='contact_addresses[$x][address_region]' placeholder='' maxlength='255' value=\"".escape($row["address_region"])."\">\n";
 		echo "		</div>\n";
-	
+
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-address_postal_code']."\n";
 		echo "		</div>\n";
@@ -2106,7 +2107,7 @@ if (permission_exists('contact_url_view')) {
 
 		echo "				<select class='formfld' ".((!$url_label_found && $url_label != '') ? "style='display: none;'" : "style='width: auto;'")." name='contact_urls[$x][url_label]' id='url_label' onchange=\"getElementById('url_label_custom').value='';\">\n";
 		echo "					<option value=''></option>\n";
-	
+
 		echo 					(is_array($url_label_options)) ? implode("\n", $url_label_options) : null;
 		echo "				</select>\n";
 		echo "				<input type='text' class='formfld' ".(($url_label_found || $url_label == '') ? "style='display: none;'" : null)." name='url_label_custom' id='url_label_custom' value=\"".((!$url_label_found) ? htmlentities($url_label) : null)."\">\n";
@@ -2193,13 +2194,13 @@ if (permission_exists('contact_relation_view')) {
 			}
 			echo "		</div>\n";
 			echo "		<div style='clear: both;'></div>\n";
-	
+
 			echo "		<div class='label required'>\n";
 			echo "			".$text['label-contact_relation_label']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-	
-	
+
+
 			//if there are no custom labels add defaults
 			if (is_array($_SESSION["contact"]["relation_label"])) {
 				$relation_labels = $_SESSION["contact"]["url_label"];
@@ -2231,7 +2232,7 @@ if (permission_exists('contact_relation_view')) {
 			echo "			".$text['label-contact_relation_contact']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-	
+
 			echo "			<select class='formfld' name='contact_relations[$x][relation_contact_uuid]' id='relation_contact_uuid'>\n";
 			echo "				<option value=''></option>\n";
 			if (is_array($contacts) && @sizeof($contacts) != 0) {
@@ -2251,13 +2252,13 @@ if (permission_exists('contact_relation_view')) {
 			unset($sql, $parameters, $result, $row);
 			echo "			</select>\n";
 			echo "		</div>\n";
-	
+
 			echo "		<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";
 			echo "			&nbsp;\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap empty_row' style='grid-row: 4 / span 99;'>\n";
 			echo "		</div>\n";
-	
+
 			echo "	</div>\n";
 			$x++;
 		}
@@ -2361,7 +2362,7 @@ if (permission_exists('contact_setting_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		echo "				<input class='formfld' type='text' name='contact_settings[$x][contact_setting_description]' placeholder='".escape($text['label-contact_setting_description'])."' maxlength='255' value=\"".escape($row["contact_setting_description"])."\">\n";
 		echo "		</div>\n";
-	
+
 		if (is_array($contact_settings) && @sizeof($contact_settings) > 1 && permission_exists('contact_setting_delete')) {
 			if (is_uuid($row['contact_setting_uuid'])) {
 				echo "		<div class='label'>\n";
