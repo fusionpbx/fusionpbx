@@ -951,5 +951,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Define the allowed file attachment extensions and their mime types in a JSON array.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d8998b7f-c27c-43ac-ad1b-a9c66187bb10";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "contact";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "permissions";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 
 ?>
