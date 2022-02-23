@@ -1064,13 +1064,7 @@ function number_pad($number,$n) {
 // validate email address syntax
 	if(!function_exists('valid_email')) {
 		function valid_email($email) {
-			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+(\.[A-z0-9]{2,7})?$/';
-			if ($email != "" && preg_match($regex, $email) == 1) {
-				return true; // email address has valid syntax
-			}
-			else {
-				return false; // email address does not have valid syntax
-			}
+			return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? true : false;
 		}
 	}
 
@@ -1378,9 +1372,6 @@ function number_pad($number,$n) {
 				include_once("resources/phpmailer/class.phpmailer.php");
 				include_once("resources/phpmailer/class.smtp.php");
 
-				//regular expression to validate email addresses
-				$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,7}$/';
-
 				//create the email object and set general settings
 				$mail = new PHPMailer();
 				$mail->IsSMTP();
@@ -1448,7 +1439,7 @@ function number_pad($number,$n) {
 				}
 				foreach ($eml_recipients as $eml_recipient) {
 					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
-						if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
+						if ($eml_recipient["address"] != '' && valid_email($eml_recipient["address"])) { // check if valid address
 							switch ($eml_recipient["delivery"]) {
 								case "cc" :		$mail->AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
 								case "bcc" :	$mail->AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
@@ -1457,7 +1448,7 @@ function number_pad($number,$n) {
 							$address_found = true;
 						}
 					}
-					else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
+					else if ($eml_recipient != '' && valid_email($eml_recipient)) { // check if recipient value is simply (only) an address
 						$mail->AddAddress($eml_recipient);
 						$address_found = true;
 					}
@@ -1615,21 +1606,6 @@ function number_pad($number,$n) {
 		}
 		else {
 			return strtoupper($string);
-		}
-	}
-
-//email validate
-	if (!function_exists('email_validate')) {
-		function email_validate($strEmail){
-			$validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
-			// search email text for regular exp matches
-			preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
-			if (count($matches) == 0) {
-				return 0;
-			}
-			else {
-				return 1;
-			}
 		}
 	}
 

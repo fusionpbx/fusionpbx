@@ -283,6 +283,17 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 	$ivrs = $database->select($sql, $parameters);
 }
 
+//get the ring groups
+if (permission_exists('call_block_all') || permission_exists('call_block_ring_group')) {
+	$sql = "select ring_group_uuid,ring_group_name, ring_group_extension, ring_group_description from v_ring_groups ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	// $sql .= "and ring_group_enabled = 'true' ";
+	$sql .= "order by ring_group_extension asc ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$database = new database;
+	$ring_groups = $database->select($sql, $parameters);
+}
+
 //get the voicemails
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
 	$sql .= "from v_voicemails ";
@@ -405,7 +416,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	function call_block_action_select($label = false) {
-		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails;
+		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails, $ring_groups;
 		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
 		if ($label) {
 			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
@@ -444,6 +455,16 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) 
 				foreach ($ivrs as &$row) {
 					$selected = ($call_block_app == 'ivr' && $call_block_data == $row['ivr_menu_extension']) ? "selected='selected'" : null;
 					echo "		<option value='ivr:".urlencode($row["ivr_menu_extension"])."' ".$selected.">".escape($row['ivr_menu_name'])." ".escape($row['ivr_menu_extension'])."</option>\n";
+				}
+				echo "	</optgroup>\n";
+			}
+		}
+		if (permission_exists('call_block_ring_group')) {
+			if (is_array($ring_groups) && sizeof($ring_groups) != 0) {
+				echo "	<optgroup label='".$text['label-ring_groups']."'>\n";
+				foreach ($ring_groups as &$row) {
+					$selected = ($call_block_app == 'ring_group' && $call_block_data == $row['ring_group_extension']) ? "selected='selected'" : null;
+					echo "		<option value='ring_group:".urlencode($row["ring_group_extension"])."' ".$selected.">".escape($row['ring_group_name'])." ".escape($row['ring_group_extension'])."</option>\n";
 				}
 				echo "	</optgroup>\n";
 			}

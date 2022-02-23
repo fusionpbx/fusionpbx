@@ -235,9 +235,9 @@
 							$label = $text['label-11d'];
 							$abbrv = "11d";
 							break;
-						case "^(?:\+?1)?(\d{10})$":
+						case "^\+?1?([2-9]\d{2}[2-9]\d{2}\d{4})$":
 							$label = $text['label-north_america'];
-							$abbrv = "10-11d";
+							$abbrv = "10-11-NANP";
 							break;
 						case "^(011\d{9,17})$":
 							$label = $text['label-north_america_intl'];
@@ -1086,7 +1086,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
 	echo "	<option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
 	echo "	<option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
-	echo "	<option value='^\+?1?(\\d{10})\$'>".$text['label-north_america']."</option>\n";
+	echo "	<option value='^\+?1?([2-9]\\d{2}[2-9]\\d{2}\\d{4})\$'>".$text['label-north_america']."</option>\n";
 	echo "	<option value='^(011\\d{9,17})\$'>".$text['label-north_america_intl']."</option>\n";
 	echo "	<option value='^\+?1?((?:264|268|242|246|441|284|345|767|809|829|849|473|658|876|664|787|939|869|758|784|721|868|649|340|684|671|670|808)\d{7})\$'>".$text['label-north_america_islands']."</option>\n";
 	echo "	<option value='^(00\\d{9,17})\$'>".$text['label-europe_intl']."</option>\n";

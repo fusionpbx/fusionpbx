@@ -206,6 +206,15 @@
 							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: extension ".. call_block_data.."\n");
 						end
 					end
+					if (call_block_app == 'ring_group') then
+						if (session:ready()) then
+							session:execute('set', 'call_block_uuid='..call_block_uuid);
+							session:execute('set', 'call_block_app='..call_block_app);
+							session:execute('set', 'call_block_data='..call_block_data);
+							session:execute("transfer", call_block_data..' XML '.. context);
+							freeswitch.consoleLog("notice", "[call_block] caller id number " .. caller_id_number .. " action: extension ".. call_block_data.."\n");
+						end
+					end
 					if (call_block_app == 'voicemail') then
 						if (session:ready()) then
 							session:execute('set', 'call_block_uuid='..call_block_uuid);

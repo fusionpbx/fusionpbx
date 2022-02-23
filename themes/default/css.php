@@ -2296,6 +2296,7 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		*/
 		padding-top: 3px;
 		padding-bottom: 15px;
+		overflow-y: auto;
 		}
 
 	@media(min-width: 0px) and (max-width: 1199px) {

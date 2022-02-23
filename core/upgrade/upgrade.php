@@ -54,9 +54,13 @@
 //get the command line arguments
 	if(defined('STDIN')) {
 		//$application_name = $argv[0];
-		$upgrade_type = $argv[1];
-		//echo $upgrade_type."\n";
+		if (isset($argv[1])) {
+			$upgrade_type = $argv[1];
+		}
 	}
+
+//show the upgrade type
+	//echo $upgrade_type."\n";
 
 //run all app_defaults.php files
 	if ($upgrade_type == 'domains') {
