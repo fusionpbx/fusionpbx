@@ -178,7 +178,7 @@
 
 		echo "</div>\n";
 
-		if (permission_exists('xml_cdr_all') && $_GET['show'] == 'all') {
+		if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>";
 		}
 
@@ -188,7 +188,7 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
-	if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
+	if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
@@ -208,7 +208,7 @@
 	if (is_array($summary)) {
 		foreach ($summary as $key => $row) {
 			echo "<tr class='list-row'>\n";
-			if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
+			if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['extension'])."</td>\n";
