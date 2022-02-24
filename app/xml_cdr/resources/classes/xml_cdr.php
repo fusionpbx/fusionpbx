@@ -1149,7 +1149,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " originating_leg_uuid, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
 				else {
@@ -1160,12 +1160,12 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
 				$database = new database;
