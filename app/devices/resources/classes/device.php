@@ -120,6 +120,9 @@ include "root.php";
 				case "64167f":
 					$device_vendor = "polycom";
 					break;
+				case "482567":
+					$device_vendor = "polycom";
+					break;
 				case "000413":
 					$device_vendor = "snom";
 					break;
