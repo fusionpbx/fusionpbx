@@ -90,6 +90,11 @@ if (!class_exists('destinations')) {
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_number']."\$)";
 				}
+				elseif (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_number']."\$)";
+				}
 				elseif (isset($array['destination_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
 					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
@@ -109,12 +114,13 @@ if (!class_exists('destinations')) {
 
 					//add prefix
 						if (strlen($destination_prefix) > 0) {
-							if (strlen($destination_prefix) > 0 && strlen($destination_prefix) < 4) {
-								$plus = (substr($destination_prefix, 0, 1) == "+") ? '' : '\+?';
+							$destination_prefix = str_replace("+", "", $destination_prefix);
+							$plus = '\+?';
+							if (strlen($destination_prefix) == 1) {
 								$destination_prefix = $plus.$destination_prefix.'?';
 							}
 							else {
-								$destination_prefix = '(?:'.$destination_prefix.')?';
+								$destination_prefix = $plus.'(?:'.$destination_prefix.')?';
 							}
 						}
 
@@ -953,7 +959,6 @@ if (!class_exists('destinations')) {
 						$i++;
 					}
 
-					$i = 0;
 					unset($text);
 				}
 			}

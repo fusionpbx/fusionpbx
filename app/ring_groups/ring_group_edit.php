@@ -500,6 +500,8 @@
 	}
 
 //set the default
+	$destination_delay_max = $_SESSION['ring_group']['destination_delay_max']['numeric'];
+	$destination_timeout_max = $_SESSION['ring_group']['destination_timeout_max']['numeric'];
 	if (strlen($ring_group_ringback) == 0) {
 		$ring_group_ringback = '${us-ring}';
 	}
@@ -696,7 +698,7 @@
 		echo "<optgroup label=".$text['label-'.$key].">\n";
 		$selected = false;
 		foreach ($value as $row) {
-			if ($ring_group_greeting == $row["value"]) { 
+			if ($ring_group_greeting == $row["value"]) {
 				$selected = true;
 				echo "	<option value='".escape($row["value"])."' selected='selected'>".escape($row["name"])."</option>\n";
 			}
@@ -772,7 +774,7 @@
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
 		$i=0;
-		while ($i <= 300) {
+		while ($i <= $destination_delay_max) {
 			if ($i == $row['destination_delay']) {
 				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}
@@ -785,8 +787,9 @@
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_timeout]' class='formfld' style='width:55px'>\n";
+
 		$i = 5;
-		while($i <= 300) {
+		while($i <= $destination_timeout_max) {
 			if ($i == $row['destination_timeout']) {
 				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}
@@ -1056,7 +1059,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	
+
 	if (permission_exists("ring_group_context")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

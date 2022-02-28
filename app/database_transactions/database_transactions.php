@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,6 +57,8 @@
 		$sql_search .= "	or lower(t.transaction_address) like :search ";
 		$sql_search .= "	or lower(t.transaction_type) like :search ";
 		$sql_search .= "	or cast(t.transaction_date as text) like :search ";
+		$sql_search .= "	or lower(t.transaction_old) like :search ";
+		$sql_search .= "	or lower(t.transaction_new) like :search ";
 		$sql_search .= "	or lower(u.username) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -126,9 +128,9 @@
 		}
 		echo "	</select>";
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','onclick'=>"document.getElementById('search').value = ''; document.getElementById('form_search').submit();",'style'=>(!$search ? 'display: none;' : null)]);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','onclick'=>"document.getElementById('search').value = ''; document.getElementById('form_search').submit();",'style'=>(!$search ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}

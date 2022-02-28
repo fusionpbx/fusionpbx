@@ -812,6 +812,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+				//header("Location: fax_outbox.php?id=".$fax_uuid);
 			}
 			exit;
 		}
@@ -942,28 +943,30 @@ if (!$included) {
 		$sql .= "and cp.phone_type_fax = 1 ";
 		$sql .= "and cp.phone_number is not null ";
 		$sql .= "and cp.phone_number <> '' ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
-			//only show contacts assigned to current user's group(s) and those not assigned to any group
-			$sql .= "and (";
-			$sql .= "	c.contact_uuid in ( ";
-			$sql .= "		select contact_uuid from v_contact_groups ";
-			$sql .= "		where (";
-			foreach ($user_group_uuids as $index => $user_group_uuid) {
-				$sql .= $or;
-				$sql .= "		group_uuid = :group_uuid_".$index." ";
-				$parameters['group_uuid_'.$index] = $user_group_uuid;
-				$or = " or ";
+		if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+			if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+				//only show contacts assigned to current user's group(s) and those not assigned to any group
+				$sql .= "and (";
+				$sql .= "	c.contact_uuid in ( ";
+				$sql .= "		select contact_uuid from v_contact_groups ";
+				$sql .= "		where (";
+				foreach ($user_group_uuids as $index => $user_group_uuid) {
+					$sql .= $or;
+					$sql .= "		group_uuid = :group_uuid_".$index." ";
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+					$or = " or ";
+				}
+				unset($user_group_uuids, $index, $user_group_uuid, $or);
+				$sql .= "		) ";
+				$sql .= "		and domain_uuid = :domain_uuid ";
+				$sql .= "	) ";
+				$sql .= "	or ";
+				$sql .= "	c.contact_uuid not in ( ";
+				$sql .= "		select contact_uuid from v_contact_groups ";
+				$sql .= "		where domain_uuid = :domain_uuid ";
+				$sql .= "	) ";
+				$sql .= ") ";
 			}
-			unset($user_group_uuids, $index, $user_group_uuid, $or);
-			$sql .= "		) ";
-			$sql .= "		and domain_uuid = :domain_uuid ";
-			$sql .= "	) ";
-			$sql .= "	or ";
-			$sql .= "	c.contact_uuid not in ( ";
-			$sql .= "		select contact_uuid from v_contact_groups ";
-			$sql .= "		where domain_uuid = :domain_uuid ";
-			$sql .= "	) ";
-			$sql .= ") ";
 		}
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$database = new database;

@@ -2691,7 +2691,7 @@
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 {if isset($grandstream_lan_port_vlan) }
-<P27004>1</P27004>
+<P27004>{$grandstream_lan_port_vlan}</P27004>
 {else}
 <P27004>0</P27004>
 {/if}
@@ -2850,12 +2850,12 @@
 <!-- When set to Yes(1), it will override the configured provision path and method -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P20719>1</P20719>
+{if isset($grandstream_dhcp_option_override)}<P20719>{$grandstream_dhcp_option_override}</P20719>{else}<P20719>1</P20719>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory -->
-<P20721>0</P20721>
+<P20721>1</P20721>
 
 <!-- Automatic Upgrade. Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. P20721=3 -->
 <!-- Number: 60 to 5256000 -->
@@ -3209,7 +3209,7 @@
 <!-- Allow DHCP Option 2 to override time zone (If DHCP Option 2 is enabled, the timezone can be offset.) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P143>1</P143>
+{if isset($grandstream_dhcp_option_2_timezone_override) }<P143>{$grandstream_dhcp_option_2_timezone_override}</P143>{else}<P143>0</P143>{/if}
 
 <!-- ######################### -->
 <!-- #  Maintenance/Syslog  ## -->
@@ -3268,11 +3268,7 @@
 <!-- Enable Phonebook XML Download. # 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - Yes, HTTPS. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-{if isset($contact_grandstream)}
-<P330>1</P330>
-{else}
-<P330>0</P330>
-{/if}
+<P330>{$grandstream_phonebook_download}</P330>
 
 <!-- HTTP/HTTPS User Name -->
 <!-- String -->
@@ -3286,23 +3282,25 @@
 <!-- This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
-{if isset($contact_grandstream)}
-<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($grandstream_phonebook_xml_server_path)}
-<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{if isset($grandstream_phonebook_xml_server_path)}
+    <P331>{$grandstream_phonebook_xml_server_path}/{$mac}</P331>
 {else}
-<P331></P331>
+    <P331></P331>
 {/if}
 
 <!-- Phonebook Download Interval (in minutes) -->
 <!-- Valid value range is 5-720. Default is 0 for disabled -->
 <!-- Number: 0, 5-720;  -->
-<P332>120</P332>
+{if isset($grandstream_phonebook_download_interval)}
+    <P332>{$grandstream_phonebook_download_interval}</P332>
+{else}
+    <P332>0</P332>
+{/if}
 
 <!-- Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P333>1</P333>
+<P333>0</P333>
 
 <!-- ############################################### -->
 <!-- #  Phonebook/Global Phonebook LDAP Settings  ## -->

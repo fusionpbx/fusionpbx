@@ -24,6 +24,10 @@
     <alert_external_ring_sound perm="">{if isset($snom_alert_external)}{$snom_alert_external}{else}Ringer1{/if}</alert_external_ring_sound>
     <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
     <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
+    <!-- Wallpaper (426x240px PNG) (Firmware: 10.1.41.1+) -->
+    <custom_bg_image_url perm="">{$snom_wallpaper_url}</custom_bg_image_url>
+    <!-- Expansion Mod (480x1280px PNG <2MB) -->
+    <expansion_module_background_image perm="">{$snom_exp_wallpaper_url}</expansion_module_background_image>
     <!-- SIP Settings -->
     <mwi_notification perm="">silent</mwi_notification>
     <mwi_dialtone perm="">stutter</mwi_dialtone>

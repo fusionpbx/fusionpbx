@@ -7,6 +7,10 @@ if ($domains_processed == 1) {
 			unset($array);
 		}
 
+	//make the default groups exist
+		$group = new groups;
+		$group->defaults();
+
 	//get the groups
 		$sql = "select * from v_groups ";
 		$sql .= "where domain_uuid is null ";
@@ -84,7 +88,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'dashboard';
 			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
-			$database->save($array);
+			$database->save($array, false);
 			//$result = $database->message;
 			//view_array($result);
 		}

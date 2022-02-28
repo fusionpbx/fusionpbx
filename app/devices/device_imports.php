@@ -278,7 +278,7 @@
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -289,6 +289,17 @@
 									
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
+
+									//count the field names
+									if (isset($field_count[$table_name][$field_name])) {
+										$field_count[$table_name][$field_name]++;
+									}
+									else {
+										$field_count[$table_name][$field_name] = 0;
+									}
+
+									//set the ordinal ID
+									$id = $field_count[$table_name][$field_name];
 
 									//remove formatting from the phone number
 									if ($field_name == "phone_number") {
@@ -310,14 +321,14 @@
 											}
 										}
 										else {
-											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
+											$array[$parent][$row_id][$table_name][$id]['domain_uuid'] = $domain_uuid;
+											$array[$parent][$row_id][$table_name][$id][$field_name] = $result[$key];
 										}
 
 										if ($field_name == "username") {
 											foreach ($users as $field) {
 												if ($field['username'] == $result[$key]) {
-													$array[$table_name][$row_id]['device_user_uuid'] = $field['user_uuid'];
+													$array[$parent][$table_name][$id]['device_user_uuid'] = $field['user_uuid'];
 												}
 											}
 										}
@@ -344,8 +355,40 @@
 									unset($sql, $parameters);
 								}
 
+							//debug information
+								//view_array($field_count);
+
 							//process a chunk of the array
 								if ($row_id === 1000) {
+
+									//remove sub table data if it doesn't have more details than domain_uuid an device_uuid
+										$x = 0;
+										foreach ($array['devices'] as $row) {
+											//remove empty device keys
+											if (isset($row['device_keys'])) {
+												$y = 0;
+												foreach ($row['device_keys'] as &$sub_row) {
+													if (count($sub_row) == 2) {
+														unset($array['devices'][$x]['device_keys']);
+													}
+													$y++;
+												}
+											}
+
+											//remove empty device lines
+											if (isset($row['device_lines'])) {
+												$y = 0;
+												foreach ($row['device_lines'] as &$sub_row) {
+													if (count($sub_row) == 2) {
+														unset($array['devices'][$x]['device_lines']);
+													}
+													$y++;
+												}
+											}
+
+											//increment device id
+											$x++;
+										}
 
 									//save to the data
 										$database->save($array);
@@ -359,21 +402,49 @@
 								}
 
 						} //if ($from_row <= $row_id)
+						unset($field_count);
 						$row_number++;
 						$row_id++;
 					} //end while
 					fclose($handle);
 
+				//remove sub table data if it doesn't have more details than domain_uuid an device_uuid
+					$x = 0;
+					foreach ($array['devices'] as $row) {
+						//remove empty device keys
+						if (isset($row['device_keys'])) {
+							$y = 0;
+							foreach ($row['device_keys'] as &$sub_row) {
+								if (count($sub_row) == 2) {
+									unset($array['devices'][$x]['device_keys']);
+								}
+								$y++;
+							}
+						}
+
+						//remove empty device lines
+						if (isset($row['device_lines'])) {
+							$y = 0;
+							foreach ($row['device_lines'] as &$sub_row) {
+								if (count($sub_row) == 2) {
+									unset($array['devices'][$x]['device_lines']);
+								}
+								$y++;
+							}
+						}
+
+						//increment device id
+						$x++;
+					}
+
 				//debug info
-					//echo "<pre>\n";
-					//print_r($array);
-					//echo "</pre>\n";
-					//exit;
+					//view_array($array);
 
 				//save to the data
 					if (is_array($array)) {
 						$database->save($array);
 						//$message = $database->message;
+						//view_array($message);
 					}
 				
 					if (strlen($_SESSION['provision']['path']['text']) > 0) {

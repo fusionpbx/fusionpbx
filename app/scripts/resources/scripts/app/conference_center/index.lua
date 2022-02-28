@@ -1,6 +1,6 @@
 --	conference_center/index.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -43,8 +43,9 @@
 	dbh = Database.new('system');
 	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
---get the cache directory
+--get the settings
 	session_enabled = settings:get('conference_center', 'session_enabled', 'boolean');
+	account_code_enabled = settings:get('conference_center', 'account_code_enabled', 'boolean');
 
 --include json library
 	local json
@@ -109,10 +110,11 @@
 					link_address = http_protocol.."://"..domain_name..project_path;
 
 				--prepare the headers
-					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-					headers = headers..'"X-FusionPBX-Call-UUID":"na",';
-					headers = headers..'"X-FusionPBX-Email-Type":"conference"}';
+					headers = {}
+					headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+					headers["X-FusionPBX-Domain-Name"] = domain_name;
+					headers["X-FusionPBX-Call-UUID"]   = 'na';
+					headers["X-FusionPBX-Email-Type"]  = 'conference';
 
 				--remove quotes from caller id name and number
 					caller_id_name = caller_id_name:gsub("'", "&#39;");
@@ -151,14 +153,22 @@
 
 				--send the email
 					if (string.len(attachment) > 4) then
-						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."' '"..attachment.."'";
+						send_mail(headers,
+							email,
+							email,
+							{subject, body},
+							attachment
+							);
 					else
-						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."'";
+						send_mail(headers,
+							email,
+							email,
+							{subject, body}
+							);
 					end
 					if (debug["info"]) then
-						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
+						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. email .. " " .. subject .. " " .. body .. "\n");
 					end
-					result = api:executeString(cmd);
 			end
 
 	end
@@ -581,6 +591,30 @@
 				member_type = "participant";
 			end
 
+		--get the account code
+			if (account_code_enabled == 'true' and member_type == 'moderator') then
+				--request the account code
+					min_digits = 2;
+					max_digits = 20;
+					account_code = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
+					--user_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_extension_followed_by_pound.wav", "", "\\d+");
+
+				--update the account code
+					local sql = {}
+					table.insert(sql, "update v_conference_rooms ");
+					table.insert(sql, "set account_code = :account_code ");
+					table.insert(sql, "where conference_center_uuid = :conference_center_uuid ");
+					sql = table.concat(sql, "\n");
+					local params = {
+						conference_center_uuid = conference_center_uuid;
+						account_code = account_code;
+					};
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+					end
+					dbh:query(sql, params);
+			end
+
 		--close the database connection
 			dbh:release();
 
@@ -600,12 +634,14 @@
 			end
 
 		--check if the conference exists
-			cmd = "conference "..conference_room_uuid.."@"..domain_name.." xml_list";
-			result = trim(api:executeString(cmd));
-			if (string.sub(result, -9) == "not found") then
-				conference_exists = false;
-			else
-				conference_exists = true;
+			if (conference_room_uuid and domain_name) then
+				cmd = "conference "..conference_room_uuid.."@"..domain_name.." xml_list";
+				result = trim(api:executeString(cmd));
+				if (string.sub(result, -9) == "not found") then
+					conference_exists = false;
+				else
+					conference_exists = true;
+				end
 			end
 
 		--check if the conference is locked
@@ -798,4 +834,3 @@
 			freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 			session:execute("conference", cmd);
 	end
-

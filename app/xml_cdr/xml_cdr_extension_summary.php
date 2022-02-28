@@ -113,7 +113,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-extension_summary']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('xml_cdr_all') && $_GET['show'] != 'all') {
+	if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] != 'all') {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?show=all']);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-download_csv'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-sm-dn','link'=>'xml_cdr_extension_summary.php?'.(strlen($_SERVER["QUERY_STRING"]) > 0 ? $_SERVER["QUERY_STRING"].'&' : null).'type=csv']);
@@ -178,7 +178,7 @@
 
 		echo "</div>\n";
 
-		if (permission_exists('xml_cdr_all') && $_GET['show'] == 'all') {
+		if (permission_exists('xml_cdr_extension_summary_all') && $_GET['show'] == 'all') {
 			echo "<input type='hidden' name='show' value='all'>";
 		}
 
@@ -188,7 +188,7 @@
 //show the results
 	echo "<table class='list'>\n";
 	echo "	<tr class='list-header'>\n";
-	if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
+	if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 		echo "		<th>".$text['label-domain']."</th>\n";
 	}
 	echo "		<th>".$text['label-extension']."</th>\n";
@@ -197,7 +197,7 @@
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
 	echo "		<th class='center'>".$text['label-busy']."</th>\n";
-	echo "		<th class='center'>".$text['label-aloc']."</th>\n";
+	echo "		<th class='center' title='".$text['description-aloc']."'>".$text['label-aloc']."</th>\n";
 	echo "		<th class='center'>".$text['label-inbound_calls']."</th>\n";
 	echo "		<th class='center'>".$text['label-inbound_duration']."</th>\n";
 	echo "		<th class='center'>".$text['label-outbound_calls']."</th>\n";
@@ -208,7 +208,7 @@
 	if (is_array($summary)) {
 		foreach ($summary as $key => $row) {
 			echo "<tr class='list-row'>\n";
-			if ($_GET['show'] === "all" && permission_exists('xml_cdr_all')) {
+			if ($_GET['show'] === "all" && permission_exists('xml_cdr_extension_summary_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['extension'])."</td>\n";
