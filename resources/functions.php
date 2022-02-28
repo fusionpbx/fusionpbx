@@ -1382,6 +1382,7 @@ function number_pad($number,$n) {
 				if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
 					$mail->Port = $_SESSION['email']['smtp_port']['numeric'];
 				}
+
 				if ($_SESSION['email']['smtp_auth']['text'] == "true") {
 					$mail->SMTPAuth = true;
 					$mail->Username = $_SESSION['email']['smtp_username']['text'];
@@ -1390,14 +1391,23 @@ function number_pad($number,$n) {
 				else {
 					$mail->SMTPAuth = false;
 				}
-				if ($_SESSION['email']['smtp_secure']['text'] == "none") {
-					$_SESSION['email']['smtp_secure']['text'] = '';
+
+				$smtp_secure = true;
+				if ($_SESSION['email']['smtp_secure']['text'] == "") {
+					$mail->SMTPSecure = 'none';
+					$mail->SMTPAutoTLS = false;
+					$smtp_secure = false;
 				}
-				if ($_SESSION['email']['smtp_secure']['text'] != '') {
+				elseif ($_SESSION['email']['smtp_secure']['text'] == "none") {
+					$mail->SMTPSecure = 'none';
+					$mail->SMTPAutoTLS = false;
+					$smtp_secure = false;
+				}
+				else {
 					$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
 				}
 
-				if (isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
+				if ($smtp_secure && isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
 					//bypass certificate check e.g. for self-signed certificates
 					$smtp_options['ssl']['verify_peer'] = false;
 					$smtp_options['ssl']['verify_peer_name'] = false;
@@ -1405,7 +1415,7 @@ function number_pad($number,$n) {
 				}
 
 				//used to set the SSL version
-				if (isset($_SESSION['email']['smtp_crypto_method'])) {
+				if ($smtp_secure && isset($_SESSION['email']['smtp_crypto_method'])) {
 					$smtp_options['ssl']['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
 				}
 
