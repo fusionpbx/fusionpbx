@@ -117,7 +117,7 @@
 		<param name="enable-timer" value="false" enabled="true"/>
 		<param name="minimum-session-expires" value="0" enabled="false"/>
 		
-		<!-- apply inbound acl->
+		<!-- apply inbound acl -->
 		<param name="apply-inbound-acl" value="domains"/>
 		<!--
 		This defines your local network, by default we detect your local network
