@@ -76,6 +76,11 @@
 		<param name="rtp-hold-timeout-sec" value="1800"/>
 		<!--<param name="enable-3pcc" value="true"/>-->
 
+		<!--session timers -->
+		<param name="session-timeout" value="0" enabled="true"/>
+		<param name="enable-timer" value="false" enabled="true"/>
+		<param name="minimum-session-expires" value="0" enabled="false"/>
+
 		<!-- TLS: disabled by default, set to "true" to enable -->
 		<param name="tls" value="$${external_ssl_enable}"/>
 		<!-- Set to true to not bind on the normal sip-port but only on the TLS port -->
