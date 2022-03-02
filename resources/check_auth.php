@@ -42,6 +42,16 @@
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
+// check if the user was authenticated in Laravel
+	if (isset($_SESSION['LARAVEL_UN'])){
+		$_REQUEST["username"] = $_SESSION['LARAVEL_UN'];
+		$_REQUEST["password"] = $_SESSION['LARAVEL_PW'];
+		unset($_SESSION['LARAVEL_UN']);
+		unset($_SESSION['LARAVEL_PW']);
+	} else {
+		header("Location: ".PROJECT_PATH."/login");
+	}
+
 //if the username is not provided then send to login.php
 	if (strlen($_SESSION['username']) == 0 && strlen($_REQUEST["username"]) == 0 && strlen($_REQUEST["key"]) == 0) {
 		$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
