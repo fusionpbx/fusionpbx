@@ -51,6 +51,16 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0bc44a93-b87c-414f-8584-f890dd06d28c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "country_code";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_domains";

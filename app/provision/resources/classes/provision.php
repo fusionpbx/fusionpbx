@@ -303,7 +303,11 @@ include "root.php";
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
 						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
 						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
-						if (isset($value)) { $provision[$key] = $value; }
+						if (isset($value)) {
+							$value = str_replace('${domain_name}', $domain_name, $value);
+							$value = str_replace('${mac_address}', $mac, $value);
+							$provision[$key] = $value;
+						}
 						unset($value);
 					}
 				}
@@ -889,7 +893,7 @@ include "root.php";
 
 				//get the list of contact directly assigned to the user
 					if (is_uuid($domain_uuid)) {
-						if ($_SESSION['provision']['contact_permissions']['boolean'] == "true") {
+						if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 							//get the contacts assigned to the groups and add to the contacts array
 								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_groups']['boolean'] == "true") {
 									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');

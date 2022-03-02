@@ -223,7 +223,7 @@
 
 /* Screen smaller than 550px? 1 columns */
 @media (max-width: 575px) {
-  .widgets { grid-template-columns: repeat(1, 1fr); }
+  .widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
   .col-num { grid-column: span 1; }
 	<?php
 		foreach($dashboard as $row) {
@@ -240,7 +240,7 @@
 
 /* Screen larger than 550px? 2 columns */
 @media (min-width: 575px) {
-  .widgets { grid-template-columns: repeat(2, 1fr); }
+  .widgets { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
@@ -261,7 +261,7 @@
 
 /* Screen larger than 1300px? 3 columns */
 @media (min-width: 1300px) {
-  .widgets { grid-template-columns: repeat(3, 1fr); }
+  .widgets { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 	<?php
 		foreach($dashboard as $row) {
@@ -279,13 +279,13 @@
 
 /* Screen larger than 1500px? 4 columns */
 @media (min-width: 1500px) {
-  .widgets { grid-template-columns: repeat(4, 1fr); }
+  .widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
 
 /* Screen larger than 2000px? 5 columns */
 @media (min-width: 2000px) {
-  .widgets { grid-template-columns: repeat(5, 1fr); }
+  .widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
 
@@ -299,7 +299,11 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		echo "<div class='widget' id='".$dashboard_name."' draggable='true'>\n";
+		$draggable = '';
+		if ($_GET['edit'] == 'true') {
+			$draggable = "draggable='true'";
+		}
+		echo "<div class='widget' id='".$dashboard_name."' ".$draggable.">\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;

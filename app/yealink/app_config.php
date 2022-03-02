@@ -35,8 +35,8 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_provision_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = 'https://{$domain_name}/app/provision/';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Provisioning URL for Yealink";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fc2fa8cd-b14e-48e3-99bd-7c01c9d6208d";
@@ -963,9 +963,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_trust_certificates";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Required trusted certificate for provisioning.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Only Accept Trusted Certificates 0-Disabled (default), 1-Enabled.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e1d03aea-1563-4c57-86de-4d4d274b8352";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -1481,5 +1481,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*73";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e7091a9-6a1c-478c-9a4b-39dd93f19f94";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_udp_update_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT keep-alive; 0-Disabled, 1-Default (default), 2-Option, 3-Notify";	
 
 ?>

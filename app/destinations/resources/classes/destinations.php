@@ -959,7 +959,6 @@ if (!class_exists('destinations')) {
 						$i++;
 					}
 
-					$i = 0;
 					unset($text);
 				}
 			}

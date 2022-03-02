@@ -221,6 +221,8 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_export_pdf";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_extension_summary_all";
 
 	//default settings
 		$y=0;
