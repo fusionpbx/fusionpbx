@@ -42,18 +42,14 @@
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
-// check if the user has been authenticated in Laravel or here
-	if ((isset($_SESSION['LARAVEL_UN']) || strlen($_SESSION['username']) != 0) &&
-	isset($_COOKIE[$_SESSION['cookie_name']])){
+// check if the user was authenticated in Laravel
+	if (isset($_SESSION['LARAVEL_UN'])){
 		$_REQUEST["username"] = $_SESSION['LARAVEL_UN'];
 		$_REQUEST["password"] = $_SESSION['LARAVEL_PW'];
-		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
-		unset($_SESSION['redirect_url']);
 		unset($_SESSION['LARAVEL_UN']);
 		unset($_SESSION['LARAVEL_PW']);
 	} else {
-		header("Location: ".PROJECT_PATH."/logout");
-		exit;
+		header("Location: ".PROJECT_PATH."/login");
 	}
 
 //if the username is not provided then send to login.php
@@ -79,8 +75,6 @@
 			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 				$auth->username = $_REQUEST["username"];
 				$auth->password = $_REQUEST["password"];
-				$auth->domain_uuid = $_SESSION['user']['domain_uuid'];
-				$auth->domain_name = $_SESSION['user']['domain_name'];
 			}
 			if (isset($_REQUEST["key"])) {
 				$auth->key = $_REQUEST["key"];
