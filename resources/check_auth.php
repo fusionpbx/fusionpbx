@@ -43,7 +43,7 @@
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }
 
 // check if the user has been authenticated in Laravel or here
-if (isset($_SESSION['LARAVEL_UN']) || strlen($_SESSION['username']) != 0){
+	if (isset($_SESSION['LARAVEL_UN']) || strlen($_SESSION['username']) != 0){
 		$_REQUEST["username"] = $_SESSION['LARAVEL_UN'];
 		$_REQUEST["password"] = $_SESSION['LARAVEL_PW'];
 		unset($_SESSION['LARAVEL_UN']);
