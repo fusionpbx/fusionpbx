@@ -63,7 +63,7 @@
 		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus_other';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${destination}:";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 		$z=0;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'top';
