@@ -3,6 +3,6 @@
 
 include:config "y000000000108.cfg"
 include:config "{$mac}.cfg"
-include:config "y900000000108"
+include:config "y900000000108.cfg"
 
 overwrite_mode = {$yealink_overwrite_mode}
