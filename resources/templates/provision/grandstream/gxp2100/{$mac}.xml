@@ -38,7 +38,7 @@
 
 <!--# SIP User ID-->
 <!--# String-->
-    <P35>{$account.1.display_name}</P35>
+    <P35>{$account.1.user_id}</P35>
 
 <!--# Authenticate ID-->
 <!--# String-->

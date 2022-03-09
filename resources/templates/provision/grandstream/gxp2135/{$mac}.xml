@@ -5848,81 +5848,81 @@
     <!-- ########################################## -->
     <!-- # IP Address. Ignore if DHCP or PPPoE is used -->
     <!-- # Number: 0 - 255 -->
-    <P9>192</P9>
+    {if isset($grandstream_ipv4octet_1)}<P9>{$grandstream_ipv4octet_1}</P9>{else}<P9>192</P9>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P10>168</P10>
+    {if isset($grandstream_ipv4octet_2)}<P10>{$grandstream_ipv4octet_2}</P10>{else}<P10>168</P10>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P11>1</P11>
+    {if isset($grandstream_ipv4octet_3)}<P11>{$grandstream_ipv4octet_3}</P11>{else}<P11>1</P11>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P12>102</P12>
+    {if isset($grandstream_ipv4octet_4)}<P12>{$grandstream_ipv4octet_4}</P12>{else}<P12>102</P12>{/if}
 
     <!-- # Subnet mask. Ignore if DHCP or PPPoE is used -->
     <!-- # Number: 0 - 255 -->
-    <P13>255</P13>
+    {if isset($grandstream_ipv4mask_1)}<P13>{$grandstream_ipv4mask_1}</P13>{else}<P13>255</P13>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P14>255</P14>
+    {if isset($grandstream_ipv4mask_2)}<P14>{$grandstream_ipv4mask_2}</P14>{else}<P14>255</P14>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P15>0</P15>
+    {if isset($grandstream_ipv4mask_3)}<P15>{$grandstream_ipv4mask_3}</P15>{else}<P15>0</P15>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P16>0</P16>
+    {if isset($grandstream_ipv4mask_4)}<P16>{$grandstream_ipv4mask_4}</P16>{else}<P16>0</P16>{/if}
 
     <!-- # Gateway. Ignore if DHCP or PPPoE is used -->
     <!-- # Number: 0 - 255 -->
-    <P17>192</P17>
+    {if isset($grandstream_ipv4gw_1)}<P17>{$grandstream_ipv4gw_1}</P17>{else}<P17>192</P17>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P18>168</P18>
+    {if isset($grandstream_ipv4gw_2)}<P18>{$grandstream_ipv4gw_2}</P18>{else}<P18>168</P18>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P19>2</P19>
+    {if isset($grandstream_ipv4gw_3)}<P19>{$grandstream_ipv4gw_3}</P19>{else}<P19>2</P19>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P20>1</P20>
+    {if isset($grandstream_ipv4gw_4)}<P20>{$grandstream_ipv4gw_4}</P20>{else}<P20>1</P20>{/if}
 
     <!-- # DNS 1 Server. Ignore if DHCP or PPPoE is used -->
     <!-- # Number: 0 - 255 -->
-    <P21>0</P21>
+    {if isset($grandstream_ipv4dns1_1)}<P21>{$grandstream_ipv4dns1_1}</P21>{else}<P21>0</P21>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P22>0</P22>
+    {if isset($grandstream_ipv4dns1_2)}<P22>{$grandstream_ipv4dns1_2}</P22>{else}<P22>0</P22>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P23>0</P23>
+    {if isset($grandstream_ipv4dns1_3)}<P23>{$grandstream_ipv4dns1_3}</P23>{else}<P23>0</P23>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P24>0</P24>
+    {if isset($grandstream_ipv4dns1_4)}<P24>{$grandstream_ipv4dns1_4}</P24>{else}<P24>0</P24>{/if}
 
     <!-- # DNS 2 Server. Ignore if DHCP or PPPoE is used -->
     <!-- # Number: 0 - 255 -->
-    <P25>0</P25>
+    {if isset($grandstream_ipv4dns2_1)}<P25>{$grandstream_ipv4dns2_1}</P25>{else}<P25>0</P25>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P26>0</P26>
+    {if isset($grandstream_ipv4dns2_2)}<P26>{$grandstream_ipv4dns2_2}</P26>{else}<P26>0</P26>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P27>0</P27>
+    {if isset($grandstream_ipv4dns2_3)}<P27>{$grandstream_ipv4dns2_3}</P27>{else}<P27>0</P27>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P28>0</P28>
+    {if isset($grandstream_ipv4dns2_4)}<P28>{$grandstream_ipv4dns2_4}</P28>{else}<P28>0</P28>{/if}
 
     <!-- # Preferred DNS server.  (if specified). -->
     <!-- # Number: 0 - 255 -->
-    <P92>0</P92>
+    {if isset($grandstream_ipv4preferdns_1)}<P92>{$grandstream_ipv4preferdns_1}</P92>{else}<P92>0</P92>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P93>0</P93>
+    {if isset($grandstream_ipv4preferdns_2)}<P93>{$grandstream_ipv4preferdns_2}</P93>{else}<P93>0</P93>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P94>0</P94>
+    {if isset($grandstream_ipv4preferdns_3)}<P94>{$grandstream_ipv4preferdns_3}</P94>{else}<P94>0</P94>{/if}
 
     <!-- # Number: 0 - 255 -->
-    <P95>0</P95>
+    {if isset($grandstream_ipv4preferdns_4)}<P95>{$grandstream_ipv4preferdns_4}</P95>{else}<P95>0</P95>{/if}
 
     <!-- # IPv6 Address type. 0 - Auto Configured, 1 - Statically Configured. Default is 0. -->
     <!-- # Number: 0, 1 -->
