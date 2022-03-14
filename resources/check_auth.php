@@ -49,7 +49,8 @@
 		unset($_SESSION['LARAVEL_UN']);
 		unset($_SESSION['LARAVEL_PW']);
 	} else {
-		header("Location: ".PROJECT_PATH."/login");
+		header("Location: ".PROJECT_PATH."/logout");
+		exit;
 	}
 
 //if the username is not provided then send to login.php
@@ -75,6 +76,8 @@
 			if (isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
 				$auth->username = $_REQUEST["username"];
 				$auth->password = $_REQUEST["password"];
+				$auth->domain_uuid = $_SESSION['user']['domain_uuid'];
+				$auth->domain_name = $_SESSION['user']['domain_name'];
 			}
 			if (isset($_REQUEST["key"])) {
 				$auth->key = $_REQUEST["key"];
