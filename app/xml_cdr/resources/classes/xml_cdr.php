@@ -369,6 +369,9 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->sip_h_caller_destination) ) {
 							$caller_destination = urldecode($xml->variables->sip_h_caller_destination);
 						}
+						if (!isset($caller_destination) && isset($xml->variables->dialed_user)) {
+							$caller_destination = urldecode($xml->variables->dialed_user);
+						}
 
 					//set missed calls
 						if (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
