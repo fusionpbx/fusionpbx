@@ -299,8 +299,15 @@ if (!class_exists('xml_cdr')) {
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
 					//get the caller ID
-						$caller_id_name = urldecode($xml->variables->caller_id_name);
-						$caller_id_number = urldecode($xml->variables->caller_id_number);
+						if (isset($xml->variables->caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->caller_id_name);
+						}
+						if (isset($xml->variables->caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->caller_id_number);
+						}
+						if (!isset($caller_id_number) && isset($xml->variables->sip_from_user)) {
+							$caller_id_number = urldecode($xml->variables->sip_from_user);
+						}
 
 					//if the origination caller id name and number are set then use them
 						if (isset($xml->variables->origination_caller_id_name)) {
