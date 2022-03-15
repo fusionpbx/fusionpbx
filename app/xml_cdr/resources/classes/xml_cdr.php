@@ -302,6 +302,14 @@ if (!class_exists('xml_cdr')) {
 						$caller_id_name = urldecode($xml->variables->caller_id_name);
 						$caller_id_number = urldecode($xml->variables->caller_id_number);
 
+					//if the origination caller id name and number are set then use them
+						if (isset($xml->variables->origination_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
+						}
+						if (isset($xml->variables->origination_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
+						}
+
 					//if the call is outbound use the external caller ID
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
@@ -347,6 +355,14 @@ if (!class_exists('xml_cdr')) {
 							}
 						}
 
+					//get the caller_destination
+						if (isset($xml->variables->caller_destination) ) {
+							$caller_destination = urldecode($xml->variables->caller_destination);
+						}
+						if (isset($xml->variables->sip_h_caller_destination) ) {
+							$caller_destination = urldecode($xml->variables->sip_h_caller_destination);
+						}
+
 					//set missed calls
 						if (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
 							//answered call
@@ -368,7 +384,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['missed_call'] = $missed_call;
 						$this->array[$key]['caller_id_name'] = $caller_id_name;
 						$this->array[$key]['caller_id_number'] = $caller_id_number;
-						$this->array[$key]['caller_destination'] = urldecode($xml->variables->caller_destination);
+						$this->array[$key]['caller_destination'] = $caller_destination;
 						$this->array[$key]['accountcode'] = urldecode($xml->variables->accountcode);
 						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
 						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
