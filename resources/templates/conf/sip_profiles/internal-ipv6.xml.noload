@@ -38,8 +38,12 @@
 		<param name="bitpacking" value="aal2" enabled="false"/>
 		<!--max number of open dialogs in proceeding -->
 		<param name="max-proceeding" value="1000" enabled="false"/>
+
 		<!--session timers for all call to expire after the specified seconds -->
-		<param name="session-timeout" value="1800" enabled="false"/>
+		<param name="session-timeout" value="0" enabled="true"/>
+		<param name="enable-timer" value="false" enabled="true"/>
+		<param name="minimum-session-expires" value="0" enabled="false"/>
+
 		<param name="multiple-registrations" value="true" enabled="false"/>
 		<!--set to 'greedy' if you want your codec list to take precedence -->
 		<param name="inbound-codec-negotiation" value="generous"/>

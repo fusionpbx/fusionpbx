@@ -108,7 +108,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "loopback";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "outbound,loopback,lcr";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: outbound,loopback,lcr";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "48874632-421d-4829-a6b7-0695c589d85f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
@@ -212,7 +212,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "tls";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: tls, none";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "aba1680c-ac78-4d20-adfe-17231aef70fe";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "email";

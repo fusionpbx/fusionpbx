@@ -254,6 +254,10 @@
 		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/dashboard/";
 	}
 
+	if (strlen($_REQUEST['path']) > 0) {
+		$_SESSION['redirect_path'] = $_REQUEST['path'];
+	}
+
 //add the header
 	$document['title'] = $text['title-login'];
 	include "resources/header.php";
