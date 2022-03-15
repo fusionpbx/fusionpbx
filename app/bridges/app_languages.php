@@ -224,7 +224,7 @@
 		$text['description-bridge_description']['he-il'] = '';
 		$text['description-bridge_description']['it-it'] = '';
 		$text['description-bridge_description']['nl-nl'] = 'Voer omschrijving in.';
-		$text['description-bridge_description']['pl-pl'] = 'Wprowadx opis.';
+		$text['description-bridge_description']['pl-pl'] = 'Wprowadź opis.';
 		$text['description-bridge_description']['pt-br'] = '';
 		$text['description-bridge_description']['pt-pt'] = '';
 		$text['description-bridge_description']['ro-ro'] = '';
