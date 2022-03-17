@@ -22,6 +22,13 @@ if (email_queue_enabled == 'true') then
 		local call_uuid = headers["X-FusionPBX-Call-UUID"];
 		local local_after_email = headers["X-FusionPBX-local_after_email"] or '';
 
+		if (call_uuid ~= nil) then
+			email_uuid = call_uuid;
+		else
+			api = freeswitch.API();
+			email_uuid = api:executeString("create_uuid");
+		end
+
 		if (local_after_email == 'false') then
 			email_action_after = 'delete';
 		else
@@ -85,7 +92,7 @@ if (email_queue_enabled == 'true') then
 			email_subject = email_subject;
 			email_body = email_body;
 			email_status = email_status;
-			email_uuid = call_uuid;
+			email_uuid = email_uuid;
 			email_action_after = email_action_after;
 		}
 		db:query(sql, params);
