@@ -1,6 +1,6 @@
 --	email.lua
 --	Part of FusionPBX
---	Copyright (C) 2010 - 291 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010 - 2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,19 @@
 
 --replace the &#34 with double quote
 	body = body:gsub("&#34;", [["]]);
+
+--get sessions info
+	if (session:ready()) then
+		domain_uuid = session:getVariable("domain_uuid");
+		domain_name = session:getVariable("domain_name");
+		call_uuid = session:getVariable("uuid");
+		headers = {
+			["X-FusionPBX-Domain-UUID"] = domain_uuid;
+			["X-FusionPBX-Domain-Name"] = domain_name;
+			["X-FusionPBX-Email-Type"]	= 'voicemail';
+			["X-FusionPBX-Call-UUID"]	= call_uuid;
+		}
+	end
 
 --send the email
 	if (file == nil) then
