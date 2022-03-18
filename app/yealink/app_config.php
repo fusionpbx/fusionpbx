@@ -1489,5 +1489,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or disable the NAT keep-alive; 0-Disabled, 1-Default (default), 2-Option, 3-Notify";	
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94a40988-057c-428e-b3fc-f125a345f85f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_hold_or_swap_mode";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "configures the display rule of the Hold/Swap soft key when there are two calls on the phone. 0-Only display Swap softkey (default), 1-Only display Hold softkey, 2-Display Hold and Swap softkeys";
 
 ?>
