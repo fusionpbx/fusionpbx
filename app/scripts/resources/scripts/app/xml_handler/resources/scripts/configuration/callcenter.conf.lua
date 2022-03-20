@@ -47,9 +47,15 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
-		--get the variables
-			dsn = freeswitch.getGlobalVariable("dsn") or ''
-			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
+		--get the dsn
+			if  xml_handler.callcenter_use_dsn then
+				dsn = database.switch or ''
+				dsn_callcenter = database.callcenter or ''
+			else
+				-- old method
+				dsn = freeswitch.getGlobalVariable("dsn") or ''
+				dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
+			end
 
 		--start the xml array
 			local xml = {}
