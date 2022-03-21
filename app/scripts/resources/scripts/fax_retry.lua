@@ -89,6 +89,11 @@
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
+	fax_document_transferred_pages = env:getHeader("fax_document_transferred_pages");
+	fax_document_total_pages = env:getHeader("fax_document_total_pages");
+	fax_image_resolution = env:getHeader("fax_image_resolution");
+	fax_duration = env:getHeader("billsec");
+	
 
 --set default values
 	default_language = 'en';
@@ -357,6 +362,30 @@
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 	end
+
+--function to format time in templates
+	function format_time(seconds)
+		local seconds = tonumber(seconds)
+		
+		if (seconds <= 0) then
+			return "00:00:00";
+		else
+			hours = string.format("%02.f", math.floor(seconds/3600));
+			mins = string.format("%02.f", math.floor(seconds/60 - (hours*60)));
+			secs = string.format("%02.f", math.floor(seconds - hours*3600 - mins *60));
+		
+			if (hours == '00' and mins == '00') then
+				time_formatted = secs.."s";
+			elseif (hours == '00' and mins ~= '00') then
+				time_formatted = mins.."m "..secs.."s";
+			else
+				time_formatted = hours.."h "..mins.."m "..secs.."s";
+			end
+		end
+		return time_formatted;
+	end
+
+--perform variable replacements in email templates
 	dbh:query(sql, params, function(row)
 		if (row["template_subcategory"] == 'success_default') then
 			email_subject_success_default = row["template_subject"];
@@ -364,8 +393,21 @@
 
 			email_subject_success_default = email_subject_success_default:gsub("${number_dialed}", number_dialed);
 			email_subject_success_default = email_subject_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_subject_success_default = email_subject_success_default:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_subject_success_default = email_subject_success_default:gsub("${fax_duration}", format_time(fax_duration));
+			
 			email_body_success_default = email_body_success_default:gsub("${number_dialed}", number_dialed);
 			email_body_success_default = email_body_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_success_default = email_body_success_default:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_body_success_default = email_body_success_default:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_body_success_default = email_body_success_default:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_body_success_default = email_body_success_default:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_body_success_default = email_body_success_default:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_body_success_default = email_body_success_default:gsub("${fax_duration}", format_time(fax_duration));
 		end
 		if (row["template_subcategory"] == 'fail_default') then
 			email_subject_fail_default = row["template_subject"];
@@ -373,8 +415,21 @@
 
 			email_subject_fail_default = email_subject_fail_default:gsub("${number_dialed}", number_dialed);
 			email_subject_fail_default = email_subject_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_subject_fail_default = email_subject_fail_default:gsub("${fax_duration}", format_time(fax_duration));
+
 			email_body_fail_default = email_body_fail_default:gsub("${number_dialed}", number_dialed);
 			email_body_fail_default = email_body_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_body_fail_default = email_body_fail_default:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_body_fail_default = email_body_fail_default:gsub("${fax_duration}", format_time(fax_duration));
 		end
 		if (row["template_subcategory"] == 'fail_busy') then
 			email_subject_fail_busy = row["template_subject"];
@@ -382,8 +437,21 @@
 
 			email_subject_fail_busy = email_subject_fail_busy:gsub("${number_dialed}", number_dialed);
 			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_duration}", format_time(fax_duration));
+
 			email_body_fail_busy = email_body_fail_busy:gsub("${number_dialed}", number_dialed);
 			email_body_fail_busy = email_body_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_body_fail_busy = email_body_fail_busy:gsub("${fax_duration}", format_time(fax_duration));
 		end
 		if (row["template_subcategory"] == 'fail_invalid') then
 			email_subject_fail_invalid = row["template_subject"];
@@ -391,8 +459,21 @@
 
 			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${number_dialed}", number_dialed);
 			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_duration}", format_time(fax_duration));
+
 			email_body_fail_invalid = email_body_fail_invalid:gsub("${number_dialed}", number_dialed);
 			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_time}", os.date("%Y-%m-%d %X"));
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_document_transferred_pages}", fax_document_transferred_pages);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_document_total_pages}", fax_document_total_pages);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_local_caller_id_number}", fax_local_station_id);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_image_resolution}", fax_image_resolution);
+			email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_duration}", format_time(fax_duration));
 		end
 	end);
 
