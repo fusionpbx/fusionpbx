@@ -46,6 +46,8 @@
 	if (isset($_SESSION['LARAVEL_UN']) || strlen($_SESSION['username']) != 0){
 		$_REQUEST["username"] = $_SESSION['LARAVEL_UN'];
 		$_REQUEST["password"] = $_SESSION['LARAVEL_PW'];
+		$_SESSION['login']['destination']['url'] = $_SESSION['redirect_url'];
+		unset($_SESSION['redirect_url']);
 		unset($_SESSION['LARAVEL_UN']);
 		unset($_SESSION['LARAVEL_PW']);
 	} else {
