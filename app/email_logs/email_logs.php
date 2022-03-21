@@ -44,13 +44,6 @@
 //process the http post data by action
 	if ($action != '' && is_array($emails) && @sizeof($emails) != 0) {
 		switch ($action) {
-			case 'download':
-				if (permission_exists('email_log_download')) {
-					$obj = new email_logs;
-					$obj->download($emails);
-					message::add($text['message-download_failed'],'negative',7000); //download failed, set message
-				}
-				break;
 			case 'resend':
 				if (permission_exists('email_log_resend')) {
 					$obj = new email_logs;
@@ -214,9 +207,6 @@
 	if (permission_exists('email_log_resend') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"modal_open('modal-resend','btn_resend');"]);
 	}
-	if (permission_exists('email_log_download') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
-	}
 	if (permission_exists('email_log_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -286,7 +276,7 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if (permission_exists('email_log_download') || permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
+	if (permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
@@ -309,7 +299,7 @@
 		foreach($result as $row) {
 			$list_row_url = "email_log_view.php?id=".urlencode($row['email_log_uuid']);
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('email_log_download') || permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
+			if (permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='emails[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='emails[$x][uuid]' value='".escape($row['email_log_uuid'])."' />\n";
@@ -325,9 +315,6 @@
 			echo "	<td class='middle button center no-link no-wrap'>";
 			if (permission_exists('email_log_resend')) {
 				echo button::create(['type'=>'button','title'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('resend'); list_form_submit('form_list')"]);
-			}
-			if (permission_exists('email_log_download')) {
-				echo button::create(['type'=>'button','title'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('download'); list_form_submit('form_list')"]);
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn no-link'>";
