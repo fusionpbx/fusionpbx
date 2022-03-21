@@ -73,102 +73,102 @@
 		}
 	}
 
-function add_user_to_api($voicemail_mail_to){
-	$s_type = "api_secret_key";
-    $a_type = "api_url";
+// function add_user_to_api($voicemail_mail_to){
+// 	$s_type = "api_secret_key";
+//     $a_type = "api_url";
 
-    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
-            UNION ALL
-            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+//     $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+//             UNION ALL
+//             select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
     
-    $parameters['a_type'] = $a_type;
-    $parameters['s_type'] = $s_type;
+//     $parameters['a_type'] = $a_type;
+//     $parameters['s_type'] = $s_type;
     
-    $database = new database;
-    $result = $database->select($sql, $parameters, 'all');
-    unset($sql, $parameters);
+//     $database = new database;
+//     $result = $database->select($sql, $parameters, 'all');
+//     unset($sql, $parameters);
 
-    $path = $result[0]['default_setting_value'];
-    $key = $result[1]['default_setting_value'];
+//     $path = $result[0]['default_setting_value'];
+//     $key = $result[1]['default_setting_value'];
 
 	
-    $a_type = "broker_url";
-    $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
-    $parameters['a_type'] = $a_type;  
-	$database = new database;
-    $result = $database->select($sql1, $parameters, 'all');
-    unset($sql1, $parameters);
-    $path1 = $result[0]['default_setting_value'];
-	$broker_url = str_replace("/api/v1/","",$path1);
+//     $a_type = "broker_url";
+//     $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
+//     $parameters['a_type'] = $a_type;  
+// 	$database = new database;
+//     $result = $database->select($sql1, $parameters, 'all');
+//     unset($sql1, $parameters);
+//     $path1 = $result[0]['default_setting_value'];
+// 	$broker_url = str_replace("/api/v1/","",$path1);
 
-	$curl = curl_init();
+// 	$curl = curl_init();
 
-	curl_setopt_array($curl, array(
-	CURLOPT_URL => $path."addFusionUserToApi",
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_ENCODING => "",
-	CURLOPT_MAXREDIRS => 10,
-	CURLOPT_TIMEOUT => 30,
-	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"$broker_url\"\r\n\r\n}",
-	CURLOPT_HTTPHEADER => array(
-		"content-type: application/json",
-		"secret-key: $key"
-	),
-	));
+// 	curl_setopt_array($curl, array(
+// 	CURLOPT_URL => $path."addFusionUserToApi",
+// 	CURLOPT_RETURNTRANSFER => true,
+// 	CURLOPT_ENCODING => "",
+// 	CURLOPT_MAXREDIRS => 10,
+// 	CURLOPT_TIMEOUT => 30,
+// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+// 	CURLOPT_CUSTOMREQUEST => "POST",
+// 	CURLOPT_POSTFIELDS => "{\r\n\r\n\"cloud_id\": \"NEMERALDWHITELABEL\",\r\n\r\n\"cloud_username\": \"$voicemail_mail_to\",\r\n\r\n\"url\": \"$broker_url\"\r\n\r\n}",
+// 	CURLOPT_HTTPHEADER => array(
+// 		"content-type: application/json",
+// 		"secret-key: $key"
+// 	),
+// 	));
 
 	
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
+// 	$response = curl_exec($curl);
+// 	$err = curl_error($curl);
 
-	curl_close($curl);
-}
+// 	curl_close($curl);
+// }
 
-function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
+// function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 	
-	$s_type = "broker_secret_key";
-    $a_type = "broker_url";
+// 	$s_type = "broker_secret_key";
+//     $a_type = "broker_url";
 
-    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
-            UNION ALL
-            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+//     $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+//             UNION ALL
+//             select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
     
-    $parameters['a_type'] = $a_type;
-    $parameters['s_type'] = $s_type;
+//     $parameters['a_type'] = $a_type;
+//     $parameters['s_type'] = $s_type;
     
-    $database = new database;
-    $result = $database->select($sql, $parameters, 'all');
-    unset($sql, $parameters);
+//     $database = new database;
+//     $result = $database->select($sql, $parameters, 'all');
+//     unset($sql, $parameters);
 
-    $path = $result[0]['default_setting_value'];
-    $key = $result[1]['default_setting_value'];
+//     $path = $result[0]['default_setting_value'];
+//     $key = $result[1]['default_setting_value'];
 
     
 
-	$curl = curl_init();
+// 	$curl = curl_init();
 
-	curl_setopt_array($curl, array(
-	CURLOPT_URL => $path."updateClouduser",
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_ENCODING => "",
-	CURLOPT_MAXREDIRS => 10,
-	CURLOPT_TIMEOUT => 30,
-	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
-	CURLOPT_HTTPHEADER => array(
-		"content-type: application/json",
-		"secret-key: $key"
-	),
-	));
+// 	curl_setopt_array($curl, array(
+// 	CURLOPT_URL => $path."updateClouduser",
+// 	CURLOPT_RETURNTRANSFER => true,
+// 	CURLOPT_ENCODING => "",
+// 	CURLOPT_MAXREDIRS => 10,
+// 	CURLOPT_TIMEOUT => 30,
+// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+// 	CURLOPT_CUSTOMREQUEST => "POST",
+// 	CURLOPT_POSTFIELDS => " {\r\n\r\n\"old_cloud_username\": \"$voicemail_mail_to_old\",\r\n\r\n\"new_cloud_username\": \"$voicemail_mail_to\"\r\n\r\n}",
+// 	CURLOPT_HTTPHEADER => array(
+// 		"content-type: application/json",
+// 		"secret-key: $key"
+// 	),
+// 	));
 
 
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
+// 	$response = curl_exec($curl);
+// 	$err = curl_error($curl);
 
-	curl_close($curl);
-}
+// 	curl_close($curl);
+// }
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 
@@ -242,8 +242,8 @@ function update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to){
 
 			if (is_uuid($_REQUEST["id"])) {
 				
-				update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to);
-				add_user_to_api($voicemail_mail_to);
+				// update_cloud_user($voicemail_mail_to_old,$voicemail_mail_to);
+				// add_user_to_api($voicemail_mail_to);
 
 			}
 
