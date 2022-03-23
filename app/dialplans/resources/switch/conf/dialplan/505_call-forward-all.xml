@@ -8,7 +8,7 @@
 		<action application="set" data="outbound_caller_id_name=${caller_id_name}" inline="true" enabled="true"/>
 		<action application="set" data="outbound_caller_id_number=${caller_id_number}" inline="true" enabled="true"/>
 		<action application="set" data="accountcode=${user_data ${destination_number}@${domain_name} var accountcode}" inline="true" enabled="false"/>
-		<action application="transfer" data="${forward_all_destination} XML ${domain_name}"/>
+		<action application="transfer" data="${forward_all_destination} XML ${domain_name}" enabled="true"/>
 	</condition>
 	</extension>
 </context>
