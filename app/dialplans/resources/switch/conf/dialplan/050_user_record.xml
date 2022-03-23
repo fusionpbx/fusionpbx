@@ -44,9 +44,9 @@
 		<condition field="${record_session}" expression="^true$"/>
 		<condition field="destination_number" expression="^(?:(?!\*).|\*59|\*\*|\*8|\*67|\*69)+$">
 			<action application="set" data="record_path=${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}" inline="true" enabled="true"/>
-			<action application="set" data="record_name=${uuid}.${record_ext}" inline="true" enabled="true" enabled="true"/>
+			<action application="set" data="record_name=${uuid}.${record_ext}" inline="true" enabled="true"/>
 			<!--<action application="set" data="record_name=${destination_number}-${caller_id_number}_${strftime(%Y-%m-%d %H:%M)}.${record_ext}" inline="true" enabled="true"/>-->
-			<action application="mkdir" data="${record_path}" enabled="true" enabled="true"/>
+			<action application="mkdir" data="${record_path}" enabled="true"/>
 			<action application="set" data="recording_follow_transfer=true" inline="true" enabled="true"/>
 			<action application="bind_digit_action" data="local,*5,api:uuid_record,${uuid} mask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self" enabled="true"/>
 			<action application="bind_digit_action" data="local,*6,api:uuid_record,${uuid} unmask ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext},both,self" enabled="true"/>
