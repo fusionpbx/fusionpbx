@@ -14,7 +14,7 @@
 		$text['title-bridges']['he-il'] = '';
 		$text['title-bridges']['it-it'] = '';
 		$text['title-bridges']['nl-nl'] = 'Bruggen';
-		$text['title-bridges']['pl-pl'] = '';
+		$text['title-bridges']['pl-pl'] = 'Mostki';
 		$text['title-bridges']['pt-br'] = '';
 		$text['title-bridges']['pt-pt'] = '';
 		$text['title-bridges']['ro-ro'] = '';
@@ -35,7 +35,7 @@
 		$text['title-bridge']['he-il'] = '';
 		$text['title-bridge']['it-it'] = '';
 		$text['title-bridge']['nl-nl'] = 'Brug';
-		$text['title-bridge']['pl-pl'] = '';
+		$text['title-bridge']['pl-pl'] = 'Mostek';
 		$text['title-bridge']['pt-br'] = '';
 		$text['title-bridge']['pt-pt'] = '';
 		$text['title-bridge']['ro-ro'] = '';
@@ -56,7 +56,7 @@
 		$text['title_description-bridge']['he-il'] = '';
 		$text['title_description-bridge']['it-it'] = '';
 		$text['title_description-bridge']['nl-nl'] = 'Voeg brug opdrachten toe aan bestemmings lijst.';
-		$text['title_description-bridge']['pl-pl'] = '';
+		$text['title_description-bridge']['pl-pl'] = 'Dodaj wyrażenia mostkowania do listy wyboru destynacji.';
 		$text['title_description-bridge']['pt-br'] = '';
 		$text['title_description-bridge']['pt-pt'] = '';
 		$text['title_description-bridge']['ro-ro'] = '';
@@ -77,7 +77,7 @@
 		$text['label-bridge_name']['he-il'] = '';
 		$text['label-bridge_name']['it-it'] = '';
 		$text['label-bridge_name']['nl-nl'] = 'Naam';
-		$text['label-bridge_name']['pl-pl'] = '';
+		$text['label-bridge_name']['pl-pl'] = 'Nazwa';
 		$text['label-bridge_name']['pt-br'] = '';
 		$text['label-bridge_name']['pt-pt'] = '';
 		$text['label-bridge_name']['ro-ro'] = '';
@@ -98,7 +98,7 @@
 		$text['description-bridge_name']['he-il'] = '';
 		$text['description-bridge_name']['it-it'] = '';
 		$text['description-bridge_name']['nl-nl'] = 'Voer naam in.';
-		$text['description-bridge_name']['pl-pl'] = '';
+		$text['description-bridge_name']['pl-pl'] = 'Wprowadź nazwę.';
 		$text['description-bridge_name']['pt-br'] = '';
 		$text['description-bridge_name']['pt-pt'] = '';
 		$text['description-bridge_name']['ro-ro'] = '';
@@ -119,7 +119,7 @@
 		$text['label-bridge_destination']['he-il'] = '';
 		$text['label-bridge_destination']['it-it'] = '';
 		$text['label-bridge_destination']['nl-nl'] = 'Bestemming';
-		$text['label-bridge_destination']['pl-pl'] = '';
+		$text['label-bridge_destination']['pl-pl'] = 'Destynacja';
 		$text['label-bridge_destination']['pt-br'] = '';
 		$text['label-bridge_destination']['pt-pt'] = '';
 		$text['label-bridge_destination']['ro-ro'] = '';
@@ -140,7 +140,7 @@
 		$text['description-bridge_destination']['he-il'] = '';
 		$text['description-bridge_destination']['it-it'] = '';
 		$text['description-bridge_destination']['nl-nl'] = 'Voer de bestemming in.';
-		$text['description-bridge_destination']['pl-pl'] = '';
+		$text['description-bridge_destination']['pl-pl'] = 'Wprowadź destynację.';
 		$text['description-bridge_destination']['pt-br'] = '';
 		$text['description-bridge_destination']['pt-pt'] = '';
 		$text['description-bridge_destination']['ro-ro'] = '';
@@ -161,7 +161,7 @@
 		$text['label-bridge_enabled']['he-il'] = '';
 		$text['label-bridge_enabled']['it-it'] = '';
 		$text['label-bridge_enabled']['nl-nl'] = 'Geactiveerd';
-		$text['label-bridge_enabled']['pl-pl'] = '';
+		$text['label-bridge_enabled']['pl-pl'] = 'Aktywny';
 		$text['label-bridge_enabled']['pt-br'] = '';
 		$text['label-bridge_enabled']['pt-pt'] = '';
 		$text['label-bridge_enabled']['ro-ro'] = '';
@@ -182,7 +182,7 @@
 		$text['description-bridge_enabled']['he-il'] = '';
 		$text['description-bridge_enabled']['it-it'] = '';
 		$text['description-bridge_enabled']['nl-nl'] = 'Kies aktiveer/deactiveer.';
-		$text['description-bridge_enabled']['pl-pl'] = '';
+		$text['description-bridge_enabled']['pl-pl'] = 'Wybierz czy aktywować lub dezaktywować.';
 		$text['description-bridge_enabled']['pt-br'] = '';
 		$text['description-bridge_enabled']['pt-pt'] = '';
 		$text['description-bridge_enabled']['ro-ro'] = '';
@@ -203,7 +203,7 @@
 		$text['label-bridge_description']['he-il'] = '';
 		$text['label-bridge_description']['it-it'] = '';
 		$text['label-bridge_description']['nl-nl'] = 'Omschrijving';
-		$text['label-bridge_description']['pl-pl'] = '';
+		$text['label-bridge_description']['pl-pl'] = 'Opis';
 		$text['label-bridge_description']['pt-br'] = '';
 		$text['label-bridge_description']['pt-pt'] = '';
 		$text['label-bridge_description']['ro-ro'] = '';
@@ -224,7 +224,7 @@
 		$text['description-bridge_description']['he-il'] = '';
 		$text['description-bridge_description']['it-it'] = '';
 		$text['description-bridge_description']['nl-nl'] = 'Voer omschrijving in.';
-		$text['description-bridge_description']['pl-pl'] = '';
+		$text['description-bridge_description']['pl-pl'] = 'Wprowadź opis.';
 		$text['description-bridge_description']['pt-br'] = '';
 		$text['description-bridge_description']['pt-pt'] = '';
 		$text['description-bridge_description']['ro-ro'] = '';

@@ -15,7 +15,7 @@
 		$text['title-dashboard']['he-il'] = "ממשק משתמש";
 		$text['title-dashboard']['it-it'] = "Pannello di Controllo";
 		$text['title-dashboard']['nl-nl'] = "";
-		$text['title-dashboard']['pl-pl'] = "Panel użytkowników";
+		$text['title-dashboard']['pl-pl'] = "Panel nawigacyjny";
 		$text['title-dashboard']['pt-br'] = "Painel de Controle";
 		$text['title-dashboard']['pt-pt'] = "Painel de Controle do Usuário";
 		$text['title-dashboard']['ro-ro'] = "Panou control utilizator";
@@ -57,7 +57,7 @@
 		$text['label-group_uuid']['he-il'] = '';
 		$text['label-group_uuid']['it-it'] = '';
 		$text['label-group_uuid']['nl-nl'] = '';
-		$text['label-group_uuid']['pl-pl'] = '';
+		$text['label-group_uuid']['pl-pl'] = 'UUID Grupy';
 		$text['label-group_uuid']['pt-br'] = '';
 		$text['label-group_uuid']['pt-pt'] = '';
 		$text['label-group_uuid']['ro-ro'] = '';
@@ -77,7 +77,7 @@
 		$text['description-group_uuid']['he-il'] = '';
 		$text['description-group_uuid']['it-it'] = '';
 		$text['description-group_uuid']['nl-nl'] = '';
-		$text['description-group_uuid']['pl-pl'] = '';
+		$text['description-group_uuid']['pl-pl'] = 'Wprowadź UUID grupy';
 		$text['description-group_uuid']['pt-br'] = '';
 		$text['description-group_uuid']['pt-pt'] = '';
 		$text['description-group_uuid']['ro-ro'] = '';
@@ -97,7 +97,7 @@
 		$text['label-dashboard_name']['he-il'] = '';
 		$text['label-dashboard_name']['it-it'] = '';
 		$text['label-dashboard_name']['nl-nl'] = '';
-		$text['label-dashboard_name']['pl-pl'] = '';
+		$text['label-dashboard_name']['pl-pl'] = 'Nazwa';
 		$text['label-dashboard_name']['pt-br'] = '';
 		$text['label-dashboard_name']['pt-pt'] = '';
 		$text['label-dashboard_name']['ro-ro'] = '';
@@ -117,7 +117,7 @@
 		$text['description-dashboard_name']['he-il'] = '';
 		$text['description-dashboard_name']['it-it'] = '';
 		$text['description-dashboard_name']['nl-nl'] = '';
-		$text['description-dashboard_name']['pl-pl'] = '';
+		$text['description-dashboard_name']['pl-pl'] = 'Wprowadź nazwę widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_name']['pt-br'] = '';
 		$text['description-dashboard_name']['pt-pt'] = '';
 		$text['description-dashboard_name']['ro-ro'] = '';
@@ -137,7 +137,7 @@
 		$text['label-dashboard_path']['he-il'] = '';
 		$text['label-dashboard_path']['it-it'] = '';
 		$text['label-dashboard_path']['nl-nl'] = '';
-		$text['label-dashboard_path']['pl-pl'] = '';
+		$text['label-dashboard_path']['pl-pl'] = 'Ścieżka';
 		$text['label-dashboard_path']['pt-br'] = '';
 		$text['label-dashboard_path']['pt-pt'] = '';
 		$text['label-dashboard_path']['ro-ro'] = '';
@@ -157,7 +157,7 @@
 		$text['description-dashboard_path']['he-il'] = '';
 		$text['description-dashboard_path']['it-it'] = '';
 		$text['description-dashboard_path']['nl-nl'] = '';
-		$text['description-dashboard_path']['pl-pl'] = '';
+		$text['description-dashboard_path']['pl-pl'] = 'Wprowadź ścieżkę widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_path']['pt-br'] = '';
 		$text['description-dashboard_path']['pt-pt'] = '';
 		$text['description-dashboard_path']['ro-ro'] = '';
@@ -177,7 +177,7 @@
 		$text['label-dashboard_groups']['he-il'] = '';
 		$text['label-dashboard_groups']['it-it'] = '';
 		$text['label-dashboard_groups']['nl-nl'] = '';
-		$text['label-dashboard_groups']['pl-pl'] = '';
+		$text['label-dashboard_groups']['pl-pl'] = 'Grupy';
 		$text['label-dashboard_groups']['pt-br'] = '';
 		$text['label-dashboard_groups']['pt-pt'] = '';
 		$text['label-dashboard_groups']['ro-ro'] = '';
@@ -197,7 +197,7 @@
 		$text['description-dashboard_groups']['he-il'] = '';
 		$text['description-dashboard_groups']['it-it'] = '';
 		$text['description-dashboard_groups']['nl-nl'] = '';
-		$text['description-dashboard_groups']['pl-pl'] = '';
+		$text['description-dashboard_groups']['pl-pl'] = 'Dodaj grupy, które mają uprawnienia do tego widżetu.';
 		$text['description-dashboard_groups']['pt-br'] = '';
 		$text['description-dashboard_groups']['pt-pt'] = '';
 		$text['description-dashboard_groups']['ro-ro'] = '';
@@ -217,7 +217,7 @@
 		$text['label-dashboard_column_span']['he-il'] = '';
 		$text['label-dashboard_column_span']['it-it'] = '';
 		$text['label-dashboard_column_span']['nl-nl'] = '';
-		$text['label-dashboard_column_span']['pl-pl'] = '';
+		$text['label-dashboard_column_span']['pl-pl'] = 'Szerokość kolumn';
 		$text['label-dashboard_column_span']['pt-br'] = '';
 		$text['label-dashboard_column_span']['pt-pt'] = '';
 		$text['label-dashboard_column_span']['ro-ro'] = '';
@@ -237,7 +237,7 @@
 		$text['description-dashboard_column_span']['he-il'] = '';
 		$text['description-dashboard_column_span']['it-it'] = '';
 		$text['description-dashboard_column_span']['nl-nl'] = '';
-		$text['description-dashboard_column_span']['pl-pl'] = '';
+		$text['description-dashboard_column_span']['pl-pl'] = 'Wprowadź szerokość kolumn widżetu panelu nawigacyjnego';
 		$text['description-dashboard_column_span']['pt-br'] = '';
 		$text['description-dashboard_column_span']['pt-pt'] = '';
 		$text['description-dashboard_column_span']['ro-ro'] = '';
@@ -257,7 +257,7 @@
 		$text['label-dashboard_order']['he-il'] = '';
 		$text['label-dashboard_order']['it-it'] = '';
 		$text['label-dashboard_order']['nl-nl'] = '';
-		$text['label-dashboard_order']['pl-pl'] = '';
+		$text['label-dashboard_order']['pl-pl'] = 'Kolejność';
 		$text['label-dashboard_order']['pt-br'] = '';
 		$text['label-dashboard_order']['pt-pt'] = '';
 		$text['label-dashboard_order']['ro-ro'] = '';
@@ -277,7 +277,7 @@
 		$text['description-dashboard_order']['he-il'] = '';
 		$text['description-dashboard_order']['it-it'] = '';
 		$text['description-dashboard_order']['nl-nl'] = '';
-		$text['description-dashboard_order']['pl-pl'] = '';
+		$text['description-dashboard_order']['pl-pl'] = 'Wprowadź kolejność widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_order']['pt-br'] = '';
 		$text['description-dashboard_order']['pt-pt'] = '';
 		$text['description-dashboard_order']['ro-ro'] = '';
@@ -297,7 +297,7 @@
 		$text['label-dashboard_enabled']['he-il'] = '';
 		$text['label-dashboard_enabled']['it-it'] = '';
 		$text['label-dashboard_enabled']['nl-nl'] = '';
-		$text['label-dashboard_enabled']['pl-pl'] = '';
+		$text['label-dashboard_enabled']['pl-pl'] = 'Włączony';
 		$text['label-dashboard_enabled']['pt-br'] = '';
 		$text['label-dashboard_enabled']['pt-pt'] = '';
 		$text['label-dashboard_enabled']['ro-ro'] = '';
@@ -317,7 +317,7 @@
 		$text['description-dashboard_enabled']['he-il'] = '';
 		$text['description-dashboard_enabled']['it-it'] = '';
 		$text['description-dashboard_enabled']['nl-nl'] = '';
-		$text['description-dashboard_enabled']['pl-pl'] = '';
+		$text['description-dashboard_enabled']['pl-pl'] = 'Wprowadź stan włączenia widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_enabled']['pt-br'] = '';
 		$text['description-dashboard_enabled']['pt-pt'] = '';
 		$text['description-dashboard_enabled']['ro-ro'] = '';
@@ -337,7 +337,7 @@
 		$text['label-dashboard_description']['he-il'] = '';
 		$text['label-dashboard_description']['it-it'] = '';
 		$text['label-dashboard_description']['nl-nl'] = '';
-		$text['label-dashboard_description']['pl-pl'] = '';
+		$text['label-dashboard_description']['pl-pl'] = 'Opis';
 		$text['label-dashboard_description']['pt-br'] = '';
 		$text['label-dashboard_description']['pt-pt'] = '';
 		$text['label-dashboard_description']['ro-ro'] = '';
@@ -357,7 +357,7 @@
 		$text['description-dashboard_description']['he-il'] = '';
 		$text['description-dashboard_description']['it-it'] = '';
 		$text['description-dashboard_description']['nl-nl'] = '';
-		$text['description-dashboard_description']['pl-pl'] = '';
+		$text['description-dashboard_description']['pl-pl'] = 'Wprowadź opis widżetu panelu nawigacyjnego.';
 		$text['description-dashboard_description']['pt-br'] = '';
 		$text['description-dashboard_description']['pt-pt'] = '';
 		$text['description-dashboard_description']['ro-ro'] = '';

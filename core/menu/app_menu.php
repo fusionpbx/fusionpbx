@@ -39,7 +39,7 @@
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Home";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dom";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Główne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Principal";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Casa";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
@@ -158,7 +158,7 @@
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Avanzato";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zaawansowany";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zaawansowane";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Avançado";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Avançado";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
