@@ -118,7 +118,7 @@
 	echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
-	echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+	echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
 	echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 
