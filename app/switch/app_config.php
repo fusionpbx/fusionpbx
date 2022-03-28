@@ -31,7 +31,7 @@
 
 	//default settings
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c2b3da39-a9b7-46b6-b2f2-810b8006efee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9ff1ed88-76ba-4648-a082-d53f64947d08";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_main_background_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -39,7 +39,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "061b77dd-fa89-4255-9ea3-3a5124de1c18";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7d7ba6e6-1616-4082-9f20-774e8ef673c9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_sub_background_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -47,7 +47,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "01f5a0c9-7154-4f68-a0b2-3b84d5b35172";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cad4fdf1-2eb5-4669-8215-2b3dbee5d124";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_border_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -55,7 +55,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e03b0b77-af29-4ac3-b4b6-61e5a1595f70";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "206d91d0-1ee2-46f3-a30b-977ad49b84cb";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dashboard";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "switch_status_chart_border_width";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
