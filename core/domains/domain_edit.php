@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -512,6 +512,10 @@
 							}
 					}
 				}
+
+			//clear the cache
+				$cache = new cache;
+				$response = $cache->flush();
 
 			//clear the domains session array to update it
 				unset($_SESSION["domains"]);
