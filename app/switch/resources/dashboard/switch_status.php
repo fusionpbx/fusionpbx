@@ -86,7 +86,7 @@
 			datasets: [{
 				data: ['<?php echo $registrations; ?>', 0.00001],
 				backgroundColor: ['<?php echo $_SESSION['dashboard']['switch_status_chart_main_background_color']['text']; ?>',
-				'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
+				'<?php echo $_SESSION['dashboard']['switch_status_chart_sub_background_color']['text']; ?>'],
 				borderColor: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_color']['text']; ?>',
 				borderWidth: '<?php echo $_SESSION['dashboard']['switch_status_chart_border_width']['text']; ?>',
 				cutout: chart_cutout
