@@ -3719,7 +3719,7 @@
 <!--# This is a string of up to 256 characters that should contain a path to the XML file-->
 <!--# It MUST be in the host/path format. For example: directory.grandstream.com/engineering-->
 <!--# String-->
-    <P341></P341>
+    <P341>{$grandstream_idle_screen_server_path}</P341>
 
 <!--# Server Path-->
 <!--# This is a string of up to 256 characters that should contain a path to the XML Application file-->
