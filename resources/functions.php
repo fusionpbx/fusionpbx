@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -2258,29 +2258,37 @@ function number_pad($number,$n) {
 	}
 
 // User exists
-        if (!function_exists('user_exists')) {
-                function user_exists($login, $domain_name = null) {
-                	//connect to freeswitch
-                        $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-                        if (!$fp) {
-                                return false;
-                        }
+	if (!function_exists('user_exists')) {
+		function user_exists($login, $domain_name = null) {
+			//connect to freeswitch
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				return false;
+			}
 
-               		//send the user_exists command to freeswitch
-                        if ($fp) {
-                                //build and send the mkdir command to freeswitch
-				if (is_null($domain_name)){
+			//send the user_exists command to freeswitch
+			if ($fp) {
+				if (is_null($domain_name)) {
 					$domain_name = $_SESSION['domain_name'];
 				}
 				$switch_cmd = "user_exists id '$login' '$domain_name'";
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				fclose($fp);
-				return ($switch_result == 'true'?true:false);
-                        }
+				return ($switch_result == 'true' ? true: false);
+			}
 
 			//can not create directory
-                        return null;
-                }
-        }
+			return null;
+		}
+	}
+
+//include additional functions
+	$functions = glob("{".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/functions/*.php,".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/resources/functions/*.php}", GLOB_BRACE);
+	foreach($functions as $function) {
+		$path = pathinfo($function);
+		if ($path['filename'] != 'transcribe') {
+			require($function);
+		}
+	}
 
 ?>

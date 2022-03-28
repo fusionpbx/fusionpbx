@@ -14,7 +14,7 @@
 		$text['title-email_templates']['he-il'] = '';
 		$text['title-email_templates']['it-it'] = '';
 		$text['title-email_templates']['nl-nl'] = '';
-		$text['title-email_templates']['pl-pl'] = '';
+		$text['title-email_templates']['pl-pl'] = 'Szablony Email';
 		$text['title-email_templates']['pt-br'] = '';
 		$text['title-email_templates']['pt-pt'] = '';
 		$text['title-email_templates']['ro-ro'] = '';
@@ -35,7 +35,7 @@
 		$text['title-email_template']['he-il'] = '';
 		$text['title-email_template']['it-it'] = '';
 		$text['title-email_template']['nl-nl'] = '';
-		$text['title-email_template']['pl-pl'] = '';
+		$text['title-email_template']['pl-pl'] = 'Szablon Email';
 		$text['title-email_template']['pt-br'] = '';
 		$text['title-email_template']['pt-pt'] = '';
 		$text['title-email_template']['ro-ro'] = '';
@@ -56,7 +56,7 @@
 		$text['title_description-email_template']['he-il'] = '';
 		$text['title_description-email_template']['it-it'] = '';
 		$text['title_description-email_template']['nl-nl'] = '';
-		$text['title_description-email_template']['pl-pl'] = '';
+		$text['title_description-email_template']['pl-pl'] = 'Definiowanie i zarządzanie dynamicznymi szablonami wykorzystywanymi w generowanych przez system wychodzących wiadomościach e-mail.';
 		$text['title_description-email_template']['pt-br'] = '';
 		$text['title_description-email_template']['pt-pt'] = '';
 		$text['title_description-email_template']['ro-ro'] = '';
@@ -77,7 +77,7 @@
 		$text['label-template_language']['he-il'] = '';
 		$text['label-template_language']['it-it'] = '';
 		$text['label-template_language']['nl-nl'] = '';
-		$text['label-template_language']['pl-pl'] = '';
+		$text['label-template_language']['pl-pl'] = 'Język';
 		$text['label-template_language']['pt-br'] = '';
 		$text['label-template_language']['pt-pt'] = '';
 		$text['label-template_language']['ro-ro'] = '';
@@ -98,7 +98,7 @@
 		$text['description-template_language']['he-il'] = '';
 		$text['description-template_language']['it-it'] = '';
 		$text['description-template_language']['nl-nl'] = '';
-		$text['description-template_language']['pl-pl'] = '';
+		$text['description-template_language']['pl-pl'] = 'Wprowadź język.';
 		$text['description-template_language']['pt-br'] = '';
 		$text['description-template_language']['pt-pt'] = '';
 		$text['description-template_language']['ro-ro'] = '';
@@ -119,7 +119,7 @@
 		$text['label-template_category']['he-il'] = '';
 		$text['label-template_category']['it-it'] = '';
 		$text['label-template_category']['nl-nl'] = '';
-		$text['label-template_category']['pl-pl'] = '';
+		$text['label-template_category']['pl-pl'] = 'Kategoria';
 		$text['label-template_category']['pt-br'] = '';
 		$text['label-template_category']['pt-pt'] = '';
 		$text['label-template_category']['ro-ro'] = '';
@@ -140,7 +140,7 @@
 		$text['description-template_category']['he-il'] = '';
 		$text['description-template_category']['it-it'] = '';
 		$text['description-template_category']['nl-nl'] = '';
-		$text['description-template_category']['pl-pl'] = '';
+		$text['description-template_category']['pl-pl'] = 'Wybierz kategorię.';
 		$text['description-template_category']['pt-br'] = '';
 		$text['description-template_category']['pt-pt'] = '';
 		$text['description-template_category']['ro-ro'] = '';
@@ -161,7 +161,7 @@
 		$text['label-template_subcategory']['he-il'] = '';
 		$text['label-template_subcategory']['it-it'] = '';
 		$text['label-template_subcategory']['nl-nl'] = '';
-		$text['label-template_subcategory']['pl-pl'] = '';
+		$text['label-template_subcategory']['pl-pl'] = 'Podkategoria';
 		$text['label-template_subcategory']['pt-br'] = '';
 		$text['label-template_subcategory']['pt-pt'] = '';
 		$text['label-template_subcategory']['ro-ro'] = '';
@@ -182,7 +182,7 @@
 		$text['description-template_subcategory']['he-il'] = '';
 		$text['description-template_subcategory']['it-it'] = '';
 		$text['description-template_subcategory']['nl-nl'] = '';
-		$text['description-template_subcategory']['pl-pl'] = '';
+		$text['description-template_subcategory']['pl-pl'] = 'Wprowadź podkategorię.';
 		$text['description-template_subcategory']['pt-br'] = '';
 		$text['description-template_subcategory']['pt-pt'] = '';
 		$text['description-template_subcategory']['ro-ro'] = '';
@@ -203,7 +203,7 @@
 		$text['label-template_subject']['he-il'] = '';
 		$text['label-template_subject']['it-it'] = '';
 		$text['label-template_subject']['nl-nl'] = '';
-		$text['label-template_subject']['pl-pl'] = '';
+		$text['label-template_subject']['pl-pl'] = 'Tytuł';
 		$text['label-template_subject']['pt-br'] = '';
 		$text['label-template_subject']['pt-pt'] = '';
 		$text['label-template_subject']['ro-ro'] = '';
@@ -224,7 +224,7 @@
 		$text['description-template_subject']['he-il'] = '';
 		$text['description-template_subject']['it-it'] = '';
 		$text['description-template_subject']['nl-nl'] = '';
-		$text['description-template_subject']['pl-pl'] = '';
+		$text['description-template_subject']['pl-pl'] = 'Wprowadź szablon tytułu.';
 		$text['description-template_subject']['pt-br'] = '';
 		$text['description-template_subject']['pt-pt'] = '';
 		$text['description-template_subject']['ro-ro'] = '';
@@ -245,7 +245,7 @@
 		$text['label-template_body']['he-il'] = '';
 		$text['label-template_body']['it-it'] = '';
 		$text['label-template_body']['nl-nl'] = '';
-		$text['label-template_body']['pl-pl'] = '';
+		$text['label-template_body']['pl-pl'] = 'Treść';
 		$text['label-template_body']['pt-br'] = '';
 		$text['label-template_body']['pt-pt'] = '';
 		$text['label-template_body']['ro-ro'] = '';
@@ -266,7 +266,7 @@
 		$text['description-template_body']['he-il'] = '';
 		$text['description-template_body']['it-it'] = '';
 		$text['description-template_body']['nl-nl'] = '';
-		$text['description-template_body']['pl-pl'] = '';
+		$text['description-template_body']['pl-pl'] = 'Wprowadź szablon treści.';
 		$text['description-template_body']['pt-br'] = '';
 		$text['description-template_body']['pt-pt'] = '';
 		$text['description-template_body']['ro-ro'] = '';
@@ -287,7 +287,7 @@
 		$text['label-template_type']['he-il'] = '';
 		$text['label-template_type']['it-it'] = '';
 		$text['label-template_type']['nl-nl'] = '';
-		$text['label-template_type']['pl-pl'] = '';
+		$text['label-template_type']['pl-pl'] = 'Typ';
 		$text['label-template_type']['pt-br'] = '';
 		$text['label-template_type']['pt-pt'] = '';
 		$text['label-template_type']['ro-ro'] = '';
@@ -308,7 +308,7 @@
 		$text['description-template_type']['he-il'] = '';
 		$text['description-template_type']['it-it'] = '';
 		$text['description-template_type']['nl-nl'] = '';
-		$text['description-template_type']['pl-pl'] = '';
+		$text['description-template_type']['pl-pl'] = 'Ustaw typ treści.';
 		$text['description-template_type']['pt-br'] = '';
 		$text['description-template_type']['pt-pt'] = '';
 		$text['description-template_type']['ro-ro'] = '';
@@ -350,7 +350,7 @@
 		$text['label-template_enabled']['he-il'] = '';
 		$text['label-template_enabled']['it-it'] = '';
 		$text['label-template_enabled']['nl-nl'] = '';
-		$text['label-template_enabled']['pl-pl'] = '';
+		$text['label-template_enabled']['pl-pl'] = 'Aktywny';
 		$text['label-template_enabled']['pt-br'] = '';
 		$text['label-template_enabled']['pt-pt'] = '';
 		$text['label-template_enabled']['ro-ro'] = '';
@@ -371,7 +371,7 @@
 		$text['description-template_enabled']['he-il'] = '';
 		$text['description-template_enabled']['it-it'] = '';
 		$text['description-template_enabled']['nl-nl'] = '';
-		$text['description-template_enabled']['pl-pl'] = '';
+		$text['description-template_enabled']['pl-pl'] = 'Ustaw status szablonu.';
 		$text['description-template_enabled']['pt-br'] = '';
 		$text['description-template_enabled']['pt-pt'] = '';
 		$text['description-template_enabled']['ro-ro'] = '';
@@ -392,7 +392,7 @@
 		$text['label-template_description']['he-il'] = '';
 		$text['label-template_description']['it-it'] = '';
 		$text['label-template_description']['nl-nl'] = '';
-		$text['label-template_description']['pl-pl'] = '';
+		$text['label-template_description']['pl-pl'] = 'Opis';
 		$text['label-template_description']['pt-br'] = '';
 		$text['label-template_description']['pt-pt'] = '';
 		$text['label-template_description']['ro-ro'] = '';
@@ -413,7 +413,7 @@
 		$text['description-template_description']['he-il'] = '';
 		$text['description-template_description']['it-it'] = '';
 		$text['description-template_description']['nl-nl'] = '';
-		$text['description-template_description']['pl-pl'] = '';
+		$text['description-template_description']['pl-pl'] = 'Wprowadź opis.';
 		$text['description-template_description']['pt-br'] = '';
 		$text['description-template_description']['pt-pt'] = '';
 		$text['description-template_description']['ro-ro'] = '';
