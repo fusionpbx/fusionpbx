@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2019 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -273,9 +273,12 @@ continue = true;
 
 				--get the extension from the database
 					if (continue) then
-						local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid "
-							.. "and (extension = :user or number_alias = :user) "
-							.. "and enabled = 'true' ";
+						local sql = "SELECT e.* FROM v_extensions as e, v_domains as d "
+							.. "WHERE e.domain_uuid = :domain_uuid "
+							.. "AND d.domain_uuid = :domain_uuid "
+							.. "AND d.domain_enabled = 'true' "
+							.. "AND (e.extension = :user or e.number_alias = :user) "
+							.. "AND e.enabled = 'true' ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
