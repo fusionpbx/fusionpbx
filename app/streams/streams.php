@@ -243,7 +243,7 @@
 			if (strlen($row['stream_location']) > 0) {
 				$location_parts = explode('://',$row['stream_location']);
 				if ($location_parts[0] == "shout") {
-					echo "<audio src='http://".$location_parts[1]."' controls='controls' />\n";
+					echo "<audio src='https://".$location_parts[1]."' controls='controls' />\n";
 				}
 			}
 			echo "	</td>\n";
