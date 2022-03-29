@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2022
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -242,9 +242,8 @@
 			echo "	<td class='no-wrap button'>\n";
 			if (strlen($row['stream_location']) > 0) {
 				$location_parts = explode('://',$row['stream_location']);
-				if ($location_parts[0] == "shout") {
-					echo "<audio src='https://".$location_parts[1]."' controls='controls' />\n";
-				}
+				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
+				echo "<audio src='".$http_protocol."://".$location_parts[1]."' controls='controls' />\n";
 			}
 			echo "	</td>\n";
 			if (permission_exists('stream_edit')) {
