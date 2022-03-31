@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2015-2019
+--	Copyright (C) 2015-2022
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -41,14 +41,15 @@
 		json = require "resources.functions.lunajson"
 	end
 
---define the explode function
+--additional includes
 	require "resources.functions.explode";
-
---array count
 	require "resources.functions.count";
+	require "resources.functions.send_mail";
 
+--check if windows
 	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
 
+--define function quote
 	local function quote(s)
 		local q = IS_WINDOWS and '"' or "'"
 		if s:find('%s') or s:find(q, nil, true) then
@@ -57,13 +58,13 @@
 		return s
 	end
 
--- escape shell arguments to prevent command injection
-        local function shell_esc(x)
-                return (x:gsub('\\', '\\\\')
-                       :gsub('\'', '\\\''))
-        end
+--escape shell arguments to prevent command injection
+	local function shell_esc(x)
+		return (x:gsub('\\', '\\\\')
+			:gsub('\'', '\\\''))
+	end
 
--- set channel variables to lua variables
+--set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
 
@@ -97,11 +98,11 @@
 		end
 	end
 
--- show all channel variables
+--show all channel variables
 	serialized = env:serialize()
 	freeswitch.consoleLog("INFO","[fax]\n" .. serialized .. "\n")
 
--- example channel variables relating to fax
+--example channel variables relating to fax
 	--variable_fax_success: 0
 	--variable_fax_result_code: 49
 	--variable_fax_result_text: The%20call%20dropped%20prematurely
@@ -114,9 +115,10 @@
 	--variable_fax_bad_rows: 0
 	--variable_fax_transfer_rate: 14400
 
--- set channel variables to lua variables
-	fax_uuid = env:getHeader("fax_uuid");
+--set channel variables to lua variables
 	uuid = env:getHeader("uuid");
+	fax_uuid = env:getHeader("fax_uuid");
+	fax_queue_uuid = env:getHeader("fax_queue_uuid");
 	fax_success = env:getHeader("fax_success");
 	fax_result_text = env:getHeader("fax_result_text");
 	fax_local_station_id = env:getHeader("fax_local_station_id");
@@ -135,7 +137,7 @@
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
 	fax_file = env:getHeader("fax_file");
 
--- prevent nil errors
+--prevent nil errors
 	if (fax_file == nil) then
 		fax_file = env:getHeader("fax_filename");
 	end
@@ -150,6 +152,9 @@
 	end
 	if (caller_id_number == nil) then
 		caller_id_number = env:getHeader("Caller-Caller-ID-Number");
+	end
+	if (document_root == nil) then
+		document_root = '';
 	end
 
 --set default values
@@ -205,27 +210,38 @@
 	end
 
 --fax to email
-	-- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
-	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
-	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
-	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
-	cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
-	cmd = cmd .. "messages=" .. quote("result:"..shell_esc(fax_result_text).." sender:"..shell_esc(fax_remote_station_id).." pages:"..shell_esc(fax_document_total_pages)).." ";
-	cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
-	cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
-	cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
-	if #fax_forward_number > 0 then
-		cmd = cmd .. "fax_relay=true ";
-	else
-		cmd = cmd .. "fax_relay=false ";
+	---- cmd = "lua" .. " " .. quote(scripts_dir .. "/fax_to_email.lua") .. " ";
+	--cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/secure/fax_to_email.php").." ";
+	--cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
+	--cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
+	--cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
+	--cmd = cmd .. "messages=" .. quote("result:"..shell_esc(fax_result_text).." sender:"..shell_esc(fax_remote_station_id).." pages:"..shell_esc(fax_document_total_pages)).." ";
+	--cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
+	--cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
+	--cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
+	--if #fax_forward_number > 0 then
+	--	cmd = cmd .. "fax_relay=true ";
+	--else
+	--	cmd = cmd .. "fax_relay=false ";
+	--end
+	--if #fax_prefix > 0 then
+	--	cmd = cmd .. "fax_prefix=true ";
+	--else
+	--	cmd = cmd .. "fax_prefix=false ";
+	--end
+	--freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
+	--local handle = io.popen(cmd);
+	--result = handle:read("*a");
+	--handle:close();
+
+--update the email queue status
+	if (fax_success == '1') then
+		sql = "update v_fax_queue ";
+		sql = sql .. "set fax_status = 'sent' ";
+		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
+		local params = {fax_queue_uuid = fax_queue_uuid}
+		dbh:query(sql, params);
 	end
-	if #fax_prefix > 0 then
-		cmd = cmd .. "fax_prefix=true ";
-	else
-		cmd = cmd .. "fax_prefix=false ";
-	end
-	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	result = api:execute("system", cmd);
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";
@@ -415,7 +431,170 @@
 		end
 	end
 
--- send the selected variables to the console
+--settings
+	require "resources.functions.settings";
+	settings = settings(domain_uuid);
+	storage_type = "";
+	storage_path = "";
+	if (settings['fax'] ~= nil) then
+		if (settings['fax']['storage_type'] ~= nil) then
+			if (settings['fax']['storage_type']['text'] ~= nil) then
+				storage_type = settings['fax']['storage_type']['text'];
+			end
+		end
+		if (settings['fax']['storage_path'] ~= nil) then
+			if (settings['fax']['storage_path']['text'] ~= nil) then
+				storage_path = settings['fax']['storage_path']['text'];
+				storage_path = storage_path:gsub("${domain_name}", domain_name);
+				storage_path = storage_path:gsub("${voicemail_id}", voicemail_id);
+				storage_path = storage_path:gsub("${voicemail_dir}", voicemail_dir);
+			end
+		end
+		ignore_early_media = "false";
+		if (settings['fax']['variable'] ~= nil) then
+			for i, var in ipairs(settings.fax.variable) do
+				--freeswitch.consoleLog("notice", "variable #" .. i .. ": " .. var .. "\n");
+				if (var == "ignore_early_media=true") then
+					ignore_early_media = "true";
+				end
+			end
+		end
+	end
+
+--fax busy
+	if (fax_result_code == "2"  or fax_result_code == "3" or hangup_cause_q850 == 17) then
+		--do nothing. don't want to increment
+		freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n");
+		fax_busy_attempts = fax_busy_attempts + 1;
+		if (fax_busy_attempts > fax_busy_limit) then
+			fax_retry_attempts = 17;
+		else
+			freeswitch.msleep(fax_retry_sleep * 1000);
+		end
+	end
+
+--for email
+	email_address = env:getHeader("mailto_address");
+	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
+	if (email_address == nil) then
+		email_address = '';
+	else
+		email_address = email_address:gsub(",", "\\,");
+	end
+	from_address = env:getHeader("mailfrom_address");
+	if (from_address == nil) then
+		from_address = email_address;
+	end
+	uri_array = explode("/",fax_uri);
+	number_dialed = uri_array[4];
+	if (number_dialed == nil) then
+		number_dialed = uri_array[3];
+		if (number_dialed == nil) then
+			number_dialed = '0';
+		end
+	end
+	--do not use apostrophies in message, they are not escaped and the mail will fail.
+
+--get the from address
+	if (from_address == nil) then
+		if (settings['fax'] ~= nil) then
+			if (settings['fax']['smtp_from'] ~= nil) then
+				if (settings['fax']['smtp_from']['text'] ~= nil) then
+					smtp_from = settings['fax']['smtp_from']['text'];
+				end
+			end
+		end
+		if (from_address == nil) then
+			if (settings['email'] ~= nil) then
+				if (settings['email']['smtp_from'] ~= nil) then
+					if (settings['email']['smtp_from']['text'] ~= nil) then
+						smtp_from = settings['email']['smtp_from']['text'];
+					end
+				end
+			end
+		end
+	end
+
+--get the templates
+	local sql = "SELECT * FROM v_email_templates ";
+	sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	sql = sql .. "AND template_language = :template_language ";
+	sql = sql .. "AND template_category = 'fax' "
+	sql = sql .. "AND ( ";
+	sql = sql .. "	template_subcategory = 'success_default' ";
+	--sql = sql .. "  OR template_subcategory = 'fail_default' ";
+	--sql = sql .. "  OR template_subcategory = 'fail_busy' ";
+	--sql = sql .. "  OR template_subcategory = 'fail_invalid' ";
+	sql = sql .. ") "
+	sql = sql .. "AND template_enabled = 'true' "
+	local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+	dbh:query(sql, params, function(row)
+		if (row["template_subcategory"] == 'success_default') then
+			email_subject_success_default = row["template_subject"];
+			email_body_success_default = row["template_body"];
+
+			email_subject_fail_default = email_subject_success_default:gsub("${number_dialed}", number_dialed);
+			email_subject_fail_default = email_subject_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+			email_body_success_default = email_body_success_default:gsub("${number_dialed}", number_dialed);
+			email_body_success_default = email_body_success_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		end
+		--if (row["template_subcategory"] == 'fail_default') then
+		--	email_subject_fail_default = row["template_subject"];
+		--	email_body_fail_default = row["template_body"];
+
+		--	email_subject_fail_default = email_subject_fail_default:gsub("${number_dialed}", number_dialed);
+		--	email_subject_fail_default = email_subject_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--	email_body_fail_default = email_body_fail_default:gsub("${number_dialed}", number_dialed);
+		--	email_body_fail_default = email_body_fail_default:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--end
+		--if (row["template_subcategory"] == 'fail_busy') then
+		--	email_subject_fail_busy = row["template_subject"];
+		--	email_body_fail_busy = row["template_body"];
+
+		--	email_subject_fail_busy = email_subject_fail_busy:gsub("${number_dialed}", number_dialed);
+		--	email_subject_fail_busy = email_subject_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--	email_body_fail_busy = email_body_fail_busy:gsub("${number_dialed}", number_dialed);
+		--	email_body_fail_busy = email_body_fail_busy:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--end
+		--if (row["template_subcategory"] == 'fail_invalid') then
+		--	email_subject_fail_invalid = row["template_subject"];
+		--	email_body_fail_invalid = row["template_body"];
+
+		--	email_subject_fail_invalid = email_subject_fail_invalid:gsub("${number_dialed}", number_dialed);
+		--	email_subject_fail_invalid = email_subject_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--	email_body_fail_invalid = email_body_fail_invalid:gsub("${number_dialed}", number_dialed);
+		--	email_body_fail_invalid = email_body_fail_invalid:gsub("${fax_busy_attempts}", fax_busy_attempts);
+		--end
+	end);
+
+--mark the fax as sent
+	if (fax_success == '1') then
+		sql = "update v_fax_queue ";
+		sql = sql .. "set fax_status = 'sent' ";
+		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
+		local params = {fax_queue_uuid = fax_queue_uuid}
+		dbh:query(sql, params);
+	end
+
+--prepare the headers
+	headers = {}
+	headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+	headers["X-FusionPBX-Domain-Name"] = domain_name;
+	headers["X-FusionPBX-Email-From"]  = from_address;
+	headers["X-FusionPBX-Call-UUID"] = uuid;
+
+--send the email
+	send_mail(headers,
+		from_address,
+		email_address,
+		{email_subject, email_body},
+		fax_file:gsub(".tif",".pdf")
+	);
+
+--send the selected variables to the console
 	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
 	end
