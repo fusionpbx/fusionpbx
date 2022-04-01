@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015
+	Portions created by the Initial Developer are Copyright (C) 2015 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,6 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+//includes
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
@@ -164,7 +165,9 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 			sort($emails); // oldest first
 			foreach ($emails as $email_id) {
+				//get email meta data
 				$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
+				//print_r($metadata);
 
 				//format from address
 				//$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
@@ -173,16 +176,19 @@ if (is_array($result) && @sizeof($result) != 0) {
 	
 				//get the sender email address	
 				if (strstr($metadata[0]['from'], '<') && strstr($metadata[0]['from'], '>')) {
-					$sender_email = preg_match('/^.*<(.+)>/', $metadata[0]['from'], $matches) ? $matches[1] : '';
+					$sender_email = preg_match('/^.*<(.+)>/', $metadata[0]['from'], $matches) ? strtolower($matches[1]) : '';
 				}
 				else {
-					$sender_email = $metadata[0]['from'];
+					$sender_email = strtolower($metadata[0]['from']);
 				}
  
 				//check sender
 				$sender_domain = explode('@', $sender_email)[1];
 				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
 				if ($sender_authorized) {
+					//debug info
+					//echo "authorized\n";
+
 					//add multi-lingual support
 					$language = new text;
 					$text = $language->get();
