@@ -167,15 +167,22 @@ if (is_array($result) && @sizeof($result) != 0) {
 				$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 
 				//format from address
-				$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
-				$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
-
+				//$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
+				//$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
+				//$sender_email = $metadata[0]['from'];
+	
+				//get the sender email address	
+				if (strstr($metadata[0]['from'], '<') && strstr($metadata[0]['from'], '>')) {
+					$sender_email = preg_match('/^.*<(.+)>/', $metadata[0]['from'], $matches) ? $matches[1] : '';
+				}
+				else {
+					$sender_email = $metadata[0]['from'];
+				}
+ 
 				//check sender
-				$sender_email = $metadata[0]['from'];
 				$sender_domain = explode('@', $sender_email)[1];
 				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
 				if ($sender_authorized) {
-
 					//add multi-lingual support
 					$language = new text;
 					$text = $language->get();
