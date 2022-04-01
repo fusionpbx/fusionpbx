@@ -658,8 +658,12 @@ if (!function_exists('fax_split_dtmf')) {
 			$mailto_address = $mailto_address_user;
 		}
 
+		//set the fax
+		$fax_queue_uuid = uuid();
+
 		//send the fax
 		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
+		$common_variables .= "fax_queue_uuid='"               . $fax_queue_uuid          . "',";
 		$common_variables  = "for_fax=1,";
 		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
 		$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
@@ -712,7 +716,6 @@ if (!function_exists('fax_split_dtmf')) {
 			//add fax to the fax queue or send it directly
 			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
 				//build an array to add the fax to the queue
-				$fax_queue_uuid = uuid();
 				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
