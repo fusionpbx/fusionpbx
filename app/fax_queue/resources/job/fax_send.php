@@ -118,16 +118,16 @@
 	}
 
 //define the fax file
-	$tmp_dial_string  = "for_fax=1,";
-	$tmp_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-	$tmp_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-	$tmp_dial_string .= "domain_uuid="                   . $domain_uuid             . "',";
-	$tmp_dial_string .= "domain_name="                   . $domain_name             . "',";
-	$tmp_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-	$tmp_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-	$tmp_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-	$tmp_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-	$tmp_dial_string .= "fax_file='"                     . $fax_file                . "',";
+	$common_variables  = "for_fax=1,";
+	$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
+	$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+	$common_variables .= "domain_uuid="                   . $domain_uuid             . "',";
+	$common_variables .= "domain_name="                   . $domain_name             . "',";
+	$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+	$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+	$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+	$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
+	$common_variables .= "fax_file='"                     . $fax_file                . "',";
 
 //extract fax_dtmf from the fax number
 	fax_split_dtmf($fax_number, $fax_dtmf);
@@ -155,7 +155,7 @@
 	$fax_instance_uuid = pathinfo($fax_file, PATHINFO_FILENAME);
 
 //build a list of fax variables
-	$dial_string = $tmp_dial_string;
+	$dial_string = $common_variables;
 	$dial_string .= $fax_variables;
 	$dial_string .= $fax_options.",";
 	$dial_string .= "fax_uuid="            . $fax_uuid. ",";
@@ -168,7 +168,7 @@
 	//$dial_string .= "fax_retry_sleep=180"  . ",";
 	$dial_string .= "fax_verbose=true"     . ",";
 	//$dial_string .= "fax_use_ecm=off"      . ",";
-	$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup.lua'";
+	$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_rx.lua'";
 	$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 	//echo $fax_command."\n";
 
