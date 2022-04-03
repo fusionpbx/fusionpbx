@@ -1444,9 +1444,10 @@ function number_pad($number,$n) {
 				$address_found = false;
 				if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
 					$eml_recipients = str_replace(' ', '', $eml_recipients);
-					$eml_recipients = str_replace(array(';',','), ' ', $eml_recipients);
-					$eml_recipients = explode(' ', $eml_recipients); // convert to array of addresses
+					$eml_recipients = str_replace(',', ';', $eml_recipients);
+					$eml_recipients = explode(';', $eml_recipients); // convert to array of addresses
 				}
+
 				foreach ($eml_recipients as $eml_recipient) {
 					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
 						if ($eml_recipient["address"] != '' && valid_email($eml_recipient["address"])) { // check if valid address
@@ -1515,7 +1516,8 @@ function number_pad($number,$n) {
 				//send the email
 				if (!$mail->Send()) {
 					if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
-						$mailer_error = $mail->ErrorInfo;
+						$eml_error = $mail->ErrorInfo;
+						//echo $eml_error;
 					}
 					return false;
 				}
@@ -1529,6 +1531,7 @@ function number_pad($number,$n) {
 			}
 			catch (Exception $e) {
 				$eml_error = $mail->ErrorInfo;
+				//echo $eml_error;
 				return false;
 			}
 
