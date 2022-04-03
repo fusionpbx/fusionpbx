@@ -629,8 +629,9 @@ if (!function_exists('fax_split_dtmf')) {
 			exit;
 		}
 
-		//get some more info to send the fax
+		//prepare variables send the fax
 		$mailfrom_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
+		$_SESSION['fax']['send_mode']['text'] = (isset($_SESSION['fax']['send_mode']['text'])) ? $_SESSION['fax']['send_mode']['text'] : '';
 
 		$sql = "select * from v_fax where fax_uuid = :fax_uuid ";
 		$parameters['fax_uuid'] = $fax_uuid;
@@ -710,11 +711,16 @@ if (!function_exists('fax_split_dtmf')) {
 			$dial_string .= "fax_retry_sleep=180"  . ",";
 			$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
-			$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
+			if ($_SESSION['fax']['send_mode']['text'] == 'queue') {
+				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
+			}
+			else {
+				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
+			}
 			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
 			//add fax to the fax queue or send it directly
-			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if ($_SESSION['fax']['send_mode']['text'] == 'queue') {
 				//build an array to add the fax to the queue
 				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
