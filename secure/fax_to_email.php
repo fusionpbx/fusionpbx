@@ -536,7 +536,7 @@ if (!function_exists('fax_split_dtmf')) {
 							fclose($fp);
 					}
 			}
-			else {
+			if ($fax_send_mode == 'enqueue') {
 				$wav_file = '';
 				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
 			}
