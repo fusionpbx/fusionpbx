@@ -57,7 +57,7 @@
 	$fax_queue_uuid = $_GET['fax_queue_uuid'];
 	$hostname = $_GET['hostname'];
 
-//get the email details to send
+//get the fax queue details to send
 	$sql = "select q.*, d.domain_name ";
 	$sql .= "from v_fax_queue as q, v_domains as d ";
 	$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
@@ -85,118 +85,193 @@
 	}
 	unset($parameters);
 
+//determine if the retry count exceed the limit
+	if ($fax_retry_count > $retry_limit) {
+		$fax_status = 'failed';
+	}
+
+//get the default settings
+	$sql = "select default_setting_uuid, default_setting_name, default_setting_category, default_setting_subcategory, default_setting_value ";
+	$sql .= "from v_default_settings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and default_setting_category in ('domain', 'fax', fax_queue') ";
+	$sql .= "and default_setting_enabled = 'true' ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as $row) {
+			$name = $row['default_setting_name'];
+			$category = $row['default_setting_category'];
+			$subcategory = $row['default_setting_subcategory'];
+			if ($subcategory != '') {
+				if ($name == "array") {
+					$_SESSION[$category][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$name] = $row['default_setting_value'];
+				}
+			}
+			else {
+				if ($name == "array") {
+					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+				}
+			}
+		}
+	}
+	unset($result, $row);
+
+//get the domain settings
+	$sql = "select domain_setting_uuid, domain_setting_name, domain_setting_category, domain_setting_subcategory, domain_setting_value ";
+	$sql .= "from v_domain_settings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and domain_setting_category in ('domain', 'fax', fax_queue') ";
+	$sql .= "and domain_setting_enabled = 'true' ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$database = new database;
+	$result = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+	if (is_array($result) && sizeof($result) != 0) {
+		foreach ($result as $row) {
+			$name = $row['domain_setting_name'];
+			$category = $row['domain_setting_category'];
+			$subcategory = $row['domain_setting_subcategory'];
+			if ($subcategory != '') {
+				if ($name == "array") {
+					$_SESSION[$category][] = $row['domain_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$name] = $row['domain_setting_value'];
+				}
+			}
+			else {
+				if ($name == "array") {
+					$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$subcategory]['uuid'] = $row['domain_setting_uuid'];
+					$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+				}
+			}
+		}
+	}
+	unset($result, $row);
+
 //get some more info to send the fax
 	$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 
-//get the call center settings
-	$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
-	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+//attempt sending the fax
+	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
+		//get the call center settings
+			$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
+			//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
-//prepare the fax retry count
-	if (strlen($fax_retry_count) == 0) {
-		$fax_retry_count = 0;
-	}
-	else {
-		$fax_retry_count = $fax_retry_count + 1;
-	}
+		//prepare the fax retry count
+			if (strlen($fax_retry_count) == 0) {
+				$fax_retry_count = 0;
+			}
+			elseif ($fax_status != 'busy') {
+				$fax_retry_count = $fax_retry_count + 1;
+			}
 
-//fax options
-	if ($fax_retry_count == 0) {
-		$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
-	}
-	elseif ($fax_retry_count == 1) {
-		$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
-	}
-	elseif ($fax_retry_count == 2) {
-		$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
-	}
-	elseif ($fax_retry_count == 3) {
-		$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
-	}
-	elseif ($fax_retry_count == 4) {
-		$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
-	}
+		//fax options
+			if ($fax_retry_count == 0) {
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+			}
+			elseif ($fax_retry_count == 1) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+			}
+			elseif ($fax_retry_count == 2) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+			}
+			elseif ($fax_retry_count == 3) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 4) {
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+			}
 
-//define the fax file
-	$common_variables  = "for_fax=1,";
-	$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
-	$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-	$common_variables .= "domain_uuid="                   . $domain_uuid             . "',";
-	$common_variables .= "domain_name="                   . $domain_name             . "',";
-	$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-	$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-	$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-	$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
-	$common_variables .= "fax_file='"                     . $fax_file                . "',";
+		//define the fax file
+			$common_variables  = "for_fax=1,";
+			$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
+			$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+			$common_variables .= "domain_uuid="                   . $domain_uuid             . "',";
+			$common_variables .= "domain_name="                   . $domain_name             . "',";
+			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+			$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+			$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
+			$common_variables .= "fax_file='"                     . $fax_file                . "',";
+		
+		//extract fax_dtmf from the fax number
+			fax_split_dtmf($fax_number, $fax_dtmf);
 
-//extract fax_dtmf from the fax number
-	fax_split_dtmf($fax_number, $fax_dtmf);
+		//prepare the fax command
+			if (strlen($fax_toll_allow) > 0) {
+				$channel_variables["toll_allow"] = $fax_toll_allow;
+			}
+			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+			if (count($route_array) == 0) {
+				//send the internal call to the registered extension
+				$fax_uri = "user/".$fax_number."@".$domain_name;
+				$fax_variables = "";
+			}
+			else {
+				//send the external call
+				$fax_uri = $route_array[0];
+				$fax_variables = "";
+				foreach($_SESSION['fax']['variable'] as $variable) {
+					$fax_variables .= $variable.",";
+				}
+			}
 
-//prepare the fax command
-	if (strlen($fax_toll_allow) > 0) {
-		$channel_variables["toll_allow"] = $fax_toll_allow;
-	}
-	$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
-	if (count($route_array) == 0) {
-		//send the internal call to the registered extension
-		$fax_uri = "user/".$fax_number."@".$domain_name;
-		$fax_variables = "";
-	}
-	else {
-		//send the external call
-		$fax_uri = $route_array[0];
-		$fax_variables = "";
-		foreach($_SESSION['fax']['variable'] as $variable) {
-			$fax_variables .= $variable.",";
-		}
-	}
+		//set the fax file name without the extension
+			$fax_instance_uuid = pathinfo($fax_file, PATHINFO_FILENAME);
 
-//set the fax file name without the extension
-	$fax_instance_uuid = pathinfo($fax_file, PATHINFO_FILENAME);
+		//build a list of fax variables
+			$dial_string = $common_variables;
+			$dial_string .= $fax_variables;
+			$dial_string .= $fax_options.",";
+			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
+			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
+			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
+			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
+			$dial_string .= "fax_uri="             . $fax_uri  . ",";
+			$dial_string .= "fax_retry_attempts=1" . ",";
+			$dial_string .= "fax_retry_limit=1"    . ",";
+			//$dial_string .= "fax_retry_sleep=180"  . ",";
+			$dial_string .= "fax_verbose=true"     . ",";
+			//$dial_string .= "fax_use_ecm=off"      . ",";
+			$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
+			$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
+			//echo $fax_command."\n";
 
-//build a list of fax variables
-	$dial_string = $common_variables;
-	$dial_string .= $fax_variables;
-	$dial_string .= $fax_options.",";
-	$dial_string .= "fax_uuid="            . $fax_uuid. ",";
-	$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
-	$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
-	$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
-	$dial_string .= "fax_uri="             . $fax_uri  . ",";
-	$dial_string .= "fax_retry_attempts=1" . ",";
-	$dial_string .= "fax_retry_limit=1"    . ",";
-	//$dial_string .= "fax_retry_sleep=180"  . ",";
-	$dial_string .= "fax_verbose=true"     . ",";
-	//$dial_string .= "fax_use_ecm=off"      . ",";
-	$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_rx.lua'";
-	$fax_command  = "originate {" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
-	//echo $fax_command."\n";
-
-//connect to event socket and send the command
-	if (file_exists($fax_file)) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$response = event_socket_request($fp, "api " . $fax_command);
-			//$response = event_socket_request($fp, $fax_command);
-			$response = str_replace("\n", "", $response);
-			$uuid = str_replace("+OK ", "", $response);
-			echo "uuid ".$uuid."\n";
-		}
-		fclose($fp);
-	}
-	else {
-		echo "fax file missing: ".$fax_file."\n";
+		//connect to event socket and send the command
+			if ($fax_status != 'failed' && file_exists($fax_file)) {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$response = event_socket_request($fp, "api " . $fax_command);
+					//$response = event_socket_request($fp, $fax_command);
+					$response = str_replace("\n", "", $response);
+					$uuid = str_replace("+OK ", "", $response);
+					echo "uuid ".$uuid."\n";
+				}
+				fclose($fp);
+			}
+			else {
+				echo "fax file missing: ".$fax_file."\n";
+			}
 	}
 
 //update the database to say status to trying and set the command
 	$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 	$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-	if ($fax_retry_count >= $retry_limit) {
-		$array['fax_queue'][0]['fax_status'] = 'failed';
-	}
-	else {
-		$array['fax_queue'][0]['fax_status'] = 'trying';
-	}
+	$array['fax_queue'][0]['fax_status'] = $fax_status;
 	$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 	$array['fax_queue'][0]['fax_retry_date'] = 'now()';
 	$array['fax_queue'][0]['fax_command'] = $fax_command;
@@ -213,6 +288,120 @@
 
 //remove temporary permissions
 	$p->delete('fax_queue_edit', 'temp');
+
+//send the email
+	if (in_array($fax_status, array('sent', 'failed')) && strlen($fax_email_address) > 0 && file_exists($fax_file)) {
+
+		//get the language code
+			$language_code = $_SESSION['domain']['language']['code'];
+
+		//get the template subcategory
+			if (isset($fax_relay) && $fax_relay == 'true') {
+				$template_subcategory = 'relay';
+			}
+			else {
+				$template_subcategory = 'inbound';
+			}
+
+		//get the email template from the database
+			if (isset($fax_email) && strlen($fax_email) > 0) {
+				$sql = "select template_subject, template_body from v_email_templates ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$sql .= "and template_language = :template_language ";
+				$sql .= "and template_category = :template_category ";
+				$sql .= "and template_type = :template_type ";
+				$sql .= "and template_enabled = 'true' ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['template_language'] = $language_code;
+				$parameters['template_category'] = 'fax';
+				$parameters['template_type'] = 'html';
+				$database = new database;
+				$fax_templates = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+			}
+
+		//determine the template category: fail_busy, fail_default, fail_invalid, inbound, relay, success_default
+			switch ($fax_status) {
+				case 'sent':
+					$template_subcategory = 'success_default';
+					break;
+				case 'failed':
+					$template_subcategory = 'fail_default';
+					break;
+				case 'busy':
+					$template_subcategory = 'fail_busy';
+					break;
+			}
+
+		//determine the email template to use
+			if (is_array($fax_templates)) {
+				foreach($fax_templates as $row) {
+					if ($row['template_subcategory'] == $template_subcategory) {
+						$email_subject = $row['template_subject'];
+						$email_body = $row['template_body'];
+					}
+				}
+			}
+
+		//replace variables in email subject
+			$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
+			$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
+			$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
+			$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
+			$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
+			$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
+
+		//replace variables in email body
+			$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
+			$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
+			$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
+			$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
+			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
+			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+
+		//debug info
+			//echo "<hr />\n";
+			//echo "email_address ".$fax_email."<br />\n";
+			//echo "email_subject ".$email_subject."<br />\n";
+			//echo "email_body ".$email_body."<br />\n";
+			//echo "<hr />\n";
+
+		//send the email
+			if (isset($fax_email) && strlen($fax_email) > 0) {
+				//add the attachment
+				if (strlen($fax_file_name) > 0) {
+					$email_attachments[0]['type'] = 'file';
+					if ($pdf_file && file_exists($pdf_file)) {
+						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
+						$email_attachments[0]['value'] = $pdf_file;
+					}
+					else {
+						$email_attachments[0]['name'] = $fax_file_name.'.tif';
+						$email_attachments[0]['value'] = $fax_file;
+					}
+				}
+
+				//$email_response = send_email($email_address, $email_subject, $email_body);
+				$email_response = !send_email($fax_email, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, null, null, $email_attachments) ? false : true;
+			}
+
+		//output to the log
+			echo "email_from: ".$email_from."\n";
+			echo "email_from_name: ".$email_from_address."\n";
+			echo "email_subject: $email_subject\n";
+
+		//send the email
+			if ($email_response) {
+				echo "Mailer Error";
+				$email_status=$mail;
+			}
+			else {
+				echo "Message sent!";
+				$email_status="ok";
+			}
+	}
+
+
 
 //wait for a few seconds
 	//sleep(1);
