@@ -107,7 +107,7 @@ if (!$included) {
 	//set the fax directory
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
-	// set fax cover font to generate pdf
+	//set fax cover font to generate pdf
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
 else {
@@ -183,7 +183,7 @@ if (!function_exists('fax_split_dtmf')) {
 	$continue = false;
 	if (!$included) {
 		if (($_POST['action'] == "send")) {
-			//Get values from the HTTP POST to set as variables
+			//get the values from the HTTP POST
 				$fax_numbers = $_POST['fax_numbers'];
 				$fax_uuid = $_POST["id"];
 				$fax_caller_id_name = $_POST['fax_caller_id_name'];
