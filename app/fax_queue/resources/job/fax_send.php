@@ -241,7 +241,7 @@
 			}
 
 		//set the fax file name without the extension
-			$fax_instance_uuid = pathinfo($fax_file, PATHINFO_FILENAME);
+			$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 
 		//build a list of fax variables
 			$dial_string = $common_variables;
@@ -356,6 +356,23 @@
 				}
 			}
 
+		//get the fax file name (only) if a full path
+			$path_info = pathinfo($fax_file);
+			$fax_file_dirname = $path_info['dirname'];
+			$fax_file_basename = $path_info['basename'];
+			$fax_file_filename = $path_info['filename'];
+			$fax_file_extension = $path_info['extension'];
+
+		//set the fax file pdf and tif files
+			$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . $fax_file_extension);
+			$fax_file_pdf = path_join($fax_file_dirname, $fax_file_filename . 'pdf');
+			if (file_exists(path_join($fax_file_dirname, $fax_file_filename . 'pdf'))) {
+				$fax_file_name = $fax_file_filename . '.pdf';
+			}
+			else {
+				$fax_file_name = $fax_file_filename . '.' . $fax_file_extension;
+			}
+
 		//replace variables in email subject
 			$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
 			$email_subject = str_replace('${number_dialed}', $fax_number, $email_subject);
@@ -379,21 +396,15 @@
 				//add the attachment
 				if (strlen($fax_file_name) > 0) {
 					$email_attachments[0]['type'] = 'file';
-					if ($pdf_file && file_exists($pdf_file)) {
-						$email_attachments[0]['name'] = $fax_file_name.'.pdf';
-						$email_attachments[0]['value'] = $pdf_file;
-					}
-					else {
-						$email_attachments[0]['name'] = $fax_file_name.'.tif';
-						$email_attachments[0]['value'] = $fax_file;
-					}
+					$email_attachments[0]['name'] = $fax_file_name;
+					$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
 				}
 
 				$fax_email_address = str_replace(",", ";", $fax_email_address);
 				$email_addresses = explode(";", $fax_email_address);
 				foreach($email_addresses as $email_adress) {
 						//send the email
-						$email_response = !send_email($email_adress, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, 3, $email_attachments) ? false : true;
+						$email_response = !send_email($email_adress, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, null, $email_attachments) ? false : true;
 
 						//debug info
 						if (isset($_GET['debug'])) {
@@ -424,12 +435,12 @@
 	//sleep(1);
 
 //move the generated tif (and pdf) files to the sent directory
-	//if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
-	//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+	//if (file_exists($dir_fax_temp.'/'.$fax_instance_id.".tif")) {
+	//	copy($dir_fax_temp.'/'.$fax_instance_id.".tif", $dir_fax_sent.'/'.$fax_instance_id.".tif");
 	//}
-//	if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
-//		copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
-//	}
+	//if (file_exists($dir_fax_temp.'/'.$fax_instance_id.".pdf")) {
+	//	copy($dir_fax_temp.'/'.$fax_instance_id.".pdf ", $dir_fax_sent.'/'.$fax_instance_id.".pdf");
+	//}
 
 //send context to the temp log
 	//echo "Subject: ".$email_subject."\n";
