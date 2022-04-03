@@ -8,6 +8,7 @@
 		set_include_path($document_root);
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		require_once "resources/require.php";
+		require_once "resources/functions.php";
 	}
 	else {
 		exit;
@@ -85,18 +86,12 @@
 	}
 	unset($parameters);
 
-//determine if the retry count exceed the limit
-	if ($fax_retry_count > $retry_limit) {
-		$fax_status = 'failed';
-	}
-
 //get the default settings
 	$sql = "select default_setting_uuid, default_setting_name, default_setting_category, default_setting_subcategory, default_setting_value ";
 	$sql .= "from v_default_settings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and default_setting_category in ('domain', 'fax', fax_queue') ";
+	$sql .= "where default_setting_category in ('domain', 'fax', 'fax_queue') ";
 	$sql .= "and default_setting_enabled = 'true' ";
-	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters = null;
 	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -137,6 +132,7 @@
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (is_array($result) && sizeof($result) != 0) {
+		
 		foreach ($result as $row) {
 			$name = $row['domain_setting_name'];
 			$category = $row['domain_setting_category'];
@@ -162,22 +158,36 @@
 	}
 	unset($result, $row);
 
-//get some more info to send the fax
+//prepare the smtp from and from name variables
+	$email_from = $_SESSION['email']['smtp_from']['text'];
+	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
+	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
+		$email_from = $_SESSION['fax']['smtp_from']['text'];
+	}
+	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
+		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
+	}
+
+//prepare the variables to send the fax
 	$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
+	$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
+	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+
+//prepare the fax retry count
+	if (strlen($fax_retry_count) == 0) {
+		$fax_retry_count = 0;
+	}
+	elseif ($fax_status != 'busy') {
+		$fax_retry_count = $fax_retry_count + 1;
+	}
+
+//determine if the retry count exceed the limit
+	if ($fax_status != 'sent' && $fax_status != 'busy' && $fax_retry_count > $retry_limit) {
+		$fax_status = 'failed';
+	}
 
 //attempt sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
-		//get the call center settings
-			$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
-			//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
-
-		//prepare the fax retry count
-			if (strlen($fax_retry_count) == 0) {
-				$fax_retry_count = 0;
-			}
-			elseif ($fax_status != 'busy') {
-				$fax_retry_count = $fax_retry_count + 1;
-			}
 
 		//fax options
 			if ($fax_retry_count == 0) {
@@ -207,7 +217,7 @@
 			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
 			$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
 			$common_variables .= "fax_file='"                     . $fax_file                . "',";
-		
+
 		//extract fax_dtmf from the fax number
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
@@ -266,6 +276,9 @@
 			else {
 				echo "fax file missing: ".$fax_file."\n";
 			}
+
+		//set the fax status
+			$fax_status = 'trying';
 	}
 
 //update the database to say status to trying and set the command
@@ -304,8 +317,8 @@
 			}
 
 		//get the email template from the database
-			if (isset($fax_email) && strlen($fax_email) > 0) {
-				$sql = "select template_subject, template_body from v_email_templates ";
+			if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+				$sql = "select template_subcategory, template_subject, template_body from v_email_templates ";
 				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				$sql .= "and template_language = :template_language ";
 				$sql .= "and template_category = :template_category ";
@@ -345,6 +358,7 @@
 
 		//replace variables in email subject
 			$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
+			$email_subject = str_replace('${number_dialed}', $fax_number, $email_subject);
 			$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
 			$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
 			$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
@@ -353,21 +367,15 @@
 
 		//replace variables in email body
 			$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
+			$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
 			$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
 			$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
 			$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
 			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
 			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
 
-		//debug info
-			//echo "<hr />\n";
-			//echo "email_address ".$fax_email."<br />\n";
-			//echo "email_subject ".$email_subject."<br />\n";
-			//echo "email_body ".$email_body."<br />\n";
-			//echo "<hr />\n";
-
 		//send the email
-			if (isset($fax_email) && strlen($fax_email) > 0) {
+			if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
 				//add the attachment
 				if (strlen($fax_file_name) > 0) {
 					$email_attachments[0]['type'] = 'file';
@@ -381,27 +389,36 @@
 					}
 				}
 
-				//$email_response = send_email($email_address, $email_subject, $email_body);
-				$email_response = !send_email($fax_email, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, null, null, $email_attachments) ? false : true;
-			}
+				$fax_email_address = str_replace(",", ";", $fax_email_address);
+				$email_addresses = explode(";", $fax_email_address);
+				foreach($email_addresses as $email_adress) {
+						//send the email
+						$email_response = !send_email($email_adress, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, 3, $email_attachments) ? false : true;
 
-		//output to the log
-			echo "email_from: ".$email_from."\n";
-			echo "email_from_name: ".$email_from_address."\n";
-			echo "email_subject: $email_subject\n";
+						//debug info
+						if (isset($_GET['debug'])) {
+							echo "template_subcategory: ".$template_subcategory."\n";
+							echo "email_adress: ".$email_adress."\n";
+							echo "email_from: ".$email_from_name."\n";
+							echo "email_from_name: ".$email_from_address."\n";
+							echo "email_subject: ".$email_subject."\n";
+							//echo "email_body: ".$email_body."\n";
+							echo "\n";
+						}
+				}
+
+			}
 
 		//send the email
-			if ($email_response) {
-				echo "Mailer Error";
-				$email_status=$mail;
-			}
-			else {
-				echo "Message sent!";
-				$email_status="ok";
-			}
+			//if ($email_response) {
+			//	echo "Mailer Error";
+			//	$email_status=$mail;
+			//}
+			//else {
+			//	echo "Message sent!";
+			//	$email_status="ok";
+			//}
 	}
-
-
 
 //wait for a few seconds
 	//sleep(1);
@@ -422,12 +439,6 @@
 	//echo "Date: ".$email_date."\n";
 	//echo "Transcript: ".$array['message']."\n";
 	//echo "Body: ".$email_body."\n";
-
-//send email
-	//ob_start();
-	//$sent = !send_email($email_to, $email_subject, $email_body, $email_error, null, null, 3, 3, $email_attachments) ? false : true;
-	//$response = ob_get_clean();
-	//echo $response;
 
 //save output to
 	//$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
