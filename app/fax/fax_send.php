@@ -778,7 +778,8 @@ if (!function_exists('fax_split_dtmf')) {
 		if (!$included && is_uuid($fax_uuid)) {
 			message::add($response, 'default');
 			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
-				header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
+				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
+				header("Location: ".PROJECT_PATH."/app/fax/fax.php");
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
