@@ -1064,7 +1064,56 @@ function number_pad($number,$n) {
 // validate email address syntax
 	if(!function_exists('valid_email')) {
 		function valid_email($email) {
-			return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? true : false;
+			$validated_email = validate_email($email);
+			return ($validated_email['valid']===true);
+		}
+	}
+// validate an array of emails using rfc 2822
+	if(!function_exists('validate_emails')) {
+		function validate_emails(array &$emails) : array {
+			$validate_emails = [];
+			foreach($emails as $email) {
+				$validate_emails[] = validate_email($email);
+			}
+			return $validate_emails;
+		}
+	}
+	
+// validate emails to rfc 2822
+	if(!function_exists('validate_email')) {
+		function validate_email(string $email) : array {
+			$email_matches = [];
+
+			$from_regex   = '[a-zA-Z0-9_,\s\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
+			$user_regex   = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
+			$domain_regex = '(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.?)+';
+			$ipv4_regex   = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
+			$ipv6_regex   = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
+
+			preg_match("/^$from_regex\s\<(($user_regex)@($domain_regex|(\[($ipv4_regex|$ipv6_regex)\])))\>$/", $email, $matches_2822);
+			preg_match("/^($user_regex)@($domain_regex|(\[($ipv4_regex|$ipv6_regex)\]))$/", $email, $matches_normal);
+
+			$email_matches['valid'] = false;
+			$email_matches['original_text'] = $email;
+			// Check for valid email as per RFC 2822 spec.
+			if (empty($matches_normal) && !empty($matches_2822) && !empty($matches_2822[3])) {
+				$email_matches['valid'] = true;
+				$email_matches['from_name'] = $matches_2822[0];
+				$email_matches['full_email'] = $matches_2822[1];
+				$email_matches['email_name'] = $matches_2822[2];
+				$email_matches['domain'] = $matches_2822[3];
+			}
+
+			// Check for valid email as per RFC 822 spec.
+			if (empty($matches_2822) && !empty($matches_normal) && !empty($matches_normal[2])) {
+				$email_matches['valid'] = true;
+				$email_matches['from_name'] = '';
+				$email_matches['full_email'] = $matches_normal[0];
+				$email_matches['email_name'] = $matches_normal[1];
+				$email_matches['domain'] = $matches_normal[2];
+			}
+
+			return $email_matches;
 		}
 	}
 
