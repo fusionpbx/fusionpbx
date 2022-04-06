@@ -147,7 +147,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: calls.php');
+				header('Location: call_forward.php');
 				exit;
 			}
 
