@@ -302,6 +302,7 @@
 	}
 	if ($missed == true) {
 		$sql .= "and missed_call = 1 \n";
+		$sql .= "and hangup_cause <> 'LOSE_RACE' ";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql .= "and start_epoch between :start_epoch and :stop_epoch \n";
@@ -470,6 +471,7 @@
 				break;
 			case 'missed':
 				$sql .= "and missed_call = '1' ";
+				$sql .= "and hangup_cause <> 'LOSE_RACE' ";
 				break;
 			case 'cancelled':
 				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
