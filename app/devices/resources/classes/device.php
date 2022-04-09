@@ -75,10 +75,13 @@ include "root.php";
 				case "001873":
 					$device_vendor = "cisco";
 					break;
+				case "001a2f":
+					$device_vendor = "cisco";
+					break;
 				case "a44c11":
 					$device_vendor = "cisco";
 					break;
-				case "0021A0":
+				case "0021a0":
 					$device_vendor = "cisco";
 					break;
 				case "30e4db":
@@ -132,13 +135,13 @@ include "root.php";
 				case "805ec0":
 					$device_vendor = "yealink";
 					break;
-				case "00268B":
+				case "00268b":
 					$device_vendor = "escene";
 					break;
 				case "001fc1":
 					$device_vendor = "htek";
 					break;
-				case "0C383E":
+				case "0c383e":
 					$device_vendor = "fanvil";
 					break;
 				case "7c2f80":
