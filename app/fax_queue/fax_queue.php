@@ -88,8 +88,15 @@
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
 	$sql .= "from v_fax_queue ";
+	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	if (isset($search)) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	lower(hostname) like :search ";
 		$sql .= "	or lower(fax_caller_id_name) like :search ";
 		$sql .= "	or lower(fax_caller_id_number) like :search ";
@@ -100,13 +107,6 @@
 		$sql .= "	or lower(fax_accountcode) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
-		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -123,24 +123,33 @@
 
 //get the list
 	$sql = "select ";
-	$sql .= "fax_queue_uuid, ";
-	$sql .= "fax_uuid, ";
-	$sql .= "fax_date, ";
-	$sql .= "hostname, ";
-	$sql .= "fax_caller_id_name, ";
-	$sql .= "fax_caller_id_number, ";
-	$sql .= "fax_number, ";
-	$sql .= "fax_prefix, ";
-	$sql .= "fax_email_address, ";
-	$sql .= "fax_file, ";
-	$sql .= "fax_status, ";
-	$sql .= "fax_retry_date, ";
-	$sql .= "fax_retry_count, ";
-	$sql .= "fax_accountcode, ";
-	$sql .= "fax_command ";
-	$sql .= "from v_fax_queue ";
+	$sql .= "d.domain_name, ";
+	$sql .= "q.fax_queue_uuid, ";
+	$sql .= "q.fax_uuid, ";
+	$sql .= "q.fax_date, ";
+	$sql .= "q.hostname, ";
+	$sql .= "q.fax_caller_id_name, ";
+	$sql .= "q.fax_caller_id_number, ";
+	$sql .= "q.fax_number, ";
+	$sql .= "q.fax_prefix, ";
+	$sql .= "q.fax_email_address, ";
+	$sql .= "q.fax_file, ";
+	$sql .= "q.fax_status, ";
+	$sql .= "q.fax_retry_date, ";
+	$sql .= "q.fax_retry_count, ";
+	$sql .= "q.fax_accountcode, ";
+	$sql .= "q.fax_command ";
+	$sql .= "from v_fax_queue as q, v_domains as d ";
+	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where q.domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= "and q.domain_uuid = d.domain_uuid ";
 	if (isset($_GET["search"])) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	lower(hostname) like :search ";
 		$sql .= "	or lower(fax_caller_id_name) like :search ";
 		$sql .= "	or lower(fax_caller_id_number) like :search ";
@@ -170,9 +179,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-fax_queue']." (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
-	//if (permission_exists('fax_queue_add')) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'fax_queue_edit.php']);
-	//}
+	if (permission_exists('fax_queue_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'fax_queue_edit.php']);
+	}
 	if (permission_exists('fax_queue_add') && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
@@ -256,7 +265,7 @@
 				echo "	</td>\n";
 			}
 			if ($_GET['show'] == 'all' && permission_exists('fax_queue_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td>".escape($row['fax_date'])."</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
