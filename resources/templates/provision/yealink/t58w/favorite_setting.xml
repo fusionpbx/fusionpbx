@@ -1,0 +1,8 @@
+<root_favorite_set>
+<item id_name="localdirectory" display_name="Local Directory" priority="2" enable="0" />
+<item id_name="history" display_name="History" priority="3" enable="1" />
+<item id_name="networkcalllog" display_name="Network CallLog" priority="4" enable="0" />
+<item id_name="remotedirectory" display_name="Remote Phone Book" priority="5" enable="1" />
+<item id_name="ldap" display_name="LDAP" priority="1" enable="0" />
+<item id_name="networkdirectory" display_name="Network Directory" priority="6" enable="0" />
+</root_favorite_set>
