@@ -1497,7 +1497,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "*79";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
-		$y++
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9e7091a9-6a1c-478c-9a4b-39dd93f19f94";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_udp_update_enable";
