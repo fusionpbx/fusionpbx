@@ -630,14 +630,13 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 
 		//prepare variables send the fax
-		$mailfrom_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
-		$_SESSION['fax']['send_mode']['text'] = (isset($_SESSION['fax']['send_mode']['text'])) ? $_SESSION['fax']['send_mode']['text'] : '';
+		$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 
 		$sql = "select * from v_fax where fax_uuid = :fax_uuid ";
 		$parameters['fax_uuid'] = $fax_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		$mailto_address_fax = $row["fax_email"];
+		$mail_to_address_fax = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
 		unset($sql, $parameters, $row);
 
@@ -645,18 +644,18 @@ if (!function_exists('fax_split_dtmf')) {
 			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 			$database = new database;
-			$mailto_address_user = $database->select($sql, $parameters, 'column');
+			$mail_to_address_user = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 		}
 		else {
 			//use email-to-fax from address
 		}
 
-		if ($mailto_address_fax != '' && $mailto_address_user != $mailto_address_fax) {
-			$mailto_address = $mailto_address_fax.",".$mailto_address_user;
+		if ($mail_to_address_fax != '' && $mail_to_address_user != $mail_to_address_fax) {
+			$mail_to_address = $mail_to_address_fax.",".$mail_to_address_user;
 		}
 		else {
-			$mailto_address = $mailto_address_user;
+			$mail_to_address = $mail_to_address_user;
 		}
 
 		//set the fax
@@ -703,15 +702,15 @@ if (!function_exists('fax_split_dtmf')) {
 			//build the fax dial string
 			$dial_string = $common_variables;
 			$dial_string .= $fax_variables;
-			$dial_string .= "mailto_address='"     . $mailto_address   . "',";
-			$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
+			$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
+			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
 			$dial_string .= "fax_uri=" . $fax_uri  . ",";
 			$dial_string .= "fax_retry_attempts=1" . ",";
 			$dial_string .= "fax_retry_limit=20"   . ",";
 			$dial_string .= "fax_retry_sleep=180"  . ",";
 			$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
-			if ($_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
 			}
 			else {
@@ -720,7 +719,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
 			//add fax to the fax queue or send it directly
-			if ($_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				//build an array to add the fax to the queue
 				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -731,7 +730,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
 				$array['fax_queue'][0]['fax_number'] = $fax_number;
 				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
-				$array['fax_queue'][0]['fax_email_address'] = $mailto_address;
+				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
 				$array['fax_queue'][0]['fax_file'] = $fax_file;
 				$array['fax_queue'][0]['fax_status'] = 'waiting';
 				//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
@@ -777,7 +776,7 @@ if (!function_exists('fax_split_dtmf')) {
 		//redirect the browser
 		if (!$included && is_uuid($fax_uuid)) {
 			message::add($response, 'default');
-			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
 				header("Location: ".PROJECT_PATH."/app/fax/fax.php");
 			}
