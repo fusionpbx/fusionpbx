@@ -57,7 +57,7 @@
 				if(function_exists('mysql_real_escape_string')){
 					$tmp_str = mysql_real_escape_string($string);
 				}
-				else{
+				else {
 					$tmp_str = mysqli_real_escape_string($db, $string);
 				}
 				if (strlen($tmp_str)) {
@@ -1303,7 +1303,7 @@ function number_pad($number,$n) {
 
 //function to send email
 	if (!function_exists('send_email')) {
-		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3, $eml_debug_level = 0, $eml_attachments = '', $eml_read_confirmation = false) {
+		function send_email($email_recipients, $email_subject, $email_body, &$email_error = '', $email_from_address = '', $email_from_name = '', $email_priority = 3, $email_debug_level = 0, $email_attachments = '', $email_read_confirmation = false) {
 			/*
 			RECIPIENTS NOTE:
 
@@ -1363,177 +1363,53 @@ function number_pad($number,$n) {
 
 			ERROR RESPONSE:
 
-				Error messages are stored in the variable passed into $eml_error BY REFERENCE
+				Error messages are stored in the variable passed into $email_error BY REFERENCE
 
 			*/
 
-			try {
-				//include the phpmailer classes
-				include_once("resources/phpmailer/class.phpmailer.php");
-				include_once("resources/phpmailer/class.smtp.php");
+			//add the email recipients
+			$address_found = false;
+			if (!is_array($email_recipients)) { // must be a single or delimited recipient address(s)
+				$email_recipients = str_replace(' ', '', $email_recipients);
+				$email_recipients = str_replace(',', ';', $email_recipients);
+				$email_recipients = explode(';', $email_recipients); // convert to array of addresses
+			}
 
-				//create the email object and set general settings
-				$mail = new PHPMailer();
-				$mail->IsSMTP();
-				if ($_SESSION['email']['smtp_hostname']['text'] != '') {
-					$mail->Hostname = $_SESSION['email']['smtp_hostname']['text'];
-				}
-				$mail->Host = $_SESSION['email']['smtp_host']['text'];
-				if (is_numeric($_SESSION['email']['smtp_port']['numeric'])) {
-					$mail->Port = $_SESSION['email']['smtp_port']['numeric'];
-				}
-
-				if ($_SESSION['email']['smtp_auth']['text'] == "true") {
-					$mail->SMTPAuth = true;
-					$mail->Username = $_SESSION['email']['smtp_username']['text'];
-					$mail->Password = $_SESSION['email']['smtp_password']['text'];
-				}
-				else {
-					$mail->SMTPAuth = false;
-				}
-
-				$smtp_secure = true;
-				if ($_SESSION['email']['smtp_secure']['text'] == "") {
-					$mail->SMTPSecure = 'none';
-					$mail->SMTPAutoTLS = false;
-					$smtp_secure = false;
-				}
-				elseif ($_SESSION['email']['smtp_secure']['text'] == "none") {
-					$mail->SMTPSecure = 'none';
-					$mail->SMTPAutoTLS = false;
-					$smtp_secure = false;
-				}
-				else {
-					$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['text'];
-				}
-
-				if ($smtp_secure && isset($_SESSION['email']['smtp_validate_certificate']) && $_SESSION['email']['smtp_validate_certificate']['boolean'] == "false") {
-					//bypass certificate check e.g. for self-signed certificates
-					$smtp_options['ssl']['verify_peer'] = false;
-					$smtp_options['ssl']['verify_peer_name'] = false;
-					$smtp_options['ssl']['allow_self_signed'] = true;
-				}
-
-				//used to set the SSL version
-				if ($smtp_secure && isset($_SESSION['email']['smtp_crypto_method'])) {
-					$smtp_options['ssl']['crypto_method'] = $_SESSION['email']['smtp_crypto_method']['text'];
-				}
-
-				//add SMTP Options if the array exists
-				if (is_array($smtp_options)) {
-					$mail->SMTPOptions = $smtp_options;
-				}
-
-				$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['text'];
-				$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['text'];
-				$mail->SetFrom($eml_from_address, $eml_from_name);
-				$mail->AddReplyTo($eml_from_address, $eml_from_name);
-				$mail->Subject = $eml_subject;
-				$mail->MsgHTML($eml_body);
-				$mail->Priority = $eml_priority;
-				if ($eml_read_confirmation) {
-					$mail->AddCustomHeader('X-Confirm-Reading-To: '.$eml_from_address);
-					$mail->AddCustomHeader('Return-Receipt-To: '.$eml_from_address);
-					$mail->AddCustomHeader('Disposition-Notification-To: '.$eml_from_address);
-				}
-				if (is_numeric($eml_debug_level) && $eml_debug_level > 0) {
-					$mail->SMTPDebug = $eml_debug_level;
-				}
-
-				//add the email recipients
-				$address_found = false;
-				if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
-					$eml_recipients = str_replace(' ', '', $eml_recipients);
-					$eml_recipients = str_replace(',', ';', $eml_recipients);
-					$eml_recipients = explode(';', $eml_recipients); // convert to array of addresses
-				}
-
-				foreach ($eml_recipients as $eml_recipient) {
-					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
-						if ($eml_recipient["address"] != '' && valid_email($eml_recipient["address"])) { // check if valid address
-							switch ($eml_recipient["delivery"]) {
-								case "cc" :		$mail->AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								case "bcc" :	$mail->AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
-								default :		$mail->AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
-							}
-							$address_found = true;
-						}
-					}
-					else if ($eml_recipient != '' && valid_email($eml_recipient)) { // check if recipient value is simply (only) an address
-						$mail->AddAddress($eml_recipient);
+			foreach ($email_recipients as $email_recipient) {
+				if (is_array($email_recipient)) { // check if each recipient has multiple fields
+					if ($email_recipient["address"] != '' && valid_email($email_recipient["address"])) { // check if valid address
+						$recipients = $email_recipient["address"];
 						$address_found = true;
 					}
 				}
-
-				if (!$address_found) {
-					$eml_error = "No valid e-mail address provided.";
-					return false;
+				else if ($email_recipient != '' && valid_email($email_recipient)) { // check if recipient value is simply (only) an address
+					$email_recipients = $email_recipient;
+					$address_found = true;
 				}
-
-				//add email attachments
-				if (is_array($eml_attachments) && sizeof($eml_attachments) > 0) {
-					foreach ($eml_attachments as $attachment) {
-						//set the name of the file
-						$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
-
-						//set the mime type
-						switch (substr($attachment['name'], -4)) {
-							case ".png":
-								$attachment['mime_type'] = 'image/png';
-								break;
-							case ".pdf":
-								$attachment['mime_type'] = 'application/pdf';
-								break;
-							case ".mp3":
-								$attachment['mime_type'] = 'audio/mpeg';
-								break;
-							case ".wav":
-								$attachment['mime_type'] = 'audio/x-wav';
-								break;
-							case ".opus":
-								$attachment['mime_type'] = 'audio/opus';
-								break;
-							case ".ogg":
-								$attachment['mime_type'] = 'audio/ogg';
-								break;
-						}
-
-						//add the attachments
-						if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
-							$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
-						}
-						else if ($attachment['type'] == 'string') {
-							if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
-								$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
-							}
-							else {
-								$mail->AddStringAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
-							}
-						}
-					}
-				}
-
-				//send the email
-				if (!$mail->Send()) {
-					if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
-						$eml_error = $mail->ErrorInfo;
-						//echo $eml_error;
-					}
-					return false;
-				}
-
-				//cleanup the mail object
-				$mail->ClearAddresses();
-				$mail->SmtpClose();
-				unset($mail);
-				return true;
-
 			}
-			catch (Exception $e) {
-				$eml_error = $mail->ErrorInfo;
-				//echo $eml_error;
+			if (is_array($recipients)) {
+				$email_recipients = implode(",", $recipients);
+			}
+			if (!$address_found) {
+				$email_error = "No valid e-mail address provided.";
 				return false;
 			}
+
+			//get the from address and name
+			$email_from_address = ($email_from_address != '') ? $email_from_address : $_SESSION['email']['smtp_from']['text'];
+			$email_from_name = ($email_from_name != '') ? $email_from_name : $_SESSION['email']['smtp_from_name']['text'];
+
+			//send email
+			$email = new email;
+			$email->recipients = $email_recipients;
+			$email->subject = $email_subject;
+			$email->body = $email_body;
+			$email->from_address = $email_from_address;
+			$email->from_name = $email_from_name;
+			$email->attachments = $email_attachments;
+			$email->debug_level = 3;
+			$sent = $email->send();
+			//$email_error = $email->email_error;
 
 		}
 	}
