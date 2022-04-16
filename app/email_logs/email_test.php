@@ -102,7 +102,7 @@
 	$email->from_name = $email_from_name;
 	$email->attachments = $email_attachments;
 	$email->debug_level = 3;
-	//$email->method = 'direct';
+	$email->method = 'direct';
 	$sent = $email->send();
 	//$email_error = $email->email_error;
 
