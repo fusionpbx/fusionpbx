@@ -232,7 +232,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 						$fax_message = str_replace("\r\n\r\n", "\r\n", $fax_message);
 					}
 
-					//set fax directory (used for pdf creation - cover and/or attachments)
+					// set fax directory (used for pdf creation - cover and/or attachments)
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.(($domain_name != '') ? '/'.$domain_name : null);
 
 					//handle attachments (if any)
@@ -243,11 +243,11 @@ if (is_array($result) && @sizeof($result) != 0) {
 							$fax_file_extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
 
 							//block unknown files
-								if ($fax_file_extension == '') { continue; }
+								if ($fax_file_extension == '') {continue; }
 							//block unauthorized files
 								if (!$fax_allowed_extension['.' . $fax_file_extension]) { continue; } 
 							//support only attachments
-								//if($attachment['disposition'] != 'attachment') { continue; } 
+								//if($attachment['disposition'] != 'attachment'){ continue; } 
 
 							//store attachment in local fax temp folder
 								$uuid_filename = uuid();
@@ -276,7 +276,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 					$cwd = getcwd();
 					$included = true;
 					require("fax_send.php");
-					if($cwd) {
+					if($cwd){
 						chdir($cwd);
 					}
 
