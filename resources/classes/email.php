@@ -77,6 +77,136 @@ if (!class_exists('email')) {
 		}
 
 		/**
+		 * parse raw emails
+		 */
+		public function parse($message) {
+			//includes
+			require_once('resources/pop3/mime_parser.php');
+			require_once('resources/pop3/rfc822_addresses.php');
+			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
+				require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
+			}
+
+			//parse the email message
+			$mime = new mime_parser_class;
+			$mime->decode_bodies = 1;
+			$parameters = array(
+				//'File'=>$message_file,
+
+				// Read a message from a string instead of a file
+				'Data' => $message,
+
+				// Save the message body parts to a directory
+				// 'SaveBody' => '/tmp',
+
+				// Do not retrieve or save message body parts
+				//   'SkipBody' => 1,
+			);
+			$success = $mime->Decode($parameters, $decoded);
+			unset($parameters);
+
+			if (!$success) {
+				echo "MIME message decoding error: ".HtmlSpecialChars($mime->error)."\n";
+			}
+			else {
+				//get the headers
+				//print_r($decoded[0]);
+				$this->headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
+				$this->subject = $decoded[0]["Headers"]["subject:"];
+				$this->from_address = $decoded[0]["Headers"]["from:"];
+				$this->reply_to = $decoded[0]["Headers"]["reply-to:"];
+				$this->recipients = $decoded[0]["Headers"]["to:"];
+				$this->date = $decoded[0]["Headers"]["date:"];
+
+				//get the body
+				$this->body = ''; //$parts_array["Parts"][0]["Headers"]["content-type:"];
+
+				//get the body
+				$this->body = '';
+				$this->content_type = $decoded[0]['Headers']['content-type:'];
+				if (substr($this->content_type, 0, 15) == "multipart/mixed" || substr($this->content_type, 0, 21) == "multipart/alternative") {
+					foreach ($decoded[0]["Parts"] as $row) {
+						$body_content_type = $row["Headers"]["content-type:"];
+						if (substr($body_content_type, 0, 9) == "text/html") {
+							$this->body = $row["Body"];
+						}
+						if (substr($body_content_type, 0, 10) == "text/plain") { 
+							$body_plain = $row["Body"];
+							$this->body = $body_plain;
+						}
+					}
+				}
+				else {
+					$content_type_array = explode(";", $content_type);
+					$this->body = $decoded[0]["Body"];
+					//if ($content_type_array[0] == "text/html" || $content_type_array[0] == "text/plain") {
+					//	$body = $row["Body"];
+					//}
+				}
+
+				//get the attachments and add to the email
+				$x = 0;
+				foreach ($decoded[0]["Parts"] as &$parts_array) {
+					//image/tiff;name="testfax.tif"
+					//text/plain; charset=ISO-8859-1; format=flowed
+					$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];
+
+					//base64, 7bit
+					$content_transfer_encoding = $parts_array["Parts"][0]["Headers"]["content-transfer-encoding:"];
+
+					//inline;filename="testfax.tif"
+					$content_disposition = $parts_array["Parts"][0]["Headers"]["content-disposition"];
+
+					//testfax.tif
+					$file = $parts_array["FileName"];
+
+					//inline	
+					$filedisposition = $parts_array["FileDisposition"];
+
+					$body_part = $parts_array["BodyPart"];
+					$body_length = $parts_array["BodyLength"];
+
+					if (strlen($file) > 0) {
+						//get the file information
+							$file_ext = pathinfo($file, PATHINFO_EXTENSION);
+							$file_name = substr($file, 0, (strlen($file) - strlen($file_ext))-1 );
+							$encoding = "base64"; //base64_decode
+
+							switch ($file_ext){
+								case "wav":
+									$mime_type = "audio/x-wav";
+									break;
+								case "mp3":
+									$mime_type = "audio/x-mp3";
+									break;
+								case "pdf":
+									$mime_type = "application/pdf";
+									break;
+								case "tif":
+									$mime_type = "image/tiff";
+									break;
+								case "tiff":
+									$mime_type = "image/tiff";
+									break;
+								default:
+									$mime_type = "binary/octet-stream";
+									break;
+							}
+
+						//add attachment(s)
+							$this->attachments[$x]['type'] = 'string';
+							$this->attachments[$x]['name'] = $file;
+							$this->attachments[$x]['value'] = $parts_array["Body"];
+						
+						//increment the id
+							$x++;
+					}
+				}
+
+			}
+		}
+
+		/**
 		 * send emails
 		 */
 		public function send() {
