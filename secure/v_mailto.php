@@ -97,6 +97,7 @@
 //debug information
 	/*
 	echo "<pre>\n";
+	echo "recipients ".print_r($email->recipients)."\n";
 	echo "recipients ".$email->recipients."\n";
 	echo "subject ".$email->subject."\n";
 	echo "body ".$email->body."\n";
