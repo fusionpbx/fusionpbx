@@ -147,42 +147,41 @@ if (!class_exists('email_logs')) {
 										$sql .= "where email_log_uuid = :email_log_uuid ";
 										$parameters['email_log_uuid'] = $uuid;
 										$database = new database;
-										$email = $database->select($sql, $parameters, 'column');
-										$found = $email != '' ? true : false;
+										$msg = $database->select($sql, $parameters, 'column');
+										$found = $msg != '' ? true : false;
 										unset($sql, $parameters, $row);
 
 									//resend email
 										if ($found) {
-											$msg = $email;
 											$resend = true;
 											require "secure/v_mailto.php";
-											if ($mailer_error == '') {
+
+											if ($sent) {
 
 												//build the delete array
-													$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
+												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
 
 												//grant temporary permissions
-													$p = new permissions;
-													$p->add('email_log_delete', 'temp');
+												$p = new permissions;
+												$p->add('email_log_delete', 'temp');
 
 												//delete the email log
-													$database = new database;
-													$database->app_name = $this->app_name;
-													$database->app_uuid = $this->app_uuid;
-													$database->delete($array);
-													unset($array);
+												$database = new database;
+												$database->app_name = $this->app_name;
+												$database->app_uuid = $this->app_uuid;
+												$database->delete($array);
+												unset($array);
 
 												//revoke temporary permissions
-													$p->delete('email_log_delete', 'temp');
+												$p->delete('email_log_delete', 'temp');
 
 												//set message
-													message::add($text['message-message_resent']);
+												message::add($text['message-message_resent']);
 
 											}
 											else {
-
 												//set message
-													message::add($text['message-resend_failed'].": ".$mailer_error, 'negative', 4000);
+												message::add($text['message-resend_failed'].": ".$email->email_error, 'negative', 4000);
 
 											}
 										}
