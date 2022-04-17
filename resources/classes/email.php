@@ -109,14 +109,20 @@ if (!class_exists('email')) {
 				echo "MIME message decoding error: ".HtmlSpecialChars($mime->error)."\n";
 			}
 			else {
+
 				//get the headers
-				//print_r($decoded[0]);
 				$this->headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
 				$this->subject = $decoded[0]["Headers"]["subject:"];
-				$this->from_address = $decoded[0]["Headers"]["from:"];
+				$this->from_name = $decoded[0]["ExtractedAddresses"]["from:"][0]["name"];
+				$this->from_address = $decoded[0]["ExtractedAddresses"]["from:"][0]["address"];
 				$this->reply_to = $decoded[0]["Headers"]["reply-to:"];
-				$this->recipients = $decoded[0]["Headers"]["to:"];
+				$this->recipients = $decoded[0]["ExtractedAddresses"]["to:"];
 				$this->date = $decoded[0]["Headers"]["date:"];
+
+				//debug information
+				//view_array($decoded[0]);
+				//view_array($this);
+				//view_array($this->recipients);
 
 				//get the body
 				$this->body = ''; //$parts_array["Parts"][0]["Headers"]["content-type:"];
