@@ -619,7 +619,15 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 
 				//$email_response = send_email($email_address, $email_subject, $email_body);
-				$email_response = !send_email($fax_email, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, 3, $email_attachments) ? false : true;
+				$email = new email;
+				$email->recipients = $fax_email;
+				$email->subject = $email_subject;
+				$email->body = $email_body;
+				$email->from_address = $email_from_address;
+				$email->from_name = $email_from_name;
+				$email->attachments = $email_attachments;
+				$response = $mail->error;
+				$sent = $email->send();
 			}
 
 		//output to the log
@@ -628,13 +636,13 @@ if (!function_exists('fax_split_dtmf')) {
 			echo "email_subject: $email_subject\n";
 
 		//send the email
-			if ($email_response) {
+			if ($sent) {
 				echo "Mailer Error";
-				$email_status=$mail;
+				$email_status='failed';
 			}
 			else {
 				echo "Message sent!";
-				$email_status="ok";
+				$email_status='ok';
 			}
 	}
 
