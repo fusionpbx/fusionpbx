@@ -60,9 +60,9 @@ if (!class_exists('email')) {
 			//assign the variables
 			$this->app_name = 'email';
 			$this->name = 'email';
-			//$this->app_uuid = 'zzz';
-			$this->priority = 3;
-			$this->debug_level = 0;
+			$this->app_uuid = '7a4fef67-5bf8-436a-ae25-7e3c03afcf96';
+			$this->priority = 0;
+			$this->debug_level = 3;
 			$this->read_confirmation = false;
 		}
 
@@ -257,20 +257,21 @@ if (!class_exists('email')) {
 					$y = 0;
 					foreach ($this->attachments as $attachment) {
 						//set the name of the file
-						$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
+							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
+							$attachment['type'] = strtolower(pathinfo($attachment['value'], PATHINFO_EXTENSION));
+						}
 
 						//add the attachments to the array
 						$array['email_queue_attachments'][$y]['email_queue_attachment_uuid'] = uuid();
 						$array['email_queue_attachments'][$y]['email_queue_uuid'] = $email_queue_uuid;
 						$array['email_queue_attachments'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['email_queue_attachments'][$y]['email_attachment_type'] = $email_attachment_type;
-						$array['email_queue_attachments'][$y]['email_attachment_path'] = $email_attachment_path;
-						$array['email_queue_attachments'][$y]['email_attachment_name'] = $email_attachment_name;
-
-						if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
-							$array['email_queue_attachments'][$y]['email_attachment_path'] = $attachment['value'];
+						$array['email_queue_attachments'][$y]['email_attachment_type'] = $attachment['type'];
+						$array['email_queue_attachments'][$y]['email_attachment_name'] = $attachment['name'];
+						if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
+							$array['email_queue_attachments'][$y]['email_attachment_path'] = pathinfo($attachment['value'], PATHINFO_DIRNAME);
 						}
-						else if ($attachment['type'] == 'string') {
+						else {
 							$array['email_queue_attachments'][$y]['email_attachment_base64'] = base64_decode($attachment['value']);
 						}
 						$y++;
@@ -467,16 +468,6 @@ if (!class_exists('email')) {
 					if (is_array($this->attachments) && sizeof($this->attachments) > 0) {
 						foreach ($this->attachments as $attachment) {
 
-							//set the type if not set
-							if (!isset($attachment['type'])) {
-								if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
-									$attachment['type'] = 'file';
-								}
-								else {
-									$attachment['type'] = 'string';
-								}
-							}
-
 							//set the name of the file
 							$attachment['name'] = $attachment['name'] != '' ? $attachment['name'] : basename($attachment['value']);
 
@@ -494,7 +485,7 @@ if (!class_exists('email')) {
 								case ".wav":
 									$attachment['mime_type'] = 'audio/x-wav';
 									break;
-								case ".opus":
+								case "opus":
 									$attachment['mime_type'] = 'audio/opus';
 									break;
 								case ".ogg":
@@ -503,10 +494,10 @@ if (!class_exists('email')) {
 							}
 
 							//add the attachments
-							if ($attachment['type'] == 'file' || $attachment['type'] == 'path') {
+							if (strlen($attachment['value']) < 255 && file_exists($attachment['value'])) {
 								$mail->AddAttachment($attachment['value'], $attachment['name'], 'base64', $attachment['mime_type']);
 							}
-							else if ($attachment['type'] == 'string') {
+							else {
 								if (base64_encode(base64_decode($attachment['value'], true)) === $attachment['value']) {
 									$mail->AddStringAttachment(base64_decode($attachment['value']), $attachment['name'], 'base64', $attachment['mime_type']);
 								}
