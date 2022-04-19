@@ -169,7 +169,7 @@
 	}
 
 //prepare the variables to send the fax
-	$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
+	$email_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 	$retry_limit = $_SESSION['fax_queue']['retry_limit']['numeric'];
 	//$retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
 
@@ -250,7 +250,7 @@
 			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
-			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
+			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
 			$dial_string .= "fax_uri="             . $fax_uri  . ",";
 			$dial_string .= "fax_retry_attempts=1" . ",";
 			$dial_string .= "fax_retry_limit=1"    . ",";
@@ -402,26 +402,36 @@
 
 				$fax_email_address = str_replace(",", ";", $fax_email_address);
 				$email_addresses = explode(";", $fax_email_address);
-				foreach($email_addresses as $email_adress) {
+				foreach($email_addresses as $email_address) {
 						//send the email
-						$email_response = !send_email($email_adress, $email_subject, $email_body, $email_error, $email_from_address, $email_from_name, 3, null, $email_attachments) ? false : true;
+						$email = new email;
+						$email->recipients = $email_address;
+						$email->subject = $email_subject;
+						$email->body = $email_body;
+						$email->from_address = $email_from_address;
+						$email->from_name = $email_from_name;
+						$email->attachments = $email_attachments;
+						$email->debug_level = 3;
+						$email_error = $mail->error;
+						//view_array($email);
+						$sent = $email->send();
 
 						//debug info
 						if (isset($_GET['debug'])) {
 							echo "template_subcategory: ".$template_subcategory."\n";
-							echo "email_adress: ".$email_adress."\n";
+							echo "email_adress: ".$email_address."\n";
 							echo "email_from: ".$email_from_name."\n";
 							echo "email_from_name: ".$email_from_address."\n";
 							echo "email_subject: ".$email_subject."\n";
 							//echo "email_body: ".$email_body."\n";
+							echo "email_error: ".$email_error."\n";
 							echo "\n";
 						}
 				}
-
 			}
 
 		//send the email
-			//if ($email_response) {
+			//if ($sent) {
 			//	echo "Mailer Error";
 			//	$email_status=$mail;
 			//}
@@ -469,6 +479,5 @@
 
 	//fwrite($fp, $content);
 	//fclose($fp);
-
 
 ?>
