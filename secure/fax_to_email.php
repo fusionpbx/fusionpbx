@@ -193,84 +193,6 @@ if (!function_exists('tiff2pdf')) {
 	}
 }
 
-if (!function_exists('fax_enqueue')) {
-	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $reply_address, $fax_uri, $fax_dtmf, $dial_string) {
-		global $db_type;
-
-		$fax_task_uuid = uuid();
-		$dial_string .= "fax_task_uuid='".$fax_task_uuid."',";
-		$description = ''; //! @todo add description
-		if ($db_type == "pgsql") {
-			$date_utc_now_sql  = "NOW()";
-		}
-		if ($db_type == "mysql") {
-			$date_utc_now_sql  = "UTC_TIMESTAMP()";
-		}
-		if ($db_type == "sqlite") {
-			$date_utc_now_sql  = "datetime('now')";
-		}
-
-		$sql = "insert into v_fax_tasks";
-		$sql .= "( ";
-		$sql .= "fax_task_uuid, ";
-		$sql .= "fax_uuid, ";
-		$sql .= "task_next_time, ";
-		$sql .= "task_lock_time, ";
-		$sql .= "task_fax_file, ";
-		$sql .= "task_wav_file, ";
-		$sql .= "task_uri, ";
-		$sql .= "task_dial_string, ";
-		$sql .= "task_dtmf, ";
-		$sql .= "task_interrupted, ";
-		$sql .= "task_status, ";
-		$sql .= "task_no_answer_counter, ";
-		$sql .= "task_no_answer_retry_counter,";
-		$sql .= "task_retry_counter, ";
-		$sql .= "task_reply_address, ";
-		$sql .= "task_description ";
-		$sql .= ") ";
-		$sql .= "values ( ";
-		$sql .= ":fax_task_uuid, ";
-		$sql .= ":fax_uuid, ";
-		$sql .= $date_utc_now_sql.", ";
-		$sql .= "null, ";
-		$sql .= ":fax_file, ";
-		$sql .= ":wav_file, ";
-		$sql .= ":fax_uri, ";
-		$sql .= ":dial_string, ";
-		$sql .= ":fax_dtmf, ";
-		$sql .= "'false', ";
-		$sql .= "0, ";
-		$sql .= "0, ";
-		$sql .= "0, ";
-		$sql .= "0, ";
-		$sql .= ":reply_address, ";
-		$sql .= ":description ";
-		$sql .= ") ";
-		$parameters['fax_task_uuid'] = $fax_task_uuid;
-		$parameters['fax_uuid'] = $fax_uuid;
-		$parameters['fax_file'] = $fax_file;
-		$parameters['wav_file'] = $wav_file;
-		$parameters['fax_uri'] = $fax_uri;
-		$parameters['dial_string'] = $dial_string;
-		$parameters['fax_dtmf'] = $fax_dtmf;
-		$parameters['reply_address'] = $reply_address;
-		$parameters['description'] = $description;
-		$database = new database;
-		$database->execute($sql, $parameters);
-		$response = $database->message();
-		if ($response['message'] == 'OK' && $response['code'] == '200') {
-			return 'Success';
-		}
-		else{
-			//! @todo log error
-			view_array($response);
-			return 'Failed';
-		}
-		unset($sql, $parameters, $response);
-	}
-}
-
 if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
@@ -536,10 +458,6 @@ if (!function_exists('fax_split_dtmf')) {
 							fclose($fp);
 					}
 			}
-			if ($fax_send_mode == 'enqueue') {
-				$wav_file = '';
-				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
-			}
 		}
 	}
 
@@ -626,6 +544,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$email->from_address = $email_from_address;
 				$email->from_name = $email_from_name;
 				$email->attachments = $email_attachments;
+				//$email->debug_level = 3;
 				$response = $mail->error;
 				$sent = $email->send();
 			}
