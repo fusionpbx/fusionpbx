@@ -62,9 +62,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "interval";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "180";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "30";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the queue. Default 180 seconds.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to process the queue. Default 30 seconds.";
 		//$y++;
 		//$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "afd729d9-cf69-4793-a140-21093814d314";
 		//$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
