@@ -114,12 +114,16 @@
 
 //get the fax messages that are waiting to send
 	$sql = "select * from v_fax_queue ";
-	$sql .= "where (fax_status = 'waiting' or fax_status = 'trying') ";
-	$sql .= "and hostname = :hostname ";
-	$sql .= "and ( ";
-	$sql .= "	fax_retry_date is null ";
-	$sql .= "	or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :interval ";
+	$sql .= "where ";
+	$sql .= "( ";
+	$sql .= "	(fax_status = 'waiting' or fax_status = 'trying') ";
+	$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :interval) ";
 	$sql .= ")  ";
+	$sql .= "or ( ";
+	$sql .= "	fax_status = 'sent' ";
+	$sql .= "	and fax_notify_date is null ";
+	$sql .= ") ";
+	$sql .= "and hostname = :hostname ";
 	$sql .= "order by domain_uuid asc ";
 	$sql .= "limit :limit ";
 	if (isset($hostname)) {
@@ -137,8 +141,8 @@
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
-			$command = "/usr/bin/php /var/www/fusionpbx/app/fax_queue/resources/job/fax_send.php ";
-			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."'";
+			$command = "cd /var/www/fusionpbx && /usr/bin/php /var/www/fusionpbx/app/fax_queue/resources/job/fax_send.php ";
+			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
 				//run process inline to see debug info
 				echo $command."\n";
@@ -147,6 +151,7 @@
 			}
 			else {
 				//starts process rapidly doesn't wait for previous process to finish (used for production)
+				echo $command."\n";
 				$handle = popen($command." > /dev/null &", 'r'); 
 				echo "'$handle'; " . gettype($handle) . "\n";
 				$read = fread($handle, 2096);
