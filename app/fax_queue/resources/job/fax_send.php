@@ -145,7 +145,6 @@
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (is_array($result) && sizeof($result) != 0) {
-		
 		foreach ($result as $row) {
 			$name = $row['domain_setting_name'];
 			$category = $row['domain_setting_category'];
@@ -169,7 +168,7 @@
 			}
 		}
 	}
-	unset($result, $row);
+	unset($result, $parameters);
 
 //prepare the smtp from and from name variables
 	$email_from = $_SESSION['email']['smtp_from']['text'];
@@ -310,6 +309,7 @@
 			$database->app_name = 'fax queue';
 			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array, false);
+			unset($array);
 
 		//remove temporary permissions
 			$p->delete('fax_queue_edit', 'temp');
@@ -459,6 +459,7 @@
 			$database->app_name = 'fax queue';
 			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array, false);
+			unset($array);
 
 		//remove temporary permissions
 			$p->delete('fax_queue_edit', 'temp');
