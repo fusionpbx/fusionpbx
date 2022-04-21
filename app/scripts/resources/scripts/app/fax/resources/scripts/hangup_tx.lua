@@ -171,9 +171,10 @@
 	end
 
 --fax sent successfully
-	fax_status = "";
 	if (fax_success == '1') then
 		fax_status = 'sent';
+	else
+		fax_status = 'trying';
 	end
 
 --fax busy
@@ -223,7 +224,7 @@
 	end
 
 --update the email queue status
-	if (fax_status == 'sent') then
+	if (fax_success == '1') then
 		sql = "update v_fax_queue ";
 		sql = sql .. "set fax_status = :fax_status ";
 		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
