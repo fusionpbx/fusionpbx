@@ -750,6 +750,9 @@ if (!function_exists('fax_split_dtmf')) {
 
 				//remove temporary permisison
 				$p->delete('fax_queue_add', 'temp');
+				
+				//add message to show in the browser
+				message::add($text['confirm-queued']);
 			}
 			else {
 				//send the fax directly
@@ -761,6 +764,9 @@ if (!function_exists('fax_split_dtmf')) {
 					$uuid = str_replace("+OK ", "", $response);
 				}
 				fclose($fp);
+				
+				//add message to show in the browser
+				message::add($text['confirm-sent']." ".$response);
 			}
 		}
 
@@ -775,10 +781,9 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//redirect the browser
 		if (!$included && is_uuid($fax_uuid)) {
-			message::add($response, 'default');
 			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
-				header("Location: ".PROJECT_PATH."/app/fax/fax.php");
+				header("Location: ".PROJECT_PATH."fax.php");
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
