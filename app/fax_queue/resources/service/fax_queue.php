@@ -8,6 +8,7 @@
 		set_include_path($document_root);
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		require_once "resources/require.php";
+		require_once "resources/pdo.php";
 	}
 	else {
 		exit;
@@ -34,6 +35,9 @@
 	}
 	if (isset($_GET['debug'])) {
 		$debug = $_GET['debug'];
+	}
+	if (isset($_GET['sql'])) {
+		$debug_sql = $_GET['sql'];
 	}
 
 //includes
@@ -80,7 +84,15 @@
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
-//set the email queue limit
+//set the fax queue interval
+	if (isset($_SESSION['fax_queue']['interval']['numeric'])) {
+		$fax_queue_interval = $_SESSION['fax_queue']['interval']['numeric'];
+	}
+	else {
+		$fax_queue_interval = '30';
+	}
+
+//set the fax queue limit
 	if (isset($_SESSION['fax_queue']['limit']['numeric'])) {
 		$fax_queue_limit = $_SESSION['fax_queue']['limit']['numeric'];
 	}
@@ -148,9 +160,18 @@
 			}
 			$parameters['limit'] = $fax_queue_limit;
 			$parameters['interval'] = $fax_queue_interval;
+			if (isset($debug_sql)) {
+				print_r($parameters);
+			}
 			$database = new database;
 			$fax_queue = $database->select($sql, $parameters, 'all');
 			unset($parameters);
+			
+		//show results from the database
+			if (isset($debug_sql)) {
+				echo $sql."\n";
+				print_r($parameters);
+			}
 
 		//process the messages
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
