@@ -58,6 +58,19 @@
 	$fax_queue_uuid = $_GET['fax_queue_uuid'];
 	$hostname = $_GET['hostname'];
 
+//prepare to save the output
+	if (isset($_GET['debug'])) {
+		//create the debug log
+		$fp = fopen(sys_get_temp_dir()."/fax_queue.log", "a");
+		
+		//prepare the output buffers
+		ob_end_clean();
+		ob_start();
+
+		//message divider for log file
+		echo "\n\n====================================================\n\n";
+	}
+
 //get the fax queue details to send
 	$sql = "select q.*, d.domain_name ";
 	$sql .= "from v_fax_queue as q, v_domains as d ";
@@ -186,7 +199,7 @@
 		$fax_status = 'failed';
 	}
 
-//attempt sending the fax
+//sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
 		//fax options
@@ -279,28 +292,29 @@
 
 		//set the fax status
 			$fax_status = 'trying';
+
+		//update the database to say status to trying and set the command
+			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_queue'][0]['fax_status'] = $fax_status;
+			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
+			$array['fax_queue'][0]['fax_retry_date'] = 'now()';
+			$array['fax_queue'][0]['fax_command'] = $fax_command;
+
+		//add temporary permissions
+			$p = new permissions;
+			$p->add('fax_queue_edit', 'temp');
+
+		//save the data
+			$database = new database;
+			$database->app_name = 'fax queue';
+			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			$database->save($array, false);
+
+		//remove temporary permissions
+			$p->delete('fax_queue_edit', 'temp');
+
 	}
-
-//update the database to say status to trying and set the command
-	$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-	$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-	$array['fax_queue'][0]['fax_status'] = $fax_status;
-	$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
-	$array['fax_queue'][0]['fax_retry_date'] = 'now()';
-	$array['fax_queue'][0]['fax_command'] = $fax_command;
-
-//add temporary permissions
-	$p = new permissions;
-	$p->add('fax_queue_edit', 'temp');
-
-//save the data
-	$database = new database;
-	$database->app_name = 'fax queue';
-	$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-	$database->save($array, false);
-
-//remove temporary permissions
-	$p->delete('fax_queue_edit', 'temp');
 
 //send the email
 	if (in_array($fax_status, array('sent', 'failed')) && strlen($fax_email_address) > 0 && file_exists($fax_file)) {
@@ -430,6 +444,25 @@
 				}
 			}
 
+		//update the database to say status to trying and set the command
+			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_queue'][0]['fax_notify_sent'] = true;
+			$array['fax_queue'][0]['fax_notify_date'] = 'now()';
+
+		//add temporary permissions
+			$p = new permissions;
+			$p->add('fax_queue_edit', 'temp');
+
+		//save the data
+			$database = new database;
+			$database->app_name = 'fax queue';
+			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			$database->save($array, false);
+
+		//remove temporary permissions
+			$p->delete('fax_queue_edit', 'temp');
+
 		//send the email
 			//if ($sent) {
 			//	echo "Mailer Error";
@@ -461,23 +494,15 @@
 	//echo "Transcript: ".$array['message']."\n";
 	//echo "Body: ".$email_body."\n";
 
-//save output to
-	//$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "a");
-
-//prepare the output buffers
-	//ob_end_clean();
-	//ob_start();
-
-//message divider for log file
-	//echo "\n\n====================================================\n\n";
-
 //get and save the output from the buffer
-	//$content = ob_get_contents(); //get the output from the buffer
-	//$content = str_replace("<br />", "", $content);
+	if (isset($_GET['debug'])) {
+		$content = ob_get_contents(); //get the output from the buffer
+		$content = str_replace("<br />", "", $content);
 
-	//ob_end_clean(); //clean the buffer
+		ob_end_clean(); //clean the buffer
 
-	//fwrite($fp, $content);
-	//fclose($fp);
+		fwrite($fp, $content);
+		fclose($fp);
+	}
 
 ?>
