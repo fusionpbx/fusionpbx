@@ -45,60 +45,61 @@ else {
 }
 
 //curl hit addDestinationToApi
-function addDestinationToApi($destination){
+// function addDestinationToApi($destination){
 
-	$s_type = "api_secret_key";
-    $a_type = "api_url";
+// 	$s_type = "api_secret_key";
+//     $a_type = "api_url";
 
-    $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
-            UNION ALL
-            select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
+//     $sql = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type
+//             UNION ALL
+//             select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :s_type";
     
-    $parameters['a_type'] = $a_type;
-    $parameters['s_type'] = $s_type;
+//     $parameters['a_type'] = $a_type;
+//     $parameters['s_type'] = $s_type;
     
-    $database = new database;
-    $result = $database->select($sql, $parameters, 'all');
-    unset($sql, $parameters);
+//     $database = new database;
+//     $result = $database->select($sql, $parameters, 'all');
+//     unset($sql, $parameters);
 
-    $path = $result[0]['default_setting_value'];
-    $key = $result[1]['default_setting_value'];
+//     $path = $result[0]['default_setting_value'];
+//     $key = $result[1]['default_setting_value'];
 
-	$a_type = "broker_url";
-    $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
-    $parameters['a_type'] = $a_type;  
-	$database = new database;
-    $result = $database->select($sql1, $parameters, 'all');
-    unset($sql1, $parameters);
-    $path1 = $result[0]['default_setting_value'];
-	$broker_url = str_replace("/api/v1/","",$path1);
+// 	$a_type = "broker_url";
+//     $sql1 = "select default_setting_value from v_default_settings where default_setting_category = 'server' and default_setting_subcategory = :a_type";         
+//     $parameters['a_type'] = $a_type;  
+// 	$database = new database;
+//     $result = $database->select($sql1, $parameters, 'all');
+//     unset($sql1, $parameters);
+//     $path1 = $result[0]['default_setting_value'];
+// 	$broker_url = str_replace("/api/v1/","",$path1);
 
 
-	$curl = curl_init();
-	curl_setopt_array($curl, array(
-	CURLOPT_URL => $path."addFusionDestinationToApi",
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_ENCODING => '',
-	CURLOPT_MAXREDIRS => 10,
-	CURLOPT_TIMEOUT => 0,
-	CURLOPT_FOLLOWLOCATION => true,
-	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	CURLOPT_CUSTOMREQUEST => 'POST',
-	CURLOPT_POSTFIELDS =>'{ "cloud_id": "NEMERALDWHITELABEL", "destination": "'.$destination.'", "url": "'.$broker_url.'" }',
-	CURLOPT_HTTPHEADER => array(
-	"Secret-Key: $key",
-	'Content-Type: application/json'
-	),
-	));
-	$response = curl_exec($curl);
-	curl_close($curl);
+// 	$curl = curl_init();
+// 	curl_setopt_array($curl, array(
+// 	CURLOPT_URL => $path."addFusionDestinationToApi",
+// 	CURLOPT_RETURNTRANSFER => true,
+// 	CURLOPT_ENCODING => '',
+// 	CURLOPT_MAXREDIRS => 10,
+// 	CURLOPT_TIMEOUT => 0,
+// 	CURLOPT_FOLLOWLOCATION => true,
+// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+// 	CURLOPT_CUSTOMREQUEST => 'POST',
+// 	CURLOPT_POSTFIELDS =>'{ "cloud_id": "NEMERALDWHITELABEL", "destination": "'.$destination.'", "url": "'.$broker_url.'" }',
+// 	CURLOPT_HTTPHEADER => array(
+// 	"Secret-Key: $key",
+// 	'Content-Type: application/json'
+// 	),
+// 	));
+// 	$response = curl_exec($curl);
+// 	curl_close($curl);
 
-	if ($err) {
-	return "cURL Error #:" . $err;
-	} else {
-	return  $response;
-	}
-}
+// 	if ($err) {
+// 	return "cURL Error #:" . $err;
+// 	} else {
+// 	return  $response;
+// 	}
+// }
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -172,7 +173,8 @@ function addDestinationToApi($destination){
 			header( 'Location: sms.php') ;
 
 		}
-		addDestinationToApi($destination);
+		//addDestinationToApi($destination);
+		
 	} elseif (count($_POST) > 0 && $action == "update") {
 			$destination = str_replace(' ','-',check_str($_POST["destination"]));
 			$carrier = check_str($_POST["carrier"]);
@@ -202,7 +204,7 @@ function addDestinationToApi($destination){
 
 			error_log($sql_insert);
 			unset ($prep_statement);
-			addDestinationToApi($destination);
+			//addDestinationToApi($destination);
 			header( 'Location: sms.php');
 	}
 
