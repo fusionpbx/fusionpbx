@@ -474,29 +474,6 @@
 			//}
 	}
 
-//if file doesn't exist set status to missing file
-	if (in_array($fax_status, array('sent', 'failed'))) {
-		if (!file_exists($row['fax_file'])) {
-			//update the database to say status to trying and set the command
-				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
-				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
-				$array['fax_queue'][0]['fax_status'] = 'missing file';
-
-			//add temporary permissions
-				$p = new permissions;
-				$p->add('fax_queue_edit', 'temp');
-
-			//save the data
-				$database = new database;
-				$database->app_name = 'fax queue';
-				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-				$database->save($array, false);
-
-			//remove temporary permissions
-				$p->delete('fax_queue_edit', 'temp');
-		}
-	}
-
 //wait for a few seconds
 	//sleep(1);
 
