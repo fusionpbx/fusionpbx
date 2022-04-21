@@ -126,7 +126,7 @@
 			if (strlen($fax_status) == 0) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
 			//if (strlen($fax_retry_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
 			//if (strlen($fax_retry_count) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_count']."<br>\n"; }
-			if (strlen($fax_accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
+			//if (strlen($fax_accountcode) == 0) { $msg .= $text['message-required']." ".$text['label-fax_accountcode']."<br>\n"; }
 			//if (strlen($fax_command) == 0) { $msg .= $text['message-required']." ".$text['label-fax_command']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
@@ -403,7 +403,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-fax_accountcode']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
