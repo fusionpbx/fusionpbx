@@ -138,7 +138,7 @@
 	$sql = "select domain_setting_uuid, domain_setting_name, domain_setting_category, domain_setting_subcategory, domain_setting_value ";
 	$sql .= "from v_domain_settings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and domain_setting_category in ('domain', 'fax', fax_queue') ";
+	$sql .= "and domain_setting_category in ('domain', 'fax', 'fax_queue') ";
 	$sql .= "and domain_setting_enabled = 'true' ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$database = new database;
