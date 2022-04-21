@@ -171,6 +171,7 @@
 	end
 
 --fax sent successfully
+	fax_status = "";
 	if (fax_success == '1') then
 		fax_status = 'sent';
 	end
@@ -222,7 +223,7 @@
 	end
 
 --update the email queue status
-	if (fax_status ~= nil) then
+	if (fax_status == 'sent') then
 		sql = "update v_fax_queue ";
 		sql = sql .. "set fax_status = :fax_status ";
 		sql = sql .. "where fax_queue_uuid = :fax_queue_uuid ";
@@ -309,7 +310,6 @@
 	end
 	sql = sql .. ":fax_time ";
 	sql = sql .. ")";
-
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;
@@ -330,92 +330,87 @@
 		fax_date = os.date("%Y-%m-%d %X");
 		fax_time = os.time();
 	};
-
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 	end
-
 	dbh:query(sql, params);
 
+--prepare base64
+	if (storage_type == "base64") then
+		--include the file io
+			local file = require "resources.functions.file"
+
+		--read file content as base64 string
+			fax_base64 = assert(file.read_base64(fax_file));
+	end
+
 --add the fax files
-	if (fax_success ~= nil) then
-		if (fax_success =="1") then
-			if (storage_type == "base64") then
-				--include the file io
-					local file = require "resources.functions.file"
-
-				--read file content as base64 string
-					fax_base64 = assert(file.read_base64(fax_file));
-			end
-
-			local sql = {}
-			table.insert(sql, "insert into v_fax_files ");
-			table.insert(sql, "(");
-			table.insert(sql, "fax_file_uuid, ");
-			table.insert(sql, "fax_uuid, ");
-			table.insert(sql, "fax_mode, ");
-			table.insert(sql, "fax_file_type, ");
-			table.insert(sql, "fax_file_path, ");
-			if (caller_id_name ~= nil) then
-				table.insert(sql, "fax_caller_id_name, ");
-			end
-			if (caller_id_number ~= nil) then
-				table.insert(sql, "fax_caller_id_number, ");
-			end
-			table.insert(sql, "fax_date, ");
-			table.insert(sql, "fax_epoch, ");
-			if (storage_type == "base64") then
-				table.insert(sql, "fax_base64, ");
-			end
-			table.insert(sql, "domain_uuid");
-			table.insert(sql, ") ");
-			table.insert(sql, "values ");
-			table.insert(sql, "(");
-			table.insert(sql, ":uuid, ");
-			table.insert(sql, ":fax_uuid, ");
-			table.insert(sql, "'rx', ");
-			table.insert(sql, "'tif', ");
-			table.insert(sql, ":fax_file, ");
-			if (caller_id_name ~= nil) then
-				table.insert(sql, ":caller_id_name, ");
-			end
-			if (caller_id_number ~= nil) then
-				table.insert(sql, ":caller_id_number, ");
-			end
-			if (database["type"] == "sqlite") then
-				table.insert(sql, ":fax_date, ");
-			else
-				table.insert(sql, "now(), ");
-			end
-			table.insert(sql, ":fax_time, ");
-			if (storage_type == "base64") then
-				table.insert(sql, ":fax_base64, ");
-			end
-			table.insert(sql, ":domain_uuid");
-			table.insert(sql, ")");
-			sql = table.concat(sql, "\n");
-			local params = {
-				uuid = uuid;
-				domain_uuid = domain_uuid;
-				fax_uuid = fax_uuid;
-				fax_file = fax_file;
-				caller_id_name = caller_id_name;
-				caller_id_number = caller_id_number;
-				fax_base64 = fax_base64;
-				fax_date = os.date("%Y-%m-%d %X");
-				fax_time = os.time();
-			};
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			end
-			if (storage_type == "base64") then
-				local dbh = Database.new('system', 'base64');
-				dbh:query(sql, params);
-				dbh:release();
-			else
-				result = dbh:query(sql, params);
-			end
-		end
+	local sql = {}
+	table.insert(sql, "insert into v_fax_files ");
+	table.insert(sql, "(");
+	table.insert(sql, "fax_file_uuid, ");
+	table.insert(sql, "fax_uuid, ");
+	table.insert(sql, "fax_mode, ");
+	table.insert(sql, "fax_file_type, ");
+	table.insert(sql, "fax_file_path, ");
+	if (caller_id_name ~= nil) then
+		table.insert(sql, "fax_caller_id_name, ");
+	end
+	if (caller_id_number ~= nil) then
+		table.insert(sql, "fax_caller_id_number, ");
+	end
+	table.insert(sql, "fax_date, ");
+	table.insert(sql, "fax_epoch, ");
+	if (storage_type == "base64") then
+		table.insert(sql, "fax_base64, ");
+	end
+	table.insert(sql, "domain_uuid");
+	table.insert(sql, ") ");
+	table.insert(sql, "values ");
+	table.insert(sql, "(");
+	table.insert(sql, ":uuid, ");
+	table.insert(sql, ":fax_uuid, ");
+	table.insert(sql, "'tx', ");
+	table.insert(sql, "'tif', ");
+	table.insert(sql, ":fax_file, ");
+	if (caller_id_name ~= nil) then
+		table.insert(sql, ":caller_id_name, ");
+	end
+	if (caller_id_number ~= nil) then
+		table.insert(sql, ":caller_id_number, ");
+	end
+	if (database["type"] == "sqlite") then
+		table.insert(sql, ":fax_date, ");
+	else
+		table.insert(sql, "now(), ");
+	end
+	table.insert(sql, ":fax_time, ");
+	if (storage_type == "base64") then
+		table.insert(sql, ":fax_base64, ");
+	end
+	table.insert(sql, ":domain_uuid");
+	table.insert(sql, ")");
+	sql = table.concat(sql, "\n");
+	local params = {
+		uuid = uuid;
+		domain_uuid = domain_uuid;
+		fax_uuid = fax_uuid;
+		fax_file = fax_file;
+		caller_id_name = caller_id_name;
+		caller_id_number = caller_id_number;
+		fax_base64 = fax_base64;
+		fax_date = os.date("%Y-%m-%d %X");
+		fax_time = os.time();
+	};
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[fax] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+	end
+	if (storage_type == "base64") then
+		local dbh = Database.new('system', 'base64');
+		dbh:query(sql, params);
+		dbh:release();
+	else
+		dbh:query(sql, params);
 	end
 
 --send the selected variables to the console
