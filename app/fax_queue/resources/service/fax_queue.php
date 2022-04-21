@@ -40,7 +40,6 @@
 	if (!defined('STDIN')) { include_once "root.php"; }
 	require_once "resources/require.php";
 	include "resources/classes/permissions.php";
-//	require $document_root."/app/fax_queue/resources/functions/transcribe.php";  //**************************************
 
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
@@ -157,7 +156,7 @@
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 				foreach($fax_queue as $row) {
 					$command = "cd /var/www/fusionpbx && /usr/bin/php /var/www/fusionpbx/app/fax_queue/resources/job/fax_send.php ";
-					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
+					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."'";
 					if (isset($debug)) {
 						//run process inline to see debug info
 						echo $command."\n";
