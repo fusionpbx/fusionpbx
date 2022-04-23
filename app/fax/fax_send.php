@@ -317,12 +317,14 @@ if (!function_exists('fax_split_dtmf')) {
 					chdir($dir_fax_temp);
 
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
+					$gs = exec('which gs');
+					$cmd = $gs . "-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit";
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
 				}
 
+				$tiffinfo = exec('which tiffinfo');
 				$cmd = "tiffinfo ".correct_path($dir_fax_temp.'/'.$fax_name).".tif | grep \"Page Number\" | grep -c \"P\"";
 				// echo($cmd . "<br/>\n");
 				$tif_page_count = exec($cmd);
@@ -567,7 +569,8 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//combine tif files into single multi-page tif
 		if (is_array($tif_files) && sizeof($tif_files) > 0) {
-			$cmd = "tiffcp -c none ";
+			$tiffcp = exec('which tiffcp');
+			$cmd = $tiffcp. " -c none ";
 			foreach ($tif_files as $tif_file) {
 				$cmd .= correct_path($tif_file) . ' ';
 			}
@@ -580,21 +583,22 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			//generate pdf from tif
-			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
+			$tiff2pdf = exec('which tiff2pdf');
+			$cmd = $tiff2pdf . ' -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
 				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+
 			exec($cmd);
+			//echo $cmd."<br />\n";
 		}
-		else {
-			if (!$included) {
-				//nothing to send, redirect the browser
-				message::add($text['message-invalid-fax'], 'negative', 4000);
-				header("Location: fax_send.php?id=".$fax_uuid);
-				exit;
-			}
+		elseif (!$included) {
+			//nothing to send, redirect the browser
+			message::add($text['message-invalid-fax'], 'negative', 4000);
+			header("Location: fax_send.php?id=".$fax_uuid);
+			exit;
 		}
 
 		//preview, if requested
