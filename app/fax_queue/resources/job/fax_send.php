@@ -447,6 +447,7 @@
 		//update the database to say status to trying and set the command
 			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_queue'][0]['fax_status'] = $fax_status;
 			$array['fax_queue'][0]['fax_notify_sent'] = true;
 			$array['fax_queue'][0]['fax_notify_date'] = 'now()';
 
