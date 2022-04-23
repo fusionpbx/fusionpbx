@@ -311,10 +311,10 @@ if (!function_exists('fax_split_dtmf')) {
 	unset($sql, $parameters, $result);
 
 //prepare smtp server settings
-	$email_from = $_SESSION['email']['smtp_from']['text'];
+	$email_from_address = $_SESSION['email']['smtp_from']['text'];
 	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
 	if (isset($_SESSION['fax']['smtp_from']['text']) && strlen($_SESSION['fax']['smtp_from']['text']) > 0) {
-		$email_from = $_SESSION['fax']['smtp_from']['text'];
+		$email_from_address = $_SESSION['fax']['smtp_from']['text'];
 	}
 	if (isset($_SESSION['fax']['smtp_from_name']['text']) && strlen($_SESSION['fax']['smtp_from_name']['text']) > 0) {
 		$email_from_name = $_SESSION['fax']['smtp_from_name']['text'];
@@ -329,7 +329,7 @@ if (!function_exists('fax_split_dtmf')) {
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && @sizeof($row) != 0) {
-		//$fax_email = $row["fax_email"];
+		$fax_email = $row["fax_email"];
 		$fax_uuid = $row["fax_uuid"];
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_prefix = $row["fax_prefix"];
@@ -550,7 +550,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 		//output to the log
-			echo "email_from: ".$email_from."\n";
+			echo "email_from_address: ".$email_from_address."\n";
 			echo "email_from_name: ".$email_from_address."\n";
 			echo "email_subject: $email_subject\n";
 
