@@ -76,6 +76,14 @@
 		exit;
 	}
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+
 //get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
@@ -127,6 +135,8 @@
 	$sql .= "q.fax_queue_uuid, ";
 	$sql .= "q.fax_uuid, ";
 	$sql .= "q.fax_date, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as start_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as start_time_formatted, \n";	
 	$sql .= "q.hostname, ";
 	$sql .= "q.fax_caller_id_name, ";
 	$sql .= "q.fax_caller_id_number, ";
@@ -161,8 +171,9 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= order_by($order_by, $order, '', '');
+	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$database = new database;
 	$fax_queue = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -236,7 +247,9 @@
 	if ($_GET['show'] == 'all' && permission_exists('fax_queue_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
-	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
+	//echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
+	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
+	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order);
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
@@ -267,7 +280,9 @@
 			if ($_GET['show'] == 'all' && permission_exists('fax_queue_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
-			echo "	<td>".escape($row['fax_date'])."</td>\n";
+			//echo "	<td>".escape($row['fax_date'])."</td>\n";
+			echo "	<td nowrap='nowrap'>".escape($row['start_date_formatted'])."</td>\n";
+			echo "	<td nowrap='nowrap'>".escape($row['start_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
