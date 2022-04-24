@@ -135,8 +135,8 @@
 	$sql .= "q.fax_queue_uuid, ";
 	$sql .= "q.fax_uuid, ";
 	$sql .= "q.fax_date, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as start_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as start_time_formatted, \n";	
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as fax_time_formatted, \n";	
 	$sql .= "q.hostname, ";
 	$sql .= "q.fax_caller_id_name, ";
 	$sql .= "q.fax_caller_id_number, ";
@@ -281,8 +281,8 @@
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			//echo "	<td>".escape($row['fax_date'])."</td>\n";
-			echo "	<td nowrap='nowrap'>".escape($row['start_date_formatted'])."</td>\n";
-			echo "	<td nowrap='nowrap'>".escape($row['start_time_formatted'])."</td>\n";
+			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
+			echo "	<td nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
