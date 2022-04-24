@@ -80,6 +80,14 @@
 		exit;
 	}
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+
 //get order and order by
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
@@ -122,6 +130,8 @@
 //get the list
 	$sql = "select ";
 	$sql .= "email_date, ";
+	$sql .= "to_char(timezone(:time_zone, email_date), 'DD Mon YYYY') as email_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, email_date), 'HH12:MI:SS am') as email_time_formatted, \n";	
 	$sql .= "email_queue_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "email_from, ";
@@ -145,6 +155,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$database = new database;
 	$email_queue = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -217,7 +228,9 @@
 	//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
 	//	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	//}
-	echo th_order_by('email_date', $text['label-email_date'], $order_by, $order);
+	//echo th_order_by('email_date', $text['label-email_date'], $order_by, $order);
+	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
+	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
 	echo th_order_by('email_from', $text['label-email_from'], $order_by, $order);
 	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
@@ -251,10 +264,14 @@
 			//}
 			echo "	<td>\n";
 			if (permission_exists('email_queue_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date'])."</a>\n";
+				//echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date'])."</a>\n";
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date_formatted'])."</a>\n";
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_time_formatted'])."</a>\n";
 			}
 			else {
-				echo "	".escape($row['email_date']);
+				//echo "	".escape($row['email_date']);
+				echo "	".escape($row['email_date_formatted']);
+				echo "	".escape($row['email_time_formatted']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
