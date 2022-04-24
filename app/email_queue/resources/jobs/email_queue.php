@@ -145,7 +145,7 @@
     //process the messages
     if (is_array($email_queue) && @sizeof($email_queue) != 0) {
         foreach($email_queue as $row) {
-            $command = "/usr/bin/php /var/www/fusionpbx/app/email_queue/resources/jobs/email_send.php ";
+            $command = exec('which php')." ".$document_root."/app/email_queue/resources/jobs/email_send.php ";
             $command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
             if (isset($debug)) {
                 //run process inline to see debug info
