@@ -572,24 +572,25 @@ if (!function_exists('fax_split_dtmf')) {
 			foreach ($tif_files as $tif_file) {
 				$cmd .= correct_path($tif_file) . ' ';
 			}
-			$cmd .= correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+			$cmd .= correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
 			//echo($cmd . "<br/>\n");
 			exec($cmd);
-
-			foreach ($tif_files as $tif_file) {
-				@unlink($tif_file);
-			}
 
 			//generate pdf from tif
 			$cmd = exec('which tiff2pdf').' -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf').' '.
+				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
 
 			exec($cmd);
 			//echo $cmd."<br />\n";
+
+			//remove the extra files
+			foreach ($tif_files as $tif_file) {
+				@unlink($tif_file);
+			}
 		}
 		elseif (!$included) {
 			//nothing to send, redirect the browser
@@ -601,19 +602,21 @@ if (!function_exists('fax_split_dtmf')) {
 		//preview, if requested
 		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == 'preview')) {
 			unset($file_type);
-			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
+			if (file_exists($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf')) {
+				$file_path = $dir_fax_sent.'/'.$fax_instance_uuid.".pdf";
 				$file_type = 'pdf';
 				$content_type = 'application/pdf';
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".tif");
+				@unlink($dir_fax_sent.'/'.$fax_instance_uuid.".tif");
 			}
-			else if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.tif')) {
+			else if (file_exists($dir_fax_sent.'/'.$fax_instance_uuid.'.tif')) {
+				$file_path = $dir_fax_sent.'/'.$fax_instance_uuid.".tif";
 				$file_type = 'tif';
 				$content_type = 'image/tiff';
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
+				@unlink($dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 			}
 			if ($file_type != '') {
 				//push download
-				$fd = fopen($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type, "rb");
+				$fd = fopen($file_path, "rb");
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
@@ -623,9 +626,9 @@ if (!function_exists('fax_split_dtmf')) {
 				header('Accept-Ranges: bytes');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-				header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type));
+				header("Content-Length: ".filesize($file_path));
 				fpassthru($fd);
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".".$file_type);
+				@unlink($file_path);
 			}
 			exit;
 		}
@@ -659,11 +662,19 @@ if (!function_exists('fax_split_dtmf')) {
 			$mail_to_address = $mail_to_address_user;
 		}
 
+		//move the generated tif (and pdf) files to the sent directory
+		//if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
+		//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		//}
+		//if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
+		//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
+		//}
+
 		//set the fax
 		$fax_queue_uuid = uuid();
 
 		//send the fax
-		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
+		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
 		$common_variables .= "fax_queue_uuid='"               . $fax_queue_uuid          . "',";
 		$common_variables  = "for_fax=1,";
 		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
@@ -769,15 +780,6 @@ if (!function_exists('fax_split_dtmf')) {
 				//add message to show in the browser
 				message::add($text['confirm-sent']." ".$response);
 			}
-		}
-
-		//move the generated tif (and pdf) files to the sent directory
-		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
-			copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
-		}
-
-		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
-			copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
 
 		//redirect the browser
