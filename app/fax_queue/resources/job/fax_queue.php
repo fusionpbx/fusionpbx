@@ -165,7 +165,7 @@
 	}
 
 //remove the old pid file
-	if (file_exists($file)) {
+	if (file_exists($pid_file)) {
 		unlink($pid_file);
 	}
 
