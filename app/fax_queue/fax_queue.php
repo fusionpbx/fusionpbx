@@ -148,6 +148,9 @@
 	$sql .= "q.fax_retry_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'DD Mon YYYY') as fax_retry_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'HH12:MI:SS am') as fax_retry_time_formatted, \n";	
+	$sql .= "q.fax_notify_date, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'DD Mon YYYY') as fax_notify_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'HH12:MI:SS am') as fax_notify_time_formatted, \n";	
 	$sql .= "q.fax_retry_count, ";
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";
@@ -260,6 +263,7 @@
 	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
 	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
+	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
 	echo th_order_by('fax_retry_count', $text['label-fax_retry_count'], $order_by, $order);
 	if (permission_exists('fax_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -292,6 +296,7 @@
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".escape($row['fax_status'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
+			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_count'])."</td>\n";
 			if (permission_exists('fax_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
