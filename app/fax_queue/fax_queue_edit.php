@@ -63,6 +63,7 @@
 		$fax_file = $_POST["fax_file"];
 		$fax_status = $_POST["fax_status"];
 		$fax_retry_date = $_POST["fax_retry_date"];
+		$fax_notify_date = $_POST["fax_notify_date"];
 		$fax_retry_count = $_POST["fax_retry_count"];
 		$fax_accountcode = $_POST["fax_accountcode"];
 		$fax_command = $_POST["fax_command"];
@@ -160,6 +161,7 @@
 			$array['fax_queue'][0]['fax_file'] = $fax_file;
 			$array['fax_queue'][0]['fax_status'] = $fax_status;
 			$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
+			$array['fax_queue'][0]['fax_notify_date'] = $fax_notify_date;
 			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 			$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
 			$array['fax_queue'][0]['fax_command'] = $fax_command;
@@ -198,6 +200,7 @@
 		$sql .= " fax_file, ";
 		$sql .= " fax_status, ";
 		$sql .= " fax_retry_date, ";
+		$sql .= " fax_notify_date, ";
 		$sql .= " fax_retry_count, ";
 		$sql .= " fax_accountcode, ";
 		$sql .= " fax_command ";
@@ -220,6 +223,7 @@
 			$fax_file = $row["fax_file"];
 			$fax_status = $row["fax_status"];
 			$fax_retry_date = $row["fax_retry_date"];
+			$fax_notify_date = $row["fax_notify_date"];
 			$fax_retry_count = $row["fax_retry_count"];
 			$fax_accountcode = $row["fax_accountcode"];
 			$fax_command = $row["fax_command"];
@@ -388,6 +392,17 @@
 	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_retry_date)."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_retry_date']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-fax_notify_date']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_notify_date)."'>\n";
+	echo "<br />\n";
+	echo $text['description-fax_notify_date']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
