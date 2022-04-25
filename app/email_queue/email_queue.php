@@ -262,18 +262,16 @@
 			//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
 			//	echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			//}
-			echo "	<td>\n";
 			if (permission_exists('email_queue_edit')) {
-				//echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date'])."</a>\n";
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date_formatted'])."</a>\n";
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_time_formatted'])."</a>\n";
+				//echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date'])."</a></td>\n";
+				echo "	<td nowrap='nowrap'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date_formatted'])."</a></td>\n";
+				echo "	<td nowrap='nowrap'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_time_formatted'])."</a></td>\n";
 			}
 			else {
-				//echo "	".escape($row['email_date']);
-				echo "	".escape($row['email_date_formatted']);
-				echo "	".escape($row['email_time_formatted']);
+				//echo "	<td>".escape($row['email_date'])."	</td>\n";
+				echo "	<td nowrap='nowrap'>".escape($row['email_date_formatted'])."	</td>\n";
+				echo "	<td nowrap='nowrap'>".escape($row['email_time_formatted'])."	</td>\n";
 			}
-			echo "	</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
 			echo "	<td>".escape($row['email_from'])."</td>\n";
 			echo "	<td>".escape($row['email_to'])."</td>\n";
