@@ -146,6 +146,8 @@
 	$sql .= "q.fax_file, ";
 	$sql .= "q.fax_status, ";
 	$sql .= "q.fax_retry_date, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'DD Mon YYYY') as fax_retry_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'HH12:MI:SS am') as fax_retry_time_formatted, \n";	
 	$sql .= "q.fax_retry_count, ";
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";
@@ -280,7 +282,6 @@
 			if ($_GET['show'] == 'all' && permission_exists('fax_queue_all')) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
-			//echo "	<td>".escape($row['fax_date'])."</td>\n";
 			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
 			echo "	<td nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['hostname'])."</td>\n";
@@ -290,7 +291,7 @@
 			echo "	<td>".escape($row['fax_email_address'])."</td>\n";
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".escape($row['fax_status'])."</td>\n";
-			echo "	<td>".escape($row['fax_retry_date'])."</td>\n";
+			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_count'])."</td>\n";
 			if (permission_exists('fax_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
