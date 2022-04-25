@@ -481,6 +481,26 @@
 		$text['label-fax_retry_date']['sv-se'] = '';
 		$text['label-fax_retry_date']['uk-ua'] = '';
 
+		$text['label-fax_notify_date']['en-us'] = 'Notify Date';
+		$text['label-fax_notify_date']['ar-eg'] = '';
+		$text['label-fax_notify_date']['de-at'] = '';
+		$text['label-fax_notify_date']['de-ch'] = '';
+		$text['label-fax_notify_date']['de-de'] = '';
+		$text['label-fax_notify_date']['es-cl'] = '';
+		$text['label-fax_notify_date']['es-mx'] = '';
+		$text['label-fax_notify_date']['fr-ca'] = '';
+		$text['label-fax_notify_date']['fr-fr'] = '';
+		$text['label-fax_notify_date']['he-il'] = '';
+		$text['label-fax_notify_date']['it-it'] = '';
+		$text['label-fax_notify_date']['nl-nl'] = '';
+		$text['label-fax_notify_date']['pl-pl'] = '';
+		$text['label-fax_notify_date']['pt-br'] = '';
+		$text['label-fax_notify_date']['pt-pt'] = '';
+		$text['label-fax_notify_date']['ro-ro'] = '';
+		$text['label-fax_notify_date']['ru-ru'] = '';
+		$text['label-fax_notify_date']['sv-se'] = '';
+		$text['label-fax_notify_date']['uk-ua'] = '';
+
 		$text['description-fax_retry_date']['en-us'] = 'Date the fax was retried';
 		$text['description-fax_retry_date']['ar-eg'] = '';
 		$text['description-fax_retry_date']['de-at'] = '';
