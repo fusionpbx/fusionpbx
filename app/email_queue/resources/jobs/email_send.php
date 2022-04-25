@@ -28,12 +28,80 @@
 	}
 	//print_r($_GET);
 
-//set the variables
-	if (isset($_GET['hostname'])) {
+//get the primary key
+	if (is_uuid($_GET['email_queue_uuid'])) {
+		$email_queue_uuid = $_GET['email_queue_uuid'];
 		$hostname = urldecode($_GET['hostname']);
-	}
-	if (isset($_GET['debug'])) {
 		$debug = $_GET['debug'];
+		$sleep_seconds = $_GET['sleep'];
+	}
+	else {
+		//invalid uuid
+		exit;
+	}
+
+//define the process id file
+	$pid_file = "/var/run/fusionpbx/email_send".".".$email_queue_uuid.".pid";
+	//echo "pid_file: ".$pid_file."\n";
+
+//function to check if the process exists
+	function process_exists($file = false) {
+
+		//set the default exists to false
+		$exists = false;
+
+		//check to see if the process is running
+		if (file_exists($file)) {
+			$pid = file_get_contents($file);
+			if (posix_getsid($pid) === false) { 
+				//process is not running
+				$exists = false;
+			}
+			else {
+				//process is running
+				$exists = true;
+			}
+		}
+
+		//return the result
+		return $exists;
+	}
+
+//check to see if the process exists
+	$pid_exists = process_exists($pid_file);
+
+//prevent the process running more than once
+	if ($pid_exists) {
+		//echo "Cannot lock pid file {$pid_file}\n";
+		exit;
+	}
+
+//make sure the /var/run/fusionpbx directory exists
+	if (!file_exists('/var/run/fusionpbx')) {
+		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		if (!$result) {
+			die('Failed to create /var/run/fusionpbx');
+		}
+	}
+
+//create the process id file if the process doesn't exist
+	if (!$pid_exists) {
+		//remove the old pid file
+		if (file_exists($file)) {
+			unlink($pid_file);
+		}
+
+		//show the details to the user
+		//echo "The process id is ".getmypid()."\n";
+		//echo "pid_file: ".$pid_file."\n";
+
+		//save the pid file
+		file_put_contents($pid_file, getmypid());
+	}
+
+//sleep used for debugging
+	if (isset($sleep_seconds)) {
+		sleep($sleep_seconds);
 	}
 
 //includes
@@ -62,15 +130,6 @@
 //includes
 	include_once "resources/phpmailer/class.phpmailer.php";
 	include_once "resources/phpmailer/class.smtp.php";
-
-//set the GET array
-	if (!empty($argv[1])) {
-		parse_str($argv[1], $_GET);
-	}
-
-//get the primary key
-	$email_queue_uuid = $_GET['email_queue_uuid'];
-	$hostname = $_GET['hostname'];
 
 //get the email details to send
 	$sql = "select * from v_email_queue ";
@@ -610,6 +669,11 @@
 		}
 		*/
 
+	}
+
+//remove the old pid file
+	if (file_exists($pid_file)) {
+		unlink($pid_file);
 	}
 
 //unset the php mail object
