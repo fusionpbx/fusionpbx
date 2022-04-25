@@ -134,6 +134,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_key_line";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_key_extension";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
