@@ -28,10 +28,13 @@
 	Corey Moullas <cmoullas@emak.tech>
 */
 
-if (!isset($included)) { $included = false; }
+//set included to boolean
+	if (!isset($included)) { $included = false; }
 
-if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
+//check if windows
+	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
+//send email through browser
 if (!$included) {
 
 	//includes
@@ -124,6 +127,7 @@ if (!function_exists('correct_path')) {
 	}
 }
 
+//define function gs_cmd
 if (!function_exists('gs_cmd')) {
 	function gs_cmd($args) {
 		global $IS_WINDOWS;
@@ -134,6 +138,7 @@ if (!function_exists('gs_cmd')) {
 	}
 }
 
+//define function fax_split dtmf
 if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
@@ -636,30 +641,22 @@ if (!function_exists('fax_split_dtmf')) {
 		//prepare variables send the fax
 		$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 
+		//get the fax mail to address and fax prefix
 		$sql = "select * from v_fax where fax_uuid = :fax_uuid ";
 		$parameters['fax_uuid'] = $fax_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		$mail_to_address_fax = $row["fax_email"];
+		$mail_to_address = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
 		unset($sql, $parameters, $row);
 
-		if (!$included) {
-			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
-			$parameters['user_uuid'] = $_SESSION['user_uuid'];
-			$database = new database;
-			$mail_to_address_user = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-		}
-		else {
+		//for email to fax send email notification back to the email sender
+		if ($included) {
 			//use email-to-fax from address
-		}
-
-		if ($mail_to_address_fax != '' && $mail_to_address_user != $mail_to_address_fax) {
-			$mail_to_address = $mail_to_address_fax.",".$mail_to_address_user;
+			$mail_to_address = $sender_email;
 		}
 		else {
-			$mail_to_address = $mail_to_address_user;
+			//send fax through the browser
 		}
 
 		//move the generated tif (and pdf) files to the sent directory
@@ -798,6 +795,7 @@ if (!function_exists('fax_split_dtmf')) {
 	} //end upload and send fax
 
 
+//show content in the browser
 if (!$included) {
 
 	//retrieve current user's assigned groups (uuids)
