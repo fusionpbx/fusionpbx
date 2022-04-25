@@ -121,6 +121,7 @@
 	$sql .= ")  ";
 	$sql .= "or ( ";
 	$sql .= "	fax_status = 'sent' ";
+	$sql .= "	and fax_email_address is not null ";
 	$sql .= "	and fax_notify_date is null ";
 	$sql .= ") ";
 	$sql .= "and hostname = :hostname ";
