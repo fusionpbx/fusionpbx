@@ -149,6 +149,22 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "04b1e1e6-064a-4112-ba84-e33cd3a87170";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "max_retry";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "5";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Login blocked after reaching the max retries.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ee3ae838-90fd-4849-81c4-8ca9bb612125";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "find_time";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3600";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Login blocked for many failures in a given time.";
 
 	//schema details
 		$y=0;
