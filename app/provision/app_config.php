@@ -53,7 +53,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "digest";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: basic, digest (default)";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c6a5b05b-210d-484f-bbb6-c1dd2223992e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
