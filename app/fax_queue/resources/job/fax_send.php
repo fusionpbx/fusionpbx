@@ -155,6 +155,7 @@
 		$domain_uuid = $row['domain_uuid'];
 		$domain_name = $row['domain_name'];
 		$fax_uuid = $row['fax_uuid'];
+		$origination_uuid = $row['origination_uuid'];
 		$hostname = $row["hostname"];
 		$fax_date = $row["fax_date"];
 		$fax_caller_id_name = $row["fax_caller_id_name"];
@@ -272,6 +273,20 @@
 //sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
+		//create event socket handle
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if (!$fp) {
+				echo "Could not connect to event socket.\n";
+				exit;	
+			}
+			else 
+
+		//check if the uuid exists if it does then end the script
+			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
+				echo "FAX job in progress.\n";
+				exit;
+			}
+
 		//fax options
 			if ($fax_retry_count == 0) {
 				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
@@ -326,10 +341,15 @@
 		//set the fax file name without the extension
 			$fax_instance_id = pathinfo($fax_file, PATHINFO_FILENAME);
 
+		//set the origination uuid
+			$origination_uuid = uuid();
+
 		//build a list of fax variables
 			$dial_string = $common_variables;
 			$dial_string .= $fax_variables;
 			$dial_string .= $fax_options.",";
+			
+			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
 			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
@@ -346,7 +366,6 @@
 
 		//connect to event socket and send the command
 			if ($fax_status != 'failed' && file_exists($fax_file)) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$response = event_socket_request($fp, "api " . $fax_command);
 					//$response = event_socket_request($fp, $fax_command);
@@ -366,6 +385,7 @@
 		//update the database to say status to trying and set the command
 			$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
 			$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['fax_queue'][0]['origination_uuid'] = $origination_uuid;
 			$array['fax_queue'][0]['fax_status'] = $fax_status;
 			$array['fax_queue'][0]['fax_retry_count'] = $fax_retry_count;
 			$array['fax_queue'][0]['fax_retry_date'] = 'now()';
