@@ -122,7 +122,7 @@
 			//if (strlen($fax_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_caller_id_number']."<br>\n"; }
 			if (strlen($fax_number) == 0) { $msg .= $text['message-required']." ".$text['label-fax_number']."<br>\n"; }
 			//if (strlen($fax_prefix) == 0) { $msg .= $text['message-required']." ".$text['label-fax_prefix']."<br>\n"; }
-			if (strlen($fax_email_address) == 0) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
+			//if (strlen($fax_email_address) == 0) { $msg .= $text['message-required']." ".$text['label-fax_email_address']."<br>\n"; }
 			if (strlen($fax_file) == 0) { $msg .= $text['message-required']." ".$text['label-fax_file']."<br>\n"; }
 			if (strlen($fax_status) == 0) { $msg .= $text['message-required']." ".$text['label-fax_status']."<br>\n"; }
 			//if (strlen($fax_retry_date) == 0) { $msg .= $text['message-required']." ".$text['label-fax_retry_date']."<br>\n"; }
@@ -352,7 +352,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-fax_email_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
