@@ -78,6 +78,14 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+
 //get total devices count from the database
 	$sql = "select count(*) from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -173,7 +181,9 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select d.*, d2.device_label as alternate_label ";
+	$sql = "select d.*, d2.device_label as alternate_label, ";
+	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";	
 	$sql .= "from v_devices as d, v_devices as d2 ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= ", v_domains as d3 ";
@@ -244,6 +254,7 @@
 		$sql .= "order by $order_by $order ";
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -427,7 +438,7 @@
 				echo $text['label-'.$row['device_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['device_provisioned_date'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
+			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
 			if (permission_exists('device_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
