@@ -5,7 +5,7 @@
 			<action application="bind_meta_app" data="4 ab s execute_extension::att_xfer XML ${context}" enabled="false"/>
 			<action application="bind_meta_app" data="5 ab s execute_extension::xfer_vm XML ${context}" enabled="false"/>
 			<action application="set" data="domain_name={v_context}" enabled="true"/>
-			<action application="transfer" data="1001 XML {v_context}" enabled="true"/>
+			<action application="transfer" data="${operator} XML {v_context}" enabled="true"/>
 		</condition>
 	</extension>
 </context>
