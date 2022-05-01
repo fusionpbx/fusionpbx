@@ -282,7 +282,6 @@ if (!function_exists('fax_split_dtmf')) {
 		//$destination_number = $tmp_array[1];
 		//unset($tmp_array);
 	}
-	$mail_to_address = $fax_email;
 
 //get the fax file name (only) if a full path
 	$fax_path = pathinfo($fax_file);
@@ -339,6 +338,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$fax_forward_number = $row["fax_forward_number"];
 		$fax_description = $row["fax_description"];
 		$fax_email_inbound_subject_tag = $row['fax_email_inbound_subject_tag'];
+		$mail_to_address = $fax_email;
 	}
 	unset($sql, $parameters, $row);
 
@@ -383,7 +383,7 @@ if (!function_exists('fax_split_dtmf')) {
 				echo "fax_forward_number: $fax_forward_number\n";
 		
 			//add fax to the fax queue or send it directly
-			if ($_SESSION['fax_queue']['enabled']['boolean']) {
+			if ($_SESSION['fax_queue']['enabled']['boolean'] == 'true') {
 				//build an array to add the fax to the queue
 				$array['fax_queue'][0]['fax_queue_uuid'] = uuid();
 				$array['fax_queue'][0]['domain_uuid'] = $domain_uuid;
@@ -617,7 +617,7 @@ if (!function_exists('fax_split_dtmf')) {
 	//        failed_fax_emails.sh - this is created when we have a email we need to re-send.  At the time it is created, an at job is created to execute it in 3 minutes time,
 	//            this allows us to try sending the email again at that time.  If the file exists but there is no at job this is because there are no longer any emails queued
 	//            as we have successfully sent them all.
-	if (strlen($fax_email) > 0 && file_exists($fax_file)) {
+	if ($_SESSION['fax_queue']['enabled']['boolean'] != 'true' && strlen($fax_email) > 0 && file_exists($fax_file)) {
 		if (stristr(PHP_OS, 'WIN')) {
 			//not compatible with windows
 		}
@@ -644,6 +644,7 @@ if (!function_exists('fax_split_dtmf')) {
 					$tmp_response = exec("chmod 777 ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh");
 				//note we use batch in order to execute when system load is low.  Alternatively this could be replaced with AT.
 					$tmp_response = exec("at -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
+				
 			}
 		}
 	}
