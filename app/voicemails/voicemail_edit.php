@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -522,6 +522,7 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='greeting_id'>\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
+	echo "		<option value='0' ".(($greeting_id == "0") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;

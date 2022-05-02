@@ -47,6 +47,11 @@
 					dtmf_digits = '';
 					if (string.len(greeting_id) > 0 and greeting_id ~= "default") then
 
+						--greeting set to none, return without a greeting
+							if (greeting_id == "0") then
+								return true;
+							end
+
 						--sleep
 							session:execute("playback","silence_stream://200");
 
