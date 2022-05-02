@@ -102,9 +102,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "destination_record";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_trunk_prefix";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_area_code";
@@ -121,6 +118,16 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_context";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_record";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_hold_music";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_distinctive_ring";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_accountcode";
@@ -302,6 +309,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_hold_music";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to set music on hold.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_distinctive_ring";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to set distinctive ring.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
