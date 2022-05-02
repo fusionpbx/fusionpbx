@@ -679,11 +679,10 @@
 											if (permission_exists('voicemail_local_after_email')) {
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
-											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
-											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_transcription_enabled;
-
-											$array["voicemails"][$i]["voicemail_description"] = $description;
+											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
 											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
+											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
+											$array["voicemails"][$i]["voicemail_description"] = $description;
 
 										//make sure the voicemail directory exists
 											if (is_numeric($voicemail_id)) {
@@ -888,7 +887,6 @@
 				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
-				$voicemail_transcription_enabled = $row["voicemail_enabled"];
 				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 				$voicemail_tutorial = $row["voicemail_tutorial"];
 			}
