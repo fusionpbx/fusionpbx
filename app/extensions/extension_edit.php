@@ -679,9 +679,10 @@
 											if (permission_exists('voicemail_local_after_email')) {
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
+											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
+											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
-											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 
 										//make sure the voicemail directory exists
 											if (is_numeric($voicemail_id)) {
@@ -886,6 +887,7 @@
 				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
+				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 				$voicemail_tutorial = $row["voicemail_tutorial"];
 			}
 			unset($sql, $parameters, $row);
@@ -1707,6 +1709,30 @@
 		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_enabled']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-voicemail_transcription_enabled']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='voicemail_transcription_enabled'>\n";
+		if ($voicemail_transcription_enabled == "true") {
+			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($voicemail_transcription_enabled == "false") {
+			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-voicemail_transcription_enabled']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
