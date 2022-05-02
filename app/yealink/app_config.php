@@ -819,7 +819,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_9";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring8.wav";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring9.wav";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
@@ -827,7 +827,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_ring_file_10";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring8.wav";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Ring10.wav";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.";
 		$y++;
