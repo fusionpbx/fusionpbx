@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -990,7 +990,15 @@ if (!class_exists('destinations')) {
 		* valid destination
 		*/
 		public function valid($destination, $type = 'dialplan') {
+			//allow an empty destination
+			if ($destination == ':') {
+				return true;
+			}
+
+			//get all of the $destinations
 			$destinations = $this->all($type);
+
+			//loop through destinations to validate them
 			foreach($destinations as $category => $array) {
 				if (is_array($array)) {
 					foreach ($array as $key => $value) {
