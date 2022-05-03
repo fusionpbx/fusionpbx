@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,10 +28,13 @@
 	Corey Moullas <cmoullas@emak.tech>
 */
 
-if (!isset($included)) { $included = false; }
+//set included to boolean
+	if (!isset($included)) { $included = false; }
 
-if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
+//check if windows
+	if (stristr(PHP_OS, 'WIN')) { $IS_WINDOWS = true; } else { $IS_WINDOWS = false; }
 
+//send email through browser
 if (!$included) {
 
 	//includes
@@ -87,13 +90,13 @@ if (!$included) {
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				//set database fields as variables
-					$fax_uuid = $row["fax_uuid"];
-					$fax_extension = $row["fax_extension"];
-					$fax_caller_id_name = $row["fax_caller_id_name"];
-					$fax_caller_id_number = $row["fax_caller_id_number"];
-					$fax_toll_allow = $row["fax_toll_allow"];
-					$fax_accountcode = $row["accountcode"];
-					$fax_send_greeting = $row["fax_send_greeting"];
+				$fax_uuid = $row["fax_uuid"];
+				$fax_extension = $row["fax_extension"];
+				$fax_caller_id_name = $row["fax_caller_id_name"];
+				$fax_caller_id_number = $row["fax_caller_id_number"];
+				$fax_toll_allow = $row["fax_toll_allow"];
+				$fax_accountcode = $row["accountcode"];
+				$fax_send_greeting = $row["fax_send_greeting"];
 			}
 			else {
 				if (!permission_exists('fax_extension_view_domain')) {
@@ -102,17 +105,12 @@ if (!$included) {
 				}
 			}
 			unset($sql, $parameters, $row);
-
-			$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-			if(strlen($fax_send_mode) == 0){
-				$fax_send_mode = 'direct';
-			}
 		}
 
 	//set the fax directory
 		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 
-	// set fax cover font to generate pdf
+	//set fax cover font to generate pdf
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 }
 else {
@@ -129,6 +127,7 @@ if (!function_exists('correct_path')) {
 	}
 }
 
+//define function gs_cmd
 if (!function_exists('gs_cmd')) {
 	function gs_cmd($args) {
 		global $IS_WINDOWS;
@@ -139,69 +138,7 @@ if (!function_exists('gs_cmd')) {
 	}
 }
 
-if (!function_exists('fax_enqueue')) {
-	function fax_enqueue($fax_uuid, $fax_file, $wav_file, $reply_address, $fax_uri, $fax_dtmf, $dial_string){
-		global $db_type;
-
-		$fax_task_uuid = uuid();
-		$dial_string .= "fax_task_uuid='" . $fax_task_uuid . "',";
-		$description = ''; //! @todo add description
-		if ($db_type == "pgsql") {
-			$date_utc_now_sql  = "NOW() at time zone 'utc'";
-		}
-		if ($db_type == "mysql") {
-			$date_utc_now_sql  = "UTC_TIMESTAMP()";
-		}
-		if ($db_type == "sqlite") {
-			$date_utc_now_sql  = "datetime('now')";
-		}
-
-		$array['fax_tasks'][0]['fax_task_uuid'] = $fax_task_uuid;
-		$array['fax_tasks'][0]['fax_uuid'] = $fax_uuid;
-		$array['fax_tasks'][0]['task_next_time'] = $date_utc_now_sql;
-		$array['fax_tasks'][0]['task_lock_time'] = null;
-		$array['fax_tasks'][0]['task_fax_file'] = $fax_file;
-		$array['fax_tasks'][0]['task_wav_file'] = $wav_file;
-		$array['fax_tasks'][0]['task_uri'] = $fax_uri;
-		$array['fax_tasks'][0]['task_dial_string'] = $dial_string;
-		$array['fax_tasks'][0]['task_dtmf'] = $fax_dtmf;
-		$array['fax_tasks'][0]['task_interrupted'] = 'false';
-		$array['fax_tasks'][0]['task_status'] = 0;
-		$array['fax_tasks'][0]['task_no_answer_counter'] = 0;
-		$array['fax_tasks'][0]['task_no_answer_retry_counter'] = 0;
-		$array['fax_tasks'][0]['task_retry_counter'] = 0;
-		$array['fax_tasks'][0]['task_reply_address'] = $reply_address;
-		$array['fax_tasks'][0]['task_description'] = $description;
-
-		$p = new permissions;
-		$p->add('fax_task_add', 'temp');
-
-		$database = new database;
-		$database->app_name = 'fax';
-		$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-		$database->save($array);
-		$message = $database->message;
-		unset($array);
-
-		$p->delete('fax_task_add', 'temp');
-
-		if ($message['message'] == 'OK' && $message['code'] == 200) {
-			$response = 'Enqueued';
-		}
-		else {
-			$response = 'Fail Enqueue';
-
-			echo $message['message'].' ['.$message['code']."]<br />\n";
-			if (is_array($message['error']) && @sizeof($message['error']) != 0) {
-				foreach ($message['error'] as $error) {
-					echo "<pre>".$error."</pre><br /><br />\n";
-				}
-			}
-		}
-		return $response;
-	}
-}
-
+//define function fax_split dtmf
 if (!function_exists('fax_split_dtmf')) {
 	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
 		$tmp = array();
@@ -251,18 +188,19 @@ if (!function_exists('fax_split_dtmf')) {
 	$continue = false;
 	if (!$included) {
 		if (($_POST['action'] == "send")) {
-			$fax_numbers = $_POST['fax_numbers'];
-			$fax_uuid = $_POST["id"];
-			$fax_caller_id_name = $_POST['fax_caller_id_name'];
-			$fax_caller_id_number = $_POST['fax_caller_id_number'];
-			$fax_header = $_POST['fax_header'];
-			$fax_sender = $_POST['fax_sender'];
-			$fax_recipient = $_POST['fax_recipient'];
-			$fax_subject = $_POST['fax_subject'];
-			$fax_message = $_POST['fax_message'];
-			$fax_resolution = $_POST['fax_resolution'];
-			$fax_page_size = $_POST['fax_page_size'];
-			$fax_footer = $_POST['fax_footer'];
+			//get the values from the HTTP POST
+				$fax_numbers = $_POST['fax_numbers'];
+				$fax_uuid = $_POST["id"];
+				$fax_caller_id_name = $_POST['fax_caller_id_name'];
+				$fax_caller_id_number = $_POST['fax_caller_id_number'];
+				$fax_header = $_POST['fax_header'];
+				$fax_sender = $_POST['fax_sender'];
+				$fax_recipient = $_POST['fax_recipient'];
+				$fax_subject = $_POST['fax_subject'];
+				$fax_message = $_POST['fax_message'];
+				$fax_resolution = $_POST['fax_resolution'];
+				$fax_page_size = $_POST['fax_page_size'];
+				$fax_footer = $_POST['fax_footer'];
 
 			//validate the token
 				$token = new token;
@@ -384,13 +322,14 @@ if (!function_exists('fax_split_dtmf')) {
 					chdir($dir_fax_temp);
 
 					//convert pdf to tif
-					$cmd = gs_cmd("-q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit");
+					$cmd = exec('which gs')." -q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".correct_path($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".correct_path($fax_name).".pdf -c quit";
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
 				}
 
-				$cmd = "tiffinfo ".correct_path($dir_fax_temp.'/'.$fax_name).".tif | grep \"Page Number\" | grep -c \"P\"";
+				//get the page count
+				$cmd = exec('which tiffinfo')." ".correct_path($dir_fax_temp.'/'.$fax_name).".tif | grep \"Page Number\" | grep -c \"P\"";
 				// echo($cmd . "<br/>\n");
 				$tif_page_count = exec($cmd);
 				if ($tif_page_count != '') {
@@ -577,20 +516,20 @@ if (!function_exists('fax_split_dtmf')) {
 			$pages = $pdf->getNumPages();
 
 			if ($pages > 1) {
-				# save ynew for last page
+				//save ynew for last page
 				$yn = $pdf->GetY();
 
-				# First page
+				//first page
 				$pdf->setPage(1, 0);
 				$pdf->Rect($x + 0.5, $y + 3.4, 7.5, $page_height - 3.9, 'D');
 
-				# 2nd to N-th page
+				//2nd to n-th page
 				for ($n = 2; $n < $pages; $n++) {
 					$pdf->setPage($n, 0);
 					$pdf->Rect($x + 0.5, $y + 0.5, 7.5, $page_height - 1, 'D');
 				}
 
-				#Last page
+				//last page
 				$pdf->setPage($pages, 0);
 				$pdf->Rect($x + 0.5, 0.5, 7.5, $yn, 'D');
 				$y = $yn;
@@ -612,7 +551,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$pdf->SetAutoPageBreak(false);
 			$pdf->SetTopMargin(0);
 
-			// save cover pdf
+			//save cover pdf
 			$pdf->Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
 
 			//convert pdf to tif, add to array of pages, delete pdf
@@ -634,52 +573,55 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//combine tif files into single multi-page tif
 		if (is_array($tif_files) && sizeof($tif_files) > 0) {
-			$cmd = "tiffcp -c none ";
+			$cmd = exec('which tiffcp')." -c none ";
 			foreach ($tif_files as $tif_file) {
 				$cmd .= correct_path($tif_file) . ' ';
 			}
-			$cmd .= correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+			$cmd .= correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
 			//echo($cmd . "<br/>\n");
 			exec($cmd);
 
-			foreach ($tif_files as $tif_file) {
-				@unlink($tif_file);
-			}
-
 			//generate pdf from tif
-			$cmd = 'tiff2pdf -u i -p '.$fax_page_size.
+			$cmd = exec('which tiff2pdf').' -u i -p '.$fax_page_size.
 				' -w '.$page_width.
 				' -l '.$page_height.
 				' -f -o '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_temp.'/'.$fax_instance_uuid.'.tif');
+				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf').' '.
+				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
+
 			exec($cmd);
-		}
-		else {
-			if (!$included) {
-				//nothing to send, redirect the browser
-				message::add($text['message-invalid-fax'], 'negative', 4000);
-				header("Location: fax_send.php?id=".$fax_uuid);
-				exit;
+			//echo $cmd."<br />\n";
+
+			//remove the extra files
+			foreach ($tif_files as $tif_file) {
+				@unlink($tif_file);
 			}
+		}
+		elseif (!$included) {
+			//nothing to send, redirect the browser
+			message::add($text['message-invalid-fax'], 'negative', 4000);
+			header("Location: fax_send.php?id=".$fax_uuid);
+			exit;
 		}
 
 		//preview, if requested
 		if (($_REQUEST['submit'] != '') && ($_REQUEST['submit'] == 'preview')) {
 			unset($file_type);
-			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
+			if (file_exists($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf')) {
+				$file_path = $dir_fax_sent.'/'.$fax_instance_uuid.".pdf";
 				$file_type = 'pdf';
 				$content_type = 'application/pdf';
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".tif");
+				@unlink($dir_fax_sent.'/'.$fax_instance_uuid.".tif");
 			}
-			else if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.tif')) {
+			else if (file_exists($dir_fax_sent.'/'.$fax_instance_uuid.'.tif')) {
+				$file_path = $dir_fax_sent.'/'.$fax_instance_uuid.".tif";
 				$file_type = 'tif';
 				$content_type = 'image/tiff';
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
+				@unlink($dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 			}
 			if ($file_type != '') {
 				//push download
-				$fd = fopen($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type, "rb");
+				$fd = fopen($file_path, "rb");
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
@@ -689,54 +631,59 @@ if (!function_exists('fax_split_dtmf')) {
 				header('Accept-Ranges: bytes');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-				header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type));
+				header("Content-Length: ".filesize($file_path));
 				fpassthru($fd);
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".".$file_type);
+				@unlink($file_path);
 			}
 			exit;
 		}
 
-		//get some more info to send the fax
-		$mailfrom_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
+		//prepare variables send the fax
+		$mail_from_address = (isset($_SESSION['fax']['smtp_from']['text'])) ? $_SESSION['fax']['smtp_from']['text'] : $_SESSION['email']['smtp_from']['text'];
 
+		//get the fax mail to address and fax prefix
 		$sql = "select * from v_fax where fax_uuid = :fax_uuid ";
 		$parameters['fax_uuid'] = $fax_uuid;
 		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
-		$mailto_address_fax = $row["fax_email"];
+		$mail_to_address = $row["fax_email"];
 		$fax_prefix = $row["fax_prefix"];
 		unset($sql, $parameters, $row);
 
-		if (!$included) {
-			$sql = "select user_email from v_users where user_uuid = :user_uuid ";
-			$parameters['user_uuid'] = $_SESSION['user_uuid'];
-			$database = new database;
-			$mailto_address_user = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+		//for email to fax send email notification back to the email sender
+		if ($included) {
+			//use email-to-fax from address
+			$mail_to_address = $sender_email;
 		}
 		else {
-			//use email-to-fax from address
+			//send fax through the browser
 		}
 
-		if ($mailto_address_fax != '' && $mailto_address_user != $mailto_address_fax) {
-			$mailto_address = $mailto_address_fax.",".$mailto_address_user;
-		}
-		else {
-			$mailto_address = $mailto_address_user;
-		}
+		//move the generated tif (and pdf) files to the sent directory
+		//if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
+		//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		//}
+		//if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
+		//	copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
+		//}
+
+		//set the fax
+		$fax_queue_uuid = uuid();
 
 		//send the fax
-		$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
-		$tmp_dial_string  = "for_fax=1,";
-		$tmp_dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-		$tmp_dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-		$tmp_dial_string .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
-		$tmp_dial_string .= "domain_name="                   . $_SESSION["domain_name"] . ",";
-		$tmp_dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-		$tmp_dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-		$tmp_dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-		$tmp_dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-		$tmp_dial_string .= "fax_file='"                     . $fax_file                . "',";
+		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
+		$common_variables .= "fax_queue_uuid='"               . $fax_queue_uuid          . "',";
+		$common_variables  = "for_fax=1,";
+		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
+		$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
+		$common_variables .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$common_variables .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$common_variables .= "fax_file='"                     . $fax_file                . "',";
+
 		foreach ($fax_numbers as $fax_number) {
 
 			$fax_number = trim($fax_number);
@@ -761,57 +708,86 @@ if (!function_exists('fax_split_dtmf')) {
 				}
 			}
 
-			if ($fax_send_mode != 'queue') {
-				$dial_string = $tmp_dial_string;
-				$dial_string .= $fax_variables;
-				$dial_string .= "mailto_address='"     . $mailto_address   . "',";
-				$dial_string .= "mailfrom_address='"   . $mailfrom_address . "',";
-				$dial_string .= "fax_uri=" . $fax_uri  . ",";
-				$dial_string .= "fax_retry_attempts=1" . ",";
-				$dial_string .= "fax_retry_limit=20"   . ",";
-				$dial_string .= "fax_retry_sleep=180"  . ",";
-				$dial_string .= "fax_verbose=true"     . ",";
-				$dial_string .= "fax_use_ecm=off"      . ",";
+			//build the fax dial string
+			$dial_string = $common_variables;
+			$dial_string .= $fax_variables;
+			$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
+			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
+			$dial_string .= "fax_uri=" . $fax_uri  . ",";
+			$dial_string .= "fax_retry_attempts=1" . ",";
+			$dial_string .= "fax_retry_limit=20"   . ",";
+			$dial_string .= "fax_retry_sleep=180"  . ",";
+			$dial_string .= "fax_verbose=true"     . ",";
+			$dial_string .= "fax_use_ecm=off"      . ",";
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
+				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
+			}
+			else {
 				$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-				$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
+			}
+			$dial_string  = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
 
+			//add fax to the fax queue or send it directly
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
+				//build an array to add the fax to the queue
+				$array['fax_queue'][0]['fax_queue_uuid'] = $fax_queue_uuid;
+				$array['fax_queue'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+				$array['fax_queue'][0]['fax_uuid'] = $fax_uuid;
+				$array['fax_queue'][0]['fax_date'] = 'now()';
+				$array['fax_queue'][0]['hostname'] = gethostname();
+				$array['fax_queue'][0]['fax_caller_id_name'] = $fax_caller_id_name;
+				$array['fax_queue'][0]['fax_caller_id_number'] = $fax_caller_id_number;
+				$array['fax_queue'][0]['fax_number'] = $fax_number;
+				$array['fax_queue'][0]['fax_prefix'] = $fax_prefix;
+				$array['fax_queue'][0]['fax_email_address'] = $mail_to_address;
+				$array['fax_queue'][0]['fax_file'] = $fax_file;
+				$array['fax_queue'][0]['fax_status'] = 'waiting';
+				//$array['fax_queue'][0]['fax_retry_date'] = $fax_retry_date;
+				$array['fax_queue'][0]['fax_retry_count'] = 0;
+				$array['fax_queue'][0]['fax_accountcode'] = $fax_accountcode;
+				$array['fax_queue'][0]['fax_command'] = 'originate '.$dial_string;
+
+				//add temporary permisison
+				$p = new permissions;
+				$p->add('fax_queue_add', 'temp');
+
+				//save the data
+				$database = new database;
+				$database->app_name = 'fax queue';
+				$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+				$database->save($array);
+
+				//remove temporary permisison
+				$p->delete('fax_queue_add', 'temp');
+				
+				//add message to show in the browser
+				message::add($text['confirm-queued']);
+			}
+			else {
+				//send the fax directly
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$cmd = "api originate " . $dial_string;
-					//send the command to event socket
 					$response = event_socket_request($fp, $cmd);
 					$response = str_replace("\n", "", $response);
 					$uuid = str_replace("+OK ", "", $response);
 				}
 				fclose($fp);
-			}
-			else { // enqueue
-				$wav_file = ''; //! @todo add custom message
-				$dial_string = $tmp_dial_string;
-				$response = fax_enqueue($fax_uuid, $fax_file, $wav_file, $mailto_address, $fax_uri, $fax_dtmf, $dial_string);
+				
+				//add message to show in the browser
+				message::add($text['confirm-sent']." ".$response);
 			}
 		}
 
-		//wait for a few seconds
-		sleep(5);
-
-		//move the generated tif (and pdf) files to the sent directory
-		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".tif")) {
-			copy($dir_fax_temp.'/'.$fax_instance_uuid.".tif", $dir_fax_sent.'/'.$fax_instance_uuid.".tif");
-		}
-
-		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
-			copy($dir_fax_temp.'/'.$fax_instance_uuid.".pdf ", $dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
-		}
-
+		//redirect the browser
 		if (!$included && is_uuid($fax_uuid)) {
-			//redirect the browser
-			message::add($response, 'default');
-			if (isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
-				header("Location: fax_active.php?id=".$fax_uuid);
+			if ($_SESSION['fax_queue']['enabled']['boolean']) {
+				//header("Location: ".PROJECT_PATH."/app/fax_queue/fax_queue.php?id=".$fax_uuid);
+				header("Location: ".PROJECT_PATH."fax.php");
 			}
 			else {
 				header("Location: fax_files.php?id=".$fax_uuid."&box=sent");
+				//header("Location: fax_outbox.php?id=".$fax_uuid);
 			}
 			exit;
 		}
@@ -819,7 +795,86 @@ if (!function_exists('fax_split_dtmf')) {
 	} //end upload and send fax
 
 
+//show content in the browser
 if (!$included) {
+
+	//retrieve current user's assigned groups (uuids)
+		foreach ($_SESSION['groups'] as $group_data) {
+			$user_group_uuids[] = $group_data['group_uuid'];
+		}
+
+	//add user's uuid to group uuid list to include private (non-shared) contacts
+		$user_group_uuids[] = $_SESSION["user_uuid"];
+		$sql = "select ";
+		$sql .= "c.contact_organization, ";
+		$sql .= "c.contact_name_given, ";
+		$sql .= "c.contact_name_family, ";
+		$sql .= "c.contact_nickname, ";
+		$sql .= "cp.phone_number ";
+		$sql .= "from ";
+		$sql .= "v_contacts as c, ";
+		$sql .= "v_contact_phones as cp ";
+		$sql .= "where ";
+		$sql .= "c.contact_uuid = cp.contact_uuid ";
+		$sql .= "and c.domain_uuid = :domain_uuid ";
+		$sql .= "and cp.domain_uuid = :domain_uuid ";
+		$sql .= "and cp.phone_type_fax = 1 ";
+		$sql .= "and cp.phone_number is not null ";
+		$sql .= "and cp.phone_number <> '' ";
+		if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+			if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+				//only show contacts assigned to current user's group(s) and those not assigned to any group
+				$sql .= "and (";
+				$sql .= "	c.contact_uuid in ( ";
+				$sql .= "		select contact_uuid from v_contact_groups ";
+				$sql .= "		where (";
+				foreach ($user_group_uuids as $index => $user_group_uuid) {
+					$sql .= $or;
+					$sql .= "		group_uuid = :group_uuid_".$index." ";
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+					$or = " or ";
+				}
+				unset($user_group_uuids, $index, $user_group_uuid, $or);
+				$sql .= "		) ";
+				$sql .= "		and domain_uuid = :domain_uuid ";
+				$sql .= "	) ";
+				$sql .= "	or ";
+				$sql .= "	c.contact_uuid not in ( ";
+				$sql .= "		select contact_uuid from v_contact_groups ";
+				$sql .= "		where domain_uuid = :domain_uuid ";
+				$sql .= "	) ";
+				$sql .= ") ";
+			}
+		}
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$database = new database;
+		$contacts = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters, $row);
+
+	//build the contact labels
+		if (is_array($contacts) && @sizeof($contacts) != 0) {
+			foreach ($contacts as &$row) {
+				if ($row['contact_organization'] != '') {
+					$contact_option_label = $row['contact_organization'];
+				}
+				if ($row['contact_name_given'] != '' || $row['contact_name_family'] != '' || $row['contact_nickname'] != '') {
+					$contact_option_label .= ($row['contact_organization'] != '') ? "," : null;
+					$contact_option_label .= ($row['contact_name_given'] != '') ? (($row['contact_organization'] != '') ? " " : null).$row['contact_name_given'] : null;
+					$contact_option_label .= ($row['contact_name_family'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '') ? " " : null).$row['contact_name_family'] : null;
+					$contact_option_label .= ($row['contact_nickname'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '' || $row['contact_name_family'] != '') ? " (".$row['contact_nickname'].")" : $row['contact_nickname']) : null;
+				}
+				$contact_option_value_recipient = $contact_option_label;
+				$contact_option_value_faxnumber = $row['phone_number'];
+				$contact_option_label .= " ".escape(format_phone($row['phone_number']));
+				$contact_labels[] = $contact_option_label;
+				$contact_values[] = $contact_option_value_faxnumber."|".$contact_option_value_recipient;
+				unset($contact_option_label);
+			}
+			if (is_array($contact_labels)) {
+				//sort by name(s)
+				asort($contact_labels, SORT_NATURAL); 
+			}
+		}
 
 	//create token
 		$object = new token;
@@ -920,83 +975,16 @@ if (!$included) {
 		echo "	".$text['label-fax-recipient']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		//retrieve current user's assigned groups (uuids)
-		foreach ($_SESSION['groups'] as $group_data) {
-			$user_group_uuids[] = $group_data['group_uuid'];
-		}
-		//add user's uuid to group uuid list to include private (non-shared) contacts
-		$user_group_uuids[] = $_SESSION["user_uuid"];
-		$sql = "select ";
-		$sql .= "c.contact_organization, ";
-		$sql .= "c.contact_name_given, ";
-		$sql .= "c.contact_name_family, ";
-		$sql .= "c.contact_nickname, ";
-		$sql .= "cp.phone_number ";
-		$sql .= "from ";
-		$sql .= "v_contacts as c, ";
-		$sql .= "v_contact_phones as cp ";
-		$sql .= "where ";
-		$sql .= "c.contact_uuid = cp.contact_uuid ";
-		$sql .= "and c.domain_uuid = :domain_uuid ";
-		$sql .= "and cp.domain_uuid = :domain_uuid ";
-		$sql .= "and cp.phone_type_fax = 1 ";
-		$sql .= "and cp.phone_number is not null ";
-		$sql .= "and cp.phone_number <> '' ";
-		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
-			//only show contacts assigned to current user's group(s) and those not assigned to any group
-			$sql .= "and (";
-			$sql .= "	c.contact_uuid in ( ";
-			$sql .= "		select contact_uuid from v_contact_groups ";
-			$sql .= "		where (";
-			foreach ($user_group_uuids as $index => $user_group_uuid) {
-				$sql .= $or;
-				$sql .= "		group_uuid = :group_uuid_".$index." ";
-				$parameters['group_uuid_'.$index] = $user_group_uuid;
-				$or = " or ";
-			}
-			unset($user_group_uuids, $index, $user_group_uuid, $or);
-			$sql .= "		) ";
-			$sql .= "		and domain_uuid = :domain_uuid ";
-			$sql .= "	) ";
-			$sql .= "	or ";
-			$sql .= "	c.contact_uuid not in ( ";
-			$sql .= "		select contact_uuid from v_contact_groups ";
-			$sql .= "		where domain_uuid = :domain_uuid ";
-			$sql .= "	) ";
-			$sql .= ") ";
-		}
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
-		$contacts = $database->select($sql, $parameters, 'all');
 		if (is_array($contacts) && @sizeof($contacts) != 0) {
-			foreach ($contacts as &$row) {
-				if ($row['contact_organization'] != '') {
-					$contact_option_label = $row['contact_organization'];
-				}
-				if ($row['contact_name_given'] != '' || $row['contact_name_family'] != '' || $row['contact_nickname'] != '') {
-					$contact_option_label .= ($row['contact_organization'] != '') ? "," : null;
-					$contact_option_label .= ($row['contact_name_given'] != '') ? (($row['contact_organization'] != '') ? " " : null).$row['contact_name_given'] : null;
-					$contact_option_label .= ($row['contact_name_family'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '') ? " " : null).$row['contact_name_family'] : null;
-					$contact_option_label .= ($row['contact_nickname'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '' || $row['contact_name_family'] != '') ? " (".$row['contact_nickname'].")" : $row['contact_nickname']) : null;
-				}
-				$contact_option_value_recipient = $contact_option_label;
-				$contact_option_value_faxnumber = $row['phone_number'];
-				$contact_option_label .= ":&nbsp;&nbsp;".escape(format_phone($row['phone_number']));
-				$contact_labels[] = $contact_option_label;
-				$contact_values[] = $contact_option_value_faxnumber."|".$contact_option_value_recipient;
-				unset($contact_option_label);
-			}
-			if (is_array($contact_labels)) {
-				asort($contact_labels, SORT_NATURAL); // sort by name(s)
-			}
 			echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
 			echo "		<option value=''></option>\n";
-			foreach ($contact_labels as $index => $contact_label) {
-				echo "	<option value=\"".escape($contact_values[$index])."\">".$contact_label."</option>\n";
+			if (is_array($contact_labels) && @sizeof($contact_labels) != 0) {
+				foreach ($contact_labels as $index => $contact_label) {
+					echo "	<option value=\"".escape($contact_values[$index])."\">".$contact_label."</option>\n";
+				}
 			}
 			echo "	</select>\n";
 		}
-		unset($sql, $parameters, $row);
 		echo "	<input type='text' name='fax_recipient' id='fax_recipient' class='formfld' style='max-width: 250px;' value=''>\n";
 		if (is_array($contacts)) {
 			echo "	<input type='button' id='btn_toggle_recipient' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('fax_recipient');\">\n";

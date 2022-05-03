@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,7 +29,9 @@
 
 		//create the directory
 			if (strlen($_SESSION['switch']['extensions']['dir']) > 0) {
-				if (!is_dir($_SESSION['switch']['extensions']['dir'])) { event_socket_mkdir($_SESSION['switch']['extensions']['dir']); }
+				if (!is_dir($_SESSION['switch']['extensions']['dir'])) {
+					mkdir($_SESSION['switch']['extensions']['dir'], 0770, false);
+				}
 			}
 
 		//update the directory first and last names
@@ -55,7 +57,7 @@
 					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('extension_edit', 'temp');
@@ -89,6 +91,11 @@
 				$database->execute($sql);
 				unset($sql);
 			}
+		
+		//do not disturb no longer uses the extension dial_string set the value to null
+			$sql = "update v_extensions set dial_string = null where (dial_string = '!USER_BUSY' or dial_string = 'error/user_busy');\n";
+			$database->execute($sql);
+			unset($sql);
 
 	}
 

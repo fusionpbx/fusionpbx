@@ -37,7 +37,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "USA-7";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "http://wiki.snom.com/Settings/timezone";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "https://service.snom.com/display/wiki/timezone";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945982a-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";

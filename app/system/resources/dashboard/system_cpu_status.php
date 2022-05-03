@@ -49,7 +49,7 @@
 
 //add half doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 8px'>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
 		<div style='width: 175px; height: 175px; margin: 0 auto;'><canvas id='system_cpu_status_chart'></canvas></div>
 	</div>
 
@@ -57,11 +57,11 @@
 		var system_cpu_status_chart_context = document.getElementById('system_cpu_status_chart').getContext('2d');
 
 		var system_cpu_status_chart_background_color;
-		if ('<?php echo $percent_cpu; ?>' <= 50) {
+		if ('<?php echo $percent_cpu; ?>' <= 60) {
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' <= 70 && '<?php echo $percent_cpu; ?>' > 50) {
+		} else if ('<?php echo $percent_cpu; ?>' <= 80) {
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][1]; ?>';
-		} else if ('<?php echo $percent_cpu; ?>' > 70) {
+		} else if ('<?php echo $percent_cpu; ?>' > 80) {
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
 		}
 
@@ -118,7 +118,7 @@
 	echo "<div class='hud_details hud_box' id='hud_system_cpu_status_details'>";
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
-	echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
+	echo "<th class='hud_heading' width='50%'>".$text['label-name']."</th>\n";
 	echo "<th class='hud_heading' style='text-align: right;'>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 

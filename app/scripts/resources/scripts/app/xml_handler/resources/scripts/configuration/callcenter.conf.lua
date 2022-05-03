@@ -206,24 +206,27 @@
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 										--add the call_timeout
 										pos = string.find(agent_contact, "}");
-										first = string.sub(agent_contact, 0, pos);
+										first = string.sub(agent_contact, 0, pos -1);
+										last = string.sub(agent_contact, pos);
+										agent_contact = first..[[,domain_name=]]..domain_name..[[,domain_uuid=]]..domain_uuid..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
+								else
+										--add the call_timeout
+										pos = string.find(agent_contact, "}");
+										first = string.sub(agent_contact, 0, pos - 1);
 										last = string.sub(agent_contact, pos);
 										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
-								else
-										--the string has the call timeout
-										agent_contact = agent_contact;
 								end
-							else
+						else
 								--found
 								pos = string.find(agent_contact, "}");
-								first = string.sub(agent_contact, 0, pos);
+								first = string.sub(agent_contact, 0, pos - 1);
 								last = string.sub(agent_contact, pos);
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
-									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
+									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
 								else
 									--add confirm
-									agent_contact = tmp_first..',sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;
+									agent_contact = tmp_first..',domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;
 								end
 							end
 						end

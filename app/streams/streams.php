@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2022
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -144,13 +144,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'stream_edit.php']);
 	}
 	if (permission_exists('stream_add') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('stream_edit') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('stream_delete') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('stream_all')) {
@@ -193,7 +193,7 @@
 	echo "<tr class='list-header'>\n";
 	if (permission_exists('stream_add') || permission_exists('stream_edit') || permission_exists('stream_delete')) {
 		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($streams ?: "style='visibility: hidden;'").">\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($streams ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
 	if ($_GET['show'] == 'all' && permission_exists('stream_all')) {
@@ -217,7 +217,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('stream_add') || permission_exists('stream_edit') || permission_exists('stream_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='streams[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='streams[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='streams[$x][uuid]' value='".escape($row['stream_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
@@ -242,9 +242,8 @@
 			echo "	<td class='no-wrap button'>\n";
 			if (strlen($row['stream_location']) > 0) {
 				$location_parts = explode('://',$row['stream_location']);
-				if ($location_parts[0] == "shout") {
-					echo "<audio src='http://".$location_parts[1]."' controls='controls' />\n";
-				}
+				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
+				echo "<audio src='".$http_protocol."://".$location_parts[1]."' controls='controls' />\n";
 			}
 			echo "	</td>\n";
 			if (permission_exists('stream_edit')) {

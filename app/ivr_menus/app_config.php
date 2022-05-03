@@ -63,7 +63,7 @@
 		$apps[$x]['destinations'][$y]['name'] = 'ivr_menus_other';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
-		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${name}:";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "\${destination}:";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 		$z=0;
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'top';
@@ -93,6 +93,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_option_view";

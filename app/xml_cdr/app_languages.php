@@ -2772,6 +2772,27 @@ $text['description-mos']['ru-ru'] = "Средний оценочный пока�
 $text['description-mos']['sv-se'] = "Genomsnittlig bedömning poäng";
 $text['description-mos']['uk-ua'] = "Середнє число думок";
 
+$text['description-aloc']['en-us'] = "Average Length of Call";
+$text['description-aloc']['en-gb'] = "Average Length of Call";
+$text['description-aloc']['ar-eg'] = "متوسط طول المحادثة";
+$text['description-aloc']['de-at'] = "Durchschnittliche Gesprächsdauer";
+$text['description-aloc']['de-ch'] = "Durchschnittliche Gesprächsdauer";
+$text['description-aloc']['de-de'] = "Durchschnittliche Gesprächsdauer";
+$text['description-aloc']['es-cl'] = "Duración promedio de la conversación";
+$text['description-aloc']['es-mx'] = "Duración promedio de la conversación";
+$text['description-aloc']['fr-ca'] = "Durée moyenne de la conversation";
+$text['description-aloc']['fr-fr'] = "Durée moyenne de la conversation";
+$text['description-aloc']['he-il'] = "משך השיחה הממוצע";
+$text['description-aloc']['it-it'] = "Durata media della conversazione";
+$text['description-aloc']['nl-nl'] = "";
+$text['description-aloc']['pl-pl'] = "";
+$text['description-aloc']['pt-br'] = "Duração média da conversa";
+$text['description-aloc']['pt-pt'] = "Duração média da conversa";
+$text['description-aloc']['ro-ro'] = "Durata medie a conversației";
+$text['description-aloc']['ru-ru'] = "Средняя продолжительность разговора";
+$text['description-aloc']['sv-se'] = "Genomsnittlig konversationslängd";
+$text['description-aloc']['uk-ua'] = "Середня тривалість розмови";
+
 $text['button-archive']['en-us'] = "Archive";
 $text['button-archive']['en-gb'] = "Archive";
 $text['button-archive']['ar-eg'] = "";

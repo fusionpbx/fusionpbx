@@ -111,11 +111,13 @@
 
 		<!-- Enable Compact SIP headers. -->
 		<param name="enable-compact-headers" value="true" enabled="false"/>
-		<!--
-		enable/disable session timers
-		-->
-		<param name="enable-timer" value="false" enabled="false"/>
-		<param name="minimum-session-expires" value="120" enabled="false"/>
+
+		<!--session timers -->
+		<param name="session-timeout" value="0" enabled="true"/>
+		<param name="enable-timer" value="false" enabled="true"/>
+		<param name="minimum-session-expires" value="0" enabled="false"/>
+		
+		<!-- apply inbound acl -->
 		<param name="apply-inbound-acl" value="domains"/>
 		<!--
 		This defines your local network, by default we detect your local network

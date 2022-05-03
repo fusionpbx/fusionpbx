@@ -60,7 +60,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'settings';
 				$database->app_uuid = 'b6b1b2e5-4ba5-044c-8a5c-18709a15eb60';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('setting_add', 'temp');
@@ -81,7 +81,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'settings';
 				$database->app_uuid = 'b6b1b2e5-4ba5-044c-8a5c-18709a15eb60';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('setting_edit', 'temp');

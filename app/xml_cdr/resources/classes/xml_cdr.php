@@ -298,14 +298,43 @@ if (!class_exists('xml_cdr')) {
 			//process data if the call detail record is not a duplicate
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
-					//get the caller details
-						$caller_id_name = urldecode($xml->variables->caller_id_name);
-						$caller_id_number = urldecode($xml->variables->caller_id_number);
+					//get the caller ID
+						if (isset($xml->variables->caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->caller_id_name);
+						}
+						if (isset($xml->variables->caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->caller_id_number);
+						}
+						if (!isset($caller_id_number) && isset($xml->variables->sip_from_user)) {
+							$caller_id_number = urldecode($xml->variables->sip_from_user);
+						}
+
+					//if the origination caller id name and number are set then use them
+						if (isset($xml->variables->origination_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
+						}
+						if (isset($xml->variables->origination_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
+						}
+
+					//if the call is outbound use the external caller ID
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
-						if (isset($xml->variables->effective_caller_id_number)) {
+						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
+						}
+
+					//if the sip_from_domain and domain_name are not the same then original call direction was inbound
+						//when an inbound call is forward the call_direction is set to inbound and then updated to outbound
+						//use sip_from_display and sip_from_user to get the original caller ID instead of the updated caller ID info from the forward
+						if (isset($xml->variables->sip_from_domain) && urldecode($xml->variables->sip_from_domain) != urldecode($xml->variables->domain_name)) { 
+							if (isset($xml->variables->sip_from_display)) {
+								$caller_id_name = urldecode($xml->variables->sip_from_display);
+							}
+							if (isset($xml->variables->sip_from_user)) {
+								$caller_id_number = urldecode($xml->variables->sip_from_user);
+							}
 						}
 
 					//get the values from the callflow.
@@ -315,12 +344,6 @@ if (!class_exists('xml_cdr')) {
 								$context = urldecode($row->caller_profile->context);
 								$destination_number = urldecode($row->caller_profile->destination_number);
 								$network_addr = urldecode($row->caller_profile->network_addr);
-							}
-							if (strlen($caller_id_name) == 0) {
-								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
-							}
-							if (strlen($caller_id_number) == 0) {
-								$caller_id_number = urldecode($row->caller_profile->caller_id_number);
 							}
 							$i++;
 						}
@@ -337,6 +360,17 @@ if (!class_exists('xml_cdr')) {
 							if ($provider_prefix == substr($destination_number, 0, strlen($provider_prefix))) {
 								$destination_number = substr($destination_number, strlen($provider_prefix), strlen($destination_number));
 							}
+						}
+
+					//get the caller_destination
+						if (isset($xml->variables->caller_destination) ) {
+							$caller_destination = urldecode($xml->variables->caller_destination);
+						}
+						if (isset($xml->variables->sip_h_caller_destination) ) {
+							$caller_destination = urldecode($xml->variables->sip_h_caller_destination);
+						}
+						if (!isset($caller_destination) && isset($xml->variables->dialed_user)) {
+							$caller_destination = urldecode($xml->variables->dialed_user);
 						}
 
 					//set missed calls
@@ -360,7 +394,7 @@ if (!class_exists('xml_cdr')) {
 						$this->array[$key]['missed_call'] = $missed_call;
 						$this->array[$key]['caller_id_name'] = $caller_id_name;
 						$this->array[$key]['caller_id_number'] = $caller_id_number;
-						$this->array[$key]['caller_destination'] = urldecode($xml->variables->caller_destination);
+						$this->array[$key]['caller_destination'] = $caller_destination;
 						$this->array[$key]['accountcode'] = urldecode($xml->variables->accountcode);
 						$this->array[$key]['default_language'] = urldecode($xml->variables->default_language);
 						$this->array[$key]['bridge_uuid'] = urldecode($xml->variables->bridge_uuid);
@@ -371,13 +405,13 @@ if (!class_exists('xml_cdr')) {
 					//time
 						$start_epoch = urldecode($xml->variables->start_epoch);
 						$this->array[$key]['start_epoch'] = $start_epoch;
-						$this->array[$key]['start_stamp'] = date('c', $start_epoch);
+						$this->array[$key]['start_stamp'] = is_numeric($start_epoch) ? date('c', $start_epoch) : null;
 						$answer_epoch = urldecode($xml->variables->answer_epoch);
 						$this->array[$key]['answer_epoch'] = $answer_epoch;
-						$this->array[$key]['answer_stamp'] = date('c', $answer_epoch);
+						$this->array[$key]['answer_stamp'] = is_numeric($answer_epoch) ? date('c', $answer_epoch) : null;
 						$end_epoch = urldecode($xml->variables->end_epoch);
 						$this->array[$key]['end_epoch'] = $end_epoch;
-						$this->array[$key]['end_stamp'] = date('c', $end_epoch);
+						$this->array[$key]['end_stamp'] = is_numeric($end_epoch) ? date('c', $end_epoch) : null;
 						$this->array[$key]['duration'] = urldecode($xml->variables->duration);
 						$this->array[$key]['mduration'] = urldecode($xml->variables->mduration);
 						$this->array[$key]['billsec'] = urldecode($xml->variables->billsec);
@@ -746,7 +780,8 @@ if (!class_exists('xml_cdr')) {
 						catch(PDOException $e) {
 							$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/failed/';
 							if(!file_exists($tmp_dir)) {
-								event_socket_mkdir($tmp_dir);
+								mkdir($tmp_dir, 0770, true);
+								
 							}
 							if ($_SESSION['cdr']['format']['text'] == "xml") {
 								$tmp_file = $uuid.'.xml';
@@ -770,7 +805,7 @@ if (!class_exists('xml_cdr')) {
 							if (strlen($uuid) > 0) {
 								$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$start_year.'/'.$start_month.'/'.$start_day;
 								if(!file_exists($tmp_dir)) {
-									event_socket_mkdir($tmp_dir);
+									mkdir($tmp_dir, 0770, true);
 								}
 								if ($_SESSION['cdr']['format']['text'] == "xml") {
 									$tmp_file = $uuid.'.xml';
@@ -1140,7 +1175,7 @@ if (!class_exists('xml_cdr')) {
 				$sql .= " originating_leg_uuid, \n";
 				$sql .= " billsec \n";
 				$sql .= " from v_xml_cdr \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= " where domain_uuid = :domain_uuid \n";
 				}
 				else {
@@ -1151,12 +1186,12 @@ if (!class_exists('xml_cdr')) {
 
 				$sql .= "where \n";
 				$sql .= "d.domain_uuid = e.domain_uuid \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$sql .= "and e.domain_uuid = :domain_uuid \n";
 				}
 				$sql .= "group by e.extension, e.domain_uuid, d.domain_uuid, e.number_alias, e.description \n";
 				$sql .= "order by extension asc \n";
-				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_all'))) {
+				if (!($_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
 					$parameters['domain_uuid'] = $this->domain_uuid;
 				}
 				$database = new database;

@@ -43,7 +43,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'notifications';
 				$database->app_uuid = 'e746fbcb-f67f-4e0e-ab64-c414c01fac11';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('notification_add', 'temp');

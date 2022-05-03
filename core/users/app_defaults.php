@@ -174,7 +174,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'default_setting';
 			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 
 			//remove the temporary permission
@@ -226,7 +226,7 @@ if ($domains_processed == 1) {
 				$database = new database;
 				$database->app_name = 'email_templates';
 				$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 
 				//remove the temporary permission

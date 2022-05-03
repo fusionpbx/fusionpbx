@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -102,6 +102,7 @@
 			$fax_uuid = $_POST["fax_uuid"];
 			$provider_uuid = $_POST["provider_uuid"];
 			$user_uuid = $_POST["user_uuid"];
+			$group_uuid = $_POST["group_uuid"];
 			$destination_order= $_POST["destination_order"];
 			$destination_enabled = $_POST["destination_enabled"];
 			$destination_description = $_POST["destination_description"];
@@ -110,6 +111,7 @@
 			$destination_buy = check_float($_POST["destination_buy"]);
 			$currency_buy = $_POST["currency_buy"];
 			$destination_hold_music = $_POST["destination_hold_music"];
+			$destination_distinctive_ring = $_POST["destination_distinctive_ring"];
 			$destination_record = $_POST["destination_record"];
 			$destination_accountcode = $_POST["destination_accountcode"];
 			$destination_type_voice = $_POST["destination_type_voice"];
@@ -374,7 +376,7 @@
 							}
 
 						//build the xml dialplan
-							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan_name."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
+							$dialplan["dialplan_xml"] = "<extension name=\"".$dialplan["dialplan_name"]."\" continue=\"false\" uuid=\"".$dialplan_uuid."\">\n";
 							$dialplan["dialplan_xml"] .= "	<condition field=\"".$dialplan_detail_type."\" expression=\"".$destination_number_regex."\">\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"call_direction=inbound\" inline=\"true\"/>\n";
 							$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"domain_uuid=".$_SESSION['domain_uuid']."\" inline=\"true\"/>\n";
@@ -399,6 +401,9 @@
 							}
 							if (strlen($destination_hold_music) > 0) {
 								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"hold_music=".$destination_hold_music."\" inline=\"true\"/>\n";
+							}
+							if (strlen($destination_distinctive_ring) > 0) {
+								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"sip_h_Alert-Info=".$destination_distinctive_ring."\" inline=\"true\"/>\n";
 							}
 							if (strlen($destination_accountcode) > 0) {
 								$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".$destination_accountcode."\" inline=\"true\"/>\n";
@@ -526,6 +531,17 @@
 										$y++;
 									}
 
+								//set the distinctive ring
+									if (strlen($destination_distinctive_ring) > 0) {
+										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "export";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "sip_h_Alert-Info=".$destination_distinctive_ring;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+										$y++;
+									}
+							
 								//add fax detection
 									if (is_uuid($fax_uuid)) {
 
@@ -712,6 +728,9 @@
 							if (permission_exists('user_edit')) {
 								$array['destinations'][$x]["user_uuid"] = $user_uuid;
 							}
+							if (permission_exists('group_edit')) {
+								$array['destinations'][$x]["group_uuid"] = $group_uuid;
+							}
 							$array['destinations'][$x]["destination_type"] = $destination_type;
 							if (permission_exists('destination_condition_field')) {
 								$array['destinations'][$x]["destination_condition_field"] = $destination_condition_field;
@@ -731,7 +750,12 @@
 							$array['destinations'][$x]["destination_caller_id_number"] = $destination_caller_id_number;
 							$array['destinations'][$x]["destination_cid_name_prefix"] = $destination_cid_name_prefix;
 							$array['destinations'][$x]["destination_context"] = $destination_context;
-							$array['destinations'][$x]["destination_hold_music"] = $destination_hold_music;
+							if (permission_exists("destination_hold_music")) {
+								$array['destinations'][$x]["destination_hold_music"] = $destination_hold_music;
+							}
+							if (permission_exists("destination_distinctive_ring")) {
+								$array['destinations'][$x]["destination_distinctive_ring"] = $destination_distinctive_ring;
+							}
 							$array['destinations'][$x]["destination_record"] = $destination_record;
 							$array['destinations'][$x]["destination_accountcode"] = $destination_accountcode;
 							$array['destinations'][$x]["destination_type_voice"] = $destination_type_voice ? 1 : null;
@@ -882,6 +906,7 @@
 				$destination_caller_id_number = $row["destination_caller_id_number"];
 				$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
 				$destination_hold_music = $row["destination_hold_music"];
+				$destination_distinctive_ring = $row["destination_distinctive_ring"];
 				$destination_record = $row["destination_record"];
 				$destination_accountcode = $row["destination_accountcode"];
 				$destination_type_voice = $row["destination_type_voice"];
@@ -896,6 +921,7 @@
 				$fax_uuid = $row["fax_uuid"];
 				$provider_uuid = $row["provider_uuid"];
 				$user_uuid = $row["user_uuid"];
+				$group_uuid = $row["group_uuid"];
 				$currency = $row["currency"];
 				$destination_sell = $row["destination_sell"];
 				$destination_buy = $row["destination_buy"];
@@ -995,6 +1021,17 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
 		$users = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+	}
+
+//get the groups list
+	if (permission_exists('group_edit')) {
+		$sql = "select group_uuid, domain_uuid, group_name, group_description from v_groups ";
+		$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
+		$sql .= "order by group_name asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$groups = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
 
@@ -1306,6 +1343,28 @@
 		unset($users);
 		echo "			<br>\n";
 		echo "			".$text['description-user']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('group_edit')) {
+		echo "<tr id='tr_group'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-group']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name=\"group_uuid\" class='formfld' style='width: auto;'>\n";
+		echo "		<option value=\"\"></option>\n";
+		foreach($groups as $field) {
+			if ($field['group_uuid'] == $group_uuid) { $selected = "selected='selected'"; } else { $selected = ''; }
+			echo "		<option value='".escape($field['group_uuid'])."' $selected>".escape($field['group_name'])."</option>\n";
+		}
+		echo "		</select>";
+		unset($groups);
+		echo "		<br>\n";
+		echo "		".$text['description-group']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	echo "<tr id='tr_cid_name_prefix'>\n";
@@ -1343,7 +1402,7 @@
 		echo "</tr>\n";
 	}
 
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
+	if (permission_exists("destination_hold_music") && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
 		echo "<tr id='tr_hold_music'>\n";
 		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_hold_music']."\n";
@@ -1354,6 +1413,19 @@
 		echo $music_on_hold->select('destination_hold_music', $destination_hold_music, null);
 		echo "	<br />\n";
 		echo $text['description-destination_hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists("destination_distinctive_ring")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_distinctive_ring']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='destination_distinctive_ring' maxlength='255' value='".escape($destination_distinctive_ring)."'>\n";
+		echo "<br />\n";
+		echo $text['description-destination_distinctive_ring']." \n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

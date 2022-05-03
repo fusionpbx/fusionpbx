@@ -44,13 +44,6 @@
 //process the http post data by action
 	if ($action != '' && is_array($emails) && @sizeof($emails) != 0) {
 		switch ($action) {
-			case 'download':
-				if (permission_exists('email_log_download')) {
-					$obj = new email_logs;
-					$obj->download($emails);
-					message::add($text['message-download_failed'],'negative',7000); //download failed, set message
-				}
-				break;
 			case 'resend':
 				if (permission_exists('email_log_resend')) {
 					$obj = new email_logs;
@@ -75,22 +68,23 @@
 
 //add the search term
 	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(type) like :search ";
-		$sql_search .= "or lower(email) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //prepare to page the results
 	$sql = "select count(*) from v_email_logs ";
-	$sql .= "where true ";
-	if (permission_exists('email_log_all') && $_REQUEST['show'] != 'all') {
-		$sql .= "and domain_uuid = :domain_uuid ";
+	if ($_REQUEST['show'] == 'all' && permission_exists('email_log_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$sql .= $sql_search;
+	if (strlen($search) > 0) {
+		$sql = "and (";
+		$sql .= "lower(type) like :search ";
+		$sql .= "or lower(email) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -107,7 +101,21 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * from v_email_logs ";
+	if ($_REQUEST['show'] == 'all' && permission_exists('email_log_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (strlen($search) > 0) {
+		$sql = "and (";
+		$sql .= "lower(type) like :search ";
+		$sql .= "or lower(email) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'sent_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -199,9 +207,6 @@
 	if (permission_exists('email_log_resend') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"modal_open('modal-resend','btn_resend');"]);
 	}
-	if (permission_exists('email_log_download') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
-	}
 	if (permission_exists('email_log_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -215,9 +220,9 @@
 		}
 	}
 	echo button::create(['label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'type'=>'button','onclick'=>'document.location.reload();']);
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'email_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'email_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
@@ -271,7 +276,7 @@
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if (permission_exists('email_log_download') || permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
+	if (permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($result ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
@@ -294,7 +299,7 @@
 		foreach($result as $row) {
 			$list_row_url = "email_log_view.php?id=".urlencode($row['email_log_uuid']);
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('email_log_download') || permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
+			if (permission_exists('email_log_resend') || permission_exists('email_log_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='emails[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
 				echo "		<input type='hidden' name='emails[$x][uuid]' value='".escape($row['email_log_uuid'])."' />\n";
@@ -310,9 +315,6 @@
 			echo "	<td class='middle button center no-link no-wrap'>";
 			if (permission_exists('email_log_resend')) {
 				echo button::create(['type'=>'button','title'=>$text['button-resend'],'icon'=>'paper-plane','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('resend'); list_form_submit('form_list')"]);
-			}
-			if (permission_exists('email_log_download')) {
-				echo button::create(['type'=>'button','title'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('download'); list_form_submit('form_list')"]);
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn no-link'>";

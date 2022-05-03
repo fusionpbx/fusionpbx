@@ -35,9 +35,9 @@ $y = 0;
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = 'a772d2a8-7c1f-4453-b77b-2e15b510a78d';
 $array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
 $array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'superadmin';
-$y++;
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '127382ae-0dd1-45eb-869c-56a708220de5';
-$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
-$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
+//$y++;
+//$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_group_uuid'] = '127382ae-0dd1-45eb-869c-56a708220de5';
+//$array['dashboard'][$x]['dashboard_groups'][$y]['dashboard_uuid'] = 'bb76f7fc-669f-41dd-a636-6ddaee5deae1';
+//$array['dashboard'][$x]['dashboard_groups'][$y]['group_name'] = 'admin';
 
 ?>
