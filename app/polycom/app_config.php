@@ -175,7 +175,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Line keys are visible when you try to transfer. 1=enabled 0=disabled";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ce4a482-34bf-4db1-b96d-13cd2c9452a8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_4";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -183,7 +183,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates of firmware 4 series phones.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cb99e5da-4d04-4207-8357-037a470ee6d1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_5";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
