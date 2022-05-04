@@ -78,6 +78,7 @@
 				// set the session variables
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
+					$_SESSION["context"] = $result['domain_name'];
 
 				// user session array
 					$_SESSION["user"]["username"] = $result["username"];
