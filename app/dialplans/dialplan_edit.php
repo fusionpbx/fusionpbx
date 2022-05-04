@@ -857,35 +857,35 @@
 									echo "	</optgroup>\n";
 								}
 								else {
-									echo "		<option value=''></option>\n";
+									echo "	<option value=''></option>\n";
 								}
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "condition" || $dialplan_detail_tag == "regex") {
-									echo "		<optgroup label='".$text['optgroup-condition_or_regex']."'>\n";
-									echo "		<option value='context'>".$text['option-context']."</option>\n";
-									echo "		<option value='username'>".$text['option-username']."</option>\n";
-									echo "		<option value='rdnis'>".$text['option-rdnis']."</option>\n";
-									echo "		<option value='destination_number'>".$text['option-destination_number']."</option>\n";
-									echo "		<option value='dialplan'>".$text['option-dialplan']."</option>\n";
-									echo "		<option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
-									echo "		<option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
+									echo "	<optgroup label='".$text['optgroup-condition_or_regex']."'>\n";
 									echo "		<option value='ani'>".$text['option-ani']."</option>\n";
 									echo "		<option value='ani2'>".$text['option-ani2']."</option>\n";
-									echo "		<option value='uuid'>".$text['option-uuid']."</option>\n";
-									echo "		<option value='source'>".$text['option-source']."</option>\n";
+									echo "		<option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
+									echo "		<option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
 									echo "		<option value='chan_name'>".$text['option-chan_name']."</option>\n";
+									echo "		<option value='context'>".$text['option-context']."</option>\n";
+									echo "		<option value='destination_number'>".$text['option-destination_number']."</option>\n";
+									echo "		<option value='dialplan'>".$text['option-dialplan']."</option>\n";
 									echo "		<option value='network_addr'>".$text['option-network_addr']."</option>\n";
+									echo "		<option value='rdnis'>".$text['option-rdnis']."</option>\n";
+									echo "		<option value='source'>".$text['option-source']."</option>\n";
+									echo "		<option value='username'>".$text['option-username']."</option>\n";
+									echo "		<option value='uuid'>".$text['option-uuid']."</option>\n";
+									echo "		<option value='\${call_direction}'>\${call_direction}</option>\n";
 									echo "		<option value='\${number_alias}'>\${number_alias}</option>\n";
-									echo "		<option value='\${sip_from_uri}'>\${sip_from_uri}</option>\n";
-									echo "		<option value='\${sip_from_user}'>\${sip_from_user}</option>\n";
-									echo "		<option value='\${sip_from_host}'>\${sip_from_host}</option>\n";
+									echo "		<option value='\${sip_contact_host}'>\${sip_contact_host}</option>\n";
 									echo "		<option value='\${sip_contact_uri}'>\${sip_contact_uri}</option>\n";
 									echo "		<option value='\${sip_contact_user}'>\${sip_contact_user}</option>\n";
-									echo "		<option value='\${sip_contact_host}'>\${sip_contact_host}</option>\n";
+									echo "		<option value='\${sip_h_Diversion}'>\${sip_h_Diversion}</option>\n";
+									echo "		<option value='\${sip_from_host}'>\${sip_from_host}</option>\n";
+									echo "		<option value='\${sip_from_uri}'>\${sip_from_uri}</option>\n";
+									echo "		<option value='\${sip_from_user}'>\${sip_from_user}</option>\n";
 									echo "		<option value='\${sip_to_uri}'>\${sip_to_uri}</option>\n";
 									echo "		<option value='\${sip_to_user}'>\${sip_to_user}</option>\n";
-									echo "		<option value='\${sip_to_host}'>\${sip_to_host}</option>\n";
 									echo "		<option value='\${toll_allow}'>\${toll_allow}</option>\n";
-									echo "		<option value='\${sip_h_Diversion}'>\${sip_h_Diversion}</option>\n";
 									echo "	</optgroup>\n";
 								//}
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
