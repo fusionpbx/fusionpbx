@@ -183,15 +183,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/polycom/resources/firmware/5.9.3/";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
-		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f7f3f966-50a2-4e9d-b2d3-410105aec289";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip321";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -199,7 +191,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c9adc695-c6de-4e0b-8a9f-0be2cbe44688";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip331";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -207,7 +199,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9f00305f-6319-433a-93d3-285a26e1462f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip335";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -215,7 +207,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b31fd27a-ca37-4098-af24-1b345812fdf2";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip450";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -223,7 +215,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ad635e7d-62b1-40fc-ac39-e7217eb9cb9c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip5000";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -231,7 +223,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dbc3dd9d-2f8d-4671-81df-7c5be9533e9f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip550";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -239,7 +231,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "22e9bc74-81f7-4911-a9b2-e4c3ab46dddc";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip560";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -247,7 +239,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "83e7e323-3c49-4fd2-93c8-68b8bd225572";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip6000";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -255,7 +247,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "555b81f2-3e4f-47f1-a10d-d0e7613d645c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip650";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -263,7 +255,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6c4bc29a-eac6-4a45-8cf9-a07e75e0673e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip670";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -271,7 +263,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "705ed34e-dd03-45da-ba0c-a89faafa6857";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_ip7000";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -279,7 +271,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3faabb7d-f896-44fc-a1ae-727149265395";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_sound_sation_duo";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -287,7 +279,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f04f3b70-56c9-4f1c-b43f-b9098f8bcaa7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx101";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -295,7 +287,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "af85342c-8104-432e-99c2-d1b4253188e3";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx150";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -303,7 +295,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5a0ad10e-2a86-41f7-8811-7d3078859bc6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx1500";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -311,7 +303,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b6f031f4-aaad-48e2-a76d-5e6dc6cec6d5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx201";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -319,7 +311,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6423e85f-e49d-4824-b73d-13afd6b6eac9";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx250";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -327,7 +319,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2b4381a3-cf23-4fb8-8884-f2fdade4b9e6";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx300";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -335,7 +327,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "94130d18-b848-4a58-b454-d8f1f84fef2d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx301";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -343,7 +335,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cddf945d-0d59-44d7-b650-76ff917be374";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx310";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -351,7 +343,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c5c6529a-1311-4379-ace3-3feac1963330";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx311";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -359,7 +351,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a6b539c8-065d-4d8e-94a0-eefa13c06e01";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx350";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -367,7 +359,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "56f18819-6b98-42d5-903d-a6ac7bd19a49";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx400";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -375,7 +367,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "dd033f31-4531-43d2-a3a3-e63f149ed3b0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx401";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -383,7 +375,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c792eb3f-6bc2-46ed-a336-fb8e21820b51";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx410";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -391,7 +383,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb879f58-9233-4c49-8efa-399afce28c9e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx411";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -399,7 +391,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d9df188-e31b-4968-854d-8b8b626602a0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx450";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -407,7 +399,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f5149425-f140-4468-b845-d2a83e687b74";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx500";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -415,7 +407,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c4214f46-d300-42c9-a79d-ce295a39d915";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx501";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/polycom/resources/firmware/5.9.3/";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5a468b30-f81a-447c-857c-e91e8edc5ee5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_vvx600";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
@@ -423,7 +423,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "182a1328-e640-4fa8-b4e6-c2ec8bd613ee";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d3c028a5-b7de-4def-8c81-acae29a1b75d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_urlvvx601";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
