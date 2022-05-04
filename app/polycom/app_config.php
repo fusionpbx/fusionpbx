@@ -273,7 +273,7 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3faabb7d-f896-44fc-a1ae-727149265395";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_sound_sation_duo";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_firmware_url_duo";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/polycom/resources/firmware/5.9.3/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
