@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<directory>
+	<item_list>
+		{assign var=x value=1}
+		{foreach $contacts as $row}
+		<item>
+			{if $row.contact_name_given != ""}
+			<ln>{$row.contact_name_family}</ln>
+			<fn>{$row.contact_name_given}</fn>
+			{else}
+			<ln>{$row.contact_organization}</ln>
+			{/if}
+			{if $row.phone_number != ""}
+			<ct>{$row.phone_number}</ct>
+			{else}
+			<ct>{$row.phone_extension}</ct>
+			{/if}
+			<rt>7</rt>
+			<dc/>
+			<ad>0</ad>
+			<ar>0</ar>
+			<bw>0</bw>
+			<bb>0</bb>
+		</item>
+		{assign var=x value=$x+1}
+		{/foreach}
+	</item_list>
+</directory>
