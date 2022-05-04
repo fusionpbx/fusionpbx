@@ -725,12 +725,6 @@
 		}
 		echo "</optgroup>\n";
 	}
-	if (if_group("superadmin")) {
-		if (!$selected && strlen($queue_greeting) > 0) {
-			echo "	<option value='".escape($queue_greeting)."' selected='selected'>".escape($queue_greeting)."</option>\n";
-		}
-		unset($selected);
-	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-greeting']."\n";
