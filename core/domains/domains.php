@@ -65,6 +65,7 @@
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
+				$_SESSION["context"] = $_SESSION["domain_name"];
 
 			//clear the extension array so that it is regenerated for the selected domain
 				unset($_SESSION['extension_array']);
