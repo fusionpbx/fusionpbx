@@ -122,6 +122,7 @@
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					//$_SESSION["domain_name"] = $result["domain_name"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
+					$_SESSION["context"] = $result['domain_name'];
 
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
