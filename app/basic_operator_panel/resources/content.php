@@ -477,7 +477,7 @@ if (sizeof($grouped_extensions) > 0) {
 	// Ensure alphabetical order
 	ksort($grouped_extensions);
 	foreach ($grouped_extensions as $group => $extensions) {
-		echo "<strong style='color: black;'>".ucwords(escape($group))."</strong>";
+		echo "<div class=\"heading\"><strong>".ucwords(escape($group))."</strong></div>";
 		echo "<br><br>";
 		echo "<table width='100%'><tr><td>";
 		foreach ($extensions as $ext_block) {
@@ -488,7 +488,7 @@ if (sizeof($grouped_extensions) > 0) {
 }
 
 if (sizeof($other_extensions) > 0) {
-	echo "<strong style='color: black;'>".$text['label-other_extensions']."</strong>";
+	echo "<div class=\"heading\"><strong>".$text['label-other_extensions']."</strong></div>";
 	echo "<br><br>";
 	echo "<table width='100%'><tr><td>";
 	foreach ($other_extensions as $ext_block) {
