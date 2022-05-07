@@ -335,7 +335,6 @@
 					$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"ringback=".$ivr_menu_ringback."\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".$ivr_menu_extension."@".$_SESSION['domain_name']."\"/>\n";
 					if (strlen($ivr_menu_language) > 0) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_language=".$ivr_menu_language."\" inline=\"true\"/>\n";
 						$dialplan_xml .= "		<action application=\"set\" data=\"default_dialect=".$ivr_menu_dialect."\" inline=\"true\"/>\n";
