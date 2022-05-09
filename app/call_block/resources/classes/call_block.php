@@ -329,8 +329,13 @@ if (!class_exists('call_block')) {
 											}
 											if ($this->call_block_direction == 'inbound') {
 												//remove e.164 and country code
-												$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
-
+												if (trim($row["caller_id_number"])[0] == "+") {
+													//format e.164
+													$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
+												} else {
+													//remove the country code if its the first in the string
+													$call_block_number = ltrim(trim($row["caller_id_number"]),$_SESSION['domain']['country_code']['numeric']);
+												}
 												//build the array
 												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric']);
 												$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
