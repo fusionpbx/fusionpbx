@@ -1521,5 +1521,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "configures the display rule of the Hold/Swap soft key when there are two calls on the phone. 0-Only display Swap softkey (default), 1-Only display Hold softkey, 2-Display Hold and Swap softkeys";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba047b88-ff57-468b-b1a5-99ec2f95fd7f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_call_info_display_method";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: 0-Name+Number, 1-Number+Name, 2-Name, 3-Number, 4-Full Contact, 5-Null";	
+		$y++;
 
 ?>
