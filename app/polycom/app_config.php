@@ -413,7 +413,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/polycom/resources/firmware/6.4.2.3008/";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom Firmware URL for automatic firmware updates for VVX501.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5a468b30-f81a-447c-857c-e91e8edc5ee5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
