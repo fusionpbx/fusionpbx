@@ -2121,7 +2121,7 @@ function number_pad($number,$n) {
 	    }
 	}
 
-//get accountode
+//get accountcode
 	if (!function_exists('get_accountcode')) {
 		function get_accountcode() {
 			if (strlen($accountcode = $_SESSION['domain']['accountcode']['text']) > 0) {
