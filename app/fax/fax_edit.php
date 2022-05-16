@@ -583,7 +583,7 @@
 		echo "    ".$text['label-accountcode']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
+		if ($action == "add") { $fax_accountcode = get_accountcode(); }
 		echo "	<input class='formfld' type='text' name='accountcode' maxlength='80' value=\"".escape($fax_accountcode)."\">\n";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
