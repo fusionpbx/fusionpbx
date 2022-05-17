@@ -16,6 +16,28 @@ local presence_in = require "resources.functions.presence_in"
 local Database = require "resources.functions.database"
 local BasicEventService = require "resources.functions.basic_event_service"
 
+local find_vmail do
+
+	local find_vmail_sql = [[select t1.voicemail_message_uuid
+	from v_voicemail_messages t1
+	inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	inner join v_voicemails t3 on t1.voicemail_uuid = t3.voicemail_uuid
+	where t2.domain_name = :domain_name and t3.voicemail_id = :extension and t1.message_status != 'saved']]
+	
+	function find_vmail(user)
+		local ext, domain_name = split_first(user, '@', true)
+		log.notice("ext: " .. ext);
+		log.notice("domain_name: " .. domain_name);
+		if not domain_name then return end
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local vmail = dbh:first_row(find_vmail_sql, {domain_name = domain_name, extension = ext})
+		dbh:release()
+		return vmail
+	end
+	
+end
+
 local find_call_flow do
 
 local find_call_flow_sql = [[select t1.call_flow_uuid, t1.call_flow_status
@@ -112,6 +134,24 @@ end
 end
 
 local protocols = {}
+
+protocols.vmail = function(event)
+	local from, to = event:getHeader('from'), event:getHeader('to')
+	local expires = tonumber(event:getHeader('expires'))
+	if expires and expires > 0 then
+		local proto, user = split_first(to, '+', true)
+		local vmail_status = find_vmail(user)
+		if vmail_status then
+			log.noticef("Find VMAIL: %s status: %s", to, tostring(vmail_status))
+			presence_in.turn_lamp(true, to)
+		else
+			log.warningf("Can not find VMAIL: %s", to)
+			presence_in.turn_lamp(false, to)
+		end
+	else
+		log.noticef("%s UNSUBSCRIBE from %s", from, to)
+	end
+end
 
 protocols.flow = function(event)
 	local from, to = event:getHeader('from'), event:getHeader('to')
