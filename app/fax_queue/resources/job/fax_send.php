@@ -29,12 +29,20 @@
 	}
 	//print_r($_GET);
 
+//set the GET array
+	if (!empty($argv[1])) {
+		parse_str($argv[1], $_GET);
+	}
+
 //set the variables
 	if (isset($_GET['hostname'])) {
 		$hostname = urldecode($_GET['hostname']);
 	}
 	if (isset($_GET['debug'])) {
 		$debug = $_GET['debug'];
+	}
+	if (isset($_GET['file'])) {
+		$file = $_GET['file'];
 	}
 
 //extract dtmf from the fax number
@@ -47,11 +55,6 @@
 				$fax_dtmf = $tmp[2];
 			}
 		}
-	}
-
-//set the GET array
-	if (!empty($argv[1])) {
-		parse_str($argv[1], $_GET);
 	}
 
 //get the primary key
@@ -130,7 +133,7 @@
 	}
 
 //prepare to save the output
-	if (isset($_GET['debug'])) {
+	if (isset($file)) {
 		//create the debug log
 		$fp = fopen(sys_get_temp_dir()."/fax_queue.log", "a");
 		
@@ -150,6 +153,7 @@
 	$parameters['fax_queue_uuid'] = $fax_queue_uuid;
 	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
+//view_array($row);
 	if (is_array($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
@@ -270,6 +274,13 @@
 		$fax_status = 'failed';
 	}
 
+//add debug info
+	if (isset($debug)) {
+		echo "fax_retry_count $fax_retry_count\n";
+		echo "retry_limit $retry_limit\n";
+		echo "fax_status $fax_status\n";
+	}
+
 //sending the fax
 	if ($fax_status == 'waiting' || $fax_status == 'trying' || $fax_status == 'busy') {
 
@@ -279,7 +290,12 @@
 				echo "Could not connect to event socket.\n";
 				exit;	
 			}
-			else 
+
+		//check if the uuid exists if it does then end the script
+			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
+				echo "FAX job in progress.\n";
+				exit;
+			}
 
 		//check if the uuid exists if it does then end the script
 			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
@@ -407,132 +423,135 @@
 
 	}
 
-//send the email
-	if (in_array($fax_status, array('sent', 'failed')) && strlen($fax_email_address) > 0 && file_exists($fax_file)) {
-
-		//get the language code
-			$language_code = $_SESSION['domain']['language']['code'];
-
-		//get the template subcategory
-			if (isset($fax_relay) && $fax_relay == 'true') {
-				$template_subcategory = 'relay';
-			}
-			else {
-				$template_subcategory = 'inbound';
-			}
-
-		//get the email template from the database
-			if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
-				$sql = "select template_subcategory, template_subject, template_body from v_email_templates ";
-				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-				$sql .= "and template_language = :template_language ";
-				$sql .= "and template_category = :template_category ";
-				$sql .= "and template_type = :template_type ";
-				$sql .= "and template_enabled = 'true' ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['template_language'] = $language_code;
-				$parameters['template_category'] = 'fax';
-				$parameters['template_type'] = 'html';
-				$database = new database;
-				$fax_templates = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
-			}
-
-		//determine the template category: fail_busy, fail_default, fail_invalid, inbound, relay, success_default
-			switch ($fax_status) {
-				case 'sent':
-					$template_subcategory = 'success_default';
-					break;
-				case 'failed':
-					$template_subcategory = 'fail_default';
-					break;
-				case 'busy':
-					$template_subcategory = 'fail_busy';
-					break;
-			}
-
-		//determine the email template to use
-			if (is_array($fax_templates)) {
-				foreach($fax_templates as $row) {
-					if ($row['template_subcategory'] == $template_subcategory) {
-						$email_subject = $row['template_subject'];
-						$email_body = $row['template_body'];
-					}
-				}
-			}
-
-		//get the fax file name (only) if a full path
-			$path_info = pathinfo($fax_file);
-			$fax_file_dirname = $path_info['dirname'];
-			$fax_file_basename = $path_info['basename'];
-			$fax_file_filename = $path_info['filename'];
-			$fax_file_extension = $path_info['extension'];
-
-		//set the fax file pdf and tif files
-			$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . $fax_file_extension);
-			$fax_file_pdf = path_join($fax_file_dirname, $fax_file_filename . 'pdf');
-			if (file_exists(path_join($fax_file_dirname, $fax_file_filename . 'pdf'))) {
-				$fax_file_name = $fax_file_filename . '.pdf';
-			}
-			else {
-				$fax_file_name = $fax_file_filename . '.' . $fax_file_extension;
-			}
-
-		//replace variables in email subject
-			$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
-			$email_subject = str_replace('${number_dialed}', $fax_number, $email_subject);
-			$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
-			$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
-			$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
-			$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
-			$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
-
-		//replace variables in email body
-			$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
-			$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
-			$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
-			$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
-			$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
-			$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
-			$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+//post process
+	if (in_array($fax_status, array('sent', 'failed'))) {
 
 		//send the email
-			if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
-				//add the attachment
-				if (strlen($fax_file_name) > 0) {
-					$email_attachments[0]['type'] = 'file';
-					$email_attachments[0]['name'] = $fax_file_name;
-					$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
+			if (strlen($fax_email_address) > 0 && file_exists($fax_file)) {
+				//get the language code
+				$language_code = $_SESSION['domain']['language']['code'];
+
+				//get the template subcategory
+				if (isset($fax_relay) && $fax_relay == 'true') {
+					$template_subcategory = 'relay';
+				}
+				else {
+					$template_subcategory = 'inbound';
 				}
 
-				$fax_email_address = str_replace(",", ";", $fax_email_address);
-				$email_addresses = explode(";", $fax_email_address);
-				foreach($email_addresses as $email_address) {
-						//send the email
-						$email = new email;
-						$email->domain_uuid = $domain_uuid;
-						$email->recipients = $email_address;
-						$email->subject = $email_subject;
-						$email->body = $email_body;
-						$email->from_address = $email_from_address;
-						$email->from_name = $email_from_name;
-						$email->attachments = $email_attachments;
-						$email->debug_level = 3;
-						$email_error = $mail->error;
-						//view_array($email);
-						$sent = $email->send();
+				//get the email template from the database
+				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+					$sql = "select template_subcategory, template_subject, template_body from v_email_templates ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and template_language = :template_language ";
+					$sql .= "and template_category = :template_category ";
+					$sql .= "and template_type = :template_type ";
+					$sql .= "and template_enabled = 'true' ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['template_language'] = $language_code;
+					$parameters['template_category'] = 'fax';
+					$parameters['template_type'] = 'html';
+					$database = new database;
+					$fax_templates = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
+				}
 
-						//debug info
-						if (isset($_GET['debug'])) {
-							echo "template_subcategory: ".$template_subcategory."\n";
-							echo "email_adress: ".$email_address."\n";
-							echo "email_from: ".$email_from_name."\n";
-							echo "email_from_name: ".$email_from_address."\n";
-							echo "email_subject: ".$email_subject."\n";
-							//echo "email_body: ".$email_body."\n";
-							echo "email_error: ".$email_error."\n";
-							echo "\n";
+				//determine the template category: fail_busy, fail_default, fail_invalid, inbound, relay, success_default
+				switch ($fax_status) {
+					case 'sent':
+						$template_subcategory = 'success_default';
+						break;
+					case 'failed':
+						$template_subcategory = 'fail_default';
+						break;
+					case 'busy':
+						$template_subcategory = 'fail_busy';
+						break;
+				}
+
+				//determine the email template to use
+				if (is_array($fax_templates)) {
+					foreach($fax_templates as $row) {
+						if ($row['template_subcategory'] == $template_subcategory) {
+							$email_subject = $row['template_subject'];
+							$email_body = $row['template_body'];
 						}
+					}
+				}
+
+				//get the fax file name (only) if a full path
+				$path_info = pathinfo($fax_file);
+				$fax_file_dirname = $path_info['dirname'];
+				$fax_file_basename = $path_info['basename'];
+				$fax_file_filename = $path_info['filename'];
+				$fax_file_extension = $path_info['extension'];
+				
+				//set the fax file pdf and tif files
+				$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . $fax_file_extension);
+				$fax_file_pdf = path_join($fax_file_dirname, $fax_file_filename . 'pdf');
+				if (file_exists(path_join($fax_file_dirname, $fax_file_filename . 'pdf'))) {
+					$fax_file_name = $fax_file_filename . '.pdf';
+				}
+				else {
+					$fax_file_name = $fax_file_filename . '.' . $fax_file_extension;
+				}
+
+				//replace variables in email subject
+				$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
+				$email_subject = str_replace('${number_dialed}', $fax_number, $email_subject);
+				$email_subject = str_replace('${fax_file_name}', $fax_file_name, $email_subject);
+				$email_subject = str_replace('${fax_extension}', $fax_extension, $email_subject);
+				$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
+				$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
+				$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
+
+				//replace variables in email body
+				$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
+				$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
+				$email_body = str_replace('${fax_file_name}', $fax_file_name, $email_body);
+				$email_body = str_replace('${fax_extension}', $fax_extension, $email_body);
+				$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
+				$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
+				$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+
+				//send the email
+				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
+					//add the attachment
+					if (strlen($fax_file_name) > 0) {
+						$email_attachments[0]['type'] = 'file';
+						$email_attachments[0]['name'] = $fax_file_name;
+						$email_attachments[0]['value'] = path_join($fax_file_dirname, '.', $fax_file_name);
+					}
+
+					$fax_email_address = str_replace(",", ";", $fax_email_address);
+					$email_addresses = explode(";", $fax_email_address);
+					foreach($email_addresses as $email_address) {
+							//send the email
+							$email = new email;
+							$email->domain_uuid = $domain_uuid;
+							$email->recipients = $email_address;
+							$email->subject = $email_subject;
+							$email->body = $email_body;
+							$email->from_address = $email_from_address;
+							$email->from_name = $email_from_name;
+							$email->attachments = $email_attachments;
+							$email->debug_level = 3;
+							$email_error = $mail->error;
+							//view_array($email);
+							$sent = $email->send();
+
+							//debug info
+							if (isset($debug)) {
+								echo "template_subcategory: ".$template_subcategory."\n";
+								echo "email_adress: ".$email_address."\n";
+								echo "email_from: ".$email_from_name."\n";
+								echo "email_from_name: ".$email_from_address."\n";
+								echo "email_subject: ".$email_subject."\n";
+								//echo "email_body: ".$email_body."\n";
+								echo "email_error: ".$email_error."\n";
+								echo "\n";
+							}
+					}
 				}
 			}
 
@@ -594,7 +613,8 @@
 	//echo "Body: ".$email_body."\n";
 
 //get and save the output from the buffer
-	if (isset($_GET['debug'])) {
+	if (isset($file)) {
+		echo "\n";
 		$content = ob_get_contents(); //get the output from the buffer
 		$content = str_replace("<br />", "", $content);
 
