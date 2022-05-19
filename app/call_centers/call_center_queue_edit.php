@@ -298,7 +298,9 @@
 				$array['call_center_queues'][0]['queue_outbound_caller_id_number'] = $queue_outbound_caller_id_number;
 			}
 			$array['call_center_queues'][0]['queue_announce_position'] = $queue_announce_position;
-			$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
+			if (permission_exists('call_center_announce_sound')) {
+				$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
+			}
 			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
 			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
