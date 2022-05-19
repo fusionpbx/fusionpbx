@@ -198,7 +198,8 @@ if (!class_exists('call_flows')) {
 								}
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid, call_flow_context from v_".$this->table." ";
+								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, ";
+								$sql .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -208,6 +209,7 @@ if (!class_exists('call_flows')) {
 									foreach ($rows as $row) {
 										$call_flows[$row['uuid']]['state'] = $row['toggle'];
 										$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$call_flows[$row['uuid']]['call_flow_feature_code'] = $row['call_flow_feature_code'];
 										$call_flow_contexts[] = $row['call_flow_context'];
 									}
 								}
@@ -263,7 +265,37 @@ if (!class_exists('call_flows')) {
 								//set message
 									message::add($text['message-toggle']);
 							}
-							unset($records, $call_flows);
+							unset($records);
+
+						//toggle the presence
+							if ($this->toggle_field != 'call_flow_enabled') {
+								foreach($call_flows as $uuid => $row) {
+									//prepare the event
+									$cmd = "sendevent PRESENCE_IN\n";
+									$cmd .= "proto: flow\n";
+									$cmd .= "login: ".$row['call_flow_feature_code']."@".$_SESSION['domain_name']."\n";
+									$cmd .= "from: ".$row['call_flow_feature_code']."@".$_SESSION['domain_name']."\n";
+									$cmd .= "status: Active (1 waiting)\n";
+									$cmd .= "rpid: unknown\n";
+									$cmd .= "event_type: presence\n";
+									$cmd .= "alt_event_type: dialog\n";
+									$cmd .= "event_count: 1\n";
+									$cmd .= "unique-id: ".uuid()."\n";
+									$cmd .= "Presence-Call-Direction: outbound\n";
+									if ($call_flow['state'] == 'true') {
+										$cmd .= "answer-state: confirmed\n";
+									}
+									else {
+										$cmd .= "answer-state: terminated\n";
+									}
+
+									//send the event
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$switch_result = event_socket_request($fp, $cmd);
+								}
+							}
+							unset($call_flows);
+
 					}
 
 			}
