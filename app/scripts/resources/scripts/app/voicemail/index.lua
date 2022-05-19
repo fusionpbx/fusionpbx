@@ -330,6 +330,7 @@
 	require "app.voicemail.resources.functions.record_name";
 	require "app.voicemail.resources.functions.message_count"
 	require "app.voicemail.resources.functions.mwi_notify";
+	require "app.voicemail.resources.functions.blf_notify";
 	require "app.voicemail.resources.functions.tutorial";
 
 --send a message waiting event

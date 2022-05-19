@@ -11,7 +11,7 @@
 			<action application="lua" data="app.lua voicemail"/>
 			<!--<action application="voicemail" data="check default ${domain_name}"/>-->
 		</condition>
-		<condition field="destination_number" expression="^(vmain$|^\*4000$|^\*98)(\d{2,12})$">
+		<condition field="destination_number" expression="^(vmain$|^\*4000$|^\*98|voicemail\+)(\d{2,12})$">
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>
 			<action application="set" data="record_append=false"/>
