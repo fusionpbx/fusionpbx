@@ -510,6 +510,7 @@
 				foreach($email_addresses as $email_address) {
 						//send the email
 						$email = new email;
+						$email->domain_uuid = $domain_uuid;
 						$email->recipients = $email_address;
 						$email->subject = $email_subject;
 						$email->body = $email_body;
