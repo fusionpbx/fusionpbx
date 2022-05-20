@@ -22,11 +22,10 @@
 */
 
 /**
- * permission class
+ * presence class
  *
- * @method string add
- * @method string delete
- * @method string exists
+ * @method boolean active
+ * @method array show
  */
 			
 if (!class_exists('presence')) {
