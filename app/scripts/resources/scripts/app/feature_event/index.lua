@@ -138,7 +138,7 @@
 
 	--Call Forward
 
-		--Call Formward All enabled
+		--Call Forward All enabled
 			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_immediate") then
 				--set a variable
 					forward_all_destination = action_value;
@@ -188,7 +188,7 @@
 					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
 
-		--Call Formward All disable
+		--Call Forward All disable
 			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_immediate") then
 				--set a variable				
 					forward_all_destination = action_value;
@@ -220,7 +220,7 @@
 					notify.forward_immediate(user, host, sip_profiles, forward_immediate_enabled, forward_immediate_destination);
 			end
 
-		--Call Formward BUSY enable
+		--Call Forward BUSY enable
 			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
@@ -243,7 +243,7 @@
 					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
 
-		--Call Formward BUSY disable
+		--Call Forward BUSY disable
 			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_busy") then
 				--set a variable
 					forward_busy_destination = action_value;
@@ -270,7 +270,7 @@
 					notify.forward_busy(user, host, sip_profiles, forward_busy_enabled, forward_busy_destination);
 			end
 
-		--Call Formward NO ANSWER enable
+		--Call Forward NO ANSWER enable
 			if (feature_action == "SetCallForward" and feature_enabled == "true" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
@@ -295,7 +295,7 @@
 					notify.forward_no_answer(user, host, sip_profiles, forward_no_answer_enabled, forward_no_answer_destination, ring_count);
 			end
 
-		--Call Formward NO ANSWER disable
+		--Call Forward NO ANSWER disable
 			if (feature_action == "SetCallForward" and feature_enabled == "false" and action_name == "forward_no_answer") then
 				--set a variable
 					forward_no_answer_destination = action_value;
