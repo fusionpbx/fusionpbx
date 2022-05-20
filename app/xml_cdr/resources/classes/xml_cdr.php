@@ -374,7 +374,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set missed calls
-						if (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
+						if ($xml->variables->hangup_cause == 'NORMAL_CLEARING') {
 							//answered call
 							$missed_call = 'false';
 						}
