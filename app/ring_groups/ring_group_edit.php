@@ -375,6 +375,7 @@
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_delay"] = $row['destination_delay'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_timeout"] = $row['destination_timeout'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
+					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
 				}
 				$y++;
@@ -751,6 +752,7 @@
 	if (permission_exists('ring_group_prompt')) {
 		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
 	}
+	echo "				<td class='vtable'>"."Enable"."</td>\n";
 	if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
 		echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
 		echo "						<span id='delete_label_destinations'>".$text['label-delete']."</span>\n";
@@ -765,7 +767,9 @@
 
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
-		}
+		} else {
+			$row['destination_enabled'] = 'on';
+ 		}
 
 		echo "			<tr>\n";
 		echo "				<td class='formfld'>\n";
@@ -810,6 +814,19 @@
 			echo "				</select>\n";
 			echo "			</td>\n";
 		}
+		echo "   <td valign='top' class='".$row_style[$c]." switch-c'>\n";
+			###iphone
+			
+		echo "	<label class='switch'>\n";
+		$checked = ($row['destination_enabled'] == 'on' ? 'checked=checked' : '');
+		echo "	<input type ='checkbox' id='ring_group_destinations[".$x."][destination_enabled]' name='ring_group_destinations[".$x."][destination_enabled]' $checked>\n";
+		echo "	<div class ='slider round'></div>\n";
+		echo "	</div>\n";
+
+		#iphone button		
+		
+		echo "</td>";
+
 		if ($show_destination_delete && permission_exists('ring_group_destination_delete')) {
 			if (is_uuid($row['ring_group_destination_uuid'])) {
 				echo "			<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
