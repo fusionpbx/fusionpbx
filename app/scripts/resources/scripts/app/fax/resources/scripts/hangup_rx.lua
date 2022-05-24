@@ -64,6 +64,9 @@
 			:gsub('\'', '\\\''))
 	end
 
+--create the api object
+	api = freeswitch.API();
+
 --set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -230,9 +233,7 @@
 		cmd = cmd .. "fax_prefix=false ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	local handle = io.popen(cmd);
-	result = handle:read("*a");
-	handle:close();
+	result = api:executeString(cmd);
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";
