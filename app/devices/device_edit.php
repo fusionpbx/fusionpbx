@@ -261,8 +261,8 @@
 					if (permission_exists('device_location')) {
 						$array['devices'][0]['device_location'] = $device_location;
 					}
-					if (permission_exists('device_alternate') && is_uuid($device_uuid_alternate)) {
-						$array['devices'][0]['device_uuid_alternate'] = $device_uuid_alternate;
+					if (permission_exists('device_alternate')) {
+						$array['devices'][0]['device_uuid_alternate'] = is_uuid($device_uuid_alternate) ? $device_uuid_alternate : null;
 					}
 					if (permission_exists('device_model')) {
 						$array['devices'][0]['device_model'] = $device_model;
