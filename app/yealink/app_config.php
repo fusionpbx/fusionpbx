@@ -541,7 +541,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "w53h-88.83.0.90.rom";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W53H Cordless firmware ROM"
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W53H Cordless firmware ROM";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7ad642b6-9c07-4216-ac7f-98e7ebe7c6cf";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
