@@ -485,7 +485,7 @@
 					AND d.ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
 					AND r.ring_group_enabled = 'true'
-					AND d.destination_enabled = 'on'
+					AND d.destination_enabled = 'true'
 				ORDER BY
 					]]..sql_order..[[
 			]];
