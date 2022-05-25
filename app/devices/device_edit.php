@@ -1192,40 +1192,40 @@
 					echo "			</td>\n";
 				}
 
-				echo "			<td align='left'>\n";
+				echo "			<td align='left' valign='top'>\n";
 				echo "				<input class='formfld' style='min-width: 75px; width: 100%;' type='text' name='device_lines[".$x."][label]' maxlength='255' value=\"".escape($row['label'])."\"/>\n";
 				echo "			</td>\n";
 
-				echo "			<td align='left'>\n";
+				echo "			<td align='left' valign='top'>\n";
 				echo "				<input class='formfld' style='min-width: 75px; width: 100%;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".escape($row['display_name'])."\"/>\n";
 				echo "			</td>\n";
 
-				echo "			<td align='left'>\n";
+				echo "			<td align='left' valign='top'>\n";
 				echo "				<input class='formfld' style='min-width: 50px; width: 100%; max-width: 80px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' autocomplete=\"new-password\" value=\"".escape($row['user_id'])."\"/>\n";
 				echo "			</td>\n";
 
 				if (permission_exists('device_line_auth_id')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<input class='formfld' style='min-width: 50px; width: 100%; max-width: 80px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' autocomplete=\"new-password\" value=\"".escape($row['auth_id'])."\"/>\n";
 					echo "				<input type='text' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_password')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<input type='password' style='display: none;' disabled='disabled'>"; //help defeat browser auto-fill
 					echo "				<input class='formfld' style='min-width: 75px; width: 100%;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete=\"off\" maxlength='255' value=\"".escape($row['password'])."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_port')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".escape($row['sip_port'])."\"/>\n";
 					echo "			</td>\n";
 				}
 
 				if (permission_exists('device_line_transport')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<select class='formfld' style='width: 75px;' name='device_lines[".$x."][sip_transport]'>\n";
 					echo "					<option value='tcp' ".(($row['sip_transport'] == 'tcp') ? "selected" : null).">TCP</option>\n";
 					echo "					<option value='udp' ".(($row['sip_transport'] == 'udp') ? "selected" : null).">UDP</option>\n";
@@ -1239,7 +1239,7 @@
 				}
 
 				if (permission_exists('device_line_register_expires')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".escape($row['register_expires'])."\"/>\n";
 					echo "			</td>\n";
 				}
@@ -1248,7 +1248,7 @@
 				}
 
 				if (permission_exists('device_line_shared')) {
-					echo "			<td align='left'>\n";
+					echo "			<td align='left' valign='top'>\n";
 					echo "				<input class='formfld' style='width: 50px;' type='text' name='device_lines[".$x."][shared_line]' maxlength='255' value=\"".escape($row['shared_line'])."\"/>\n";
 					echo "			</td>\n";
 				}
@@ -1256,7 +1256,7 @@
 					echo "				<input type='hidden' name='device_lines[".$x."][shared_line]' value=\"".escape($row['shared_line'])."\"/>\n";
 				}
 
-				echo "			<td align='left'>\n";
+				echo "			<td align='left' valign='top'>\n";
 				echo "				<select class='formfld' name='device_lines[".$x."][enabled]'>\n";
 				echo "					<option value='true' ".(($row['enabled'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 				echo "					<option value='false' ".(($row['enabled'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
@@ -1523,7 +1523,7 @@
 					echo "</td>\n";
 				}
 
-				echo "<td align='left' nowrap='nowrap'>\n";
+				echo "<td align='left' valign='top' nowrap='nowrap'>\n";
 				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
 				if (strlen($row['device_key_vendor']) > 0) {
 					$device_key_vendor = $row['device_key_vendor'];
@@ -1572,17 +1572,17 @@
 					echo "</td>\n";
 				}
 
-				echo "<td align='left'>\n";
+				echo "<td align='left' valign='top'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".escape($row['device_key_value'])."\"/>\n";
 				echo "</td>\n";
 
 				if (permission_exists('device_key_extension')) {
-					echo "<td align='left'>\n";
+					echo "<td align='left' valign='top'>\n";
 					echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_extension'])."\"/>\n";
 					echo "</td>\n";
 				}
 
-				echo "<td align='left'>\n";
+				echo "<td align='left' valign='top'>\n";
 				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 75px;' maxlength='255' value=\"".escape($row['device_key_label'])."\"/>\n";
 				echo "</td>\n";
 
