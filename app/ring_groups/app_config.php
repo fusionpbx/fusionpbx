@@ -347,6 +347,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_prompt";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric"; //confirm,announce
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled ";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text"; //confirm,announce
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_ring_group_users";
