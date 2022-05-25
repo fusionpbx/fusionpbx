@@ -768,7 +768,7 @@
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
 		} else {
-			$row['destination_enabled'] = 'on';
+			$row['destination_enabled'] = 'true';
  		}
 
 		echo "			<tr>\n";
@@ -818,7 +818,7 @@
 			###iphone
 			
 		echo "	<label class='switch'>\n";
-		$checked = ($row['destination_enabled'] == 'on' ? 'checked=checked' : '');
+		$checked = ($row['destination_enabled'] == 'true' ? 'checked=checked' : '');
 		echo "	<input type ='checkbox' id='ring_group_destinations[".$x."][destination_enabled]' name='ring_group_destinations[".$x."][destination_enabled]' $checked>\n";
 		echo "	<div class ='slider round'></div>\n";
 		echo "	</div>\n";
