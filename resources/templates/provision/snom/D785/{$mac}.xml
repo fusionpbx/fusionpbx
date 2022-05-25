@@ -25,9 +25,9 @@
     <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
     <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
     <!-- Wallpaper (480x272px PNG)-->
-    <custom_bg_image_url perm="">{$snom_wallpaper_url}</custom_bg_image_url>
+    <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d785)}{$snom_wallpaper_url_d785}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
     <!-- Expansion Mod (480x1280px PNG <2MB) -->
-    <expansion_module_background_image perm="">{$snom_exp_wallpaper_url}</expansion_module_background_image>
+    <expansion_module_background_image perm="">{if isset($snom_exp_wallpaper_url_d785)}{$snom_exp_wallpaper_url_d785}{else}{$snom_exp_wallpaper_url}{/if}</expansion_module_background_image>
     <!-- SIP Settings -->
     <mwi_notification perm="">silent</mwi_notification>
     <mwi_dialtone perm="">stutter</mwi_dialtone>
