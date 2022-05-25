@@ -551,7 +551,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the W56H Cordless firmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "246c630db-8b56-4d09-80ec-ac4a6c85bd11";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "246c63db-8b56-4d09-80ec-ac4a6c85bd11";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_w59r_handset_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
