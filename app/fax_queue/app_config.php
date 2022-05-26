@@ -58,6 +58,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of tries to send before giving up.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "edf13aab-c7df-4966-9895-a085d43e64a1";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "retry_interval";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "180";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "How often to try resending the fax. Default 180 seconds.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9c379e94-0cb8-41d6-8ee5-8459c5ef7391";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "fax_queue";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "interval";
