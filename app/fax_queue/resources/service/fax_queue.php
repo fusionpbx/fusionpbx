@@ -110,12 +110,6 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
-//get the call center settings
-	$interval = $_SESSION['fax_queue']['interval']['numeric'];
-
-//set the defaults
-	if (!is_numeric($interval)) { $interval = 30; }
-
 //set the fax queue interval
 	if (isset($_SESSION['fax_queue']['interval']['numeric'])) {
 		$fax_queue_interval = $_SESSION['fax_queue']['interval']['numeric'];
@@ -135,6 +129,14 @@
 		$debug = $_SESSION['fax_queue']['debug']['boolean'];
 	}
 
+//set the fax queue retry interval
+	if (isset($_SESSION['fax_queue']['retry_interval']['numeric'])) {
+		$fax_retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	}
+	else {
+		$fax_retry_interval = '180';
+	}
+
 //change the working directory
 	chdir($document_root);
 
@@ -146,7 +148,7 @@
 			$sql .= "where ";
 			$sql .= "( ";
 			$sql .= "	(fax_status = 'waiting' or fax_status = 'trying') ";
-			$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :interval) ";
+			$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 			$sql .= ")  ";
 			$sql .= "or ( ";
 			$sql .= "	fax_status = 'sent' ";
@@ -163,7 +165,7 @@
 				$parameters['hostname'] = gethostname();
 			}
 			$parameters['limit'] = $fax_queue_limit;
-			$parameters['interval'] = $fax_queue_interval;
+			$parameters['retry_interval'] = $fax_retry_interval;
 			if (isset($debug_sql)) {
 				print_r($parameters);
 			}
@@ -201,7 +203,7 @@
 			}
 
 		//pause to prevent excessive database queries
-		sleep($interval);
+		sleep($fax_queue_interval);
 	}
 
 //remove the old pid file

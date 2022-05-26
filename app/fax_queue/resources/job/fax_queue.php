@@ -63,13 +63,7 @@
 		return $exists;
 	}
 
-//get the default settings settings
-	$fax_queue_interval = $_SESSION['fax_queue']['interval']['numeric'];
-
-//set the defaults
-	if (!is_numeric($interval)) { $interval = 30; }
-
-//set the email queue limit
+//set the fax queue limit
 	if (isset($_SESSION['fax_queue']['limit']['numeric'])) {
 		$fax_queue_limit = $_SESSION['fax_queue']['limit']['numeric'];
 	}
@@ -78,6 +72,14 @@
 	}
 	if (isset($_SESSION['fax_queue']['debug']['boolean'])) {
 		$debug = $_SESSION['fax_queue']['debug']['boolean'];
+	}
+
+//set the fax queue retry interval
+	if (isset($_SESSION['fax_queue']['retry_interval']['numeric'])) {
+		$fax_retry_interval = $_SESSION['fax_queue']['retry_interval']['numeric'];
+	}
+	else {
+		$fax_retry_interval = '180';
 	}
 
 //check to see if the process exists
@@ -117,7 +119,7 @@
 	$sql .= "where ";
 	$sql .= "( ";
 	$sql .= "	(fax_status = 'waiting' or fax_status = 'trying') ";
-	$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :interval) ";
+	$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
 	$sql .= ")  ";
 	$sql .= "or ( ";
 	$sql .= "	fax_status = 'sent' ";
@@ -134,7 +136,7 @@
 		$parameters['hostname'] = gethostname();
 	}
 	$parameters['limit'] = $fax_queue_limit;
-	$parameters['interval'] = $fax_queue_interval;
+	$parameters['retry_interval'] = $fax_retry_interval;
 	$database = new database;
 	$fax_queue = $database->select($sql, $parameters, 'all');
 	unset($parameters);
