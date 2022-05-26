@@ -328,8 +328,19 @@ if (!class_exists('call_block')) {
 												$array['call_block'][$x]['extension_uuid'] = $this->extension_uuid;
 											}
 											if ($this->call_block_direction == 'inbound') {
+												//remove e.164 and country code
+												if (trim($row["caller_id_number"])[0] == "+") {
+													//format e.164
+													$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
+												} else {
+													//remove the country code if its the first in the string
+													$call_block_number = ltrim(trim($row["caller_id_number"]),$_SESSION['domain']['country_code']['numeric']);
+												}
+												//build the array
+												$array['call_block'][$x]['call_block_country_code'] = trim($_SESSION['domain']['country_code']['numeric']);
 												$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-												$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+												$array['call_block'][$x]['call_block_number'] = $call_block_number;
+												$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 											}
 											if ($this->call_block_direction == 'outbound') {
 												$array['call_block'][$x]['call_block_number'] = trim($row["caller_destination"]);
@@ -350,8 +361,13 @@ if (!class_exists('call_block')) {
 														$array['call_block'][$x]['call_block_direction'] = $this->call_block_direction;
 														$array['call_block'][$x]['extension_uuid'] = $field['extension_uuid'];
 														if ($this->call_block_direction == 'inbound') {
+															//remove e.164 and country code
+															$call_block_number = str_replace("+".trim($_SESSION['domain']['country_code']['numeric']), "", trim($row["caller_id_number"]));
+
+															//build the array
 															$array['call_block'][$x]['call_block_name'] = trim($row["caller_id_name"]);
-															$array['call_block'][$x]['call_block_number'] = trim($row["caller_id_number"]);
+															$array['call_block'][$x]['call_block_number'] = $call_block_number;
+															$array['call_block'][$x]['call_block_description'] = trim($row["caller_id_name"]);
 														}
 														if ($this->call_block_direction == 'outbound') {
 															$array['call_block'][$x]['call_block_number'] = trim($row["caller_destination"]);

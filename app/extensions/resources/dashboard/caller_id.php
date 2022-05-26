@@ -205,10 +205,10 @@
 					else {
 						//caller id name and number inputs
 						echo "	<td class='input'>\n";
-						echo "		<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".escape($row['outbound_caller_id_name'])."\">\n";
+						echo "		<input class='formfld' style='width: 70%;' type='text' name='extensions[".$x."][outbound_caller_id_name]' maxlength='255' value=\"".escape($row['outbound_caller_id_name'])."\">\n";
 						echo "	</td>\n";
 						echo "	<td class='input'>\n";
-						echo "		<input class='formfld' style='min-width: 50px; max-width: 100px;' type='text' name='extensions[".$x."][outbound_caller_id_number]' maxlength='255' value=\"".$row['outbound_caller_id_number']."\">\n";
+						echo "		<input class='formfld' style='width: 70%;' type='text' name='extensions[".$x."][outbound_caller_id_number]' maxlength='255' value=\"".$row['outbound_caller_id_number']."\">\n";
 						echo "	</td>\n";
 					}
 					echo "	<td class='description overflow hide-sm-dn'>\n";

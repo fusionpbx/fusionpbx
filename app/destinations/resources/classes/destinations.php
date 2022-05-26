@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -90,6 +90,11 @@ if (!class_exists('destinations')) {
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_number']."\$)";
 				}
+				elseif (isset($array['destination_prefix']) && isset($array['destination_trunk_prefix']) && isset($array['destination_number'])) {
+					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_trunk_prefix'].$array['destination_number']."\$|";
+					$destination_regex .= "^".$array['destination_number']."\$)";
+				}
 				elseif (isset($array['destination_prefix']) && isset($array['destination_area_code']) && isset($array['destination_number'])) {
 					$destination_regex = "(\+?".$array['destination_prefix'].$array['destination_area_code'].$array['destination_number']."\$|";
 					$destination_regex .= "^".$array['destination_area_code'].$array['destination_number']."\$|";
@@ -109,12 +114,13 @@ if (!class_exists('destinations')) {
 
 					//add prefix
 						if (strlen($destination_prefix) > 0) {
-							if (strlen($destination_prefix) > 0 && strlen($destination_prefix) < 4) {
-								$plus = (substr($destination_prefix, 0, 1) == "+") ? '' : '\+?';
+							$destination_prefix = str_replace("+", "", $destination_prefix);
+							$plus = '\+?';
+							if (strlen($destination_prefix) == 1) {
 								$destination_prefix = $plus.$destination_prefix.'?';
 							}
 							else {
-								$destination_prefix = '(?:'.$destination_prefix.')?';
+								$destination_prefix = $plus.'(?:'.$destination_prefix.')?';
 							}
 						}
 
@@ -953,7 +959,6 @@ if (!class_exists('destinations')) {
 						$i++;
 					}
 
-					$i = 0;
 					unset($text);
 				}
 			}
@@ -985,7 +990,15 @@ if (!class_exists('destinations')) {
 		* valid destination
 		*/
 		public function valid($destination, $type = 'dialplan') {
+			//allow an empty destination
+			if ($destination == ':') {
+				return true;
+			}
+
+			//get all of the $destinations
 			$destinations = $this->all($type);
+
+			//loop through destinations to validate them
 			foreach($destinations as $category => $array) {
 				if (is_array($array)) {
 					foreach ($array as $key => $value) {

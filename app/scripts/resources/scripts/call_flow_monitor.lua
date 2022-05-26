@@ -49,16 +49,6 @@
 --define the run file
 	run_file = scripts_dir .. "/run/call_flow_monitor.tmp";
 
---define the functions
-	--shell return results
-	function shell(c)
-		local o, h
-		h = assert(io.popen(c,"r"))
-		o = h:read("*all")
-		h:close()
-		return o
-	end
-
 --used to stop the lua service
 	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");

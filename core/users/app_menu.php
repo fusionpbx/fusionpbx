@@ -8,7 +8,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benutzerverwaltung";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Gestor de Usuarios";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Utilisteurs";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des utilisteurs";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "מנהל משתמש";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Utenti";
@@ -34,7 +34,7 @@
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Kontoeinstellungen";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Config de Cuenta";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Paramètre du Compte";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Configuration du Compte";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "הגדרת חשבון";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Impostazioni Utente";

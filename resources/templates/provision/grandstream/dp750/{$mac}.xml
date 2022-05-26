@@ -2602,18 +2602,18 @@
 <!-- Number: 0,1,2 -->
 <!-- Mandatory  -->
 <!-- Reboot required  -->
-<P8>0</P8>
+<P8>{$grandstream_ip_address_mode}</P8>
 
 <!-- Preferred DNS server -->
 <!-- Mandatory  -->
-<P92>0</P92>
-<P93>0</P93>
-<P94>0</P94>
-<P95>0</P95>
+{if isset($grandstream_ipv4preferdns_1)}<P92>{$grandstream_ipv4preferdns_1}</P92>{else}<P92>0</P92>{/if}
+{if isset($grandstream_ipv4preferdns_2)}<P93>{$grandstream_ipv4preferdns_2}</P93>{else}<P93>0</P93>{/if}
+{if isset($grandstream_ipv4preferdns_3)}<P94>{$grandstream_ipv4preferdns_3}</P94>{else}<P94>0</P94>{/if}
+{if isset($grandstream_ipv4preferdns_4)}<P95>{$grandstream_ipv4preferdns_4}</P95>{else}<P95>0</P95>{/if}
 
 <!-- Host name (Option 12). Max length allowed is 32 bytes. -->
 <!-- String: address  -->
-<P146></P146>
+<P146>phone-{$mac|replace:'-':''}</P146>
 
 <!-- DHCP Domain -->
 <!-- String: address  -->
@@ -2635,34 +2635,34 @@
 <P269></P269>
 
 <!-- IP Address. Ignore if DHCP or PPPoE is used -->
-<!--  <P9>192</P9> -->
-<!--  <P10>168</P10> -->
-<!--  <P11>0</P11> -->
-<!--  <P12>160</P12> -->
+{if isset($grandstream_ipv4octet_1)}<P9>{$grandstream_ipv4octet_1}</P9>{else}<P9>192</P9>{/if}
+{if isset($grandstream_ipv4octet_2)}<P10>{$grandstream_ipv4octet_2}</P10>{else}<P10>168</P10>{/if}
+{if isset($grandstream_ipv4octet_3)}<P11>{$grandstream_ipv4octet_3}</P11>{else}<P11>1</P11>{/if}
+{if isset($grandstream_ipv4octet_4)}<P12>{$grandstream_ipv4octet_4}</P12>{else}<P12>102</P12>{/if}
 
 <!-- Subnet mask. Ignore if DHCP or PPPoE is used -->
-<!--  <P13>255</P13> -->
-<!--  <P14>255</P14> -->
-<!--  <P15>0</P15> -->
-<!--  <P16>0</P16> -->
+{if isset($grandstream_ipv4mask_1)}<P13>{$grandstream_ipv4mask_1}</P13>{else}<P13>255</P13>{/if}
+{if isset($grandstream_ipv4mask_2)}<P14>{$grandstream_ipv4mask_2}</P14>{else}<P14>255</P14>{/if}
+{if isset($grandstream_ipv4mask_3)}<P15>{$grandstream_ipv4mask_3}</P15>{else}<P15>0</P15>{/if}
+{if isset($grandstream_ipv4mask_4)}<P16>{$grandstream_ipv4mask_4}</P16>{else}<P16>0</P16>{/if}
 
 <!-- Gateway. Ignore if DHCP or PPPoE is used -->
-<!--  <P17>0</P17> -->
-<!--  <P18>0</P18> -->
-<!--  <P19>0</P19> -->
-<!--  <P20>0</P20> -->
+{if isset($grandstream_ipv4gw_1)}<P17>{$grandstream_ipv4gw_1}</P17>{else}<P17>192</P17>{/if}
+{if isset($grandstream_ipv4gw_2)}<P18>{$grandstream_ipv4gw_2}</P18>{else}<P18>168</P18>{/if}
+{if isset($grandstream_ipv4gw_3)}<P19>{$grandstream_ipv4gw_3}</P19>{else}<P19>2</P19>{/if}
+{if isset($grandstream_ipv4gw_4)}<P20>{$grandstream_ipv4gw_4}</P20>{else}<P20>1</P20>{/if}
 
 <!-- DNS server 1. Ignore if DHCP or PPPoE is used -->
-<!--  <P21>0</P21> -->
-<!--  <P22>0</P22> -->
-<!--  <P23>0</P23> -->
-<!--  <P24>0</P24> -->
+{if isset($grandstream_ipv4dns1_1)}<P21>{$grandstream_ipv4dns1_1}</P21>{else}<P21>0</P21>{/if}
+{if isset($grandstream_ipv4dns1_2)}<P22>{$grandstream_ipv4dns1_2}</P22>{else}<P22>0</P22>{/if}
+{if isset($grandstream_ipv4dns1_3)}<P23>{$grandstream_ipv4dns1_3}</P23>{else}<P23>0</P23>{/if}
+{if isset($grandstream_ipv4dns1_4)}<P24>{$grandstream_ipv4dns1_4}</P24>{else}<P24>0</P24>{/if}
 
 <!-- DNS server 2. Ignore if DHCP or PPPoE is used -->
-<!--  <P25>0</P25> -->
-<!--  <P26>0</P26> -->
-<!--  <P27>0</P27> -->
-<!--  <P28>0</P28> -->
+{if isset($grandstream_ipv4dns2_1)}<P25>{$grandstream_ipv4dns2_1}</P25>{else}<P25>0</P25>{/if}
+{if isset($grandstream_ipv4dns2_2)}<P26>{$grandstream_ipv4dns2_2}</P26>{else}<P26>0</P26>{/if}
+{if isset($grandstream_ipv4dns2_3)}<P27>{$grandstream_ipv4dns2_3}</P27>{else}<P27>0</P27>{/if}
+{if isset($grandstream_ipv4dns2_4)}<P28>{$grandstream_ipv4dns2_4}</P28>{else}<P28>0</P28>{/if}
 
 <!-- ################################################## -->
 <!-- #  Settings/Network Settings/Advanced Settings  ## -->
@@ -2691,7 +2691,7 @@
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
 {if isset($grandstream_lan_port_vlan) }
-<P27004>1</P27004>
+<P27004>{$grandstream_lan_port_vlan}</P27004>
 {else}
 <P27004>0</P27004>
 {/if}
@@ -2850,12 +2850,12 @@
 <!-- When set to Yes(1), it will override the configured provision path and method -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P20719>1</P20719>
+{if isset($grandstream_dhcp_option_override)}<P20719>{$grandstream_dhcp_option_override}</P20719>{else}<P20719>1</P20719>{/if}
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <!-- Number: 0,1,2,3 -->
 <!-- Mandatory -->
-<P20721>0</P20721>
+<P20721>1</P20721>
 
 <!-- Automatic Upgrade. Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. P20721=3 -->
 <!-- Number: 60 to 5256000 -->
@@ -3209,7 +3209,7 @@
 <!-- Allow DHCP Option 2 to override time zone (If DHCP Option 2 is enabled, the timezone can be offset.) -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P143>1</P143>
+{if isset($grandstream_dhcp_option_2_timezone_override) }<P143>{$grandstream_dhcp_option_2_timezone_override}</P143>{else}<P143>0</P143>{/if}
 
 <!-- ######################### -->
 <!-- #  Maintenance/Syslog  ## -->
@@ -3268,11 +3268,7 @@
 <!-- Enable Phonebook XML Download. # 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - Yes, HTTPS. Default is 0 -->
 <!-- Number: 0, 1, 2, 3 -->
 <!-- Mandatory -->
-{if isset($contact_grandstream)}
-<P330>1</P330>
-{else}
-<P330>0</P330>
-{/if}
+<P330>{$grandstream_phonebook_download}</P330>
 
 <!-- HTTP/HTTPS User Name -->
 <!-- String -->
@@ -3286,23 +3282,25 @@
 <!-- This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
 <!-- For example: directory.grandstream.com/engineering -->
 <!-- String -->
-{if isset($contact_grandstream)}
-<P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
-{elseif isset($grandstream_phonebook_xml_server_path)}
-<P331>{$grandstream_phonebook_xml_server_path}</P331>
+{if isset($grandstream_phonebook_xml_server_path)}
+    <P331>{$grandstream_phonebook_xml_server_path}/{$mac}</P331>
 {else}
-<P331></P331>
+    <P331></P331>
 {/if}
 
 <!-- Phonebook Download Interval (in minutes) -->
 <!-- Valid value range is 5-720. Default is 0 for disabled -->
 <!-- Number: 0, 5-720;  -->
-<P332>120</P332>
+{if isset($grandstream_phonebook_download_interval)}
+    <P332>{$grandstream_phonebook_download_interval}</P332>
+{else}
+    <P332>0</P332>
+{/if}
 
 <!-- Remove Manually-edited entries on Download. 0 - No, 1 - Yes. Default is 1 -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P333>1</P333>
+<P333>0</P333>
 
 <!-- ############################################### -->
 <!-- #  Phonebook/Global Phonebook LDAP Settings  ## -->

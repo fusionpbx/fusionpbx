@@ -97,7 +97,7 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		if (isset($search)) {
-			$sql = "and (";
+			$sql .= "and (";
 			$sql .= "lower(ring_group_name) like :search ";
 			$sql .= "or lower(ring_group_extension) like :search ";
 			$sql .= "or lower(ring_group_description) like :search ";
@@ -127,7 +127,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (isset($search)) {
-		$sql = "and (";
+		$sql .= "and (";
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
@@ -174,9 +174,9 @@
 			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'ring_groups.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'ring_groups.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}

@@ -45,14 +45,15 @@
 
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
-	$sql .= "where ( ";
-	$sql .= "domain_uuid = :domain_uuid ";
+	$sql .= "where true ";
+	if ($_GET['show'] != "all" || !permission_exists('music_on_hold_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (permission_exists('music_on_hold_domain')) {
 		$sql .= "or domain_uuid is null ";
 	}
-	$sql .= ") ";
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$streams = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -275,7 +276,7 @@
 
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
-						event_socket_mkdir($stream_path);
+						mkdir($stream_path, 0770, true);
 					}
 					if (is_dir($stream_path)) {
 						if (copy($stream_file_name_temp, $stream_path.'/'.$stream_file_name)) {
@@ -423,8 +424,16 @@
 		echo 	"</span>\n";
 		echo 	"</form>";
 	}
+	if (permission_exists('music_on_hold_all')) {
+		if ($_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+		}
+	}
 	if (permission_exists('music_on_hold_delete') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -510,9 +519,12 @@
 					echo "	<tr class='list-header'>\n";
 					if (permission_exists('music_on_hold_delete')) {
 						echo "	<th class='checkbox'>\n";
-						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : '';\">\n";
+						echo "		<input type='checkbox' id='checkbox_all_".$row['music_on_hold_uuid']."' name='checkbox_all' onclick=\"list_all_toggle('".$row['music_on_hold_uuid']."'); document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."_hidden').value = this.checked ? 'true' : ''; checkbox_on_change(this);\">\n";
 						echo "		<input type='hidden' id='checkbox_all_".$row['music_on_hold_uuid']."_hidden' name='moh[".$row['music_on_hold_uuid']."][checked]'>\n";
 						echo "	</th>\n";
+					}
+					if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
+						echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
 					}
 					echo "		<th class='pct-50'>".$stream_details."</th>\n";
 					echo "		<th class='center shrink'>".$text['label-tools']."</th>\n";
@@ -541,9 +553,18 @@
 							echo "<tr class='list-row' href=\"".$list_row_link."\">\n";
 							if (permission_exists('music_on_hold_delete')) {
 								echo "	<td class='checkbox'>\n";
-								echo "		<input type='checkbox' name='moh[".$row['music_on_hold_uuid']."][$x][checked]' id='checkbox_".$x."' class='checkbox_".$row['music_on_hold_uuid']."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."').checked = false; }\">\n";
+								echo "		<input type='checkbox' name='moh[".$row['music_on_hold_uuid']."][$x][checked]' id='checkbox_".$x."' class='checkbox_".$row['music_on_hold_uuid']."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$row['music_on_hold_uuid']."').checked = false; }\">\n";
 								echo "		<input type='hidden' name='moh[".$row['music_on_hold_uuid']."][$x][file_name]' value=\"".escape($stream_file)."\" />\n";
 								echo "	</td>\n";
+							}
+							if ($_GET['show'] == "all" && permission_exists('music_on_hold_all')) {
+								if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
+									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+								}
+								else {
+									$domain = $text['label-global'];
+								}
+								echo "	<td>".escape($domain)."</td>\n";
 							}
 							echo "	<td class='overflow'>".escape($stream_file)."</td>\n";
 							echo "	<td class='button center no-link no-wrap'>";

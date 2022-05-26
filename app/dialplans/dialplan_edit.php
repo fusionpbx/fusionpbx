@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2021
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -86,10 +86,35 @@
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
 			$result = event_socket_request($fp, 'api show application');
-			$_SESSION['switch']['applications'] = explode("\n\n", $result);
-			$_SESSION['switch']['applications'] = explode("\n", $_SESSION['switch']['applications'][0]);
+			
+			$show_applications = explode("\n\n", $result);
+			$raw_applications = explode("\n", $show_applications[0]);
 			unset($result);
 			unset($fp);
+
+			$previous_application = null;
+			foreach($raw_applications as $row) {
+				if (strlen($row) > 0) {
+					$application_array = explode(",", $row);
+					$application = $application_array[0];
+
+					if (
+						$application != "name" 
+						&& $application != "system" 
+						&& $application != "bgsystem" 
+						&& $application != "spawn" 
+						&& $application != "bg_spawn" 
+						&& $application != "spawn_stream" 
+						&& stristr($application, "[") != true
+					) {
+						if ($application != $previous_application) {
+							$applications[] = $application;
+						}
+					}
+					$previous_application = $application;
+				}
+			}
+			$_SESSION['switch']['applications'] = $applications;
 		} else {
 			$_SESSION['switch']['applications'] = Array();
 		}
@@ -221,7 +246,13 @@
 						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
 							$dialplan_detail_type = $row["dialplan_detail_type"];
 						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_type"])) {
+							$dialplan_detail_type = $row["dialplan_detail_type"];
+						}
 						if (!preg_match("/system/i", $row["dialplan_detail_data"])) {
+							$dialplan_detail_data = $row["dialplan_detail_data"];
+						}
+						if (!preg_match("/spawn/i", $row["dialplan_detail_data"])) {
 							$dialplan_detail_data = $row["dialplan_detail_data"];
 						}
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
@@ -826,47 +857,42 @@
 									echo "	</optgroup>\n";
 								}
 								else {
-									echo "		<option value=''></option>\n";
+									echo "	<option value=''></option>\n";
 								}
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "condition" || $dialplan_detail_tag == "regex") {
-									echo "		<optgroup label='".$text['optgroup-condition_or_regex']."'>\n";
-									echo "		<option value='context'>".$text['option-context']."</option>\n";
-									echo "		<option value='username'>".$text['option-username']."</option>\n";
-									echo "		<option value='rdnis'>".$text['option-rdnis']."</option>\n";
-									echo "		<option value='destination_number'>".$text['option-destination_number']."</option>\n";
-									echo "		<option value='dialplan'>".$text['option-dialplan']."</option>\n";
-									echo "		<option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
-									echo "		<option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
+									echo "	<optgroup label='".$text['optgroup-condition_or_regex']."'>\n";
 									echo "		<option value='ani'>".$text['option-ani']."</option>\n";
 									echo "		<option value='ani2'>".$text['option-ani2']."</option>\n";
-									echo "		<option value='uuid'>".$text['option-uuid']."</option>\n";
-									echo "		<option value='source'>".$text['option-source']."</option>\n";
+									echo "		<option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
+									echo "		<option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
 									echo "		<option value='chan_name'>".$text['option-chan_name']."</option>\n";
+									echo "		<option value='context'>".$text['option-context']."</option>\n";
+									echo "		<option value='destination_number'>".$text['option-destination_number']."</option>\n";
+									echo "		<option value='dialplan'>".$text['option-dialplan']."</option>\n";
 									echo "		<option value='network_addr'>".$text['option-network_addr']."</option>\n";
+									echo "		<option value='rdnis'>".$text['option-rdnis']."</option>\n";
+									echo "		<option value='source'>".$text['option-source']."</option>\n";
+									echo "		<option value='username'>".$text['option-username']."</option>\n";
+									echo "		<option value='uuid'>".$text['option-uuid']."</option>\n";
+									echo "		<option value='\${call_direction}'>\${call_direction}</option>\n";
 									echo "		<option value='\${number_alias}'>\${number_alias}</option>\n";
-									echo "		<option value='\${sip_from_uri}'>\${sip_from_uri}</option>\n";
-									echo "		<option value='\${sip_from_user}'>\${sip_from_user}</option>\n";
-									echo "		<option value='\${sip_from_host}'>\${sip_from_host}</option>\n";
+									echo "		<option value='\${sip_contact_host}'>\${sip_contact_host}</option>\n";
 									echo "		<option value='\${sip_contact_uri}'>\${sip_contact_uri}</option>\n";
 									echo "		<option value='\${sip_contact_user}'>\${sip_contact_user}</option>\n";
-									echo "		<option value='\${sip_contact_host}'>\${sip_contact_host}</option>\n";
+									echo "		<option value='\${sip_h_Diversion}'>\${sip_h_Diversion}</option>\n";
+									echo "		<option value='\${sip_from_host}'>\${sip_from_host}</option>\n";
+									echo "		<option value='\${sip_from_uri}'>\${sip_from_uri}</option>\n";
+									echo "		<option value='\${sip_from_user}'>\${sip_from_user}</option>\n";
 									echo "		<option value='\${sip_to_uri}'>\${sip_to_uri}</option>\n";
 									echo "		<option value='\${sip_to_user}'>\${sip_to_user}</option>\n";
-									echo "		<option value='\${sip_to_host}'>\${sip_to_host}</option>\n";
 									echo "		<option value='\${toll_allow}'>\${toll_allow}</option>\n";
-									echo "		<option value='\${sip_h_Diversion}'>\${sip_h_Diversion}</option>\n";
 									echo "	</optgroup>\n";
 								//}
 								//if (strlen($dialplan_detail_tag) == 0 || $dialplan_detail_tag == "action" || $dialplan_detail_tag == "anti-action") {
 									echo "	<optgroup label='".$text['optgroup-applications']."'>\n";
 									if (is_array($_SESSION['switch']['applications'])) {
-										foreach ($_SESSION['switch']['applications'] as $row) {
-											if (strlen($row) > 0) {
-												$application = explode(",", $row);
-												if ($application[0] != "name" && $application[0] != "system" && stristr($application[0], "[") != true) {
-													echo "	<option value='".escape($application[0])."'>".escape($application[0])."</option>\n";
-												}
-											}
+										foreach ($_SESSION['switch']['applications'] as $application) {
+											echo "	<option value='".escape($application)."'>".escape($application)."</option>\n";
 										}
 									}
 									echo "	</optgroup>\n";

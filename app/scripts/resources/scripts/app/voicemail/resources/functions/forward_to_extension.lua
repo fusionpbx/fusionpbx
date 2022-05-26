@@ -155,6 +155,7 @@
 
 		--send the message waiting event
 			mwi_notify(forward_voicemail_id.."@"..domain_name, new_messages, saved_messages)
+			blf_notify(tonumber(new_messages) > 0, "voicemail+" .. forward_voicemail_id .. "@" .. domain_name)
 
 		--if local after email is true then copy the recording file
 			if (storage_type ~= "base64") then

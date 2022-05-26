@@ -122,6 +122,7 @@
 					$_SESSION["domain_uuid"] = $result["domain_uuid"];
 					//$_SESSION["domain_name"] = $result["domain_name"];
 					$_SESSION["user_uuid"] = $result["user_uuid"];
+					$_SESSION["context"] = $result['domain_name'];
 
 				//user session array
 					$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
@@ -297,7 +298,17 @@
 
 		//if logged in, redirect to login destination
 			if (!isset($_REQUEST["key"])) {
-				if (isset($_SESSION['login']['destination']['url'])) {
+				if (isset($_SESSION['redirect_path'])) {
+					$redirect_path = $_SESSION['redirect_path'];
+					unset($_SESSION['redirect_path']);
+					// prevent open redirect attacks. redirect url shouldn't contain a hostname
+					$parsed_url = parse_url($redirect_path);
+					if ($parsed_url['host']) {
+						die("Was someone trying to hack you?");
+					}
+					header("Location: ".$redirect_path);
+				}
+				elseif (isset($_SESSION['login']['destination']['url'])) {
 					header("Location: ".$_SESSION['login']['destination']['url']);
 				} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");

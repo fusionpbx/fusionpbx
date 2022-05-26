@@ -48,6 +48,11 @@
 					if (string.len(greeting_id) > 0 and greeting_id ~= "default"
 						and greeting_id ~= "11") then
 
+						--greeting set to none, return without a greeting
+							if (greeting_id == "0") then
+								return true;
+							end
+
 						--sleep
 							session:execute("playback","silence_stream://200");
 

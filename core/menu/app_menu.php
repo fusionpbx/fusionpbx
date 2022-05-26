@@ -8,7 +8,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Διαχειριστής Μενού";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Gestor de Menú";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Gestion des Menus";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion des Menus";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Gestione dei Menu";
@@ -34,12 +34,12 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Αρχική";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Casa";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Acceuil";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Maison";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Home";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dom";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Główne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Principal";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Casa";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
@@ -65,7 +65,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Λογαριασμοί";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Cuentas";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Comptes";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Comptes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Credenziali";
@@ -93,7 +93,7 @@
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Applikationen";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Aplicaciones";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Applications";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Apps";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
@@ -124,7 +124,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Κατάσταση";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Estado";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Etat";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Etat";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato";
@@ -153,12 +153,12 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Για προχωρημένους";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Avanzado";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Avancé";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Avancé";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Avanzato";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
-	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zaawansowany";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zaawansowane";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Avançado";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Avançado";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
@@ -181,7 +181,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = "Είσοδος";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Ingresar";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Connexion";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Connexion";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Login";
@@ -209,7 +209,7 @@
 	$apps[$x]['menu'][$y]['title']['el-gr'] = 'Έξοδος';
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = 'Salir';
-	$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Déconnexion";
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Déconnexion';
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Logout";

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2020
+ Portions created by the Initial Developer are Copyright (C) 2008-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -138,8 +138,10 @@
 				//get a new voicemail_uuid
 					if ($action == "add" && permission_exists('voicemail_add')) {
 						$voicemail_uuid = uuid();
-						//If adding a mailbox, set the default transcribe behavior
-						$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
+						//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
+						if (!permission_exists('voicemail_transcription_enabled') && isset($_SESSION['voicemail']['transcription_enabled_default']['boolean'])) {
+							$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
+						}
 					}
 
 				//add common array fields
@@ -315,7 +317,7 @@
 //set defaults
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
-	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: "false"; }	
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }	
 	if (strlen($voicemail_tutorial) == 0) { $voicemail_tutorial = "false"; }
 
 //get the greetings list
@@ -520,8 +522,8 @@
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='greeting_id'>\n";
 	echo "		<option value=''>".$text['label-default']."</option>\n";
-	$selected = ($greeting_id == 11) ? "selected" : null;
-	echo "		<option value='11' ".escape($selected).">".$text['label-name']."</option>\n";
+	echo "		<option value='0' ".(($greeting_id == "0") ? "selected='selected'" : null).">".$text['label-none']."</option>\n";
+  echo "		<option value='11' ".(($greeting_id == "11") ? "selected='selected'" : null).">".$text['label-name']."</option>\n";
 	if (is_array($greetings) && @sizeof($greetings) != 0) {
 		foreach ($greetings as $greeting) {
 			$selected = ($greeting['greeting_id'] == $greeting_id) ? 'selected' : null;
@@ -650,7 +652,7 @@
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('voicemail_transcription_edit') && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == "true") {
+	if (permission_exists('voicemail_transcription_enabled') && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == "true") {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_transcription_enabled']."\n";

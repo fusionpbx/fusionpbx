@@ -45,6 +45,7 @@
 	$sql .=	"		or direction = 'local' \n";
 	$sql .=	"	) \n";
 	$sql .=	"	and (missed_call = true or bridge_uuid is null) ";
+	$sql .=	"	and hangup_cause <> 'LOSE_RACE' ";
 	if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
 		$x = 0;
 		foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
@@ -77,7 +78,7 @@
 
 //add doughnut chart
 	?>
-	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 10px;'>
+	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
 		<div style='width: 175px; height: 175px;'><canvas id='missed_calls_chart'></canvas></div>
 	</div>
 

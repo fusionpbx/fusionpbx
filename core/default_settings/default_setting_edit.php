@@ -480,7 +480,7 @@
 	elseif ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld' type='password' id='default_setting_value' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".escape($default_setting_value)."\">\n";
 	}
-	elseif ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+	elseif (substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value)."\">\n";
 	}
 	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
@@ -632,6 +632,12 @@
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
 		echo "    	<option value='shrink'>".$text['option-shrink']."</option>\n";
 		echo "    	<option value='fixed' ".($default_setting_value == "fixed" ? "selected='selected'" : null).">".$text['option-fixed']."</option>\n";
+		echo "    </select>\n";
+	}
+	elseif ($category == "theme" && $subcategory == "menu_side_item_main_sub_close" && $name == "text" ) {
+		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='automatic'>".$text['option-automatic']."</option>\n";
+		echo "    	<option value='manual' ".($default_setting_value == "manual" ? "selected='selected'" : null).">".$text['option-manual']."</option>\n";
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) {

@@ -70,6 +70,7 @@
 	$sql .= "dashboard_uuid, \n";
 	$sql .= "dashboard_name, \n";
 	$sql .= "dashboard_path, \n";
+	$sql .= "dashboard_column_span, \n";
 	$sql .= "dashboard_order, \n";
 	$sql .= "cast(dashboard_enabled as text), \n";
 	$sql .= "dashboard_description \n";
@@ -170,7 +171,7 @@
 	<?php
 
 //show the content
-	echo "<form id='dashboard' method='POST'>\n";
+	echo "<form id='dashboard' method='POST' onsubmit='setFormSubmitting()'>\n";
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dashboard']."</b></div>\n";
 	echo "	<div class='actions'>\n";
@@ -209,7 +210,7 @@
 }
 
 .widget {
-  /*background-color: #eee*/
+  /*background-color: #eee;*/
 }
 
 .widgets {
@@ -222,31 +223,69 @@
 
 /* Screen smaller than 550px? 1 columns */
 @media (max-width: 575px) {
-  .widgets { grid-template-columns: repeat(1, 1fr); }
+  .widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
   .col-num { grid-column: span 1; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			if (is_numeric($dashboard_column_span)) {
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span 1;\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 550px? 2 columns */
 @media (min-width: 575px) {
-  .widgets { grid-template-columns: repeat(2, 1fr); }
+  .widgets { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_column_span = 1;
+			if (is_numeric($dashboard_column_span)) {
+				if ($row['dashboard_column_span'] > 2) {
+					$dashboard_column_span = 2;
+				}
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 1300px? 3 columns */
 @media (min-width: 1300px) {
-  .widgets { grid-template-columns: repeat(3, 1fr); }
+  .widgets { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
+	<?php
+		foreach($dashboard as $row) {
+			$dashboard_name = strtolower($row['dashboard_name']);
+			$dashboard_name = str_replace(" ", "_", $dashboard_name);
+			$dashboard_column_span = $row['dashboard_column_span'];
+			if (is_numeric($dashboard_column_span)) {
+				echo "#".$dashboard_name." {\n";
+				echo "	grid-column: span ".$dashboard_column_span.";\n";
+				echo "}\n";
+			}
+		}
+	?>
 }
 
 /* Screen larger than 1500px? 4 columns */
 @media (min-width: 1500px) {
-  .widgets { grid-template-columns: repeat(4, 1fr); }
+  .widgets { grid-template-columns: repeat(4, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
 
 /* Screen larger than 2000px? 5 columns */
 @media (min-width: 2000px) {
-  .widgets { grid-template-columns: repeat(5, 1fr); }
+  .widgets { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
   .col-num { grid-column: span 2; }
 }
 
@@ -260,7 +299,11 @@
 	foreach($dashboard as $row) {
 		$dashboard_name = strtolower($row['dashboard_name']);
 		$dashboard_name = str_replace(" ", "_", $dashboard_name);
-		echo "<div class='widget' id='".$dashboard_name."' draggable='true'>\n";
+		$draggable = '';
+		if ($_GET['edit'] == 'true') {
+			$draggable = "draggable='true'";
+		}
+		echo "<div class='widget' id='".$dashboard_name."' ".$draggable.">\n";
 			include($row['dashboard_path']);
 		echo "</div>\n";
 		$x++;
@@ -295,8 +338,8 @@
 		}
 
 		.hud_box .hud_box:hover {
-			transform: none;
 			box-shadow: none;
+			transform: none;
 		}
 
 		.ghost {
@@ -306,6 +349,7 @@
 		</style>
 
 		<script>
+		//make widgets draggable
 		var widgets = document.getElementById('widgets');
 		var sortable = Sortable.create(widgets, {
 			animation: 150,
@@ -313,16 +357,15 @@
 			preventOnFilter: true,
 			ghostClass: 'ghost',
 			onChange: function (evt) {
-				//re-render chart when dragged
-				if (evt.item.id != 'ring_group_forward' && evt.item.id != 'call_forward') {
-					let chart = eval(evt.item.id + "_chart");
+				//check if chart exists
+				let chart_status = Chart.getChart(evt.item.id + "_chart");
+				if(chart_status !== undefined && chart_status !== null) {
 					let context = eval(evt.item.id + "_chart_context");
+					let chart = Chart.getChart(context);
 					let config = eval(evt.item.id + "_chart_config");
-			
-					let chart_status = Chart.getChart(context);
-					if (chart_status != undefined) {
-						chart_status.destroy();
-					}
+
+					//re render the chart
+					chart.destroy();
 					chart.options.animation = { duration: 0 };
 					chart = new Chart(context, config);
 				}
@@ -336,6 +379,25 @@
 				document.getElementById('widget_order').value = widget_ids_list;
 			},
 		});
+
+		/*
+		//warn the user before leaving the page
+		var formSubmitting = false;
+		var setFormSubmitting = function() { formSubmitting = true; };
+
+		window.onload = function() {
+			window.addEventListener("beforeunload", function (e) {
+				var confirmationMessage = 'You have unsaved changes which will not be saved.';
+
+				if (formSubmitting) {
+					return undefined;
+				}
+
+				(e || window.event).returnValue = confirmationMessage;
+				return confirmationMessage;
+			});
+		};
+		*/
 		</script>
 		<?php
 	} //end edit

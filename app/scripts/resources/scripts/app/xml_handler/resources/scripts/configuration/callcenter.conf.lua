@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2015-2021 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2015-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,7 @@
 			elseif #dsn > 0 then
 				table.insert(xml, [[                            <param name="odbc-dsn" value="]]..database["switch"]..[["/>]]);
 			end
+			table.insert(xml, [[                          <param name="cc-instance-id" value="]]..hostname..[["/>]]);
 			-- table.insert(xml, [[                          <param name="dbname" value="]]..database_dir..[[/call_center.db"/>]]);
 			table.insert(xml, [[                    </settings>]]);
 
@@ -155,7 +156,9 @@
 		--get the agents
 			table.insert(xml, [[                    <agents>]]);
 			sql = "select SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) as extension,  ";
-			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1)) as extension_uuid, a.*, d.domain_name  ";
+			sql = sql .. "(select extension_uuid from v_extensions where domain_uuid = a.domain_uuid ";
+			sql = sql .. "and extension = SPLIT_PART(SPLIT_PART(a.agent_contact, '/', 2), '@', 1) limit 1) as extension_uuid, ";
+			sql = sql .. "a.*, d.domain_name  ";
 			sql = sql .. "from v_call_center_agents as a, v_domains as d ";
 			sql = sql .. "where d.domain_uuid = a.domain_uuid; ";
 			--sql = "select * from v_call_center_agents as a, v_domains as d ";
@@ -206,24 +209,27 @@
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 										--add the call_timeout
 										pos = string.find(agent_contact, "}");
-										first = string.sub(agent_contact, 0, pos);
+										first = string.sub(agent_contact, 0, pos -1);
+										last = string.sub(agent_contact, pos);
+										agent_contact = first..[[,domain_name=]]..domain_name..[[,domain_uuid=]]..domain_uuid..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
+								else
+										--add the call_timeout
+										pos = string.find(agent_contact, "}");
+										first = string.sub(agent_contact, 0, pos - 1);
 										last = string.sub(agent_contact, pos);
 										agent_contact = first..[[,sip_h_caller_destination=${caller_destination},call_timeout=]]..agent_call_timeout..last;
-								else
-										--the string has the call timeout
-										agent_contact = agent_contact;
 								end
-							else
+						else
 								--found
 								pos = string.find(agent_contact, "}");
-								first = string.sub(agent_contact, 0, pos);
+								first = string.sub(agent_contact, 0, pos - 1);
 								last = string.sub(agent_contact, pos);
 								if (string.find(agent_contact, 'call_timeout') == nil) then
 									--add the call_timeout and confirm
-									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
+									agent_contact = first..','..confirm..',sip_h_caller_destination=${caller_destination},domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination},call_timeout='..agent_call_timeout..last;
 								else
 									--add confirm
-									agent_contact = tmp_first..',sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;
+									agent_contact = tmp_first..',domain_name="..domain_name..",domain_uuid="..domain_uuid..",sip_h_caller_destination=${caller_destination},'..confirm..tmp_last;
 								end
 							end
 						end

@@ -759,7 +759,16 @@ if (!class_exists('domains')) {
 		 */
 		public function settings() {
 
-			//get the list of installed apps from the core and mod directories
+			//get an array of the default settings UUIDs
+				$sql = "select * from v_default_settings ";
+				$database = new database;
+				$result = $database->select($sql, null, 'all');
+				foreach($result as $row) {
+					$setting[$row['default_setting_uuid']] = 1;
+				}
+				unset($sql);
+
+			//get the list of default settings
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as $config_path) {
@@ -769,109 +778,33 @@ if (!class_exists('domains')) {
 				$x = 0;
 				foreach ($apps as $app) {
 					if (is_array($app['default_settings'])) {
-						foreach ($app['default_settings'] as $setting) {
-								$array[$x] = ($setting);
-								$array[$x]['app_uuid'] = $app['uuid'];
+						foreach ($app['default_settings'] as $row) {
+							if (!isset($setting[$row['default_setting_uuid']])) {
+								$array['default_settings'][$x] = $row;
+								$array['default_settings'][$x]['app_uuid'] = $app['uuid'];
 								$x++;
+							}
 						}
 					}
 				}
-
-			//get an array of the default settings
-				$sql = "select * from v_default_settings ";
-				$sql .= "order by default_setting_category asc, default_setting_subcategory asc";
-				$database = new database;
-				$default_settings = $database->select($sql, null, 'all');
-				unset($sql);
-
-			//named array
-				foreach ($default_settings as $row) {
-					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['uuid'] = $row['default_setting_uuid'];
-					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['value'] = $row['default_setting_value'];
-					$default_settings[$row['default_setting_category']][$row['default_setting_subcategory']][$row['default_setting_name']]['app_uuid'] = $row['app_uuid'];
-					//echo "[".$row['default_setting_category']."][".$row['default_setting_subcategory']."][".$row['default_setting_name']."]  = ".$row['default_setting_value']."\n";
-				}
-
-			//update matching settings with the correct default_setting_uuid and app_uuid and if they exist remove them from the array
-				$x = 0;
-				foreach ($array as $row) {
-					$category = $row['default_setting_category'];
-					$subcategory = $row['default_setting_subcategory'];
-					$name = $row['default_setting_name'];
-
-					if (isset($default_settings[$category][$subcategory][$name]['value'])) {
-						//set the variables
-							$default_setting_uuid = $default_settings[$category][$subcategory][$name]['uuid'];
-							$app_uuid = $default_settings[$category][$subcategory][$name]['app_uuid'];
-						//update matching settings
-							if ($app_uuid == null) {
-								$sql = "update v_default_settings set ";
-								if ($default_setting_uuid != $row['default_setting_uuid']) {
-									$sql .= "default_setting_uuid = :default_setting_uuid, ";
-								}
-								$sql .= "app_uuid = :app_uuid ";
-								$sql .= "where default_setting_uuid = :default_setting_uuid';";
-								$parameters['default_setting_uuid'] = $row['default_setting_uuid'];
-								$parameters['app_uuid'] = $row['app_uuid'];
-								$database = new database;
-								$default_settings = $database->select($sql, $parameters, 'all');
-								unset($sql, $parameters);
-								//echo "\n";
-							}
-
-						//remove settings from the array that were found
-							unset($array[$x]);
-					}
-					$x++;
-				}
-				unset($default_settings);
-
-			//get the missing count
-				$array_count = count($array);
 
 			//add the missing default settings
 				if (is_array($array) && count($array) > 0) {
-					foreach ($array as $row) {
-						$sql = "insert into v_default_settings (";
-						$sql .= "default_setting_uuid, ";
-						$sql .= "default_setting_category, ";
-						$sql .= "default_setting_subcategory, ";
-						$sql .= "default_setting_name, ";
-						$sql .= "default_setting_value, ";
-						if ($row['default_setting_order']) {
-							$sql .= "default_setting_order, ";
-						}
-						$sql .= "default_setting_enabled, ";
-						$sql .= "default_setting_description ";
-						$sql .= ") values \n";
-						$sql .= "(";
-						$sql .= ":default_setting_uuid, ";
-						$sql .= ":default_setting_category, ";
-						$sql .= ":default_setting_subcategory, ";
-						$sql .= ":default_setting_name, ";
-						$sql .= ":default_setting_value, ";
-						if ($row['default_setting_order']) {
-							$sql .= ":default_setting_order, ";
-						}
-						$sql .= ":default_setting_enabled, ";
-						$sql .= ":default_setting_description ";
-						$sql .= ");";
-						$parameters['default_setting_uuid'] = $row['default_setting_uuid'];
-						$parameters['default_setting_category'] = $row['default_setting_category'];
-						$parameters['default_setting_subcategory'] = $row['default_setting_subcategory'];
-						$parameters['default_setting_name'] = $row['default_setting_name'];
-						$parameters['default_setting_value'] = $row['default_setting_value'];
-						if ($row['default_setting_order']) {
-							$parameters['default_setting_order'] = $row['default_setting_order'];
-						}
-						$parameters['default_setting_enabled'] = $row['default_setting_enabled'];
-						$parameters['default_setting_description'] = $row['default_setting_description'];
+					//grant temporary permissions
+						$p = new permissions;
+						$p->add('default_setting_add', 'temp');
+
+					//execute insert
 						$database = new database;
-						$default_settings = $database->select($sql, $parameters, 'all');
-						unset($sql, $parameters);
-					}
-					unset($array);
-				}		
+						$database->app_name = 'default_settings';
+						$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+						$database->save($array, false);
+						unset($array);
+
+					//revoke temporary permissions
+						$p->delete('default_setting_add', 'temp');
+				}
+
 		} //end settings method
 	}
 }
