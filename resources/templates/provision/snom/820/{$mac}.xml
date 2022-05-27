@@ -54,7 +54,18 @@
 <fkey context="active" idx="10">blf sip:1010@{$domain_name}</fkey>
 <fkey context="active" idx="11">blf sip:1011@{$domain_name}</fkey>
 </function-keys>
+  <tbook e="2" complete="true">
+    {foreach $contacts as $row}
+    <item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
+      <name>{$row.contact_name_given} {$row.contact_name_family}</name>
+      <number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
+    </item>
+    {/foreach}
+  </tbook>
 <dialplan>
+    {foreach $snom_dialplan as $row}
+      {$row}
+    {/foreach}
 <!-- Handset Dialplan Mask, VERY similar to Cisco format... -->
 <template Timeout="0" User="phone" match="0" rewrite="" scheme="sip"/>
 <template Timeout="8" User="phone" match="1*" rewrite="" scheme="sip"/>

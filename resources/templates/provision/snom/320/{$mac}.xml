@@ -124,6 +124,10 @@
         <first_name>{$row.directory_full_name} ({$row.extension})</first_name>
     </item>
 {/foreach}
-
 </tbook>
+  <dialplan e="2">
+    {foreach $snom_dialplan as $row}
+      {$row}
+    {/foreach}
+  </dialplan>
 </settings>
