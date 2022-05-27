@@ -233,7 +233,7 @@
 		cmd = cmd .. "fax_prefix=false ";
 	end
 	freeswitch.consoleLog("notice", "[fax] command: " .. cmd .. "\n");
-	result = api:executeString(cmd);
+	result = api:executeString("bg_system "..cmd);
 
 --add to fax logs
 	sql = "insert into v_fax_logs ";
