@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -143,6 +143,11 @@
 		//add the access_control_uuid
 			if (!is_uuid($_POST["access_control_uuid"])) {
 				$access_control_uuid = uuid();
+			}
+
+		//protect users by forcing default to deny
+			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
+				$access_control_default = 'deny';
 			}
 
 		//prepare the array
