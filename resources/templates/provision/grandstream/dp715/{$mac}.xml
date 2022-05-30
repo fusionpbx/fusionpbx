@@ -681,7 +681,7 @@
 		<!-- Self-Defined Time Zone -->
 		<P246>MTZ+6MDT+5,M3.2.0,M11.1.0</P246>
 		<!-- Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
-		<P143>0</P143>
+		{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 		<!-- Language. 0 - English, 10 - Spanish IVR -->
 		<P342>0</P342>
