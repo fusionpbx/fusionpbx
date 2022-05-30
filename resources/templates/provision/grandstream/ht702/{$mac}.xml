@@ -1795,7 +1795,7 @@
 <!-- Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-<P143>0</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!-- Language. 0 - English, 4 - Chinese, 10 - Spanish IVR -->
 <!-- Number: 0, 4, 10 -->
