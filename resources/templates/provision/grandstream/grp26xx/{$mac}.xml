@@ -7459,7 +7459,7 @@
 
     <!-- # Allow DHCP Option 2 to Override Time Zone Setting -->
     <!-- # Number: 0, 1 -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Self Defined Time Zone. Max length allowed is 64 characters -->
     <!-- # String -->
