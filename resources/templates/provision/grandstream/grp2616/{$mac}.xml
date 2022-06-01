@@ -7606,7 +7606,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
-    <P1565>2</P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
     <!-- # DND Override. 0 - Off, 1 - Allow All, 2 - Allow Only Contacts, 3 - Allow Only Favourites. Default is 0 -->
     <!-- # Number: 0,1,2,3 -->
