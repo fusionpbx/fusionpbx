@@ -2016,6 +2016,12 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 		border-color: #41b9eb;
 		}
 
+	div.op_valet_park_active {
+		border-width: 1px 3px;
+		background-color: #B9A6FC;
+		border-color: #B9A6FC;
+		}
+
 	table.op_ext, table.off_ext {
 		width: 100%;
 		height: 70px;
@@ -2062,6 +2068,14 @@ header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
 	td.op_state_active {
 		background-color: #e1ffe2;
+		}
+
+	td.op_valet_park_active {
+		background-color: #ECE3FF;
+		}
+
+	table.op_valet_park_active {
+		background-color: #B9A6FC;
 		}
 
 	table.op_state_ringing {

@@ -42,7 +42,7 @@ if (defined('STDIN')) {
 $IS_WINDOWS = stristr(PHP_OS, 'WIN') ? true : false;
 
 if (!function_exists('exec_in_dir')) {
-	function exec_in_dir($dir, $cmd, &$ok){
+	function exec_in_dir($dir, $cmd, &$ok) {
 		$args = func_get_args();
 		$cwd = getcwd();
 		chdir($dir);
@@ -52,7 +52,7 @@ if (!function_exists('exec_in_dir')) {
 		if ($cwd)
 			chdir($cwd);
 		$ok = ($ret == 0);
-		return join($output, "\n");
+		return implode("\n", $output);
 	}
 }
 
@@ -83,23 +83,23 @@ if (!function_exists('path_join')) {
 			$path = trim( $path, '/' );
 		}
 
-		if ($prefix === null){
+		if ($prefix === null) {
 			return '';
 		}
 
 		$paths = array_filter($paths);
-		return $prefix . join('/', $paths);
+		return $prefix . implode('/', $paths);
 	}
 }
 
 if (!function_exists('tiff2pdf')) {
-	function tiff2pdf($tiff_file_name){
+	function tiff2pdf($tiff_file_name) {
 		//convert the tif to a pdf
 		//Ubuntu: apt-get install libtiff-tools
 
 		global $IS_WINDOWS;
 
-		if (!file_exists($tiff_file_name)){
+		if (!file_exists($tiff_file_name)) {
 			echo "tiff file does not exists";
 			return false; // "tiff file does not exists";
 		}
@@ -108,18 +108,18 @@ if (!function_exists('tiff2pdf')) {
 		$tiff_file = pathinfo($tiff_file_name);
 		$dir_fax = $tiff_file['dirname'];
 		$fax_file_name = $tiff_file['filename'];
-		$pdf_file_name = path_join( $dir_fax, $fax_file_name . '.pdf' );
+		$pdf_file_name = path_join($dir_fax, $fax_file_name . '.pdf');
 
 		if (file_exists($pdf_file_name)) {
 			return $pdf_file_name;
 		}
 
 		$dir_fax_temp = $_SESSION['server']['temp']['dir'];
-		if (!$dir_fax_temp){
+		if (!$dir_fax_temp) {
 			$dir_fax_temp = path_join(dirname($dir_fax), 'temp');
 		}
 
-		if (!file_exists($dir_fax_temp)){
+		if (!file_exists($dir_fax_temp)) {
 			echo "can not create temporary directory";
 			return false; //
 		}
@@ -127,7 +127,7 @@ if (!function_exists('tiff2pdf')) {
 		$cmd  = "tiffinfo " . correct_path($tiff_file_name) . ' | grep "Resolution:"';
 		$ok   = false;
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if (!$ok){
+		if (!$ok) {
 			echo "can not find fax resoulution";
 			return false; // "can not find fax resoulution"
 		}
@@ -135,14 +135,14 @@ if (!function_exists('tiff2pdf')) {
 		$ppi_w = 0;
 		$ppi_h = 0;
 		$tmp = array();
-		if (preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Resolution.*?(\d+).*?(\d+)/', $resp, $tmp)) {
 			$ppi_w = $tmp[1];
 			$ppi_h = $tmp[2];
 		}
 
 		$cmd = "tiffinfo " . $tiff_file_name . ' | grep "Image Width:"';
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
-		if (!$ok){
+		if (!$ok) {
 			echo "can not find fax size";
 			return false; // "can not find fax size"
 		}
@@ -150,7 +150,7 @@ if (!function_exists('tiff2pdf')) {
 		$pix_w = 0;
 		$pix_h = 0;
 		$tmp = array();
-		if (preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)){
+		if (preg_match('/Width.*?(\d+).*?Length.*?(\d+)/', $resp, $tmp)) {
 			$pix_w = $tmp[1];
 			$pix_h = $tmp[2];
 		}
@@ -177,14 +177,14 @@ if (!function_exists('tiff2pdf')) {
 		$page_width  = sprintf('%.4f', $page_width);
 		$page_height = sprintf('%.4f', $page_height);
 
-		$cmd = join(array('tiff2pdf', 
+		$cmd = implode(' ', array('tiff2pdf', 
 			'-o', correct_path($pdf_file_name),
 			correct_path($tiff_file_name),
-		), ' ');
+		));
 
 		$resp = exec_in_dir($dir_fax, $cmd, $ok);
 
-		if (!file_exists($pdf_file_name)){
+		if (!file_exists($pdf_file_name)) {
 			echo "can not create pdf: $resp";
 			return false;
 		}
@@ -194,10 +194,10 @@ if (!function_exists('tiff2pdf')) {
 }
 
 if (!function_exists('fax_split_dtmf')) {
-	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+	function fax_split_dtmf(&$fax_number, &$fax_dtmf) {
 		$tmp = array();
 		$fax_dtmf = '';
-		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
+		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)) {
 			$fax_number = $tmp[1];
 			$fax_dtmf = $tmp[2];
 		}
@@ -362,7 +362,7 @@ if (!function_exists('fax_split_dtmf')) {
 
 	$pdf_file = tiff2pdf($fax_file);
 	echo "file: $pdf_file \n";
-	if (!$pdf_file){
+	if (!$pdf_file) {
 		$fax_file_warning = 'warning: Fax image not available on server.';
 	}
 	else{
@@ -420,7 +420,7 @@ if (!function_exists('fax_split_dtmf')) {
 				fax_split_dtmf($fax_forward_number, $fax_dtmf);
 
 				$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-				if (strlen($fax_send_mode) == 0){
+				if (strlen($fax_send_mode) == 0) {
 					$fax_send_mode = 'direct';
 				}
 

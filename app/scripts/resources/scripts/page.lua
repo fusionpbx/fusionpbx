@@ -1,6 +1,6 @@
 --	page.lua
 --	Part of FusionPBX
---	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -152,10 +152,11 @@
 					end
 			end
 
-		--get the channels
+		--log the destinations
+			freeswitch.consoleLog("NOTICE", "[page] destinations "..destinations.." available\n");
+
+		--create the api object
 			api = freeswitch.API();
-			cmd_string = "show channels";
-			channel_result = api:executeString(cmd_string);
 
 		--originate the calls
 			destination_count = 0;
@@ -168,29 +169,15 @@
 
 					--prevent calling the user that initiated the page
 					if (sip_from_user ~= destination) then
-
-						--loop through channels to determine if destination is available or busy
-						destination_status = 'available';
-						channel_array = explode("\n", channel_result);
-						for index,row in pairs(channel_array) do
-							if string.find(row, destination..'@'..domain_name, nil, true) then
-								destination_status = 'busy';
-							end
+						freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
+						if destination == sip_from_user then
+							--this destination is the caller that initated the page
+						else
+							--originate the call
+							cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+							api:executeString(cmd_string);
+							destination_count = destination_count + 1;
 						end
-
-						--if available then page then originate the call with auto answer
-						if (destination_status == 'available') then
-							freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
-							if destination == sip_from_user then
-								--this destination is the caller that initated the page
-							else
-								--originate the call
-								cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
-								api:executeString(cmd_string);
-								destination_count = destination_count + 1;
-							end
-						end
-
 					end
 				end
 			end

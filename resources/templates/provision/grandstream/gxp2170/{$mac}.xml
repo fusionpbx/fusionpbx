@@ -8186,7 +8186,7 @@
 {if isset($grandstream_dhcp_option_2_timezone_override) }
     <P143>{$grandstream_dhcp_option_2_timezone_override}</P143>
 {else}
-    <P143>0</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 {/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->

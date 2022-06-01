@@ -3513,7 +3513,7 @@
     <!-- # Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode, 3 - Locked Mode. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1357>2</P1357>
+    {if isset($grandstream_configuration_via_keypad)}<P1357>{$grandstream_configuration_via_keypad}</P1357>{else}<P1357>0</P1357>{/if}
 
     <!-- # Validate Server Certificates. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -4955,7 +4955,7 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -381,6 +381,53 @@
 				}
 				$feature_event_notify->send_notify();
 				unset($feature_event_notify);
+			}
+
+		//send presence event
+			if (permission_exists('do_not_disturb')) {
+				if ($dnd_enabled == 'true') {
+					//build the event
+					$cmd = "sendevent PRESENCE_IN\n";
+					$cmd .= "proto: sip\n";
+					$cmd .= "login: ".$extension."@".$_SESSION['domain_name']."\n";
+					$cmd .= "from: ".$extension."@".$_SESSION['domain_name']."\n";
+					$cmd .= "status: Active (1 waiting)\n";
+					$cmd .= "rpid: unknown\n";
+					$cmd .= "event_type: presence\n";
+					$cmd .= "alt_event_type: dialog\n";
+					$cmd .= "event_count: 1\n";
+					$cmd .= "unique-id: ".uuid()."\n";
+					$cmd .= "Presence-Call-Direction: outbound\n";
+					$cmd .= "answer-state: confirmed\n";
+
+					//send the event
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					$switch_result = event_socket_request($fp, $cmd);
+					unset($fp);
+				}
+				else {
+					$presence = new presence;
+					if (!$presence->active($extension."@".$_SESSION['domain_name'])) {
+						//build the event
+						$cmd = "sendevent PRESENCE_IN\n";
+						$cmd .= "proto: sip\n";
+						$cmd .= "login: ".$extension."@".$_SESSION['domain_name']."\n";
+						$cmd .= "from: ".$extension."@".$_SESSION['domain_name']."\n";
+						$cmd .= "status: Active (1 waiting)\n";
+						$cmd .= "rpid: unknown\n";
+						$cmd .= "event_type: presence\n";
+						$cmd .= "alt_event_type: dialog\n";
+						$cmd .= "event_count: 1\n";
+						$cmd .= "unique-id: ".uuid()."\n";
+						$cmd .= "Presence-Call-Direction: outbound\n";
+						$cmd .= "answer-state: terminated\n";
+
+						//send the event
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						$switch_result = event_socket_request($fp, $cmd);
+						unset($fp);
+					}
+				}
 			}
 
 		//synchronize configuration
