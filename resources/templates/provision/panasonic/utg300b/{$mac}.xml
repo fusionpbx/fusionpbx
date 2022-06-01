@@ -221,7 +221,7 @@
                     <VM_NUMBER perm="!RW" access="A">*97</VM_NUMBER>
                     <DIAL_PLAN perm="!RW" access="A">[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[2-9]xxxT</DIAL_PLAN>
                     <DIAL_PLAN_NOT_MATCH_ENABLE perm="RW" access="A">Y</DIAL_PLAN_NOT_MATCH_ENABLE>
- 					<SHARED_CALL_ENABLE perm="!RW" access="A">No</SHARED_CALL_ENABLE>
+                    <SHARED_CALL_ENABLE perm="!RW" access="A">No</SHARED_CALL_ENABLE>
                     <CALLPARK_SUBSCRIBE_ENABLE perm="!RW" access="A">N</CALLPARK_SUBSCRIBE_ENABLE>
                     <RESOURCELIST_URI perm="!RW" access="A"></RESOURCELIST_URI>
                     <AUTO_KEY_ASSIGNMENT perm="RW" access="AU">Yes</AUTO_KEY_ASSIGNMENT>
@@ -311,9 +311,9 @@
                     <SIP_OUTPROXY_ADDR perm="!RW" access="A">{$row.outbound_proxy_primary}</SIP_OUTPROXY_ADDR>
                     <SIP_OUTPROXY_PORT perm="!RW" access="A">{$row.sip_port}</SIP_OUTPROXY_PORT>
 
-					{if $row.sip_transport == 'udp'}<SIP_TRANSPORT perm="!RW" access="A">0</SIP_TRANSPORT>{/if}
-					{if $row.sip_transport == 'tcp'}<SIP_TRANSPORT perm="!RW" access="A">1</SIP_TRANSPORT>{/if}
-					{if $row.sip_transport == 'tls'}<SIP_TRANSPORT perm="!RW" access="A">2</SIP_TRANSPORT>{/if}
+                    {if $row.sip_transport == 'udp'}<SIP_TRANSPORT perm="!RW" access="A">0</SIP_TRANSPORT>{/if}
+                    {if $row.sip_transport == 'tcp'}<SIP_TRANSPORT perm="!RW" access="A">1</SIP_TRANSPORT>{/if}
+                    {if $row.sip_transport == 'tls'}<SIP_TRANSPORT perm="!RW" access="A">2</SIP_TRANSPORT>{/if}
 
                     <SIP_DETECT_SSAF perm="!RW" access="A">Y</SIP_DETECT_SSAF>
                     <SIP_TIMER_B perm="!RW" access="A">32000</SIP_TIMER_B>
