@@ -3631,7 +3631,7 @@
 <!-- # Number: 0,1,2 -->
 <!-- # Mandatory -->
 {if isset($grandstream_idle_mute_function)}
-    <P1565>$grandstream_idle_mute_function</P1565>
+    <P1565>{$grandstream_idle_mute_function}</P1565>
 {else}
     <P1565>0</P1565>
 {/if}
