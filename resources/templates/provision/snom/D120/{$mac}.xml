@@ -34,6 +34,7 @@
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
     <setting_server perm="RW">{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</setting_server>
+    <settings_refresh_timer perm="RW">{if isset($snom_provision_timer_seconds)}{$snom_provision_timer_seconds}{else}0{/if}</settings_refresh_timer>
     <http_client_user perm="">{$http_auth_username}</http_client_user>
     <http_client_pass perm="">{$http_auth_password}</http_client_pass>
     <!-- Admin Access -->
