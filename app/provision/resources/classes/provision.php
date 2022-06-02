@@ -352,7 +352,7 @@ include "root.php";
 									$sql .= "where domain_uuid = :domain_uuid and device_mac_address = :device_mac_address ";
 									$parameters['domain_uuid'] = $domain_uuid;
 									$parameters['device_mac_address'] = strtolower($mac);
-									$parameters['device_provisioned_date'] = date("Y-m-d H:i:s");
+									$parameters['device_provisioned_date'] = 'now()';
 									$parameters['device_provisioned_method'] = (isset($_SERVER["HTTPS"]) ? 'https' : 'http');
 									$parameters['device_provisioned_ip'] = $_SERVER['REMOTE_ADDR'];
 									$parameters['device_provisioned_agent'] = $_SERVER['HTTP_USER_AGENT'];
