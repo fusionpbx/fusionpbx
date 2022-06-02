@@ -39,7 +39,7 @@ class auto_loader {
 
 		//save the log to the syslog server
 			if ($_REQUEST['debug'] == 'true') {
-				openlog("XML CDR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+				openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			}
 
 		//find the most relevant class name
