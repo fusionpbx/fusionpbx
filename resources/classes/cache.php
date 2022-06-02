@@ -106,6 +106,11 @@ class cache {
 	 */
 	public function delete($key) {
 
+		//debug information
+			openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, "debug: cache: [key: ".$key.", script: ".$_SERVER['SCRIPT_NAME'].", line: ".__line__."]");
+			closelog();
+
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				//connect to event socket
@@ -166,6 +171,12 @@ class cache {
 	 * Delete the entire cache
 	 */
 	public function flush() {
+
+		//debug information
+			openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+			syslog(LOG_WARNING, "debug: cache: [flush: all, script: ".$_SERVER['SCRIPT_NAME'].", line: ".__line__."]");
+			closelog();
+
 		//cache method memcache 
 			if ($_SESSION['cache']['method']['text'] == "memcache") {
 				// connect to event socket
