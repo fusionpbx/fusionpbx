@@ -276,17 +276,16 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
+									//set the voicemail_local_after_email, voicemail_tutorial, and voicemail_enabled to lower case
+									if ($field_name == 'voicemail_local_after_email' || $field_name == 'voicemail_tutorial' || $field_name == 'voicemail_enabled') {
+										$result[$key] = strtolower($result[$key]);
+									}
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
-											if ($field_name == 'voicemail_local_after_email' || $field_name == 'voicemail_tutorial' || $field_name == 'voicemail_enabled') {
-												$field_value = strtolower($result[$key]);
-											}
-											else {
-												$field_value = $result[$key];
-											}
-											$array[$table_name][$row_id][$field_name] = $field_value;
+											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
 										else {
 											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
