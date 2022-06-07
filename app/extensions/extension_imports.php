@@ -288,17 +288,20 @@
 										$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									}
 
+									//set the extension enabled to lower case
+									if ($field_name == 'enabled') {
+										$result[$key] = strtolower($result[$key]);
+									}
+
 									//build the data array
 									if (strlen($table_name) > 0) {
 										if (strlen($parent) == 0) {
 											$array[$table_name][$row_id]['domain_uuid'] = $domain_uuid;
 											$array[$table_name][$row_id][$field_name] = $result[$key];
 										}
-										else {
-											if ($field_name != "username") {
-												$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
-												$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
-											}
+										elseif ($field_name != "username") {
+											$array[$parent][$row_id][$table_name][$y]['domain_uuid'] = $domain_uuid;
+											$array[$parent][$row_id][$table_name][$y][$field_name] = $result[$key];
 										}
 
 										if ($field_name == "username") {
