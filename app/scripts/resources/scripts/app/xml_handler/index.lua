@@ -76,6 +76,7 @@
 	user_context = params:getHeader("variable_user_context");
 	call_context = params:getHeader("Caller-Context");
 	destination_number = params:getHeader("Caller-Destination-Number");
+	sip_to_user = params:getHeader("variable_sip_to_user");
 	caller_id_number = params:getHeader("Caller-Caller-ID-Number");
 	hunt_context = params:getHeader("Hunt-Context");
 	if (hunt_context ~= nil) then
