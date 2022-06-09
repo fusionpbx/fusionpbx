@@ -608,6 +608,13 @@ if (!class_exists('xml_cdr')) {
 								$record_length = urldecode($xml->variables->duration);
 							}
 						}
+						elseif (strlen($xml->variables->conference_recording) > 0) {
+							$conference_recording = urldecode($xml->variables->conference_recording);
+							$record_path = dirname($conference_recording);
+							$record_name = basename($conference_recording);
+							$record_length = urldecode($xml->variables->duration);
+						}
+
 						elseif (strlen($xml->variables->current_application_data) > 0) {
 							$commands = explode(",", urldecode($xml->variables->current_application_data));
 							foreach ($commands as $command) {
