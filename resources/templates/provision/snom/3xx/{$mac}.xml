@@ -86,34 +86,33 @@
 <codec_priority_list idx="11" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
 <codec_priority_list idx="12" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
 </phone-settings>
-	<functionKeys e="2">
-		{foreach $keys["line"] as $row}
-			{if $row.device_key_line == ""}
-				{if $row.device_key_type == "line"}
-					<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
-				{else}
-					<fkey idx="{$row.device_key_id-1}" context="active" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
-				{/if}
+<functionKeys e="2">
+	{foreach $keys["line"] as $row}
+		{if $row.device_key_line == ""}
+			{if $row.device_key_type == "line"}
+				<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
 			{else}
-				{if $row.device_key_type == "line"}
-					<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
-				{else}
-					<fkey idx="{$row.device_key_id-1}" context="{$row.device_key_line}" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
-				{/if}
+				<fkey idx="{$row.device_key_id-1}" context="active" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
 			{/if}
-		{/foreach}
-	</functionKeys>
-  <tbook e="2" complete="true">
-    {foreach $contacts as $row}
-    <item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
-      <name>{$row.contact_name_given} {$row.contact_name_family}</name>
-      <number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
-    </item>
-    {/foreach}
-  </tbook>
-  <dialplan e="2">
-    {foreach $snom_dialplan as $row}
-      {$row}
-    {/foreach}
-  </dialplan>
+		{else}
+			{if $row.device_key_type == "line"}
+				<fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
+			{else}
+				<fkey idx="{$row.device_key_id-1}" context="{$row.device_key_line}" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
+			{/if}
+		{/if}
+	{/foreach}
+</functionKeys>
+<tbook e="2" complete="true">
+	{foreach $contacts as $row}
+	<item context="active" type="{if $row.category == "extensions"}colleagues{else}none{/if}" index="{$row@index}">
+		<name>{$row.contact_name_given} {$row.contact_name_family}</name>
+		<number>{if $row.category == "extensions"}{$row.phone_extension}{else}{$row.phone_number}{/if}</number>
+	</item>
+	{/foreach}
+<dialplan e="2">
+	{foreach $snom_dialplan as $row}
+		{$row}
+	{/foreach}
+</dialplan>
 </settings>
