@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -100,7 +100,8 @@
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_uuid'] = $device_vendor_uuid;
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['device_vendor_function_uuid'] = $device_vendor_function_uuid;
 							//$array['device_vendors'][$x]['device_vendor_functions'][$y]['label'] = $function['label'];
-							$array['device_vendors'][$x]['device_vendor_functions'][$y]['name'] = $function['name'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['type'] = $function['type'];
+							$array['device_vendors'][$x]['device_vendor_functions'][$y]['subtype'] = $function['subtype'];
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['value'] = $function['value'];
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['enabled'] = 'true';
 							$array['device_vendors'][$x]['device_vendor_functions'][$y]['description'] = $function['description'];
