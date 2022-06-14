@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2019
+ Portions created by the Initial Developer are Copyright (C) 2016-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -77,26 +77,23 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search term
-	$search = $_GET["search"];
-	if (strlen($search) > 0) {
-		$sql_where = "and (";
-		$sql_where .= "label like :search ";
-		$sql_where .= "or name like :search ";
-		$sql_where .= "or value like :search ";
-		$sql_where .= "or enabled like :search ";
-		$sql_where .= "or description like :search ";
-		$sql_where .= ")";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	$sql .= $sql_where;
+	if (isset($_GET["search"])) {
+		$sql .= "and (";
+		$sql .= "label like :search ";
+		$sql .= "or name like :search ";
+		$sql .= "or value like :search ";
+		$sql .= "or enabled like :search ";
+		$sql .= "or description like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$_GET["search"].'%';
+	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -110,7 +107,19 @@
 	}
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * from v_device_vendor_functions ";
+	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
+	if (isset($_GET["search"])) {
+		$sql .= "and (";
+		$sql .= "	label like :search ";
+		$sql .= "	or name like :search ";
+		$sql .= "	or value like :search ";
+		$sql .= "	or enabled like :search ";
+		$sql .= "	or description like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$_GET["search"].'%';
+	}
+	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$sql .= order_by($order_by, $order, 'name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
@@ -160,7 +169,8 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($vendor_functions ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('name', $text['label-name'], $order_by, $order);
+	echo th_order_by('type', $text['label-type'], $order_by, $order);
+	echo th_order_by('subtype', $text['label-subtype'], $order_by, $order);
 	echo th_order_by('value', $text['label-value'], $order_by, $order);
 	echo "<th class='hide-sm-dn'>".$text['label-groups']."</th>\n";
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
@@ -173,6 +183,7 @@
 	if (is_array($vendor_functions) && @sizeof($vendor_functions) != 0) {
 		$x = 0;
 		foreach ($vendor_functions as $row) {
+
 			//get the groups that have been assigned to the vendor functions
 				$sql = "select ";
 				$sql .= "fg.*, g.domain_uuid as group_domain_uuid ";
@@ -197,6 +208,7 @@
 				}
 				$group_list = isset($group_list) ? implode(', ', $group_list) : '';
 				unset ($vendor_function_groups);
+
 			//show the row of data
 				if (permission_exists('device_vendor_function_edit')) {
 					$list_row_url = "device_vendor_function_edit.php?device_vendor_uuid=".urlencode($row['device_vendor_uuid'])."&id=".urlencode($row['device_vendor_function_uuid']);
@@ -208,14 +220,25 @@
 					echo "		<input type='hidden' name='vendor_functions[$x][uuid]' value='".escape($row['device_vendor_function_uuid'])."' />\n";
 					echo "	</td>\n";
 				}
+
 				echo "	<td>\n";
 				if (permission_exists('device_vendor_function_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['name'])."</a>\n";
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['type'])."</a>\n";
 				}
 				else {
-					echo "	".escape($row['name']);
+					echo "	".escape($row['type']);
 				}
 				echo "	</td>\n";
+
+				echo "	<td>\n";
+				if (permission_exists('device_vendor_function_edit')) {
+					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['subtype'])."</a>\n";
+				}
+				else {
+					echo "	".escape($row['subtype']);
+				}
+				echo "	</td>\n";
+
 				echo "	<td>".escape($row['value'])."&nbsp;</td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($group_list)."&nbsp;</td>\n";
 				if (permission_exists('device_vendor_function_edit')) {
