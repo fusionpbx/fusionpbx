@@ -2964,6 +2964,27 @@ $text['label-device_key_type']['ru-ru'] = "Тип";
 $text['label-device_key_type']['sv-se'] = "Typ";
 $text['label-device_key_type']['uk-ua'] = "";
 
+$text['label-device_key_subtype']['en-us'] = "Subtype";
+$text['label-device_key_subtype']['en-gb'] = "Subtype";
+$text['label-device_key_subtype']['ar-eg'] = "";
+$text['label-device_key_subtype']['de-at'] = "Typ"; //copied from de-de
+$text['label-device_key_subtype']['de-ch'] = "Typ"; //copied from de-de
+$text['label-device_key_subtype']['de-de'] = "Typ";
+$text['label-device_key_subtype']['es-cl'] = "Tipo";
+$text['label-device_key_subtype']['es-mx'] = "Tipo"; //copied from es-cl
+$text['label-device_key_subtype']['fr-ca'] = "Type"; //copied from fr-fr
+$text['label-device_key_subtype']['fr-fr'] = "Type";
+$text['label-device_key_subtype']['he-il'] = "סוג";
+$text['label-device_key_subtype']['it-it'] = "Tipo";
+$text['label-device_key_subtype']['nl-nl'] = "Type";
+$text['label-device_key_subtype']['pl-pl'] = "Typ";
+$text['label-device_key_subtype']['pt-br'] = "Tipo"; //copied from pt-pt
+$text['label-device_key_subtype']['pt-pt'] = "Tipo";
+$text['label-device_key_subtype']['ro-ro'] = "";
+$text['label-device_key_subtype']['ru-ru'] = "Тип";
+$text['label-device_key_subtype']['sv-se'] = "Typ";
+$text['label-device_key_subtype']['uk-ua'] = "";
+
 $text['label-device_key_line']['en-us'] = "Line";
 $text['label-device_key_line']['en-gb'] = "Line";
 $text['label-device_key_line']['ar-eg'] = "";
