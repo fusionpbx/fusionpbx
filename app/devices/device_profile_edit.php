@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2020 All Rights Reserved.
+	Copyright (C) 2020 - 2022 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -151,6 +151,9 @@
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_id"] = $row["profile_key_id"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_vendor"] = $row["profile_key_vendor"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_type"] = $row["profile_key_type"];
+					if (isset($row["profile_key_subtype"])) {
+						$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_subtype"] = $row["profile_key_subtype"];
+					}
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_line"] = $row["profile_key_line"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_value"] = $row["profile_key_value"];
 					$array['device_profiles'][0]['device_profile_keys'][$y]["profile_key_extension"] = $row["profile_key_extension"];
@@ -276,6 +279,16 @@
 		}
 	}
 
+//determine whether to show the key_subtype
+	$show_key_subtype = false;
+	if (is_array($device_profile_keys) && @sizeof($device_profile_keys) != 0) {
+		foreach($device_profile_keys as $row) {
+			if ($row['profile_key_vendor'] == 'fanvil') {
+				$show_key_subtype = true;
+			}
+		}
+	}
+
 //get the vendors
 	$sql = "select * ";
 	$sql .= "from v_device_vendors as v ";
@@ -286,7 +299,7 @@
 	unset($sql);
 
 //get the vendor functions
-	$sql = "select v.name as vendor_name, f.name, f.value ";
+	$sql = "select v.name as vendor_name, f.type, f.subtype, f.value ";
 	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
 	$sql .= "and v.enabled = 'true' ";
@@ -310,6 +323,7 @@
 	$device_profile_keys[$x]['profile_key_id'] = '';
 	$device_profile_keys[$x]['profile_key_vendor'] = '';
 	$device_profile_keys[$x]['profile_key_type'] = '';
+	$device_profile_keys[$x]['profile_key_subtype'] = '';
 	$device_profile_keys[$x]['profile_key_line'] = '';
 	$device_profile_keys[$x]['profile_key_value'] = '';
 	$device_profile_keys[$x]['profile_key_extension'] = '';
@@ -425,6 +439,9 @@
 		echo "			<th class='vtablereq'>".$text['label-device_key_id']."</th>\n";
 		echo "			<th class='vtablereq'>".$text['label-device_key_vendor']."</th>\n";
 		echo "			<th class='vtablereq'>".$text['label-device_key_type']."</th>\n";
+		if ($show_key_subtype) {
+			echo "			<th class='vtablereq'>".$text['label-device_key_subtype']."</th>\n";
+		}
 		echo "			<th class='vtablereq'>".$text['label-device_key_line']."</th>\n";
 		echo "			<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 		if (permission_exists('device_key_extension')) {
@@ -464,6 +481,9 @@
 			echo "				<th class='vtablereq'>".$text['label-device_key_id']."</td>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_vendor']."</td>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_type']."</td>\n";
+			if ($show_key_subtype) {	
+				echo "				<th class='vtable'>".$text['label-device_key_subtype']."</th>\n";
+			}
 			echo "				<th class='vtablereq'>".$text['label-device_key_line']."</td>\n";
 			echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 			if (permission_exists('device_key_extension')) {
@@ -546,7 +566,6 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		//echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_type]' maxlength='255' value=\"".escape($row["profile_key_type"])."\">\n";
-
 		echo "				<select class='formfld' name='device_profile_keys[".$x."][profile_key_type]' id='key_type_".$x."'>\n";
 		echo "					<option value=''></option>\n";
 		$previous_vendor = '';
@@ -561,10 +580,10 @@
 				$selected = "selected='selected'";
 			}
 			if (strlen($row['profile_key_vendor']) == 0) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['name']]."</option>\n";
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['type']]."</option>\n";
 			}
 			if (strlen($row['profile_key_vendor']) > 0 && $row['profile_key_vendor'] == $function['vendor_name']) {
-				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['name']]."</option>\n";
+				echo "					<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."' $selected >".$text['label-'.$function['type']]."</option>\n";
 			}
 			$previous_vendor = $function['vendor_name'];
 			$i++;
@@ -573,8 +592,14 @@
 			echo "					</optgroup>\n";
 		}
 		echo "				</select>\n";
-
 		echo "			</td>\n";
+
+		if ($show_key_subtype) {
+			echo "			<td align='left'>\n";
+			echo "				<input class='formfld' type='text' name='device_profile_keys[".$x."][profile_key_subtype]' style='width: 120px;' maxlength='255' value=\"".escape($row['profile_key_subtype'])."\"/>\n";
+			echo "			</td>\n";
+		}
+
 		echo "			<td class='formfld'>\n";
 		echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_line]'>\n";
 		echo "					<option value=''></option>\n";
