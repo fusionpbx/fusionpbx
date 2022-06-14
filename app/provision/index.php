@@ -468,7 +468,7 @@
 		}
 		else {
 			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result){
+			if (false == $result) {
 				header("Content-Type: text/plain");
 				header("Content-Length: ".strval(strlen($file_contents)));
 			}
