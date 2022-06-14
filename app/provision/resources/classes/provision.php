@@ -699,6 +699,7 @@ include "root.php";
 								$sql .= "profile_key_category as device_key_category, ";
 								$sql .= "profile_key_vendor as device_key_vendor, ";
 								$sql .= "profile_key_type as device_key_type, ";
+								$sql .= "profile_key_subtype as device_key_subtype, ";
 								$sql .= "profile_key_line as device_key_line, ";
 								$sql .= "profile_key_value as device_key_value, ";
 								$sql .= "profile_key_extension as device_key_extension, ";
