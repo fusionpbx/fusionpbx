@@ -64,7 +64,7 @@ if (!class_exists('registrations')) {
 		/**
 		 * get the registrations
 		 */
-		public function get($profile) {
+		public function get($profile = 'all') {
 
 			//initialize the id used in the registrations array
 				$id = 0;
@@ -196,53 +196,15 @@ if (!class_exists('registrations')) {
 		 */
 		public function count($profile = 'all') {
 
-			//set the initial count value to 0
-				$count = 0;
+			//use get the registrations to count
+				$registrations = $this->get($profile);
 
-			//create the event socket connection
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-			//get the default settings
-				$sql = "select sip_profile_name from v_sip_profiles ";
-				$sql .= "where sip_profile_enabled = 'true' ";
-				if ($profile != 'all' && $profile != '') {
-					$sql .= "and sip_profile_name = :sip_profile_name ";
-					$parameters['sip_profile_name'] = $profile;
-				}
-				$database = new database;
-				$sip_profiles = $database->select($sql, $parameters, 'all');
-				if (is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
-					foreach ($sip_profiles as $field) {
-
-					//get sofia status profile information including registrations
-						$cmd = "api sofia xmlstatus profile ".$field['sip_profile_name']." reg";
-						$xml_response = trim(event_socket_request($fp, $cmd));
-
-						if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
-						$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
-						$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
-						if (strlen($xml_response) > 101) {
-							try {
-								$xml = new SimpleXMLElement($xml_response);
-							}
-							catch(Exception $e) {
-								echo $e->getMessage();
-								exit;
-							}
-							$array = json_decode(json_encode($xml), true);
-							if (is_array($array['registrations']['registration'][0])) {
-								$count = $count + @sizeof($array['registrations']['registration']);
-							}
-							else {
-								$count = $count + @sizeof($array['registrations']);
-							}
-						}
-
-					}
-				}
+			//set the count
+				$count = @sizeof($registrations);
 
 			//return the registrations count
 				return $count;
+
 		}
 
 		/**
