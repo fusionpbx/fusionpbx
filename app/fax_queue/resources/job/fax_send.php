@@ -324,8 +324,8 @@
 			$common_variables  = "for_fax=1,";
 			$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
 			$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_variables .= "domain_uuid="                   . $domain_uuid             . "',";
-			$common_variables .= "domain_name="                   . $domain_name             . "',";
+			$common_variables .= "domain_uuid='"                  . $domain_uuid             . "',";
+			$common_variables .= "domain_name='"                  . $domain_name             . "',";
 			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
 			$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
 			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
