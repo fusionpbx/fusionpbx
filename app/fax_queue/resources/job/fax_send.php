@@ -297,12 +297,6 @@
 				exit;
 			}
 
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
-			}
-
 		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
 				$fax_options = "";
