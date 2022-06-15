@@ -303,20 +303,23 @@
 				exit;
 			}
 
-		//fax options
+		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+				$fax_options = "";
 			}
 			elseif ($fax_retry_count == 1) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
 			}
 			elseif ($fax_retry_count == 2) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 3) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 4) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 5) {
 				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 
@@ -364,15 +367,14 @@
 			$dial_string = $common_variables;
 			$dial_string .= $fax_variables;
 			$dial_string .= $fax_options.",";
-			
 			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
 			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
 			$dial_string .= "fax_uri="             . $fax_uri  . ",";
-			$dial_string .= "fax_retry_attempts=1" . ",";
-			$dial_string .= "fax_retry_limit=1"    . ",";
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
+			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
 			//$dial_string .= "fax_retry_sleep=180"  . ",";
 			$dial_string .= "fax_verbose=true"     . ",";
 			//$dial_string .= "fax_use_ecm=off"      . ",";
