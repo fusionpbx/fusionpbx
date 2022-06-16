@@ -1,6 +1,6 @@
 --      xml_handler.lua
 --      Part of FusionPBX
---      Copyright (C) 2016-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--      Copyright (C) 2016-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --      All rights reserved.
 --
 --      Redistribution and use in source and binary forms, with or without
@@ -277,9 +277,11 @@
 						ivr_menu_option_action = r.ivr_menu_option_action
 						ivr_menu_option_param = r.ivr_menu_option_param
 						ivr_menu_option_description = r.ivr_menu_option_description
-						table.insert(xml, [[					<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
-						if (tonumber(ivr_menu_option_digits) and #ivr_menu_option_digits >= tonumber(direct_dial_digits_min)) then
-							table.insert(direct_dial_exclude, ivr_menu_option_digits);
+						if (#ivr_menu_option_action > 0) then
+							table.insert(xml, [[					<entry action="]]..ivr_menu_option_action..[[" digits="]]..ivr_menu_option_digits..[[" param="]]..ivr_menu_option_param..[[" description="]]..ivr_menu_option_description..[["/>]]);
+							if (tonumber(ivr_menu_option_digits) and #ivr_menu_option_digits >= tonumber(direct_dial_digits_min)) then
+								table.insert(direct_dial_exclude, ivr_menu_option_digits);
+							end
 						end
 					end);
 
