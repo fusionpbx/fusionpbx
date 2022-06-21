@@ -75,6 +75,7 @@
 				or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 				or session:getVariable("originate_disposition") == "failure"
 				or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL"
+				or session:getVariable("originate_disposition") == "UNALLOCATED_NUMBER"
 			) then
 				--set the status
 					status = 'missed'

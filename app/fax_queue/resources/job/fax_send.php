@@ -297,26 +297,23 @@
 				exit;
 			}
 
-		//check if the uuid exists if it does then end the script
-			if (trim(event_socket_request($fp, "api uuid_exists ".$origination_uuid)) == 'true') {
-				echo "FAX job in progress.\n";
-				exit;
-			}
-
-		//fax options
+		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+				$fax_options = "";
 			}
 			elseif ($fax_retry_count == 1) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
 			}
 			elseif ($fax_retry_count == 2) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 3) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 4) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 5) {
 				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 
@@ -324,8 +321,8 @@
 			$common_variables  = "for_fax=1,";
 			$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
 			$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_variables .= "domain_uuid="                   . $domain_uuid             . "',";
-			$common_variables .= "domain_name="                   . $domain_name             . "',";
+			$common_variables .= "domain_uuid='"                  . $domain_uuid             . "',";
+			$common_variables .= "domain_name='"                  . $domain_name             . "',";
 			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
 			$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
 			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
@@ -364,15 +361,14 @@
 			$dial_string = $common_variables;
 			$dial_string .= $fax_variables;
 			$dial_string .= $fax_options.",";
-			
 			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
 			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid. ",";
 			$dial_string .= "mailto_address='"     . $fax_email_address   . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from_address . "',";
 			$dial_string .= "fax_uri="             . $fax_uri  . ",";
-			$dial_string .= "fax_retry_attempts=1" . ",";
-			$dial_string .= "fax_retry_limit=1"    . ",";
+			$dial_string .= "fax_retry_attempts="  . $fax_retry_count  . ",";  
+			$dial_string .= "fax_retry_limit="     . $retry_limit  . ",";
 			//$dial_string .= "fax_retry_sleep=180"  . ",";
 			$dial_string .= "fax_verbose=true"     . ",";
 			//$dial_string .= "fax_use_ecm=off"      . ",";

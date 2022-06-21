@@ -3573,7 +3573,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
-    <P1565>2</P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
     <!-- # # Enable Auto Unmute. 0 - No, 1 - Yes. Default is 1 -->
     <P8488>0</P8488>
