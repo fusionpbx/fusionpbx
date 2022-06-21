@@ -256,10 +256,10 @@
 <Secure_One_Call_Act_Code ua="na">*18</Secure_One_Call_Act_Code>
 <Secure_One_Call_Deact_Code ua="na">*19</Secure_One_Call_Deact_Code>
 <Paging_Code ua="na">*96</Paging_Code>
-<Call_Park_Code ua="na">*68</Call_Park_Code>
-<Call_Pickup_Code ua="na">{$voicemail_number}</Call_Pickup_Code>
-<Call_Unpark_Code ua="na">*88</Call_Unpark_Code>
-<Group_Call_Pickup_Code ua="na">*98</Group_Call_Pickup_Code>
+<Call_Park_Code ua="na">#68</Call_Park_Code>
+<Call_Pickup_Code ua="na">#97</Call_Pickup_Code>
+<Call_Unpark_Code ua="na">#88</Call_Unpark_Code>
+<Group_Call_Pickup_Code ua="na">#98</Group_Call_Pickup_Code>
 <Referral_Services_Codes ua="na"/>
 <Feature_Dial_Services_Codes ua="na"/>
 <!-- Vertical Service Announcement Codes -->
