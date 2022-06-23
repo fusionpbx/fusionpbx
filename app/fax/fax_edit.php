@@ -255,6 +255,9 @@
 				return;
 			}
 
+		//sanitize the fax extension number
+			$fax_extension = preg_replace('#[^0-9]#', '', $fax_extension);
+
 		//replace the spaces with a dash
 			$fax_name = str_replace(" ", "-", $fax_name);
 
