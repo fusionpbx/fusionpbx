@@ -85,7 +85,7 @@ if ($domains_processed == 1) {
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
 						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['queue_greeting'];
+							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);
