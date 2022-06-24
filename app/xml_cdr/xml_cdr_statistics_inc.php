@@ -154,7 +154,6 @@
 	}
 	if ($missed == true) {
 		$sql_where_ands[] = "missed_call = true ";
-		$sql_where_ands[] = "and hangup_cause <> 'LOSE_RACE' ";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql_where_ands[] = "start_epoch between :start_epoch and :stop_epoch";
