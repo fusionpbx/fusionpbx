@@ -29,6 +29,21 @@
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
 
+	//permission details
+		$y=0;
+		$apps[$x]['permissions'][$y]['name'] = "switch_version";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "switch_uptime";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "switch_channels";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "switch_registrations";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+
 	//default settings
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9ff1ed88-76ba-4648-a082-d53f64947d08";
