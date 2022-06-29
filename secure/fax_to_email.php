@@ -273,7 +273,7 @@ if (!function_exists('fax_split_dtmf')) {
 		$tmp_array = explode("=", $_SERVER["argv"][9]);
 		$fax_prefix = $tmp_array[1];
 		unset($tmp_array);
-	
+
 		$tmp_array = explode("=", $_SERVER["argv"][10]);
 		$mail_from_address = $tmp_array[1];
 		unset($tmp_array);
@@ -381,7 +381,7 @@ if (!function_exists('fax_split_dtmf')) {
 		if (isset($fax_forward_number) && strlen($fax_forward_number) > 0) {
 			//show info
 				echo "fax_forward_number: $fax_forward_number\n";
-		
+
 			//add fax to the fax queue or send it directly
 			if ($_SESSION['fax_queue']['enabled']['boolean'] == 'true') {
 				//build an array to add the fax to the queue
@@ -427,7 +427,7 @@ if (!function_exists('fax_split_dtmf')) {
 				$route_array = outbound_route_to_bridge($domain_uuid, $fax_forward_number);
 				if (count($route_array) == 0) {
 					//send the internal call to the registered extension
-						$fax_uri = "user/".$fax_forward_number."@".$domain_name;
+						$fax_uri = "user/".escapeshellarg($fax_forward_number)."@".escapeshellarg($domain_name);
 						$fax_variables = "";
 				}
 				else {
@@ -435,35 +435,35 @@ if (!function_exists('fax_split_dtmf')) {
 						$fax_uri = $route_array[0];
 						$fax_variables = "";
 						foreach($_SESSION['fax']['variable'] as $variable) {
-							$fax_variables .= $variable.",";
+							$fax_variables .= escapeshellarg($variable).",";
 						}
 				}
 
 				//build the dial string
 				$dial_string = "absolute_codec_string='PCMU,PCMA',";
-				$dial_string .= "accountcode='"                  . $fax_accountcode         . "',";
-				$dial_string .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-				$dial_string .= "domain_uuid="                   . $domain_uuid . ",";
-				$dial_string .= "domain_name="                   . $domain_name . ",";
-				$dial_string .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
-				$dial_string .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
-				$dial_string .= "fax_ident='"                    . $fax_caller_id_number    . "',";
-				$dial_string .= "fax_header='"                   . $fax_caller_id_name      . "',";
-				$dial_string .= "fax_file='"                     . $fax_file                . "',";
+				$dial_string .= "accountcode='"                  . escapeshellarg($fax_accountcode)         . "',";
+				$dial_string .= "sip_h_X-accountcode='"          . escapeshellarg($fax_accountcode)         . "',";
+				$dial_string .= "domain_uuid="                   . escapeshellarg($domain_uuid)             . ",";
+				$dial_string .= "domain_name="                   . escapeshellarg($domain_name)             . ",";
+				$dial_string .= "origination_caller_id_name='"   . escapeshellarg($fax_caller_id_name)      . "',";
+				$dial_string .= "origination_caller_id_number='" . escapeshellarg($fax_caller_id_number)    . "',";
+				$dial_string .= "fax_ident='"                    . escapeshellarg($fax_caller_id_number)    . "',";
+				$dial_string .= "fax_header='"                   . escapeshellarg($fax_caller_id_name)      . "',";
+				$dial_string .= "fax_file='"                     . escapeshellarg($fax_file)                . "',";
 
 				if ($fax_send_mode != 'queue') {
 					//add more ot the dial string
 						$dial_string .= $fax_variables;
-						$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
-						$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
-						$dial_string .= "fax_uri=" . $fax_uri  . ",";
+						$dial_string .= "mailto_address='"     . escapeshellarg($mail_to_address)   . "',";
+						$dial_string .= "mailfrom_address='"   . escapeshellarg($mail_from_address) . "',";
+						$dial_string .= "fax_uri="             . escapeshellarg($fax_uri)  . ",";
 						$dial_string .= "fax_retry_attempts=1" . ",";
 						$dial_string .= "fax_retry_limit=20"   . ",";
 						$dial_string .= "fax_retry_sleep=180"  . ",";
 						$dial_string .= "fax_verbose=true"     . ",";
 						$dial_string .= "fax_use_ecm=off"      . ",";
 						$dial_string .= "api_hangup_hook='lua fax_retry.lua'";
-						$dial_string = "{" . $dial_string . "}" . $fax_uri." &txfax('".$fax_file."')";
+						$dial_string = "{" . $dial_string . "}" . escapeshellarg($fax_uri)." &txfax('".escapeshellarg($fax_file)."')";
 
 					//get the event socket information
 						$sql = "select * from v_settings ";
@@ -628,23 +628,6 @@ if (!function_exists('fax_split_dtmf')) {
 					$fp = fopen($fax_to_email_queue_dir."/emailed_faxes.log", "a");
 					fwrite($fp, $fax_file_name." received on ".$fax_extension." emailed to ".$fax_email." ".$fax_messages."\n");
 					fclose($fp);
-			}
-			else {
-				//create an instruction log to email messages once the connection to the mail server has been restored
-					$fp = fopen($fax_to_email_queue_dir."/failed_fax_emails.log", "a");
-					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email='".$fax_email."' extension=".$fax_extension." name='".$fax_file."' messages='".$fax_messages."' domain=".$domain_name." caller_id_name='".$caller_id_name."' caller_id_number=".$caller_id_number." retry=true\n");
-					fclose($fp);
-				//create a script to do the delayed mailing
-					$fp = fopen($_SESSION['server']['temp']['dir']."/failed_fax_emails.sh", "w");
-					fwrite($fp, "rm ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, "mv ".$fax_to_email_queue_dir."/failed_fax_emails.log ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, "chmod 777 ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fwrite($fp, $_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
-					fclose($fp);
-					$tmp_response = exec("chmod 777 ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh");
-				//note we use batch in order to execute when system load is low.  Alternatively this could be replaced with AT.
-					$tmp_response = exec("at -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
-				
 			}
 		}
 	}
