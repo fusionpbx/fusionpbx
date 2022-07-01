@@ -164,7 +164,7 @@
 		//check for all required data
 			$msg = '';
 			if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
-			if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+			if (strlen($destination_number) == 0 && $action == 'add') { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 			if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
