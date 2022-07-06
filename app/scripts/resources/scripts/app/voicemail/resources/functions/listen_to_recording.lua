@@ -139,7 +139,7 @@
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-				    //check if wav file exists then play the file
+				    --check if wav file exists then play the file
 				    if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav")) then
 					   stream_seek = true;
 					   if (storage_type == "http_cache") then
@@ -152,7 +152,7 @@
 					   session:streamFile("silence_stream://1000");
 					end
 
-					//check if mp3 file exists then play the file
+					--check if mp3 file exists then play the file
 					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
 					   stream_seek = true;
 					   if (storage_type == "http_cache") then
