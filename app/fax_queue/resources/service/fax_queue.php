@@ -88,12 +88,12 @@
 	}
 
 //make sure the /var/run/fusionpbx directory exists
-    if (!file_exists('/var/run/fusionpbx')) {
-        $result = mkdir('/var/run/fusionpbx', 0777, true);
-        if (!$result) {
-            die('Failed to create /var/run/fusionpbx');
-        }
-    }
+	if (!file_exists('/var/run/fusionpbx')) {
+		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		if (!$result) {
+			die('Failed to create /var/run/fusionpbx');
+		}
+	}
 
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
@@ -145,17 +145,18 @@
 
 		//get the fax messages that are waiting to send
 			$sql = "select * from v_fax_queue ";
-			$sql .= "where ";
-			$sql .= "( ";
-			$sql .= "	(fax_status = 'waiting' or fax_status = 'trying') ";
-			$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
-			$sql .= ")  ";
-			$sql .= "or ( ";
-			$sql .= "	fax_status = 'sent' ";
-			$sql .= "	and fax_email_address is not null ";
-			$sql .= "	and fax_notify_date is null ";
+			$sql .= "where hostname = :hostname ";
+			$sql .= "and ( ";
+			$sql .= "	( ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
+			$sql .= "	)  ";
+			$sql .= "	or ( ";
+			$sql .= "		fax_status = 'sent' ";
+			$sql .= "		and fax_email_address is not null ";
+			$sql .= "		and fax_notify_date is null ";
+			$sql .= "	) ";
 			$sql .= ") ";
-			$sql .= "and hostname = :hostname ";
 			$sql .= "order by domain_uuid asc ";
 			$sql .= "limit :limit ";
 			if (isset($hostname)) {
@@ -167,12 +168,13 @@
 			$parameters['limit'] = $fax_queue_limit;
 			$parameters['retry_interval'] = $fax_retry_interval;
 			if (isset($debug_sql)) {
+				echo $sql."\n";
 				print_r($parameters);
 			}
 			$database = new database;
 			$fax_queue = $database->select($sql, $parameters, 'all');
 			unset($parameters);
-			
+
 		//show results from the database
 			if (isset($debug_sql)) {
 				echo $sql."\n";
