@@ -235,7 +235,7 @@
 							$label = $text['label-11d'];
 							$abbrv = "11d";
 							break;
-						case "^\+?1?([2-9]\d{2}[2-9]\d{2}\d{4})$":
+						case "^(?:\+1|1)?([2-9]\d{2}[2-9]\d{2}\d{4})$":
 							$label = $text['label-north_america'];
 							$abbrv = "10-11-NANP";
 							break;
