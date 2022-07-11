@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010 - 2016
+--	Copyright (C) 2010 - 2022
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -352,6 +352,30 @@
 			else
 				session:execute("export", "sip_h_X-intercept_uuid="..uuid);
 				make_proxy_call(pickup_number, call_hostname)
+			end
+		end
+	end
+
+--get the call center channel variables and set in the intercepted call
+	if (uuid ~= nil) then
+		call_center_queue_uuid = api:executeString("uuid_getvar ".. uuid .." call_center_queue_uuid");
+		if (call_center_queue_uuid ~= nil) then
+			session:execute("set", "call_center_queue_uuid="..call_center_queue_uuid);
+			session:execute("set", "cc_cause=answered");
+
+			cc_side = api:executeString("uuid_getvar  ".. uuid .." cc_side");
+			if (cc_side ~= nil) then
+				session:execute("set", "cc_side="..cc_side);
+			end
+
+			cc_queue = api:executeString("uuid_getvar  ".. uuid .." cc_queue");
+			if (cc_queue ~= nil) then
+				session:execute("set", "cc_queue="..cc_queue);
+			end
+
+			cc_queue_joined_epoch = api:executeString("uuid_getvar  ".. uuid .." cc_queue_joined_epoch");
+			if (cc_queue_joined_epoch ~= nil) then
+				session:execute("set", "cc_queue_joined_epoch="..cc_queue_joined_epoch);
 			end
 		end
 	end
