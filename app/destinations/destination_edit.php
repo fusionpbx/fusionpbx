@@ -224,8 +224,11 @@
 			}
 
 		//if the user doesn't have the correct permission then 
-		//override destination_number and destination_context values
+		//override variables using information from the database
 			if (is_array($row) && @sizeof($row) != 0) {
+				if (!permission_exists('destination_prefix')) {
+					$destination_prefix = $row["destination_prefix"];
+				}
 				if (!permission_exists('destination_trunk_prefix')) {
 					$destination_trunk_prefix = $row["destination_trunk_prefix"];
 				}
@@ -239,8 +242,47 @@
 				if (!permission_exists('destination_condition_field')) {
 					$destination_condition_field = $row["destination_condition_field"];
 				}
+				if (!permission_exists('destination_caller_id_name')) {
+					$destination_caller_id_name = $row["destination_caller_id_name"];
+				}
+				if (!permission_exists('destination_caller_id_number')) {
+					$destination_caller_id_number = $row["destination_caller_id_number"];
+				}
 				if (!permission_exists('destination_context')) {
 					$destination_context = $row["destination_context"];
+				}
+				if (!permission_exists('destination_fax')) {
+					$fax_uuid = $row["fax_uuid"];
+				}
+				if (!permission_exists('provider_edit')) {
+					$provider_uuid = $row["provider_uuid"];
+				}
+				if (!permission_exists('user_edit')) {
+					$user_uuid = $row["user_uuid"];
+				}
+				if (!permission_exists('group_edit')) {
+					$group_uuid = $row["group_uuid"];
+				}
+				if (!permission_exists('destination_cid_name_prefix')) {
+					$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
+				}
+				if (!permission_exists('destination_record')) {
+					$destination_record = $row["destination_record"];
+				}
+				if (!permission_exists('destination_hold_music')) {
+					$destination_hold_music = $row["destination_hold_music"];
+				}
+				if (!permission_exists('destination_distinctive_ring')) {
+					$destination_distinctive_ring = $row["destination_distinctive_ring"];
+				}
+				if (!permission_exists('destination_accountcode')) {
+					$destination_accountcode = $row["destination_accountcode"];
+				}
+				if (!permission_exists('destination_emergency')) {
+					$destination_type_emergency = $row["destination_type_emergency"];
+				}
+				if (!permission_exists('destination_domain')) {
+					$domain_uuid = $row["domain_uuid"];
 				}
 			}
 			unset($row);
@@ -1372,16 +1414,18 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr id='tr_cid_name_prefix'>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_cid_name_prefix']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_cid_name_prefix' maxlength='255' value=\"".escape($destination_cid_name_prefix)."\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_cid_name_prefix']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('destination_cid_name_prefix')) {
+		echo "<tr id='tr_cid_name_prefix'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_cid_name_prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_cid_name_prefix' maxlength='255' value=\"".escape($destination_cid_name_prefix)."\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_cid_name_prefix']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if ($destination_type == 'inbound' && permission_exists('destination_record')) {
 		echo "<tr>\n";
