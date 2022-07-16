@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -279,9 +279,20 @@
 	if (is_array($destinations) && @sizeof($destinations) != 0) {
 		$x = 0;
 		foreach($destinations as $row) {
+
+			//prepare the destination actions
+			$destination_actions = json_decode($row['destination_actions'], true);
+			foreach($destination_actions as $action) {
+				$destination_app = $action['destination_app'];
+				$destination_data = $action['destination_data'];
+			}
+
+			//create the row link
 			if (permission_exists('destination_edit')) {
 				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']);
 			}
+
+			//show the data
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('destination_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -299,7 +310,7 @@
 				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
-			
+
 			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
 			if (permission_exists('destination_trunk_prefix')) {
 				echo "	<td>".escape($row['destination_trunk_prefix'])."&nbsp;</td>\n";
@@ -318,7 +329,7 @@
 			echo "	</td>\n";
 
 			if (!$_GET['show'] == "all") {
-				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $row['destination_app'].':'.$row['destination_data'])."&nbsp;</td>\n";
+				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $destination_app.':'.$destination_data)."&nbsp;</td>\n";
 			}
 			if (permission_exists("destination_context")) {
 				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
