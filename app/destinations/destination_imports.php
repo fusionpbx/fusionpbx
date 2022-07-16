@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -216,6 +216,11 @@
 							//add the actions
 								foreach ($array['destinations'] as $row) {
 
+									//build the array
+										$actions[0]['destination_app'] = $row['destination_app'];
+										$actions[0]['destination_data'] =  $row['destination_data'];
+										$destination_actions = json_encode($actions);
+
 									//get the values
 										$destination_number = $row['destination_number'];
 										$destination_app = $row['destination_app'];
@@ -235,6 +240,7 @@
 
 									//add the additional fields
 										$dialplan_uuid = uuid();
+										$array["destinations"][$row_id]['destination_actions'] = $destination_actions;
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
@@ -404,7 +410,7 @@
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//set the call accountcode
+											//set the destination app and data
 												if (strlen($destination_app) > 0 && strlen($destination_data) > 0) {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -412,6 +418,11 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_data;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 													$y++;
+
+													//set inline to true
+													if ($action_app == 'set' || $action_app == 'export') {
+														$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = 'true';
+													}
 
 													//increment the dialplan detail order
 													$dialplan_detail_order = $dialplan_detail_order + 10;
@@ -731,7 +742,7 @@
 			echo $text['description-destination_type']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
-			
+
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-destination_record']."\n";
