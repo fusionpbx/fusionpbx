@@ -260,7 +260,7 @@
 	}
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
 	if (!$_GET['show'] == "all") {
-		echo  "<th>". $text['label-detail_action']."</th>";
+		echo  "<th>". $text['label-destination_actions']."</th>";
 	}
 	if (permission_exists("destination_context")) {
 		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
