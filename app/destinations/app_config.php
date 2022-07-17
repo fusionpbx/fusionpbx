@@ -140,6 +140,9 @@
 		$apps[$x]['permissions'][$y]['name'] = "destination_fax";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_conditions";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_user_uuid";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -334,11 +337,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Number is used for text messages.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_conditions";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "json";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Array of Conditions.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_actions";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "json";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Array of destination Actions.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Array of Actions.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
