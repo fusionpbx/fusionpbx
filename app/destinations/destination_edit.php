@@ -1414,7 +1414,7 @@
 			echo "	<select name=\"destination_conditions[$x][condition_field]\" id='destination_conditions' class='formfld' style='".$select_style."'>\n";
 			echo "	<option value=''></option>\n";
 			if ($row['condition_field'] == 'caller_id_number') {
-				echo "		<option value=\"caller_id_number\" selected='selected'>".$text['label-option-caller_id_number']."</option>\n";
+				echo "		<option value=\"caller_id_number\" selected='selected'>".$text['option-caller_id_number']."</option>\n";
 			}
 			else {
 				echo "		<option value=\"caller_id_number\">".$text['option-caller_id_number']."</option>\n";
