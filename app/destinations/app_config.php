@@ -108,6 +108,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_prefix";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "destination_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
