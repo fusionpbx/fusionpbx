@@ -526,8 +526,14 @@
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
-		$template_array = explode("/", $device_template);
+		//get the device vendor using the mac address
 		$device_vendor = device::get_vendor($device_mac_address);
+		
+		//if the vendor was not found using the mac address use an alternative method
+		if (strlen($device_vendor) == 0) {
+			$template_array = explode("/", $device_template);
+			$device_vendor = $template_array[0];
+		}
 	}
 
 //set the sub array index
