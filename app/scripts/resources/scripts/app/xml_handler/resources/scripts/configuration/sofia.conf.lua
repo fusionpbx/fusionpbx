@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2018 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -192,6 +192,9 @@
 								end
 								if (string.len(field.ping_max) > 0) then
 									table.insert(xml, [[							<param name="ping-max" value="]] .. field.ping_max .. [["/>]]);
+								end
+								if (string.len(field.contact_in_ping) > 0) then
+									table.insert(xml, [[							<param name="contact-in-ping" value="]] .. field.contact_in_ping .. [["/>]]);
 								end
 								if (string.len(field.context) > 0) then
 									table.insert(xml, [[							<param name="context" value="]] .. field.context .. [["/>]]);

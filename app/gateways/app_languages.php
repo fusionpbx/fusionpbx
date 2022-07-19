@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 19th of September 2017 08:54:24 AM UTC
 
 $text['title-gateways']['en-us'] = "Gateways";
 $text['title-gateways']['en-gb'] = "Gateways";
@@ -485,7 +484,7 @@ $text['label-ping']['sv-se'] = "Ping";
 $text['label-ping']['uk-ua'] = "Пінг";
 
 $text['label-ping_min']['en-us'] = "Ping Min";
-$text['label-ping_min']['en-gb'] = "";
+$text['label-ping_min']['en-gb'] = "Ping Min";
 $text['label-ping_min']['ar-eg'] = "";
 $text['label-ping_min']['de-at'] = "";
 $text['label-ping_min']['de-ch'] = "";
@@ -506,7 +505,7 @@ $text['label-ping_min']['sv-se'] = "";
 $text['label-ping_min']['uk-ua'] = "";
 
 $text['label-ping_max']['en-us'] = "Ping Max";
-$text['label-ping_max']['en-gb'] = "";
+$text['label-ping_max']['en-gb'] = "Ping Max";
 $text['label-ping_max']['ar-eg'] = "";
 $text['label-ping_max']['de-at'] = "";
 $text['label-ping_max']['de-ch'] = "";
@@ -525,6 +524,27 @@ $text['label-ping_max']['ro-ro'] = "";
 $text['label-ping_max']['ru-ru'] = "";
 $text['label-ping_max']['sv-se'] = "";
 $text['label-ping_max']['uk-ua'] = "";
+
+$text['label-contact_in_ping']['en-us'] = "Contact in Ping";
+$text['label-contact_in_ping']['en-gb'] = "";
+$text['label-contact_in_ping']['ar-eg'] = "";
+$text['label-contact_in_ping']['de-at'] = "";
+$text['label-contact_in_ping']['de-ch'] = "";
+$text['label-contact_in_ping']['de-de'] = "";
+$text['label-contact_in_ping']['es-cl'] = "";
+$text['label-contact_in_ping']['es-mx'] = "";
+$text['label-contact_in_ping']['fr-ca'] = "";
+$text['label-contact_in_ping']['fr-fr'] = "";
+$text['label-contact_in_ping']['he-il'] = "";
+$text['label-contact_in_ping']['it-it'] = "";
+$text['label-contact_in_ping']['nl-nl'] = "";
+$text['label-contact_in_ping']['pl-pl'] = "";
+$text['label-contact_in_ping']['pt-br'] = "";
+$text['label-contact_in_ping']['pt-pt'] = "";
+$text['label-contact_in_ping']['ro-ro'] = "";
+$text['label-contact_in_ping']['ru-ru'] = "";
+$text['label-contact_in_ping']['sv-se'] = "";
+$text['label-contact_in_ping']['uk-ua'] = "";
 
 $text['label-password']['en-us'] = "Password";
 $text['label-password']['en-gb'] = "Password";
@@ -1177,6 +1197,48 @@ $text['description-ping']['ru-ru'] = "Введите интервал ping зд�
 $text['description-ping']['sv-se'] = "Ange interval för ping i sekunder.";
 $text['description-ping']['uk-ua'] = "Введіть інтервал пінгування в секундах.";
 
+$text['description-ping_min']['en-us'] = "Enter the ping minimum range in seconds.";
+$text['description-ping_min']['en-gb'] = "Enter the ping minimum range in seconds.";
+$text['description-ping_min']['ar-eg'] = "";
+$text['description-ping_min']['de-at'] = ""; //copied from de-de
+$text['description-ping_min']['de-ch'] = ""; //copied from de-de
+$text['description-ping_min']['de-de'] = "";
+$text['description-ping_min']['es-cl'] = "";
+$text['description-ping_min']['es-mx'] = ""; //copied from es-cl
+$text['description-ping_min']['fr-ca'] = ""; //copied from fr-fr
+$text['description-ping_min']['fr-fr'] = "";
+$text['description-ping_min']['he-il'] = "";
+$text['description-ping_min']['it-it'] = "";
+$text['description-ping_min']['nl-nl'] = "";
+$text['description-ping_min']['pl-pl'] = "";
+$text['description-ping_min']['pt-br'] = "";
+$text['description-ping_min']['pt-pt'] = "";
+$text['description-ping_min']['ro-ro'] = "";
+$text['description-ping_min']['ru-ru'] = "";
+$text['description-ping_min']['sv-se'] = "";
+$text['description-ping_min']['uk-ua'] = "";
+
+$text['description-ping_max']['en-us'] = "Enter the ping maximum range in seconds.";
+$text['description-ping_max']['en-gb'] = "Enter the ping maximum range in seconds.";
+$text['description-ping_max']['ar-eg'] = "";
+$text['description-ping_max']['de-at'] = ""; //copied from de-de
+$text['description-ping_max']['de-ch'] = ""; //copied from de-de
+$text['description-ping_max']['de-de'] = "";
+$text['description-ping_max']['es-cl'] = "";
+$text['description-ping_max']['es-mx'] = ""; //copied from es-cl
+$text['description-ping_max']['fr-ca'] = ""; //copied from fr-fr
+$text['description-ping_max']['fr-fr'] = "";
+$text['description-ping_max']['he-il'] = "";
+$text['description-ping_max']['it-it'] = "";
+$text['description-ping_max']['nl-nl'] = "";
+$text['description-ping_max']['pl-pl'] = "";
+$text['description-ping_max']['pt-br'] = "";
+$text['description-ping_max']['pt-pt'] = "";
+$text['description-ping_max']['ro-ro'] = "";
+$text['description-ping_max']['ru-ru'] = "";
+$text['description-ping_max']['sv-se'] = "";
+$text['description-ping_max']['uk-ua'] = "";
+
 $text['description-password']['en-us'] = "Enter the password here.";
 $text['description-password']['en-gb'] = "Enter the password here.";
 $text['description-password']['ar-eg'] = "";
@@ -1491,6 +1553,27 @@ $text['description-codec_prefs']['ro-ro'] = "";
 $text['description-codec_prefs']['ru-ru'] = "Задайте список кодеков в порядке предпочтения: PCMA,PCMU,G722";
 $text['description-codec_prefs']['sv-se'] = "Ange codec preferenser som en lista . Ex : PCMA , PCMU , G722";
 $text['description-codec_prefs']['uk-ua'] = "";
+
+$text['description-contact_in_ping']['en-us'] = "Select whether to add contact in the ping. ";
+$text['description-contact_in_ping']['en-gb'] = "Select whether to add contact in the ping.";
+$text['description-contact_in_ping']['ar-eg'] = "";
+$text['description-contact_in_ping']['de-at'] = ""; //copied from de-de
+$text['description-contact_in_ping']['de-ch'] = ""; //copied from de-de
+$text['description-contact_in_ping']['de-de'] = "";
+$text['description-contact_in_ping']['es-cl'] = "";
+$text['description-contact_in_ping']['es-mx'] = ""; //copied from es-cl
+$text['description-contact_in_ping']['fr-ca'] = ""; //copied from fr-fr
+$text['description-contact_in_ping']['fr-fr'] = "";
+$text['description-contact_in_ping']['he-il'] = "";
+$text['description-contact_in_ping']['it-it'] = "";
+$text['description-contact_in_ping']['nl-nl'] = "";
+$text['description-contact_in_ping']['pl-pl'] = "";
+$text['description-contact_in_ping']['pt-br'] = "";
+$text['description-contact_in_ping']['pt-pt'] = "";
+$text['description-contact_in_ping']['ro-ro'] = "";
+$text['description-contact_in_ping']['ru-ru'] = "";
+$text['description-contact_in_ping']['sv-se'] = "";
+$text['description-contact_in_ping']['uk-ua'] = "";
 
 $text['description-channels']['en-us'] = "Maximum number of simultaneous channels available in the gateway.";
 $text['description-channels']['en-gb'] = "Maximum number of simultaneous channels available in the gateway.";
