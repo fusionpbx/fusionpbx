@@ -432,7 +432,7 @@
 						//set the last destination_app and destination_data variables
 							foreach($destination_actions as $action) {
 								$action_array = explode(":", $action, 2);
-								if (isset($action_array[1]) && $action_array[1] != '') {
+								if (isset($action_array[0]) && $action_array[0] != '') {
 									$destination_app = $action_array[0];
 									$destination_data = $action_array[1];
 								}
