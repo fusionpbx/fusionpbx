@@ -497,7 +497,7 @@
 							//add the actions to the dialplan_xml
 							foreach($destination_actions as $action) {
 								$action_array = explode(":", $action, 2);
-								if (isset($action_array[1]) && $action_array[1] != '') {
+								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
 										$dialplan["dialplan_xml"] .= "		<action application=\"".$action_array[0]."\" data=\"".$action_array[1]."\"/>\n";
 									}
@@ -791,7 +791,7 @@
 										$action_array = explode(":", $field, 2);
 										$action_app = $action_array[0];
 										$action_data = $action_array[1];
-										if (isset($action_array[1]) && $action_array[1] != '') {
+										if (isset($action_array[0]) && $action_array[0] != '') {
 											if ($destination->valid($action_app.':'.$action_data)) {
 												//add to the dialplan_details array
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
@@ -889,7 +889,7 @@
 								$action_array = explode(":", $action, 2);
 								$action_app = $action_array[0];
 								$action_data = $action_array[1];
-								if (isset($action_array[1]) && $action_array[1] != '') {
+								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_app.':'.$action_data)) {
 										$actions[$y]['destination_app'] = $action_app;
 										$actions[$y]['destination_data'] = $action_data;
