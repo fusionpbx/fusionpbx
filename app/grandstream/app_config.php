@@ -822,5 +822,28 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Allow DHCP server to set Time Zone. 0 - No, 1 - Yes";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "db6bf37d-b240-4cd9-91d3-bf326a4d8462";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_idle_mute_function";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bba15ab9-fb7b-4551-b83c-101b968bef02";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_idle_mute_function_old";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable Idle Mute. 0 - No, 1 - Yes. Default is 0";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e08a9c4e-fd4b-485a-bb60-c47fa03d525f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_show_key_labels";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0";
+		$y++;
 ?>

@@ -7816,7 +7816,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>1</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
     <!-- ############################################################################## -->
     <!-- ##  Settings/Programmable Keys/Virtual Multi-Purpose Keys -->
