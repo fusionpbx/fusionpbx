@@ -285,7 +285,11 @@
 				--set the values
 					external = "true";
 					row['user_exists'] = "false";
-					row['accountcode'] = accountcode;
+					if (accountcode ~= nil) then
+						row['accountcode'] = accountcode;
+					else
+						row['accountcode'] = domain_name;
+					end
 				--add the row to the destinations array
 					destinations[x] = row;
 			end
