@@ -3480,4 +3480,10 @@
 		$vendors[$y]['uuid'] = "0f5b8507-3799-4a95-848b-1edfd5484869";
 		$vendors[$y]['name'] = "yeastar";
 
+	//telekonnectors details
+		$y++;
+		$vendors[$y]['uuid'] = "89959f8f-946a-4d4d-be7f-1385bf8b0d64";
+		$vendors[$y]['name'] = "telekonnectors";
+		$z=0;
+
 ?>
