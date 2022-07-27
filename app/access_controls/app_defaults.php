@@ -130,6 +130,15 @@
 		}
 		unset($sql, $num_rows);
 
+		//remove orphaned access control nodes
+		$sql = "delete from v_access_control_nodes ";
+		$sql .= "where access_control_uuid not in ( ";
+		$sql .= "	select access_control_uuid from v_access_controls ";
+		$sql .= ")";
+		$database = new database;
+		$database->execute($sql, null);
+		unset($sql);
+
 	}
 
 ?>
