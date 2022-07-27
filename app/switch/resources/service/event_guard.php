@@ -92,6 +92,10 @@
 		}
 	}
 
+//test a specific address
+	//$ip_address = '10.7.0.253';
+	//$result = access_allowed($ip_address);
+
 //get the settings
 	//$setting_name = $_SESSION['category']['subcategory']['text'];
 
@@ -132,7 +136,6 @@
 
 					//debug info
 					if ($debug) {
-						echo "possible hacker\n";
 						echo "network-ip ".$array['network-ip']."\n";
 						echo "to-host ".$array['to-host']."\n";
 						echo "\n";
@@ -417,7 +420,16 @@
 		//use the ip address to get the authorized nodes
 		foreach($allowed_nodes as $row) {
 			if (check_cidr($row['node_cidr'], $ip_address)) {
+				//debug info
+				if ($debug) {
+					print_r($row);
+					echo $ip_address."\n";
+				}
+				
+				//set the allowed to true
 				$allowed = true;
+				
+				//exit the loop
 				break;
 			}
 		}
