@@ -200,10 +200,7 @@
 		$cache = new cache;
 
 		if (!is_blocked($ip_address)) {
-			//log the blocked ip address
-			openlog("fusionpbx", LOG_PID | LOG_PERROR);
-			syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$array['to-user'].", to-host: ".$array['to-host'].", line: ".__line__."]");
-			closelog();
+
 
 			//add the blocked ip address to the cache
 			$cache->set("switch:blocked:".$ip_address, 'true');
@@ -222,10 +219,34 @@
 				$result = shell($command);
 			}
 
+			//log the blocked ip address to the syslog
+			openlog("fusionpbx", LOG_PID | LOG_PERROR);
+			syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$array['to-user'].", to-host: ".$array['to-host'].", line: ".__line__."]");
+			closelog();
+
+			//log the blocked ip address to the database
+			$array['event_guard_logs'][0]['event_guard_log_uuid'] = uuid();
+			$array['event_guard_logs'][0]['hostname'] = gethostname();
+			$array['event_guard_logs'][0]['log_date'] = 'now()';
+			$array['event_guard_logs'][0]['filter'] = $filter;
+			$array['event_guard_logs'][0]['ip_address'] = $ip_address;
+			$array['event_guard_logs'][0]['extension'] = $array['to-user'].'@'.$array['to-host'];
+			$array['event_guard_logs'][0]['log_status'] = 'blocked';
+			$p = new permissions;
+			$p->add('event_guard_log_add', 'temp');
+			$database = new database;
+			$database->app_name = 'event guard';
+			$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+			$database->save($array);
+			$p->add('event_guard_log_add', 'temp');
+
 			//send debug information to the console
 			if ($debug) {
 				echo "blocked address ".$ip_address .", line ".__line__."\n";
 			}
+
+			//unset the array
+			unset($array);
 		}
 	}
 
