@@ -53,19 +53,19 @@
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('event_guard_log_add')) {
-					$obj = new event_guard_logs;
+					$obj = new event_guard;
 					$obj->copy($event_guard_logs);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('event_guard_log_edit')) {
-					$obj = new event_guard_logs;
+					$obj = new event_guard;
 					$obj->toggle($event_guard_logs);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('event_guard_log_delete')) {
-					$obj = new event_guard_logs;
+					$obj = new event_guard;
 					$obj->delete($event_guard_logs);
 				}
 				break;
