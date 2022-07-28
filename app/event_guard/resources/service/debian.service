@@ -1,6 +1,6 @@
 
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/switch/resources/service/debian-event_guard.service /etc/systemd/system/event_guard.service
+; cp /var/www/fusionpbx/app/event_guard/resources/service/debian.service /etc/systemd/system/event_guard.service
 ; systemctl enable event_guard
 ; systemctl start event_guard
 ; systemctl daemon-reload
@@ -22,7 +22,7 @@ WorkingDirectory=/var/www/fusionpbx
 ;EnvironmentFile=-/etc/default/fusionpbx
 ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
 ;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/switch/resources/service/event_guard.php
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/event_guard/resources/service/event_guard.php
 TimeoutSec=55s
 Restart=always
 
