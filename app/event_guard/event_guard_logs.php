@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2022
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -90,6 +90,11 @@
 	$sql .= "from v_event_guard_logs ";
 	if (isset($search)) {
 		$sql .= "where (";
+		$sql .= "	hostname like :search ";
+		$sql .= "	or filter like :search ";
+		$sql .= "	or ip_address like :search ";
+		$sql .= "	or extension like :search ";
+		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -117,6 +122,11 @@
 	$sql .= "from v_event_guard_logs ";
 	if (isset($_GET["search"])) {
 		$sql .= "where (";
+		$sql .= "	hostname like :search ";
+		$sql .= "	or filter like :search ";
+		$sql .= "	or ip_address like :search ";
+		$sql .= "	or extension like :search ";
+		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -203,7 +213,7 @@
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
 			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "<tr class='list-row'>\n";
 			if (permission_exists('event_guard_log_add') || permission_exists('event_guard_log_edit') || permission_exists('event_guard_log_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='event_guard_logs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
@@ -218,9 +228,9 @@
 				echo "	".escape($row['hostname']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['log_date'])."</td>\n";
-			echo "	<td>".escape($row['filter'])."</td>\n";
-			echo "	<td>".escape($row['ip_address'])."</td>\n";
+			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date'])."</a></td>\n";
+			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
+			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
 			echo "	<td>".escape($row['log_status'])."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
