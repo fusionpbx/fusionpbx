@@ -69,7 +69,7 @@
 			$context = $_SESSION['domain_name'];
 
 		//clean up variable values
-			$src = str_replace(array('.','(',')','-',' '), '', $src);
+			$src = str_replace(array('(',')',' '), '', $src);
 			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
 
 		//adjust variable values
