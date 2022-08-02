@@ -80,14 +80,14 @@
 
 		//loop through the chains
 		foreach ($chains as $chain) {
-			$command = 'iptables --list INPUT | grep '.$chain;
-			if ($debug) {
-				echo $command."\n";
-			}
-			if (strlen(shell($command)) == 0) {
+			$command = "iptables --list INPUT | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+			//if ($debug) { echo $command."\n"; }
+			$response = shell($command);
+			if (!in_array($chain, explode(",", $response))) {
+				echo "Add iptables ".$chain." chain\n";
 				system('iptables --new '.$chain);
 				system('iptables -I INPUT -j '.$chain);
-				echo "Add iptables ".$chain." chain\n";
+				echo "\n";
 			}
 		}
 	}
@@ -146,6 +146,7 @@
 
 		//debug information
 		if ($debug && ($array['Event-Subclass'] == 'sofia::register_failure' || $array['Event-Subclass'] == 'sofia::pre_register')) {
+
 			echo "\n";
 			print_r($array);
 
