@@ -196,58 +196,49 @@
 			return false;
 		}
 
-		//create the cache object
-		$cache = new cache;
-
-		if (!is_blocked($ip_address)) {
-
-
-			//add the blocked ip address to the cache
-			$cache->set("switch:blocked:".$ip_address, 'true');
-
-			//run the block command for iptables
-			if ($firewall == 'iptables') {
-				//example: iptables -I INPUT -s 127.0.0.1 -j DROP
-				$command = 'iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
-				$result = shell($command);
-			}
-
-			//run the block command for pf
-			if ($firewall == 'pf') {
-				//example: pfctl -t sip-auth-ip -T add 127.0.0.5/32
-				$command = 'pfctl -t '.$filter.' -T add '.$ip_address.'/32';
-				$result = shell($command);
-			}
-
-			//log the blocked ip address to the syslog
-			openlog("fusionpbx", LOG_PID | LOG_PERROR);
-			syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$array['to-user'].", to-host: ".$array['to-host'].", line: ".__line__."]");
-			closelog();
-
-			//log the blocked ip address to the database
-			$array['event_guard_logs'][0]['event_guard_log_uuid'] = uuid();
-			$array['event_guard_logs'][0]['hostname'] = gethostname();
-			$array['event_guard_logs'][0]['log_date'] = 'now()';
-			$array['event_guard_logs'][0]['filter'] = $filter;
-			$array['event_guard_logs'][0]['ip_address'] = $ip_address;
-			$array['event_guard_logs'][0]['extension'] = $array['to-user'].'@'.$array['to-host'];
-			$array['event_guard_logs'][0]['log_status'] = 'blocked';
-			$p = new permissions;
-			$p->add('event_guard_log_add', 'temp');
-			$database = new database;
-			$database->app_name = 'event guard';
-			$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-			$database->save($array);
-			$p->add('event_guard_log_add', 'temp');
-
-			//send debug information to the console
-			if ($debug) {
-				echo "blocked address ".$ip_address .", line ".__line__."\n";
-			}
-
-			//unset the array
-			unset($array);
+		//run the block command for iptables
+		if ($firewall == 'iptables') {
+			//example: iptables -I INPUT -s 127.0.0.1 -j DROP
+			$command = 'iptables -I '.$filter.' -s '.$ip_address.' -j DROP';
+			$result = shell($command);
 		}
+
+		//run the block command for pf
+		if ($firewall == 'pf') {
+			//example: pfctl -t sip-auth-ip -T add 127.0.0.5/32
+			$command = 'pfctl -t '.$filter.' -T add '.$ip_address.'/32';
+			$result = shell($command);
+		}
+
+		//log the blocked ip address to the syslog
+		openlog("fusionpbx", LOG_PID | LOG_PERROR);
+		syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$array['to-user'].", to-host: ".$array['to-host'].", line: ".__line__."]");
+		closelog();
+
+		//log the blocked ip address to the database
+		$array['event_guard_logs'][0]['event_guard_log_uuid'] = uuid();
+		$array['event_guard_logs'][0]['hostname'] = gethostname();
+		$array['event_guard_logs'][0]['log_date'] = 'now()';
+		$array['event_guard_logs'][0]['filter'] = $filter;
+		$array['event_guard_logs'][0]['ip_address'] = $ip_address;
+		$array['event_guard_logs'][0]['extension'] = $array['to-user'].'@'.$array['to-host'];
+		$array['event_guard_logs'][0]['log_status'] = 'blocked';
+		$p = new permissions;
+		$p->add('event_guard_log_add', 'temp');
+		$database = new database;
+		$database->app_name = 'event guard';
+		$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+		$database->save($array);
+		$p->add('event_guard_log_add', 'temp');
+
+		//send debug information to the console
+		if ($debug) {
+			echo "blocked address ".$ip_address .", line ".__line__."\n";
+		}
+
+		//unset the array
+		unset($array);
+
 	}
 
 //unblock the ip address
@@ -259,12 +250,6 @@
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
 			return false;
 		}
-
-		//create the cache object
-		$cache = new cache;
-
-		//delete the blocked ip address from the cache
-		$cache->delete("switch:blocked:".$ip_address);
 
 		//unblock the address
 		if ($firewall == 'iptables') {
@@ -305,48 +290,26 @@
 			return false;
 		}
 
-		//create the cache object
-		$cache = new cache;
-
-		//set blocked to false by default
-		$blocked = false;
-
-		//check the cache to see if the address is blocked
-		if ($cache->get("switch:blocked:".$ip_address) === 'true') {
-			$blocked = true;
+		//determine whether to return true or false
+		if ($firewall == 'iptables') {
+			//check to see if the address is blocked
+			$command = 'iptables -L -n --line-numbers | grep '.$ip_address;
+			$result = shell($command);
+			if (strlen($result) > 3) {
+				return true;
+			}
+		}
+		elseif ($firewall == 'pf') {
+			//check to see if the address is blocked
+			$command = 'pfctl -t ".$filter." -Ts | grep '.$ip_address;
+			$result = shell($command);
+			if (strlen($result) > 3) {
+				return true;
+			}
 		}
 		else {
-			//run command to see if address is blocked
-			if ($firewall == 'iptables') {
-				//check to see if the address is blocked
-				$command = 'iptables -L -n --line-numbers | grep '.$ip_address;
-				//echo $command."\n";
-				$result = shell($command);
-				if (strlen($result) > 3) {
-					//address is blocked but not cached add it to the cache
-					$cache->set("switch:blocked:".$ip_address, 'true');
-
-					//set blocked to true
-					$blocked = true;
-				}
-			}
-
-			//run command to see if address is blocked
-			if ($firewall == 'pf') {
-				//check to see if the address is blocked
-				$command = 'pfctl -t ".$filter." -Ts | grep '.$ip_address;
-				//echo $command."\n";
-				$result = shell($command);
-				if (strlen($result) > 3) {
-					//address is blocked but not cached add it to the cache
-					$cache->set("switch:blocked:".$ip_address, 'true');
-
-					//set blocked to true
-					$blocked = true;
-				}
-			}
+			return false;
 		}
-		return $blocked;
 	}
 
 //is the ip address registered
@@ -373,6 +336,11 @@
 	function access_allowed($ip_address) {
 		//define global variables
 		global $debug;
+
+		//invalid ip address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
 
 		//check the cache to see if the address is allowed
 		$cache = new cache;
