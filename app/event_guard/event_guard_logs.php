@@ -58,11 +58,11 @@
 				}
 				break;
 			case 'toggle':
-				if (permission_exists('event_guard_log_edit')) {
-					$obj = new event_guard;
-					$obj->toggle($event_guard_logs);
-				}
-				break;
+				//if (permission_exists('event_guard_log_edit')) {
+				//	$obj = new event_guard;
+				//	$obj->toggle($event_guard_logs);
+				//}
+				//break;
 			case 'delete':
 				if (permission_exists('event_guard_log_delete')) {
 					$obj = new event_guard;
@@ -157,9 +157,9 @@
 	if (permission_exists('event_guard_log_add') && $event_guard_logs) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
-	if (permission_exists('event_guard_log_edit') && $event_guard_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
+	//if (permission_exists('event_guard_log_edit') && $event_guard_logs) {
+	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+	//}
 	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
