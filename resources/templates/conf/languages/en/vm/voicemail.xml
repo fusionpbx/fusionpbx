@@ -63,7 +63,7 @@
         <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$7" method="pronounced" type="name_spelled"/>
- <action function="play-file" data="voicemail/vm-mark_message_new.wav"/>
+        <action function="play-file" data="voicemail/vm-mark_message_new.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$8" method="pronounced" type="name_spelled"/>
       </match>
