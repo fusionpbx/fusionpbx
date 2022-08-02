@@ -94,6 +94,7 @@
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
 		$sql .= "	or extension like :search ";
+		$sql .= "	or user_agent like :search ";
 		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -118,6 +119,7 @@
 	$sql .= "filter, ";
 	$sql .= "ip_address, ";
 	$sql .= "extension, ";
+	$sql .= "user_agent, ";
 	$sql .= "log_status ";
 	$sql .= "from v_event_guard_logs ";
 	if (isset($_GET["search"])) {
@@ -126,6 +128,7 @@
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
 		$sql .= "	or extension like :search ";
+		$sql .= "	or user_agent like :search ";
 		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -201,6 +204,7 @@
 	echo th_order_by('filter', $text['label-filter'], $order_by, $order);
 	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
 	if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -232,6 +236,7 @@
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
+			echo "	<td>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($row['log_status'])."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
