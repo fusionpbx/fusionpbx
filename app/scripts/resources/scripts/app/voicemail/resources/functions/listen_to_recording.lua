@@ -250,8 +250,8 @@
 					timeouts = 0;
 					return main_menu();
 				elseif (dtmf_digits == "0") then
-					message_saved(voicemail_id, uuid);
-					session:transfer("0", "XML", context);
+					message_saved_new(voicemail_id, uuid);
+					session:execute("playback", "phrase:voicemail_ack:marked_new");
 				elseif (dtmf_digits == "#") then
 					return;
 				else
