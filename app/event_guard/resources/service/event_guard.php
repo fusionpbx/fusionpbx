@@ -222,6 +222,7 @@
 		$array['event_guard_logs'][0]['filter'] = $filter;
 		$array['event_guard_logs'][0]['ip_address'] = $ip_address;
 		$array['event_guard_logs'][0]['extension'] = $array['to-user'].'@'.$array['to-host'];
+		$array['event_guard_logs'][0]['user_agent'] = $array['user-agent'];
 		$array['event_guard_logs'][0]['log_status'] = 'blocked';
 		$p = new permissions;
 		$p->add('event_guard_log_add', 'temp');
@@ -414,10 +415,10 @@
 					print_r($row);
 					echo $ip_address."\n";
 				}
-				
+
 				//set the allowed to true
 				$allowed = true;
-				
+
 				//exit the loop
 				break;
 			}
