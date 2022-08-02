@@ -66,8 +66,8 @@ if ($domains_processed == 1) {
 					$actions[0]['destination_data'] = $row['destination_data'];
 				}
 				if (isset($row['destination_alternate_data']) && $row['destination_alternate_data'] != '') {
-					$actions[1]['destination_app'] = $row['destination_alternate_app'];
-					$actions[1]['destination_data'] = $row['destination_alternate_data'];
+					$actions[1]['destination_alternate_app'] = $row['destination_alternate_app'];
+					$actions[1]['destination_alternate_data'] = $row['destination_alternate_data'];
 				}
 
 				//build the array of destinations
@@ -95,7 +95,6 @@ if ($domains_processed == 1) {
 			}
 		}
 		unset($sql, $num_rows);
-
 
 }
 
