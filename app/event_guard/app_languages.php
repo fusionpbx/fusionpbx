@@ -261,6 +261,46 @@
 		$text['description-extension']['sv-se'] = '';
 		$text['description-extension']['uk-ua'] = '';
 
+		$text['label-user_agent']['en-us'] = 'User Agent';
+		$text['label-user_agent']['ar-eg'] = '';
+		$text['label-user_agent']['de-at'] = '';
+		$text['label-user_agent']['de-ch'] = '';
+		$text['label-user_agent']['de-de'] = '';
+		$text['label-user_agent']['es-cl'] = '';
+		$text['label-user_agent']['es-mx'] = '';
+		$text['label-user_agent']['fr-ca'] = '';
+		$text['label-user_agent']['fr-fr'] = '';
+		$text['label-user_agent']['he-il'] = '';
+		$text['label-user_agent']['it-it'] = '';
+		$text['label-user_agent']['nl-nl'] = '';
+		$text['label-user_agent']['pl-pl'] = '';
+		$text['label-user_agent']['pt-br'] = '';
+		$text['label-user_agent']['pt-pt'] = '';
+		$text['label-user_agent']['ro-ro'] = '';
+		$text['label-user_agent']['ru-ru'] = '';
+		$text['label-user_agent']['sv-se'] = '';
+		$text['label-user_agent']['uk-ua'] = '';
+
+		$text['description-user_agent']['en-us'] = 'Enter the User Agent.';
+		$text['description-user_agent']['ar-eg'] = '';
+		$text['description-user_agent']['de-at'] = '';
+		$text['description-user_agent']['de-ch'] = '';
+		$text['description-user_agent']['de-de'] = '';
+		$text['description-user_agent']['es-cl'] = '';
+		$text['description-user_agent']['es-mx'] = '';
+		$text['description-user_agent']['fr-ca'] = '';
+		$text['description-user_agent']['fr-fr'] = '';
+		$text['description-user_agent']['he-il'] = '';
+		$text['description-user_agent']['it-it'] = '';
+		$text['description-user_agent']['nl-nl'] = '';
+		$text['description-user_agent']['pl-pl'] = '';
+		$text['description-user_agent']['pt-br'] = '';
+		$text['description-user_agent']['pt-pt'] = '';
+		$text['description-user_agent']['ro-ro'] = '';
+		$text['description-user_agent']['ru-ru'] = '';
+		$text['description-user_agent']['sv-se'] = '';
+		$text['description-user_agent']['uk-ua'] = '';
+
 		$text['label-log_status']['en-us'] = 'Status';
 		$text['label-log_status']['ar-eg'] = '';
 		$text['label-log_status']['de-at'] = '';
