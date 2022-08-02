@@ -1,24 +1,23 @@
 <?php
 /*
-	FusionPBX
-	Version: MPL 1.1
-
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
-
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
-
-	The Original Code is FusionPBX
-
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022
-	the Initial Developer. All Rights Reserved.
+	Copyright (C) 2022 Mark J Crane <markjcrane@fusionpbx.com>
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
 */
 
 //includes
@@ -111,11 +110,22 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+	$parameters['time_zone'] = $time_zone;
+
 //get the list
 	$sql = "select ";
 	$sql .= "event_guard_log_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "log_date, ";
+	$sql .= "to_char(timezone(:time_zone, log_date), 'DD Mon YYYY') as log_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, log_date), 'HH12:MI:SS am') as log_time_formatted, \n";
 	$sql .= "filter, ";
 	$sql .= "ip_address, ";
 	$sql .= "extension, ";
@@ -200,7 +210,8 @@
 		echo "	</th>\n";
 	}
 	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
-	echo th_order_by('log_date', $text['label-log_date'], $order_by, $order);
+	echo "<th>".$text['label-date']."</th>\n";
+	echo "<th class='hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('filter', $text['label-filter'], $order_by, $order);
 	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
@@ -232,7 +243,9 @@
 				echo "	".escape($row['hostname']);
 			}
 			echo "	</td>\n";
-			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date'])."</a></td>\n";
+			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date_formatted'])."</a></td>\n";
+			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
+			
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
