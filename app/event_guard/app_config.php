@@ -70,6 +70,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'user_agent';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the user_agent.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'log_status';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
