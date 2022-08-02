@@ -57,6 +57,7 @@
 		$filter = $_POST["filter"];
 		$ip_address = $_POST["ip_address"];
 		$extension = $_POST["extension"];
+		$user_agent = $_POST["user_agent"];
 		$log_status = $_POST["log_status"];
 	}
 
@@ -111,6 +112,7 @@
 			if (strlen($filter) == 0) { $msg .= $text['message-required']." ".$text['label-filter']."<br>\n"; }
 			if (strlen($ip_address) == 0) { $msg .= $text['message-required']." ".$text['label-ip_address']."<br>\n"; }
 			if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
+			//if (strlen($user_agent) == 0) { $msg .= $text['message-required']." ".$text['label-user_agent']."<br>\n"; }
 			if (strlen($log_status) == 0) { $msg .= $text['message-required']." ".$text['label-log_status']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
@@ -137,6 +139,7 @@
 			$array['event_guard_logs'][0]['filter'] = $filter;
 			$array['event_guard_logs'][0]['ip_address'] = $ip_address;
 			$array['event_guard_logs'][0]['extension'] = $extension;
+			$array['event_guard_logs'][0]['user_agent'] = $user_agent;
 			$array['event_guard_logs'][0]['log_status'] = $log_status;
 
 		//save the data
@@ -168,6 +171,7 @@
 		$sql .= " filter, ";
 		$sql .= " ip_address, ";
 		$sql .= " extension, ";
+		$sql .= " user_agent, ";
 		$sql .= " log_status ";
 		$sql .= "from v_event_guard_logs ";
 		$sql .= "where event_guard_log_uuid = :event_guard_log_uuid ";
@@ -180,6 +184,7 @@
 			$filter = $row["filter"];
 			$ip_address = $row["ip_address"];
 			$extension = $row["extension"];
+			$user_agent = $row["user_agent"];
 			$log_status = $row["log_status"];
 		}
 		unset($sql, $parameters, $row);
@@ -282,6 +287,18 @@
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-user_agent']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='user_agent' maxlength='255' value='".escape($user_agent)."'>\n";
+	echo "<br />\n";
+	echo $text['description-user_agent']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
