@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -302,6 +302,10 @@
 
 --check the missed calls
 	function missed()
+		--add missed call channel variable
+			if (session) then
+				session:setVariable("missed_call", 'true');
+			end
 
 		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
