@@ -10,6 +10,7 @@
 			<action application="set" data="hangup_after_bridge=true"/>
 			<!--<action application="set" data="continue_on_fail=NORMAL_TEMPORARY_FAILURE,USER_BUSY,NO_ANSWER,TIMEOUT,NO_ROUTE_DESTINATION"/> -->
 			<action application="set" data="continue_on_fail=true"/>
+			<action application="set" data="initial_callee_id_name=${user_data(${dialed_extension}@${domain_name} var effective_caller_id_name)}"/>
 			<action application="hash" data="insert/${domain_name}-call_return/${dialed_extension}/${caller_id_number}"/>
 			<action application="hash" data="insert/${domain_name}-last_dial_ext/${dialed_extension}/${uuid}"/>
 			<action application="set" data="called_party_call_group=${user_data(${dialed_extension}@${domain_name} var call_group)}"/>

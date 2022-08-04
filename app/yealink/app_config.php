@@ -231,6 +231,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The type of SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM, 6-Preference";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0767daa9-9a7d-4949-86e4-63a779f750e0";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_cp_source";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Configure the type of SIP header(s) to display on the caller's LCD screen; 0-RPID-FROM, 1-Dialed Digits(default), 2-RFC4916";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ba0ebf59-6364-47b2-9a98-73430669a4c4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_dtmf_type";
