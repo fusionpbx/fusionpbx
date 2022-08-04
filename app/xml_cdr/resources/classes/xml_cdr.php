@@ -374,7 +374,7 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set missed calls
-						if (isset($xml->variables->missed_call) {
+						if (isset($xml->variables->missed_call)) {
 							$missed_call = $xml->variables->missed_call;
 						}
 						elseif (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
