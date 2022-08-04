@@ -46,7 +46,7 @@
 				else {
 					$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
 					$xml_string .= "	<network-lists>\n";
-					$xml_string .= "		<list name=\"rfc1918\" default=\"allow\">\n";
+					$xml_string .= "		<list name=\"rfc1918\" default=\"deny\">\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"10.0.0.0/8\"/>\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"172.16.0.0/12\"/>\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.0.0/16\"/>\n";
