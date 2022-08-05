@@ -1286,14 +1286,14 @@ if (!class_exists('xml_cdr')) {
 							$record_name = $row['record_name'];
 							$record_path = $row['record_path'];
 						}
-
+						
 						unset ($sql, $parameters, $row);
 						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
 						$parameters['xml_cdr_uuid'] = $uuid;
-
 						$row = $database->select($sql, $parameters, 'row');
 							if (is_array($row)) {
 								$setting=$this->getS3Setting($row['domain_uuid']);
+								
 								
 								 $s3 = new \Aws\S3\S3Client([
 								'region'  => $setting['region'],
@@ -1303,19 +1303,43 @@ if (!class_exists('xml_cdr')) {
 									'secret' => $setting['secret']
 								]
 								]);
-								$record_name=substr($row['object_key'],strpos($row['object_key'], "-")+1);
 
 								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
-								if($response){	
+								if($response){
+									
+								 $cmd = $s3->getCommand('GetObject', [
+									'Bucket' => $setting['bucket'],
+									'Key'    => $row['object_key']
+								]);
+	
+								} else {
+
+									$setting['driver']='s3';
+									$setting['url']='';
+									$setting['endpoint']='';
+									$setting['region']='us-west-2';
+									$setting['use_path_style_endpoint']=false;
+								
+									$setting=$this->getDefaultS3Configuration();
+								
+								
+									$s3 = new \Aws\S3\S3Client([
+									'region'  => $setting['region'],
+									'version' => 'latest',
+									'credentials' => [
+										'key'    => $setting['key'],
+										'secret' => $setting['secret']
+									]
+									]);
 									$cmd = $s3->getCommand('GetObject', [
 										'Bucket' => $setting['bucket'],
 										'Key'    => $row['object_key']
 									]);
-									$request = $s3->createPresignedRequest($cmd, '+30 minutes');
-									$record_file = (string) $request->getUri();
-									$is_s3=true;
-								} 
+								}
 								
+								$request = $s3->createPresignedRequest($cmd, '+30 minutes');
+								$record_file = (string) $request->getUri();
+								$is_s3=true;
 							}
 							unset ($sql, $parameters, $row);
 						}
@@ -1326,6 +1350,7 @@ if (!class_exists('xml_cdr')) {
 					}
 				//download the file
 					if (file_exists($record_file) || $is_s3) {
+						
 						//content-range
 						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" )  {
 							$this->range_download($record_file);
@@ -1534,18 +1559,16 @@ function getS3Setting($domain_id){
 
         $config=[];
 
-		
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_setting_category = 'aws' ";
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_uuid = '".$domain_id."' \n";
-		// $parameters['domain_uuid'] = $domain_id;
+		$sql .= "where domain_uuid = :domain_uuid ";
+		//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+		$parameters['domain_uuid'] = $domain_id;
 		//$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
-		$row = $database->select($sql);
-		// $row = $database->select($sql);
+		$row = $database->select($sql, $parameters, 'all');
 	
-		if (is_array($row) && count($row)>0) {
+		if (is_array($row)) {
 			$config['driver']='s3';
 			$config['url']='';
 			$config['endpoint']='';
