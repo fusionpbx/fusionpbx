@@ -377,7 +377,16 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->missed_call)) {
 							$missed_call = $xml->variables->missed_call;
 						}
-						elseif (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
+						elseif (isset($xml->variables->fax_success)) {
+							$missed_call = 'false';
+						}
+						elseif ($xml->variables->hangup_cause = 'LOSE_RACE') {
+							$missed_call = 'false';
+						}
+						elseif ($xml->variables->hangup_cause = 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
+							$missed_call = 'false';
+						}
+						elseif (isset($xml->variables->answer_stamp)) {
 							//answered call
 							$missed_call = 'false';
 						}
