@@ -29,6 +29,9 @@
  *
  * @method boolean add
  */
+require 'aws/aws-autoloader.php';
+use Aws\S3\S3Client;
+use Aws\Common\Enum\Region;
 if (!class_exists('xml_cdr')) {
 	class xml_cdr {
 
@@ -1268,7 +1271,8 @@ if (!class_exists('xml_cdr')) {
 		 */
 		public function download($uuid) {
 			if (permission_exists('xml_cdr_view')) {
-
+				$is_s3=false;
+				$record_file='';
 				//get call recording from database
 					if (is_uuid($uuid)) {
 						$sql = "select record_name, record_path from v_xml_cdr ";
@@ -1282,27 +1286,87 @@ if (!class_exists('xml_cdr')) {
 							$record_name = $row['record_name'];
 							$record_path = $row['record_path'];
 						}
+						
 						unset ($sql, $parameters, $row);
-					}
+						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
+						$parameters['xml_cdr_uuid'] = $uuid;
+						$row = $database->select($sql, $parameters, 'row');
+							if (is_array($row)) {
+								$setting=$this->getS3Setting($row['domain_uuid']);
+								
+								
+								 $s3 = new \Aws\S3\S3Client([
+								'region'  => $setting['region'],
+								'version' => 'latest',
+								'credentials' => [
+									'key'    => $setting['key'],
+									'secret' => $setting['secret']
+								]
+								]);
+
+								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
+								if($response){
+									
+								 $cmd = $s3->getCommand('GetObject', [
+									'Bucket' => $setting['bucket'],
+									'Key'    => $row['object_key']
+								]);
+	
+								} else {
+
+									$setting['driver']='s3';
+									$setting['url']='';
+									$setting['endpoint']='';
+									$setting['region']='us-west-2';
+									$setting['use_path_style_endpoint']=false;
+								
+									$setting=$this->getDefaultS3Configuration();
+								
+								
+									$s3 = new \Aws\S3\S3Client([
+									'region'  => $setting['region'],
+									'version' => 'latest',
+									'credentials' => [
+										'key'    => $setting['key'],
+										'secret' => $setting['secret']
+									]
+									]);
+									$cmd = $s3->getCommand('GetObject', [
+										'Bucket' => $setting['bucket'],
+										'Key'    => $row['object_key']
+									]);
+								}
+								
+								$request = $s3->createPresignedRequest($cmd, '+30 minutes');
+								$record_file = (string) $request->getUri();
+								$is_s3=true;
+							}
+							unset ($sql, $parameters, $row);
+						}
 
 				//build full path
-					$record_file = $record_path.'/'.$record_name;
-
+					if($record_file==''){
+						$record_file = $record_path.'/'.$record_name;
+					}
 				//download the file
-					if (file_exists($record_file)) {
+					if (file_exists($record_file) || $is_s3) {
+						
 						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" )  {
 							$this->range_download($record_file);
 						}
 						ob_clean();
 						$fd = fopen($record_file, "rb");
 						if ($_GET['t'] == "bin") {
+
 							header("Content-Type: application/force-download");
 							header("Content-Type: application/octet-stream");
 							header("Content-Type: application/download");
 							header("Content-Description: File Transfer");
 						}
 						else {
+							
+
 							$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
 							switch ($file_ext) {
 								case "wav" : header("Content-Type: audio/x-wav"); break;
@@ -1490,6 +1554,78 @@ if (!class_exists('xml_cdr')) {
 					}
 			}
 		} //method
+		
+function getS3Setting($domain_id){
+
+        $config=[];
+
+		$sql = "select * from v_domain_settings ";
+		$sql .= "where domain_setting_category = 'aws' ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+		$parameters['domain_uuid'] = $domain_id;
+		//$parameters['domain_uuid'] = $domain_uuid;
+		$database = new database;
+		$row = $database->select($sql, $parameters, 'all');
+	
+		if (is_array($row)) {
+			$config['driver']='s3';
+			$config['url']='';
+			$config['endpoint']='';
+			$config['region']='us-west-2';
+			$config['use_path_style_endpoint']=false;
+		
+				foreach($row as $conf){
+					$config[$this->getCredentialKey($conf['domain_setting_subcategory'])]=trim($conf['domain_setting_value']);
+				}
+			
+
+			
+    	}  else {
+			$config['driver']='s3';
+				$config['url']='';
+				$config['endpoint']='';
+				$config['region']='us-west-2';
+				$config['use_path_style_endpoint']=false;
+			
+				$config=$this->getDefaultS3Configuration();
+				
+			}
+			unset ($sql, $parameters, $row);
+			
+			$setting['default']='s3';
+			$setting['disks']['s3']=$config;
+			
+			return $config;
+
+      }
+       function getDefaultS3Configuration(){
+
+		$sql = "select * from v_default_settings ";
+		$sql .= "where default_setting_category = 'aws' ";
+		$database = new database;
+		$default_credentials = $database->select($sql);
+		
+        $config=[];
+        foreach($default_credentials as $d_conf){
+            $config[$this->getCredentialKey($d_conf['default_setting_subcategory'])]=$d_conf['default_setting_value'];
+        }
+        return $config;
+    }
+	function getCredentialKey($string){
+       switch($string){
+        case 'region':
+            return 'region';
+        case 'secret_key':
+            return 'secret';
+        case 'bucket_name':
+            return 'bucket';
+        case 'access_key':
+            return 'key';
+        default:
+            return $string;
+       }
+    }
 
 	} //class
 }
