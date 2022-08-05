@@ -382,11 +382,11 @@ if (!class_exists('xml_cdr')) {
 							//fax server
 							$missed_call = 'false';
 						}
-						elseif ($xml->variables->hangup_cause = 'LOSE_RACE') {
+						elseif ($xml->variables->hangup_cause == 'LOSE_RACE') {
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						elseif ($xml->variables->hangup_cause = 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
+						elseif ($xml->variables->hangup_cause == 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
 							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
