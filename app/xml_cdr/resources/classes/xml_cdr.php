@@ -375,18 +375,26 @@ if (!class_exists('xml_cdr')) {
 
 					//set missed calls
 						if (isset($xml->variables->missed_call)) {
+							//marked as missed
 							$missed_call = $xml->variables->missed_call;
 						}
 						elseif (isset($xml->variables->fax_success)) {
+							//fax server
 							$missed_call = 'false';
 						}
 						elseif ($xml->variables->hangup_cause = 'LOSE_RACE') {
+							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
 						elseif ($xml->variables->hangup_cause = 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
+							//ring group or multi destination bridge statement
 							$missed_call = 'false';
 						}
-						elseif (isset($xml->variables->answer_stamp)) {
+						elseif (substr($xml->variables->destination_number, 0, 3) == '*99') {
+							//voicemail
+							$missed_call = 'false';
+						}
+						elseif (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
 							$missed_call = 'false';
 						}
