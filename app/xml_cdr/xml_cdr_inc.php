@@ -45,7 +45,6 @@
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
 		$cdr_id = $_REQUEST["cdr_id"];
-		$missed = $_REQUEST["missed"];
 		$direction = $_REQUEST["direction"];
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
@@ -242,6 +241,7 @@
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.duration, \n";
 	$sql .= "c.billmsec, \n";
+	$sql .= "c.missed_call, \n";
 	$sql .= "c.record_path, \n";
 	$sql .= "c.record_name, \n";
 	$sql .= "c.xml_cdr_uuid, \n";
@@ -299,10 +299,6 @@
 		else {
 			$sql .= "and false ";
 		}
-	}
-	if ($missed == true) {
-		$sql .= "and missed_call = 1 \n";
-		$sql .= "and hangup_cause <> 'LOSE_RACE' ";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql .= "and start_epoch between :start_epoch and :stop_epoch \n";
@@ -470,8 +466,7 @@
 				$sql .= "and (answer_stamp is not null and bridge_uuid is null) ";
 				break;
 			case 'missed':
-				$sql .= "and missed_call = '1' ";
-				$sql .= "and hangup_cause <> 'LOSE_RACE' ";
+				$sql .= "and missed_call = true ";
 				break;
 			case 'cancelled':
 				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
