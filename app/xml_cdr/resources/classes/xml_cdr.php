@@ -392,7 +392,11 @@ if (!class_exists('xml_cdr')) {
 						}
 						elseif (substr($xml->variables->destination_number, 0, 3) == '*99') {
 							//voicemail
-							$missed_call = 'false';
+							$missed_call = 'true';
+						}
+						elseif (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
+							//voicemail
+							$missed_call = 'true';
 						}
 						elseif (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
