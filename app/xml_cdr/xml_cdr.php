@@ -637,16 +637,14 @@ function getS3Setting($domain_id){
 
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_setting_category = 'aws' ";
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_uuid = '".$domain_id."' \n";
-		// $parameters['domain_uuid'] = $domain_id;
+		$sql .= "where domain_uuid = :domain_uuid ";
+		//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+		$parameters['domain_uuid'] = $domain_id;
 		//$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
-		$row = $database->select($sql);
-		// $row = $database->select($sql);
-
+		$row = $database->select($sql, $parameters, 'all');
 	
-		if (is_array($row) && count($row)>0) {
+		if (is_array($row)) {
 			$config['driver']='s3';
 			$config['url']='';
 			$config['endpoint']='';
@@ -673,6 +671,7 @@ function getS3Setting($domain_id){
 			
 			$setting['default']='s3';
 			$setting['disks']['s3']=$config;
+			
 			return $config;
 
       }
@@ -716,10 +715,9 @@ function getS3Setting($domain_id){
 						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
 						$parameters['xml_cdr_uuid'] = $row['xml_cdr_uuid'];
 						$rec = $database->select($sql, $parameters, 'row');
-
 							if (is_array($rec)) {
 								$setting=getS3Setting($rec['domain_uuid']);
-								$s3 = new \Aws\S3\S3Client([
+								 $s3 = new \Aws\S3\S3Client([
 								'region'  => $setting['region'],
 								'version' => 'latest',
 								'credentials' => [
@@ -728,17 +726,42 @@ function getS3Setting($domain_id){
 								]
 								]);
 
+								
 								$response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
+								if($response){
+									
+								 $cmd = $s3->getCommand('GetObject', [
+									'Bucket' => $setting['bucket'],
+									'Key'    => $rec['object_key']
+								]);
+	
+								} else {
 
-								if(isset($response)){									
+									$setting['driver']='s3';
+									$setting['url']='';
+									$setting['endpoint']='';
+									$setting['region']='us-west-2';
+									$setting['use_path_style_endpoint']=false;
+								
+									$setting=getDefaultS3Configuration();
+								
+								
+									$s3 = new \Aws\S3\S3Client([
+									'region'  => $setting['region'],
+									'version' => 'latest',
+									'credentials' => [
+										'key'    => $setting['key'],
+										'secret' => $setting['secret']
+									]
+									]);
 									$cmd = $s3->getCommand('GetObject', [
 										'Bucket' => $setting['bucket'],
-										'Key'    => $rec['object_key']
+										'Key'    => $ec['object_key']
 									]);
-									$request = $s3->createPresignedRequest($cmd, '+60 minutes');
-									$file_path = (string) $request->getUri();
-								} 
+								}
 
+								$request = $s3->createPresignedRequest($cmd, '+60 minutes');
+								$file_path = (string) $request->getUri();
 							}
 							unset ($sql, $parameters, $rec);
 
