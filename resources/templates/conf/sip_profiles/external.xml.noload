@@ -113,6 +113,8 @@
 
 		<param name="dtmf-type" value="rfc2833"/>
 		<param name="zrtp-passthru" value="true"/>
+		
+		<!-- save session in the database for option to restore SIP UDP calls -->
 		<param name="track-calls" value="false"/>
 	</settings>
 </profile>
