@@ -1,0 +1,11 @@
+; cp /var/www/fusionpbx/app/event_guard/resources/service/debian.timer /etc/systemd/system/event_guard.timer
+; systemctl enable event_guard.timer
+; systemctl daemon-reload
+
+[Unit]
+Description=Timer for the event_guard service
+
+[Timer]
+OnBootSec=20sec
+[Install]
+WantedBy=timers.target
