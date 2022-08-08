@@ -20,10 +20,12 @@
 
 //recent calls
 	echo "<div class='hud_box'>\n";
-
-	foreach ($_SESSION['user']['extension'] as $assigned_extension) {
-		$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
-	}
+        
+        if ( is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0 ) {
+            foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+                    $assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+            }
+        }
 
 	//if also viewing system status, show more recent calls (more room avaialble)
 	$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
