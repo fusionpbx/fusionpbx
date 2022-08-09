@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CiscoIPPhoneDirectory>
+{foreach $contacts as $row}
+	<DirectoryEntry>
+	{if $row.contact_name_given != ""}
+		<Name>{$row.contact_name_given} {$row.contact_name_family}</Name>
+	{else}
+		<Name>{$row.contact_organization}</Name>
+	{/if}
+	{if $row.phone_number != ""}
+		<Telephone>{$row.phone_number}</Telephone>
+	{else}
+		<Telephone>{$row.phone_extension}</Telephone>
+	{/if}
+	</DirectoryEntry>
+{/foreach}
+</CiscoIPPhoneDirectory>
