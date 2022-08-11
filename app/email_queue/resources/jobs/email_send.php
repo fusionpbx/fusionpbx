@@ -335,6 +335,9 @@
 
 		//delete the email after it is sent
 		if ($email_action_after == 'delete') {
+			//delay the delete by a few seconds
+			sleep(3);
+
 			//remove the email file after it has been sent
 			if (is_array($email_queue_attachments) && @sizeof($email_queue_attachments) != 0) {
 				foreach($email_queue_attachments as $field) {
