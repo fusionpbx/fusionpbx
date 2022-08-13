@@ -206,8 +206,8 @@
 					if (not ivr_menu_greet_long_is_base64 and not file_exists(ivr_menu_greet_long)) then
 						if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long)) then
 							ivr_menu_greet_long = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_long;
-						elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
-							ivr_menu_greet_long = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_long;
+						--elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_long)) then
+						--	ivr_menu_greet_long = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_long;
 						end
 					end
 
@@ -216,8 +216,8 @@
 						if (not ivr_menu_greet_short_is_base64 and not file_exists(ivr_menu_greet_short)) then
 							if (file_exists(recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short)) then
 								ivr_menu_greet_short = recordings_dir.."/"..domain_name.."/"..ivr_menu_greet_short;
-							elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_short)) then
-								ivr_menu_greet_short = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_short;
+							--elseif (file_exists(sounds_dir.."/en/us/callie/8000/"..ivr_menu_greet_short)) then
+							--	ivr_menu_greet_short = sounds_dir.."/${default_language}/${default_dialect}/${default_voice}/"..ivr_menu_greet_short;
 							end
 						end
 					else
