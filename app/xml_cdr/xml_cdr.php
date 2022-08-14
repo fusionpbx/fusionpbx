@@ -728,7 +728,7 @@ function getS3Setting($domain_id){
 
 								
 								$response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
-								if($response){
+								if(isset($response)){
 									
 								 $cmd = $s3->getCommand('GetObject', [
 									'Bucket' => $setting['bucket'],
