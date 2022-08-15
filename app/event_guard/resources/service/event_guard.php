@@ -79,15 +79,17 @@
 		$chains[] = 'sip-auth-fail';
 
 		//loop through the chains
-		foreach ($chains as $chain) {
-			$command = "iptables --list INPUT | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
-			//if ($debug) { echo $command."\n"; }
-			$response = shell($command);
-			if (!in_array($chain, explode(",", $response))) {
-				echo "Add iptables ".$chain." chain\n";
-				system('iptables --new '.$chain);
-				system('iptables -I INPUT -j '.$chain);
-				echo "\n";
+		if (is_array($chains)) {
+			foreach ($chains as $chain) {
+				$command = "iptables --list INPUT | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+				//if ($debug) { echo $command."\n"; }
+				$response = shell($command);
+				if (!in_array($chain, explode(",", $response))) {
+					echo "Add iptables ".$chain." chain\n";
+					system('iptables --new '.$chain);
+					system('iptables -I INPUT -j '.$chain);
+					echo "\n";
+				}
 			}
 		}
 	}
@@ -99,25 +101,48 @@
 //get the settings
 	//$setting_name = $_SESSION['category']['subcategory']['text'];
 
+//set the event socket variables
+	$event_socket_ip_address = $_SESSION['event_socket_ip_address'];
+	$event_socket_port = $_SESSION['event_socket_port'];
+	$event_socket_password = $_SESSION['event_socket_password'];
+
+//end the session
+	session_destroy();
+
 //connect to event socket
 	$socket = new event_socket;
-	if (!$socket->connect($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password'])) {
+	if (!$socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
 		echo "Unable to connect to event socket\n";
 	}
 
 //loop through the switch events
 	$cmd = "event json ALL";
 	$result = $socket->request($cmd);
-	while ($socket) {
+	while (true) {
+
+		//reconnect to event socket
+		if (!$socket) {
+			echo "Not connected to even socket\n";
+			if ($socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
+				echo "Re-connected to event socket\n";
+			}	
+			else {
+				echo "Unable to connect to event socket\n";
+				break;
+			}
+		}
 
 		//read the socket
 		$response = $socket->read_event();
 
 		//decode the response
-		$array = json_decode($response['$'], true);
+		if (isset($response) && $response != '') {
+			$array = json_decode($response['$'], true);
+			unset($response);
+		}
 
 		//registration failed - block IP address unless they are registered, 
-		if ($array['Event-Subclass'] == 'sofia::register_failure') {
+		if (is_array($array) && $array['Event-Subclass'] == 'sofia::register_failure') {
 			//not registered so block the address
 			if (!access_allowed($array['network-ip'])) {
 				block($array['network-ip'], 'sip-auth-fail', $array);
@@ -125,7 +150,7 @@
 		}
 
 		//registration to the IP address
-		if ($array['Event-Subclass'] == 'sofia::pre_register') {
+		if (is_array($array) && $array['Event-Subclass'] == 'sofia::pre_register') {
 			if (isset($array['to-host'])) {
 				$is_valid_ip = filter_var($array['to-host'], FILTER_VALIDATE_IP);
 				if ($is_valid_ip) {
@@ -142,6 +167,11 @@
 					}
 				}
 			}
+		}
+
+		//unset the array
+		if (is_array($array)) {
+			unset($array);
 		}
 
 		//debug information
@@ -177,6 +207,7 @@
 			echo 'Peak memory: ' . round($memory_peak / 1024) . " KB\n\n";
 			echo "\n";
 		}
+
 	}
 
 //run command and capture standard output
@@ -188,7 +219,7 @@
 	}
 
 //block an ip address
-	function block($ip_address, $filter, $array) {
+	function block($ip_address, $filter, $event) {
 		//set global variables
 		global $firewall;
 
@@ -213,7 +244,7 @@
 
 		//log the blocked ip address to the syslog
 		openlog("fusionpbx", LOG_PID | LOG_PERROR);
-		syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$array['to-user'].", to-host: ".$array['to-host'].", line: ".__line__."]");
+		syslog(LOG_WARNING, "fusionpbx: blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$event['to-user'].", to-host: ".$event['to-host'].", line: ".__line__."]");
 		closelog();
 
 		//log the blocked ip address to the database
@@ -222,8 +253,8 @@
 		$array['event_guard_logs'][0]['log_date'] = 'now()';
 		$array['event_guard_logs'][0]['filter'] = $filter;
 		$array['event_guard_logs'][0]['ip_address'] = $ip_address;
-		$array['event_guard_logs'][0]['extension'] = $array['to-user'].'@'.$array['to-host'];
-		$array['event_guard_logs'][0]['user_agent'] = $array['user-agent'];
+		$array['event_guard_logs'][0]['extension'] = $event['to-user'].'@'.$event['to-host'];
+		$array['event_guard_logs'][0]['user_agent'] = $event['user-agent'];
 		$array['event_guard_logs'][0]['log_status'] = 'blocked';
 		$p = new permissions;
 		$p->add('event_guard_log_add', 'temp');
@@ -231,7 +262,8 @@
 		$database->app_name = 'event guard';
 		$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
 		$database->save($array);
-		$p->add('event_guard_log_add', 'temp');
+		$p->delete('event_guard_log_add', 'temp');
+		unset($database, $array);
 
 		//send debug information to the console
 		if ($debug) {
@@ -239,8 +271,7 @@
 		}
 
 		//unset the array
-		unset($array);
-
+		unset($event);
 	}
 
 //unblock the ip address
@@ -325,12 +356,15 @@
 		$command = "fs_cli -x 'show registrations as json' ";
 		$result = shell($command);
 		$array = json_decode($result, true);
-		foreach ($array['rows'] as $row) {
-			if ($row['network_ip'] == $ip_address) {
-				$registered = true;
+		if (is_array($array['rows'])) {
+			foreach ($array['rows'] as $row) {
+				if ($row['network_ip'] == $ip_address) {
+					$registered = true;
+				}
 			}
 		}
-		//print_r($array);
+
+		//return registered boolean
 		return $registered;
 	}
 
@@ -404,24 +438,27 @@
 		$parameters = null;
 		$database = new database;
 		$allowed_nodes = $database->select($sql, $parameters, 'all');
+		unset($database);
 
 		//default authorized to false
 		$allowed = false;
 
 		//use the ip address to get the authorized nodes
-		foreach($allowed_nodes as $row) {
-			if (check_cidr($row['node_cidr'], $ip_address)) {
-				//debug info
-				if ($debug) {
-					print_r($row);
-					echo $ip_address."\n";
+		if (is_array($allowed_nodes)) {
+			foreach($allowed_nodes as $row) {
+				if (check_cidr($row['node_cidr'], $ip_address)) {
+					//debug info
+					if ($debug) {
+						print_r($row);
+						echo $ip_address."\n";
+					}
+
+					//set the allowed to true
+					$allowed = true;
+
+					//exit the loop
+					break;
 				}
-
-				//set the allowed to true
-				$allowed = true;
-
-				//exit the loop
-				break;
 			}
 		}
 
