@@ -560,4 +560,5 @@
 		$text['label-sent']['ru-ru'] = '';
 		$text['label-sent']['sv-se'] = '';
 		$text['label-sent']['uk-ua'] = '';
+
 ?>
