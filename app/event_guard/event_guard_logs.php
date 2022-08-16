@@ -185,7 +185,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo "		<select class='formfld' name='filter'>\n";
-    echo "			<option value='' selected='selected' disabled hidden>".$text['label-filter']."</option>";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-filter']."...</option>";
 	echo "			<option value=''></option>\n";
 	if (isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-ip") {
 		echo "			<option value='sip-auth-ip' selected='selected'>"."sip-auth-ip"."</option>\n";
