@@ -87,8 +87,9 @@
 //get the count
 	$sql = "select count(event_guard_log_uuid) ";
 	$sql .= "from v_event_guard_logs ";
+	$sql .= "where true ";
 	if (isset($search)) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	hostname like :search ";
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
@@ -97,6 +98,10 @@
 		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
+		$sql .= "and filter = :filter ";
+		$parameters['filter'] = $_GET["filter"];
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -132,7 +137,7 @@
 	$sql .= "user_agent, ";
 	$sql .= "log_status ";
 	$sql .= "from v_event_guard_logs ";
-	$sql .= "where 1=1 ";
+	$sql .= "where true ";
 	if (isset($_GET["search"]) && $_GET["search"] != '') {
 		$sql .= "and (";
 		$sql .= "	hostname like :search ";
