@@ -321,6 +321,15 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
+					
+						if (isset($xml->variables->origination_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
+						}
+						
+						if (isset($xml->variables->origination_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
+						}
+					
 						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
