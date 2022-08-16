@@ -318,7 +318,8 @@
 	}
 
 	echo 		"<select class='formfld' name='fields' id='select_fields' style='width: auto; margin-left: 15px;' onchange=\"if (document.getElementById('search').value != '') { this.form.submit(); }\">\n";
-	echo "			<option value=''>".$text['label-fields']."...</option>\n";
+	echo "			<option value='' selected='selected' disabled hidden>".$text['label-fields']."...</option>\n";
+	echo "			<option value=''></option>\n";
 	echo "			<option value=''>".$text['label-default']."</option>\n";
 	echo "			<option value='lines' ".($fields == 'lines' ? " selected='selected'" : null).">".$text['label-lines']."</option>\n";
 	echo "			<option value='keys' ".($fields == 'keys' ? " selected='selected'" : null).">".$text['label-keys']."</option>\n";
