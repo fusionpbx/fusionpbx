@@ -100,8 +100,9 @@
 //get the count
 	$sql = "select count(email_queue_uuid) ";
 	$sql .= "from v_email_queue ";
+	$sql .= "where true ";
 	if (isset($search)) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
 		$sql .= "	or lower(email_subject) like :search ";
@@ -109,6 +110,10 @@
 		$sql .= "	or lower(email_status) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+		$sql .= "and email_status = :email_status ";
+		$parameters['email_status'] = $_GET["email_status"];
 	}
 	//else {
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -143,8 +148,9 @@
 	$sql .= "email_status, ";
 	$sql .= "email_retry_count ";
 	$sql .= "from v_email_queue ";
-	if (isset($_GET["search"])) {
-		$sql .= "where (";
+	$sql .= "where true ";
+	if (isset($search)) {
+		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
 		$sql .= "	or lower(email_subject) like :search ";
@@ -152,6 +158,10 @@
 		$sql .= "	or lower(email_status) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+		$sql .= "and email_status = :email_status ";
+		$parameters['email_status'] = $_GET["email_status"];
 	}
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -184,7 +194,29 @@
 	if (permission_exists('email_queue_delete') && $email_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	echo "		<select class='formfld' name='email_status'>\n";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
+	echo "			<option value=''></option>\n";
+	if (isset($_GET["email_status"]) && $_GET["email_status"] == "waiting") {
+		echo "			<option value='waiting' selected='selected'>".$text['label-waiting']."</option>\n";
+	}
+	else {
+		echo "			<option value='waiting'>".$text['label-waiting']."</option>\n";
+	}
+	if (isset($_GET["email_status"]) && $_GET["email_status"] == "failed") {
+		echo "			<option value='failed' selected='selected'>".$text['label-failed']."</option>\n";
+	}
+	else {
+		echo "			<option value='failed'>".$text['label-failed']."</option>\n";
+	}
+	if (isset($_GET["email_status"]) && $_GET["email_status"] == "sent") {
+		echo "			<option value='sent' selected='selected'>".$text['label-sent']."</option>\n";
+	}
+	else {
+		echo "			<option value='sent'>".$text['label-sent']."</option>\n";
+	}
+	echo "		</select>\n";
 	//if (permission_exists('email_queue_all')) {
 	//	if ($_GET['show'] == 'all') {
 	//		echo "		<input type='hidden' name='show' value='all'>\n";
