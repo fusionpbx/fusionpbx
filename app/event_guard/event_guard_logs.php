@@ -235,13 +235,13 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($event_guard_logs ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th>".$text['label-date']."</th>\n";
 	echo "<th class='hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('filter', $text['label-filter'], $order_by, $order);
 	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
 	if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -261,7 +261,7 @@
 				echo "		<input type='hidden' name='event_guard_logs[$x][event_guard_log_uuid]' value='".escape($row['event_guard_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>\n";
+			echo "	<td class='hide-md-dn'>\n";
 			if (permission_exists('event_guard_log_edit')) {
 				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['hostname'])."</a>\n";
 			}
@@ -270,12 +270,12 @@
 			}
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date_formatted'])."</a></td>\n";
-			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
+			echo "	<td class='hide-md-dn'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
 			
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td>".escape($row['user_agent'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($row['log_status'])."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
