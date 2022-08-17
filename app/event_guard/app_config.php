@@ -31,6 +31,9 @@
 		$apps[$x]['permissions'][$y]['name'] = 'event_guard_log_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'event_guard_log_unblock';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 
 	//event guard logs
 		$y = 0;
