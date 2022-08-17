@@ -50,12 +50,12 @@ if (!class_exists('event_guard')) {
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'event_guard_logs';
+				$this->app_name = 'event_guard';
 				$this->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
 				$this->name = 'event_guard_log';
 				$this->table = 'event_guard_logs';
 				$this->toggle_field = '';
-				$this->toggle_values = ['true','false'];
+				$this->toggle_values = ['block','pending'];
 				$this->location = 'event_guard_logs.php';
 		}
 
