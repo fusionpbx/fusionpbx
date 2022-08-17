@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -108,6 +108,56 @@ if (!class_exists('event_guard')) {
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
+									unset($array);
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		/**
+		 * update rows from the database change status to pending
+		 */
+		public function unblock($records) {
+			if (permission_exists($this->name.'_unblock')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+										$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
+										$array[$this->table][$x]['log_status'] = 'pending';
+									}
+
+								//increment the id
+									$x++;
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
 									unset($array);
 
 								//set message
