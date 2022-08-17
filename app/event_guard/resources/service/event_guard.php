@@ -61,6 +61,11 @@
 		$debug = true;
 	}
 
+//get the hostname
+	if (!isset($hostname)) {
+		$hostname = gethostname();
+	}
+
 //set the php operating system
 	$php_os = strtolower(PHP_OS);
 
@@ -115,10 +120,63 @@
 		echo "Unable to connect to event socket\n";
 	}
 
+//preset values
+	$interval_seconds = 30;
+	$previous_time = time() - $interval_seconds;
+
 //loop through the switch events
 	$cmd = "event json ALL";
 	$result = $socket->request($cmd);
 	while (true) {
+
+		//check pending unblock requests
+		if ((time() - $previous_time) > $interval_seconds) {
+			//debug info
+			if ($debug) {
+				echo "time difference: ". (time() - $previous_time)."\n";
+			}
+
+			//check the database for pending requests
+			$sql = "select event_guard_log_uuid, log_date, filter, ip_address, extension, user_agent ";
+			$sql .= "from v_event_guard_logs ";
+			$sql .= "where log_status = 'pending' ";
+			$sql .= "and hostname = :hostname ";
+			if ($debug) { echo $sql." ".$hostname."\n"; }
+			$parameters['hostname'] = $hostname;
+			$database = new database;
+			$event_guard_logs = $database->select($sql, $parameters, 'all');
+			unset($database);
+			if (is_array($event_guard_logs)) {
+				foreach($event_guard_logs as $row) {
+					//unblock the ip address
+					unblock($row['ip_address'], $row['filter']);
+
+					//log the blocked ip address to the syslog
+					openlog("fusionpbx", LOG_PID | LOG_PERROR);
+					syslog(LOG_WARNING, "fusionpbx: unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]");
+					closelog();
+
+					//log the blocked ip address to the database
+					$array['event_guard_logs'][0]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
+					$array['event_guard_logs'][0]['log_date'] = 'now()';
+					$array['event_guard_logs'][0]['log_status'] = 'unblocked';
+				}
+				if (is_array($array)) {
+					$p = new permissions;
+					$p->add('event_guard_log_edit', 'temp');
+					$database = new database;
+					$database->app_name = 'event guard';
+					$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+					$database->save($array);
+					//$message = $database->message;
+					$p->delete('event_guard_log_edit', 'temp');
+					unset($database, $array);
+				}
+			}
+
+			//update the time
+			$previous_time = time();
+		}
 
 		//reconnect to event socket
 		if (!$socket) {
@@ -133,66 +191,66 @@
 		}
 
 		//read the socket
-		$response = $socket->read_event();
+		$json_response = $socket->read_event();
 
 		//decode the response
-		if (isset($response) && $response != '') {
-			$array = json_decode($response['$'], true);
-			unset($response);
+		if (isset($json_response) && $json_response != '') {
+			$json_array = json_decode($json_response['$'], true);
+			unset($json_response);
 		}
 
 		//registration failed - block IP address unless they are registered, 
-		if (is_array($array) && $array['Event-Subclass'] == 'sofia::register_failure') {
+		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
 			//not registered so block the address
-			if (!access_allowed($array['network-ip'])) {
-				block($array['network-ip'], 'sip-auth-fail', $array);
+			if (!access_allowed($json_array['network-ip'])) {
+				block($json_array['network-ip'], 'sip-auth-fail', $json_array);
 			}
 		}
 
 		//registration to the IP address
-		if (is_array($array) && $array['Event-Subclass'] == 'sofia::pre_register') {
-			if (isset($array['to-host'])) {
-				$is_valid_ip = filter_var($array['to-host'], FILTER_VALIDATE_IP);
+		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::pre_register') {
+			if (isset($json_array['to-host'])) {
+				$is_valid_ip = filter_var($json_array['to-host'], FILTER_VALIDATE_IP);
 				if ($is_valid_ip) {
 					//if not registered block the address
-					if (!access_allowed($array['network-ip'])) {
-						block($array['network-ip'], 'sip-auth-ip', $array);
+					if (!access_allowed($json_array['network-ip'])) {
+						block($json_array['network-ip'], 'sip-auth-ip', $json_array);
 					}
 
 					//debug info
 					if ($debug) {
-						echo "network-ip ".$array['network-ip']."\n";
-						echo "to-host ".$array['to-host']."\n";
+						echo "network-ip ".$json_array['network-ip']."\n";
+						echo "to-host ".$json_array['to-host']."\n";
 						echo "\n";
 					}
 				}
 			}
 		}
 
-		//unset the array
-		if (is_array($array)) {
-			unset($array);
-		}
-
 		//debug information
-		if ($debug && ($array['Event-Subclass'] == 'sofia::register_failure' || $array['Event-Subclass'] == 'sofia::pre_register')) {
+		if ($debug && ($json_array['Event-Subclass'] == 'sofia::register_failure' || $json_array['Event-Subclass'] == 'sofia::pre_register')) {
 
 			echo "\n";
-			print_r($array);
+			print_r($json_array);
 
-			//echo "event_name: ".$array['Event-Name']."\n";
-			//echo "event_type: ".$array['event_type']."\n";
-			//echo "event_subclass: ".$array['Event-Subclass']."\n";
-			//echo "status: ".$array['status']."\n";
-			//echo "network_ip: ".$array['network-ip']."\n";
-			//echo "channel_state: ".$array['Channel-State']."\n";
-			//echo "channel_call_state: ".$array['Channel-Call-State']."\n";
-			//echo "call_direction: ".$array['Call-Direction']."\n";
-			//echo "channel_call_uuid: ".$array['Channel-Call-UUID']."\n";
-			//echo "answer_state: ".$array['Answer-State']."\n";
-			//echo "hangup_cause: ".$array['Hangup-Cause']."\n";
-			//echo "to-host: $array['to-host']\n";
+			//echo "event_name: ".$json_array['Event-Name']."\n";
+			//echo "event_type: ".$json_array['event_type']."\n";
+			//echo "event_subclass: ".$json_array['Event-Subclass']."\n";
+			//echo "status: ".$json_array['status']."\n";
+			//echo "network_ip: ".$json_array['network-ip']."\n";
+			//echo "channel_state: ".$json_array['Channel-State']."\n";
+			//echo "channel_call_state: ".$json_array['Channel-Call-State']."\n";
+			//echo "call_direction: ".$json_array['Call-Direction']."\n";
+			//echo "channel_call_uuid: ".$json_array['Channel-Call-UUID']."\n";
+			//echo "answer_state: ".$json_array['Answer-State']."\n";
+			//echo "hangup_cause: ".$json_array['Hangup-Cause']."\n";
+			//echo "to-host: $json_array['to-host']\n";
 			//echo "\n";
+		}
+
+		//unset the array
+		if (is_array($json_array)) {
+			unset($json_array);
 		}
 
 		//debug info
@@ -275,7 +333,7 @@
 	}
 
 //unblock the ip address
-	function unblock($ip_address, $chain) {
+	function unblock($ip_address, $filter) {
 		//set global variables
 		global $firewall;
 
@@ -286,15 +344,12 @@
 
 		//unblock the address
 		if ($firewall == 'iptables') {
-			$command = 'iptables -L -n --line-numbers | grep '.$ip_address;
-			$result = shell($command);
+			$command = 'iptables -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
+			$line_number = trim(shell($command));
 			echo "\n". $command . " line ".__line__." result ".$result."\n";
-			if (strlen($result) > 3) {
-				$array = explode(' ', trim($result));
-				$line_number = trim($array[0]);
-
+			if (is_numeric($line_number)) {
 				//$result = shell('iptables -D INPUT '.$line_number);
-				$command = 'iptables -D '.$chain.' '.$line_number;
+				$command = 'iptables -D '.$filter.' '.$line_number;
 				$result = shell($command);
 				echo "Unblock address ".$ip_address ." line ".$line_number." command ".$command." result ".$result."\n";
 			}
