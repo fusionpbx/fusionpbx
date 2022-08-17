@@ -65,7 +65,7 @@
 			case 'delete':
 				if (permission_exists('event_guard_log_delete')) {
 					$obj = new event_guard;
-					$obj->delete($event_guard_logs);
+					$obj->unblock($event_guard_logs);
 				}
 				break;
 		}
@@ -181,7 +181,7 @@
 	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	//}
 	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-unblock'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo "		<select class='formfld' name='filter'>\n";
