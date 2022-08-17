@@ -36,6 +36,11 @@
 		$debug = $_GET['debug'];
 	}
 
+//get the hostname
+	if (!isset($hostname)) {
+		$hostname = gethostname();
+	}
+
 //includes
 	if (!defined('STDIN')) { include_once "root.php"; }
 	require_once "resources/require.php";
@@ -133,12 +138,7 @@
 		$sql .= "and hostname = :hostname ";
 		$sql .= "order by domain_uuid asc ";
 		$sql .= "limit :limit ";
-		if (isset($hostname)) {
-			$parameters['hostname'] = $hostname;
-		}
-		else {
-			$parameters['hostname'] = gethostname();
-		}
+		$parameters['hostname'] = $hostname;
 		$parameters['limit'] = $email_queue_limit;
 		$database = new database;
 		$email_queue = $database->select($sql, $parameters, 'all');
