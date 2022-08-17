@@ -637,12 +637,14 @@ function getS3Setting($domain_id){
 
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_setting_category = 'aws' ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-		$parameters['domain_uuid'] = $domain_id;
+		// $sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and domain_uuid = '".$domain_id."' \n";
+		// $parameters['domain_uuid'] = $domain_id;
 		//$parameters['domain_uuid'] = $domain_uuid;
 		$database = new database;
-		$row = $database->select($sql, $parameters, 'all');
+		$row = $database->select($sql);
+		// $row = $database->select($sql);
+
 	
 		if (is_array($row)) {
 			$config['driver']='s3';
@@ -728,13 +730,11 @@ function getS3Setting($domain_id){
 
 								
 								$response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
-								if(isset($response)){
-									
+								if(isset($response)){									
 								 $cmd = $s3->getCommand('GetObject', [
 									'Bucket' => $setting['bucket'],
 									'Key'    => $rec['object_key']
 								]);
-	
 								} else {
 
 									$setting['driver']='s3';
