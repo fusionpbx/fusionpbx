@@ -142,7 +142,7 @@
 	$sql .= "email_from, ";
 	$sql .= "email_to, ";
 	$sql .= "email_subject, ";
-	$sql .= "email_body, ";
+	$sql .= "substring(email_body, 0, 80) as email_body, ";
 	//$sql .= "email_action_before, ";
 	$sql .= "email_action_after, ";
 	$sql .= "email_status, ";
@@ -262,16 +262,16 @@
 	//echo th_order_by('email_date', $text['label-email_date'], $order_by, $order);
 	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
-	echo th_order_by('email_from', $text['label-email_from'], $order_by, $order);
+	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
+	echo "<th class='shrink hide-md-dn'>".$text['label-email_from']."</th>\n";
 	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
 	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order);
-	echo th_order_by('email_body', $text['label-email_body'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-email_body']."</th>\n";
 	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order);
 	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
 	
 	//echo th_order_by('email_action_before', $text['label-email_action_before'], $order_by, $order);
-	echo th_order_by('email_action_after', $text['label-email_action_after'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-email_action_after']."</th>\n";
 	if (permission_exists('email_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -296,22 +296,22 @@
 			if (permission_exists('email_queue_edit')) {
 				//echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date'])."</a></td>\n";
 				echo "	<td nowrap='nowrap'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_date_formatted'])."</a></td>\n";
-				echo "	<td nowrap='nowrap'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_time_formatted'])."</a></td>\n";
+				echo "	<td nowrap='nowrap' class='center shrink hide-md-dn'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['email_time_formatted'])."</a></td>\n";
 			}
 			else {
 				//echo "	<td>".escape($row['email_date'])."	</td>\n";
 				echo "	<td nowrap='nowrap'>".escape($row['email_date_formatted'])."	</td>\n";
 				echo "	<td nowrap='nowrap'>".escape($row['email_time_formatted'])."	</td>\n";
 			}
-			echo "	<td>".escape($row['hostname'])."</td>\n";
-			echo "	<td>".escape($row['email_from'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td>".escape($row['email_to'])."</td>\n";
 			echo "	<td>".iconv_mime_decode($row['email_subject'])."</td>\n";
-			echo "	<td>".escape($row['email_body'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".escape($row['email_status'])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
-			echo "	<td>".escape($row['email_action_after'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['email_action_after'])."</td>\n";
 			if (permission_exists('email_queue_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
