@@ -150,7 +150,6 @@ if (!class_exists('fax')) {
 					}
 				}
 				$dialplan_xml .= "		<action application=\"set\" data=\"".$last_fax."\"/>\n";
-				$dialplan_xml .= "		<action application=\"playback\" data=\"silence_stream://2000\"/>\n";
 				$dialplan_xml .= "		<action application=\"rxfax\" data=\"$rxfax_data\"/>\n";
 				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
