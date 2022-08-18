@@ -1133,7 +1133,7 @@ include "root.php";
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				//reduce prepared statement latency
-					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES') {
+					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
 						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
 					}
 
