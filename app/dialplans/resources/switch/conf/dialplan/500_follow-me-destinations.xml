@@ -4,8 +4,6 @@
 	<condition field="${follow_me_enabled}" expression="^true$">
 		<action application="set" data="outbound_caller_id_name=${user_data ${destination_number}@${domain_name} var outbound_caller_id_name}" inline="true" enabled="false"/>
 		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
-		<action application="set" data="outbound_caller_id_name=${caller_id_name}" inline="true" enabled="true"/>
-		<action application="set" data="outbound_caller_id_number=${caller_id_number}" inline="true" enabled="true"/>
 		<action application="unset" data="call_timeout" inline="true"/>
 		<action application="lua" data="app.lua follow_me"/>
 	</condition>
