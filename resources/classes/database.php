@@ -1130,7 +1130,12 @@ include "root.php";
 					}
 
 				//set the error mode
-					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION, PDO::PGSQL_ATTR_DISABLE_PREPARES);
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				//reduce prepared statement latency
+					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES') {
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+					}
 
 				//execute the query, and return the results
 					try {
