@@ -86,7 +86,7 @@
 		//loop through the chains
 		if (is_array($chains)) {
 			foreach ($chains as $chain) {
-				$command = "iptables --list INPUT | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+				$command = "iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
 				//if ($debug) { echo $command."\n"; }
 				$response = shell($command);
 				if (!in_array($chain, explode(",", $response))) {
