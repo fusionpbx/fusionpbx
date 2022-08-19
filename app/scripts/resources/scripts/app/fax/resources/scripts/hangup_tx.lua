@@ -275,7 +275,6 @@
 	if (fax_uuid ~= nil) then
 		sql = sql .. ":fax_uuid, ";
 	end
-
 	sql = sql .. ":fax_success, ";
 	sql = sql .. ":fax_result_code, ";
 	sql = sql .. ":fax_result_text, ";
@@ -313,7 +312,6 @@
 	end
 	sql = sql .. ":fax_time ";
 	sql = sql .. ")";
-
 	local params = {
 		uuid = uuid;
 		domain_uuid = domain_uuid;
