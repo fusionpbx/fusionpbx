@@ -230,7 +230,7 @@
 --add to fax logs
 	sql = "insert into v_fax_logs ";
 	sql = sql .. "(";
-	sql = sql .. "fax_log_uuid , ";
+	sql = sql .. "fax_log_uuid, ";
 	sql = sql .. "domain_uuid, ";
 	if (fax_uuid ~= nil) then
 		sql = sql .. "fax_uuid, ";
