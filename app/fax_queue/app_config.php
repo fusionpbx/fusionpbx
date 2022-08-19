@@ -114,6 +114,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_log_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_fax_logs';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'fax_log_uuid';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'fax_date';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
