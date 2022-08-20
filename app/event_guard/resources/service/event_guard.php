@@ -121,8 +121,8 @@
 	}
 
 //preset values
-	$interval_seconds = 30;
-	$previous_time = time() - $interval_seconds;
+	//$interval_seconds = 30;
+	//$previous_time = time() - $interval_seconds;
 
 //loop through the switch events
 	$cmd = "event json ALL";
@@ -130,53 +130,17 @@
 	while (true) {
 
 		//check pending unblock requests
+		/*
 		if ((time() - $previous_time) > $interval_seconds) {
 			//debug info
 			if ($debug) {
 				echo "time difference: ". (time() - $previous_time)."\n";
 			}
 
-			//check the database for pending requests
-			$sql = "select event_guard_log_uuid, log_date, filter, ip_address, extension, user_agent ";
-			$sql .= "from v_event_guard_logs ";
-			$sql .= "where log_status = 'pending' ";
-			$sql .= "and hostname = :hostname ";
-			if ($debug) { echo $sql." ".$hostname."\n"; }
-			$parameters['hostname'] = $hostname;
-			$database = new database;
-			$event_guard_logs = $database->select($sql, $parameters, 'all');
-			unset($database);
-			if (is_array($event_guard_logs)) {
-				foreach($event_guard_logs as $row) {
-					//unblock the ip address
-					unblock($row['ip_address'], $row['filter']);
-
-					//log the blocked ip address to the syslog
-					openlog("fusionpbx", LOG_PID | LOG_PERROR);
-					syslog(LOG_WARNING, "fusionpbx: unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]");
-					closelog();
-
-					//log the blocked ip address to the database
-					$array['event_guard_logs'][0]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
-					$array['event_guard_logs'][0]['log_date'] = 'now()';
-					$array['event_guard_logs'][0]['log_status'] = 'unblocked';
-				}
-				if (is_array($array)) {
-					$p = new permissions;
-					$p->add('event_guard_log_edit', 'temp');
-					$database = new database;
-					$database->app_name = 'event guard';
-					$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-					$database->save($array);
-					//$message = $database->message;
-					$p->delete('event_guard_log_edit', 'temp');
-					unset($database, $array);
-				}
-			}
-
 			//update the time
 			$previous_time = time();
 		}
+		*/
 
 		//reconnect to event socket
 		if (!$socket) {
@@ -199,11 +163,60 @@
 			unset($json_response);
 		}
 
+		//debug info
+		//view_array($json_array, false);
+
 		//registration failed - block IP address unless they are registered, 
 		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
 			//not registered so block the address
 			if (!access_allowed($json_array['network-ip'])) {
 				block($json_array['network-ip'], 'sip-auth-fail', $json_array);
+			}
+		}
+
+		//sendevent CUSTOM event_guard:unblock
+		if (is_array($json_array) && $json_array['Event-Subclass'] == 'event_guard:unblock') {
+			//check the database for pending requests
+			$sql = "select event_guard_log_uuid, log_date, filter, ip_address, extension, user_agent ";
+			$sql .= "from v_event_guard_logs ";
+			$sql .= "where log_status = 'pending' ";
+			$sql .= "and hostname = :hostname ";
+			//if ($debug) { echo $sql." ".$hostname."\n"; }
+			$parameters['hostname'] = $hostname;
+			$database = new database;
+			$event_guard_logs = $database->select($sql, $parameters, 'all');
+			unset($database);
+			if (is_array($event_guard_logs)) {
+				foreach($event_guard_logs as $row) {
+					//unblock the ip address
+					unblock($row['ip_address'], $row['filter']);
+
+					//log the blocked ip address to the syslog
+					openlog("fusionpbx", LOG_PID | LOG_PERROR);
+					syslog(LOG_WARNING, "fusionpbx: unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]");
+					closelog();
+
+					//debug info
+					if ($debug) {
+						echo "unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__."]\n";
+					}
+
+					//log the blocked ip address to the database
+					$array['event_guard_logs'][0]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
+					$array['event_guard_logs'][0]['log_date'] = 'now()';
+					$array['event_guard_logs'][0]['log_status'] = 'unblocked';
+				}
+				if (is_array($array)) {
+					$p = new permissions;
+					$p->add('event_guard_log_edit', 'temp');
+					$database = new database;
+					$database->app_name = 'event guard';
+					$database->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+					$database->save($array);
+					//$message = $database->message;
+					$p->delete('event_guard_log_edit', 'temp');
+					unset($database, $array);
+				}
 			}
 		}
 
