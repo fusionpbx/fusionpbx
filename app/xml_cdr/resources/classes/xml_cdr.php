@@ -1286,10 +1286,11 @@ if (!class_exists('xml_cdr')) {
 							$record_name = $row['record_name'];
 							$record_path = $row['record_path'];
 						}
-						
+
 						unset ($sql, $parameters, $row);
 						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
 						$parameters['xml_cdr_uuid'] = $uuid;
+
 						$row = $database->select($sql, $parameters, 'row');
 							if (is_array($row)) {
 								$setting=$this->getS3Setting($row['domain_uuid']);
@@ -1302,6 +1303,7 @@ if (!class_exists('xml_cdr')) {
 									'secret' => $setting['secret']
 								]
 								]);
+								$record_name=$row['object_key'];
 
 								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
 								if($response){	
@@ -1324,7 +1326,6 @@ if (!class_exists('xml_cdr')) {
 					}
 				//download the file
 					if (file_exists($record_file) || $is_s3) {
-						
 						//content-range
 						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin" )  {
 							$this->range_download($record_file);
