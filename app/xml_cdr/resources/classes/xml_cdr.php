@@ -1292,7 +1292,7 @@ if (!class_exists('xml_cdr')) {
 									'secret' => $setting['secret']
 								]
 								]);
-								$record_name=$row['object_key'];
+								$record_name=substr($row['object_key'],strpos($row['object_key'], "-")+1);
 
 								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
 								if($response){	
