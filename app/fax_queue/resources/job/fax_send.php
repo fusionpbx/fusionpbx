@@ -160,6 +160,7 @@
 		$domain_name = $row['domain_name'];
 		$fax_uuid = $row['fax_uuid'];
 		$origination_uuid = $row['origination_uuid'];
+		$fax_log_uuid = $row['fax_log_uuid'];
 		$hostname = $row["hostname"];
 		$fax_date = $row["fax_date"];
 		$fax_caller_id_name = $row["fax_caller_id_name"];
@@ -498,6 +499,33 @@
 					$fax_file_name = $fax_file_filename . '.' . $fax_file_extension;
 				}
 
+				//get fax log data for email variables
+				if (isset($fax_email_address) && strlen($fax_email_address) > 0 && isset($fax_log_uuid)) {
+					$sql = "select * ";
+					$sql .= "from v_fax_logs ";
+					$sql .= "where fax_log_uuid = :fax_log_uuid ";
+					$parameters['fax_log_uuid'] = $fax_log_uuid;
+					$database = new database;
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row)) {
+						$fax_success = $row['fax_success'];
+						$fax_result_code = $row['fax_result_code'];
+						$fax_result_text = $row['fax_result_text'];
+						$fax_ecm_used = $row['fax_ecm_used'];
+						$fax_local_station_id = $row['fax_local_station_id'];
+						$fax_document_transferred_pages = $row["fax_document_transferred_pages"];
+						$fax_document_total_pages = $row["fax_document_total_pages"];
+						$fax_image_resolution = $row["fax_image_resolution"];
+						$fax_image_size = $row["fax_image_size"];
+						$fax_bad_rows = $row["fax_bad_rows"];
+						$fax_transfer_rate = $row["fax_transfer_rate"];
+						$fax_epoch = $row["fax_epoch"];
+						$fax_duration = $row["fax_duration"];
+						$fax_duration_formatted = sprintf('%02dh %02dm %02ds', ($fax_duration/ 3600),($fax_duration/ 60 % 60), $fax_duration% 60);
+					}
+					unset($parameters);
+				}
+
 				//replace variables in email subject
 				$email_subject = str_replace('${domain_name}', $domain_uuid, $email_subject);
 				$email_subject = str_replace('${number_dialed}', $fax_number, $email_subject);
@@ -506,7 +534,22 @@
 				$email_subject = str_replace('${fax_messages}', $fax_messages, $email_subject);
 				$email_subject = str_replace('${fax_file_warning}', $fax_file_warning, $email_subject);
 				$email_subject = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_subject);
-
+				
+				$email_subject = str_replace('${fax_success}', $fax_success, $email_subject);
+				$email_subject = str_replace('${fax_result_code}', $fax_result_code, $email_subject);
+				$email_subject = str_replace('${fax_result_text}', $fax_result_text, $email_subject);
+				$email_subject = str_replace('${fax_ecm_used}', $fax_ecm_used, $email_subject);
+				$email_subject = str_replace('${fax_local_station_id}', $fax_local_station_id, $email_subject);
+				$email_subject = str_replace('${fax_document_transferred_pages}', $fax_document_transferred_pages, $email_subject);
+				$email_subject = str_replace('${fax_document_total_pages}', $fax_document_total_pages, $email_subject);
+				$email_subject = str_replace('${fax_image_resolution}', $fax_image_resolution, $email_subject);
+				$email_subject = str_replace('${fax_image_size}', $fax_image_size, $email_subject);
+				$email_subject = str_replace('${fax_bad_rows}', $fax_bad_rows, $email_subject);
+				$email_subject = str_replace('${fax_transfer_rate}', $fax_transfer_rate, $email_subject);
+				$email_subject = str_replace('${fax_date}', date('Y-m-d H:i:s', $fax_epoch), $email_subject);
+				$email_subject = str_replace('${fax_duration}', $fax_duration, $email_subject);
+				$email_subject = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_subject);
+				
 				//replace variables in email body
 				$email_body = str_replace('${domain_name}', $domain_uuid, $email_body);
 				$email_body = str_replace('${number_dialed}', $fax_number, $email_body);
@@ -515,6 +558,21 @@
 				$email_body = str_replace('${fax_messages}', $fax_messages, $email_body);
 				$email_body = str_replace('${fax_file_warning}', $fax_file_warning, $email_body);
 				$email_body = str_replace('${fax_subject_tag}', $fax_email_inbound_subject_tag, $email_body);
+				
+				$email_body = str_replace('${fax_success}', $fax_success, $email_body);
+				$email_body = str_replace('${fax_result_code}', $fax_result_code, $email_body);
+				$email_body = str_replace('${fax_result_text}', $fax_result_text, $email_body);
+				$email_body = str_replace('${fax_ecm_used}', $fax_ecm_used, $email_body);
+				$email_body = str_replace('${fax_local_station_id}', $fax_local_station_id, $email_body);
+				$email_body = str_replace('${fax_document_transferred_pages}', $fax_document_transferred_pages, $email_body);
+				$email_body = str_replace('${fax_document_total_pages}', $fax_document_total_pages, $email_body);
+				$email_body = str_replace('${fax_image_resolution}', $fax_image_resolution, $email_body);
+				$email_body = str_replace('${fax_image_size}', $fax_image_size, $email_body);
+				$email_body = str_replace('${fax_bad_rows}', $fax_bad_rows, $email_body);
+				$email_body = str_replace('${fax_transfer_rate}', $fax_transfer_rate, $email_body);
+				$email_body = str_replace('${fax_date}', date('Y-m-d H:i:s', $fax_epoch), $email_body);
+				$email_body = str_replace('${fax_duration}', $fax_duration, $email_body);
+				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
 
 				//send the email
 				if (isset($fax_email_address) && strlen($fax_email_address) > 0) {
