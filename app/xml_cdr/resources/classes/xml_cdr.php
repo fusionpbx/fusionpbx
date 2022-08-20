@@ -1294,7 +1294,6 @@ if (!class_exists('xml_cdr')) {
 							if (is_array($row)) {
 								$setting=$this->getS3Setting($row['domain_uuid']);
 								
-								
 								 $s3 = new \Aws\S3\S3Client([
 								'region'  => $setting['region'],
 								'version' => 'latest',
@@ -1305,41 +1304,16 @@ if (!class_exists('xml_cdr')) {
 								]);
 
 								$response = $s3->doesObjectExist($setting['bucket'], $row['object_key']);
-								if($response){
-									
-								 $cmd = $s3->getCommand('GetObject', [
-									'Bucket' => $setting['bucket'],
-									'Key'    => $row['object_key']
-								]);
-	
-								} else {
-
-									$setting['driver']='s3';
-									$setting['url']='';
-									$setting['endpoint']='';
-									$setting['region']='us-west-2';
-									$setting['use_path_style_endpoint']=false;
-								
-									$setting=$this->getDefaultS3Configuration();
-								
-								
-									$s3 = new \Aws\S3\S3Client([
-									'region'  => $setting['region'],
-									'version' => 'latest',
-									'credentials' => [
-										'key'    => $setting['key'],
-										'secret' => $setting['secret']
-									]
-									]);
+								if($response){	
 									$cmd = $s3->getCommand('GetObject', [
 										'Bucket' => $setting['bucket'],
 										'Key'    => $row['object_key']
 									]);
-								}
+									$request = $s3->createPresignedRequest($cmd, '+30 minutes');
+									$record_file = (string) $request->getUri();
+									$is_s3=true;
+								} 
 								
-								$request = $s3->createPresignedRequest($cmd, '+30 minutes');
-								$record_file = (string) $request->getUri();
-								$is_s3=true;
 							}
 							unset ($sql, $parameters, $row);
 						}
@@ -1570,7 +1544,7 @@ function getS3Setting($domain_id){
 		$row = $database->select($sql);
 		// $row = $database->select($sql);
 	
-		if (is_array($row)) {
+		if (is_array($row) && count($row)>0) {
 			$config['driver']='s3';
 			$config['url']='';
 			$config['endpoint']='';
