@@ -184,7 +184,6 @@
 	end
 
 --define additional variables
-	uuids = "";
 	external = "false";
 
 --set the sounds path for the language, dialect and voice
@@ -749,15 +748,6 @@
 						else
 							delay_name = "leg_delay_start";
 						end
-
-					--create a new uuid and add it to the uuid list
-						new_uuid = api:executeString("create_uuid");
-						if (string.len(uuids) == 0) then
-							uuids = new_uuid;
-						else
-							uuids = uuids ..",".. new_uuid;
-						end
-						session:execute("set", "uuids="..uuids);
 
 					--export the ringback
 						if (ring_group_distinctive_ring and #ring_group_distinctive_ring > 0) then
