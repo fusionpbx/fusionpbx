@@ -490,7 +490,7 @@
 				$fax_file_extension = $path_info['extension'];
 				
 				//set the fax file pdf and tif files
-				$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . "." . $fax_file_extension);
+				$fax_file_tif = path_join($fax_file_dirname, $fax_file_filename . '.' . $fax_file_extension);
 				$fax_file_pdf = path_join($fax_file_dirname, $fax_file_filename . '.pdf');
 				
 				if (file_exists($fax_file_pdf)) {
