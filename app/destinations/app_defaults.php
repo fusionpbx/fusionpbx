@@ -76,6 +76,9 @@ if ($domains_processed == 1) {
 					$array['destinations'][$z]['destination_actions'] = json_encode($actions);
 					$z++;
 				}
+				
+				//unset actions
+				unset($actions);
 			}
 
 			if (is_array($array)) {
