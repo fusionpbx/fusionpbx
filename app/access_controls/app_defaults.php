@@ -46,13 +46,13 @@
 				else {
 					$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
 					$xml_string .= "	<network-lists>\n";
-					$xml_string .= "		<list name=\"rfc1918\" default=\"allow\">\n";
+					$xml_string .= "		<list name=\"rfc1918\" default=\"deny\">\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"10.0.0.0/8\"/>\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"172.16.0.0/12\"/>\n";
 					$xml_string .= "			<node type=\"allow\" cidr=\"192.168.0.0/16\"/>\n";
 					$xml_string .= "		</list>\n";
-					$xml_string .= "		<list name=\"domains\" default=\"deny\">\n";
-					$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
+					$xml_string .= "		<list name=\"providers\" default=\"deny\">\n";
+					//$xml_string .= "			<node type=\"allow\" domain=\"".$_SESSION['domain_name']."\"/>\n";
 					$xml_string .= "		</list>\n";
 					$xml_string .= "	</network-lists>\n";
 					$xml_string .= "</configuration>\n";
@@ -129,6 +129,15 @@
 				}
 		}
 		unset($sql, $num_rows);
+
+		//remove orphaned access control nodes
+		$sql = "delete from v_access_control_nodes ";
+		$sql .= "where access_control_uuid not in ( ";
+		$sql .= "	select access_control_uuid from v_access_controls ";
+		$sql .= ")";
+		$database = new database;
+		$database->execute($sql, null);
+		unset($sql);
 
 	}
 

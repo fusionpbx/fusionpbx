@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,7 @@
 				or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 				or session:getVariable("originate_disposition") == "failure"
 				or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL"
+				or session:getVariable("originate_disposition") == "UNALLOCATED_NUMBER"
 			) then
 				--set the status
 					status = 'missed'
@@ -183,7 +184,6 @@
 	end
 
 --define additional variables
-	uuids = "";
 	external = "false";
 
 --set the sounds path for the language, dialect and voice
@@ -301,6 +301,10 @@
 
 --check the missed calls
 	function missed()
+		--add missed call channel variable
+			if (session) then
+				session:setVariable("missed_call", 'true');
+			end
 
 		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -745,15 +749,6 @@
 							delay_name = "leg_delay_start";
 						end
 
-					--create a new uuid and add it to the uuid list
-						new_uuid = api:executeString("create_uuid");
-						if (string.len(uuids) == 0) then
-							uuids = new_uuid;
-						else
-							uuids = uuids ..",".. new_uuid;
-						end
-						session:execute("set", "uuids="..uuids);
-
 					--export the ringback
 						if (ring_group_distinctive_ring and #ring_group_distinctive_ring > 0) then
 							if (local_ip_v4 ~= nil) then
@@ -869,7 +864,7 @@
 								end
 
 							--set the destination dial string
-								dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+								dial_string = "[toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm.."leg_timeout="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations
@@ -905,7 +900,6 @@
 		--session execute
 			if (session:ready()) then
 				--set the variables
-					session:execute("set", "ignore_early_media=true");
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
 

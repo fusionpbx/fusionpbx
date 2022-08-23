@@ -674,14 +674,16 @@
 											//$array["voicemails"][$i]["voicemail_alternate_greet_id"] = $alternate_greet_id;
 											$array["voicemails"][$i]["voicemail_mail_to"] = $voicemail_mail_to;
 											//$array["voicemails"][$i]["voicemail_attach_file"] = $voicemail_attach_file;
-											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
-											$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
+											if (permission_exists('voicemail_file')) {
+												$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
+											}
 											if (permission_exists('voicemail_local_after_email')) {
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
+											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
+											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
-											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 
 										//make sure the voicemail directory exists
 											if (is_numeric($voicemail_id)) {
@@ -883,10 +885,10 @@
 				$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
 				$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
 				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+				$voicemail_tutorial = $row["voicemail_tutorial"];
 				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
-				$voicemail_tutorial = $row["voicemail_tutorial"];
 			}
 			unset($sql, $parameters, $row);
 		}
@@ -1721,7 +1723,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('voicemail_transcription_enabled') && $_SESSION['voicemail']['transcribe_enabled']['boolean'] == "true") {
+		if (permission_exists('voicemail_transcription_enabled')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
@@ -1737,20 +1739,22 @@
 			echo "</tr>\n";
 		}
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-voicemail_file']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
-		echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
-		echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
-		echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-voicemail_file']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('voicemail_file')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-voicemail_file']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
+			echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
+			echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
+			echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-voicemail_file']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		if (permission_exists('voicemail_local_after_email')) {
 			echo "<tr>\n";

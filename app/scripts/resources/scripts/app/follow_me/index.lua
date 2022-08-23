@@ -23,6 +23,7 @@
 	local route_to_bridge = require "resources.functions.route_to_bridge"
 	local Settings = require "resources.functions.lazy_settings"
 	require "resources.functions.trim";
+	require 'resources.functions.send_mail';
 
 --get the variables
 	if (session:ready()) then
@@ -36,6 +37,10 @@
 		outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
 		call_direction = session:getVariable("call_direction");
 		original_destination_number = session:getVariable("destination_number");
+		missed_call_app = session:getVariable("missed_call_app");
+		missed_call_data = session:getVariable("missed_call_data");
+		sip_to_user = session:getVariable("sip_to_user");
+		dialed_user = session:getVariable("dialed_user") or '';
 	end
 
 --set caller id
@@ -67,6 +72,80 @@
 
 --prepare the api object
 	api = freeswitch.API();
+
+--check the missed calls
+        function missed()
+                if (missed_call_app ~= nil and missed_call_data ~= nil) then
+                        if (missed_call_app == "email") then
+                                --set the sounds path for the language, dialect and voice
+                                        default_language = session:getVariable("default_language");
+                                        default_dialect = session:getVariable("default_dialect");
+                                        default_voice = session:getVariable("default_voice");
+                                        if (not default_language) then default_language = 'en'; end
+                                        if (not default_dialect) then default_dialect = 'us'; end
+                                        if (not default_voice) then default_voice = 'callie'; end
+
+                                --connect to the database
+                                        local Database = require "resources.functions.database";
+                                        local dbh = Database.new('system');
+
+                                --get the templates
+                                        local sql = "SELECT * FROM v_email_templates ";
+                                        sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+                                        sql = sql .. "AND template_language = :template_language ";
+                                        sql = sql .. "AND template_category = 'missed' "
+                                        sql = sql .. "AND template_enabled = 'true' "
+                                        sql = sql .. "ORDER BY domain_uuid DESC "
+                                        local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
+                                        if (debug["sql"]) then
+                                                freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+                                        end
+                                        dbh:query(sql, params, function(row)
+                                                subject = row["template_subject"];
+                                                body = row["template_body"];
+                                        end);
+
+                                --prepare the headers
+                                        local headers = {}
+                                        headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+                                        headers["X-FusionPBX-Domain-Name"] = domain_name;
+                                        headers["X-FusionPBX-Call-UUID"]   = uuid;
+                                        headers["X-FusionPBX-Email-Type"]  = 'missed';
+
+                                --prepare the subject
+                                        subject = subject:gsub("${caller_id_name}", caller_id_name);
+                                        subject = subject:gsub("${caller_id_number}", caller_id_number);
+                                        subject = subject:gsub("${sip_to_user}", sip_to_user);
+                                        subject = subject:gsub("${dialed_user}", dialed_user);
+                                        subject = trim(subject);
+                                        subject = '=?utf-8?B?'..base64.encode(subject)..'?=';
+
+                                --prepare the body
+                                        body = body:gsub("${caller_id_name}", caller_id_name);
+                                        body = body:gsub("${caller_id_number}", caller_id_number);
+                                        body = body:gsub("${sip_to_user}", sip_to_user);
+                                        body = body:gsub("${dialed_user}", dialed_user);
+                                        body = body:gsub(" ", "&nbsp;");
+                                        body = body:gsub("%s+", "");
+                                        body = body:gsub("&nbsp;", " ");
+                                        body = body:gsub("\n", "");
+                                        body = body:gsub("\n", "");
+                                        body = body:gsub("'", "&#39;");
+                                        body = body:gsub([["]], "&#34;");
+                                        body = trim(body);
+
+                                --send the emails
+                                        send_mail(headers,
+                                                missed_call_data,
+                                                {subject, body}
+                                        );
+
+                                        if (debug["info"]) then
+                                                freeswitch.consoleLog("notice", "[missed call] " .. caller_id_number .. "->" .. sip_to_user .. "emailed to " .. missed_call_data .. "\n");
+                                        end
+                        end
+                end
+        end
 
 --get the destination and follow the forward
 	function get_forward_all(count, destination_number, domain_name)
@@ -206,7 +285,11 @@
 				--set the values
 					external = "true";
 					row['user_exists'] = "false";
-					row['accountcode'] = accountcode;
+					if (accountcode ~= nil) then
+						row['accountcode'] = accountcode;
+					else
+						row['accountcode'] = domain_name;
+					end
 				--add the row to the destinations array
 					destinations[x] = row;
 			end
@@ -380,7 +463,6 @@
 						end
 					end
 
-
 				--set the caller id
 					caller_id = '';
 					if (caller_id_name ~= nil) then
@@ -393,7 +475,7 @@
 				--set the destination dial string
 					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
 					destination_delay = destination_delay * 2;
-					dial_string = "[ignore_early_media=true,toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					dial_string = "[toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations
@@ -448,7 +530,7 @@
 
 		--timeout destination
 			if (app_data ~= nil) then
-				if session:ready() and (
+				if (
 					session:getVariable("originate_disposition")  == "ALLOTTED_TIMEOUT"
 					or session:getVariable("originate_disposition") == "NO_ANSWER"
 					or session:getVariable("originate_disposition") == "NO_USER_RESPONSE"
@@ -459,25 +541,27 @@
 					or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 					or session:getVariable("originate_disposition") == "failure"
 				) then
-					--get the forward no answer
-						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_enabled";
-						forward_no_answer_enabled = trim(api:executeString(cmd));
+					if session:ready() then
+						--get the forward no answer
+							cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_enabled";
+							forward_no_answer_enabled = trim(api:executeString(cmd));
 
-						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_destination";
-						forward_no_answer_destination = trim(api:executeString(cmd));
+							cmd = "user_data ".. original_destination_number .."@"..domain_name.." var forward_no_answer_destination";
+							forward_no_answer_destination = trim(api:executeString(cmd));
 
-						cmd = "user_data ".. original_destination_number .."@"..domain_name.." var user_context";
-						user_context = trim(api:executeString(cmd));
+							cmd = "user_data ".. original_destination_number .."@"..domain_name.." var user_context";
+							user_context = trim(api:executeString(cmd));
 
-					--execute the time out action
-						if (forward_no_answer_enabled == 'true') then
-							session:transfer(forward_no_answer_destination, 'XML', user_context);
-						else
-							session:transfer('*99' .. original_destination_number, 'XML', user_context);
-						end
+						--execute the time out action
+							if (forward_no_answer_enabled == 'true') then
+								session:transfer(forward_no_answer_destination, 'XML', user_context);
+							else
+								session:transfer('*99' .. original_destination_number, 'XML', user_context);
+							end
+					end
 
 					--check and report missed call
-						--missed();
+						missed();
 				end
 			end
 	end

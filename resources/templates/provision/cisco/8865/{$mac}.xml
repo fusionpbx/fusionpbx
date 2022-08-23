@@ -103,7 +103,7 @@
 <!-- RTP Parameters -->
 <RTP_Port_Min ua="na">16384</RTP_Port_Min>
 <RTP_Port_Max ua="na">16482</RTP_Port_Max>
-<RTP_Packet_Size ua="na">0.030</RTP_Packet_Size>
+<RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval ua="na">0</RTCP_Tx_Interval>
 <!-- SDP Payload Types -->
@@ -398,7 +398,7 @@
 <Off_Hook_Key_List ua="na">option;redial;cancel;dir;cfwd;dnd;lcr;unpark;pickup;gpickup;</Off_Hook_Key_List>
 <Dialing_Input_Key_List ua="na">option|1;call|2;delchar|3;cancel|4;</Dialing_Input_Key_List>
 <Progressing_Key_List ua="na">endcall|2;</Progressing_Key_List>
-<Connected_Key_List ua="na">hold|1;endcall|2;conf|3;xfer|4;crdstart;crdstop;bxfer;confLx;xferLx;park;phold;flash;dnd;</Connected_Key_List>
+<Connected_Key_List ua="na">bxfer|1;xfer|2;endcall|3;conf|4;hold;crdstart;crdstop;confLx;xferLx;park;phold;flash;dnd;</Connected_Key_List>
 <Start-Xfer_Key_List ua="na">hold|1;endcall|2;xfer|4;crdstart;crdstop;dnd;</Start-Xfer_Key_List>
 <Start-Conf_Key_List ua="na">hold|1;endcall|2;conf|3;crdstart;crdstop;dnd;</Start-Conf_Key_List>
 <Conferencing_Key_List ua="na">hold|1;endcall|2;join|4;crdstart;crdstop;dnd;</Conferencing_Key_List>

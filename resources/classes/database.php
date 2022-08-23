@@ -608,6 +608,13 @@ include "root.php";
 
 				//execute the query, show exceptions
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				//reduce prepared statement latency
+					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+					}
+
+				//prepare the sql and parameters and then execute the query
 					try {
 						//$this->sql = $sql;
 						//$this->db->exec($sql);
@@ -1131,7 +1138,12 @@ include "root.php";
 				//set the error mode
 					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-				//execute the query, and return the results
+				//reduce prepared statement latency
+					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+					}
+
+				//execute the query and return the results
 					try {
 						$prep_statement = $this->db->prepare($sql);
 						if (is_array($parameters)) {
@@ -1811,8 +1823,15 @@ include "root.php";
 											$sql .= ");";
 											$sql = str_replace(", )", ")", $sql);
 
+											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+											//reduce prepared statement latency
+											if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+											}
+
+											//execute the query and return the results
 											try {
 												//$this->db->query(check_sql($sql));
 												$prep_statement = $this->db->prepare($sql);
@@ -1898,7 +1917,16 @@ include "root.php";
 											}
 											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 											$sql = str_replace(", WHERE", " WHERE", $sql);
+
+											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+											//reduce prepared statement latency
+											if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+											}
+
+											//execute the query and return the results
 											try {
 												$prep_statement = $this->db->prepare($sql);
 												$prep_statement->execute($params);
@@ -2059,9 +2087,16 @@ include "root.php";
 																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 																$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 																$sql = str_replace(", WHERE", " WHERE", $sql);
-																$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
 
+																//set the error mode
+																$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+																//reduce prepared statement latency
+																if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+																	$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+																}
+
+																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
 																try {
 																	//$this->db->query(check_sql($sql));
 																	$prep_statement = $this->db->prepare($sql);
@@ -2184,7 +2219,16 @@ include "root.php";
 															}
 															$sql .= ");";
 															$sql = str_replace(", )", ")", $sql);
+
+															//set the error mode
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+															//reduce prepared statement latency
+															if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
+																$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+															}
+
+															//execute the query and return the results
 															try {
 																$prep_statement = $this->db->prepare($sql);
 																$prep_statement->execute($params);

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -246,6 +246,7 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
+	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
 	if ($fp) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
@@ -293,6 +294,7 @@
 				echo escape($row['gateway']);
 			}
 			echo "	</td>\n";
+			echo "	<td>".escape($row["proxy"])."</td>\n";
 			echo "	<td>".escape($row["context"])."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {

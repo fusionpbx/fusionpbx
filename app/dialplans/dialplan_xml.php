@@ -108,10 +108,14 @@
 
 		//disable xml entities and load the xml object to test if the xml is valid
 			libxml_disable_entity_loader(true);
-			$xml = simplexml_load_string($dialplan_xml, 'SimpleXMLElement', LIBXML_NOCDATA);
-			if (!$xml) {
-				//$errors = libxml_get_errors();
-				$dialplan_valid = false;
+			preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
+			foreach($matches as $match) {
+				$xml = simplexml_load_string($match[0], 'SimpleXMLElement', LIBXML_NOCDATA);
+				if (!$xml) {
+					//$errors = libxml_get_errors();
+					$dialplan_valid = false;
+					break;
+				}
 			}
 
 		//save the xml to the database

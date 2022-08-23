@@ -103,7 +103,7 @@
 <!-- RTP Parameters -->
 <RTP_Port_Min ua="na">16384</RTP_Port_Min>
 <RTP_Port_Max ua="na">16482</RTP_Port_Max>
-<RTP_Packet_Size ua="na">0.030</RTP_Packet_Size>
+<RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval ua="na">0</RTCP_Tx_Interval>
 <!-- SDP Payload Types -->
@@ -256,10 +256,10 @@
 <Secure_One_Call_Act_Code ua="na">*18</Secure_One_Call_Act_Code>
 <Secure_One_Call_Deact_Code ua="na">*19</Secure_One_Call_Deact_Code>
 <Paging_Code ua="na">*96</Paging_Code>
-<Call_Park_Code ua="na">*68</Call_Park_Code>
-<Call_Pickup_Code ua="na">{$voicemail_number}</Call_Pickup_Code>
-<Call_Unpark_Code ua="na">*88</Call_Unpark_Code>
-<Group_Call_Pickup_Code ua="na">*98</Group_Call_Pickup_Code>
+<Call_Park_Code ua="na">#68</Call_Park_Code>
+<Call_Pickup_Code ua="na">#97</Call_Pickup_Code>
+<Call_Unpark_Code ua="na">#88</Call_Unpark_Code>
+<Group_Call_Pickup_Code ua="na">#98</Group_Call_Pickup_Code>
 <Referral_Services_Codes ua="na"/>
 <Feature_Dial_Services_Codes ua="na"/>
 <!-- Vertical Service Announcement Codes -->
@@ -306,7 +306,7 @@
 {foreach $keys["line"] as $row}
 {if $row.device_key_category == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
-<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_line}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "disabled"}Disabled{else}{$row.device_key_line}{/if}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{if $row.device_key_type == "shared"}shared{else}private{/if}</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
@@ -398,7 +398,7 @@
 <Off_Hook_Key_List ua="na">option;redial;cancel;dir;cfwd;dnd;lcr;unpark;pickup;gpickup;</Off_Hook_Key_List>
 <Dialing_Input_Key_List ua="na">option|1;call|2;delchar|3;cancel|4;</Dialing_Input_Key_List>
 <Progressing_Key_List ua="na">endcall|2;</Progressing_Key_List>
-<Connected_Key_List ua="na">hold|1;endcall|2;conf|3;xfer|4;crdstart;crdstop;bxfer;confLx;xferLx;park;phold;flash;dnd;</Connected_Key_List>
+<Connected_Key_List ua="na">bxfer|1;xfer|2;endcall|3;conf|4;hold;crdstart;crdstop;confLx;xferLx;park;phold;flash;dnd;</Connected_Key_List>
 <Start-Xfer_Key_List ua="na">hold|1;endcall|2;xfer|4;crdstart;crdstop;dnd;</Start-Xfer_Key_List>
 <Start-Conf_Key_List ua="na">hold|1;endcall|2;conf|3;crdstart;crdstop;dnd;</Start-Conf_Key_List>
 <Conferencing_Key_List ua="na">hold|1;endcall|2;join|4;crdstart;crdstop;dnd;</Conferencing_Key_List>

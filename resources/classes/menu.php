@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2020
+	Copyright (C) 2010 - 2022
 	All Rights Reserved.
 
 	Contributor(s):
@@ -419,6 +419,9 @@ if (!class_exists('menu')) {
 									$menu_item_path = $menu['path'];
 									$menu_item_order = $menu['order'];
 									$menu_item_description = $menu['desc'];
+
+								//sanitize the menu link
+									$menu_item_path = preg_replace('#[^a-zA-Z0-9_\-\.\&\=\?\/]#', '', $menu_item_path);
 
 								//check if the menu item exists and if it does set the row array
 									$menu_item_exists = false;

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -85,7 +85,7 @@ if ($domains_processed == 1) {
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
 						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['queue_greeting'];
+							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);
@@ -97,23 +97,23 @@ if ($domains_processed == 1) {
 					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=\$2\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
-					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$row["queue_extension"]."$\">\n";
+					$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".$row["queue_extension"]."$\">\n";
 					$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 					if (is_uuid($row['call_center_queue_uuid'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".$row['call_center_queue_uuid']."\"/>\n";
 					}
-					if (is_numeric($queue_extension)) {
+					if (is_numeric($row['queue_extension'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$row['queue_extension']."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					if ($row['queue_time_base_score_sec'] != '') {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$row['queue_time_base_score_sec']."\"/>\n";
 					}
-					if ($row['queue_greeting_path'] != '') {
-						$greeting_array = explode(':', $row['queue_greeting_path']);
+					if ($row['queue_greeting'] != '') {
+						$greeting_array = explode(':', $row['queue_greeting']);
 						if (count($greeting_array) == 1) {
-							$dialplan_xml .= "		<action application=\"playback\" data=\"".$row['queue_greeting_path']."\"/>\n";
+							$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
 						}
 						else {
 							if ($greeting_array[0] == 'say' || $greeting_array[0] == 'tone_stream' || $greeting_array[0] == 'phrase') {

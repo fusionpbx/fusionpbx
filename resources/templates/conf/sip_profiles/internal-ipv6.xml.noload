@@ -9,13 +9,11 @@
 		<param name="user-agent-string" value="FreeSWITCH" enabled="true"/>
 		<param name="debug" value="0"/>
 		<param name="sip-trace" value="no"/>
-		<param name="track-calls" value="false"/>
 		<param name="context" value="public"/>
 		<param name="rfc2833-pt" value="101"/>
 		<!-- port to bind to for sip traffic -->
-		<param name="sip-port" value="$${internal_sip_port}"/>
+		<param name="sip-port" value="5060"/>
 		<param name="dialplan" value="XML"/>
-		<param name="dtmf-type" value="rfc2833"/>
 		<param name="dtmf-duration" value="2000"/>
 		<param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
 		<param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
@@ -28,9 +26,9 @@
 		<param name="hold-music" value="$${hold_music}"/>
 		<param name="enable-100rel" value="false" enabled="false"/>
 		<param name="disable-srv503" value="true" enabled="false"/>
-		<param name="apply-inbound-acl" value="domains"/>
-		<param name="apply-register-acl" value="domains" enabled="false"/>
-		
+		<param name="apply-inbound-acl" value="providers"/>
+		<param name="apply-register-acl" value="providers" enabled="false"/>
+		<param name="dtmf-type" value="rfc2833"/>
 		<param name="record-template" value="$${recordings_dir}/${caller_id_number}.${strftime(%Y-%m-%d-%H-%M-%S)}.${record_ext}"/>
 		<!--enable to use presence and mwi -->
 		<param name="manage-presence" value="true"/>
@@ -38,12 +36,12 @@
 		<param name="bitpacking" value="aal2" enabled="false"/>
 		<!--max number of open dialogs in proceeding -->
 		<param name="max-proceeding" value="1000" enabled="false"/>
-
+		<!--max number of receiving requests per second (Default: 1000, 0 - unlimited) -->
+		<param name="max-recv-requests-per-second" value="0" enabled="false"/>
 		<!--session timers for all call to expire after the specified seconds -->
 		<param name="session-timeout" value="0" enabled="true"/>
 		<param name="enable-timer" value="false" enabled="true"/>
 		<param name="minimum-session-expires" value="0" enabled="false"/>
-
 		<param name="multiple-registrations" value="true" enabled="false"/>
 		<!--set to 'greedy' if you want your codec list to take precedence -->
 		<param name="inbound-codec-negotiation" value="generous"/>
@@ -58,7 +56,7 @@
 		<!-- additional bind parameters for TLS -->
 		<param name="tls-bind-params" value="transport=tls"/>
 		<!-- Port to listen on for TLS requests. (5061 will be used if unspecified) -->
-		<param name="tls-sip-port" value="$${internal_tls_port}"/>
+		<param name="tls-sip-port" value="5061"/>
 		<!-- Location of the agent.pem and cafile.pem ssl certificates (needed for TLS server) -->
 		<param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
 		<!-- Optionally set the passphrase password used by openSSL to encrypt/decrypt TLS private key files -->
@@ -66,14 +64,23 @@
 		<!-- Verify the date on TLS certificates -->
 		<param name="tls-verify-date" value="false"/>
 		<!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
-		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
-		<param name="tls-verify-policy" value="all|subjects_all" enabled="false"/>
+		<!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'subjects_in', 'subjects_out' and 'subjects_all' for subject validation. Multiple policies can be split with a '|' pipe -->
+		<param name="tls-verify-policy" value="none"/>
 		<!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
 		<param name="tls-verify-depth" value="2"/>
 		<!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
 		<param name="tls-verify-in-subjects" value=""/>
-		<!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
+		<!-- TLS version default: tlsv1,tlsv1.1,tlsv1.2 -->
 		<param name="tls-version" value="$${sip_tls_version}"/>
+		<!-- TLS ciphers default: ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH  -->
+		<param name="tls-ciphers" value="$${sip_tls_ciphers}" enabled="false"/>
+		<!--
+		Connect timeout for outgoing requests using TLS (in milliseconds).
+		Set the timeout and SIP engine will try again sending an outgoing request
+		and when possible - using an alternative address (DNS failover).
+		Default - 0 (disabled)
+		-->
+		<param name="tls-orq-connect-timeout" value="3000" enabled="false"/>
 
 		<!--If you don't want to pass through timestampes from 1 RTP call to another (on a per call basis with rtp_rewrite_timestamps chanvar)-->
 		<param name="rtp-rewrite-timestamps" value="true" enabled="false"/>
@@ -113,13 +120,16 @@
 		<param name="auth-subscriptions" value="true"/>
 		<!-- on authed calls, authenticate *all* the packets not just invite -->
 		<param name="auth-all-packets" value="false"/>
+		<!-- Shouldn't set these on IPv6 -->
 		<param name="ext-rtp-ip" value="$${external_rtp_ip}" enabled="false"/>
 		<param name="ext-sip-ip" value="$${external_sip_ip}" enabled="false"/>
 		<!-- rtp inactivity timeout -->
-		<param name="rtp-timeout-sec" value="300"/>
-		<param name="rtp-hold-timeout-sec" value="1800"/>
+		<param name="rtp-timeout-sec" value="300" description="deprecated" enabled="false"/>
+		<param name="rtp-hold-timeout-sec" value="1800" description="deprecated" enabled="false"/>
+		<param name="media_timeout" value="300" enabled="true"/>
+		<param name="media_hold_timeout" value="1800" enabled="true"/>
 		<!-- VAD choose one (out is a good choice); -->
-		<!-- <param name="vad" value="in"/> -->
+		<!-- <param name="vad" value="in" enabled="false"/> -->
 		<param name="vad" value="out" enabled="false"/>
 		<!-- <param name="vad" value="both"/> -->
 		<param name="alias" value="sip:10.0.1.251:5555" enabled="false"/>
@@ -146,5 +156,7 @@
 		<param name="disable-srv" value="false" enabled="false"/>
 		<param name="disable-naptr" value="false" enabled="false"/>
 
+		<!-- save session in the database for option to restore SIP UDP calls -->
+		<param name="track-calls" value="false"/>
 	</settings>
 </profile>

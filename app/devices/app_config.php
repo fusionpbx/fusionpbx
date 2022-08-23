@@ -109,6 +109,14 @@
 		$apps[$x]['permissions'][$y]['name'] = "device_line_server_address_secondary";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_line_label";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "device_line_display_name";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_line_password";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -134,6 +142,7 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_key_line";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "device_key_extension";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -268,15 +277,19 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -286,30 +299,38 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_key_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'device_profile_setting_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -3458,5 +3479,11 @@
 		$y++;
 		$vendors[$y]['uuid'] = "0f5b8507-3799-4a95-848b-1edfd5484869";
 		$vendors[$y]['name'] = "yeastar";
+
+	//telekonnectors details
+		$y++;
+		$vendors[$y]['uuid'] = "89959f8f-946a-4d4d-be7f-1385bf8b0d64";
+		$vendors[$y]['name'] = "telekonnectors";
+		$z=0;
 
 ?>

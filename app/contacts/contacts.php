@@ -74,13 +74,9 @@
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 //get contact settings - sync sources
-	$sql = "select ";
-	$sql .= "contact_uuid, ";
-	$sql .= "contact_setting_value ";
-	$sql .= "from ";
-	$sql .= "v_contact_settings ";
-	$sql .= "where ";
-	$sql .= "domain_uuid = :domain_uuid ";
+	$sql = "select contact_uuid, contact_setting_value ";
+	$sql .= "from v_contact_settings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and contact_setting_category = 'sync' ";
 	$sql .= "and contact_setting_subcategory = 'source' ";
 	$sql .= "and contact_setting_name = 'array' ";
@@ -236,7 +232,44 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*, (select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid', $sql);
+	$sql = "select *, ";
+	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid ";
+	$sql .= "from v_contacts as c ";
+	$sql .= "where true ";
+	if ($_GET['show'] != "all" || !permission_exists('contact_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!permission_exists('contact_domain_view')) {
+		$sql .= "and ( "; //only contacts assigned to current user's group(s) and those not assigned to any group
+		$sql .= "	contact_uuid in ( ";
+		$sql .= "		select contact_uuid from v_contact_groups ";
+		$sql .= "		where ";
+		if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
+			foreach ($user_group_uuids as $index => $user_group_uuid) {
+				if (is_uuid($user_group_uuid)) {
+					$sql_where_or[] = "group_uuid = :group_uuid_".$index;
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+				}
+			}
+			if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
+				$sql .= " ( ".implode(' or ', $sql_where_or)." ) ";
+			}
+			unset($sql_where_or, $index, $user_group_uuid);
+		}
+		$sql .= "		and domain_uuid = :domain_uuid ";
+		$sql .= "	) ";
+		$sql .= "	or contact_uuid in ( ";
+		$sql .= "		select contact_uuid from v_contact_users ";
+		$sql .= "		where user_uuid = :user_uuid ";
+		$sql .= "		and domain_uuid = :domain_uuid ";
+		$sql .= "";
+		$sql .= "	) ";
+		$sql .= ") ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	}
+	$sql .= $sql_search;
+	$database = new database;
 	if ($order_by != '') {
 		$sql .= order_by($order_by, $order);
 		$sql .= ", contact_organization asc ";

@@ -33,6 +33,7 @@
 //redirect admin to app instead
 	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
 		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
+		exit;
 	}
 
 //change the domain
@@ -65,6 +66,7 @@
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
+				$_SESSION["context"] = $_SESSION["domain_name"];
 
 			//clear the extension array so that it is regenerated for the selected domain
 				unset($_SESSION['extension_array']);

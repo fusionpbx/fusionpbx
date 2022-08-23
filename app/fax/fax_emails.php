@@ -65,10 +65,6 @@ if (is_array($result) && @sizeof($result) != 0) {
 	$event_socket['password'] = $row['event_socket_password'];
 	unset($sql, $row);
 
-	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
-	if(strlen($fax_send_mode_default) == 0){
-		$fax_send_mode_default = 'direct';
-	}
 	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
 
 	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
@@ -105,18 +101,13 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
 
-		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-		if(strlen($fax_send_mode) == 0){
-			$fax_send_mode = $fax_send_mode_default;
-		}
-
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 		if(strlen($fax_cover_font) == 0){
 			$fax_cover_font = $fax_cover_font_default;
 		}
 
 		$fax_allowed_extension = arr_to_map($_SESSION['fax']['allowed_extension']);
-		if($fax_allowed_extension == false){
+		if($fax_allowed_extension == false) {
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
 

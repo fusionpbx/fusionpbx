@@ -1,6 +1,6 @@
 --	page.lua
 --	Part of FusionPBX
---	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,7 @@
 	if ( session:ready() ) then
 		--answer the call
 			session:answer();
+
 		--get the dialplan variables and set them as local variables
 			destination_number = session:getVariable("destination_number");
 			pin_number = session:getVariable("pin_number");
@@ -83,6 +84,31 @@
 			caller_id_number = session:getVariable("caller_id_number");
 			sip_from_user = session:getVariable("sip_from_user");
 			mute = session:getVariable("mute");
+
+		--determine whether to check if the destination is available
+			check_destination_status = session:getVariable("check_destination_status");
+			if (not check_destination_status) then check_destination_status = 'false'; end
+
+		--set the type of auto answer
+			auto_answer = session:getVariable("auto_answer");
+			if (not auto_answer) then auto_answer = 'call_info'; end
+			if (auto_answer == 'call_info') then
+				auto_answer = "sip_h_Call-Info=<sip:"..domain_name..">;answer-after=0";
+			end
+			if (auto_answer == 'sip_auto_answer') then
+				auto_answer = "sip_auto_answer=true";
+			end
+
+		--set sip header Alert-Info
+			alert_info = session:getVariable("alert_info");
+			if (not alert_info) then alert_info = 'ring_answer'; end
+			if (alert_info == 'auto_answer') then
+				alert_info = "sip_h_Alert-Info='Auto Answer'";
+			elseif (alert_info == 'ring_answer') then
+				alert_info = "sip_h_Alert-Info='Ring Answer'";
+			else
+				alert_info = "sip_h_Alert-Info='"..alert_info.."'";
+			end
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -128,10 +154,12 @@
 			if (pin_number) then
 				--sleep
 					session:sleep(500);
+
 				--get the user pin number
 					min_digits = 2;
 					max_digits = 20;
 					digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
 				--validate the user pin number
 					pin_number_table = explode(",",pin_number);
 					for index,pin_number in pairs(pin_number_table) do
@@ -144,6 +172,7 @@
 								break;
 						end
 					end
+
 				--if not authorized play a message and then hangup
 					if (not auth) then
 						session:streamFile("phrase:voicemail_fail_auth:#");
@@ -152,10 +181,17 @@
 					end
 			end
 
-		--get the channels
+		--log the destinations
+			freeswitch.consoleLog("NOTICE", "[page] destinations "..destinations.." available\n");
+
+		--create the api object
 			api = freeswitch.API();
-			cmd_string = "show channels";
-			channel_result = api:executeString(cmd_string);
+
+		--get the channels
+			if (check_destination_status == 'true') then
+				cmd_string = "show channels";
+				channel_result = api:executeString(cmd_string);
+			end
 
 		--originate the calls
 			destination_count = 0;
@@ -168,29 +204,41 @@
 
 					--prevent calling the user that initiated the page
 					if (sip_from_user ~= destination) then
-
-						--loop through channels to determine if destination is available or busy
-						destination_status = 'available';
-						channel_array = explode("\n", channel_result);
-						for index,row in pairs(channel_array) do
-							if string.find(row, destination..'@'..domain_name, nil, true) then
-								destination_status = 'busy';
+						if (check_destination_status == 'true') then
+							--detect if the destination is available or busy
+							destination_status = 'available';
+							channel_array = explode("\n", channel_result);
+							for index,row in pairs(channel_array) do
+								if string.find(row, destination..'@'..domain_name, nil, true) then
+									destination_status = 'busy';
+									break;
+								end
 							end
-						end
 
-						--if available then page then originate the call with auto answer
-						if (destination_status == 'available') then
-							freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
+							--if available then page then originate the call with auto answer
+							if (destination_status == 'available') then
+								freeswitch.consoleLog("NOTICE", "[page] destination "..destination.." available\n");
+								if destination == sip_from_user then
+									--this destination is the caller that initated the page
+								else
+									--originate the call
+									cmd_string = "bgapi originate {"..auto_answer..","..alert_info..",hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+									api:executeString(cmd_string);
+									destination_count = destination_count + 1;
+								end
+							end
+						else
+							--endpoint determines what to do with the call when the destination is active
+							freeswitch.consoleLog("NOTICE", "[page] endpoint determines what to do if the it has an active call.\n");
 							if destination == sip_from_user then
 								--this destination is the caller that initated the page
 							else
 								--originate the call
-								cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
+								cmd_string = "bgapi originate {"..auto_answer..","..alert_info..",hangup_after_bridge=false,rtp_secure_media="..rtp_secure_media..",origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:"..conference_bridge.."+"..flags.." inline";
 								api:executeString(cmd_string);
 								destination_count = destination_count + 1;
 							end
 						end
-
 					end
 				end
 			end
