@@ -611,7 +611,7 @@ include "root.php";
 
 				//reduce prepared statement latency
 					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
 				//prepare the sql and parameters and then execute the query
@@ -1140,7 +1140,7 @@ include "root.php";
 
 				//reduce prepared statement latency
 					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
 				//execute the query and return the results
@@ -1828,7 +1828,7 @@ include "root.php";
 
 											//reduce prepared statement latency
 											if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 											}
 
 											//execute the query and return the results
@@ -1923,7 +1923,7 @@ include "root.php";
 
 											//reduce prepared statement latency
 											if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+												$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 											}
 
 											//execute the query and return the results
@@ -2093,7 +2093,7 @@ include "root.php";
 
 																//reduce prepared statement latency
 																if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-																	$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+																	$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 																}
 
 																//$prep_statement->bindParam(':domain_uuid', $this->domain_uuid );
@@ -2225,7 +2225,7 @@ include "root.php";
 
 															//reduce prepared statement latency
 															if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-																$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+																$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 															}
 
 															//execute the query and return the results
