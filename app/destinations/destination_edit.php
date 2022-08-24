@@ -935,11 +935,15 @@
 						$cache->delete("dialplan:".$destination_context);
 					}
 					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'single') {
-						if (isset($destination_number) && is_numeric($destination_number)) {
-							$cache->delete("dialplan:".$destination_context.":".$destination_number);
-						}
 						if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
 							$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+							$cache->delete("dialplan:".$destination_context.":+".$destination_prefix.$destination_number);
+						}
+						if (isset($destination_number) && substr($destination_number, 0, 1) == '+' && is_numeric(str_replace('+', '', $destination_number))) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
+						}
+						if (isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
 						}
 					}
 
