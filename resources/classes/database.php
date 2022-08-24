@@ -1140,7 +1140,7 @@ include "root.php";
 
 				//reduce prepared statement latency
 					if (defined('PDO::PGSQL_ATTR_DISABLE_PREPARES')) {
-						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES);
+						$this->db->setAttribute(PDO::PGSQL_ATTR_DISABLE_PREPARES, true);
 					}
 
 				//execute the query and return the results
