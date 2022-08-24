@@ -1,5 +1,6 @@
 <?php
 
+/*
 	//Bridges
 		$text['title-bridges']['en-us'] = 'Bridges';
 		$text['title-bridges']['en-gb'] = 'Bridges';
@@ -255,3 +256,4 @@
 		$text['label-bridge_description']['tr-tr'] = "Açıklama";
 
 ?>
+*/
