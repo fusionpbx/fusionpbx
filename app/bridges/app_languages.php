@@ -1,5 +1,17 @@
 <?php
-
+// Load by file
+$basename = "$lang_path/resources/languages";
+foreach($GLOBALS['language']->languages as $filename) {
+    if (file_exists("$basename/$filename.ini")) {
+        $sections = parse_ini_file("$basename/$filename.ini", true);
+        foreach($sections as $section_name => $section) {
+            foreach($section as $name => $value) {
+                $text[$section_name.$name][$filename] = $value;
+            }
+        }
+    }
+}
+/*
 	//Bridges
 		$text['title-bridges']['en-us'] = 'Bridges';
 		$text['title-bridges']['en-gb'] = 'Bridges';
@@ -255,3 +267,4 @@
 		$text['label-bridge_description']['tr-tr'] = "Açıklama";
 
 ?>
+*/
