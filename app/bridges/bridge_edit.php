@@ -33,8 +33,9 @@
 	}
 
 //add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+        require_once "strings.php";
+//	$language = new text;
+//	$text = $language->get();
 
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
@@ -81,16 +82,16 @@
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
+				message::add($strings['Invalid Token'],'negative');
 				header('Location: bridges.php');
 				exit;
 			}
 
 		//check for all required data
 			$msg = '';
-			if (strlen($bridge_name) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_name']."<br>\n"; }
-			if (strlen($bridge_destination) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_destination']."<br>\n"; }
-			if (strlen($bridge_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-bridge_enabled']."<br>\n"; }
+			if (strlen($bridge_name) == 0) { $msg .= $strings['Required']." ".$strings['Name']."<br>\n"; }
+			if (strlen($bridge_destination) == 0) { $msg .= $strings['Required']." ".$strings['Destination']."<br>\n"; }
+			if (strlen($bridge_enabled) == 0) { $msg .= $strings['Required']." ".$strings['Enabled']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -132,10 +133,10 @@
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+					$_SESSION["message"] = $strings['Add'];
 				}
 				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+					$_SESSION["message"] = $strings['Updated'];
 				}
 				header('Location: bridges.php');
 				return;
@@ -164,84 +165,84 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
-	$document['title'] = $text['title-bridge'];
+	$document['title'] = $strings['Bridge'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-bridge']."</b></div>\n";
+	echo "	<div class='heading'><b>".$strings['Bridge']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'bridges.php']);
+	echo button::create(['type'=>'button','label'=>$strings['Back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'bridges.php']);
 	if ($action == 'update' && permission_exists('bridge_delete')) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$strings['Delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
+	echo button::create(['type'=>'submit','label'=>$strings['Save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
 	if ($action == 'update' && permission_exists('bridge_delete')) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$strings['Continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_name']."\n";
+	echo "	".$strings['Name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='bridge_name' maxlength='255' value='".escape($bridge_name)."'>\n";
 	echo "<br />\n";
-	echo $text['description-bridge_name']."\n";
+	echo $strings['Enter the name.']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_destination']."\n";
+	echo "	".$strings['Destination']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='bridge_destination' maxlength='255' value='".escape($bridge_destination)."'>\n";
 	echo "<br />\n";
-	echo $text['description-bridge_destination']."\n";
+	echo $strings['Enter the destination.']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_enabled']."\n";
+	echo "	".$strings['Enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='bridge_enabled'>\n";
 	if ($bridge_enabled == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		echo "		<option value='true' selected='selected'>".$strings['Enabled']."</option>\n";
 	}
 	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
+		echo "		<option value='true'>".$strings['Enabled']."</option>\n";
 	}
 	if ($bridge_enabled == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		echo "		<option value='false' selected='selected'>".$strings['Enabled']."</option>\n";
 	}
 	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
+		echo "		<option value='false'>".$strings['Disabled']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['description-bridge_enabled']."\n";
+	echo $strings['Select to enable or disable.']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-bridge_description']."\n";
+	echo "	".$strings['Description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='bridge_description' maxlength='255' value=\"".escape($bridge_description)."\">\n";
 	echo "<br />\n";
-	echo $text['description-bridge_description']."\n";
+	echo $strings['Enter the description.']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
