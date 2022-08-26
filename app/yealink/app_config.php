@@ -495,14 +495,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the T52Sfirmware ROM";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "7378c0b6-3242-4989-8af6-903dfb437285";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t54s";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "T54S(T52S)-70.82.0.20.rom";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware tested 2017-11-26";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4ffd1ad7-1b00-41f7-8e93-19412127245a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_firmware_t56a";
