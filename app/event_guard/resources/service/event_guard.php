@@ -143,14 +143,18 @@
 		*/
 
 		//reconnect to event socket
-		if (!$socket) {
-			echo "Not connected to even socket\n";
+		if (!$socket->connected()) {
+			//echo "Not connected to even socket\n";
 			if ($socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
+				$cmd = "event json ALL";
+				$result = $socket->request($cmd);
 				echo "Re-connected to event socket\n";
+				
 			}	
 			else {
-				echo "Unable to connect to event socket\n";
-				break;
+				//sleep and then attempt to reconnect
+				sleep(1);
+				continue;
 			}
 		}
 
