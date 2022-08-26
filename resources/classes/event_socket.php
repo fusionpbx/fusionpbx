@@ -72,7 +72,6 @@ class event_socket {
 				$kv = explode(':', $line, 2);
 				$content[trim($kv[0])] = trim($kv[1]);
 			}
-//			usleep(1000);
 
 			if (feof($this->fp)) {
 				break;
@@ -114,7 +113,7 @@ class event_socket {
 			return false;
 		}
                 
-                socket_set_timeout($fp, 0, 1000);
+		socket_set_timeout($fp, 0, 1000);
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
