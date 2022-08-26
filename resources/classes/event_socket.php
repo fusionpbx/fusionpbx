@@ -142,6 +142,15 @@ class event_socket {
 		return false;
 	}
 
+	public function connected() {
+		if ($this->fp) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	public function request($cmd) {
 		if (!$this->fp) {
 			return false;
