@@ -112,8 +112,7 @@ class event_socket {
 		if (!$fp) {
 			return false;
 		}
-                
-		socket_set_timeout($fp, 0, 1000);
+		socket_set_timeout($fp, 0, 30000);
 		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
