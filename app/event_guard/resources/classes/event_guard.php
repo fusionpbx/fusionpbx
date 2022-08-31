@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2019 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,12 +50,12 @@ if (!class_exists('event_guard')) {
 		 */
 		public function __construct() {
 			//assign the variables
-				$this->app_name = 'event_guard_logs';
+				$this->app_name = 'event_guard';
 				$this->app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
 				$this->name = 'event_guard_log';
 				$this->table = 'event_guard_logs';
 				$this->toggle_field = '';
-				$this->toggle_values = ['true','false'];
+				$this->toggle_values = ['block','pending'];
 				$this->location = 'event_guard_logs.php';
 		}
 
@@ -109,6 +109,63 @@ if (!class_exists('event_guard')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->delete($array);
 									unset($array);
+
+								//set message
+									message::add($text['message-delete']);
+							}
+							unset($records);
+					}
+			}
+		}
+
+		/**
+		 * update rows from the database change status to pending
+		 */
+		public function unblock($records) {
+			if (permission_exists($this->name.'_unblock')) {
+
+				//add multi-lingual support
+					$language = new text;
+					$text = $language->get();
+
+				//validate the token
+					$token = new token;
+					if (!$token->validate($_SERVER['PHP_SELF'])) {
+						message::add($text['message-invalid_token'],'negative');
+						header('Location: '.$this->location);
+						exit;
+					}
+
+				//delete multiple records
+					if (is_array($records) && @sizeof($records) != 0) {
+						//build the delete array
+							$x = 0;
+							foreach ($records as $record) {
+								//add to the array
+									if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+										$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
+										$array[$this->table][$x]['log_status'] = 'pending';
+									}
+
+								//increment the id
+									$x++;
+							}
+
+						//delete the checked rows
+							if (is_array($array) && @sizeof($array) != 0) {
+								//execute delete
+									$database = new database;
+									$database->app_name = $this->app_name;
+									$database->app_uuid = $this->app_uuid;
+									$database->save($array);
+									unset($array);
+
+								//send unblock event
+									$cmd = "sendevent CUSTOM\n";
+									$cmd .= "Event-Name: CUSTOM\n";
+									$cmd .= "Event-Subclass: event_guard:unblock\n";
+									$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+									$switch_result = event_socket_request($fp, $cmd);
 
 								//set message
 									message::add($text['message-delete']);

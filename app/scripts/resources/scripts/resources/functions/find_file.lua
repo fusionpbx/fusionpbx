@@ -6,6 +6,7 @@ local basename         = require "resources.functions.basename"
 local is_absolute_path = require "resources.functions.is_absolute_path"
 
 function find_file(dbh, domain_name, domain_uuid, file_name)
+
 	-- if we specify e.g. full path
 	if (is_absolute_path(file_name) and file.exists(file_name)) then
 		log.debugf('[find_file.lua] found file `%s` in file system', file_name)
@@ -28,8 +29,17 @@ function find_file(dbh, domain_name, domain_uuid, file_name)
 			local settings = Settings.new(dbh, domain_name, domain_uuid)
 			local storage_type = settings:get('recordings', 'storage_type', 'text') or ''
 			if storage_type == 'base64' then
+				--create the database object
+				local Database         = require "resources.functions.database"
+				
+				-- json need to add when enabling debug sql
+				local json
+				if (debug["sql"]) then
+				    json = require "resources.functions.lunajson"
+				end
+
 				local sql = "SELECT recording_base64 FROM v_recordings "
-					.. "WHERE domain_uuid = :domain_uuid"
+					.. "WHERE domain_uuid = :domain_uuid "
 					.. "AND recording_filename = :file_name "
 				local params = {domain_uuid = domain_uuid, file_name = file_name};
 				if (debug["sql"]) then

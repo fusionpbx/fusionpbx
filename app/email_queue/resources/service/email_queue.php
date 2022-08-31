@@ -36,6 +36,11 @@
 		$debug = $_GET['debug'];
 	}
 
+//get the hostname
+	if (!isset($hostname)) {
+		$hostname = gethostname();
+	}
+
 //includes
 	if (!defined('STDIN')) { include_once "root.php"; }
 	require_once "resources/require.php";
@@ -55,13 +60,25 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (posix_getsid($pid) === false) { 
-				//process is not running
-				$exists = false;
+			if (function_exists(posix_getsid)) {
+				if (posix_getsid($pid) === false) { 
+					//process is not running
+					$exists = false;
+				}
+				else {
+					//process is running
+					$exists = true;
+				}
 			}
 			else {
-				//process is running
-				$exists = true;
+				if (file_exists('/proc/'.$pid)) {
+					//process is running
+					$exists = true;
+				}
+				else {
+					//process is not running
+					$exists = false;
+				}
 			}
 		}
 
@@ -133,12 +150,7 @@
 		$sql .= "and hostname = :hostname ";
 		$sql .= "order by domain_uuid asc ";
 		$sql .= "limit :limit ";
-		if (isset($hostname)) {
-			$parameters['hostname'] = $hostname;
-		}
-		else {
-			$parameters['hostname'] = gethostname();
-		}
+		$parameters['hostname'] = $hostname;
 		$parameters['limit'] = $email_queue_limit;
 		$database = new database;
 		$email_queue = $database->select($sql, $parameters, 'all');

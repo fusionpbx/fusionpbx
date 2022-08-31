@@ -935,11 +935,15 @@
 						$cache->delete("dialplan:".$destination_context);
 					}
 					if ($_SESSION['destinations']['dialplan_mode']['text'] == 'single') {
-						if (isset($destination_number) && is_numeric($destination_number)) {
-							$cache->delete("dialplan:".$destination_context.":".$destination_number);
-						}
 						if (isset($destination_prefix) && is_numeric($destination_prefix) && isset($destination_number) && is_numeric($destination_number)) {
 							$cache->delete("dialplan:".$destination_context.":".$destination_prefix.$destination_number);
+							$cache->delete("dialplan:".$destination_context.":+".$destination_prefix.$destination_number);
+						}
+						if (isset($destination_number) && substr($destination_number, 0, 1) == '+' && is_numeric(str_replace('+', '', $destination_number))) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
+						}
+						if (isset($destination_number) && is_numeric($destination_number)) {
+							$cache->delete("dialplan:".$destination_context.":".$destination_number);
 						}
 					}
 
@@ -1190,13 +1194,17 @@
 	echo "			if (document.getElementById('tr_conditions')) { document.getElementById('tr_conditions').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_actions')) { document.getElementById('tr_actions').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_provider')) { document.getElementById('tr_provider').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_cid_name_prefix')) { document.getElementById('tr_cid_name_prefix').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
-	echo "			if (document.getElementById('tr_account_code')) { document.getElementById('tr_account_code').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_user')) { document.getElementById('tr_user').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_group')) { document.getElementById('tr_group').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_destination_record')) { document.getElementById('tr_destination_record').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_hold_music')) { document.getElementById('tr_hold_music').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_distinctive_ring')) { document.getElementById('tr_distinctive_ring').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_account_code')) { document.getElementById('tr_account_code').style.display = 'none'; }\n";
 	echo "		}\n";
 	echo "		else if (dir == 'inbound') {\n";
 	echo "			if (document.getElementById('tr_caller_id_name')) { document.getElementById('tr_caller_id_name').style.display = ''; }\n";
@@ -1204,12 +1212,16 @@
 	echo "			if (document.getElementById('tr_conditions')) { document.getElementById('tr_conditions').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_actions')) { document.getElementById('tr_actions').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_provider')) { document.getElementById('tr_provider').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_cid_name_prefix')) { document.getElementById('tr_cid_name_prefix').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_user')) { document.getElementById('tr_user').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_group')) { document.getElementById('tr_group').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_destination_record')) { document.getElementById('tr_destination_record').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_hold_music')) { document.getElementById('tr_hold_music').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_distinctive_ring')) { document.getElementById('tr_distinctive_ring').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_account_code')) {document.getElementById('tr_account_code').style.display = ''; }\n";
 	echo "			if (document.getElementById('destination_context')) { document.getElementById('destination_context').value = 'public' }";
 	echo "		}\n";
@@ -1219,10 +1231,14 @@
 	echo "			if (document.getElementById('tr_conditions')) { document.getElementById('tr_conditions').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_actions')) { document.getElementById('tr_actions').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_fax_detection')) { document.getElementById('tr_fax_detection').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_provider')) { document.getElementById('tr_provider').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_cid_name_prefix')) { document.getElementById('tr_cid_name_prefix').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_sell')) { document.getElementById('tr_sell').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_buy')) { document.getElementById('tr_buy').style.display = 'none'; }\n";
 	echo "			if (document.getElementById('tr_carrier')) { document.getElementById('tr_carrier').style.display = 'none'; }\n";
+	echo "			if (document.getElementById('tr_destination_record')) { document.getElementById('tr_destination_record').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_hold_music')) { document.getElementById('tr_hold_music').style.display = ''; }\n";
+	echo "			if (document.getElementById('tr_distinctive_ring')) { document.getElementById('tr_distinctive_ring').style.display = ''; }\n";
 	echo "			if (document.getElementById('tr_account_code')) { document.getElementById('tr_account_code').style.display = ''; }\n";
 	echo "		}\n";
 	echo "		";
@@ -1391,7 +1407,7 @@
 
 	//context
 	if (permission_exists('destination_context')) {
-		echo "<tr>\n";
+		echo "<tr id='tr_destination_context'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_context']."\n";
 		echo "</td>\n";
@@ -1438,7 +1454,6 @@
 	echo "<td class='vtable' align='left'>\n";
 	$x=0;
 	foreach($destination_actions as $row) {
-//view_array($row, false);
 		echo $destination->select('dialplan', "destination_actions[$x]", $row['destination_app'].':'.$row['destination_data']);
 		echo "<br />\n";
 		$x++;
@@ -1484,7 +1499,7 @@
 
 	//providers
 	if (permission_exists('provider_edit') && is_array($providers) && @sizeof($providers) != 0) {
-		echo "<tr id='tr_fax_detection'>\n";
+		echo "<tr id='tr_provider'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-provider']."\n";
 		echo "</td>\n";
@@ -1565,6 +1580,7 @@
 	//record
 	if ($destination_type == 'inbound' && permission_exists('destination_record')) {
 		echo "<tr>\n";
+		echo "<tr id='tr_destination_record'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-destination_record']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='destination_record'>\n";
@@ -1607,6 +1623,7 @@
 	//distinctive ring
 	if (permission_exists("destination_distinctive_ring")) {
 		echo "<tr>\n";
+		echo "<tr id='tr_distinctive_ring'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_distinctive_ring']."\n";
 		echo "</td>\n";
@@ -1633,6 +1650,7 @@
 
 	//destination types
 	echo "<tr>\n";
+	echo "<tr id='tr_destination_type'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-usage']."\n";
 	echo "</td>\n";

@@ -65,7 +65,7 @@
 			case 'delete':
 				if (permission_exists('event_guard_log_delete')) {
 					$obj = new event_guard;
-					$obj->delete($event_guard_logs);
+					$obj->unblock($event_guard_logs);
 				}
 				break;
 		}
@@ -87,8 +87,9 @@
 //get the count
 	$sql = "select count(event_guard_log_uuid) ";
 	$sql .= "from v_event_guard_logs ";
+	$sql .= "where true ";
 	if (isset($search)) {
-		$sql .= "where (";
+		$sql .= "and (";
 		$sql .= "	hostname like :search ";
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
@@ -97,6 +98,10 @@
 		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
+		$sql .= "and filter = :filter ";
+		$parameters['filter'] = $_GET["filter"];
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -132,8 +137,9 @@
 	$sql .= "user_agent, ";
 	$sql .= "log_status ";
 	$sql .= "from v_event_guard_logs ";
-	if (isset($_GET["search"])) {
-		$sql .= "where (";
+	$sql .= "where true ";
+	if (isset($_GET["search"]) && $_GET["search"] != '') {
+		$sql .= "and (";
 		$sql .= "	hostname like :search ";
 		$sql .= "	or filter like :search ";
 		$sql .= "	or ip_address like :search ";
@@ -142,6 +148,10 @@
 		$sql .= "	or log_status like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
+	}
+	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
+		$sql .= "and filter = :filter ";
+		$parameters['filter'] = $_GET["filter"];
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -171,9 +181,25 @@
 	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	//}
 	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-unblock'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<select class='formfld' name='filter'>\n";
+    echo "			<option value='' selected='selected' disabled hidden>".$text['label-filter']."...</option>";
+	echo "			<option value=''></option>\n";
+	if (isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-ip") {
+		echo "			<option value='sip-auth-ip' selected='selected'>"."sip-auth-ip"."</option>\n";
+	}
+	else {
+		echo "			<option value='sip-auth-ip'>"."sip-auth-ip"."</option>\n";
+	}
+	if (isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-fail") {
+		echo "			<option value='sip-auth-fail' selected='selected'>"."sip-auth-fail"."</option>\n";
+	}
+	else {
+		echo "			<option value='sip-auth-fail'>"."sip-auth-fail"."</option>\n";
+	}
+	echo "		</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>($search == '' ? 'display: none;' : null)]);
@@ -209,13 +235,13 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($event_guard_logs ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th>".$text['label-date']."</th>\n";
 	echo "<th class='hide-md-dn'>".$text['label-time']."</th>\n";
 	echo th_order_by('filter', $text['label-filter'], $order_by, $order);
 	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
+	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
 	if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -235,7 +261,7 @@
 				echo "		<input type='hidden' name='event_guard_logs[$x][event_guard_log_uuid]' value='".escape($row['event_guard_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>\n";
+			echo "	<td class='hide-md-dn'>\n";
 			if (permission_exists('event_guard_log_edit')) {
 				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['hostname'])."</a>\n";
 			}
@@ -244,12 +270,12 @@
 			}
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date_formatted'])."</a></td>\n";
-			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
+			echo "	<td class='hide-md-dn'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
 			
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['filter'])."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
 			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td>".escape($row['user_agent'])."</td>\n";
+			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($row['log_status'])."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>\n";
