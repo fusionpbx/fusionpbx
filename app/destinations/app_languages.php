@@ -296,6 +296,27 @@ $text['message-duplicate']['ru-ru'] = "Обнаружено дублирован
 $text['message-duplicate']['sv-se'] = "Dubblett Upptäckt";
 $text['message-duplicate']['uk-ua'] = "Знайдено дублікат";
 
+$text['label-file_name']['en-us'] = "File Name";
+$text['label-file_name']['en-gb'] = "File Name";
+$text['label-file_name']['ar-eg'] = "";
+$text['label-file_name']['de-at'] = "";
+$text['label-file_name']['de-ch'] = "";
+$text['label-file_name']['de-de'] = "";
+$text['label-file_name']['es-cl'] = "";
+$text['label-file_name']['es-mx'] = "";
+$text['label-file_name']['fr-ca'] = "";
+$text['label-file_name']['fr-fr'] = "";
+$text['label-file_name']['he-il'] = "";
+$text['label-file_name']['it-it'] = "";
+$text['label-file_name']['nl-nl'] = "";
+$text['label-file_name']['pl-pl'] = "";
+$text['label-file_name']['pt-br'] = "";
+$text['label-file_name']['pt-pt'] = "";
+$text['label-file_name']['ro-ro'] = "";
+$text['label-file_name']['ru-ru'] = "";
+$text['label-file_name']['sv-se'] = "";
+$text['label-file_name']['uk-ua'] = "";
+
 $text['label-monthly_price_buy']['en-us'] = "Monthly buy price";
 $text['label-monthly_price_buy']['en-gb'] = "Monthly buy price";
 $text['label-monthly_price_buy']['ar-eg'] = "";
@@ -1558,7 +1579,6 @@ $text['description-destination_actions']['ro-ro'] = "";
 $text['description-destination_actions']['ru-ru'] = "";
 $text['description-destination_actions']['sv-se'] = "";
 $text['description-destination_actions']['uk-ua'] = "";
-
 
 $text['description-group']['en-us'] = "Assign the destination to a group.";
 $text['description-group']['en-gb'] = "Assign the destination to a group.";
