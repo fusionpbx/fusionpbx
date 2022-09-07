@@ -1,4 +1,4 @@
-  <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <gs_provision version="1">
 <config version="1">
 <!-- ######################################################################################## -->
@@ -2279,6 +2279,19 @@
 <!-- HS Mode. Set the hanging group mode for handset, set 1 - 5 to non-hanging group mode. -->
 <!-- Number: 1 - 5; 101 - 104. 1 - HS1, 2 - HS2, 3 - HS3, 4 - HS4, 5 - HS5; 101 - Circular, 102 - Linear, 103 - Parallel, 104 - Shared. Default is 101. -->
 <!-- Mandatory -->
+{if isset($grandstream_hanging_group_mode) }
+<P27080>{$grandstream_hanging_group_mode}</P27080>
+<P27081>{$grandstream_hanging_group_mode}</P27081>
+<P27082>{$grandstream_hanging_group_mode}</P27082>
+<P27083>{$grandstream_hanging_group_mode}</P27083>
+<P27084>{$grandstream_hanging_group_mode}</P27084>
+<P27085>{$grandstream_hanging_group_mode}</P27085>
+<P27086>{$grandstream_hanging_group_mode}</P27086>
+<P27087>{$grandstream_hanging_group_mode}</P27087>
+<P27088>{$grandstream_hanging_group_mode}</P27088>
+<P27089>{$grandstream_hanging_group_mode}</P27089>
+{/if}
+
 {if isset($grandstream_line_1_hanging_group_mode) }
 <P27080>{$grandstream_line_1_hanging_group_mode}</P27080>
 {else}
