@@ -346,6 +346,11 @@
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
+
+			//unset the destination app and data
+			unset($destination_app, $destination_data);
+
+			//increment the id
 			$x++;
 		}
 		unset($destinations);
