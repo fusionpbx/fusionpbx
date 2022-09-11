@@ -282,9 +282,11 @@
 
 			//prepare the destination actions
 			$destination_actions = json_decode($row['destination_actions'], true);
-			foreach($destination_actions as $action) {
-				$destination_app = $action['destination_app'];
-				$destination_data = $action['destination_data'];
+			if (is_array($destination_actions)) {
+				foreach($destination_actions as $action) {
+					$destination_app = $action['destination_app'];
+					$destination_data = $action['destination_data'];
+				}
 			}
 
 			//create the row link
