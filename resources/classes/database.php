@@ -2574,6 +2574,23 @@ include "root.php";
 					}
 			}
 
+		/**
+		 * Returns a new connected database object.<br>
+		 * <p>This allows a shortcut for a common syntax. For more information
+		 * on how the connection happens see {@link database::__construct()} and
+		 * {@link database::connect()}</p>
+		 * <p><b>Usage:</b><br>
+		 * <code>&nbsp; $database_object = database::new();</code></p>
+		 * @return database reference to a new instance of database object
+		 * @see database::__construct()
+		 * @see database::connect()
+		 */
+		public static function &new() : database {
+			$db = new database();
+			$db->connect();
+			return $db;
+		}
+
 		} //class database
 	} //!class_exists
 
