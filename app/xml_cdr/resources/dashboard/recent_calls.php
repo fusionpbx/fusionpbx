@@ -18,16 +18,17 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
-//recent calls
-	echo "<div class='hud_box'>\n";
-
-	foreach ($_SESSION['user']['extension'] as $assigned_extension) {
-		$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+//create assigned extensions array
+	if (is_array($_SESSION['user']['extension'])) {
+		foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+		}
 	}
 
-	//if also viewing system status, show more recent calls (more room avaialble)
+//if also viewing system status, show more recent calls (more room avaialble)
 	$recent_limit = (is_array($selected_blocks) && in_array('counts', $selected_blocks)) ? 10 : 5;
 
+//get the recent calls from call detail records
 	$sql = "
 		select
 			direction,
@@ -70,9 +71,13 @@
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($result) ? sizeof($result) : 0;
 
+//define row styles
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+
+//recent calls
+	echo "<div class='hud_box'>\n";
 
 //add doughnut chart
 	?>
