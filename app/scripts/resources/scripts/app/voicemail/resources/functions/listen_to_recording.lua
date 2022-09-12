@@ -90,7 +90,7 @@
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
-						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid;
 
 					--save the recording to the file system
 						if (string.len(row["message_intro_base64"]) > 32) then
@@ -105,6 +105,21 @@
 							--write decoded string to file
 								assert(file.write_base64(message_location, row["message_base64"]));
 						end
+
+					--get the file type
+						command = "file -b --mime-type "..message_location;
+						local handle = io.popen(command);
+						local mime_type = trim(handle:read("*a"));
+						handle:close();
+						if (mime_type == 'audio/x-wav') then
+							vm_message_ext = 'wav';
+						end
+						if (mime_type == 'audio/mpeg') then
+							vm_message_ext = 'mp3';
+						end
+					
+					--rename the file
+						os.execute('mv '..message_location..' '..message_location..'.'..vm_message_ext);
 				end);
 				dbh:release()
 			elseif (storage_type == "http_cache") then
