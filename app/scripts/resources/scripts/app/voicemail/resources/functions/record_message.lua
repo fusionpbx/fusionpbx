@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2020 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -194,13 +194,12 @@
 			else
 				if (vm_message_ext == "mp3") then
 					shout_exists = trim(api:execute("module_exists", "mod_shout"));
-					if (shout_exists == "true" and transcribe_enabled == "false") or (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled ~= "true") then
+					if (shout_exists == "true") then
+						--send information to the console
 						freeswitch.consoleLog("notice", "using mod_shout for mp3 encoding\n");
-						--record in mp3 directly, no transcription
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
-					elseif (shout_exists == "true" and transcribe_enabled == "true" and voicemail_transcription_enabled == "true" and transcribe_provider == "watson") then
-						--record in mp3 directly with mp3 transcription if watson selected
-							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
+
+						--record in mp3 directly
+						result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3", message_max_length, message_silence_threshold, message_silence_seconds);
 					else
 						--create initial wav recording
 							result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", message_max_length, message_silence_threshold, message_silence_seconds);
@@ -217,7 +216,10 @@
 										vm_message_ext = "wav";
 									end
 							else
+								--send information to the console
 								freeswitch.consoleLog("notice", "neither mod_shout or lame found, defaulting to wav\n");
+								
+								--use wav format
 								vm_message_ext = "wav";
 							end
 					end
