@@ -20,9 +20,10 @@
 
 //missed calls
 	echo "<div class='hud_box'>\n";
-
-	foreach ($_SESSION['user']['extension'] as $assigned_extension) {
-		$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+	if (is_array($_SESSION['user']['extension'])) {
+		foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+		}
 	}
 	unset($assigned_extension);
 
