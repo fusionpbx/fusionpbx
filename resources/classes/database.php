@@ -34,77 +34,77 @@ include "root.php";
 
 			/**
 			 * Database connection
-			 * @access public
+			 * @access private
 			 * @var PDO object
 			 */
-			public $db;
+			private $db;
 			/**
 			 * Driver to use.
-			 * @access public
+			 * @access private
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 */
-			public $driver;
+			private $driver;
 			/**
 			 * Alias of driver.
-			 * @access public
+			 * @access private
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 * @see $driver
 			 */
-			public $type;
+			private $type;
 			/**
 			 * Host for database connection
-			 * @access public
+			 * @access private
 			 * @var string host name or IP address.
 			 */
-			public $host;
+			private $host;
 			/**
 			 * Port number
-			 * @access public
+			 * @access private
 			 * @var int 1025 - 65534
 			 */
-			public $port;
+			private $port;
 			/**
 			 * Database name
-			 * @access public
+			 * @access private
 			 * @var string
 			 */
-			public $db_name;
+			private $db_name;
 			/**
 			 * Database security
-			 * @access public
+			 * @access private
 			 * @var boolean
 			 */
-			public $db_secure;
+			private $db_secure;
 			/**
 			 * Specifies the file name of the client SSL certificate
-			 * @access public
+			 * @access private
 			 * @var string full path
 			 */
-			public $db_cert_authority;
+			private $db_cert_authority;
 			/**
 			 * Username used to connect
-			 * @access public
+			 * @access private
 			 * @var string
 			 */
-			public $username;
+			private $username;
 			/**
 			 * Password used to connect
-			 * @access public
+			 * @access private
 			 * @var string
 			 */
-			public $password;
+			private $password;
 			/**
 			 * Full path to file name.
-			 * @access public
+			 * @access private
 			 * @var string full path to file name
 			 */
-			public $path;
+			private $path;
 			/**
 			 * Table name.
-			 * @access public
+			 * @access private
 			 * @var string sanitized
 			 */
-			public $table;
+			private $table;
 			/**
 			 * Where clause(s) of an SQL statement.
 			 * <p>Array of arrays must be passed with each having the
@@ -118,11 +118,11 @@ include "root.php";
 			 * <p>Below is equivalent to the above.</p>
 			 * <p><code>$db->where[0] = ['name'=>'MyColumn','operator'=>'=','value'=>'MyValue'</code></p>
 			 * <p><code>$db->where[1] = ['name'=>'MyColumn','operator'=>'=&gt;','value'=>'MyValue'</code></p>
-			 * @access public
+			 * @access private
 			 * @var array Two dimensional array of key value pairs
 			 * @see $order_by
 			 */
-			public $where; //array
+			private $where; //array
 			/**
 			 * Order By clause(s) of an SQL statement.
 			 * <p>Array of arrays must be passed with each having the
@@ -136,76 +136,86 @@ include "root.php";
 			 * <p>Below is equivalent to the above.</p>
 			 * <p><code>$db->where[0] = ['name'=>'MyColumn','operator'=>'=','value'=>'MyValue'</code></p>
 			 * <p><code>$db->where[1] = ['name'=>'MyColumn','operator'=>'=&gt;','value'=>'MyValue'</code></p>
-			 * @access public
+			 * @access private
 			 * @var array Two dimensional array of key value pairs
 			 * @see $where
 			 */
-			public $order_by; //array
+			private $order_by; //array
 			/**
 			 * Ascending or Descending order.
 			 * @var string
+			 * @access private
 			 */
-			public $order_type;
+			private $order_type;
 			/**
 			 * Numerical value to limit returned results.
 			 * @var int Used for 'LIMIT' in SQL statement.
+			 * @access private
 			 */
-			public $limit;
+			private $limit;
 			/**
 			 * Numerical value to offset returned results.
 			 * @var int Used for 'OFFSET' in SQL statement.
+			 * @access private
 			 */
-			public $offset;
+			private $offset;
 			/**
 			 * <p>Array of fields.</p>
 			 * <p>Fields are specified in 'name'=>'value' format.
 			 * <p>Used by {@link database::add() } and {@link database::update() }</p>
+			 * @access private
 			 * @var array Array of columns
 			 * @see database::add()
 			 * @see database::update()
 			 */
-			public $fields;
+			private $fields;
 			/**
 			 * Unknown property
 			 * @var unknown
+			 * @access private
 			 */
-			public $count;
+			private $count;
 			/**
 			 * Unknown property
 			 * @var unknown
+			 * @access private
 			 */
-			public $sql;
+			private $sql;
 			/**
 			 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
 			 * <p><b>NOTE:</b> If an error occurred on the last query the result is set to an empty string.</p>
 			 * @var mixed
 			 */
-			public $result;
+			private $result;
 			/**
 			 * Stores the application name making the request.
 			 * @var string App name making database request.
 			 * @see $app_uuid
+			 * @access private
 			 */
-			public $app_name;
+			private $app_name;
 			/**
 			 * Stores the application UUID making the request.
 			 * @var string
 			 * @see $app_name
+			 * @access private
 			 */
-			public $app_uuid;
+			private $app_uuid;
 			/**
 			 * <p>Stores the domain UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
+			 * @access private
 			 * @uses $_SESSION['domain_uuid'] <br>Default value upon object creation
 			 * @var string Domain UUID making request.
 			 */
-			public $domain_uuid;
+			private $domain_uuid;
 
 			/**
 			 * <p>Message for the query results.</p>
 			 * @var array Contains the message array after a query
+			 * @access private
 			 */
-			public $message;
+			private $message;
 
 			/**
 			 * Called when the object is created
@@ -221,8 +231,8 @@ include "root.php";
 			/**
 			 * <p>Magic function called whenever a property is attempted to be set.</p>
 			 * <p>This is used to protect the values stored in the object properties.</p>
-			 * @param mixed $name
-			 * @param mixed $value
+			 * @param mixed $name Name of object property
+			 * @param mixed $value Value of property
 			 */
 			public function __set($name,$value) {
 				switch($name) {
@@ -236,6 +246,7 @@ include "root.php";
 						} else {
 							trigger_error('Message property must be set to array type', E_USER_ERROR);
 						}
+						break;
 					case 'table':
 						$this->table = self::sanitize($value);
 						break;
@@ -304,20 +315,52 @@ include "root.php";
 					case null:
 						trigger_error('Database property must not be null', E_USER_ERROR);
 						break;
-					default:
-						$this->$name = $value;
+					case 'debug':
+						$this->debug = $value;
 				}
 			}
 
+			/**
+			 * Magic function called whenever a property is requested.
+			 * <p>If any case statement is removed then access to the variable will be removed.</p>
+			 * @param mixed $name object property
+			 * @return mixed
+			 */
 			public function __get($name) {
+				//remove any case statement below to remove access to the variable
 				switch($name) {
 					case 'name':
-					case 'app_name':
 						return $this->app_name;
+					case 'app_name':
+					case 'app_uuid':
+					case 'db':
+					case 'db_cert_authority':
+					case 'db_name':
+					case 'db_secure':
+					case 'domain_uuid':
+					case 'driver':
+					case 'fields':
+					case 'host':
+					case 'limit':
+					case 'message':
+					case 'offset':
+					case 'order_by':
+					case 'order_type':
+					case 'password':
+					case 'path':
+					case 'port':
+					case 'result':
+					case 'sql':
+					case 'table':
+					case 'type':
+					case 'username':
+					case 'where':
+					case 'debug':
+						return $this->$name;
 					case 'count':
 						return $this->count();
 					default:
-						return $this->$name;
+						trigger_error('Object property not available', E_USER_ERROR);
 				}
 			}
 
@@ -332,7 +375,11 @@ include "root.php";
 			}
 
 			/**
-			 * Connect to the database
+			 * <p>Connect to the database.</p>
+			 * <p>Database driver must be set before calling connect.</p>
+			 * <p>For types other than sqlite. Execution will stop on failure.</p>
+			 * @depends database::driver Alias of database::type.
+			 *
 			 */
 			public function connect() {
 
@@ -377,12 +424,6 @@ include "root.php";
 						if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
 						if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
 				}
-				if (strlen($this->driver) == 0) {
-					$this->driver = $this->type;
-				}
-
-				//sanitize the database name
-				//$this->db_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $this->db_name); // no longer needed
 
 				if ($this->driver == "sqlite") {
 					if (strlen($this->db_name) == 0) {
@@ -449,7 +490,7 @@ include "root.php";
 					try {
 						if (strlen($this->host) > 0) {
 							if (strlen($this->port) == 0) { $this->port = "5432"; }
-							if ($this->db_secure == true) {
+							if ($this->db_secure === true) {
 								$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=verify-ca sslrootcert=$this->db_cert_authority");
 							}
 							else {
@@ -477,7 +518,13 @@ include "root.php";
 				}
 			}
 
-			public function tables() {
+			/**
+			 * Returns the table names from the database.
+			 * @return array tables
+			 * @depends connect()
+			 */
+			public function tables() : array {
+					$result = [];
 				//connect to the database if needed
 					if (!$this->db) {
 						$this->connect();
@@ -521,7 +568,12 @@ include "root.php";
 					return $result;
 			}
 
-			public function table_info() {
+			/**
+			 * Returns table information from the database.
+			 * @return array table info
+			 * @depends connect()
+			 */
+			public function table_info() : array {
 				//public $db;
 				//public $type;
 				//public $table;
@@ -531,9 +583,7 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
-				//sanitize the names
-					//$this->table = self::sanitize($this->table); // no longer needed
-					//$this->db_name = self::sanitize($this->db_name); // no longer needed
+
 				//get the table info
 					if (strlen($this->table) == 0) { return false; }
 					if ($this->type == "sqlite") {
@@ -564,7 +614,20 @@ include "root.php";
 					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
 
-			public function table_exists ($db_type, $db_name, $table_name) {
+			/**
+			 * Checks if the table exists in the database.
+			 * <p><b>Note:</b><br>
+			 * Table name must be sanitized. Otherwise, a warning will be
+			 * emitted and false will be returned.</p>
+			 * @param type $table_name Sanitized name of the table to search for.
+			 * @return boolean Returns <i>true</i> if the table exists and <i>false</i> if it does not.
+			 * @depends connect()
+			 */
+			public function table_exists ($table_name) : bool {
+				if(self::sanitize($table_name) != $table_name) {
+					trigger_error('Table Name must be sanitized', E_USER_WARNING);
+					return false;
+				}
 				//connect to the database if needed
 				if (!$this->db) {
 					$this->connect();
@@ -572,13 +635,13 @@ include "root.php";
 
 				//query table store to see if the table exists
 				$sql = "";
-				if ($db_type == "sqlite") {
+				if ($this->type == "sqlite") {
 					$sql .= "SELECT * FROM sqlite_master WHERE type='table' and name='$table_name' ";
 				}
-				if ($db_type == "pgsql") {
+				if ($this->type == "pgsql") {
 					$sql .= "select * from pg_tables where schemaname='public' and tablename = '$table_name' ";
 				}
-				if ($db_type == "mysql") {
+				if ($this->type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
 				$prep_statement = $this->db->prepare($sql);
@@ -641,10 +704,18 @@ include "root.php";
 					return $result;
 			}
 
-			//public function disconnect() {
-			//	return null;
-			//}
-
+			/**
+			 * Searches database using the following object properties:
+			 * <ol>
+			 *  <li>table - sanitized name of the table {@see database::table}</li>
+			 *  <li>where - where clause {@see database::where}</li>
+			 *  <li>order_by - order_by clause {@see database::order_by}</li>
+			 *  <li>limit - limit clause {@see database::limit}</li>
+			 *  <li>offset - offset clause {@see database::offset}</li>
+			 * </ol>
+			 * @return boolean
+			 * @depends connect()
+			 */
 			public function find() {
 				//connect;
 				//table;
@@ -657,8 +728,7 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
-				//sanitize the name
-					//$this->table = self::sanitize($this->table); // no longer needed
+
 				//get data from the database
 					$sql = "select * from ".$this->table." ";
 					if ($this->where) {
