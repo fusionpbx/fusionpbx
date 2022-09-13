@@ -187,6 +187,10 @@ class cache {
 
 		//cache method file 
 			if ($_SESSION['cache']['method']['text'] == "file") {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp === false) {
+						return false;
+					}
 				//send a custom event
 					$event = "sendevent CUSTOM\n";
 					$event .= "Event-Name: CUSTOM\n";
@@ -200,6 +204,10 @@ class cache {
 
 				//set message
 					$result = '+OK cache flushed';
+
+				//close event socket
+					fclose($fp);
+
 			}
 
 		//return result
