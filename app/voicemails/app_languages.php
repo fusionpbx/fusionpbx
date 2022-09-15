@@ -1265,8 +1265,8 @@ $text['description-voicemail_alternate_greet_id']['ru-ru'] = "Альтернат
 $text['description-voicemail_alternate_greet_id']['sv-se'] = "Ett alternativt hälsnings id som används under default settings.";
 $text['description-voicemail_alternate_greet_id']['uk-ua'] = "";
 
-$text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to. ";
-$text['description-voicemail_mail_to']['en-gb'] = "Enter the email address to send voicemail to. ";
+$text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to. Multiple addresses may be entered, separated by commas.";
+$text['description-voicemail_mail_to']['en-gb'] = "Enter the email address to send voicemail to. Multiple addresses may be entered, separated by commas.";
 $text['description-voicemail_mail_to']['ar-eg'] = "";
 $text['description-voicemail_mail_to']['de-at'] = "Geben Sie die Email Adresse an, an die Ihre Mailbox Nachricht gesendet werden soll (optional)."; //copied from de-de
 $text['description-voicemail_mail_to']['de-ch'] = "Geben Sie die Email Adresse an, an die Ihre Mailbox Nachricht gesendet werden soll (optional)."; //copied from de-de

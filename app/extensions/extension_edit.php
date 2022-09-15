@@ -146,9 +146,6 @@
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 				$voicemail_id = $number_alias;
 			}
-			if (!is_numeric($voicemail_id)) {
-				$voicemail_id = null;
-			}
 
 			$cidrs = preg_split("/[\s,]+/", $cidr);
 			$ips = array();

@@ -76,6 +76,7 @@
 		$file = $_SESSION['server']['temp']['dir']."/destinations-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
+		$_SESSION['file_name'] = $_FILES['ulfile']['name'];
 	}
 
 //copy the csv file
@@ -689,13 +690,25 @@
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
+			if (isset($_SESSION['file_name']) && strlen($_SESSION['file_name']) > 0) {
+				echo "<tr>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "		".$text['label-file_name']."\n";
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				echo "		<b>".$_SESSION['file_name']."</b>\n";
+				echo "<br />\n";
+				//echo $text['description-file_name']."\n";
+				echo "</td>\n";
+				echo "</tr>\n";
+			}
+
 			//loop through user columns
 			$x = 0;
 			foreach ($line_fields as $line_field) {
 				$line_field = trim(trim($line_field), $enclosure);
 				echo "<tr>\n";
 				echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-				//echo "    ".$text['label-zzz']."\n";
 				echo $line_field;
 				echo "	</td>\n";
 				echo "	<td class='vtable' align='left'>\n";

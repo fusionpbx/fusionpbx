@@ -380,7 +380,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_mail_to";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email address to send voicemail to.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the email address to send voicemail to. Multiple addresses may be entered, separated by commas.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_sms_to";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
