@@ -3012,7 +3012,11 @@
 <!-- Enable TR-069. 0 - No, 1 - Yes. Default is 0. -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
+{if isset ($grandstream_tr069_enable)}
+<P1409>{$grandstream_tr069_enable}</P1409>
+{else}
 <P1409>0</P1409>
+{/if}
 
 <!-- ACS URL. URL of the TR-069 Auto Configuration Servers (e.g., http://acs.mycompany.com, or IP address). -->
 <!-- String -->
