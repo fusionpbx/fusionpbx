@@ -127,6 +127,13 @@
 //loop through the switch events
 	$cmd = "event json ALL";
 	$result = $socket->request($cmd);
+	if ($debug) { print_r($result); }
+
+	//filter for specific events
+	$cmd = "filter Event-Name CUSTOM";
+	$result = $socket->request($cmd);
+	if ($debug) { print_r($result); }
+
 	while (true) {
 
 		//check pending unblock requests
@@ -148,9 +155,13 @@
 			if ($socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
 				$cmd = "event json ALL";
 				$result = $socket->request($cmd);
+				if ($debug) { print_r($result); }
+
+				$cmd = "filter Event-Name CUSTOM";
+				$result = $socket->request($cmd);
+				if ($debug) { print_r($result); }
 				echo "Re-connected to event socket\n";
-				
-			}	
+			}
 			else {
 				//sleep and then attempt to reconnect
 				sleep(1);
@@ -168,7 +179,9 @@
 		}
 
 		//debug info
-		//view_array($json_array, false);
+		if ($debug) { 
+			print_r($json_array);
+		}
 
 		//registration failed - block IP address unless they are registered, 
 		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
