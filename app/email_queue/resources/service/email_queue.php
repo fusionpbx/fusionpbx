@@ -60,7 +60,7 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (function_exists(posix_getsid)) {
+			if (function_exists('posix_getsid')) {
 				if (posix_getsid($pid) === false) { 
 					//process is not running
 					$exists = false;
