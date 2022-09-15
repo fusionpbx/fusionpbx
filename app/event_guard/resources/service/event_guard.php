@@ -452,7 +452,7 @@
 			return true;
 		}
 
-		//allow access if the cidr address is allowed
+		//allow access for addresses with authentication status success
 		if (user_log_allowed($ip_address)) {
 			//save address to the cache as allowed
 			$cache->set("switch:allowed:".$ip_address, 'true');
@@ -460,6 +460,20 @@
 			//debug info
 			if ($debug) {
 				echo "address: ".$ip_address." allowed by: user logs\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//allow access for addresses that have been unblocked
+		if (event_guard_log_allowed($ip_address)) {
+			//save address to the cache as allowed
+			$cache->set("switch:allowed:".$ip_address, 'true');
+
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: unblocked\n";
 			}
 
 			//return boolean true
@@ -493,8 +507,6 @@
 			//return boolean true
 			return true;
 		}
-
-
 
 		//return
 		return false;
@@ -567,7 +579,7 @@
 		return $allowed;
 	}
 
-//determine if the IP address has been allowed by the user log authentication success
+//determine if the IP address has been allowed by a successful authentication
 	function user_log_allowed($ip_address) {
 
 		//invalid ip address
@@ -601,4 +613,40 @@
 		//return
 		return $allowed;
 	}
+
+//determine if the IP address has been unblocked in the event guard log
+	function event_guard_log_allowed($ip_address) {
+
+		//invalid ip address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
+		//get the access control allowed nodes
+		$sql = "select count(event_guard_log_uuid) ";
+		$sql .= "from v_event_guard_logs ";
+		$sql .= "where ip_address = :ip_address ";
+		$sql .= "and log_status = 'unblocked' ";
+		$parameters['ip_address'] = $ip_address;  
+		$database = new database;
+		$user_log_count = $database->select($sql, $parameters, 'field');
+		unset($database);
+
+		//debug info
+		if ($debug) {
+			echo "address ".$ip_address." count ".$user_log_count."\n";
+		}
+
+		//default authorized to false
+		$allowed = false;
+
+		//use the ip address to get the authorized nodes
+		if ($user_log_count > 0) {
+			$allowed = true;
+		}
+
+		//return
+		return $allowed;
+	}
+
 ?>
