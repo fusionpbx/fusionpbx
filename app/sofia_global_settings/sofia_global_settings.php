@@ -115,6 +115,9 @@
 	$sql .= "from v_sofia_global_settings ";
 	if (isset($_GET["search"])) {
 		$sql .= "where (";
+		$sql .= "	global_setting_name like :search ";
+		$sql .= "	or global_setting_value like :search ";
+		$sql .= "	or global_setting_description like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
