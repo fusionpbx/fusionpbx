@@ -672,17 +672,16 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//send the fax
 		$fax_file = $dir_fax_sent."/".$fax_instance_uuid.".tif";
-		$common_variables .= "fax_queue_uuid='"               . escapeshellarg($fax_queue_uuid)          . "',";
-		$common_variables  = "for_fax=1,";
-		$common_variables .= "accountcode='"                  . escapeshellarg($fax_accountcode)         . "',";
-		$common_variables .= "sip_h_X-accountcode='"          . escapeshellarg($fax_accountcode)         . "',";
-		$common_variables .= "domain_uuid="                   . escapeshellarg($_SESSION["domain_uuid"]) . ",";
-		$common_variables .= "domain_name="                   . escapeshellarg($_SESSION["domain_name"]) . ",";
-		$common_variables .= "origination_caller_id_name='"   . escapeshellarg($fax_caller_id_name)      . "',";
-		$common_variables .= "origination_caller_id_number='" . escapeshellarg($fax_caller_id_number)    . "',";
-		$common_variables .= "fax_ident='"                    . escapeshellarg($fax_caller_id_number)    . "',";
-		$common_variables .= "fax_header='"                   . escapeshellarg($fax_caller_id_name)      . "',";
-		$common_variables .= "fax_file='"                     . escapeshellarg($fax_file)               . "',";
+		$common_variables .= "fax_queue_uuid="               . $fax_queue_uuid          . ",";
+		$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
+		$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
+		$common_variables .= "domain_uuid="                   . $_SESSION["domain_uuid"] . ",";
+		$common_variables .= "domain_name="                   . $_SESSION["domain_name"] . ",";
+		$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
+		$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
+		$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
+		$common_variables .= "fax_header='"                   . $fax_caller_id_name      . "',";
+		$common_variables .= "fax_file='"                     . $fax_file               . "',";
 
 		foreach ($fax_numbers as $fax_number) {
 
@@ -704,20 +703,20 @@ if (!function_exists('fax_split_dtmf')) {
 				$fax_uri = $route_array[0];
 				$fax_variables = "";
 				foreach($_SESSION['fax']['variable'] as $variable) {
-					$fax_variables .= escapeshellarg($variable).",";
+					$fax_variables .= $variable.",";
 				}
 			}
 
 			//build the fax dial string
 			$dial_string = $common_variables;
 			$dial_string .= $fax_variables;
-			$dial_string .= "mailto_address='"     . escapeshellarg($mail_to_address)   . "',";
-			$dial_string .= "mailfrom_address='"   . escapeshellarg($mail_from_address) . "',";
-			$dial_string .= "fax_uri="             . escapeshellarg($fax_uri)           . ",";
+			$dial_string .= "mailto_address='"     . $mail_to_address   . "',";
+			$dial_string .= "mailfrom_address='"   . $mail_from_address . "',";
+			$dial_string .= "fax_uri="             . $fax_uri           . ",";
 			$dial_string .= "fax_retry_attempts=1" . ",";
 			$dial_string .= "fax_retry_limit=20"   . ",";
 			$dial_string .= "fax_retry_sleep=180"  . ",";
-			$dial_string .= "fax_verbose=true"     . ",";
+			//$dial_string .= "fax_verbose=true"     . ",";
 			$dial_string .= "fax_use_ecm=off"      . ",";
 			if ($_SESSION['fax_queue']['enabled']['boolean']) {
 				$dial_string .= "api_hangup_hook='lua app/fax/resources/scripts/hangup_tx.lua'";
