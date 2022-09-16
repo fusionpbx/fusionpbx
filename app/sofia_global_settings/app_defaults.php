@@ -49,12 +49,12 @@ if ($domains_processed == 1) {
 	//removes settings from the array that are already in the database
 		$x = 0;
 		foreach($sofia_global_settings as $row) {
-			$x = 0;
+			$y = 0;
 			foreach ($array['sofia_global_settings'] as $sub_row) {
 				if ($row['sofia_global_setting_uuid'] == $sub_row['sofia_global_setting_uuid']) {
-					unset($array['sofia_global_settings'][$x]);
+					unset($array['sofia_global_settings'][$y]);
 				}
-				$x++;
+				$y++;
 			}
 		}
 
