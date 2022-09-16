@@ -127,6 +127,13 @@
 //loop through the switch events
 	$cmd = "event json ALL";
 	$result = $socket->request($cmd);
+	if ($debug) { print_r($result); }
+
+	//filter for specific events
+	$cmd = "filter Event-Name CUSTOM";
+	$result = $socket->request($cmd);
+	if ($debug) { print_r($result); }
+
 	while (true) {
 
 		//check pending unblock requests
@@ -148,9 +155,13 @@
 			if ($socket->connect($event_socket_ip_address, $event_socket_port, $event_socket_password)) {
 				$cmd = "event json ALL";
 				$result = $socket->request($cmd);
+				if ($debug) { print_r($result); }
+
+				$cmd = "filter Event-Name CUSTOM";
+				$result = $socket->request($cmd);
+				if ($debug) { print_r($result); }
 				echo "Re-connected to event socket\n";
-				
-			}	
+			}
 			else {
 				//sleep and then attempt to reconnect
 				sleep(1);
@@ -168,7 +179,9 @@
 		}
 
 		//debug info
-		//view_array($json_array, false);
+		//if ($debug) { 
+		//	print_r($json_array);
+		//}
 
 		//registration failed - block IP address unless they are registered, 
 		if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
@@ -245,10 +258,10 @@
 		}
 
 		//debug information
-		if ($debug && ($json_array['Event-Subclass'] == 'sofia::register_failure' || $json_array['Event-Subclass'] == 'sofia::pre_register')) {
+		//if ($debug && ($json_array['Event-Subclass'] == 'sofia::register_failure' || $json_array['Event-Subclass'] == 'sofia::pre_register')) {
 
-			echo "\n";
-			print_r($json_array);
+			//echo "\n";
+			//print_r($json_array);
 
 			//echo "event_name: ".$json_array['Event-Name']."\n";
 			//echo "event_type: ".$json_array['event_type']."\n";
@@ -263,7 +276,7 @@
 			//echo "hangup_cause: ".$json_array['Hangup-Cause']."\n";
 			//echo "to-host: $json_array['to-host']\n";
 			//echo "\n";
-		}
+		//}
 
 		//unset the array
 		if (is_array($json_array)) {
@@ -417,6 +430,88 @@
 		}
 	}
 
+//determine if the IP address has been allowed by the access control list node cidr
+	function access_allowed($ip_address) {
+		//define global variables
+		global $debug;
+
+		//invalid ip address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
+		//check the cache to see if the address is allowed
+		$cache = new cache;
+		if ($cache->get("switch:allowed:".$ip_address) === 'true') {
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: cache\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//allow access for addresses with authentication status success
+		if (user_log_allowed($ip_address)) {
+			//save address to the cache as allowed
+			$cache->set("switch:allowed:".$ip_address, 'true');
+
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: user logs\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//allow access for addresses that have been unblocked
+		if (event_guard_log_allowed($ip_address)) {
+			//save address to the cache as allowed
+			$cache->set("switch:allowed:".$ip_address, 'true');
+
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: unblocked\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//allow access if the cidr address is allowed
+		if (access_control_allowed($ip_address)) {
+			//save address to the cache as allowed
+			$cache->set("switch:allowed:".$ip_address, 'true');
+
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: access controls\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//auto allow if there is a registration from the same IP address
+		if (is_registered($ip_address)) {
+			//save address to the cache as allowed
+			$cache->set("switch:allowed:".$ip_address, 'true');
+
+			//debug info
+			if ($debug) {
+				echo "address: ".$ip_address." allowed by: registration\n";
+			}
+
+			//return boolean true
+			return true;
+		}
+
+		//return
+		return false;
+	}
+
 //is the ip address registered
 	function is_registered($ip_address) {
 		//invalid ip address
@@ -438,60 +533,6 @@
 
 		//return registered boolean
 		return $registered;
-	}
-
-//determine if the IP address has been allowed by the access control list node cidr
-	function access_allowed($ip_address) {
-		//define global variables
-		global $debug;
-
-		//invalid ip address
-		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
-			return false;
-		}
-
-		//check the cache to see if the address is allowed
-		$cache = new cache;
-		if ($cache->get("switch:allowed:".$ip_address) === 'true') {
-			//debug info
-			if ($debug) {
-				echo "allowed by: cache\n";
-			}
-
-			//return boolean true
-			return true;
-		}
-
-		//auto allow if there is a registration from the same IP address
-		if (is_registered($ip_address)) {
-			//save address to the cache as allowed
-			$cache->set("switch:allowed:".$ip_address, 'true');
-
-			//debug info
-			if ($debug) {
-				echo "allowed by: registration\n";
-			}
-
-			//return boolean true
-			return true;
-		}
-
-		//allow access if the cidr address is allowed
-		if (access_control_allowed($ip_address)) {
-			//save address to the cache as allowed
-			$cache->set("switch:allowed:".$ip_address, 'true');
-
-			//debug info
-			if ($debug) {
-				echo "allowed by: access controls\n";
-			}
-
-			//return boolean true
-			return true;
-		}
-
-		//return
-		return false;
 	}
 
 //determine if the IP address has been allowed by the access control list node cidr
@@ -520,10 +561,10 @@
 			foreach($allowed_nodes as $row) {
 				if (check_cidr($row['node_cidr'], $ip_address)) {
 					//debug info
-					if ($debug) {
-						print_r($row);
-						echo $ip_address."\n";
-					}
+					//if ($debug) {
+					//	print_r($row);
+					//	echo $ip_address."\n";
+					//}
 
 					//set the allowed to true
 					$allowed = true;
@@ -532,6 +573,76 @@
 					break;
 				}
 			}
+		}
+
+		//return
+		return $allowed;
+	}
+
+//determine if the IP address has been allowed by a successful authentication
+	function user_log_allowed($ip_address) {
+
+		//invalid ip address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
+		//get the access control allowed nodes
+		$sql = "select count(user_log_uuid) ";
+		$sql .= "from v_user_logs ";
+		$sql .= "where ip_address = :ip_address ";
+		$sql .= "and result = 'success' ";
+		$parameters['ip_address'] = $ip_address;  
+		$database = new database;
+		$user_log_count = $database->select($sql, $parameters, 'field');
+		unset($database);
+
+		//debug info
+		if ($debug) {
+			echo "address ".$ip_address." count ".$user_log_count."\n";
+		}
+
+		//default authorized to false
+		$allowed = false;
+
+		//use the ip address to get the authorized nodes
+		if ($user_log_count > 0) {
+			$allowed = true;
+		}
+
+		//return
+		return $allowed;
+	}
+
+//determine if the IP address has been unblocked in the event guard log
+	function event_guard_log_allowed($ip_address) {
+
+		//invalid ip address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
+		//get the access control allowed nodes
+		$sql = "select count(event_guard_log_uuid) ";
+		$sql .= "from v_event_guard_logs ";
+		$sql .= "where ip_address = :ip_address ";
+		$sql .= "and log_status = 'unblocked' ";
+		$parameters['ip_address'] = $ip_address;  
+		$database = new database;
+		$user_log_count = $database->select($sql, $parameters, 'field');
+		unset($database);
+
+		//debug info
+		if ($debug) {
+			echo "address ".$ip_address." count ".$user_log_count."\n";
+		}
+
+		//default authorized to false
+		$allowed = false;
+
+		//use the ip address to get the authorized nodes
+		if ($user_log_count > 0) {
+			$allowed = true;
 		}
 
 		//return
