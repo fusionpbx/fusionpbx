@@ -630,117 +630,12 @@ use Aws\Common\Enum\Region;
 				file_exists($theme_image_path."icon_cdr_local_failed.png")
 				) ? true : false;
 
-								
-function getS3Setting($domain_id){
-
-        $config=[];
-
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_setting_category = 'aws' ";
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and domain_uuid = '".$domain_id."' \n";
-		// $parameters['domain_uuid'] = $domain_id;
-		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$row = $database->select($sql);
-		// $row = $database->select($sql);
-
 	
-		if (is_array($row) && count($row)>0) {
-			$config['driver']='s3';
-			$config['url']='';
-			$config['endpoint']='';
-			$config['region']='us-west-2';
-			$config['use_path_style_endpoint']=false;
-		
-				foreach($row as $conf){
-					$config[getCredentialKey($conf['domain_setting_subcategory'])]=trim($conf['domain_setting_value']);
-				}
-			
-
-			
-    	}  else {
-			$config['driver']='s3';
-				$config['url']='';
-				$config['endpoint']='';
-				$config['region']='us-west-2';
-				$config['use_path_style_endpoint']=false;
-			
-				$config=getDefaultS3Configuration();
-				
-			}
-			unset ($sql, $parameters, $row);
-			
-			$setting['default']='s3';
-			$setting['disks']['s3']=$config;
-			return $config;
-
-      }
-       function getDefaultS3Configuration(){
-
-		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_category = 'aws' ";
-		$database = new database;
-		$default_credentials = $database->select($sql);
-		
-        $config=[];
-        foreach($default_credentials as $d_conf){
-            $config[getCredentialKey($d_conf['default_setting_subcategory'])]=$d_conf['default_setting_value'];
-        }
-        return $config;
-    }
-	function getCredentialKey($string){
-       switch($string){
-        case 'region':
-            return 'region';
-        case 'secret_key':
-            return 'secret';
-        case 'bucket_name':
-            return 'bucket';
-        case 'access_key':
-            return 'key';
-        default:
-            return $string;
-       }
-    }
-
 		//loop through the results
 			$x = 0;
 
 			foreach ($result as $index => $row) {
 
-
-					//This will check if file is on S3 or not and will set the file path accordingly
-						$file_path='download.php?id='.escape($row['xml_cdr_uuid']).'&t=record';
-
-						$sql='Select * from archive_recording where xml_cdr_uuid = :xml_cdr_uuid';
-						$parameters['xml_cdr_uuid'] = $row['xml_cdr_uuid'];
-						$rec = $database->select($sql, $parameters, 'row');
-
-							if (is_array($rec)) {
-								$setting=getS3Setting($rec['domain_uuid']);
-								$s3 = new \Aws\S3\S3Client([
-								'region'  => $setting['region'],
-								'version' => 'latest',
-								'credentials' => [
-									'key'    => $setting['key'],
-									'secret' => $setting['secret']
-								]
-								]);
-
-								$response = $s3->doesObjectExist($setting['bucket'], $rec['object_key']);
-
-								if(isset($response)){									
-									$cmd = $s3->getCommand('GetObject', [
-										'Bucket' => $setting['bucket'],
-										'Key'    => $rec['object_key']
-									]);
-									$request = $s3->createPresignedRequest($cmd, '+60 minutes');
-									$file_path = (string) $request->getUri();
-								} 
-
-							}
-							unset ($sql, $parameters, $rec);
 
 
 				//get the hangup cause
@@ -867,8 +762,9 @@ function getS3Setting($domain_id){
 						if ($record_path != '') {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if (permission_exists('xml_cdr_recording_play')) {
-								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=".$file_path." type='".escape($record_type)."'></audio>";
-								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
+								// src=".$file_path."
+								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\"  type='".escape($record_type)."'></audio>";
+								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"getRecordingPath('".escape($row['xml_cdr_uuid'])."','".escape($row['domain_uuid'])."')"]);
 							}
 							if (permission_exists('xml_cdr_recording_download')) {
 								$content .= button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"download.php?id=".urlencode($row['xml_cdr_uuid'])."&t=bin"]);
