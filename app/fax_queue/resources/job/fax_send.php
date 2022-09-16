@@ -306,30 +306,36 @@
 
 		//fax options, first attempt use the fax variables from settings
 			if ($fax_retry_count == 0) {
-				$fax_options = "";
+				$fax_options = '';
 			}
-			elseif ($fax_retry_count == 1) {
-				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+			if ($fax_retry_count == 1) {
+				$fax_options = '';
+				foreach($_SESSION['fax']['variable'] as $variable) {
+					$fax_options .= $variable.",";
+				}
 			}
 			elseif ($fax_retry_count == 2) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true";
 			}
 			elseif ($fax_retry_count == 3) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 4) {
-				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 			elseif ($fax_retry_count == 5) {
+				$fax_options = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+			}
+			elseif ($fax_retry_count == 6) {
 				$fax_options = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
 			}
 
 		//define the fax file
-			$common_variables  = "for_fax=1,";
-			$common_variables .= "accountcode='"                  . $fax_accountcode         . "',";
-			$common_variables .= "sip_h_X-accountcode='"          . $fax_accountcode         . "',";
-			$common_variables .= "domain_uuid='"                  . $domain_uuid             . "',";
-			$common_variables .= "domain_name='"                  . $domain_name             . "',";
+			$common_variables = '';
+			$common_variables = "accountcode='"                  . $fax_accountcode         . "',";
+			$common_variables .= "sip_h_accountcode='"          . $fax_accountcode         . "',";
+			$common_variables .= "domain_uuid="                  . $domain_uuid             . ",";
+			$common_variables .= "domain_name="                  . $domain_name             . ",";
 			$common_variables .= "origination_caller_id_name='"   . $fax_caller_id_name      . "',";
 			$common_variables .= "origination_caller_id_number='" . $fax_caller_id_number    . "',";
 			$common_variables .= "fax_ident='"                    . $fax_caller_id_number    . "',";
@@ -347,15 +353,10 @@
 			if (count($route_array) == 0) {
 				//send the internal call to the registered extension
 				$fax_uri = "user/".$fax_number."@".$domain_name;
-				$fax_variables = "";
 			}
 			else {
 				//send the external call
 				$fax_uri = $route_array[0];
-				$fax_variables = "";
-				foreach($_SESSION['fax']['variable'] as $variable) {
-					$fax_variables .= $variable.",";
-				}
 			}
 
 		//set the fax file name without the extension
@@ -366,7 +367,6 @@
 
 		//build a list of fax variables
 			$dial_string = $common_variables;
-			$dial_string .= $fax_variables;
 			$dial_string .= $fax_options.",";
 			$dial_string .= "origination_uuid="    . $origination_uuid. ",";
 			$dial_string .= "fax_uuid="            . $fax_uuid. ",";
