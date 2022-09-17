@@ -273,7 +273,8 @@
 			$database = new database;
 			$database->app_name = 'dialplans';
 			$database->app_uuid = $app_uuid;
-			$database->uuid($dialplan_uuid);
+			if ( strlen($dialplan_uuid)>0 )
+				$database->uuid($dialplan_uuid);
 			$database->save($array);
 			unset($array);
 
