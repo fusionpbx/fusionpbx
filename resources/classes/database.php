@@ -264,7 +264,7 @@ include "root.php";
 						$this->app_name = self::sanitize($value);
 						break;
 					case 'message':
-						if(is_array($value)) {
+						if (is_array($value)) {
 							$this->message = $value;
 						} else {
 							trigger_error('Message property must be set to array type', E_USER_ERROR);
@@ -277,7 +277,7 @@ include "root.php";
 						$this->db_name = self::sanitize($value);
 						break;
 					case 'db':
-						if($name instanceof PDO) {
+						if ($name instanceof PDO) {
 							$this->db = $value;
 						} else {
 							trigger_error('db property must be a PDO object!', E_USER_ERROR);
@@ -287,26 +287,26 @@ include "root.php";
 						break;
 					case 'path':
 						$value = realpath($value);
-						if(file_exists($value)) {
+						if (file_exists($value)) {
 							$this->path = $value;
 						} else {
 							trigger_error('Unable to find database path file!', E_USER_ERROR);
 						}
 						break;
 					case 'db_cert_authority':
-						if(!file_exists($value)) {
+						if (!file_exists($value)) {
 							trigger_error('db cert authority not found!', E_USER_WARNING);
 						}
 						$this->db_cert_authority = $value;
 						break;
 					case 'port':
 						$value = (int)$value; // force cast to int
-						if($value > 1023 && $value < 65536) { $this->port = $value;	} //valid values are 1024...65535
+						if ($value > 1023 && $value < 65536) { $this->port = $value;	} //valid values are 1024...65535
 						else { trigger_error('Port not a valid range', E_USER_ERROR);	}
 						break;
 					case 'app_uuid':
 					case 'domain_uuid':
-						if(is_uuid($value)) { $this->domain_uuid = $value; }
+						if (is_uuid($value)) { $this->domain_uuid = $value; }
 						else { trigger_error('Domain or App UUID not valid', E_USER_ERROR); }
 						break;
 					case 'type':
@@ -325,7 +325,7 @@ include "root.php";
 						}
 					case 'offset':
 					case 'limit':
-						if(is_int($value)) {
+						if (is_int($value)) {
 							$this->$name = $value;
 						} else {
 							trigger_error('Offset or Limit not set to valid integer. Resetting to zero!', E_USER_WARNING);
@@ -648,7 +648,7 @@ include "root.php";
 			 * @depends connect()
 			 */
 			public function table_exists ($table_name) : bool {
-				if(self::sanitize($table_name) != $table_name) {
+				if (self::sanitize($table_name) != $table_name) {
 					trigger_error('Table Name must be sanitized', E_USER_WARNING);
 					return false;
 				}
