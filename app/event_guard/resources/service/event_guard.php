@@ -467,6 +467,7 @@
 		}
 
 		//allow access for addresses that have been unblocked
+		/*
 		if (event_guard_log_allowed($ip_address)) {
 			//save address to the cache as allowed
 			$cache->set("switch:allowed:".$ip_address, 'true');
@@ -479,6 +480,7 @@
 			//return boolean true
 			return true;
 		}
+		*/
 
 		//allow access if the cidr address is allowed
 		if (access_control_allowed($ip_address)) {
@@ -594,7 +596,7 @@
 		$sql .= "and result = 'success' ";
 		$parameters['ip_address'] = $ip_address;  
 		$database = new database;
-		$user_log_count = $database->select($sql, $parameters, 'field');
+		$user_log_count = $database->select($sql, $parameters, 'column');
 		unset($database);
 
 		//debug info
@@ -629,7 +631,7 @@
 		$sql .= "and log_status = 'unblocked' ";
 		$parameters['ip_address'] = $ip_address;  
 		$database = new database;
-		$user_log_count = $database->select($sql, $parameters, 'field');
+		$user_log_count = $database->select($sql, $parameters, 'column');
 		unset($database);
 
 		//debug info
