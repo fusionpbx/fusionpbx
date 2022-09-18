@@ -2116,6 +2116,8 @@ include "root.php";
 													}
 												}
 											}
+											$sql .= "insert_date, ";
+											$sql .= "insert_user ";
 											$sql .= ") ";
 											$sql .= "VALUES ";
 											$sql .= "(";
@@ -2146,8 +2148,12 @@ include "root.php";
 													}
 												}
 											}
+											$sql .= "now(), ";
+											$sql .= ":insert_user ";
 											$sql .= ");";
-											$sql = str_replace(", )", ")", $sql);
+
+											//add insert user parameter
+											$params['insert_user'] = $_SESSION['user_uuid'];
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2243,8 +2249,18 @@ include "root.php";
 													}
 												}
 											}
+
+											//add the modified date and user
+											$sql .= "update_date = now(), ";
+											$sql .= "update_user = :update_user ";
+											$params['update_user'] = $_SESSION['user_uuid'];
+
+											//add the where with the parent name and value
 											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 											$sql = str_replace(", WHERE", " WHERE", $sql);
+
+											//add update user parameter
+											$params['update_user'] = $_SESSION['user_uuid'];
 
 											//set the error mode
 											$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2413,6 +2429,13 @@ include "root.php";
 																		}
 																	}
 																}
+
+																//add the modified date and user
+																$sql .= "update_date = now(), ";
+																$sql .= "update_user = :update_user ";
+																$params['update_user'] = $_SESSION['user_uuid'];
+
+																//add the where with the parent name and value
 																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
 																$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
 																$sql = str_replace(", WHERE", " WHERE", $sql);
@@ -2514,6 +2537,8 @@ include "root.php";
 																	}
 																}
 															}
+															$sql .= "insert_date, ";
+															$sql .= "insert_user ";
 															$sql .= ") ";
 															$sql .= "VALUES ";
 															$sql .= "(";
@@ -2548,8 +2573,12 @@ include "root.php";
 																	}
 																}
 															}
+															$sql .= "now(), ";
+															$sql .= ":insert_user ";
 															$sql .= ");";
-															$sql = str_replace(", )", ")", $sql);
+
+															//add insert user parameter
+															$params['insert_user'] = $_SESSION['user_uuid'];
 
 															//set the error mode
 															$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
