@@ -38,12 +38,14 @@ include "root.php";
 			 * @var PDO object
 			 */
 			private $db;
+
 			/**
 			 * Driver to use.
 			 * @access private
 			 * @var string Can be pgsql, mysql, sqlite, odbc
 			 */
 			private $driver;
+
 			/**
 			 * Alias of driver.
 			 * @access private
@@ -51,60 +53,70 @@ include "root.php";
 			 * @see $driver
 			 */
 			private $type;
+
 			/**
 			 * Host for database connection
 			 * @access private
 			 * @var string host name or IP address.
 			 */
 			private $host;
+
 			/**
 			 * Port number
 			 * @access private
 			 * @var int 1025 - 65534
 			 */
 			private $port;
+
 			/**
 			 * Database name
 			 * @access private
 			 * @var string
 			 */
 			private $db_name;
+
 			/**
 			 * Database security
 			 * @access private
 			 * @var boolean
 			 */
 			private $db_secure;
+
 			/**
 			 * Specifies the file name of the client SSL certificate
 			 * @access private
 			 * @var string full path
 			 */
 			private $db_cert_authority;
+
 			/**
 			 * Username used to connect
 			 * @access private
 			 * @var string
 			 */
 			private $username;
+
 			/**
 			 * Password used to connect
 			 * @access private
 			 * @var string
 			 */
 			private $password;
+
 			/**
 			 * Full path to file name.
 			 * @access private
 			 * @var string full path to file name
 			 */
 			private $path;
+
 			/**
 			 * Table name.
 			 * @access private
 			 * @var string sanitized
 			 */
 			private $table;
+
 			/**
 			 * Where clause(s) of an SQL statement.
 			 * <p>Array of arrays must be passed with each having the
@@ -123,6 +135,7 @@ include "root.php";
 			 * @see $order_by
 			 */
 			private $where; //array
+
 			/**
 			 * Order By clause(s) of an SQL statement.
 			 * <p>Array of arrays must be passed with each having the
@@ -141,24 +154,28 @@ include "root.php";
 			 * @see $where
 			 */
 			private $order_by; //array
+
 			/**
 			 * Ascending or Descending order.
 			 * @var string
 			 * @access private
 			 */
 			private $order_type;
+
 			/**
 			 * Numerical value to limit returned results.
 			 * @var int Used for 'LIMIT' in SQL statement.
 			 * @access private
 			 */
 			private $limit;
+
 			/**
 			 * Numerical value to offset returned results.
 			 * @var int Used for 'OFFSET' in SQL statement.
 			 * @access private
 			 */
 			private $offset;
+
 			/**
 			 * <p>Array of fields.</p>
 			 * <p>Fields are specified in 'name'=>'value' format.
@@ -169,24 +186,28 @@ include "root.php";
 			 * @see database::update()
 			 */
 			private $fields;
+
 			/**
 			 * Unknown property
 			 * @var unknown
 			 * @access private
 			 */
 			private $count;
+
 			/**
 			 * Unknown property
 			 * @var unknown
 			 * @access private
 			 */
 			private $sql;
+
 			/**
 			 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
 			 * <p><b>NOTE:</b> If an error occurred on the last query the result is set to an empty string.</p>
 			 * @var mixed
 			 */
 			private $result;
+
 			/**
 			 * Stores the application name making the request.
 			 * @var string App name making database request.
@@ -194,6 +215,7 @@ include "root.php";
 			 * @access private
 			 */
 			private $app_name;
+
 			/**
 			 * Stores the application UUID making the request.
 			 * @var string
@@ -201,6 +223,7 @@ include "root.php";
 			 * @access private
 			 */
 			private $app_uuid;
+
 			/**
 			 * <p>Stores the domain UUID making the request.</p>
 			 * <p>This is defaulted to the Session domain UUID.</p>
@@ -610,6 +633,7 @@ include "root.php";
 					}
 					$prep_statement = $this->db->prepare($sql);
 					$prep_statement->execute();
+
 				//set the result array
 					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			}
@@ -628,6 +652,7 @@ include "root.php";
 					trigger_error('Table Name must be sanitized', E_USER_WARNING);
 					return false;
 				}
+
 				//connect to the database if needed
 				if (!$this->db) {
 					$this->connect();
@@ -666,7 +691,10 @@ include "root.php";
 				//public $type;
 				//public $table;
 				//public $name;
+				
+				//initialize the array
 					$result = [];
+
 				//get the table info
 					$table_info = $this->table_info();
 
@@ -883,10 +911,13 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
+
 				//sanitize the table name
 					//$this->table = self::sanitize($this->table); // no longer needed
+
 				//count the fields
 					$field_count = count($this->fields);
+
 				//add data to the database
 					$sql = "insert into ".$this->table;
 					$sql .= " (";
@@ -968,8 +999,10 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
+
 				//sanitize the table name
 					//$this->table = self::sanitize($this->table); // no longer needed
+
 				//udate the database
 					$sql = "update ".$this->table." set ";
 					$i = 1;
@@ -1047,7 +1080,9 @@ include "root.php";
 			}
 
 			public function delete(array $array) {
+				//set the default value
 					$retval = true;
+
 				//return the array
 					if (!is_array($array)) { return false; }
 
@@ -1381,6 +1416,7 @@ include "root.php";
 					if (!$this->db) {
 						$this->connect();
 					}
+
 				//sanitize the table name
 					//$this->table = self::sanitize($this->table); // no longer needed
 
@@ -1516,14 +1552,17 @@ include "root.php";
 				if (!$this->db) {
 					$this->connect();
 				}
+
 				//set the name
 				if (isset($array['name'])) {
 					$this->name = $array['name'];
 				}
+
 				//set the uuid
 				if (isset($array['uuid'])) {
 					$this->uuid = $array['uuid'];
 				}
+
 				//build the query
 				$sql = "SELECT * FROM ".self::TABLE_PREFIX . $this->name . " ";
 				if (isset($this->uuid)) {
@@ -1661,7 +1700,6 @@ include "root.php";
 										unset($array[$parent_name][$x]);
 
 										//loop through the fields
-
 										foreach($row as $field_name => $field_value) {
 											//find the child tables
 											if (is_array($field_value)) {
