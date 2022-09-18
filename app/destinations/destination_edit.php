@@ -898,7 +898,6 @@
 								}
 							}
 							$array['destinations'][$x]["destination_actions"] = json_encode($actions);
-
 							$array['destinations'][$x]["destination_order"] = $destination_order;
 							$array['destinations'][$x]["destination_enabled"] = $destination_enabled;
 							$array['destinations'][$x]["destination_description"] = $destination_description;
@@ -921,7 +920,7 @@
 					$database->app_name = 'destinations';
 					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
-					$dialplan_response = $database->message;
+					//$dialplan_response = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
