@@ -1664,13 +1664,13 @@ include "root.php";
 			 */
 			public function copy(array $array, $suffix = '(Copy)') : bool {
 				//set default return value
-				    $retval = false;
+					$retval = false;
 
 				//return the array
 					if (!is_array($array)) { return $retval; }
 
 				//initialize array
-					$copy_array = [];	
+					$copy_array = [];
 
 				//set the message id
 					$m = 0;
@@ -2004,7 +2004,9 @@ include "root.php";
 			 * @return boolean Returns <b>true</b> on success and <b>false</b> on failure of one or more failed write attempts.
 			 */
 			public function save(array &$array, bool $transaction_save = true) : bool {
-				$retval = true;
+				//set default return value
+					$retval = true;
+
 				//return the array
 					if (!is_array($array)) { return false; }
 
@@ -2326,10 +2328,9 @@ include "root.php";
 							//child data
 								if (is_array($array)) {
 									foreach ($array as $key => $value) {
-
 										if (is_array($value)) {
-												$table_name = self::TABLE_PREFIX.$key;
-												$table_name = self::sanitize($table_name);
+												$child_table_name = self::TABLE_PREFIX.$key;
+												$child_table_name = self::sanitize($child_table_name);
 												foreach ($value as $id => $row) {
 													//prepare the variables
 														$child_name = self::singular($key);
@@ -2357,8 +2358,10 @@ include "root.php";
 															}
 														}
 
-													//allow characters found in the uuid only.
-														$child_key_value = self::sanitize($child_key_value);
+													//allow characters found in the uuid only
+														if (isset($child_key_value)) {
+															$child_key_value = self::sanitize($child_key_value);
+														}
 
 													//get the child field names
 														$child_field_names = array();
@@ -2372,7 +2375,7 @@ include "root.php";
 
 													//determine sql update or delete and get the original data
 														if ($uuid_exists) {
-															$sql = "SELECT ". implode(", ", $child_field_names)." FROM ".$table_name." ";
+															$sql = "SELECT ". implode(", ", $child_field_names)." FROM ".$child_table_name." ";
 															$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
 															$prep_statement = $this->db->prepare($sql);
 															if ($prep_statement) {
@@ -2402,7 +2405,7 @@ include "root.php";
 													//update the child data
 														if ($action == "update") {
 															if (permission_exists($child_name.'_edit')) {
-																$sql = "UPDATE ".$table_name." SET ";
+																$sql = "UPDATE ".$child_table_name." SET ";
 																if (is_array($row)) {
 																	foreach ($row as $k => $v) {
 																		if (!is_array($v) && ($k != $parent_key_name || $k != $child_key_name)) {
@@ -2520,7 +2523,7 @@ include "root.php";
 																$child_key_value = uuid();
 															}
 															//build the insert
-															$sql = "INSERT INTO ".$table_name." ";
+															$sql = "INSERT INTO ".$child_table_name." ";
 															$sql .= "(";
 															if (!$parent_key_exists) {
 																$sql .= self::singular($parent_key_name).", ";
@@ -2646,7 +2649,7 @@ include "root.php";
 								}
 
 						} // foreach schema_array
-					}  // foreach main array
+					} // foreach main array
 
 					$this->message = $message;
 
