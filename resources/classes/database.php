@@ -307,7 +307,6 @@ include "root.php";
 					case 'app_uuid':
 					case 'domain_uuid':
 						if (is_uuid($value)) { $this->domain_uuid = $value; }
-						else { trigger_error('Domain or App UUID not valid', E_USER_ERROR); }
 						break;
 					case 'type':
 					case 'driver':
