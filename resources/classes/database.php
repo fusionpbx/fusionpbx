@@ -1094,7 +1094,7 @@ include "root.php";
 					$m = 0;
 
 				//debug sql
-					$this->debug["sql"] = true;
+					//$this->debug["sql"] = true;
 
 				//set the message id
 					$m = 0;
@@ -2014,7 +2014,7 @@ include "root.php";
 					$m = 0;
 
 				//debug sql
-					$this->debug["sql"] = true;
+					//$this->debug["sql"] = true;
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -2464,9 +2464,9 @@ include "root.php";
 																		$message["details"][$m]["sql"] = $sql;
 																		if (is_array($params)) {
 																			$message["details"][$m]["params"] = $params;
-																			unset($params);
 																		}
 																	}
+																	unset($params);
 																	$this->message = $message;
 																	$m++;
 																}
@@ -2483,9 +2483,9 @@ include "root.php";
 																		$message["details"][$m]["sql"] = $sql;
 																		if (is_array($params)) {
 																			$message["details"][$m]["params"] = $params;
-																			unset($params);
 																		}
 																	}
+																	unset($params);
 																	$this->message = $message;
 																	$m++;
 																}
@@ -2603,9 +2603,9 @@ include "root.php";
 																	$message["details"][$m]["sql"] = $sql;
 																	if (is_array($params)) {
 																		$message["details"][$m]["params"] = $params;
-																		unset($params);
 																	}
 																}
+																unset($params);
 																$this->message = $message;
 																$m++;
 															}
@@ -2622,9 +2622,9 @@ include "root.php";
 																	$message["details"][$m]["sql"] = $sql;
 																	if (is_array($params)) {
 																		$message["details"][$m]["params"] = $params;
-																		unset($params);
 																	}
 																}
+																unset($params);
 																$this->message = $message;
 																$m++;
 															}
