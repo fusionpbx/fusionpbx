@@ -726,6 +726,33 @@
 	//audio playback functions
 		{literal}
 		var recording_audio, audio_clock;
+		function getRecordingPath(recording_id,domain_id){
+			if($('#recording_audio_'+recording_id).attr('src')){
+				recording_play(recording_id);
+			} else {
+				$.ajax({
+					url: "/../../../app/xml_cdr/resources/getRecordingPath.php",
+					type: "post",
+					dataType: "json",
+					data: {
+						'recording_id':recording_id,
+						'domain_id':domain_id
+					} ,
+					success: function (response) {
+						if(response.success){
+							$('#recording_audio_'+recording_id).attr('src',response.path);
+							recording_play(recording_id);
+						}
+			
+					   // You will get response from your PHP page (what you echo or print)
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+					   console.log(textStatus, errorThrown);
+					}
+				});
+			}
+			
+		}
 
 		function recording_play(recording_id) {
 			if (document.getElementById('recording_progress_bar_'+recording_id)) {
