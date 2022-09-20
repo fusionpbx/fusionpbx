@@ -1,21 +1,21 @@
 <context name="{v_context}">
-  <extension name="E911_Trunk_Synch" continue="false" uuid="a47b7a4b-d92c-4146-8958-7aef9a487d02" destination="false" order="100">
-	  <condition field="${user_exists}" expression="false"/>
-	  <condition field="destination_number" expression="^(933)|(911)[\.]?$">
-		  <action application="set" data="sip_h_X-accountcode=${accountcode}"/>
-		  <action application="export" data="call_direction=outbound"/>
-		  <action application="unset" data="call_timeout"/>
-		  <action application="set" data="rtp_secure_media=forbidden"/>
-		  <action application="export" data="rtp_secure_media=forbidden"/>
-		  <action application="set" data="hangup_after_bridge=true"/>
-		  <action application="set" data="effective_caller_id_name=${emergency_caller_id_name}"/>
-		  <action application="set" data="effective_caller_id_number=${emergency_caller_id_number}"/>
-		  <action application="set" data="inherit_codec=true"/>
-		  <action application="set" data="ignore_display_updates=true"/>
-		  <action application="set" data="callee_id_number=$1"/>
-		  <action application="set" data="continue_on_fail=true"/>
-		  <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
-		  <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
-	  </condition>
-  </extension>
- </context>
+    <extension name="E911_Trunk_Synch" continue="false" app_uuid="a57db166-6dc3-4fca-97b8-61a42c0465f8" destination="false" order="100">
+        <condition field="${user_exists}" expression="false"/>
+        <condition field="destination_number" expression="^(933)|(911)[\.]?$">
+            <action application="set" data="sip_h_X-accountcode=${accountcode}"/>
+            <action application="export" data="call_direction=outbound"/>
+            <action application="unset" data="call_timeout"/>
+            <action application="set" data="rtp_secure_media=forbidden"/>
+            <action application="export" data="rtp_secure_media=forbidden"/>
+            <action application="set" data="hangup_after_bridge=true"/>
+            <action application="set" data="effective_caller_id_name=${emergency_caller_id_name}"/>
+            <action application="set" data="effective_caller_id_number=${emergency_caller_id_number}"/>
+            <action application="set" data="inherit_codec=true"/>
+            <action application="set" data="ignore_display_updates=true"/>
+            <action application="set" data="callee_id_number=$1"/>
+            <action application="set" data="continue_on_fail=true"/>
+            <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
+            <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
+        </condition>
+    </extension>
+</context>
