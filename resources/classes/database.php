@@ -2077,8 +2077,8 @@ include "root.php";
 												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
-												echo 'Caught exception: ',  $e->getMessage(), "<br/><br/>\n";
-												echo $sql;
+												echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
+												echo $sql. "<br /><br />\n";
 												exit;
 											}
 
@@ -2113,7 +2113,12 @@ include "root.php";
 												foreach ($array as $array_key => $array_value) {
 													if (!is_array($array_value)) {
 														$array_key = self::sanitize($array_key);
-														$sql .= $array_key.", ";
+														if ($array_key != 'insert_user' &&
+															$array_key != 'insert_date' &&
+															$array_key != 'update_user' && 
+															$array_key != 'update_date') {
+															$sql .= $array_key.", ";
+														}
 													}
 												}
 											}
@@ -2127,28 +2132,35 @@ include "root.php";
 											}
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
+													
 													if (!is_array($array_value)) {
-														if (strlen($array_value) == 0) {
-															$sql .= "null, ";
-														}
-														elseif ($array_value === "now()") {
-															$sql .= "now(), ";
-														}
-														elseif ($array_value === "user_uuid()") {
-															$sql .= ':'.$array_key.", ";
-															$params[$array_key] = $_SESSION['user_uuid'];
-														}
-														elseif ($array_value === "remote_address()") {
-															$sql .= ':'.$array_key.", ";
-															$params[$array_key] = $_SERVER['REMOTE_ADDR'];
-														}
-														else {
-															$sql .= ':'.$array_key.", ";
-															$params[$array_key] = trim($array_value);
+														if ($array_key != 'insert_user' &&
+															$array_key != 'insert_date' &&
+															$array_key != 'update_user' && 
+															$array_key != 'update_date') {
+															if (strlen($array_value) == 0) {
+																$sql .= "null, ";
+															}
+															elseif ($array_value === "now()") {
+																$sql .= "now(), ";
+															}
+															elseif ($array_value === "user_uuid()") {
+																$sql .= ':'.$array_key.", ";
+																$params[$array_key] = $_SESSION['user_uuid'];
+															}
+															elseif ($array_value === "remote_address()") {
+																$sql .= ':'.$array_key.", ";
+																$params[$array_key] = $_SERVER['REMOTE_ADDR'];
+															}
+															else {
+																$sql .= ':'.$array_key.", ";
+																$params[$array_key] = trim($array_value);
+															}
 														}
 													}
 												}
 											}
+
 											$sql .= "now(), ";
 											$sql .= ":insert_user ";
 											$sql .= ");";
@@ -2539,8 +2551,12 @@ include "root.php";
 																	}
 																}
 															}
-															$sql .= "insert_date, ";
-															$sql .= "insert_user ";
+															if (!isset($row['insert_date'])) {
+																$sql .= "insert_date, ";
+															}
+															if (!isset($row['insert_user'])) {
+																$sql .= "insert_user ";
+															}
 															$sql .= ") ";
 															$sql .= "VALUES ";
 															$sql .= "(";
@@ -2575,8 +2591,12 @@ include "root.php";
 																	}
 																}
 															}
-															$sql .= "now(), ";
-															$sql .= ":insert_user ";
+															if (!isset($row['insert_date'])) {
+																$sql .= "now(), ";
+															}
+															if (!isset($row['insert_user'])) {
+																$sql .= ":insert_user ";
+															}
 															$sql .= ");";
 
 															//add insert user parameter
