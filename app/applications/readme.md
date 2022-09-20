@@ -1,2 +1,0 @@
-# fusionpbx-app-applications
-
