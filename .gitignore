@@ -17,4 +17,4 @@ app/provision/phoneconfigs/
 app/email_queue/
 app/device_logs/
 app/replication/
-
+app/applications/
