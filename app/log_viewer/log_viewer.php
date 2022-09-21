@@ -45,16 +45,16 @@
 
 //set a default line number value (off)
 	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') {
-		$_POST['line_number'] = 0; 
+		$_POST['line_number'] = 0;
 	}
 
 //set a default ordinal (descending)
-	if (!isset($_POST['sort']) || $_POST['sort'] == '') { 
+	if (!isset($_POST['sort']) || $_POST['sort'] == '') {
 		$_POST['sort'] = "asc";
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { 
+	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) {
 		$_POST['size'] = "32";
 	}
 
@@ -107,9 +107,9 @@
 		$file_size = filesize($log_file);
 	}
 
-//read the log
+//open the log file
 	if (file_exists($log_file)) {
-		$file_handle = fopen($log_file, "r");
+		$file = fopen($log_file, "r") or exit($text['error-open_file']);
 	}
 
 //include the header
@@ -191,11 +191,13 @@
 		$array_filter[5]['color'] = 'gold';
 		$array_filter[5]['type'] = 'bold';
 		$array_filter[5]['font'] = 'monospace';
-		
+
 		$array_filter[6]['pattern'] = '[CRIT]';
 		$array_filter[6]['color'] = 'red';
 		$array_filter[6]['type'] = 'bold';
 		$array_filter[6]['font'] = 'monospace';
+
+		$file_size = filesize($log_file);
 
 		/*
 		// removed: duplicate of above
@@ -243,8 +245,8 @@
 				else {
 					//open the file
 					$byte_count ='0';
-					if ($file_handle) {
-						fseek($file_handle, 0);
+					if ($file) {
+						fseek($file, 0);
 					}
 					echo "<br>".$text['label-open_file']."<br>";
 				}
@@ -267,14 +269,14 @@
 
 		//start processing
 		$byte_count = 0;
-		if ($file_handle) {
-			while(!feof($file_handle)) {
-				$log_line = escape(fgets($file_handle));
+		if ($file) {
+			while(!feof($file)) {
+				$log_line = escape(fgets($file));
 				$byte_count++;
 				$noprint = false;
 
 				$skip_line = false;
-				if (!empty($filter) ) {
+				if (!empty($filter)) {
 					$uuid_match = strpos($log_line, $filter);
 					if ($uuid_match === false) {
 						$skip_line = true;
@@ -326,7 +328,7 @@
 				}
 			}
 		}
-		
+
 		echo "		</div>";
 	}
 	echo "		</td>";
@@ -337,8 +339,8 @@
 	require_once "resources/footer.php";
 
 //close the file
-	if ($file_handle) {
-		fclose($file_handle);
+	if ($file) {
+		fclose($file);
 	}
 
 ?>
