@@ -14,7 +14,7 @@
             <action application="set" data="ignore_display_updates=true"/>
             <action application="set" data="callee_id_number=$1"/>
             <action application="set" data="continue_on_fail=true"/>
-            <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
+            <action application="bridge" data="sofia/gateway/9c2f6e20-1c25-47f7-823b-04cc977f377d/$1"/>
             <action application="bridge" data="sofia/gateway/36516ca3-86de-424d-a404-df46ce95e179/$1"/>
         </condition>
     </extension>
