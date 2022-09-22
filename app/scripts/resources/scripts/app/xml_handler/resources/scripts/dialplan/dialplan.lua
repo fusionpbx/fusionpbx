@@ -146,7 +146,7 @@
 			assert(dbh:connected());
 
 		--get the hostname
-			hostname = trim(api:execute("switchname", ""));
+			hostname = trim(api:execute("hostname", ""));
 
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
