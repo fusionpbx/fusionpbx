@@ -110,7 +110,11 @@
 	if (call_context == "public" or string.sub(call_context, 0, 7) == "public@" or string.sub(call_context, -7) == ".public") then
 		context_name = 'public';
 	end
-	--freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
+
+--use alternative sip_to_user instead of the default
+	if (dialplan_destination == '${sip_to_user}' or dialplan_destination == 'sip_to_user') then
+		destination_number = api:execute("url_decode", sip_to_user);
+	end
 
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
@@ -118,10 +122,8 @@
 		dialplan_cache_key = "dialplan:" .. call_context .. ":" .. destination_number;
 	end
 
---use alternative sip_to_user instead of the default
-	if (dialplan_destination == '${sip_to_user}') then
-		destination_number = api:execute("url_decode", sip_to_user);
-	end
+--log the dialplan mode and dialplan cache key
+	freeswitch.consoleLog("notice", "[xml_handler] ".. dialplan_mode .. " key:" .. dialplan_cache_key .. "\n");
 
 --get the cache
 	XML_STRING, err = cache.get(dialplan_cache_key);
@@ -153,7 +155,7 @@
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 			table.insert(xml, [[<document type="freeswitch/xml">]]);
 			table.insert(xml, [[	<section name="dialplan" description="">]]);
-			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
+			table.insert(xml, [[		<context name="]] .. call_context .. [[" destination_number="]]..destination_number..[[" hostname="]]..hostname..[[">]]);
 
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
