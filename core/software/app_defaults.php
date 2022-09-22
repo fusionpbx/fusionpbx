@@ -26,20 +26,17 @@
 
 if ($domains_processed == 1) {
 
-	//remove old rows 
-		$sql = "delete from v_software where software_uuid <> '7de057e7-333b-4ebf-9466-315ae7d44efd' ";
-		$database = new database;
-		$database->execute($sql, null);
-
 	//update the software table
 		$sql = "select count(*) from v_software ";
 		$database = new database;
 		$num_rows = $database->select($sql, null, 'column');
 		if ($num_rows == 0) {
-			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
-			$array['software'][0]['software_name'] = 'FusionPBX';
-			$array['software'][0]['software_url'] = 'https://www.fusionpbx.com';
-			$array['software'][0]['software_version'] = software::version();
+			if ($array['software'][0]['software_version'] != software::version()) {
+				$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
+				$array['software'][0]['software_name'] = 'FusionPBX';
+				$array['software'][0]['software_url'] = 'https://www.fusionpbx.com';
+				$array['software'][0]['software_version'] = software::version();
+			}
 		}
 		else {
 			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
