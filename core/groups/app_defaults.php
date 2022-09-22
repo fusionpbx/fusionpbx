@@ -102,7 +102,8 @@ if ($domains_processed == 1) {
 		$sql .= "SET group_uuid = ( ";
 		$sql .= "	SELECT group_uuid FROM v_groups as g  ";
 		$sql .= "	WHERE g.group_name = p.group_name  ";
-		$sql .= ");";
+		$sql .= ") ";
+		$sql .= "WHERE group_uuid is null; ";
 		$parameters = null;
 		$database = new database;
 		$database->execute($sql, $parameters);
