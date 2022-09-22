@@ -212,7 +212,7 @@
 	--end
 
 --get current switchname
-	hostname = trim(api:execute("switchname", ""))
+	hostname = trim(api:execute("hostname", ""))
 
 --get the ring group
 	ring_group_forward_enabled = '';
