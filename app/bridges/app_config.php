@@ -93,7 +93,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';

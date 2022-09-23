@@ -191,7 +191,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';

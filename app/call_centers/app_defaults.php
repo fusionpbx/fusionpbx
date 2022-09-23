@@ -65,11 +65,12 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 	//update all callcenter dialplans to have the @domain in the queue name
-		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, ";
+		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, dp.dialplan_xml, ";
 		$sql .= "q.queue_name, q.queue_extension, q.queue_timeout_action, q.queue_cid_prefix, q.queue_cc_exit_keys, ";
 		$sql .= "q.queue_description, q.queue_time_base_score_sec, q.queue_greeting ";
-		$sql .= "from v_call_center_queues as q, v_domains as d ";
+		$sql .= "from v_call_center_queues as q, v_dialplans as dp, v_domains as d ";
 		$sql .= "where q.domain_uuid = d.domain_uuid ";
+		$sql .= "and (q.dialplan_uuid = dp.dialplan_uuid or q.dialplan_uuid is null) ";
 		$database = new database;
 		$call_center_queues = $database->select($sql, null, 'all');
 		$id = 0;
@@ -132,20 +133,22 @@ if ($domains_processed == 1) {
 						$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
 					//}
 					$dialplan_xml .= "	</condition>\n";
-					$dialplan_xml .= "</extension>\n";
+					$dialplan_xml .= "</extension>";
 
 				//build the dialplan array
-					$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
-					$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
-					$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
-					$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
-					$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
-					$array['dialplans'][$id]["dialplan_continue"] = "false";
-					$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
-					$array['dialplans'][$id]["dialplan_order"] = "230";
-					$array['dialplans'][$id]["dialplan_enabled"] = "true";
-					$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
-					$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					if (md5($row["dialplan_xml"]) != md5($dialplan_xml)) {
+						$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
+						$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
+						$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
+						$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
+						$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
+						$array['dialplans'][$id]["dialplan_continue"] = "false";
+						$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
+						$array['dialplans'][$id]["dialplan_order"] = "230";
+						$array['dialplans'][$id]["dialplan_enabled"] = "true";
+						$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
+						$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					}
 
 				//increment the array id
 					$id++;

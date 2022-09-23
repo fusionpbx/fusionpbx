@@ -26,41 +26,42 @@
 
 if ($domains_processed == 1) {
 
-	//remove old rows 
-		$sql = "delete from v_software where software_uuid <> '7de057e7-333b-4ebf-9466-315ae7d44efd' ";
-		$database = new database;
-		$database->execute($sql, null);
+	//unset array if it exists
+		if (isset($array)) { unset($array); }
 
 	//update the software table
-		$sql = "select count(*) from v_software ";
+		$sql = "select software_version from v_software ";
 		$database = new database;
-		$num_rows = $database->select($sql, null, 'column');
-		if ($num_rows == 0) {
+		$software_version = $database->select($sql, null, 'column');
+		if ($software_version == '') {
 			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
 			$array['software'][0]['software_name'] = 'FusionPBX';
 			$array['software'][0]['software_url'] = 'https://www.fusionpbx.com';
 			$array['software'][0]['software_version'] = software::version();
 		}
-		else {
+		elseif ($software_version != software::version()) {
 			$array['software'][0]['software_uuid'] = '7de057e7-333b-4ebf-9466-315ae7d44efd';
 			$array['software'][0]['software_version'] = software::version();
 		}
 
-		//add the temporary permission
-		$p = new permissions;
-		$p->add("software_add", 'temp');
-		$p->add("software_edit", 'temp');
+	//save the data in the array
+		if (is_array($array) && count($array) > 0) {
+			//add the temporary permission
+			$p = new permissions;
+			$p->add("software_add", 'temp');
+			$p->add("software_edit", 'temp');
 
-		//save the data
-		$database = new database;
-		$database->app_name = 'software';
-		$database->app_uuid = 'b88c795f-7dea-4fc8-9ab7-edd555242cff';
-		$database->save($array, false);
-		unset($array);
+			//save the data
+			$database = new database;
+			$database->app_name = 'software';
+			$database->app_uuid = 'b88c795f-7dea-4fc8-9ab7-edd555242cff';
+			$database->save($array, false);
+			unset($array);
 
-		//remove the temporary permission
-		$p->delete("software_add", 'temp');
-		$p->delete("software_edit", 'temp');
+			//remove the temporary permission
+			$p->delete("software_add", 'temp');
+			$p->delete("software_edit", 'temp');
+		}
 
 }
 
