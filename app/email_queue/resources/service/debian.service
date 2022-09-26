@@ -7,8 +7,10 @@
 [Unit]
 Description=FusionPBX Email Queue
 Wants=network-online.target
-Requires=network.target local-fs.target postgresql.service
-After=network.target network-online.target local-fs.target postgresql.service
+Requires=network.target local-fs.target
+;Requires=network.target local-fs.target postgresql.service
+After=network.target network-online.target local-fs.target
+;After=network.target network-online.target local-fs.target postgresql.service
 StartLimitIntervalSec=0
 
 [Service]

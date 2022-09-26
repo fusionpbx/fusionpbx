@@ -116,6 +116,11 @@
 		destination_number = api:execute("url_decode", sip_to_user);
 	end
 
+--use alternative sip_req_user instead of the default
+	if (dialplan_destination == '${sip_req_user}' or dialplan_destination == 'sip_req_user') then
+		destination_number = api:execute("url_decode", sip_req_user);
+	end
+
 --set the dialplan cache key
 	local dialplan_cache_key = "dialplan:" .. call_context;
 	if (context_name == 'public' and dialplan_mode == "single") then
