@@ -60,10 +60,14 @@
 	}
 
 //build a list of groups the user is a member of to be used in a SQL in
-	foreach($_SESSION['user']['groups'] as $group) {
-		$group_uuids[] =  $group['group_uuid'];
+	if (is_array($_SESSION['user']['groups'])) {
+		foreach($_SESSION['user']['groups'] as $group) {
+			$group_uuids[] =  $group['group_uuid'];
+		}
 	}
-	$group_uuids_in = "'".implode("','", $group_uuids)."'";
+	if (is_array($group_uuids)) {
+		$group_uuids_in = "'".implode("','", $group_uuids)."'";
+	}
 
 //get the list
 	$sql = "select \n";
@@ -317,10 +321,10 @@
 		<style>
 		/*To prevent user selecting inside the drag source*/
 		[draggable] {
-		  -moz-user-select: none;
-		  -khtml-user-select: none;
-		  -webkit-user-select: none;
-		  user-select: none;
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
 		}
 
 		.widget {
