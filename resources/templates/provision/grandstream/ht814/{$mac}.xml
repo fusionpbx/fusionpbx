@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!-- Grandstream XML Provisioning Configuration -->
 <gs_provision version="1">
 <mac>{$mac|replace:'-':''}</mac>
@@ -73,10 +72,14 @@
     <!-- # 0 - No, 1 - Yes (default is No) -->
     <P22030>0</P22030>
 
-    <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
+    <!-- # Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
-    <P212>2</P212>
+    {if isset($grandstream_firmware_upgrade_protocol) }
+    <P212>{$grandstream_firmware_upgrade_protocol}</P212>
+    {else}
+    <P212>1</P212>
+    {/if}
 
     <!-- # Firmware Server Path -->
     <!-- # Server address -->
@@ -234,11 +237,11 @@
 
     <!-- # Connection Request Username -->
     <!-- # String -->
-    <P4511></P4511>
+    <P4511>{$mac|replace:'-':''|upper}</P4511>
 
     <!-- # Connection Request Password -->
     <!-- # String -->
-    <P4512></P4512>
+    <P4512>{$mac|replace:'-':''|upper}</P4512>
 
     <!-- # CPE SSL Certificate -->
     <P8220></P8220>
