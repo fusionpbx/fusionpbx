@@ -953,7 +953,7 @@
     <!-- #Enable Call Features.  0 - No, 1 - Yes. Default is 1 -->
     <!-- #Number: 0, 1  -->
     <!-- #Mandatory -->
-    <P191>0</P191>
+    <P191>{$grandstream_enable_call_features}</P191>
 
     <!-- #Do Not Disturb (DND) - On -->
     <!-- # String -->
