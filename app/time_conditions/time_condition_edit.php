@@ -176,7 +176,7 @@
 
 				//build update array
 					$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-					$array['dialplans'][0]['dialplan_continue'] = 'true';
+					$array['dialplans'][0]['dialplan_continue'] = 'false';
 					if (strlen($dialplan_context) > 0) {
 						$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
 					}
