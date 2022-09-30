@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
 
 //define the database class
 	if (!class_exists('database')) {
@@ -2068,7 +2067,7 @@ include "root.php";
 							//determine action update or delete and get the original data
 								if ($parent_key_exists) {
 									$sql = "SELECT ".implode(", ", $parent_field_names)." FROM ".$table_name." ";
-									$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
+									$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
 									$prep_statement = $this->db->prepare($sql);
 									if ($prep_statement) {
 										//get the data
@@ -2077,6 +2076,7 @@ include "root.php";
 												$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 											}
 											catch(PDOException $e) {
+												echo $sql."<br />\n";
 												echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
 												echo $sql. "<br /><br />\n";
 												exit;
@@ -2091,8 +2091,7 @@ include "root.php";
 												$action = "add";
 											}
 									}
-									unset($prep_statement);
-									unset($result);
+									unset($prep_statement, $result);
 								}
 								else {
 									$action = "add";
@@ -2132,7 +2131,6 @@ include "root.php";
 											}
 											if (is_array($array)) {
 												foreach ($array as $array_key => $array_value) {
-													
 													if (!is_array($array_value)) {
 														if ($array_key != 'insert_user' &&
 															$array_key != 'insert_date' &&
@@ -2160,7 +2158,6 @@ include "root.php";
 													}
 												}
 											}
-
 											$sql .= "now(), ";
 											$sql .= ":insert_user ";
 											$sql .= ");";
@@ -2269,7 +2266,7 @@ include "root.php";
 											$params['update_user'] = $_SESSION['user_uuid'];
 
 											//add the where with the parent name and value
-											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
+											$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."'; ";
 											$sql = str_replace(", WHERE", " WHERE", $sql);
 
 											//add update user parameter
@@ -2388,27 +2385,36 @@ include "root.php";
 													//determine sql update or delete and get the original data
 														if ($uuid_exists) {
 															$sql = "SELECT ". implode(", ", $child_field_names)." FROM ".$child_table_name." ";
-															$sql .= "WHERE ".$child_key_name." = '".$child_key_value."' ";
-															$prep_statement = $this->db->prepare($sql);
-															if ($prep_statement) {
-																//get the data
-																	$prep_statement->execute();
-																	$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
+															$sql .= "WHERE ".$child_key_name." = '".$child_key_value."'; ";
+															try {
+																$prep_statement = $this->db->prepare($sql);
+																if ($prep_statement) {
+																	//get the data
+																		$prep_statement->execute();
+																		$child_array = $prep_statement->fetch(PDO::FETCH_ASSOC);
 
-																//set the action
-																	if (is_array($child_array)) {
-																		$action = "update";
-																	}
-																	else {
-																		$action = "add";
-																	}
+																	//set the action
+																		if (is_array($child_array)) {
+																			$action = "update";
+																		}
+																		else {
+																			$action = "add";
+																		}
 
-																//add to the parent array
-																	if (is_array($child_array)) {
-																		$old_array[$schema_name][$schema_id][$key][] = $child_array;
-																	}
+																	//add to the parent array
+																		if (is_array($child_array)) {
+																			$old_array[$schema_name][$schema_id][$key][] = $child_array;
+																		}
+																}
+																unset($prep_statement);
 															}
-															unset($prep_statement);
+															catch(PDOException $e) {
+																echo $sql."<br />\n";
+																echo 'Caught exception: '.  $e->getMessage()."<br /><br />\n";
+																echo $sql. "<br /><br />\n";
+																exit;
+															}
+
 														}
 														else {
 															$action = "add";
@@ -2451,7 +2457,7 @@ include "root.php";
 
 																//add the where with the parent name and value
 																$sql .= "WHERE ".$parent_key_name." = '".$parent_key_value."' ";
-																$sql .= "AND ".$child_key_name." = '".$child_key_value."' ";
+																$sql .= "AND ".$child_key_name." = '".$child_key_value."'; ";
 																$sql = str_replace(", WHERE", " WHERE", $sql);
 
 																//set the error mode
@@ -2547,16 +2553,17 @@ include "root.php";
 																foreach ($row as $k => $v) {
 																	if (!is_array($v)) {
 																		$k = self::sanitize($k);
-																		$sql .= $k.", ";
+																		if ($k != 'insert_user' &&
+																		$k != 'insert_date' &&
+																		$k != 'update_user' && 
+																		$k != 'update_date') {
+																			$sql .= $k.", ";
+																		}
 																	}
 																}
 															}
-															if (!isset($row['insert_date'])) {
-																$sql .= "insert_date, ";
-															}
-															if (!isset($row['insert_user'])) {
-																$sql .= "insert_user ";
-															}
+															$sql .= "insert_date, ";
+															$sql .= "insert_user ";
 															$sql .= ") ";
 															$sql .= "VALUES ";
 															$sql .= "(";
@@ -2585,18 +2592,19 @@ include "root.php";
 																		}
 																		else {
 																			$k = self::sanitize($k);
-																			$sql .= ':'.$k.", ";
-																			$params[$k] = trim($v);
+																			if ($k != 'insert_user' &&
+																			$k != 'insert_date' &&
+																			$k != 'update_user' && 
+																			$k != 'update_date') {
+																				$sql .= ':'.$k.", ";
+																				$params[$k] = trim($v);
+																			}
 																		}
 																	}
 																}
 															}
-															if (!isset($row['insert_date'])) {
-																$sql .= "now(), ";
-															}
-															if (!isset($row['insert_user'])) {
-																$sql .= ":insert_user ";
-															}
+															$sql .= "now(), ";
+															$sql .= ":insert_user ";
 															$sql .= ");";
 
 															//add insert user parameter
