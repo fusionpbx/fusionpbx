@@ -62,7 +62,8 @@ if ($domains_processed == 1) {
 			//add the setting to the array
 			if (!$setting_found) {
 				$array['sofia_global_settings'][$x] = $row;
-				$array['sofia_global_settings']['insert_date'] = 'now()';
+				$array['sofia_global_settings'][$x]['insert_date'] = 'now()';
+				$x++;
 			}
 		}
 
