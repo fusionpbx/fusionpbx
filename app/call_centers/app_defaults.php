@@ -106,7 +106,7 @@ if ($domains_processed == 1) {
 					if (is_numeric($row['queue_extension'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$row['queue_extension']."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					if ($row['queue_time_base_score_sec'] != '') {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$row['queue_time_base_score_sec']."\"/>\n";
