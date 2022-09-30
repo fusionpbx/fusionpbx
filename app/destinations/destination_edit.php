@@ -430,8 +430,8 @@
 							}
 
 						//set the last destination_app and destination_data variables
-							foreach($destination_actions as $action) {
-								$action_array = explode(":", $action, 2);
+							foreach($destination_actions as $destination_action) {
+								$action_array = explode(":", $destination_action, 2);
 								if (isset($action_array[0]) && $action_array[0] != '') {
 									$destination_app = $action_array[0];
 									$destination_data = $action_array[1];
@@ -495,8 +495,8 @@
 							}
 
 							//add the actions to the dialplan_xml
-							foreach($destination_actions as $action) {
-								$action_array = explode(":", $action, 2);
+							foreach($destination_actions as $destination_action) {
+								$action_array = explode(":", $destination_action, 2);
 								if (isset($action_array[0]) && $action_array[0] != '') {
 									if ($destination->valid($action_array[0].':'.$action_array[1])) {
 										$dialplan["dialplan_xml"] .= "		<action application=\"".$action_array[0]."\" data=\"".$action_array[1]."\"/>\n";
@@ -885,8 +885,8 @@
 
 							//prepare the $actions array
 							$y=0;
-							foreach($destination_actions as $action) {
-								$action_array = explode(":", $action, 2);
+							foreach($destination_actions as $destination_action) {
+								$action_array = explode(":", $destination_action, 2);
 								$action_app = $action_array[0];
 								$action_data = $action_array[1];
 								if (isset($action_array[0]) && $action_array[0] != '') {
