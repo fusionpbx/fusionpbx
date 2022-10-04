@@ -142,11 +142,13 @@ class event_socket {
 	}
 
 	public function connected() {
-		if ($this->fp) {
-			return true;
+		if (feof($this->fp) === true) {
+			//not connected to the socket
+			return false;
 		}
 		else {
-			return false;
+			//connected to the socket
+			return true;
 		}
 	}
 
