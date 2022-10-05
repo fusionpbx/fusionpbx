@@ -1592,6 +1592,12 @@ if (permission_exists('contact_phone_view')) {
 		else {
 			echo "				<option value='main'>".$text['option-main']."</option>\n";
 		}
+		if ($row['phone_label'] == "billing") {
+			echo "				<option value='billing' selected='selected'>".$text['option-billing']."</option>\n";
+		}
+		else {
+			echo "				<option value='billing'>".$text['option-billing']."</option>\n";
+		}
 		if ($row['phone_label'] == "fax") {
 			echo "				<option value='fax' selected='selected'>".$text['option-fax']."</option>\n";
 		}
@@ -1776,6 +1782,13 @@ if (permission_exists('contact_address_view')) {
 		else {
 			echo "				<option value='main'>".$text['option-main']."</option>\n";
 		}
+		if ($row['address_label'] == "billing") {
+			echo "				<option value='billing' selected='selected'>".$text['option-billing']."</option>\n";
+		}
+		else {
+			echo "				<option value='billing'>".$text['option-billing']."</option>\n";
+		}
+
 		if ($row['address_label'] == "fax") {
 			echo "				<option value='fax' selected='selected'>".$text['option-fax']."</option>\n";
 		}
