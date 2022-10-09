@@ -52,7 +52,7 @@ end
 function Settings.new(db, domain_name, domain_uuid)
 	local self = setmetatable({}, Settings)
 	self._array = {}
-	self._db					= db
+	self._db = db
 	self._domain_name = domain_name
 	self._domain_uuid = domain_uuid
 	self._use_cache	 = not cache.settings
