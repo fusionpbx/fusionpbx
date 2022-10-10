@@ -24,8 +24,11 @@
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
 
-//include root
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 
 //start the session
 	ini_set("session.cookie_httponly", True);

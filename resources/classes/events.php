@@ -7,7 +7,14 @@
  * $e->add_event_function('myfunction')  it could be a static method as well
  * $e->execute_event(ADD, $params)	event type, params is an associative array
  */
-include "root.php";
+
+//set the include path
+$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
+require_once "resources/require.php";
+
 
 define ("MODULE_LOAD", 1);	// when loading a FS module with FS
 define ("MODULE_UNLOAD", 2);

@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
 
 //define the provision class
 	class provision {

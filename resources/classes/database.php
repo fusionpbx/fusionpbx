@@ -405,8 +405,16 @@
 			public function connect() {
 
 				if (strlen($this->db_name) == 0) {
+
+					//set the include path
+						$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+						set_include_path(parse_ini_file($conf[0])['document.root']);
+
+					//includes files
+						require_once "resources/require.php";
+
+
 					//include config.php
-						include "root.php";
 						if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
 							include $_SERVER["PROJECT_ROOT"]."/resources/config.php";
 						} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
