@@ -42,7 +42,9 @@
 
 //set the error reporting
 	ini_set('display_errors', '1');
-	error_reporting($conf['error.reporting']);
+	//error_reporting($conf['error.reporting']);
+        error_reporting (E_ALL ^ E_NOTICE); // hide notices
+
 
 //get the database connection settings
 	//$db_type = $settings['database']['type'];
