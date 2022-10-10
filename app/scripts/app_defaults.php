@@ -29,7 +29,7 @@ if ($domains_processed == 1) {
 
 	$obj = new scripts;
 	$obj->copy_files();
-	$obj->write_config();
+
 }
 
 ?>
