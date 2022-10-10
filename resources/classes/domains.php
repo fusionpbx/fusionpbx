@@ -621,8 +621,9 @@ if (!class_exists('domains')) {
 				$db_path = $config->db_path;
 				$db_port = $config->db_port;
 
-			//get the PROJECT PATH
-				include "root.php";
+			//set the include path
+				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+				set_include_path(parse_ini_file($conf[0])['document.root']);
 
 			//check for default settings
 				$this->settings();
@@ -739,12 +740,6 @@ if (!class_exists('domains')) {
 
 					//track of the number of domains processed
 						$domains_processed++;
-				}
-
-			//update config.lua
-				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/scripts/resources/classes/scripts.php')) {
-					$obj = new scripts;
-					$obj->write_config();
 				}
 
 			//clear the session variables

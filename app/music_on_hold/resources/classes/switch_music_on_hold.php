@@ -25,7 +25,6 @@
 	James Rose <james.o.rose@gmail.com>
 	Matthew Vale <github@mafoo.org>
 */
-include "root.php";
 
 //define the switch_music_on_hold class
 if (!class_exists('switch_music_on_hold')) {

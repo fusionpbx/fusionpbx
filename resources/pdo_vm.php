@@ -23,8 +23,13 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require "resources/require.php";
+
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
+	require "resources/require.php";
 
 //get the contents of xml_cdr.conf.xml
 	$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/voicemail.conf.xml');

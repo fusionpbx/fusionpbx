@@ -26,7 +26,6 @@
 	Errol Samuels <voiptology@gmail.com>
 
 */
-include "root.php";
 
 //define the call_forward class
 	class call_forward {

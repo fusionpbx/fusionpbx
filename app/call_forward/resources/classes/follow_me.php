@@ -27,7 +27,6 @@
 	Riccardo Granchi <riccardo.granchi@nems.it>
 	Errol Samuels <voiptology@gmail.com>
 */
-include "root.php";
 
 //define the follow me class
 	class follow_me {

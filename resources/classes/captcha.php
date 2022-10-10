@@ -59,9 +59,11 @@ class captcha {
 	 */
 	public function image_captcha() {
 
-		//includes
-		include "root.php";
-		require_once "config.php";
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
+
+		//includes files
 		require_once "resources/functions.php";
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
