@@ -46,6 +46,7 @@
 				--database system settings
 				if (k == "database.0.type")             then database.system.type = v; end
 				if (k == "database.0.host")             then database.system.host = v; end
+				if (k == "database.0.hostaddr")         then database.system.hostaddr = v; end
 				if (k == "database.0.port")             then database.system.port = v; end
 				if (k == "database.0.sslmode")          then database.system.sslmode = v; end
 				if (k == "database.0.name")             then database.system.name = v; end
@@ -56,6 +57,7 @@
 				--database switch settings
 				if (k == "database.1.type")             then database.switch.type = v; end
 				if (k == "database.1.host")             then database.switch.host = v; end
+				if (k == "database.1.hostaddr")         then database.switch.hostaddr = v; end
 				if (k == "database.1.port")             then database.switch.port = v; end
 				if (k == "database.1.sslmode")          then database.switch.sslmode = v; end
 				if (k == "database.1.name")             then database.switch.name = v; end
@@ -103,27 +105,40 @@
 
 		--database system dsn
 		system_dsn = {}
-		table.insert(system_dsn, [[pgsql://hostaddr=]] .. database.system.host);
-		table.insert(system_dsn, [[port=]] .. database.system.port);
-		if (database.switch.sslmode) then
-			table.insert(system_dsn, [[sslmode=]] .. database.system.sslmode);
+		table.insert(system_dsn, [[pgsql://]]);
+		if (database.system.host) then
+			table.insert(system_dsn, [[host=]] .. database.system.host .. [[ ]]);
 		end
-		table.insert(system_dsn, [[dbname=]] .. database.system.name);
-		table.insert(system_dsn, [[user=]] .. database.system.username);
-		table.insert(system_dsn, [[password=]] .. database.system.password);
-		database.system = table.concat(system_dsn, "\n");
+		if (database.system.hostaddr) then
+			table.insert(system_dsn, [[hostaddr=]] .. database.system.hostaddr .. [[ ]]);
+		end
+		table.insert(system_dsn, [[port=]] .. database.system.port .. [[ ]]);
+		if (database.switch.sslmode) then
+			table.insert(system_dsn, [[sslmode=]] .. database.system.sslmode .. [[ ]]);
+		end
+		table.insert(system_dsn, [[dbname=]] .. database.system.name .. [[ ]]);
+		table.insert(system_dsn, [[user=]] .. database.system.username .. [[ ]]);
+		table.insert(system_dsn, [[password=]] .. database.system.password .. [[ ]]);
+		database.system = table.concat(system_dsn, '');
 
 		--database switch dsn
 		switch_dsn = {}
-		table.insert(switch_dsn, [[pgsql://hostaddr=]] .. database.switch.host);
-		table.insert(switch_dsn, [[port=]] .. database.switch.port);
-		if (database.switch.sslmode) then
-			table.insert(switch_dsn, [[sslmode=]] .. database.switch.sslmode);
+		table.insert(switch_dsn, [[pgsql://]]);
+		if (database.switch.host) then
+			table.insert(switch_dsn, [[host=]] .. database.switch.host .. [[ ]]);
 		end
-		table.insert(switch_dsn, [[dbname=]] .. database.switch.name);
-		table.insert(switch_dsn, [[user=]] .. database.switch.username);
-		table.insert(switch_dsn, [[password=]] .. database.switch.password);
-		database.switch = table.concat(switch_dsn, "\n");
+		if (database.switch.hostaddr) then
+			table.insert(switch_dsn, [[hostaddr=]] .. database.switch.hostaddr .. [[ ]]);
+		end
+		table.insert(switch_dsn, [[host=]] .. database.switch.host .. [[ ]]);
+		table.insert(switch_dsn, [[port=]] .. database.switch.port .. [[ ]]);
+		if (database.switch.sslmode) then
+			table.insert(switch_dsn, [[sslmode=]] .. database.switch.sslmode .. [[ ]]);
+		end
+		table.insert(switch_dsn, [[dbname=]] .. database.switch.name .. [[ ]]);
+		table.insert(switch_dsn, [[user=]] .. database.switch.username .. [[ ]]);
+		table.insert(switch_dsn, [[password=]] .. database.switch.password .. [[ ]]);
+		database.switch = table.concat(switch_dsn, '');
 
 		--set defaults
 		expire = {}
