@@ -68,8 +68,10 @@
 	//echo "Project Root: ".$_SERVER["PROJECT_ROOT"]."\n";
 
 //class auto loader
-	include "resources/classes/auto_loader.php";
-	$autoload = new auto_loader();
+	if (!class_exists('auto_loader')) {
+		include "resources/classes/auto_loader.php";
+		$autoload = new auto_loader();
+	}
 
 //additional includes
 	require_once "resources/php.php";
