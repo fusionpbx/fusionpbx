@@ -5,13 +5,15 @@
 		//set the include path
 		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
-		require_once "resources/require.php";
 	}
 	else {
 		exit;
 	}
+
+//include files
+	require_once "resources/require.php";
+	include "resources/classes/permissions.php";
+	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -100,12 +102,6 @@
 	if (isset($sleep_seconds)) {
 		sleep($sleep_seconds);
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {
