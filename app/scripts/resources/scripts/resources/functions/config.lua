@@ -84,6 +84,7 @@
 				if (k == "php.bin")                     then php_bin = v; end
 				if (k == "document.root")               then document_root = v; end
 				if (k == "project.path")                then project_path = v; end
+				if (k == "temp.dir")                    then temp_dir = v; end
 
 				--cache settings
 				if (k == "cache.method")                then cache.method = v; end
