@@ -464,9 +464,6 @@
 				freeswitch.consoleLog("notice", "[conference center] session_enabled: false\n");
 			end
 
-		--add the domain to the recording directory
-			freeswitch.consoleLog("notice", "[conference center] domain_count: " .. domain_count .. "\n");
-
 		--sounds
 			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";
 			exit_sound = "tone_stream://v=-20;%(90,60,620);/%(90,60,440)";
