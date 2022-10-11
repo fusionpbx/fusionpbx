@@ -846,5 +846,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "933";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "933 service";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "365e0019-72be-45d9-ac83-7627471829bb";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_log_directory";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Polycom log upload directory";
 
 ?>
