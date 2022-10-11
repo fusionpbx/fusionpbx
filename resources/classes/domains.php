@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -625,6 +625,9 @@ if (!class_exists('domains')) {
 				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 				set_include_path(parse_ini_file($conf[0])['document.root']);
 
+			//includes files
+				include "resources/require.php";
+
 			//check for default settings
 				$this->settings();
 
@@ -753,6 +756,9 @@ if (!class_exists('domains')) {
 		 * update the uuid for older default settings that were added before the uuids was predefined.
 		 */
 		public function settings() {
+
+			//includes files
+				include "resources/require.php";
 
 			//get an array of the default settings UUIDs
 				$sql = "select * from v_default_settings ";
