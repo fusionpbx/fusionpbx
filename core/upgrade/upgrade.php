@@ -136,14 +136,14 @@
 		set_include_path($conf['document.root']);
 	}
 
+//include files
+	require_once "resources/require.php";
+
 //check the permission
 	if(defined('STDIN')) {
-		require_once "resources/require.php";
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
 	}
 	else {
-		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('upgrade_schema') || permission_exists('upgrade_source') || if_group("superadmin")) {
 			//echo "access granted";
@@ -234,9 +234,8 @@
 //default upgrade schema and app defaults
 	if ($upgrade_type == 'defaults') {
 		//add multi-lingual support
-			require_once "resources/classes/text.php";
 			$language = new text;
-			$text = $language->get();
+			$text = $language->get(null, 'core/upgrade');
 
 		//show the title
 			if ($display_type == 'text') {
@@ -248,12 +247,10 @@
 			}
 
 		//make sure the database schema and installation have performed all necessary tasks
-			require_once "resources/classes/schema.php";
 			$obj = new schema;
 			echo $obj->schema("text");
 
 		//run all app_defaults.php files
-			require_once "resources/classes/domains.php";
 			$domain = new domains;
 			$domain->display_type = $display_type;
 			$domain->upgrade();
