@@ -5,13 +5,15 @@
 		//set the include path
 		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
-		require_once "resources/require.php";
 	}
 	else {
 		exit;
 	}
+
+//include files
+	require_once "resources/require.php";
+	include "resources/classes/permissions.php";
+	require "app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -37,12 +39,6 @@
 	if (!isset($hostname)) {
 		$hostname = gethostname();
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
