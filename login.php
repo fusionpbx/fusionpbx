@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,20 +34,11 @@
 	if (!isset($_SESSION)) { session_start(); }
 
 //if config.php file does not exist then redirect to the install page
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-		//original directory
-	}
-	else if (file_exists($_SERVER["PROJECT_ROOT"]."/includes/config.php")) {
-		//move config.php from the includes to resources directory.
-		rename($_SERVER["PROJECT_ROOT"]."/includes/config.php", $_SERVER["PROJECT_ROOT"]."/resources/config.php");
-	}
-	else if (file_exists("/etc/fusionpbx/config.php")) {
-		//linux
-	}
-	else if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-		//bsd
-	}
-	else {
+	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){
+		//BSD
+	} elseif (file_exists("/etc/fusionpbx/config.conf")){
+		//Linux
+	} else {
 		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
 	}
