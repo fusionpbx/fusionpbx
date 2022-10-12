@@ -46,6 +46,7 @@
 --get the settings
 	session_enabled = settings:get('conference_center', 'session_enabled', 'boolean');
 	account_code_enabled = settings:get('conference_center', 'account_code_enabled', 'boolean');
+	http_protocol = settings:get('domain', 'http_protocol', 'text') or "https";
 
 --include json library
 	local json
