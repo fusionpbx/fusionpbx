@@ -2161,6 +2161,13 @@ function number_pad($number,$n) {
 		}
 	}
 
+//set the include path
+        $conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+        set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
+        require_once "resources/require.php";
+
 //include additional functions
 	$functions = glob("{".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/functions/*.php,".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/resources/functions/*.php}", GLOB_BRACE);
 	foreach($functions as $function) {
