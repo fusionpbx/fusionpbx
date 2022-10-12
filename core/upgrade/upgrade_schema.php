@@ -34,14 +34,11 @@
 		set_include_path(parse_ini_file($conf[0])['document.root']);
 
 		//includes files
+		require_once "resources/require.php";
 		include "resources/functions.php";
-		require_once "resources/classes/text.php";
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$format = 'text'; //html, text
 
-		//add multi-lingual support
-		$language = new text;
-		$text = $language->get();
+		//set the format
+		$format = 'text'; //html, text
 	}
 	else if (!$included) {
 		//set the include path
@@ -58,12 +55,16 @@
 			echo "access denied";
 			exit;
 		}
-
 		require_once "resources/header.php";
-		$document['title'] = $text['title-upgrade_schema'];
 
+		//set the title and format
+		$document['title'] = $text['title-upgrade_schema'];
 		$format = 'html'; //html, text
 	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 //get the database schema put it into an array then compare and update the database as needed.
 	require_once "resources/classes/schema.php";
