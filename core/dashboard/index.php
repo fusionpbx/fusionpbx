@@ -28,7 +28,7 @@
 	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 	set_include_path(parse_ini_file($conf[0])['document.root']);
 
-//if config.php file does not exist then redirect to the install page
+//if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){
 		//BSD
 	} elseif (file_exists("/etc/fusionpbx/config.conf")){
