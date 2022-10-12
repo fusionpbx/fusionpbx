@@ -35,7 +35,7 @@
 
 		//includes files
 		require_once "resources/require.php";
-		include "resources/functions.php";
+		require_once "resources/functions.php";
 
 		//set the format
 		$format = 'text'; //html, text
