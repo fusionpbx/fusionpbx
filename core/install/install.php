@@ -68,12 +68,12 @@
 
 //if the config file exists then disable the install page
 	$config_exists = false;
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+		//bsd
 		$config_exists = true;
-	} elseif (file_exists("/etc/fusionpbx/config.php")) {
+	}
+	elseif (file_exists("/etc/fusionpbx/config.conf")) {
 		//linux
-		$config_exists = true;
-	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		$config_exists = true;
 	}
 	if ($config_exists) {
