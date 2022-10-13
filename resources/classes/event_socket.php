@@ -44,7 +44,7 @@ class buffer {
 
 class event_socket {
 	private $buffer;
-	private $fp;
+	public $fp;
 
 	public function __construct($fp = false) {
 		$this->buffer = new buffer;
