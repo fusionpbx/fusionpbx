@@ -1455,10 +1455,12 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$x=0;
-	foreach($destination_actions as $row) {
-		echo $destination->select('dialplan', "destination_actions[$x]", $row['destination_app'].':'.$row['destination_data']);
-		echo "<br />\n";
-		$x++;
+	if (is_array($destination_actions)) {
+		foreach($destination_actions as $row) {
+			echo $destination->select('dialplan', "destination_actions[$x]", $row['destination_app'].':'.$row['destination_data']);
+			echo "<br />\n";
+			$x++;
+		}
 	}
 	echo $destination->select('dialplan', "destination_actions[$x]", '');
 	echo "	<br />\n";
