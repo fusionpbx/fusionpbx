@@ -49,6 +49,9 @@
 
 //xml cdr include
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	if ($_REQUEST['show'] == 'archive') {
+		$archive_request = 'true';
+	}
 	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd
@@ -146,10 +149,8 @@
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	if (permission_exists('xml_cdr_archive')) {
-		if ($_REQUEST['show'] == 'all') {
-			$query_string = "show=all";
-		}
-		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr_archive.php?".escape($query_string)."';\">\n";
+		$query_string = "show=archive";
+		echo "			<input type='button' class='btn' value='".$text['button-archive']."' onclick=\"window.location='xml_cdr.php?".escape($query_string)."';\">\n";
 	}
 	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
 	echo "				<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"document.location.href='xml_cdr.php';\" />\n";
