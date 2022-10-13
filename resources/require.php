@@ -41,10 +41,10 @@
 	define("PROJECT_PATH", $conf['project.path']);
 
 //set the error reporting
-	ini_set('display_errors', '1');
-	//error_reporting($conf['error.reporting']);
-        error_reporting (E_ALL ^ E_NOTICE); // hide notices
-
+	if (isset($conf['error.reporting'])) {
+		ini_set('display_errors', '1');
+		error_reporting($conf['error.reporting']);
+	}
 
 //get the database connection settings
 	//$db_type = $settings['database']['type'];
