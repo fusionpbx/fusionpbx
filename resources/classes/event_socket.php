@@ -142,7 +142,7 @@ class event_socket {
 	}
 
 	public function connected() {
-		if (feof($this->fp) === true) {
+		if ($this->fp && feof($this->fp) === true) {
 			//not connected to the socket
 			return false;
 		}
