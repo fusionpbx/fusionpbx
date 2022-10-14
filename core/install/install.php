@@ -25,8 +25,8 @@
 */
 
 //set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
+	$document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
+	set_include_path($document_root);
 
 //includes files
 	require_once "resources/functions.php";
