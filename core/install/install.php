@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019
+	Portions created by the Initial Developer are Copyright (C) 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 */
 
 //set the include path
-	$document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
-	set_include_path($document_root);
+        $document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
+        set_include_path($document_root);
+        $_SERVER["DOCUMENT_ROOT"] = $document_root;
+        $_SERVER["PROJECT_ROOT"] = $document_root;
+        define("PROJECT_PATH", '');
 
 //includes files
 	require_once "resources/functions.php";
