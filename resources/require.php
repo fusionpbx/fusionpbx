@@ -84,6 +84,15 @@
 		}
 	}
 
+//include additional functions
+	$functions = glob("{".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/functions/*.php,".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/resources/functions/*.php}", GLOB_BRACE);
+	foreach($functions as $function) {
+		$path = pathinfo($function);
+		if ($path['filename'] != 'transcribe') {
+			require($function);
+		}
+	}
+
 //change language on the fly - for translate tool (if available)
 	if (isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
 		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
