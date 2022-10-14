@@ -25,11 +25,11 @@
 */
 
 //set the include path
-        $document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
-        set_include_path($document_root);
-        $_SERVER["DOCUMENT_ROOT"] = $document_root;
-        $_SERVER["PROJECT_ROOT"] = $document_root;
-        define("PROJECT_PATH", '');
+	$document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
+	set_include_path($document_root);
+	$_SERVER["DOCUMENT_ROOT"] = $document_root;
+	$_SERVER["PROJECT_ROOT"] = $document_root;
+	define("PROJECT_PATH", '');
 
 //includes files
 	require_once "resources/functions.php";
@@ -127,65 +127,115 @@
 				exit;
 			}
 
-			//add the config.php
-			$config = "<?php\n";
-			$config .= "\n";
-			$config .= "/*\n";
-			$config .= "FusionPBX\n";
-			$config .= "Version: MPL 1.1\n";
-			$config .= "\n";
-			$config .= "The contents of this file are subject to the Mozilla Public License Version\n";
-			$config .= "1.1 (the \"License\"); you may not use this file except in compliance with\n";
-			$config .= "the License. You may obtain a copy of the License at\n";
-			$config .= "http://www.mozilla.org/MPL/\n";
-			$config .= "\n";
-			$config .= "Software distributed under the License is distributed on an \"AS IS\" basis,\n";
-			$config .= "WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n";
-			$config .= "for the specific language governing rights and limitations under the\n";
-			$config .= "License.\n";
-			$config .= "\n";
-			$config .= "The Original Code is FusionPBX\n";
-			$config .= "	Copyright (C) 2008 - 2019\n";
-			$config .= "	Mark J Crane <markjcrane@fusionpbx.com>\n";
-			$config .= "	All rights reserved.\n";
-			$config .= "*/\n";
-			$config .= "\n";
-			$config .= "//-----------------------------------------------------\n";
-			$config .= "// settings:\n";
-			$config .= "//-----------------------------------------------------\n";
-			$config .= "\n";
-			$config .= "	//set the database type\n";
-			$config .= "		\$db_type = 'pgsql'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
-			$config .= "\n";
-			$config .= "//database connection information\n";
-			$config .= "		\$db_host = '".$_SESSION['install']['database_host']."'; //set the host only if the database is not local\n";
-			$config .= "		\$db_port = '".$_SESSION['install']['database_port']."';\n";
-			$config .= "		\$db_name = '".$_SESSION['install']['database_name']."';\n";
-			$config .= "		\$db_username = '".$_SESSION['install']['database_username']."';\n";
-			$config .= "		\$db_password = '".$_SESSION['install']['database_password']."';\n";
-			$config .= "\n";
-			$config .= "	//show errors\n";
-			$config .= "		ini_set('display_errors', '1');\n";
-			$config .= "		//error_reporting (E_ALL); // Report everything\n";
-			$config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
-			$config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
-			$config .= "\n";
-			$config .= "?>";
-			if (is_dir("/etc/fusionpbx")){
-				$config_path = "/etc/fusionpbx/config.php";
-			} elseif (is_dir("/usr/local/etc/fusionpbx")){
-				$config_path = "/usr/local/etc/fusionpbx/config.php";
+			//set the default config file location
+			if (stristr(PHP_OS, 'BSD')) {
+				$config_path = '/usr/local/etc/fusionpbx';
+				$config_file = $config_path.'/config.conf';
+				$document_root = '/usr/local/www/fusionpbx';
+
+				$conf_dir = '/usr/local/etc/freeswitch';
+				$sounds_dir = '/usr/share/freeswitch/sounds';
+				$database_dir = '/var/lib/freeswitch/db';
+				$recordings_dir = '/var/lib/freeswitch/recordings';
+				$storage_dir = '/var/lib/freeswitch/storage';
+				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
+				$scripts_dir = '/usr/share/freeswitch/scripts';
 			}
-			elseif (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
-				$config_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
+			if (stristr(PHP_OS, 'Linux')) {
+				$config_path = '/etc/fusionpbx/';
+				$config_file = $config_path.'/config.conf';
+				$document_root = '/var/www/fusionpbx';
+
+				$conf_dir = '/etc/freeswitch';
+				$sounds_dir = '/usr/share/freeswitch/sounds';
+				$database_dir = '/var/lib/freeswitch/db';
+				$recordings_dir = '/var/lib/freeswitch/recordings';
+				$storage_dir = '/var/lib/freeswitch/storage';
+				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
+				$scripts_dir = '/usr/share/freeswitch/scripts';
+			}
+
+			//end the script if the config path is not set
+			if (!isset($config_path)) {
+				echo "Config file path not found\n";
+				exit;
+			}
+
+			//make the config directory
+			if (isset($config_path)) {
+				system('mkdir -p '.$config_path);
 			}
 			else {
-				$config_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
+				echo "config directory not found\n";
+				exit;
 			}
-			$fout = fopen($config_path,"w");
-			fwrite($fout, $config);
-			unset($config);
-			fclose($fout);
+
+			//ensure the config directory exists
+			if (!file_exists($config_path)) {
+				"Unable to make the ".$config_path." directory\n";
+				"Check file permissions\n";
+			}
+
+			//build the config file
+			$conf = "\n";
+			$conf .= "#database system settings\n";
+			$conf .= "database.0.type = pgsql\n";
+			$conf .= "database.0.host = ".$_SESSION['install']['database_host']."\n";
+			$conf .= "database.0.port = ".$_SESSION['install']['database_port']."\n";
+			$conf .= "database.0.sslmode=prefer\n";
+			$conf .= "database.0.name = ".$_SESSION['install']['database_name']."\n";
+			$conf .= "database.0.username = ".$_SESSION['install']['database_username']."\n";
+			$conf .= "database.0.password = ".$_SESSION['install']['database_password']."\n";
+			$conf .= "\n";
+			$conf .= "#database switch settings\n";
+			$conf .= "database.1.type = pgsql\n";
+			$conf .= "database.1.host = ".$_SESSION['install']['database_host']."\n";
+			$conf .= "database.1.port = ".$_SESSION['install']['database_port']."\n";
+			$conf .= "database.1.sslmode=prefer\n";
+			$conf .= "database.1.name = freeswitch\n";
+			$conf .= "database.1.username = freeswitch\n";
+			$conf .= "database.1.password = ".$_SESSION['install']['database_password']."\n";
+			$conf .= "database.1.backend.base64 = \n";
+			$conf .= "\n";
+			$conf .= "#general settings\n";
+			$conf .= "document.root = ".$document_root."\n";
+			$conf .= "project.path =\n";
+			$conf .= "temp.dir = /tmp\n";
+			$conf .= "php.dir = ".PHP_BINDIR."\n";
+			$conf .= "php.bin = php\n";
+			$conf .= "\n";
+			$conf .= "#cache settings\n";
+			$conf .= "cache.method = file\n";
+			$conf .= "cache.location = /var/cache/fusionpbx\n";
+			$conf .= "cache.settings = true\n";
+			$conf .= "\n";
+			$conf .= "#switch settings\n";
+			$conf .= "switch.conf.dir = ".$conf_dir."\n";
+			$conf .= "switch.sounds.dir = ".$sounds_dir."\n";
+			$conf .= "switch.database.dir = ".$database_dir."\n";
+			$conf .= "switch.recordings.dir = ".$recordings_dir."\n";
+			$conf .= "switch.storage.dir = ".$storage_dir."\n";
+			$conf .= "switch.voicemail.dir = ".$voicemail_dir."\n";
+			$conf .= "switch.scripts.dir = ".$scripts_dir."\n";
+			$conf .= "\n";
+			$conf .= "#switch xml handler\n";
+			$conf .= "xml_handler.fs_path = false\n";
+			$conf .= "xml_handler.reg_as_number_alias = false\n";
+			$conf .= "xml_handler.number_as_presence_id = true\n";
+			$conf .= "\n";
+			$conf .= "#error reporting hide show all errors except notices and warnings\n";
+			$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
+
+			//write the config file
+			$file_handle = fopen($config_file,"w");
+			if(!$file_handle){ return; }
+			fwrite($file_handle, $conf);
+			fclose($file_handle);
+
+			//set the include path
+			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+			$conf = parse_ini_file($config_glob[0]);
+			set_include_path($conf['document.root']);
 
 			//add the database schema
 			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
