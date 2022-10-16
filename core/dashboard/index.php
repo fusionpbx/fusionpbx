@@ -34,7 +34,7 @@
 	} elseif (file_exists("/etc/fusionpbx/config.conf")){
 		//Linux
 	} else {
-		header("Location: ".PROJECT_PATH."/core/install/install.php");
+		header("Location: /core/install/install.php");
 		exit;
 	}
 
