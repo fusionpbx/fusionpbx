@@ -310,11 +310,12 @@
 
 		//set the email status to sent
 		$sql = "update v_email_queue ";
-		$sql .= "set email_status = 'sent' ";
+		$sql .= "set email_status = 'sent', ";
 		//$sql .= "set email_status = 'waiting' "; //debug
 		if (isset($transcribe_message)) {
-			$sql .= ", email_transcription = :email_transcription ";
+			$sql .= "email_transcription = :email_transcription, ";
 		}
+		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
 		if (isset($transcribe_message)) {
@@ -436,7 +437,8 @@
 		else {
 			$sql .= "set email_status = 'trying', ";
 		}
-		$sql .= "email_retry_count = :email_retry_count ";
+		$sql .= "email_retry_count = :email_retry_count, ";
+		$sql .= "update_date = now() ";
 		//$sql .= ", email_debug = :email_debug ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
