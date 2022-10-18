@@ -2575,28 +2575,33 @@
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
 																	if (!is_array($v)) {
-																		if (strlen($v) == 0) {
-																			$sql .= "null, ";
-																		}
-																		elseif ($v === "now()") {
-																			$sql .= "now(), ";
-																		}
-																		elseif ($v === "user_uuid()") {
-																			$sql .= ':'.$k.", ";
-																			$params[$k] = $_SESSION['user_uuid'];
-																		}
-																		elseif ($v === "remote_address()") {
-																			$sql .= ':'.$k.", ";
-																			$params[$k] = $_SERVER['REMOTE_ADDR'];
-																		}
-																		else {
-																			$k = self::sanitize($k);
-																			if ($k != 'insert_user' &&
+																		if ($k != 'insert_user' &&
 																			$k != 'insert_date' &&
 																			$k != 'update_user' && 
 																			$k != 'update_date') {
+																			if (strlen($v) == 0) {
+																				$sql .= "null, ";
+																			}
+																			elseif ($v === "now()") {
+																				$sql .= "now(), ";
+																			}
+																			elseif ($v === "user_uuid()") {
 																				$sql .= ':'.$k.", ";
-																				$params[$k] = trim($v);
+																				$params[$k] = $_SESSION['user_uuid'];
+																			}
+																			elseif ($v === "remote_address()") {
+																				$sql .= ':'.$k.", ";
+																				$params[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
+																			else {
+																				$k = self::sanitize($k);
+																				if ($k != 'insert_user' &&
+																				$k != 'insert_date' &&
+																				$k != 'update_user' && 
+																				$k != 'update_date') {
+																					$sql .= ':'.$k.", ";
+																					$params[$k] = trim($v);
+																				}
 																			}
 																		}
 																	}
