@@ -86,7 +86,7 @@
 		$conf .= "\n";
 		$conf .= "#database switch settings\n";
 		$conf .= "database.1.type = sqlite\n";
-		$conf .= "database.1.path = /var/lib/freeswitch/db\n";
+		$conf .= "database.1.path = ".$database_dir."\n";
 		$conf .= "database.1.name = core.db\n";
 		$conf .= "\n";
 		$conf .= "#general settings\n";
