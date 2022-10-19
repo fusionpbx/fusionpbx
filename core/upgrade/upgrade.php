@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-
 //add the document root to the include path
 	$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 	if (is_array($config_glob) && count($config_glob) > 0) {
