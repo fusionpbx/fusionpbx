@@ -86,14 +86,9 @@
 		$conf .= "database.0.password = ".$db_password."\n";
 		$conf .= "\n";
 		$conf .= "#database switch settings\n";
-		$conf .= "database.1.type = ".$db_type."\n";
-		$conf .= "database.1.host = ".$db_host."\n";
-		$conf .= "database.1.port = ".$db_port."\n";
-		$conf .= "database.1.sslmode=prefer\n";
-		$conf .= "database.1.name = freeswitch\n";
-		$conf .= "database.1.username = freeswitch\n";
-		$conf .= "database.1.password = ".$db_password."\n";
-		$conf .= "database.1.backend.base64 = \n";
+		$conf .= "database.1.type = sqlite\n";
+		$conf .= "database.1.path = /var/lib/freeswitch/db\n";
+		$conf .= "database.1.name = core.db\n";
 		$conf .= "\n";
 		$conf .= "#general settings\n";
 		$conf .= "document.root = ".$document_root."\n";
