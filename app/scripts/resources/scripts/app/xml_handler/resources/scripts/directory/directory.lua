@@ -254,7 +254,7 @@
 								if (database["type"] == "mysql") then
 									params.now = os.time();
 									sql = sql .. "AND expires > :now ";
-								else
+								elseif (database["type"] == "pgsql") then
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
 								if (debug["sql"]) then
