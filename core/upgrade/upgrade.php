@@ -79,7 +79,7 @@
 		$conf .= "database.0.type = ".$db_type."\n";
 		$conf .= "database.0.host = ".$db_host."\n";
 		$conf .= "database.0.port = ".$db_port."\n";
-		$conf .= "database.0.sslmode=prefer\n";
+		$conf .= "database.0.sslmode = prefer\n";
 		$conf .= "database.0.name = ".$db_name."\n";
 		$conf .= "database.0.username = ".$db_username."\n";
 		$conf .= "database.0.password = ".$db_password."\n";
