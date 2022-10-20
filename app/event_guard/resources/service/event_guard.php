@@ -160,6 +160,9 @@
 				echo "Re-connected to event socket\n";
 			}
 			else {
+				//unable to connect to event socket
+				echo "Unable to connect to event socket\n";
+
 				//sleep and then attempt to reconnect
 				sleep(1);
 				continue;
