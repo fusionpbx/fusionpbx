@@ -25,7 +25,7 @@
 */
 
 //set the include path
-	$document_root = substr(getcwd(), 0, strlen($document_root) - strlen('/core/install'));
+	$document_root = substr(getcwd(), 0, strlen(getcwd()) - strlen('/core/install'));
 	set_include_path($document_root);
 	$_SERVER["DOCUMENT_ROOT"] = $document_root;
 	$_SERVER["PROJECT_ROOT"] = $document_root;
