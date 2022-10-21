@@ -484,7 +484,7 @@ if (!class_exists('email')) {
 					if (is_numeric($this->debug_level) && $this->debug_level > 0) {
 						$mail->SMTPDebug = $this->debug_level;
 					}
-					$mail->Timeout       =   60; //set the timeout (seconds)
+					$mail->Timeout       =   20; //set the timeout (seconds)
     					$mail->SMTPKeepAlive = true; //don't close the connection between messages
 
 					//add the email recipients
