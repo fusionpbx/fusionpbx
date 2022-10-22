@@ -37,6 +37,7 @@
 //include required classes
 	require_once "resources/classes/text.php";
 	require_once "resources/classes/template.php";
+	require_once "core/install/resources/classes/install.php";
 
 //add multi-lingual support
 	$language = new text;
@@ -69,34 +70,6 @@
 //set the default time zone
 	date_default_timezone_set('UTC');
 
-//if the config.php exists create the config.conf file
-	if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-		//bsd
-		$config_php = "/usr/local/etc/fusionpbx/config.php";
-	}
-	elseif (file_exists("/etc/fusionpbx/config.php")) {
-		//linux
-		$config_php = "/etc/fusionpbx/config.php";
-	}
-	if (isset($config_php)) {
-		//include the config.php file
-		include $config_php;
-
-		//build the config file
-		$install = new install;
-		$install->database_type = $db_type;
-		$install->database_host = $db_host;
-		$install->database_port = $db_port;
-		$install->database_name = $db_name;
-		$install->database_username = $db_username;
-		$install->database_password = $db_password;
-		$install->config();
-
-		//redirect the user
-		header("Location: /");
-		exit;
-	}
-
 //if the config file exists then disable the install page
 	$config_exists = false;
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
@@ -111,6 +84,35 @@
 		$msg .= "Already Installed";
 		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
 		exit;
+	}
+
+//if the config.php exists create the config.conf file
+	if (!$config_exists) {
+		if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			//bsd
+			$config_php = "/usr/local/etc/fusionpbx/config.php";
+		}
+		elseif (file_exists("/etc/fusionpbx/config.php")) {
+			//linux
+			$config_php = "/etc/fusionpbx/config.php";
+		}
+		if (isset($config_php)) {
+			//include the config.php file
+			include $config_php;
+
+			//build the config file
+			$install = new install;
+			$install->database_host = $db_host;
+			$install->database_port = $db_port;
+			$install->database_name = $db_name;
+			$install->database_username = $db_username;
+			$install->database_password = $db_password;
+			$install->config();
+
+			//redirect the user
+			header("Location: /");
+			exit;
+		}
 	}
 
 //process and save the data
