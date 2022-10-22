@@ -69,6 +69,34 @@
 //set the default time zone
 	date_default_timezone_set('UTC');
 
+//if the config.php exists create the config.conf file
+	if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+		//bsd
+		$config_php = "/usr/local/etc/fusionpbx/config.php";
+	}
+	elseif (file_exists("/etc/fusionpbx/config.php")) {
+		//linux
+		$config_php = "/etc/fusionpbx/config.php";
+	}
+	if (isset($config_php)) {
+		//include the config.php file
+		include $config_php;
+
+		//build the config file
+		$install = new install;
+		$install->database_type = $db_type;
+		$install->database_host = $db_host;
+		$install->database_port = $db_port;
+		$install->database_name = $db_name;
+		$install->database_username = $db_username;
+		$install->database_password = $db_password;
+		$install->config();
+
+		//redirect the user
+		header("Location: /");
+		exit;
+	}
+
 //if the config file exists then disable the install page
 	$config_exists = false;
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
@@ -89,7 +117,6 @@
 	if (count($_POST) > 0) {
 		foreach($_POST as $key => $value) {
 			//$_SESSION['install'][$key] = $value;
-
 			if ($key == 'admin_username') {
 				$_SESSION['install'][$key] = $value;
 			}
@@ -114,9 +141,6 @@
 			if ($key == 'database_password') {
 				$_SESSION['install'][$key] = $value;
 			}
-			//echo "if (\$key == '$key') {\n";
-			//echo "	\$_SESSION['install'][\$key] = \$value;\n";
-			//echo "}\n";
 		}
 		if ($_REQUEST["step"] == "install") {
 			//show debug information
@@ -177,60 +201,13 @@
 			}
 
 			//build the config file
-			$conf = "\n";
-			$conf .= "#database system settings\n";
-			$conf .= "database.0.type = pgsql\n";
-			$conf .= "database.0.host = ".$_SESSION['install']['database_host']."\n";
-			$conf .= "database.0.port = ".$_SESSION['install']['database_port']."\n";
-			$conf .= "database.0.sslmode=prefer\n";
-			$conf .= "database.0.name = ".$_SESSION['install']['database_name']."\n";
-			$conf .= "database.0.username = ".$_SESSION['install']['database_username']."\n";
-			$conf .= "database.0.password = ".$_SESSION['install']['database_password']."\n";
-			$conf .= "\n";
-			$conf .= "#database switch settings\n";
-			$conf .= "database.1.type = pgsql\n";
-			$conf .= "database.1.host = ".$_SESSION['install']['database_host']."\n";
-			$conf .= "database.1.port = ".$_SESSION['install']['database_port']."\n";
-			$conf .= "database.1.sslmode=prefer\n";
-			$conf .= "database.1.name = freeswitch\n";
-			$conf .= "database.1.username = freeswitch\n";
-			$conf .= "database.1.password = ".$_SESSION['install']['database_password']."\n";
-			$conf .= "database.1.backend.base64 = \n";
-			$conf .= "\n";
-			$conf .= "#general settings\n";
-			$conf .= "document.root = ".$document_root."\n";
-			$conf .= "project.path =\n";
-			$conf .= "temp.dir = /tmp\n";
-			$conf .= "php.dir = ".PHP_BINDIR."\n";
-			$conf .= "php.bin = php\n";
-			$conf .= "\n";
-			$conf .= "#cache settings\n";
-			$conf .= "cache.method = file\n";
-			$conf .= "cache.location = /var/cache/fusionpbx\n";
-			$conf .= "cache.settings = true\n";
-			$conf .= "\n";
-			$conf .= "#switch settings\n";
-			$conf .= "switch.conf.dir = ".$conf_dir."\n";
-			$conf .= "switch.sounds.dir = ".$sounds_dir."\n";
-			$conf .= "switch.database.dir = ".$database_dir."\n";
-			$conf .= "switch.recordings.dir = ".$recordings_dir."\n";
-			$conf .= "switch.storage.dir = ".$storage_dir."\n";
-			$conf .= "switch.voicemail.dir = ".$voicemail_dir."\n";
-			$conf .= "switch.scripts.dir = ".$scripts_dir."\n";
-			$conf .= "\n";
-			$conf .= "#switch xml handler\n";
-			$conf .= "xml_handler.fs_path = false\n";
-			$conf .= "xml_handler.reg_as_number_alias = false\n";
-			$conf .= "xml_handler.number_as_presence_id = true\n";
-			$conf .= "\n";
-			$conf .= "#error reporting hide show all errors except notices and warnings\n";
-			$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
-
-			//write the config file
-			$file_handle = fopen($config_file,"w");
-			if(!$file_handle){ return; }
-			fwrite($file_handle, $conf);
-			fclose($file_handle);
+			$install = new install;
+			$install->database_host = $_SESSION['install']['database_host'];
+			$install->database_port = $_SESSION['install']['database_port'];
+			$install->database_name = $_SESSION['install']['database_name'];
+			$install->database_username = $_SESSION['install']['database_username'];
+			$install->database_password = $_SESSION['install']['database_password'];
+			$install->config();
 
 			//set the include path
 			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
