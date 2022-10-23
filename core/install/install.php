@@ -100,7 +100,7 @@
 			if (is_writable($config_path)) {
 				//include the config.php file
 				include $config_path.'/config.php';
-	
+
 				//build the config file
 				$install = new install;
 				$install->database_host = $db_host;
@@ -109,7 +109,7 @@
 				$install->database_username = $db_username;
 				$install->database_password = $db_password;
 				$install->config();
-	
+
 				//redirect the user
 				header("Location: /");
 				exit;
@@ -163,55 +163,6 @@
 				exit;
 			}
 
-			//set the default config file location
-			if (stristr(PHP_OS, 'BSD')) {
-				$config_path = '/usr/local/etc/fusionpbx';
-				$config_file = $config_path.'/config.conf';
-				$document_root = '/usr/local/www/fusionpbx';
-
-				$conf_dir = '/usr/local/etc/freeswitch';
-				$sounds_dir = '/usr/share/freeswitch/sounds';
-				$database_dir = '/var/lib/freeswitch/db';
-				$recordings_dir = '/var/lib/freeswitch/recordings';
-				$storage_dir = '/var/lib/freeswitch/storage';
-				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
-				$scripts_dir = '/usr/share/freeswitch/scripts';
-			}
-			if (stristr(PHP_OS, 'Linux')) {
-				$config_path = '/etc/fusionpbx/';
-				$config_file = $config_path.'/config.conf';
-				$document_root = '/var/www/fusionpbx';
-
-				$conf_dir = '/etc/freeswitch';
-				$sounds_dir = '/usr/share/freeswitch/sounds';
-				$database_dir = '/var/lib/freeswitch/db';
-				$recordings_dir = '/var/lib/freeswitch/recordings';
-				$storage_dir = '/var/lib/freeswitch/storage';
-				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
-				$scripts_dir = '/usr/share/freeswitch/scripts';
-			}
-
-			//end the script if the config path is not set
-			if (!isset($config_path)) {
-				echo "Config file path not found\n";
-				exit;
-			}
-
-			//make the config directory
-			if (isset($config_path)) {
-				system('mkdir -p '.$config_path);
-			}
-			else {
-				echo "config directory not found\n";
-				exit;
-			}
-
-			//ensure the config directory exists
-			if (!file_exists($config_path)) {
-				"Unable to make the ".$config_path." directory\n";
-				"Check file permissions\n";
-			}
-
 			//build the config file
 			$install = new install;
 			$install->database_host = $_SESSION['install']['database_host'];
@@ -219,7 +170,13 @@
 			$install->database_name = $_SESSION['install']['database_name'];
 			$install->database_username = $_SESSION['install']['database_username'];
 			$install->database_password = $_SESSION['install']['database_password'];
-			$install->config();
+			$result = $install->config();
+
+			//end the script if the config path is not set
+			if (!$result) {
+				echo $install->message;
+				exit;
+			}
 
 			//set the include path
 			$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
