@@ -116,7 +116,7 @@
 			}
 			else {
 				//config directory is not writable run commands as root
-				echo "Please run the following commands as root.<br />\n";
+				echo "Please run the following commands as root.<br /><br />\n";
 				echo "cd ".$document_root."<br />\n";
 				echo "php ".$document_root."/core/upgrade/upgrade.php<br />\n";
 				unset($config_path);
