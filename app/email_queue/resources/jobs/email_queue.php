@@ -35,8 +35,6 @@
 	}
 
 //includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
 	include "resources/classes/permissions.php";
 	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
