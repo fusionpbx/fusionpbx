@@ -8,6 +8,7 @@ if (!class_exists('install')) {
 		*/
 		private $app_name;
 		private $app_uuid;
+		public $message;
 		public $database_host;
 		public $database_port;
 		public $database_name;
@@ -71,11 +72,13 @@ if (!class_exists('install')) {
 
 			//end the script if the config path is not set
 			if (!isset($config_path)) {
+				$this->message = "Config file path not found\n";
 				return false;
 			}
 
 			//config directory is not writable
 			if (!is_writable($config_path)) {
+				$this->message = "Check permissions ".$config_path." must be writable.\n";
 				return false;
 			}
 
