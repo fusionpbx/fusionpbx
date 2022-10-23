@@ -1,9 +1,5 @@
 <?php
-/**
- * install class
- *
- * @method null config
- */
+
 if (!class_exists('install')) {
 	class install {
 
@@ -38,7 +34,10 @@ if (!class_exists('install')) {
 		}
 
 		/**
-		 * create the config.conf file
+		 * <p>Used to create the config.conf file.</p>
+		 * <p>BSD /usr/local/etc/fusionpbx</p>
+		 * <p>Linux /etc/fusionpbx</p>
+		 * @return boolean
 		 */
 		public function config() {
 
@@ -68,6 +67,21 @@ if (!class_exists('install')) {
 				$storage_dir = '/var/lib/freeswitch/storage';
 				$voicemail_dir = '/var/lib/freeswitch/storage/voicemail';
 				$scripts_dir = '/usr/share/freeswitch/scripts';
+			}
+
+			//end the script if the config path is not set
+			if (!isset($config_path)) {
+				return false;
+			}
+
+			//config directory is not writable
+			if (!is_writable($config_path)) {
+				return false;
+			}
+
+			//make the config directory
+			if (isset($config_path)) {
+				system('mkdir -p '.$config_path);
 			}
 
 			//build the config file
@@ -125,6 +139,14 @@ if (!class_exists('install')) {
 			if(!$file_handle) { return; }
 			fwrite($file_handle, $conf);
 			fclose($file_handle);
+			
+			//if the config.conf file was saved return true
+			if (file_exists($config_file)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 
 		}
 
