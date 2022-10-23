@@ -96,30 +96,32 @@
 			//linux
 			$config_path = "/etc/fusionpbx";
 		}
-		if (isset($config_path) && is_writable($config_path)) {
-			//include the config.php file
-			include $config_path.'/config.php';
-
-			//build the config file
-			$install = new install;
-			$install->database_host = $db_host;
-			$install->database_port = $db_port;
-			$install->database_name = $db_name;
-			$install->database_username = $db_username;
-			$install->database_password = $db_password;
-			$install->config();
-
-			//redirect the user
-			header("Location: /");
-			exit;
-		}
-		else {
-			//config directory is not writable run commands as root
-			echo "Please run the following commands as root.<br />\n";
-			echo "cd ".$document_root."<br />\n";
-			echo "php ".$document_root."/core/upgrade/upgrade.php<br />\n";
-			unset($config_path);
-			exit;
+		if (isset($config_path)) {
+			if (is_writable($config_path)) {
+				//include the config.php file
+				include $config_path.'/config.php';
+	
+				//build the config file
+				$install = new install;
+				$install->database_host = $db_host;
+				$install->database_port = $db_port;
+				$install->database_name = $db_name;
+				$install->database_username = $db_username;
+				$install->database_password = $db_password;
+				$install->config();
+	
+				//redirect the user
+				header("Location: /");
+				exit;
+			}
+			else {
+				//config directory is not writable run commands as root
+				echo "Please run the following commands as root.<br />\n";
+				echo "cd ".$document_root."<br />\n";
+				echo "php ".$document_root."/core/upgrade/upgrade.php<br />\n";
+				unset($config_path);
+				exit;
+			}
 		}
 	}
 
