@@ -90,15 +90,15 @@
 	if (!$config_exists) {
 		if (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 			//bsd
-			$config_php = "/usr/local/etc/fusionpbx/config.php";
+			$config_path = "/usr/local/etc/fusionpbx";
 		}
 		elseif (file_exists("/etc/fusionpbx/config.php")) {
 			//linux
-			$config_php = "/etc/fusionpbx/config.php";
+			$config_path = "/etc/fusionpbx";
 		}
-		if (isset($config_php)) {
+		if (isset($config_path) && is_writable($config_path)) {
 			//include the config.php file
-			include $config_php;
+			include $config_path.'/config.php';
 
 			//build the config file
 			$install = new install;
@@ -111,6 +111,14 @@
 
 			//redirect the user
 			header("Location: /");
+			exit;
+		}
+		else {
+			//config directory is not writable run commands as root
+			echo "Please run the following commands as root.<br />\n";
+			echo "cd ".$document_root."<br />\n";
+			echo "php ".$document_root."/core/upgrade/upgrade.php<br />\n";
+			unset($config_path);
 			exit;
 		}
 	}
