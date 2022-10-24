@@ -458,9 +458,6 @@
 	if (!permission_exists('xml_cdr_lose_race')) {
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
-	if (!permission_exists('xml_cdr_enterprise_leg')) {
-		$sql .= "and (hangup_cause != 'NO_ANSWER' and originating_leg_uuid IS NULL) \n";
-	}
 
 	if (strlen($call_result) > 0) {
 		switch ($call_result) {
