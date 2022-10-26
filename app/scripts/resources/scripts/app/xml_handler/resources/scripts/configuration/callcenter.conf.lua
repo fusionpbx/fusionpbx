@@ -88,6 +88,7 @@
 					queue_time_base_score = row.queue_time_base_score;
 					queue_max_wait_time = row.queue_max_wait_time;
 					queue_max_wait_time_with_no_agent = row.queue_max_wait_time_with_no_agent;
+					queue_max_wait_time_with_no_agent_time_reached = row.queue_max_wait_time_with_no_agent_time_reached;
 					queue_tier_rules_apply = row.queue_tier_rules_apply;
 					queue_tier_rule_wait_second = row.queue_tier_rule_wait_second;
 					queue_tier_rule_wait_multiply_level = row.queue_tier_rule_wait_multiply_level;
