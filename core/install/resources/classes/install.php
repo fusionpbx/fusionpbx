@@ -99,14 +99,10 @@ if (!class_exists('install')) {
 			$conf .= "database.0.password = ".$this->database_password."\n";
 			$conf .= "\n";
 			$conf .= "#database switch settings\n";
-			$conf .= "database.1.type = pgsql\n";
-			$conf .= "database.1.host = ".$this->database_host."\n";
-			$conf .= "database.1.port = ".$this->database_port."\n";
-			$conf .= "database.1.sslmode = prefer\n";
-			$conf .= "database.1.name = freeswitch\n";
-			$conf .= "database.1.username = freeswitch\n";
-			$conf .= "database.1.password = ".$this->database_password."\n";
-			$conf .= "database.1.backend.base64 = \n";
+			$conf .= "database.1.type = sqlite\n";
+			$conf .= "database.1.path = ".$database_dir."\n";
+			$conf .= "database.1.name = core.db\n";
+			//$conf .= "database.1.backend.base64 = \n";
 			$conf .= "\n";
 			$conf .= "#general settings\n";
 			$conf .= "document.root = ".$document_root."\n";
