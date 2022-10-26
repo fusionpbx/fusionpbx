@@ -523,10 +523,10 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_X-accountcode='.$accountcode;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_accountcode='.$accountcode;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
 							}
 							else {
 								$y++;
@@ -535,10 +535,10 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_X-accountcode=${accountcode}';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_accountcode=${accountcode}';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
 							}
 						}
 
