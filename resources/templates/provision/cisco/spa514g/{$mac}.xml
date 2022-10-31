@@ -70,8 +70,15 @@
 <NAT_Keep_Alive_Intvl group="SIP/NAT_Support_Parameters">15</NAT_Keep_Alive_Intvl>
 <Redirect_Keep_Alive group="SIP/NAT_Support_Parameters">No</Redirect_Keep_Alive>
 
-<!-- Optional Network Configuration -->
+<!-- SIP/RTP_Parameters -->
+<RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
 <RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
+<Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
+<RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
+<No_UDP_Checksum group="SIP/RTP_Parameters">No</No_UDP_Checksum>
+<Symmetric_RTP group="SIP/RTP_Parameters">No</Symmetric_RTP>
+<Stats_In_BYE group="SIP/RTP_Parameters">No</Stats_In_BYE>
 
 <!-- Provisioning/Configuration_Profile -->
 <Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>
