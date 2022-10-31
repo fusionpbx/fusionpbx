@@ -67,9 +67,11 @@
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
 <EXT_IP group="SIP/NAT_Support_Parameters" />
-<EXT_RTP_Port_Min group="SIP/NAT_Support_Parameters" />
 <NAT_Keep_Alive_Intvl group="SIP/NAT_Support_Parameters">15</NAT_Keep_Alive_Intvl>
 <Redirect_Keep_Alive group="SIP/NAT_Support_Parameters">No</Redirect_Keep_Alive>
+
+<!-- Optional Network Configuration -->
+<RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
 
 <!-- Provisioning/Configuration_Profile -->
 <Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>
