@@ -407,7 +407,7 @@
 				//set the include path
 					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
 					set_include_path(parse_ini_file($conf[0])['document.root']);
-					
+
 				//parset the config.conf file
 					$conf = parse_ini_file($conf[0]);
 
@@ -543,7 +543,7 @@
 			 * @return array tables
 			 * @depends connect()
 			 */
-			public function tables() : array {
+			public function tables() {
 					$result = [];
 				//connect to the database if needed
 					if (!$this->db) {
@@ -593,7 +593,7 @@
 			 * @return array table info
 			 * @depends connect()
 			 */
-			public function table_info() : array {
+			public function table_info() {
 				//public $db;
 				//public $type;
 				//public $table;
@@ -644,7 +644,7 @@
 			 * @return boolean Returns <i>true</i> if the table exists and <i>false</i> if it does not.
 			 * @depends connect()
 			 */
-			public function table_exists ($table_name) : bool {
+			public function table_exists ($table_name) {
 				if (self::sanitize($table_name) != $table_name) {
 					trigger_error('Table Name must be sanitized', E_USER_WARNING);
 					return false;
@@ -683,7 +683,7 @@
 			 * @return array Two dimensional array
 			 * @depends table_info()
 			 */
-			public function fields() : array {
+			public function fields() {
 				//public $db;
 				//public $type;
 				//public $table;
@@ -1407,7 +1407,7 @@
 			 * Counts the number of rows.
 			 * @return int Represents the number of counted rows or -1 if failed.
 			 */
-			public function count() : int {
+			public function count() {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -1543,7 +1543,7 @@
 			 * @param array $array Array containing the table name, uuid, SQL and where clause.
 			 * @return database Returns the database object or null.
 			 */
-			public function find_new(array $array): ?database {
+			public function find_new(array $array) {
 
 				//connect to the database if needed
 				if (!$this->db) {
@@ -1650,7 +1650,7 @@
 			 * @param string $uuid A valid UUID must be passed
 			 * @return database Returns this object
 			 */
-			public function uuid(string $uuid) : database {
+			public function uuid(string $uuid) {
 				$this->uuid = $uuid;
 				return $this;
 			}
@@ -1660,7 +1660,7 @@
 			 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 			 * @return bool Returns <b>true</b> on success and <b>false</b> on failure.
 			 */
-			public function copy(array $array, $suffix = '(Copy)') : bool {
+			public function copy(array $array, $suffix = '(Copy)') {
 				//set default return value
 					$retval = false;
 
@@ -1876,7 +1876,7 @@
 			 * @depends database::save()
 			 * @depends database::get_apps()
 			 */
-			public function toggle(array $array) : bool {
+			public function toggle(array $array) {
 
 				//return the array
 					if (!is_array($array)) { return false; }
@@ -2001,7 +2001,7 @@
 			 * @param bool $transaction_save
 			 * @return boolean Returns <b>true</b> on success and <b>false</b> on failure of one or more failed write attempts.
 			 */
-			public function save(array &$array, bool $transaction_save = true) : bool {
+			public function save(array &$array, bool $transaction_save = true) {
 				//set default return value
 					$retval = true;
 
@@ -2802,7 +2802,7 @@
 			 * @return string Singular version of English word
 			 * @internal Moved to class to conserve resources.
 			 */
-			public static function singular(string $word) : string {
+			public static function singular(string $word) {
 				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 				if (substr($word, -2) == "es") {
 					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
@@ -2864,7 +2864,7 @@
 			 * @return int Depth of array
 			 * @internal Moved to class to conserve resources.
 			 */
-			public static function array_depth(array &$array) : int {
+			public static function array_depth(array &$array) {
 				$depth = 0;
 				if (is_array($array)) {
 					$depth++;
@@ -2991,7 +2991,7 @@
 		 * @return string Sanitized using preg_replace('#[^a-zA-Z0-9_\-]#', '')
 		 * @see preg_replace()
 		 */
-		public static function sanitize(string $value) : string {
+		public static function sanitize(string $value) {
 			return preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 		}
 
@@ -3006,7 +3006,7 @@
 		 * @see database::__construct()
 		 * @see database::connect()
 		 */
-		public static function &new() : database {
+		public static function &new() {
 			$db = new database();
 			$db->connect();
 			return $db;
