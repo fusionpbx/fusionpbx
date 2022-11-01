@@ -923,7 +923,7 @@
 					$database->app_name = 'destinations';
 					$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 					$database->save($array);
-					//$dialplan_response = $database->message;
+					//$response = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", 'temp');
@@ -1307,7 +1307,7 @@
 	echo "</tr>\n";
 
 	//destination number
-	if (permission_exists('destination_number')) {
+	if (permission_exists('destination_prefix')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_country_code']."\n";
