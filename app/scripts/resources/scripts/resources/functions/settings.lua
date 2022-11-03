@@ -1,6 +1,8 @@
 
 --define the trim function
 	require "resources.functions.trim";
+	local Database = require "resources.functions.database";
+	local dbh = dbh or Database.new("system");
 
 --include json library
 	local json
