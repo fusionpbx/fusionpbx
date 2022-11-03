@@ -586,15 +586,8 @@
 													$line_display_name = str_replace("\${extension}", $extension, $line_display_name);
 													$line_display_name = str_replace("\${description}", $description, $line_display_name);
 												}
-
-												//send a message to the user the device is not unique
-												if (!$device_unique) {
-													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
-													message::add($message,'negative');
-												}
-
 												//build the devices array
-												if ($device_unique && $device_mac_address != '000000000000') {
+												if (($device_unique && $device_mac_address != '000000000000') || $device_mac_address == '000000000000') {
 													$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["domain_uuid"] = $_SESSION['domain_uuid'];
 													$array["devices"][$j]["device_mac_address"] = $device_mac_address;
@@ -623,7 +616,11 @@
 													$array["devices"][$j]["device_lines"][0]["register_expires"] = $_SESSION['provision']['line_register_expires']['numeric'];
 													$array["devices"][$j]["device_lines"][0]["enabled"] = "true";
 												}
-
+												else {
+													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
+													message::add($message,'negative');
+												}
+												
 												//increment
 												$j++;
 											}
