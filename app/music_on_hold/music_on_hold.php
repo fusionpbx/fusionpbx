@@ -25,8 +25,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -229,6 +232,7 @@
 				//define default path
 					if ($action == "add") {
 						$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'], $stream_name, $path_rate);
+						$stream_path = str_replace('.loc', '._loc', $stream_path); // 14.03.22 freeswitch bug
 					}
 
 				//find whether the path already exists
@@ -277,6 +281,13 @@
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
 						mkdir($stream_path, 0770, true);
+
+						// 14.03.22 freeswitch bug - shouldn't be needed with freeswitch 1.10.8
+			                       if (preg_match('|^(/usr/share/freeswitch/sounds/music/(.*?\._loc.*?))/|', $stream_path, $m)) {
+			                           $fs_bug_target = $m[2];
+			                           $fs_bug_link = str_replace('._loc', '.loc', $m[1]);
+			                           symlink($fs_bug_target, $fs_bug_link);
+			                       }
 					}
 					if (is_dir($stream_path)) {
 						if (copy($stream_file_name_temp, $stream_path.'/'.$stream_file_name)) {

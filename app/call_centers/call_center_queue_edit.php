@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -341,7 +344,7 @@
 			if (is_numeric($queue_extension)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$queue_extension."\"/>\n";
 			}
-			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if ($queue_time_base_score_sec != '') {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";

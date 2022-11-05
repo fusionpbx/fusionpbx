@@ -47,6 +47,17 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${dialplan_name} \${description}";
 		$y++;
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d3c5a59d-e6c0-4ded-ac79-9a7fcd9e1269";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${sip_req_user}";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: destination_number, \${sip_to_user}, \${sip_req_user}";
+		$y++;
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_view";
@@ -172,6 +183,30 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_dialplan_details";
@@ -232,6 +267,30 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "dialplan_detail_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

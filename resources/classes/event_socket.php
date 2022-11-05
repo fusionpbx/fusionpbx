@@ -44,7 +44,7 @@ class buffer {
 
 class event_socket {
 	private $buffer;
-	private $fp;
+	public $fp;
 
 	public function __construct($fp = false) {
 		$this->buffer = new buffer;
@@ -72,7 +72,6 @@ class event_socket {
 				$kv = explode(':', $line, 2);
 				$content[trim($kv[0])] = trim($kv[1]);
 			}
-			usleep(100);
 
 			if (feof($this->fp)) {
 				break;
@@ -113,8 +112,8 @@ class event_socket {
 		if (!$fp) {
 			return false;
 		}
-
-		socket_set_blocking($fp, false);
+		socket_set_timeout($fp, 0, 30000);
+		socket_set_blocking($fp, true);
 		$this->fp = $fp;
 
 		// Wait auth request and send response
@@ -140,6 +139,21 @@ class event_socket {
 			}
 
 		return false;
+	}
+
+	public function connected() {
+		if (!$this->fp) {
+			//not connected to the socket
+			return false;
+		}
+		if (feof($this->fp) === true) {
+			//not connected to the socket
+			return false;
+		}
+		else {
+			//connected to the socket
+			return true;
+		}
 	}
 
 	public function request($cmd) {

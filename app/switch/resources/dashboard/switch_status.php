@@ -1,17 +1,20 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists("registration_all") || if_group("superadmin")) {
+	if (permission_exists("switch_version") 
+		|| permission_exists("switch_uptime") 
+		|| permission_exists("switch_channels") 
+		|| permission_exists("switch_registrations") 
+		||  permission_exists("registration_all")) {
 		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
 	}
 
 //add multi-lingual support
@@ -30,7 +33,7 @@
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 //switch version
-	if ($fp) {
+	if (permission_exists('switch_version') && $fp) {
 		$switch_version = event_socket_request($fp, 'api version');
 		preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 		$switch_version = $matches[1];
@@ -38,7 +41,7 @@
 	}
 
 //switch uptime
-	if ($fp) {
+	if (permission_exists('switch_uptime') && $fp) {
 		$tmp = event_socket_request($fp, 'api status');
 		$tmp = explode("\n", $tmp);
 		$tmp = $tmp[0];
@@ -54,7 +57,7 @@
 	}
 
 //channel count
-	if ($fp) {
+	if (permission_exists('switch_channels') && $fp) {
 		$tmp = event_socket_request($fp, 'api status');
 		$matches = Array();
 		preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
@@ -65,12 +68,13 @@
 	}
 
 //registration count
-	if ($fp && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+	if (permission_exists('switch_registrations') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
 		$registration = new registrations;
-		$registrations = $registration->count();
-		if (permission_exists("registration_all") || if_group("superadmin")) {
+		if (permission_exists("registration_all")) {
+			$registration->show = 'all';
 			$tr_link_registrations = "href='".PROJECT_PATH."/app/registrations/registrations.php'";
 		}
+		$registrations = $registration->count();
 	}
 
 //add doughnut chart
@@ -131,7 +135,7 @@
 	echo "</tr>\n";
 
 	//switch version
-	if ($switch_version != '') {
+	if (permission_exists('switch_version') && $switch_version != '') {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$switch_version." (".$switch_bits.")</a></td>\n";
@@ -140,7 +144,7 @@
 	}
 
 	//switch uptime
-	if ($uptime != '') {
+	if (permission_exists('switch_uptime') && $uptime != '') {
 		echo "<tr class='tr_link' ".$tr_link_sip_status.">\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-switch_uptime']."</td>\n";
 		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_sip_status.">".$uptime."</a></td>\n";
@@ -149,19 +153,22 @@
 	}
 
 	//switch channels
-	echo "<tr class='tr_link' ".$tr_link_channels.">\n";
-	echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
-	echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_channels.">".$channels."</a></td>\n";
-	echo "</tr>\n";
-	$c = ($c) ? 0 : 1;
+	if (permission_exists('switch_channels')) {
+		echo "<tr class='tr_link' ".$tr_link_channels.">\n";
+		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-channels']."</td>\n";
+		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_channels.">".$channels."</a></td>\n";
+		echo "</tr>\n";
+		$c = ($c) ? 0 : 1;
+	}
 
 	//switch registrations
-	echo "<tr class='tr_link' ".$tr_link_registrations.">\n";
-	echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-registrations']."</td>\n";
-	echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_registrations.">".$registrations."</a></td>\n";
-	echo "</tr>\n";
-	$c = ($c) ? 0 : 1;
-
+	if (permission_exists('switch_registrations')) {
+		echo "<tr class='tr_link' ".$tr_link_registrations.">\n";
+		echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-registrations']."</td>\n";
+		echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'><a ".$tr_link_registrations.">".$registrations."</a></td>\n";
+		echo "</tr>\n";
+		$c = ($c) ? 0 : 1;
+	}
 
 	echo "</table>\n";
 	echo "</div>";

@@ -298,11 +298,22 @@ if (!class_exists('xml_cdr')) {
 			//process data if the call detail record is not a duplicate
 				if ($duplicate_uuid == false && is_uuid($uuid)) {
 
-					//get the caller ID
-						if (isset($xml->variables->caller_id_name)) {
+					//get the caller ID from call flow caller profile
+						$i = 0;
+						foreach ($xml->callflow as $row) {
+							if ($i == 0) {
+								$caller_id_name = urldecode($row->caller_profile->caller_id_name);
+								$caller_id_number = urldecode($row->caller_profile->caller_id_number);
+							}
+							$i++;
+						}
+						unset($i);
+
+					//get the caller ID from variables
+						if (!isset($caller_id_number) && isset($xml->variables->caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->caller_id_name);
 						}
-						if (isset($xml->variables->caller_id_number)) {
+						if (!isset($caller_id_number) && isset($xml->variables->caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->caller_id_number);
 						}
 						if (!isset($caller_id_number) && isset($xml->variables->sip_from_user)) {
@@ -321,6 +332,15 @@ if (!class_exists('xml_cdr')) {
 						if (isset($xml->variables->effective_caller_id_name)) {
 							$caller_id_name = urldecode($xml->variables->effective_caller_id_name);
 						}
+					
+						if (isset($xml->variables->origination_caller_id_name)) {
+							$caller_id_name = urldecode($xml->variables->origination_caller_id_name);
+						}
+						
+						if (isset($xml->variables->origination_caller_id_number)) {
+							$caller_id_number = urldecode($xml->variables->origination_caller_id_number);
+						}
+					
 						if (urldecode($xml->variables->call_direction) == 'outbound' && isset($xml->variables->effective_caller_id_number)) {
 							$caller_id_number = urldecode($xml->variables->effective_caller_id_number);
 						}
@@ -374,7 +394,31 @@ if (!class_exists('xml_cdr')) {
 						}
 
 					//set missed calls
-						if (isset($xml->variables->answer_stamp) && isset($xml->variables->bridge_uuid)) {
+						if (isset($xml->variables->missed_call)) {
+							//marked as missed
+							$missed_call = $xml->variables->missed_call;
+						}
+						elseif (isset($xml->variables->fax_success)) {
+							//fax server
+							$missed_call = 'false';
+						}
+						elseif ($xml->variables->hangup_cause == 'LOSE_RACE') {
+							//ring group or multi destination bridge statement
+							$missed_call = 'false';
+						}
+						elseif ($xml->variables->hangup_cause == 'NO_ANSWER' && isset($xml->variables->originating_leg_uuid)) {
+							//ring group or multi destination bridge statement
+							$missed_call = 'false';
+						}
+						elseif (substr($xml->variables->destination_number, 0, 3) == '*99') {
+							//voicemail
+							$missed_call = 'true';
+						}
+						elseif (isset($xml->variables->voicemail_message) && $xml->variables->voicemail_message == true) {
+							//voicemail
+							$missed_call = 'true';
+						}
+						elseif (isset($xml->variables->billsec) && $xml->variables->billsec > 0) {
 							//answered call
 							$missed_call = 'false';
 						}
@@ -1053,14 +1097,13 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
+				$sql .= " and missed_call = false\n";
 				if (!permission_exists('xml_cdr_enterprise_leg')) {
 					$sql .= " and originating_leg_uuid is null \n";
 				}
 				elseif (!permission_exists('xml_cdr_lose_race')) {
 					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
 				}
-				$sql .= " and originating_leg_uuid IS NULL \n";
-				$sql .= " and (answer_stamp IS NOT NULL and bridge_uuid IS NOT NULL) \n";
 				$sql .= " and (cc_side IS NULL or cc_side !='agent')";
 				if ($this->include_internal) {
 					$sql .= " and (direction = 'inbound' or direction = 'local') \n";
@@ -1075,36 +1118,8 @@ if (!class_exists('xml_cdr')) {
 				$sql .= "count(*) \n";
 				$sql .= "filter ( \n";
 				$sql .= " where c.extension_uuid = e.extension_uuid \n";
-				if (!permission_exists('xml_cdr_enterprise_leg')) {
-					$sql .= " and originating_leg_uuid is null \n";
-				}
-				elseif (!permission_exists('xml_cdr_lose_race')) {
-					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
-				}
-				$sql .= " and originating_leg_uuid IS NULL \n";
-
-				$sql .= " and ( \n";
-				$sql .= " ( \n";
-				$sql .= " missed_call = '1' \n";
+				$sql .= " and missed_call = true\n";
 				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
-				$sql .= " ) \n";
-
-				$sql .= " or ( \n";
-				$sql .= " (cc_side is null or cc_side != 'agent') \n";
-				$sql .= " and (answer_stamp is not null and bridge_uuid is null) \n";
-				$sql .= " ) \n";
-
-				$sql .= " or ( \n";
-				$sql .= " ((answer_stamp is null and bridge_uuid is null) \n";
-				$sql .= " and sip_hangup_disposition != 'send_refuse' ) \n";
-				$sql .= " or ( answer_stamp is not null and bridge_uuid is null and voicemail_message = false )) \n";
-				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
-				$sql .= " ) \n";
-				if ($this->include_internal) {
-							$sql .= " and (direction = 'inbound' or direction = 'local') ";
-				} else {
-							$sql .= " and direction = 'inbound' ";
-				}
 				$sql .= ") \n";
 				$sql .= "as missed, \n";
 
@@ -1164,7 +1179,6 @@ if (!class_exists('xml_cdr')) {
 				elseif (!permission_exists('xml_cdr_lose_race')) {
 					$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
 				}
-				$sql .= " and originating_leg_uuid IS NULL \n";
 				$sql .= " and (cc_side is null or cc_side != 'agent') \n";
 				if ($this->include_internal) {
 						$sql .= " and (direction = 'inbound' or direction = 'local') \n";

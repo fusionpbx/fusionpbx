@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permisions
@@ -20,9 +23,10 @@
 
 //missed calls
 	echo "<div class='hud_box'>\n";
-
-	foreach ($_SESSION['user']['extension'] as $assigned_extension) {
-		$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+	if (is_array($_SESSION['user']['extension'])) {
+		foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+			$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+		}
 	}
 	unset($assigned_extension);
 

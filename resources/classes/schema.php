@@ -23,7 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the schema class
 if (!class_exists('schema')) {
@@ -45,6 +44,13 @@ if (!class_exists('schema')) {
 					$database->connect();
 					$this->db = $database->db;
 				}
+
+				//set the include path
+				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+				set_include_path(parse_ini_file($conf[0])['document.root']);
+
+				//includes files
+				include "resources/require.php";
 
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -487,8 +493,12 @@ if (!class_exists('schema')) {
 					$db_path = $config->db_path;
 					$db_port = $config->db_port;
 
-				//get the PROJECT PATH
-					include "root.php";
+				//set the include path
+					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+					set_include_path(parse_ini_file($conf[0])['document.root']);
+
+				//includes files
+					include "resources/require.php";
 
 				//add multi-lingual support
 					if (!isset($text)) {
@@ -557,6 +567,7 @@ if (!class_exists('schema')) {
 								}
 							}
 							if (strlen($table_name) > 0) {
+
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
 										$apps[$x]['db'][$y]['exists'] = 'true';

@@ -2,20 +2,18 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
+
+//includes files
+	require_once "resources/require.php";
+	require_once "resources/pdo.php";
+	include "resources/classes/permissions.php";
 
 //increase limits
 	set_time_limit(0);
@@ -40,11 +38,6 @@
 		$debug_sql = $_GET['sql'];
 	}
 
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-
 //define the process id file
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
 	//echo "pid_file: ".$pid_file."\n";
@@ -58,13 +51,25 @@
 		//check to see if the process is running
 		if (file_exists($file)) {
 			$pid = file_get_contents($file);
-			if (posix_getsid($pid) === false) { 
-				//process is not running
-				$exists = false;
+			if (function_exists('posix_getsid')) {
+				if (posix_getsid($pid) === false) { 
+					//process is not running
+					$exists = false;
+				}
+				else {
+					//process is running
+					$exists = true;
+				}
 			}
 			else {
-				//process is running
-				$exists = true;
+				if (file_exists('/proc/'.$pid)) {
+					//process is running
+					$exists = true;
+				}
+				else {
+					//process is not running
+					$exists = false;
+				}
 			}
 		}
 
@@ -88,12 +93,12 @@
 	}
 
 //make sure the /var/run/fusionpbx directory exists
-    if (!file_exists('/var/run/fusionpbx')) {
-        $result = mkdir('/var/run/fusionpbx', 0777, true);
-        if (!$result) {
-            die('Failed to create /var/run/fusionpbx');
-        }
-    }
+	if (!file_exists('/var/run/fusionpbx')) {
+		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		if (!$result) {
+			die('Failed to create /var/run/fusionpbx');
+		}
+	}
 
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
@@ -138,24 +143,25 @@
 	}
 
 //change the working directory
-	chdir($document_root);
+	chdir($_SERVER['DOCUMENT_ROOT']);
 
 //get the messages waiting in the email queue
 	while (true) {
 
 		//get the fax messages that are waiting to send
 			$sql = "select * from v_fax_queue ";
-			$sql .= "where ";
-			$sql .= "( ";
-			$sql .= "	(fax_status = 'waiting' or fax_status = 'trying') ";
-			$sql .= "	and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
-			$sql .= ")  ";
-			$sql .= "or ( ";
-			$sql .= "	fax_status = 'sent' ";
-			$sql .= "	and fax_email_address is not null ";
-			$sql .= "	and fax_notify_date is null ";
+			$sql .= "where hostname = :hostname ";
+			$sql .= "and ( ";
+			$sql .= "	( ";
+			$sql .= "		(fax_status = 'waiting' or fax_status = 'trying') ";
+			$sql .= "		and (fax_retry_date is null or floor(extract(epoch from now()) - extract(epoch from fax_retry_date)) > :retry_interval) ";
+			$sql .= "	)  ";
+			$sql .= "	or ( ";
+			$sql .= "		fax_status = 'sent' ";
+			$sql .= "		and fax_email_address is not null ";
+			$sql .= "		and fax_notify_date is null ";
+			$sql .= "	) ";
 			$sql .= ") ";
-			$sql .= "and hostname = :hostname ";
 			$sql .= "order by domain_uuid asc ";
 			$sql .= "limit :limit ";
 			if (isset($hostname)) {
@@ -167,12 +173,13 @@
 			$parameters['limit'] = $fax_queue_limit;
 			$parameters['retry_interval'] = $fax_retry_interval;
 			if (isset($debug_sql)) {
+				echo $sql."\n";
 				print_r($parameters);
 			}
 			$database = new database;
 			$fax_queue = $database->select($sql, $parameters, 'all');
 			unset($parameters);
-			
+
 		//show results from the database
 			if (isset($debug_sql)) {
 				echo $sql."\n";
@@ -182,7 +189,7 @@
 		//process the messages
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 				foreach($fax_queue as $row) {
-					$command = exec('which php')." ".$document_root."/app/fax_queue/resources/job/fax_send.php ";
+					$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
 					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."'";
 					if (isset($debug)) {
 						//run process inline to see debug info

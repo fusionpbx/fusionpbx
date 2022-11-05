@@ -191,54 +191,11 @@ if ($domains_processed == 1) {
 			}
 		}
 
-	//adjust the variables required variables
-		//set variables that depend on the number of domains
-			if (count($_SESSION['domains']) > 1) {
-				//disable the domain and domain_uuid for systems with multiple domains
-					$sql = "update v_vars set ";
-					$sql .= "var_enabled = 'false' ";
-					$sql .= "where (var_name = 'domain' or var_name = 'domain_uuid') ";
-					$database = new database;
-					$database->execute($sql);
-					unset($sql);
-			}
-			else {
-				//set the domain_uuid
-					$sql = "select count(*) from v_vars ";
-					$sql .= "where var_name = 'domain_uuid' ";
-					$database = new database;
-					$num_rows = $database->select($sql, null, 'column');
-					unset($sql);
+	//set country code variables
+		set_country_vars($db, $x);
 
-					if ($num_rows == 0) {
-						//build insert array
-							$array['vars'][0]['var_uuid'] = uuid();
-							$array['vars'][0]['var_name'] = 'domain_uuid';
-							$array['vars'][0]['var_value'] = $domain_uuid;
-							$array['vars'][0]['var_category'] = 'Defaults';
-							$array['vars'][0]['var_enabled'] = 'true';
-							$array['vars'][0]['var_order'] = 999;
-							$array['vars'][0]['var_description'] = null;
-						//grant temporary permissions
-							$p = new permissions;
-							$p->add("var_add", "temp");
-						//execute inserts
-							$database = new database;
-							$database->app_name = 'vars';
-							$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-							$database->save($array, false);
-							unset($array);
-						//revoke temporary permissions
-							$p->delete("var_add", "temp");
-					}
-					unset($num_rows);
-			}
-
-		//set country code variables
-			set_country_vars($db, $x);
-
-		//save the vars.xml file
-			save_var_xml();
+	//save the vars.xml file
+		save_var_xml();
 }
 
 ?>

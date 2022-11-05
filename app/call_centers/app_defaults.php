@@ -65,11 +65,12 @@ if ($domains_processed == 1) {
 		unset($sql);
 
 	//update all callcenter dialplans to have the @domain in the queue name
-		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, ";
+		$sql = "select q.domain_uuid, d.domain_name, q.call_center_queue_uuid, q.dialplan_uuid, dp.dialplan_xml, ";
 		$sql .= "q.queue_name, q.queue_extension, q.queue_timeout_action, q.queue_cid_prefix, q.queue_cc_exit_keys, ";
 		$sql .= "q.queue_description, q.queue_time_base_score_sec, q.queue_greeting ";
-		$sql .= "from v_call_center_queues as q, v_domains as d ";
+		$sql .= "from v_call_center_queues as q, v_dialplans as dp, v_domains as d ";
 		$sql .= "where q.domain_uuid = d.domain_uuid ";
+		$sql .= "and (q.dialplan_uuid = dp.dialplan_uuid or q.dialplan_uuid is null) ";
 		$database = new database;
 		$call_center_queues = $database->select($sql, null, 'all');
 		$id = 0;
@@ -85,7 +86,7 @@ if ($domains_processed == 1) {
 				//add the recording path if needed
 					if ($row['queue_greeting'] != '') {
 						if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'])) {
-							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row['queue_greeting'];
+							$queue_greeting_path = $_SESSION['switch']['recordings']['dir'].'/'.$row['domain_name'].'/'.$row['queue_greeting'];
 						}
 						else {
 							$queue_greeting_path = trim($row['queue_greeting']);
@@ -105,7 +106,7 @@ if ($domains_processed == 1) {
 					if (is_numeric($row['queue_extension'])) {
 						$dialplan_xml .= "		<action application=\"set\" data=\"queue_extension=".$row['queue_extension']."\"/>\n";
 					}
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=\${cc_export_vars},call_center_queue_uuid,sip_h_Alert-Info\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 					if ($row['queue_time_base_score_sec'] != '') {
 						$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$row['queue_time_base_score_sec']."\"/>\n";
@@ -132,20 +133,22 @@ if ($domains_processed == 1) {
 						$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
 					//}
 					$dialplan_xml .= "	</condition>\n";
-					$dialplan_xml .= "</extension>\n";
+					$dialplan_xml .= "</extension>";
 
 				//build the dialplan array
-					$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
-					$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
-					$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
-					$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
-					$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
-					$array['dialplans'][$id]["dialplan_continue"] = "false";
-					$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
-					$array['dialplans'][$id]["dialplan_order"] = "230";
-					$array['dialplans'][$id]["dialplan_enabled"] = "true";
-					$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
-					$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					if (md5($row["dialplan_xml"]) != md5($dialplan_xml)) {
+						$array['dialplans'][$id]["domain_uuid"] = $row["domain_uuid"];
+						$array['dialplans'][$id]["dialplan_uuid"] = $row["dialplan_uuid"];
+						$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
+						$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
+						$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
+						$array['dialplans'][$id]["dialplan_continue"] = "false";
+						$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
+						$array['dialplans'][$id]["dialplan_order"] = "230";
+						$array['dialplans'][$id]["dialplan_enabled"] = "true";
+						$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
+						$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+					}
 
 				//increment the array id
 					$id++;

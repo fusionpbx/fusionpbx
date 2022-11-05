@@ -29,7 +29,7 @@
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --set the default
-continue = true;
+	continue = true;
 
 --get the action
 	action = params:getHeader("action");
@@ -203,6 +203,11 @@ continue = true;
 							end
 					end
 
+				--get the dial_string from default settings
+					local Settings = require "resources.functions.lazy_settings"
+					local settings = Settings.new(dbh, domain_name, domain_uuid);
+					dial_string = settings:get('domain', 'dial_string', 'text');
+ 
 				--prevent processing for invalid domains
 					if (domain_uuid == nil) then
 						continue = false;
@@ -249,7 +254,7 @@ continue = true;
 								if (database["type"] == "mysql") then
 									params.now = os.time();
 									sql = sql .. "AND expires > :now ";
-								else
+								elseif (database["type"] == "pgsql") then
 									sql = sql .. "AND to_timestamp(expires) > NOW()";
 								end
 								if (debug["sql"]) then
@@ -391,6 +396,7 @@ continue = true;
 								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
+									--set the destintion
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then

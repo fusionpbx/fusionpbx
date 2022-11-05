@@ -67,9 +67,18 @@
 <STUN_Test_Enable group="SIP/NAT_Support_Parameters">No</STUN_Test_Enable>
 <STUN_Server group="SIP/NAT_Support_Parameters" />
 <EXT_IP group="SIP/NAT_Support_Parameters" />
-<EXT_RTP_Port_Min group="SIP/NAT_Support_Parameters" />
 <NAT_Keep_Alive_Intvl group="SIP/NAT_Support_Parameters">15</NAT_Keep_Alive_Intvl>
 <Redirect_Keep_Alive group="SIP/NAT_Support_Parameters">No</Redirect_Keep_Alive>
+
+<!-- SIP/RTP_Parameters -->
+<RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min>
+<RTP_Port_Max group="SIP/RTP_Parameters">32768</RTP_Port_Max>
+<RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size>
+<Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err>
+<RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval>
+<No_UDP_Checksum group="SIP/RTP_Parameters">No</No_UDP_Checksum>
+<Symmetric_RTP group="SIP/RTP_Parameters">No</Symmetric_RTP>
+<Stats_In_BYE group="SIP/RTP_Parameters">No</Stats_In_BYE>
 
 <!-- Provisioning/Configuration_Profile -->
 <Provision_Enable group="Provisioning/Configuration_Profile">Yes</Provision_Enable>

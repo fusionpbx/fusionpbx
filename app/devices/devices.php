@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -318,7 +321,8 @@
 	}
 
 	echo 		"<select class='formfld' name='fields' id='select_fields' style='width: auto; margin-left: 15px;' onchange=\"if (document.getElementById('search').value != '') { this.form.submit(); }\">\n";
-	echo "			<option value=''>".$text['label-fields']."...</option>\n";
+	echo "			<option value='' selected='selected' disabled hidden>".$text['label-fields']."...</option>\n";
+	echo "			<option value=''></option>\n";
 	echo "			<option value=''>".$text['label-default']."</option>\n";
 	echo "			<option value='lines' ".($fields == 'lines' ? " selected='selected'" : null).">".$text['label-lines']."</option>\n";
 	echo "			<option value='keys' ".($fields == 'keys' ? " selected='selected'" : null).">".$text['label-keys']."</option>\n";

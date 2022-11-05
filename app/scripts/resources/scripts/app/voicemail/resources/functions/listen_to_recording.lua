@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013-2016 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013-2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -29,23 +29,28 @@
 		--set default values
 			dtmf_digits = '';
 			max_digits = 1;
+
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
+
 		--set the callback function
 			if (session:ready()) then
 				session:setVariable("playback_terminators", "#");
 				session:setInputCallback("on_dtmf", "");
 			end
+
 		--set the display
 			if (session:ready()) then
 				reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
 			end
+
 		--say the message number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
 					session:execute("playback", "phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
 				end
 			end
+
 		--say the caller id number first (default)
 			if (
 				session:ready() and
@@ -56,6 +61,7 @@
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 				session:say(caller_id_number, default_language, "name_spelled", "iterated");
 			end
+
 		--say the message date first (default)
 			if (
 				session:ready() and
@@ -68,6 +74,7 @@
 				end
 				session:say(created_epoch, default_language, "current_date_time", "pronounced");
 			end
+
 		--get the recordings from the database
 			if (storage_type == "base64") then
 				local dbh = Database.new('system', 'base64/read')
@@ -83,7 +90,7 @@
 					--set the voicemail message path
 						mkdir(voicemail_dir.."/"..voicemail_id);
 						message_intro_location = voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext;
-						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
+						message_location = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid;
 
 					--save the recording to the file system
 						if (string.len(row["message_intro_base64"]) > 32) then
@@ -98,11 +105,27 @@
 							--write decoded string to file
 								assert(file.write_base64(message_location, row["message_base64"]));
 						end
+
+					--get the file type
+						command = "file -b --mime-type "..message_location;
+						local handle = io.popen(command);
+						local mime_type = trim(handle:read("*a"));
+						handle:close();
+						if (mime_type == 'audio/x-wav') then
+							vm_message_ext = 'wav';
+						end
+						if (mime_type == 'audio/mpeg') then
+							vm_message_ext = 'mp3';
+						end
+					
+					--rename the file
+						os.execute('mv '..message_location..' '..message_location..'.'..vm_message_ext);
 				end);
 				dbh:release()
 			elseif (storage_type == "http_cache") then
 				message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
 			end
+
 		--play the message intro
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
@@ -127,35 +150,48 @@
 					end
 				end
 			end
+
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
-					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-						stream_seek = true;
-						if (storage_type == "http_cache") then
-							message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext;
-							session:streamFile(storage_path.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-						else
-							if (vm_message_ext == "mp3") then
-								if (api:executeString("module_exists mod_vlc") == "true") then
-									session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-								else
-									session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-								end
-							else
-								session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-							end
-						end
-						stream_seek = false;
-						session:streamFile("silence_stream://1000");
+				    --check if wav file exists then play the file
+				    if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav")) then
+					   stream_seek = true;
+					   if (storage_type == "http_cache") then
+						  message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid..".wav";
+						  session:streamFile(storage_path.."/"..voicemail_id.."/msg_"..uuid..".wav");
+					   else
+						  session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+					   end
+					   stream_seek = false;
+					   session:streamFile("silence_stream://1000");
+					end
+
+					--check if mp3 file exists then play the file
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
+					   stream_seek = true;
+					   if (storage_type == "http_cache") then
+						  message_location = storage_path.."/"..voicemail_id.."/msg_"..uuid..".mp3";
+						  session:streamFile(storage_path.."/"..voicemail_id.."/msg_"..uuid..".mp3");
+					   else
+						  if (api:executeString("module_exists mod_vlc") == "true") then
+							 session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3");
+						  else
+							 session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3");
+						  end
+					   end
+					   stream_seek = false;
+					   session:streamFile("silence_stream://1000");
 					end
 				end
 			end
+
 		--remove the voicemail message
 			if (storage_type == "base64") then
 				os.remove(voicemail_dir.."/"..voicemail_id.."/intro_"..uuid.."."..vm_message_ext);
 				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 			end
+
 		--say the caller id number last (optional)
 			if (
 				session:ready() and
@@ -166,6 +202,7 @@
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 				session:say(caller_id_number, default_language, "name_spelled", "iterated");
 			end
+
 		--say the message date last (optional)
 			if (
 				session:ready() and
@@ -178,18 +215,21 @@
 				end
 				session:say(created_epoch, default_language, "current_date_time", "pronounced");
 			end
+
 		--post listen options
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
 					dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
 				end
 			end
+
 		--wait for more digits
 			--if (session:ready()) then
 			--	if (string.len(dtmf_digits) == 0) then
 			--		dtmf_digits = session:getDigits(max_digits, "#", 1, 3000);
 			--	end
 			--end
+
 		--process the dtmf
 			if (session:ready()) then
 				if (dtmf_digits == "1") then

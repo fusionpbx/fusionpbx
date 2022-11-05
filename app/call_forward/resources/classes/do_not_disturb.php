@@ -23,7 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
 
 //define the dnd class
 	class do_not_disturb {

@@ -22,8 +22,11 @@
 
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permissions
@@ -526,8 +529,14 @@
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
-		$template_array = explode("/", $device_template);
-		$device_vendor = $template_array[0];
+		//get the device vendor using the mac address
+		$device_vendor = device::get_vendor($device_mac_address);
+		
+		//if the vendor was not found using the mac address use an alternative method
+		if (strlen($device_vendor) == 0) {
+			$template_array = explode("/", $device_template);
+			$device_vendor = $template_array[0];
+		}
 	}
 
 //set the sub array index
@@ -1575,7 +1584,7 @@
 					echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 					echo "	<select class='formfld' name='device_keys[".$x."][device_key_line]'>\n";
 					echo "		<option value=''></option>\n";
-					for ($l = 0; $l <= 12; $l++) {
+					for ($l = 0; $l <= 99; $l++) {
 						echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
 					}
 					echo "	</select>\n";

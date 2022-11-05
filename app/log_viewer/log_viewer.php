@@ -25,8 +25,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -45,16 +48,16 @@
 
 //set a default line number value (off)
 	if (!isset($_POST['line_number']) || $_POST['line_number'] == '') {
-		$_POST['line_number'] = 0; 
+		$_POST['line_number'] = 0;
 	}
 
 //set a default ordinal (descending)
-	if (!isset($_POST['sort']) || $_POST['sort'] == '') { 
+	if (!isset($_POST['sort']) || $_POST['sort'] == '') {
 		$_POST['sort'] = "asc";
 	}
 
 //set a default file size
-	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) { 
+	if (!isset($_POST['size']) || strlen($_POST['size']) == 0) {
 		$_POST['size'] = "32";
 	}
 
@@ -66,9 +69,11 @@
 //set default default log file
 	if (isset($_POST['log_file'])) {
 		$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
-		foreach($approved_files as $approved_file) {
-			if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_POST['log_file']) {
-				$log_file = $approved_file;
+		if (is_array($approved_files)) {
+			foreach($approved_files as $approved_file) {
+				if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_POST['log_file']) {
+					$log_file = $approved_file;
+				}
 			}
 		}
 	}
@@ -81,9 +86,11 @@
 		if (isset($_GET['n'])) {
 			if (isset($filename)) { unset($filename); }
 			$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
-			foreach($approved_files as $approved_file) {
-				if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_GET['n']) {
-					$filename = $approved_file;
+			if (is_array($approved_files)) {
+				foreach($approved_files as $approved_file) {
+					if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_GET['n']) {
+						$filename = $approved_file;
+					}
 				}
 			}
 			if (isset($filename) && file_exists($filename)) {
@@ -98,6 +105,16 @@
 		}
 	}
 
+//get the file size
+	if (file_exists($log_file)) {
+		$file_size = filesize($log_file);
+	}
+
+//open the log file
+	if (file_exists($log_file)) {
+		$file = fopen($log_file, "r") or exit($text['error-open_file']);
+	}
+
 //include the header
 	$document['title'] = $text['title-log_viewer'];
 	require_once "resources/header.php";
@@ -109,9 +126,11 @@
 	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
 	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
 	$files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
-	foreach($files as $file) {
-		$selected = ($file == $log_file) ? "selected='selected'" : "";
-		echo "			<option value='".basename($file)."'".$selected.">".basename($file)."</option>";
+	if (is_array($files)) {
+		foreach($files as $file_name) {
+			$selected = ($file_name == $log_file) ? "selected='selected'" : "";
+			echo "			<option value='".basename($file_name)."'".$selected.">".basename($file_name)."</option>";
+		}
 	}
 	echo "			</select>\n";
 	echo 		$text['label-filter']." <input type='text' name='filter' class='formfld' style='width: 150px; text-align: center; margin-right: 20px;' value=\"".escape($_POST['filter'])."\" onclick='this.select();'>";
@@ -175,7 +194,7 @@
 		$array_filter[5]['color'] = 'gold';
 		$array_filter[5]['type'] = 'bold';
 		$array_filter[5]['font'] = 'monospace';
-		
+
 		$array_filter[6]['pattern'] = '[CRIT]';
 		$array_filter[6]['color'] = 'red';
 		$array_filter[6]['type'] = 'bold';
@@ -208,8 +227,6 @@
 		echo "	".$text['label-displaying']." ".number_format($user_file_size,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].".";
 		echo "</div>";
 
-		$file = fopen($log_file, "r") or exit($text['error-open_file']);
-
 		//set pointer in file
 		if ($user_file_size >= '0') {
 			if ($user_file_size == '0') {
@@ -217,21 +234,23 @@
 			}
 			if ($file_size >= $user_file_size) {
 				//set an offset on fopen
-				$byte_count=$file_size-$user_file_size;
+				$byte_count = $file_size-$user_file_size;
 				fseek($file, $byte_count);
 				//echo "opening at " . $byte_count . " bytes<br>";
 			}
 			else {
 				if ($file_size >= $default_file_size) {
 					//set an offset on fopen
-					$byte_count=$file_size-$default_file_size;
+					$byte_count = $file_size-$default_file_size;
 					fseek($file, $byte_count);
 					echo $text['label-open_at']." " . $byte_count . " ".$text['label-bytes']."<br>";
 				}
 				else {
 					//open the file
-					$byte_count='0';
-					fseek($file, 0);
+					$byte_count ='0';
+					if ($file) {
+						fseek($file, 0);
+					}
 					echo "<br>".$text['label-open_file']."<br>";
 				}
 			}
@@ -253,40 +272,42 @@
 
 		//start processing
 		$byte_count = 0;
-		while(!feof($file)) {
-			$log_line = escape(fgets($file));
-			$byte_count++;
-			$noprint = false;
+		if ($file) {
+			while(!feof($file)) {
+				$log_line = escape(fgets($file));
+				$byte_count++;
+				$noprint = false;
 
-			$skip_line = false;
-			if (!empty($filter) ) {
-				$uuid_match = strpos($log_line, $filter);
-				if ($uuid_match === false) {
-					$skip_line = true;
-				}
-				else {
-					$skip_line = false;
-				}
-			}
-
-			if ($skip_line === false) {
-				foreach ($array_filter as $v1) {
-					$pos = strpos($log_line, escape($v1['pattern']));
-					//echo "</br> POS is: '$pos'</br>";
-					if ($pos !== false) {
-						//color adjustments on words in log line
-						for ($i=2; $i<=$MAXEL; $i++) {
-							if (isset($v1["pattern".$i])) {
-								$log_line = str_replace(escape($v1["pattern".$i]), "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
-							}
-						}
-						$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
-						$noprint = true;
+				$skip_line = false;
+				if (!empty($filter)) {
+					$uuid_match = strpos($log_line, $filter);
+					if ($uuid_match === false) {
+						$skip_line = true;
+					}
+					else {
+						$skip_line = false;
 					}
 				}
 
-				if ($noprint !== true) {
-					$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".$log_line."</span><br>";
+				if ($skip_line === false) {
+					foreach ($array_filter as $v1) {
+						$pos = strpos($log_line, escape($v1['pattern']));
+						//echo "</br> POS is: '$pos'</br>";
+						if ($pos !== false) {
+							//color adjustments on words in log line
+							for ($i=2; $i<=$MAXEL; $i++) {
+								if (isset($v1["pattern".$i])) {
+									$log_line = str_replace(escape($v1["pattern".$i]), "<span style='color: ".$v1["color".$i].";'>".$v1["pattern".$i]."</span>", $log_line);
+								}
+							}
+							$array_output[] = "<span style='color: ".$v1['color']."; font-family: ".$v1['font'].";'>".$log_line."</span><br>";
+							$noprint = true;
+						}
+					}
+
+					if ($noprint !== true) {
+						$array_output[] = "<span style='color: ".$default_color."; font-family: ".$default_font.";'>".$log_line."</span><br>";
+					}
 				}
 			}
 		}
@@ -299,16 +320,18 @@
 		else {
 			$adj_index = 1;
 		}
-		foreach ($array_output as $index => $line) {
-			$line_num = "";
-			if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
-				if ($_POST['line_number']) {
-					$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
+		if (is_array($array_output)) {
+			foreach ($array_output as $index => $line) {
+				$line_num = "";
+				if ($line != "<span style='color: #fff; font-family: monospace;'></span><br>") {
+					if ($_POST['line_number']) {
+						$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
+					}
+					echo $line_num." ".$line;
 				}
-				echo $line_num." ".$line;
 			}
 		}
-		fclose($file);
+
 		echo "		</div>";
 	}
 	echo "		</td>";
@@ -317,5 +340,10 @@
 
 //include the footer
 	require_once "resources/footer.php";
+
+//close the file
+	if ($file) {
+		fclose($file);
+	}
 
 ?>

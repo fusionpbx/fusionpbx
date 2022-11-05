@@ -21,8 +21,11 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -1592,6 +1595,12 @@ if (permission_exists('contact_phone_view')) {
 		else {
 			echo "				<option value='main'>".$text['option-main']."</option>\n";
 		}
+		if ($row['phone_label'] == "billing") {
+			echo "				<option value='billing' selected='selected'>".$text['option-billing']."</option>\n";
+		}
+		else {
+			echo "				<option value='billing'>".$text['option-billing']."</option>\n";
+		}
 		if ($row['phone_label'] == "fax") {
 			echo "				<option value='fax' selected='selected'>".$text['option-fax']."</option>\n";
 		}
@@ -1776,6 +1785,13 @@ if (permission_exists('contact_address_view')) {
 		else {
 			echo "				<option value='main'>".$text['option-main']."</option>\n";
 		}
+		if ($row['address_label'] == "billing") {
+			echo "				<option value='billing' selected='selected'>".$text['option-billing']."</option>\n";
+		}
+		else {
+			echo "				<option value='billing'>".$text['option-billing']."</option>\n";
+		}
+
 		if ($row['address_label'] == "fax") {
 			echo "				<option value='fax' selected='selected'>".$text['option-fax']."</option>\n";
 		}

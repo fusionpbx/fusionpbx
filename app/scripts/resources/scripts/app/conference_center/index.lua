@@ -46,6 +46,7 @@
 --get the settings
 	session_enabled = settings:get('conference_center', 'session_enabled', 'boolean');
 	account_code_enabled = settings:get('conference_center', 'account_code_enabled', 'boolean');
+	http_protocol = settings:get('domain', 'http_protocol', 'text') or "https";
 
 --include json library
 	local json
@@ -463,9 +464,6 @@
 			else
 				freeswitch.consoleLog("notice", "[conference center] session_enabled: false\n");
 			end
-
-		--add the domain to the recording directory
-			freeswitch.consoleLog("notice", "[conference center] domain_count: " .. domain_count .. "\n");
 
 		--sounds
 			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";

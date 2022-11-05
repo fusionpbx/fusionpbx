@@ -17,27 +17,24 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021
+	Portions created by the Initial Developer are Copyright (C) 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//include the root directory
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
 
-//if config.php file does not exist then redirect to the install page
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-		//do nothing
-	} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-		//original directory
-	} elseif (file_exists("/etc/fusionpbx/config.php")){
-		//linux
-	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
-		//bsd
+//if config.conf file does not exist then redirect to the install page
+	if (file_exists("/usr/local/etc/fusionpbx/config.conf")){
+		//BSD
+	} elseif (file_exists("/etc/fusionpbx/config.conf")){
+		//Linux
 	} else {
-		header("Location: ".PROJECT_PATH."/core/install/install.php");
+		header("Location: /core/install/install.php");
 		exit;
 	}
 
@@ -60,10 +57,14 @@
 	}
 
 //build a list of groups the user is a member of to be used in a SQL in
-	foreach($_SESSION['user']['groups'] as $group) {
-		$group_uuids[] =  $group['group_uuid'];
+	if (is_array($_SESSION['user']['groups'])) {
+		foreach($_SESSION['user']['groups'] as $group) {
+			$group_uuids[] =  $group['group_uuid'];
+		}
 	}
-	$group_uuids_in = "'".implode("','", $group_uuids)."'";
+	if (is_array($group_uuids)) {
+		$group_uuids_in = "'".implode("','", $group_uuids)."'";
+	}
 
 //get the list
 	$sql = "select \n";
@@ -317,10 +318,10 @@
 		<style>
 		/*To prevent user selecting inside the drag source*/
 		[draggable] {
-		  -moz-user-select: none;
-		  -khtml-user-select: none;
-		  -webkit-user-select: none;
-		  user-select: none;
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
 		}
 
 		.widget {
