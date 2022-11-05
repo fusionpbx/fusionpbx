@@ -300,7 +300,7 @@
 
 	</style>
 
-	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.4.1.min.js'></script>
+	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.6.1.min.js'></script>
 	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
