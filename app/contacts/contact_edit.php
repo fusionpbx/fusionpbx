@@ -53,7 +53,7 @@
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST)) {
+	if (is_array($_POST) && count($_POST) > 0) {
 		$contact_organization = $_POST["contact_organization"];
 		$contact_name_prefix = $_POST["contact_name_prefix"];
 		$contact_name_given = $_POST["contact_name_given"];
@@ -76,7 +76,6 @@
 		//$contact_groups = $_POST["contact_groups"];
 		$contact_user_uuid = $_POST["contact_user_uuid"];
 		$contact_group_uuid = $_POST["contact_group_uuid"];
-
 
 		$contact_phones = $_POST["contact_phones"];
 		$contact_addresses = $_POST["contact_addresses"];
@@ -896,6 +895,42 @@
 	$document['title'] = $text['title-contact-edit'];
 	require_once "resources/header.php";
 
+?>
+
+<script type="text/javascript">
+	function get_contacts(element_id, id, search) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//create a handle for the contact select object
+				select = document.getElementById(element_id);
+
+				//remove current options
+				while (select.options.length > 0) {
+					select.remove(0);
+				}
+
+				//add an empty row
+				//select.add(new Option('', ''));
+
+				//add new options from the json results
+				obj = JSON.parse(this.responseText);
+				for (var i=0; i < obj.length; i++) {
+					select.add(new Option(obj[i].name, obj[i].id));
+				}
+			}
+		};
+		if (search) {
+			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
+		}
+		else {
+			xhttp.open("GET", "/app/contacts/contact_json.php", true);
+		}
+		xhttp.send();
+	}
+</script>
+
+<?php
 
 //determine qr branding
 	if ($_SESSION['theme']['qr_brand_type']['text'] == 'image' && $_SESSION['theme']['qr_brand_image']['text'] != '') {
@@ -2187,8 +2222,10 @@ if (permission_exists('contact_relation_view')) {
 
 		$x = 0;
 		foreach($contact_relations as $row) {
-
-			$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
+			
+			//get contact details and contact_name
+			$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname ";
+			$sql .= "from v_contacts ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid <> :contact_uuid ";
 			$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
@@ -2196,6 +2233,19 @@ if (permission_exists('contact_relation_view')) {
 			$parameters['contact_uuid'] = $row['contact_uuid'];
 			$database = new database;
 			$contacts = $database->select($sql, $parameters, 'all');
+			if (is_array($contacts) && is_uuid($row['relation_contact_uuid'])) {
+				foreach($contacts as $field) {
+					if ($field['contact_uuid'] == $row['relation_contact_uuid']) {
+						$name = array();
+						if ($field['contact_organization'] != '') { $name[] = $field['contact_organization']; }
+						if ($field['contact_name_family'] != '') { $name[] = $field['contact_name_family']; }
+						if ($field['contact_name_given'] != '') { $name[] = $field['contact_name_given']; }
+						if ($field['contact_name_family'] == '' && $field['contact_name_given'] == '' && $field['contact_nickname'] != '') { $name[] = $field['contact_nickname']; }
+						$contact_name = implode(', ', $name);
+						break;
+					}
+				}
+			}
 
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='heading'>\n";
@@ -2208,6 +2258,11 @@ if (permission_exists('contact_relation_view')) {
 				echo "				<input type='hidden' name='contact_relations[$x][contact_uuid]' value='".escape($row['contact_uuid'])."' />\n";
 				echo "			</div>\n";
 			}
+			echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
+			echo "				<a href='contact_edit.php?id=".escape($row['relation_contact_uuid'])."' target='_blank'>\n";
+			echo "					<span class='fas fa-user-friends' style='color: ".$_SESSION['theme']['body_text_color']."; float: left; margin-top: 7px; margin-left: 3px;'></span>\n";
+			echo "				</a>\n";
+			echo "			</div>\n";
 			echo "		</div>\n";
 			echo "		<div style='clear: both;'></div>\n";
 
@@ -2248,25 +2303,12 @@ if (permission_exists('contact_relation_view')) {
 			echo "			".$text['label-contact_relation_contact']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-
-			echo "			<select class='formfld' name='contact_relations[$x][relation_contact_uuid]' id='relation_contact_uuid'>\n";
-			echo "				<option value=''></option>\n";
-			if (is_array($contacts) && @sizeof($contacts) != 0) {
-				foreach($contacts as $field) {
-					$contact_name = $field['contact_name_given'].(($field['contact_name_given'] != '' && $field['contact_name_family'] != '') ? ' ' : null) . $field['contact_name_family'];
-					if ($field['contact_organization'] != '') {
-						if ($contact_name != '') {
-							$contact_name = $field['contact_organization'].', '.$contact_name;
-						}
-						else {
-							$contact_name = $field['contact_organization'];
-						}
-					}
-					echo "			<option value='".escape($field['contact_uuid'])."' ".(($field['contact_uuid'] == $row['relation_contact_uuid']) ? "selected='selected'" : null).">".escape($contact_name)."</option>\n";
-				}
-			}
-			unset($sql, $parameters, $result, $row);
-			echo "			</select>\n";
+			echo "			<div id='contacts' class='field no-wrap' style=\"width: auto; display: inline;\">\n";
+			echo "				<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 30%;\" onkeyup=\"get_contacts('contact_select_".$x."', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
+			echo "				<select class='formfld' style=\"width: 70%;\" id=\"contact_select_".$x."\" name=\"contact_relations[".$x."][relation_contact_uuid]\" >\n";
+			echo "					<option value='".$row['relation_contact_uuid']."'>".$contact_name."</option>\n";
+			echo "				</select>\n";
+			echo "			</div>\n";
 			echo "		</div>\n";
 
 			echo "		<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";
