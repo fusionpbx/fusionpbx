@@ -2306,7 +2306,7 @@ if (permission_exists('contact_relation_view')) {
 			echo "			<div id='contacts' class='field no-wrap' style=\"width: auto; display: inline;\">\n";
 			echo "				<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 30%;\" onkeyup=\"get_contacts('contact_select_".$x."', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
 			echo "				<select class='formfld' style=\"width: 70%;\" id=\"contact_select_".$x."\" name=\"contact_relations[".$x."][relation_contact_uuid]\" >\n";
-			echo "					<option value='".$row['relation_contact_uuid']."'>".$contact_name."</option>\n";
+			echo "					<option value='".escape($row['relation_contact_uuid'])."'>".escape($contact_name)."</option>\n";
 			echo "				</select>\n";
 			echo "			</div>\n";
 			echo "		</div>\n";
@@ -2654,7 +2654,6 @@ if (permission_exists('contact_note_view')) {
 	}
 	unset($contact_notes);
 }
-
 
 //close the grid
 	echo "</div>\n";
