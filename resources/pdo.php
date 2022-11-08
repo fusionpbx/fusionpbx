@@ -271,6 +271,17 @@ if ($db_type == "pgsql") {
 	}
 } //end if db_type pgsql
 
+if ($db_type == "odbc") {
+	//database connection
+	try {
+		$db = new PDO("odbc:".$db_name);
+	}
+	catch (PDOException $error) {
+		print "error: " . $error->getMessage() . "<br/>";
+		die();
+	}
+} //end if db_type pgsql
+
 //get the domain list
 	if (!is_array($_SESSION['domains']) or !isset($_SESSION["domain_uuid"])) {
 
