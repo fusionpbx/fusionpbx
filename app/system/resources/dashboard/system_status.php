@@ -194,7 +194,7 @@
 				}
 		}
 		if ($sql != '') {
-			$database = new database;
+			if (!isset($database)) { $database = new database; }
 			$connections = $database->select($sql, null, 'column');
 			unset($sql);
 		}
