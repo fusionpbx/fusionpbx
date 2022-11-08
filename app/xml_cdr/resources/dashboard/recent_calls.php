@@ -70,7 +70,7 @@
 		order by
 			start_epoch desc";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
+	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($result) ? sizeof($result) : 0;
 
