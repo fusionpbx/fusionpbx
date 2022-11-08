@@ -70,7 +70,7 @@
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	//echo $sql;
 	//view_array($parameters);
-	$database = new database;
+	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
 
 	$num_rows = is_array($result) ? sizeof($result) : 0;

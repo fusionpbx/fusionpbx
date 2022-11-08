@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2016
+	Copyright (C) 2010 - 2022
 	All Rights Reserved.
 
 	Contributor(s):
@@ -44,13 +44,15 @@
 		public $outbound_caller_id_number;
 
 		public function set() {
+			//create the database connection
+				$database = new database;
+
 			//determine whether to update the dial string
 				$sql = "select * from v_extensions ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and extension_uuid = :extension_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 				$parameters['extension_uuid'] = $this->extension_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$this->extension = $row["extension"];
@@ -77,7 +79,6 @@
 				$p->add('extension_add', 'temp');
 
 			//execute update
-				$database = new database;
 				$database->app_name = 'calls';
 				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$database->save($array);
@@ -111,6 +112,9 @@
 		 * toggle records
 		 */
 		public function toggle($records) {
+
+			//create the database connection
+				$database = new database;
 
 			//assign private variables
 				$this->app_name = 'calls';
@@ -156,7 +160,6 @@
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -216,7 +219,6 @@
 									$p->add('extension_edit', 'temp');
 
 								//save the array
-									$database = new database;
 									$database->app_name = $this->app_name;
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);

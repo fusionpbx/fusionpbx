@@ -21,6 +21,11 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
+	}
+
 //domain limits
 	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 		echo "<div class='hud_box'>\n";
@@ -33,7 +38,6 @@
 			$sql = "select count(extension_uuid) from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$extension_total = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -45,7 +49,6 @@
 			$sql = "select count(destination_uuid) from v_destinations ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$destination_total = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
