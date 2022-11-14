@@ -373,20 +373,6 @@
 									end
 								end
 
-							-- check matching UserID and AuthName
-								if sip_auth_method then
-									local check_from_number = METHODS[sip_auth_method] or METHODS._ANY_
-									if DIAL_STRING_BASED_ON_USERID then
-										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == sip_from_number))
-									else
-										continue = (sip_from_user == user) and ((not check_from_number) or (from_user == user))
-									end
-									if not continue then
-										XML_STRING = nil;
-										return 1;
-									end
-								end
-
 							--set the presence_id
 								presence_id = (NUMBER_AS_PRESENCE_ID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 
@@ -479,7 +465,7 @@
 								vm_mailto = "";
 							end
 						end);
-					end
+				end
 
 				--if the extension does not exist set continue to false;
 					if (extension_uuid == nil) then
@@ -513,7 +499,7 @@
 							table.insert(xml, [[					<users>]]);
 							if (number_alias) then
 								if (cidr) then
-									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. cidr .. number_alias_string .. [[ type=>]]);
+									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. cidr .. number_alias_string .. [[>]]);
 								else
 									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. number_alias_string .. [[>]]);
 								end
@@ -739,25 +725,6 @@
 								freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: database\n");
 							end
 					end
-			end
-
-			if XML_STRING and (not loaded_from_db) and sip_auth_method then
-				local user_id = api:execute("user_data", from_user .. "@" .. domain_name .." attr id")
-				if user_id ~= user then
-					XML_STRING = nil;
-				elseif METHODS[sip_auth_method] or METHODS._ANY_ then
-					local alias
-					if DIAL_STRING_BASED_ON_USERID then
-						alias = api:execute("user_data", from_user .. "@" .. domain_name .." attr number-alias")
-					end
-					if alias and #alias > 0 then
-						if from_user ~= alias then
-							XML_STRING = nil
-						end
-					elseif from_user ~= user_id then
-						XML_STRING = nil;
-					end
-				end
 			end
 
 		--get the XML string from the cache
