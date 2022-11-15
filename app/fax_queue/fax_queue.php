@@ -324,7 +324,7 @@
 			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
-			echo "	<td>".escape($row['fax_email_address'])."</td>\n";
+			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".escape($row['fax_status'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
