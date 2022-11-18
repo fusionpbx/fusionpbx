@@ -1,5 +1,4 @@
 <?php
-#This file was last reorganized on 27th of September 2017 01:41:51 PM UTC
 
 $text['title-call_centers']['en-us'] = "Call Center";
 $text['title-call_centers']['en-gb'] = "Call Center";
@@ -1638,6 +1637,48 @@ $text['description-exit_keys']['ro-ro'] = "";
 $text['description-exit_keys']['ru-ru'] = "";
 $text['description-exit_keys']['sv-se'] = "Knapp för att lämna den nuvarande kö:n";
 $text['description-exit_keys']['uk-ua'] = "";
+
+$text['label-queue_email_address']['en-us'] = "Email Address";
+$text['label-queue_email_address']['en-gb'] = "Email Address";
+$text['label-queue_email_address']['ar-eg'] = "";
+$text['label-queue_email_address']['de-at'] = "";
+$text['label-queue_email_address']['de-ch'] = "";
+$text['label-queue_email_address']['de-de'] = "";
+$text['label-queue_email_address']['es-cl'] = "";
+$text['label-queue_email_address']['es-mx'] = "";
+$text['label-queue_email_address']['fr-ca'] = "";
+$text['label-queue_email_address']['fr-fr'] = "";
+$text['label-queue_email_address']['he-il'] = "";
+$text['label-queue_email_address']['it-it'] = "";
+$text['label-queue_email_address']['nl-nl'] = "";
+$text['label-queue_email_address']['pl-pl'] = "";
+$text['label-queue_email_address']['pt-br'] = "";
+$text['label-queue_email_address']['pt-pt'] = "";
+$text['label-queue_email_address']['ro-ro'] = "";
+$text['label-queue_email_address']['ru-ru'] = "";
+$text['label-queue_email_address']['sv-se'] = "";
+$text['label-queue_email_address']['uk-ua'] = "";
+
+$text['description-queue_email_address']['en-us'] = "Notification Email address.";
+$text['description-queue_email_address']['en-gb'] = "Notification Email address.";
+$text['description-queue_email_address']['ar-eg'] = "";
+$text['description-queue_email_address']['de-at'] = "";
+$text['description-queue_email_address']['de-ch'] = "";
+$text['description-queue_email_address']['de-de'] = "";
+$text['description-queue_email_address']['es-cl'] = "";
+$text['description-queue_email_address']['es-mx'] = "";
+$text['description-queue_email_address']['fr-ca'] = "";
+$text['description-queue_email_address']['fr-fr'] = "";
+$text['description-queue_email_address']['he-il'] = "";
+$text['description-queue_email_address']['it-it'] = "";
+$text['description-queue_email_address']['nl-nl'] = "";
+$text['description-queue_email_address']['pl-pl'] = "";
+$text['description-queue_email_address']['pt-br'] = "";
+$text['description-queue_email_address']['pt-pt'] = "";
+$text['description-queue_email_address']['ro-ro'] = "";
+$text['description-queue_email_address']['ru-ru'] = "";
+$text['description-queue_email_address']['sv-se'] = "";
+$text['description-queue_email_address']['uk-ua'] = "";
 
 $text['label-call_timeout']['en-us'] = "Call Timeout";
 $text['label-call_timeout']['en-gb'] = "Call Timeout";
