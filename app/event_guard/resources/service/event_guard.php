@@ -83,15 +83,7 @@
 		//loop through the chains
 		if (is_array($chains)) {
 			foreach ($chains as $chain) {
-				$command = "iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
-				//if ($debug) { echo $command."\n"; }
-				$response = shell($command);
-				if (!in_array($chain, explode(",", $response))) {
-					echo "Add iptables ".$chain." chain\n";
-					system('iptables --new '.$chain);
-					system('iptables -I INPUT -j '.$chain);
-					echo "\n";
-				}
+				iptables_chain_add($chain);
 			}
 		}
 	}
@@ -649,6 +641,44 @@
 
 		//return
 		return $allowed;
+	}
+
+//add IP table chains
+	function iptables_chain_add($chain) {
+		//if the chain exists return true
+		if (iptables_chain_exists($chain)) {
+			echo "IPtables ".$chain." chain already exists\n";
+			return true;
+		}
+
+		//log info to the console
+		echo "Add iptables ".$chain." chain\n";
+
+		//add the chain
+		system('iptables --new '.$chain);
+		system('iptables -I INPUT -j '.$chain);
+
+		//check if the chain exists
+		if (iptables_chain_exists($chain)) {
+			return true;
+		}
+		else {
+			sleep(1);
+			iptables_chain_add($chain);
+		}
+	}
+
+//check if the iptables chain exists
+	function iptables_chain_exists($chain) {
+		$command = "iptables --list INPUT --numeric | grep ".$chain." | awk '{print \$1}' | sed ':a;N;\$!ba;s/\\n/,/g' ";
+		//if ($debug) { echo $command."\n"; }
+		$response = shell($command);
+		if (in_array($chain, explode(",", $response))) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 ?>
