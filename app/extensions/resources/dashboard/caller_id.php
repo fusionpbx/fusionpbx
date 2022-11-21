@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -35,6 +38,11 @@
 		//add multi-lingual support
 			$language = new text;
 			$text = $language->get($_SESSION['domain']['language']['code'], 'app/extensions');
+
+		//connect to the database
+			if (!isset($database)) {
+				$database = new database;
+			}
 
 		//add or update the database
 			if (is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
@@ -86,7 +94,6 @@
 					$p->add("extension_edit", "temp");
 
 				//save to the data
-					$database = new database;
 					$database->app_name = 'extensions';
 					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array);
@@ -133,7 +140,6 @@
 			$sql .= "and destination_type = 'inbound' ";
 			$sql .= "order by destination_caller_id_name asc, destination_caller_id_number asc";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$destinations = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 

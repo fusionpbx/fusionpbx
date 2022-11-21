@@ -910,4 +910,20 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable/Disable PTT. 0 - Disable, 1 - Enable. Default is 0.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "39dd684a-7150-443f-bb92-916f919f46d5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_dial_number";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial (User ID/extension to dial automatically when offhook)";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "51df9860-8767-43a8-9bf9-857dc50c5f3f";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_auto_dial_delay";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Offhook Auto-Dial Delay (0-60 seconds, default is 0)";
+		$y++;
 ?>

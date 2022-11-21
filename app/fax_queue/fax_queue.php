@@ -21,8 +21,11 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -321,7 +324,7 @@
 			echo "	<td>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
-			echo "	<td>".escape($row['fax_email_address'])."</td>\n";
+			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address']))."</td>\n";
 			echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".escape($row['fax_status'])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";

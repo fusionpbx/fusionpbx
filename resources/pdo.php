@@ -25,8 +25,11 @@
  Raymond Chandler <intralanman@gmail.com>
  */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/functions.php";
 
 //set defaults
@@ -261,6 +264,17 @@ if ($db_type == "pgsql") {
 		else {
 			$db = new PDO("pgsql:dbname=$db_name user=$db_username password=$db_password");
 		}
+	}
+	catch (PDOException $error) {
+		print "error: " . $error->getMessage() . "<br/>";
+		die();
+	}
+} //end if db_type pgsql
+
+if ($db_type == "odbc") {
+	//database connection
+	try {
+		$db = new PDO("odbc:".$db_name);
 	}
 	catch (PDOException $error) {
 		print "error: " . $error->getMessage() . "<br/>";

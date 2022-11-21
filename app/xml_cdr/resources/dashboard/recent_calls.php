@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permisions
@@ -67,7 +70,7 @@
 		order by
 			start_epoch desc";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
+	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($result) ? sizeof($result) : 0;
 

@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -454,9 +457,6 @@
 	//exclude ring group legs that were not answered
 	if (!permission_exists('xml_cdr_lose_race')) {
 		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
-	}
-	if (!permission_exists('xml_cdr_enterprise_leg')) {
-		$sql .= "and (hangup_cause != 'NO_ANSWER' and originating_leg_uuid IS NULL) \n";
 	}
 
 	if (strlen($call_result) > 0) {

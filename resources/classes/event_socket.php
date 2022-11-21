@@ -44,7 +44,7 @@ class buffer {
 
 class event_socket {
 	private $buffer;
-	private $fp;
+	public $fp;
 
 	public function __construct($fp = false) {
 		$this->buffer = new buffer;
@@ -142,11 +142,17 @@ class event_socket {
 	}
 
 	public function connected() {
-		if ($this->fp) {
-			return true;
+		if (!$this->fp) {
+			//not connected to the socket
+			return false;
+		}
+		if (feof($this->fp) === true) {
+			//not connected to the socket
+			return false;
 		}
 		else {
-			return false;
+			//connected to the socket
+			return true;
 		}
 	}
 

@@ -1,7 +1,10 @@
 <?php
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 
 //check permisions
@@ -18,6 +21,11 @@
 	$language = new text;
 	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
 
+//connect to the database
+	if (!isset($database)) {
+		$database = new database;
+	}
+
 //domain limits
 	if (is_array($_SESSION['limit']) && sizeof($_SESSION['limit']) > 0) {
 		echo "<div class='hud_box'>\n";
@@ -30,7 +38,6 @@
 			$sql = "select count(extension_uuid) from v_extensions ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$extension_total = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
@@ -42,7 +49,6 @@
 			$sql = "select count(destination_uuid) from v_destinations ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
 			$destination_total = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 

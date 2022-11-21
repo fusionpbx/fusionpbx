@@ -204,8 +204,11 @@ if (!function_exists('fax_split_dtmf')) {
 	}
 }
 
-//includes
-	if (!defined('STDIN')) { include "root.php"; }
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	include "resources/classes/event_socket.php";
 	include "resources/phpmailer/class.phpmailer.php";

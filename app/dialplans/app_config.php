@@ -47,6 +47,17 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${dialplan_name} \${description}";
 		$y++;
 
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d3c5a59d-e6c0-4ded-ac79-9a7fcd9e1269";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "dialplan";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "destination";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${sip_req_user}";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: destination_number, \${sip_to_user}, \${sip_req_user}";
+		$y++;
+
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "dialplan_view";

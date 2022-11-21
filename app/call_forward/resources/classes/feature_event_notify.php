@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	KonradSC <konrd@yahoo.com>
 */
-include "root.php";
 
 //define the feature_event_notify class
 	class feature_event_notify {

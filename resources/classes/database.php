@@ -404,47 +404,46 @@
 			 */
 			public function connect() {
 
-				if (strlen($this->db_name) == 0) {
-					//include config.php
-						include "root.php";
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-							include $_SERVER["PROJECT_ROOT"]."/resources/config.php";
-						} elseif (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
-							include $_SERVER["PROJECT_ROOT"]."/resources/config.php";
-						} elseif (file_exists("/etc/fusionpbx/config.php")){
-							//linux
-							include "/etc/fusionpbx/config.php";
-						} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-							//bsd
-							include "/usr/local/etc/fusionpbx/config.php";
-						}
+				//set the include path
+					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+					set_include_path(parse_ini_file($conf[0])['document.root']);
 
-					//backwards compatibility
-						if (isset($dbtype)) { $db_type = $dbtype; }
-						if (isset($dbhost)) { $db_host = $dbhost; }
-						if (isset($dbport)) { $db_port = $dbport; }
-						if (isset($dbname)) { $db_name = $dbname; }
-						if (isset($dbusername)) { $db_username = $dbusername; }
-						if (isset($dbpassword)) { $db_password = $dbpassword; }
-						if (isset($dbfilepath)) { $db_path = $db_file_path; }
-						if (isset($dbfilename)) { $db_name = $dbfilename; }
+				//parset the config.conf file
+					$conf = parse_ini_file($conf[0]);
 
-					//set defaults
-						if (!isset($this->driver) && isset($db_type)) { $this->driver = $db_type; }
-						if (!isset($this->type) && isset($db_type)) { $this->type = $db_type; }
-						if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
-						if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
-						if (!isset($this->db_name) && isset($db_name)) { $this->db_name = $db_name; }
-						if (!isset($this->db_secure) && isset($db_secure)) {
-							$this->db_secure = $db_secure;
-						}
-						else {
-							$this->db_secure = false;
-						}
-						if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
-						if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
-						if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
-				}
+				//get the database connection settings
+					$db_type = $conf['database.0.type'];
+					$db_host = $conf['database.0.host'];
+					$db_port = $conf['database.0.port'];
+					$db_name = $conf['database.0.name'];
+					$db_username = $conf['database.0.username'];
+					$db_password = $conf['database.0.password'];
+
+				//debug info
+					//echo "db type:".$db_type."\n";
+					//echo "db host:".$db_host."\n";
+					//echo "db port:".$db_port."\n";
+					//echo "db name:".$db_name."\n";
+					//echo "db username:".$db_username."\n";
+					//echo "db password:".$db_password."\n";
+					//echo "db path:".$db_path."\n";
+					//echo "</pre>\n";
+
+				//set defaults
+					if (!isset($this->driver) && isset($db_type)) { $this->driver = $db_type; }
+					if (!isset($this->type) && isset($db_type)) { $this->type = $db_type; }
+					if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
+					if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
+					if (!isset($this->db_name) && isset($db_name)) { $this->db_name = $db_name; }
+					if (!isset($this->db_secure) && isset($db_secure)) {
+						$this->db_secure = $db_secure;
+					}
+					else {
+						$this->db_secure = false;
+					}
+					if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
+					if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
+					if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
 
 				if ($this->driver == "sqlite") {
 					if (strlen($this->db_name) == 0) {
@@ -544,7 +543,7 @@
 			 * @return array tables
 			 * @depends connect()
 			 */
-			public function tables() : array {
+			public function tables() {
 					$result = [];
 				//connect to the database if needed
 					if (!$this->db) {
@@ -594,7 +593,7 @@
 			 * @return array table info
 			 * @depends connect()
 			 */
-			public function table_info() : array {
+			public function table_info() {
 				//public $db;
 				//public $type;
 				//public $table;
@@ -645,7 +644,7 @@
 			 * @return boolean Returns <i>true</i> if the table exists and <i>false</i> if it does not.
 			 * @depends connect()
 			 */
-			public function table_exists ($table_name) : bool {
+			public function table_exists ($table_name) {
 				if (self::sanitize($table_name) != $table_name) {
 					trigger_error('Table Name must be sanitized', E_USER_WARNING);
 					return false;
@@ -684,7 +683,7 @@
 			 * @return array Two dimensional array
 			 * @depends table_info()
 			 */
-			public function fields() : array {
+			public function fields() {
 				//public $db;
 				//public $type;
 				//public $table;
@@ -1408,7 +1407,7 @@
 			 * Counts the number of rows.
 			 * @return int Represents the number of counted rows or -1 if failed.
 			 */
-			public function count() : int {
+			public function count() {
 
 				//connect to the database if needed
 					if (!$this->db) {
@@ -1544,7 +1543,7 @@
 			 * @param array $array Array containing the table name, uuid, SQL and where clause.
 			 * @return database Returns the database object or null.
 			 */
-			public function find_new(array $array): ?database {
+			public function find_new(array $array) {
 
 				//connect to the database if needed
 				if (!$this->db) {
@@ -1651,7 +1650,7 @@
 			 * @param string $uuid A valid UUID must be passed
 			 * @return database Returns this object
 			 */
-			public function uuid(string $uuid) : database {
+			public function uuid(string $uuid) {
 				$this->uuid = $uuid;
 				return $this;
 			}
@@ -1661,7 +1660,7 @@
 			 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'. Second dimension in the row value as int. Third dimension is the column name.
 			 * @return bool Returns <b>true</b> on success and <b>false</b> on failure.
 			 */
-			public function copy(array $array, $suffix = '(Copy)') : bool {
+			public function copy(array $array, $suffix = '(Copy)') {
 				//set default return value
 					$retval = false;
 
@@ -1877,7 +1876,7 @@
 			 * @depends database::save()
 			 * @depends database::get_apps()
 			 */
-			public function toggle(array $array) : bool {
+			public function toggle(array $array) {
 
 				//return the array
 					if (!is_array($array)) { return false; }
@@ -2002,7 +2001,7 @@
 			 * @param bool $transaction_save
 			 * @return boolean Returns <b>true</b> on success and <b>false</b> on failure of one or more failed write attempts.
 			 */
-			public function save(array &$array, bool $transaction_save = true) : bool {
+			public function save(array &$array, bool $transaction_save = true) {
 				//set default return value
 					$retval = true;
 
@@ -2576,28 +2575,33 @@
 															if (is_array($row)) {
 																foreach ($row as $k => $v) {
 																	if (!is_array($v)) {
-																		if (strlen($v) == 0) {
-																			$sql .= "null, ";
-																		}
-																		elseif ($v === "now()") {
-																			$sql .= "now(), ";
-																		}
-																		elseif ($v === "user_uuid()") {
-																			$sql .= ':'.$k.", ";
-																			$params[$k] = $_SESSION['user_uuid'];
-																		}
-																		elseif ($v === "remote_address()") {
-																			$sql .= ':'.$k.", ";
-																			$params[$k] = $_SERVER['REMOTE_ADDR'];
-																		}
-																		else {
-																			$k = self::sanitize($k);
-																			if ($k != 'insert_user' &&
+																		if ($k != 'insert_user' &&
 																			$k != 'insert_date' &&
 																			$k != 'update_user' && 
 																			$k != 'update_date') {
+																			if (strlen($v) == 0) {
+																				$sql .= "null, ";
+																			}
+																			elseif ($v === "now()") {
+																				$sql .= "now(), ";
+																			}
+																			elseif ($v === "user_uuid()") {
 																				$sql .= ':'.$k.", ";
-																				$params[$k] = trim($v);
+																				$params[$k] = $_SESSION['user_uuid'];
+																			}
+																			elseif ($v === "remote_address()") {
+																				$sql .= ':'.$k.", ";
+																				$params[$k] = $_SERVER['REMOTE_ADDR'];
+																			}
+																			else {
+																				$k = self::sanitize($k);
+																				if ($k != 'insert_user' &&
+																				$k != 'insert_date' &&
+																				$k != 'update_user' && 
+																				$k != 'update_date') {
+																					$sql .= ':'.$k.", ";
+																					$params[$k] = trim($v);
+																				}
 																			}
 																		}
 																	}
@@ -2798,7 +2802,7 @@
 			 * @return string Singular version of English word
 			 * @internal Moved to class to conserve resources.
 			 */
-			public static function singular(string $word) : string {
+			public static function singular(string $word) {
 				//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
 				if (substr($word, -2) == "es") {
 					if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
@@ -2860,7 +2864,7 @@
 			 * @return int Depth of array
 			 * @internal Moved to class to conserve resources.
 			 */
-			public static function array_depth(array &$array) : int {
+			public static function array_depth(array &$array) {
 				$depth = 0;
 				if (is_array($array)) {
 					$depth++;
@@ -2987,7 +2991,7 @@
 		 * @return string Sanitized using preg_replace('#[^a-zA-Z0-9_\-]#', '')
 		 * @see preg_replace()
 		 */
-		public static function sanitize(string $value) : string {
+		public static function sanitize(string $value) {
 			return preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 		}
 
@@ -3002,7 +3006,7 @@
 		 * @see database::__construct()
 		 * @see database::connect()
 		 */
-		public static function &new() : database {
+		public static function &new() {
 			$db = new database();
 			$db->connect();
 			return $db;

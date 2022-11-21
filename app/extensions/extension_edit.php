@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -689,10 +692,8 @@
 											$array["voicemails"][$i]["voicemail_description"] = $description;
 
 										//make sure the voicemail directory exists
-											if (is_numeric($voicemail_id)) {
-												if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
-													mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770, true);
-												}
+											if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+												mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770, true);
 											}
 
 									}

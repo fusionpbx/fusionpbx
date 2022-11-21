@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -104,6 +107,7 @@
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
 			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
+			$queue_email_address = $_POST["queue_email_address"];
 			$queue_description = $_POST["queue_description"];
 
 		//remove invalid characters
@@ -303,6 +307,9 @@
 			}
 			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
 			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
+			if (permission_exists('call_center_email_address')) {
+				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
+			}
 			$array['call_center_queues'][0]['queue_description'] = $queue_description;
 			$array['call_center_queues'][0]['call_center_queue_uuid'] = $call_center_queue_uuid;
 			$array['call_center_queues'][0]['dialplan_uuid'] = $dialplan_uuid;
@@ -521,6 +528,7 @@
 				$queue_announce_sound = $row["queue_announce_sound"];
 				$queue_announce_frequency = $row["queue_announce_frequency"];
 				$queue_cc_exit_keys = $row["queue_cc_exit_keys"];
+				$queue_email_address = $row["queue_email_address"];
 				$queue_description = $row["queue_description"];
 			}
 		}
@@ -1288,13 +1296,26 @@
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "  ".$text['label-exit_keys']."\n";
-   	echo "</td>\n";
-   	echo "<td class='vtable' align='left'>\n";
-   	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='".escape($queue_cc_exit_keys)."'>\n";
-   	echo "<br />\n";
-   	echo $text['description-exit_keys']."\n";
-   	echo "</td>\n";
-   	echo "</tr>\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='queue_cc_exit_keys' value='".escape($queue_cc_exit_keys)."'>\n";
+	echo "<br />\n";
+	echo $text['description-exit_keys']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	if (permission_exists('call_center_email_address')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='queue_email_address' maxlength='255' value='".escape($queue_email_address)."'>\n";
+		echo "<br />\n";
+		echo $text['description-queue_email_address']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";

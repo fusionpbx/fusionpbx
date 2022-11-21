@@ -2,19 +2,18 @@
 
 //check the permission
 	if (defined('STDIN')) {
-		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
-		$document_root = $matches[1];
-		set_include_path($document_root);
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		require_once "resources/require.php";
+		//set the include path
+		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		set_include_path(parse_ini_file($conf[0])['document.root']);
 	}
 	else {
 		exit;
-		include "root.php";
-		require_once "resources/require.php";
-		require_once "resources/pdo.php";
 	}
+
+//include files
+	require_once "resources/require.php";
+	include "resources/classes/permissions.php";
+	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -103,12 +102,6 @@
 	if (isset($sleep_seconds)) {
 		sleep($sleep_seconds);
 	}
-
-//includes
-	if (!defined('STDIN')) { include_once "root.php"; }
-	require_once "resources/require.php";
-	include "resources/classes/permissions.php";
-	require $document_root."/app/email_queue/resources/functions/transcribe.php";
 
 //define a function to remove html tags
 	if (!function_exists('remove_tags')) {
@@ -317,11 +310,12 @@
 
 		//set the email status to sent
 		$sql = "update v_email_queue ";
-		$sql .= "set email_status = 'sent' ";
+		$sql .= "set email_status = 'sent', ";
 		//$sql .= "set email_status = 'waiting' "; //debug
 		if (isset($transcribe_message)) {
-			$sql .= ", email_transcription = :email_transcription ";
+			$sql .= "email_transcription = :email_transcription, ";
 		}
+		$sql .= "update_date = now() ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
 		if (isset($transcribe_message)) {
@@ -443,7 +437,8 @@
 		else {
 			$sql .= "set email_status = 'trying', ";
 		}
-		$sql .= "email_retry_count = :email_retry_count ";
+		$sql .= "email_retry_count = :email_retry_count, ";
+		$sql .= "update_date = now() ";
 		//$sql .= ", email_debug = :email_debug ";
 		$sql .= "where email_queue_uuid = :email_queue_uuid; ";
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
