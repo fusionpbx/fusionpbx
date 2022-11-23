@@ -18,3 +18,4 @@ app/email_queue/
 app/device_logs/
 app/replication/
 app/applications/
+app/call_center_notify/
