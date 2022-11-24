@@ -989,7 +989,7 @@ if (!class_exists('destinations')) {
 		/**
 		* valid destination
 		*/
-		public function valid($destination, $type = 'dialplan') {
+		public function valid($destination, $type = 'dialplan', $strict = false) {
 			//allow an empty destination
 			if ($destination == ':') {
 				return true;
@@ -1008,6 +1008,14 @@ if (!class_exists('destinations')) {
 					}
 				}
 			}
+			
+			// Custom values
+                        if (!$strict){
+                                if (preg_match('/\w+:.*/', $destination)){
+                                        return true;
+                                }
+                        }
+			
 			return false;
 		}
 
