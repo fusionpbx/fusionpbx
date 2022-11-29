@@ -33,7 +33,7 @@
 	require_once "resources/check_auth.php";
 	
 //check permissions
-	if (permission_exists('domains_all')) {
+	if (permission_exists('domain_all')) {
 		//access granted
 	}
 	else {
