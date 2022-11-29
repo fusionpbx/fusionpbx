@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -84,6 +84,10 @@
 	$text_application = $language->get(null,'themes/'.$_SESSION['domain']['template']['name']);
 	$text = array_merge($text_default, $text_application);
 
+//create token
+	$object = new token;
+	$domain_json_token = $object->create('/core/domains/domain_json.php');
+
 //set template variables
 
 	//add translations
@@ -95,6 +99,9 @@
 		$view->assign('project_path', PROJECT_PATH);
 	//domain menu
 		$view->assign('domain_menu', escape($_SESSION['domain']['menu']['uuid']));
+	//domain json token
+		$view->assign('domain_json_token_name', $domain_json_token['name']);
+		$view->assign('domain_json_token_hash', $domain_json_token['hash']);
 	//theme settings
 		if (is_array($_SESSION['theme']) && @sizeof($_SESSION['theme']) != 0) {
 			//load into array
