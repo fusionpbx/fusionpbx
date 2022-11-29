@@ -51,13 +51,13 @@
 		$search = strtolower($_GET["search"]);
 	}
 
-//validate the token
-	$token = new token;
-	if (!$token->validate($_SERVER['PHP_SELF'])) {
-		message::add($text['message-invalid_token'],'negative');
-		header('Location: /');
-		exit;
-	}
+//validate the token	
+	//$token = new token;
+	//if (!$token->validate($_SERVER['PHP_SELF'])) {
+	//	message::add($text['message-invalid_token'],'negative');
+	//	header('Location: /');
+	//	exit;
+	//}
 
 //include css
 	//echo "<link rel='stylesheet' type='text/css' href='/resources/fontawesome/css/all.min.css.php'>\n";
