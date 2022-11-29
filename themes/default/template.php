@@ -1096,11 +1096,11 @@
 		search = document.getElementById('domains_search');
 		if (search.value) {
 			//xhttp.open("GET", "/core/domains/domain_list.php?search="+search.value, true);
-			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value, true);
+			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value+"&{$domain_json_token_name}={$domain_json_token_hash}", true);
 		}
 		else {
 			//xhttp.open("GET", "/core/domains/domain_list.php", true);
-			xhttp.open("GET", "/core/domains/domain_json.php", true);
+			xhttp.open("GET", "/core/domains/domain_json.php?{$domain_json_token_name}={$domain_json_token_hash}", true);
 		}
 		xhttp.send();
 	}
