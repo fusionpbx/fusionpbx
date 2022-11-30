@@ -23,23 +23,16 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('voicemail_message_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('voicemail_message_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
@@ -54,16 +47,14 @@
 		require_once "resources/classes/voicemail.php";
 		foreach ($voicemail_messages as $voicemail_uuid => $voicemail_message_uuids) {
 			foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
-				if (is_uuid($voicemail_uuid) && is_uuid($voicemail_message_uuid)) {
-					$voicemail = new voicemail;
-					$voicemail->db = $db;
-					$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-					$voicemail->voicemail_uuid = $voicemail_uuid;
-					$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
-					$result = $voicemail->message_toggle();
-					unset($voicemail);
-					$toggled++;
-				}
+				$voicemail = new voicemail;
+				$voicemail->db = $db;
+				$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+				$voicemail->voicemail_uuid = check_str($voicemail_uuid);
+				$voicemail->voicemail_message_uuid = check_str($voicemail_message_uuid);
+				$result = $voicemail->message_toggle();
+				unset($voicemail);
+				$toggled++;
 			}
 		}
 	}
@@ -75,7 +66,7 @@
 
 //redirect the user
 	if ($toggled > 0) {
-		message::add($text['message-toggled'].': '.$toggled);
+		$_SESSION["message"] = $text['message-toggled'].': '.$toggled;
 	}
 	if ($referer_path == PROJECT_PATH."/app/voicemails/voicemail_messages.php") {
 		header("Location: voicemail_messages.php?".$referer_query);

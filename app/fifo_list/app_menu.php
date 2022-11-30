@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Active Queues";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Active Queues";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Aktive Warteschlangen";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -13,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Queues Actives";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Code Attive";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Aktieve wachtrijen";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Aktywne kolejki";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Filas ativas";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Filas Activas";

@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -83,21 +80,13 @@
 	}
 
 	loadXmlHttp.prototype.stateChanged=function () {
-		var url = new URL(this.xmlHttp.responseURL);
-		if (/login\.php$/.test(url.pathname)) {
-			// You are logged out. Stop refresh!
-			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
-			window.location.href = url.href;
-			return;
-		}
-
-		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-			//this.el.innerHTML = this.xmlHttp.responseText;
-			document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
+	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+		//this.el.innerHTML = this.xmlHttp.responseText;
+		document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 	}
 
 	var requestTime = function() {
-		var url = 'registrations.php?reload&show=<?php echo escape($show); ?>';
+		var url = 'registrations.php?template=false&profile=&show=<?php echo escape($show); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1800"; }

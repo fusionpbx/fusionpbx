@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -46,9 +43,9 @@
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$var_uuid = $_REQUEST["id"];
+		$var_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -56,18 +53,18 @@
 
 //set http values as php variables
 	if (count($_POST) > 0) {
-		$var_category = trim($_POST["var_category"]);
-		$var_name = trim($_POST["var_name"]);
-		$var_value = trim($_POST["var_value"]);
-		$var_command = trim($_POST["var_command"]);
-		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = trim($_POST["var_enabled"]);
-		$var_order = trim($_POST["var_order"]);
-		$var_description = trim($_POST["var_description"]);
+		$var_category = check_str(trim($_POST["var_category"]));
+		$var_name = check_str(trim($_POST["var_name"]));
+		$var_value = check_str(trim($_POST["var_value"]));
+		$var_command = check_str(trim($_POST["var_command"]));
+		$var_hostname = check_str(trim($_POST["var_hostname"]));
+		$var_enabled = check_str(trim($_POST["var_enabled"]));
+		$var_order = check_str(trim($_POST["var_order"]));
+		$var_description = check_str(trim($_POST["var_description"]));
 		$var_description = str_replace("''", "'", $var_description);
 
 		if (strlen($_POST["var_category_other"]) > 0) {
-			$var_category = trim($_POST["var_category_other"]);
+			$var_category = check_str(trim($_POST["var_category_other"]));
 		}
 	}
 
@@ -76,15 +73,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$var_uuid = $_POST["var_uuid"];
-			}
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: vars.php');
-				exit;
+				$var_uuid = check_str($_POST["var_uuid"]);
 			}
 
 		//check for all required data
@@ -111,37 +100,39 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('var_add')) {
-					//begin insert array
+					//insert the variable
 						$var_uuid = uuid();
-						$array['vars'][0]['var_uuid'] = $var_uuid;
-					//set message
-						message::add($text['message-add']);
-				}
-
-				if ($action == "update" && permission_exists('var_edit')) {
-					//begin update array
-						$array['vars'][0]['var_uuid'] = $var_uuid;
-					//set message
-						message::add($text['message-update']);
-				}
-
-				if (is_array($array) && @sizeof($array) != 0) {
-					//add common fields to array
-						$array['vars'][0]['var_category'] = $var_category;
-						$array['vars'][0]['var_name'] = $var_name;
-						$array['vars'][0]['var_value'] = $var_value;
-						$array['vars'][0]['var_command'] = $var_command;
-						$array['vars'][0]['var_hostname'] = $var_hostname != '' ? $var_hostname : null;
-						$array['vars'][0]['var_enabled'] = $var_enabled;
-						$array['vars'][0]['var_order'] = $var_order;
-						$array['vars'][0]['var_description'] = base64_encode($var_description);
-
-					//execute insert/update
-						$database = new database;
-						$database->app_name = 'vars';
-						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
-						$database->save($array);
-						unset($array);
+						$sql = "insert into v_vars ";
+						$sql .= "(";
+						$sql .= "var_uuid, ";
+						$sql .= "var_category, ";
+						$sql .= "var_name, ";
+						$sql .= "var_value, ";
+						$sql .= "var_command, ";
+						$sql .= "var_hostname, ";
+						$sql .= "var_enabled, ";
+						$sql .= "var_order, ";
+						$sql .= "var_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$var_uuid', ";
+						$sql .= "'$var_category', ";
+						$sql .= "'$var_name', ";
+						$sql .= "'$var_value', ";
+						$sql .= "'$var_command', ";
+						if (strlen($var_hostname) > 0) {
+							$sql .= "'$var_hostname', ";
+						}
+						else {
+							$sql .= "null, ";
+						}
+						$sql .= "'$var_enabled', ";
+						$sql .= "'$var_order', ";
+						$sql .= "'".base64_encode($var_description)."' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
 					//unset the user defined variables
 						$_SESSION["user_defined_variables"] = "";
@@ -149,23 +140,55 @@
 					//synchronize the configuration
 						save_var_xml();
 
-					//redirect
+					//set the message and redirect the user
+						messages::add($text['message-add']);
 						header("Location: vars.php");
-						exit;
-				}
-			}
+						return;
+				} //if ($action == "add")
 
-	}
+				if ($action == "update" && permission_exists('var_edit')) {
+					//update the variables
+						$sql = "update v_vars set ";
+						$sql .= "var_category = '$var_category', ";
+						$sql .= "var_name = '$var_name', ";
+						$sql .= "var_value = '$var_value', ";
+						$sql .= "var_command = '$var_command', ";
+						if (strlen($var_hostname) > 0) {
+							$sql .= "var_hostname = '$var_hostname', ";
+						}
+						else {
+							$sql .= "var_hostname = null, ";
+						}
+						$sql .= "var_enabled = '$var_enabled', ";
+						$sql .= "var_order = '$var_order', ";
+						$sql .= "var_description = '".base64_encode($var_description)."' ";
+						$sql .= "where var_uuid = '$var_uuid' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
+
+					//unset the user defined variables
+						$_SESSION["user_defined_variables"] = "";
+
+					//synchronize the configuration
+						save_var_xml();
+
+					//set the message and redirect the user
+						messages::add($text['message-update']);
+						header("Location: vars.php");
+						return;
+				} //if ($action == "update")
+		} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
 		$var_uuid = $_GET["id"];
 		$sql = "select * from v_vars ";
-		$sql .= "where var_uuid = :var_uuid ";
-		$parameters['var_uuid'] = $var_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "where var_uuid = '$var_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$var_category = $row["var_category"];
 			$var_name = $row["var_name"];
 			$var_value = $row["var_value"];
@@ -175,41 +198,43 @@
 			$var_order = $row["var_order"];
 			$var_description = base64_decode($row["var_description"]);
 		}
-		unset($sql, $parameters);
+		unset ($prep_statement);
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
 //include header
-	$document['title'] = $text['title-variable'];
 	require_once "resources/header.php";
+	if ($action == "add") {
+		$document['title'] = $text['title-var_add'];
+	}
+	if ($action == "update") {
+		$document['title'] = $text['title-var_edit'];
+	}
 
 //show contents
-	echo "<form method='post' name='frm' id='frm'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-variable']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'vars.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
+	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	if ($action == "add") {
+		echo "<td width='30%' align='left'nowrap><b>".$text['header-variable_add']."</b><br><br></td>\n";
+	}
+	if ($action == "update") {
+		echo "<td width='30%' align='left' nowrap><b>".$text['header-variable_edit']."</b><br><br></td>\n";
+	}
+	echo "<td width='70%' align='right'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='vars.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' align='left'>\n";
-	$table_name = 'v_vars';
-	$field_name = 'var_category';
-	$sql_where_optional = "";
-	$field_current_value = $var_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo "<td class='vtable' align='left'>\n";
+	$table_name = 'v_vars';$field_name = 'var_category';$sql_where_optional = "";$field_current_value = $var_category;
+	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
+	//echo "<br />\n";
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -301,8 +326,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='var_order' class='formfld'>\n";
-	$i = 0;
-	while ($i <= 999) {
+	$i=0;
+	while($i<=999) {
 		$selected = ($var_order == $i) ? "selected='selected'" : null;
 		if (strlen($i) == 1) {
 			echo "	<option value='00$i' ".$selected.">00$i</option>\n";
@@ -331,6 +356,15 @@
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	if ($action == "update") {
+		echo "		<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
+	}
+	echo "			<br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
 
 	//if variable is a code then show the codec info
 	if ($var_name == "global_codec_prefs" || $var_name == "outbound_codec_prefs") {
@@ -407,11 +441,6 @@
 
 	echo "</table>";
 	echo "<br><br>";
-
-	if ($action == "update") {
-		echo "<input type='hidden' name='var_uuid' value='".escape($var_uuid)."'>\n";
-	}
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>";
 
 //include header

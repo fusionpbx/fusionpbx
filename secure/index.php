@@ -26,11 +26,7 @@
 
 //block directory browsing and send the user to the main index
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//set a redirect
-	header("Location: ".PROJECT_PATH."/index.php");
+include "root.php";
+header("Location: ".PROJECT_PATH."/index.php");
 
 ?>

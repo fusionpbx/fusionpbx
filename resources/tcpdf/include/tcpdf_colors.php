@@ -358,7 +358,7 @@ class TCPDF_COLORS {
 				$color_code = self::$webcolor[$color];
 			} else {
 				// spot color
-				$returncolor = self::getSpotColor($hcolor, $spotc);
+				$returncolor = self::getSpotColor($color, $spotc);
 				if ($returncolor === false) {
 					$returncolor = $defcol;
 				}

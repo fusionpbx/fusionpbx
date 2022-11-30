@@ -17,34 +17,41 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 
 //start session
+	ini_set("session.cookie_httponly", True);
 	if (!isset($_SESSION)) { session_start(); }
 
-//if config.conf file does not exist then redirect to the install page
-	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
-		//BSD
-	} elseif (file_exists("/etc/fusionpbx/config.conf")) {
-		//Linux
-	} else {
-		header("Location: /core/install/install.php");
+//if config.php file does not exist then redirect to the install page
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/config.php")) {
+		//original directory
+	}
+	else if (file_exists($_SERVER["PROJECT_ROOT"]."/includes/config.php")) {
+		//move config.php from the includes to resources directory.
+		rename($_SERVER["PROJECT_ROOT"]."/includes/config.php", $_SERVER["PROJECT_ROOT"]."/resources/config.php");
+	}
+	else if (file_exists("/etc/fusionpbx/config.php")){
+		//linux
+	}
+	else if (file_exists("/usr/local/etc/fusionpbx/config.php")){
+		//bsd
+	}
+	else {
+		header("Location: ".PROJECT_PATH."/core/install/install.php");
 		exit;
 	}
 
 //use custom login, if present, otherwise use default login
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
+	if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/login.php")){
 		require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
 	}
 	else {

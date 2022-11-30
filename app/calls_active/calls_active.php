@@ -23,12 +23,8 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -54,18 +50,22 @@
 	require_once "resources/header.php";
 
 //load gateways into a session variable
-	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
-	$database = new database;
-	$gateways = $database->select($sql, $parameters, 'all');
-	foreach ($gateways as $row) {
-		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
+	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as $row) {
+			$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
+		}
 	}
+	unset($sql, $prep_statement, $result, $row);
 
 //ajax for refresh
 	?>
 	<script type="text/javascript">
 	//define refresh function, initial start
-		var refresh = 1980;
+		var refresh = 1500;
 		var source_url = 'calls_active_inc.php?';
 		var timer_id;
 		<?php
@@ -90,14 +90,31 @@
 	//refresh controls
 		function refresh_stop() {
 			clearTimeout(timer_id);
-			//document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; margin-right: 20px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
-			document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'pause','onclick'=>'refresh_start()']); ?>";
+			document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?php echo $text['label-refresh_enable']?>\" title=\"<?php echo $text['label-refresh_enable']?>\">";
 		}
 
 		function refresh_start() {
-			//if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 2px; margin-right: 20px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
-			if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<?php echo button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()']); ?>"; }
+			if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?php echo $text['label-refresh_pause']?>\" title=\"<?php echo $text['label-refresh_pause']?>\">"; }
 			ajax_get();
+		}
+
+	//call controls
+		function hangup(uuid) {
+			if (confirm("<?php echo $text['confirm-hangup']?>")) {
+				send_cmd('calls_exec.php?command=hangup&uuid='+uuid);
+			}
+		}
+
+		function send_cmd(url) {
+			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else {// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.open("GET",url,false);
+			xmlhttp.send(null);
+			document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
 		}
 
 	</script>

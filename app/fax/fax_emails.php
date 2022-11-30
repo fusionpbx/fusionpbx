@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,11 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+include "root.php";
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
@@ -39,9 +35,10 @@ require_once "resources/classes/text.php";
 $sql = "select * from v_fax ";
 $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and fax_email_connection_host is not null ";
-$database = new database;
-$result = $database->select($sql, null, 'all');
-unset($sql);
+$prep_statement = $db->prepare(check_sql($sql));
+$prep_statement->execute();
+$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+unset($sql, $prep_statement);
 
 function arr_to_map(&$arr){
 	if(is_array($arr)){
@@ -54,25 +51,30 @@ function arr_to_map(&$arr){
 	return false;
 }
 
-if (is_array($result) && @sizeof($result) != 0) {
+if (sizeof($result) != 0) {
 
 	//load default settings
 	$default_settings = load_default_settings();
 
 	//get event socket connection parameters
 	$sql = "select event_socket_ip_address, event_socket_port, event_socket_password from v_settings";
-	$database = new database;
-	$row = $database->select($sql, null, 'row');
-	$event_socket['ip_address'] = $row['event_socket_ip_address'];
-	$event_socket['port'] = $row['event_socket_port'];
-	$event_socket['password'] = $row['event_socket_password'];
-	unset($sql, $row);
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$record = $prep_statement->fetch(PDO::FETCH_NAMED);
+	$event_socket['ip_address'] = $record['event_socket_ip_address'];
+	$event_socket['port'] = $record['event_socket_port'];
+	$event_socket['password'] = $record['event_socket_password'];
+	unset($sql, $prep_statement, $record);
 
+	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
+	if(strlen($fax_send_mode_default) == 0){
+		$fax_send_mode_default = 'direct';
+	}
 	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
 
 	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
 	if($fax_allowed_extension_default == false){
-		$tmp = array('.pdf', '.tiff', '.tif');
+		$tmp = Array('.pdf', '.tiff', '.tif');
 		$fax_allowed_extension_default = arr_to_map($tmp);
 	}
 
@@ -94,15 +96,19 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$fax_email_connection_password = $row["fax_email_connection_password"];
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
-		$fax_email_outbound_authorized_senders = strtolower($row["fax_email_outbound_authorized_senders"]);
+		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
 		$fax_send_greeting = $row["fax_send_greeting"];
 		$fax_accountcode = $row["accountcode"];
-		$fax_toll_allow = $row["fax_toll_allow"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
+
+		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
+		if(strlen($fax_send_mode) == 0){
+			$fax_send_mode = $fax_send_mode_default;
+		}
 
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 		if(strlen($fax_cover_font) == 0){
@@ -110,7 +116,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 		}
 
 		$fax_allowed_extension = arr_to_map($_SESSION['fax']['allowed_extension']);
-		if($fax_allowed_extension == false) {
+		if($fax_allowed_extension == false){
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
 
@@ -120,14 +126,14 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$_SESSION['event_socket_password'] = $event_socket['password'];
 
 		//get domain name, set local and session variables
-		$sql = "select domain_name from v_domains where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		$domain_name = $row['domain_name'];
-		$_SESSION['domain_name'] = $row['domain_name'];
+		$sql = "select domain_name from v_domains where domain_uuid = '".$domain_uuid."'";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$record = $prep_statement->fetch(PDO::FETCH_NAMED);
+		$domain_name = $record['domain_name'];
+		$_SESSION['domain_name'] = $record['domain_name'];
 		$_SESSION['domain_uuid'] = $domain_uuid;
-		unset($sql, $parameters, $row);
+		unset($sql, $prep_statement, $record);
 
 		//set needed variables
 		$fax_page_size = $_SESSION['fax']['page_size']['text'];
@@ -159,29 +165,17 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 			sort($emails); // oldest first
 			foreach ($emails as $email_id) {
-				//get email meta data
 				$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
-				//print_r($metadata);
 
 				//format from address
-				//$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
-				//$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
-				//$sender_email = $metadata[0]['from'];
-	
-				//get the sender email address	
-				if (strstr($metadata[0]['from'], '<') && strstr($metadata[0]['from'], '>')) {
-					$sender_email = preg_match('/^.*<(.+)>/', $metadata[0]['from'], $matches) ? strtolower($matches[1]) : '';
-				}
-				else {
-					$sender_email = strtolower($metadata[0]['from']);
-				}
- 
+				$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
+				$metadata[0]['from'] = $tmp[0]['mailbox']."@".$tmp[0]['host'];
+
 				//check sender
-				$sender_domain = explode('@', $sender_email)[1];
-				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
+				$sender_authorized = false;
+				if (in_array($metadata[0]['from'],$authorized_senders)) { $sender_authorized = true; }
+
 				if ($sender_authorized) {
-					//debug info
-					//echo "authorized\n";
 
 					//add multi-lingual support
 					$language = new text;
@@ -231,7 +225,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 					if ($fax_message != '') {
 						$fax_message = strip_tags($fax_message);
-						$fax_message = html_entity_decode($fax_message);
+						$fax_message = str_replace("&nbsp;", "\r\n", $fax_message);
 						$fax_message = str_replace("\r\n\r\n", "\r\n", $fax_message);
 					}
 
@@ -302,82 +296,91 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 //functions used above
 function load_default_settings() {
+	global $db;
+
 	$sql = "select * from v_default_settings ";
 	$sql .= "where default_setting_enabled = 'true' ";
-	$database = new database;
-	$result = $database->select($sql, null, 'all');
+	try {
+		$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
+		$prep_statement->execute();
+	}
+	catch(PDOException $e) {
+		$prep_statement = $db->prepare($sql);
+		$prep_statement->execute();
+	}
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	//load the settings into an array
-	if (is_array($result) && @sizeof($result) != 0) {
-		foreach ($result as $row) {
-			$name = $row['default_setting_name'];
-			$category = $row['default_setting_category'];
-			$subcategory = $row['default_setting_subcategory'];
-			if (strlen($subcategory) == 0) {
-				if ($name == "array") {
-					$settings[$category][] = $row['default_setting_value'];
-				}
-				else {
-					$settings[$category][$name] = $row['default_setting_value'];
-				}
+	foreach ($result as $row) {
+		$name = $row['default_setting_name'];
+		$category = $row['default_setting_category'];
+		$subcategory = $row['default_setting_subcategory'];
+		if (strlen($subcategory) == 0) {
+			if ($name == "array") {
+				$settings[$category][] = $row['default_setting_value'];
 			}
 			else {
-				if ($name == "array") {
-					$settings[$category][$subcategory][] = $row['default_setting_value'];
-				}
-				else {
-					$settings[$category][$subcategory][$name] = $row['default_setting_value'];
-					$settings[$category][$subcategory][$name] = $row['default_setting_value'];
-				}
+				$settings[$category][$name] = $row['default_setting_value'];
+			}
+		} else {
+			if ($name == "array") {
+				$settings[$category][$subcategory][] = $row['default_setting_value'];
+			}
+			else {
+				$settings[$category][$subcategory][$name] = $row['default_setting_value'];
+				$settings[$category][$subcategory][$name] = $row['default_setting_value'];
 			}
 		}
 	}
-	unset($sql, $parameters, $result, $row);
 	return $settings;
 }
 
 function load_domain_settings($domain_uuid) {
-	if (is_uuid($domain_uuid)) {
+	global $db;
+
+	if ($domain_uuid) {
 		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "where domain_uuid = '" . $domain_uuid . "' ";
 		$sql .= "and domain_setting_enabled = 'true' ";
-		$sql .= "order by domain_setting_order asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
-			//unset the arrays that domains are overriding
-				foreach ($result as $row) {
-					$name = $row['domain_setting_name'];
-					$category = $row['domain_setting_category'];
-					$subcategory = $row['domain_setting_subcategory'];
-					if ($name == "array") {
-						unset($_SESSION[$category][$subcategory]);
-					}
+		try {
+			$prep_statement = $db->prepare($sql . " order by domain_setting_order asc ");
+			$prep_statement->execute();
+		}
+		catch(PDOException $e) {
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+		}
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		//unset the arrays that domains are overriding
+		foreach ($result as $row) {
+			$name = $row['domain_setting_name'];
+			$category = $row['domain_setting_category'];
+			$subcategory = $row['domain_setting_subcategory'];
+			if ($name == "array") {
+				unset($_SESSION[$category][$subcategory]);
+			}
+		}
+		//set the settings as a session
+		foreach ($result as $row) {
+			$name = $row['domain_setting_name'];
+			$category = $row['domain_setting_category'];
+			$subcategory = $row['domain_setting_subcategory'];
+			if (strlen($subcategory) == 0) {
+				//$$category[$name] = $row['domain_setting_value'];
+				if ($name == "array") {
+					$_SESSION[$category][] = $row['domain_setting_value'];
 				}
-			//set the settings as a session
-				foreach ($result as $row) {
-					$name = $row['domain_setting_name'];
-					$category = $row['domain_setting_category'];
-					$subcategory = $row['domain_setting_subcategory'];
-					if (strlen($subcategory) == 0) {
-						//$$category[$name] = $row['domain_setting_value'];
-						if ($name == "array") {
-							$_SESSION[$category][] = $row['domain_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$name] = $row['domain_setting_value'];
-						}
-					}
-					else {
-						//$$category[$subcategory][$name] = $row['domain_setting_value'];
-						if ($name == "array") {
-							$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
-						}
-					}
+				else {
+					$_SESSION[$category][$name] = $row['domain_setting_value'];
 				}
+			} else {
+				//$$category[$subcategory][$name] = $row['domain_setting_value'];
+				if ($name == "array") {
+					$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+				}
+			}
 		}
 	}
 }

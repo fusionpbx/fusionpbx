@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Variables";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Variables";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Variablen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Variablen";
@@ -12,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Variables";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Variabili";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Variabelen";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Zmienne";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Variáveis";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Variáveis";

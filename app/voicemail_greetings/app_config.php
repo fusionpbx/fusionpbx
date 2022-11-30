@@ -9,14 +9,13 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manager voicemail greetings for extensions.";
-		$apps[$x]['description']['en-gb'] = "Manager voicemail greetings for extensions.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-de'] = "Verwalte Voicemail-Begrüßungen für Nebenstellen.";
 		$apps[$x]['description']['es-cl'] = "Administrador de mensajes de bienvenida de correo de voz para extensiones.";
 		$apps[$x]['description']['es-mx'] = "";
-		$apps[$x]['description']['fr-ca'] = "Accueil messagerie Vocale";
+		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
@@ -124,29 +123,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "greeting_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Voicemail greeting file encoded in base64.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

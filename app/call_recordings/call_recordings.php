@@ -17,23 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2019
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('call_recording_view')) {
 		//access granted
 	}
@@ -46,209 +42,258 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http post data
-	if (is_array($_POST['call_recordings'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$call_recordings = $_POST['call_recordings'];
-	}
-
-//process the http post data by action
-	if ($action != '' && is_array($call_recordings) && @sizeof($call_recordings) != 0) {
-		switch ($action) {
-			case 'delete':
-				if (permission_exists('call_recording_delete')) {
-					$obj = new call_recordings;
-					$obj->delete($call_recordings);
-				}
+//get the action
+	if (strlen($_REQUEST["search"]) == 0 && is_array($_POST["call_recordings"])) {
+		$call_recordings = $_POST["call_recordings"];
+		foreach($call_recordings as $row) {
+			if ($row['action'] === 'download') {
+				$action = 'download';
 				break;
+			}
+			if ($row['action'] === 'delete') {
+				$action = 'delete';
+				break;
+			}
 		}
-
-		//redirect the user
-		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
-		exit;
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//download recordings
+	if (permission_exists('call_recording_download_add')) {
+		if ($action == "download") {
+			//download
+				$obj = new call_recording_downloads;
+				$obj->save($call_recordings);
+			//direct the user to the downloads
+				header("Location: ".PROJECT_PATH."/app/call_recording_downloads/call_recording_downloads.php");
+		}
+	}
 
-//add the search string
-	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
+//delete the recordings
+	if (permission_exists('call_recording_delete')) {
+		if ($action === "delete") {
+			//set the array
+				$call_recordings = $_POST["call_recordings"];
+			//download
+				$obj = new call_recordings;
+				$obj->delete($call_recordings);
+			//delete message
+				messages::add($text['message-delete']);
+		}
+	}
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
+//get variables used to control the order
+	$order_by = check_str($_REQUEST["order_by"]);
+	$order = check_str($_REQUEST["order"]);
+
+//set the defaults
+	if (strlen($order_by) == 0) { 
+		$order_by = 'call_recording_date';
+		$order = 'desc';
+	}
+
+//add the search term
+	$search = strtolower(check_str($_REQUEST["search"]));
+	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "	lower(call_recording_name) like :search ";
-		$sql_search .= "	or lower(call_recording_path) like :search ";
+		$sql_search .= "lower(call_recording_name) like '%".$search."%' ";
+		$sql_search .= "or lower(call_recording_path) like '%".$search."%' ";
+		$sql_search .= "or lower(call_direction) like '%".$search."%' ";
+		$sql_search .= "or lower(call_recording_description) like '%".$search."%' ";
 		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
 	}
 
-//get the count
-	$sql = "select count(call_recording_uuid) from v_call_recordings ";
-	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('call_recording_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+//prepare to page the results
+	$sql = "select count(call_recording_uuid) as num_rows from v_call_recordings ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= $sql_search;
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = '0';
+		}
 	}
-	if (isset($sql_search)) {
-		$sql .= $sql_search;
-	}
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
-		$param .= "&show=all";
-	}
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$param = "";
+	$page = $_REQUEST['page'];
+	if (strlen($page) == 0) { $page = 0; $_REQUEST['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(call_recording_uuid)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'call_recording_date', 'desc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$call_recordings = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	$sql = "select * from v_call_recordings ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= $sql_search;
+	$sql .= "order by $order_by $order ";
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-//include the header
-	$document['title'] = $text['title-call_recordings'];
-	require_once "resources/header.php";
+//define the checkbox_toggle function
+	echo "<script type=\"text/javascript\">\n";
+	echo "	function checkbox_toggle(item) {\n";
+	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
+	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
+	echo "			if (inputs[i].type === 'checkbox') {\n";
+	echo "				if (document.getElementById('checkbox_all').checked == true) {\n";
+	echo "				inputs[i].checked = true;\n";
+	echo "			}\n";
+	echo "				else {\n";
+	echo "					inputs[i].checked = false;\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-call_recordings']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	if (permission_exists('call_recording_download_add') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'collapse'=>'hide-xs','onclick'=>"list_action_set('download'); list_form_submit('form_list');"]);
+	echo "<form method='post' action=''>\n";
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-call_recordings']." (".$num_rows.")</b></td>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	if (permission_exists('call_recording_download_add')) {
+		echo "				<button type='submit' class='btn btn-default' id='downloads' name=\"call_recordings[$x][action]\" alt='".$text['button-download']."' onclick=\"document.getElementById('downloads').value='download'\" value=''>".$text['button-downloads']."</span></button>\n";
+		echo "				&nbsp; &nbsp; &nbsp; ";
 	}
-	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-left: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-xs']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_recordings.php','style'=>($search == '' ? 'display: none;' : null),'collapse'=>'hide-xs']);
-	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
-	}
-	echo "		</form>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".escape($search)."'>\n";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "			</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' colspan='2'>\n";
+	echo "			".$text['title_description-call_recording']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
-	if (permission_exists('call_recording_delete') && $call_recordings) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
-	}
+	//echo "<style>\n";
+	//echo "audio {\n";
+	//echo "    background-color: #ffffff;\n";
+	//echo "    background-color: rgba(0,0,0,0);\n";
+	//echo "    -webkit-border-radius:7px 7px 7px 7px ;\n";
+	//echo "    border-radius:7px 7px 7px 7px ;\n";
+	//echo "}\n";
+	//echo "</style>\n";
+	echo "\n";
 
-	echo $text['title_description-call_recordings']."\n";
-	echo "<br /><br />\n";
-
-	echo "<form id='form_list' method='post'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	$col_count = 4;
-	if (permission_exists('call_recording_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($call_recordings ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-		$col_count++;
-	}
-	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
-	}
-	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-40'");
-	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
-		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
-		$col_count++;
-	}
-	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right'");
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<th style='width:30px;'>\n";
+	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
+	echo "	</th>\n";
+	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order);
+	echo "<th>".$text['label-recording']."</th>\n";
+	//echo th_order_by('call_recording_path', $text['label-play'], $order_by, $order);
+	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order);
 	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order);
 	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order);
-	if (permission_exists('xml_cdr_details')) {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
+	echo th_order_by('call_recording_description', $text['label-call_recording_description'], $order_by, $order);
+	//echo th_order_by('call_recording_base64', $text['label-call_recording_base64'], $order_by, $order);
+	echo "	<td class='list_control_icons'>";
+	if (permission_exists('call_recording_add')) {
+		echo "		<a href='call_recording_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	echo "</tr>\n";
+	else {
+		echo "&nbsp;\n";
+	}
+	echo "	</td>\n";
+	echo "<tr>\n";
 
-	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
+	if (is_array($result)) {
 		$x = 0;
-		foreach ($call_recordings as $row) {
-			//playback progress bar
-			if (permission_exists('call_recording_play')) {
-				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;'><td class='playback_progress_bar_background' style='padding: 0; border: none;' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
-				echo "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
+		foreach($result as $row) {
+			//if (permission_exists('call_recording_play') && $recording_file_path != '') {
+			//	echo "<tr id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none3;'><td class='".$row_style[$c]." playback_progress_bar_background' style='padding: 0; border: none;' colspan='".((if_group("admin") || if_group("superadmin") || if_group("cdr")) ? ($col_count - 1) : $col_count)."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td></tr>\n";
+			//}
+			if (permission_exists('call_recording_edit')) {
+				$tr_link = "href='call_recording_edit.php?id=".$row['call_recording_uuid']."'";
 			}
-			if (permission_exists('call_recording_play')) {
-				$list_row_url = "javascript:recording_play('".escape($row['call_recording_uuid'])."');";
-			}
-			echo "<tr class='list-row' href=\"".$list_row_url."\">\n";
-			if (permission_exists('call_recording_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='call_recordings[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='call_recordings[$x][uuid]' value='".escape($row['call_recording_uuid'])."' />\n";
-				echo "	</td>\n";
-			}
-			if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
+			echo "		<input type='checkbox' name=\"call_recordings[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
+			echo "		<input type='hidden' name=\"call_recordings[$x][call_recording_uuid]\" value='".escape($row['call_recording_uuid'])."' />\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_name'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." row_style_slim tr_link_void' valign='top' align='center' nowrap='nowrap'>\n";
+			//echo "		<audio controls=\"download\" preload=\"metadata\" style=\"width:200px;\">\n";
+			//echo "			<source src=\"download.php?id=".escape($row['call_recording_uuid'])."\" type=\"audio/wav\">\n";
+			//echo "		</audio>\n";
+			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
+			if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {	
+				if (permission_exists('call_recording_play')) {
+					echo 	"<audio id='recording_audio_".escape($row['call_recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['call_recording_uuid'])."')\" onended=\"recording_reset('".escape($row['call_recording_uuid'])."');\" src=\"download.php?id=".escape($row['call_recording_uuid'])."\" type='".$recording_type."'></audio>";
+					echo 	"<span id='recording_button_".escape($row['call_recording_uuid'])."' onclick=\"recording_play('".escape($row['call_recording_uuid'])."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
 				}
-				else {
-					$domain = $text['label-global'];
+				if (permission_exists('call_recording_download')) {
+					echo 	"<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				}
-				echo "	<td>".escape($domain)."</td>\n";
 			}
-			echo "	<td class='overflow'>".escape($row['call_recording_name'])."</td>\n";
-			if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
-				echo "	<td class='middle button center no-link no-wrap'>";
-				if (file_exists($row['call_recording_path'].'/'.$row['call_recording_name'])) {
-					if (permission_exists('call_recording_play')) {
-						$recording_file_ext = pathinfo($row['call_recording_name'], PATHINFO_EXTENSION);
-						switch ($recording_file_ext) {
-							case "wav" : $recording_type = "audio/wav"; break;
-							case "mp3" : $recording_type = "audio/mpeg"; break;
-							case "ogg" : $recording_type = "audio/ogg"; break;
-						}
-						echo "<audio id='recording_audio_".escape($row['call_recording_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['call_recording_uuid'])."')\" onended=\"recording_reset('".escape($row['call_recording_uuid'])."');\" src='download.php?id=".urlencode($row['call_recording_uuid'])."' type='".$recording_type."'></audio>";
-						echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['call_recording_uuid']),'onclick'=>"recording_play('".escape($row['call_recording_uuid'])."')"]);
-					}
-					if (permission_exists('call_recording_download')) {
-						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
-					}
-				}
-				echo "	</td>\n";
-			}
-			echo "	<td class='right'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape(str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT))."</td>\n";
-			$call_recording_date = explode(' ', $row['call_recording_date']);
-			echo "	<td class='no-wrap'>".escape($call_recording_date['0'])." <span class='hide-sm-dn'>".escape($call_recording_date[1])."</span></td>\n";
-			echo "	<td>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
+			echo "	</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."' style=\"\">\n";
+			//echo "		<a href=\"download.php?id=".escape($row['call_recording_uuid'])."&t=bin\">".$text['label-download']." ".$v_link_label_download."</a>\n";
+			//echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_length'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_date'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_direction'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['call_recording_description'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['call_recording_base64'])."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('xml_cdr_details')) {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>PROJECT_PATH.'/app/xml_cdr/xml_cdr_details.php?id='.urlencode($row['call_recording_uuid'])]);
-				echo "	</td>\n";
+				echo "		<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?id=".escape($row['call_recording_uuid'])."' title='".$text['button-view']."'>$v_link_label_view</a>";
 			}
+			if (permission_exists('call_recording_edit')) {
+				echo "<button type='button' class='btn btn-default list_control_icon' name='' alt='".$text['button-edit']."' onclick=\"window.location='call_recording_edit.php?id=".escape($row['call_recording_uuid'])."'\" value='edit'><span class='glyphicon glyphicon-pencil'></span></input>\n";
+			}
+			if (permission_exists('call_recording_delete')) {
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"call_recordings[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>\n";
+			}
+			echo "	</td>\n";
 			echo "</tr>\n";
 			$x++;
-		}
-		unset($call_recordings);
-	}
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
 
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "<tr>\n";
+	echo "<td colspan='9' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('call_recording_add')) {
+		echo 		"<a href='call_recording_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
+	else {
+		echo 		"&nbsp;";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
 	echo "</form>\n";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

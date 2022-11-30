@@ -23,41 +23,42 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files;
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('fax_active_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('fax_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get the HTTP values and set as variables
-	$show = $_REQUEST["show"];
-	$fax_uuid = $_REQUEST["id"];
+	$show = trim($_REQUEST["show"]);
+	if ($show != "all") { $show = ''; }
+
+//
+	$fax_uuid = false;
+	if(isset($_REQUEST['id'])) {
+		$fax_uuid = check_str($_REQUEST["id"]);
+	}
 
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true'";
-	$database = new database;
-	$result = $database->select($sql, null, 'all');
-	if (is_array($result) && @sizeof($result) != 0) {
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as $row) {
 			$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 		}
 	}
-	unset($sql, $result, $row);
+	unset($sql, $prep_statement, $result, $row);
 
 //show the header
 	$document['title'] = $text['title'];
@@ -74,8 +75,8 @@
 		if ($show == 'all') {
 			echo "source_url = source_url + '&show=all';";
 		}
-		if (is_uuid($fax_uuid)) {
-			echo "source_url = source_url + '&id=".$fax_uuid."';";
+		if ($fax_uuid) {
+			echo "source_url = source_url + '&id=" . $fax_uuid . "';";
 		}
 		if (isset($_REQUEST["debug"])) {
 			echo "source_url = source_url + '&debug';";
@@ -107,6 +108,7 @@
 		function hangup(uuid) {
 			if (confirm("<?php echo $text['confirm-hangup']?>")) {
 				send_cmd('fax_active_exec.php?cmd=delete&id='+uuid);
+
 			}
 		}
 

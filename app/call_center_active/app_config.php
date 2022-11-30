@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Shows active calls, and agents in the call center queue.";
-		$apps[$x]['description']['en-gb'] = "Shows active calls, and agents in the call center queue.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Zeigt aktive Anrufe und Agenten in der Callcenter Warteschlange.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en queue sur le centre d'appel.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "Laat actieve oproepen en agenten in het Call-Center wachtrij zien";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Mostra as chamadas ativas, e os agentes na fila do Call Center.";
 		$apps[$x]['description']['pt-pt'] = "Mostra as chamadas ativas e agentes na fila do centro de chamadas.";

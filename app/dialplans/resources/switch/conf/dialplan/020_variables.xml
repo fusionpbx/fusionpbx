@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="variables" number="" continue="true" app_uuid="9f356fe7-8cf8-4c14-8fe2-6daf89304458">
+		<condition>
+			<action application="export" data="origination_callee_id_name=${destination_number}"/>
+			<action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
+		</condition>
+	</extension>
+</context>

@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Call Centers";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Call Centers";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Callcenter";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -13,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre d'appel";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Stato Agenti";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Call-Centers";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Call Center ";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Call Center";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Centro de Chamadas";
@@ -25,11 +24,11 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['path'] = "/app/call_centers/call_center_queues.php";
-	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "agent";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Agent Status";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Agent Status";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Agenten Status";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -40,7 +39,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "État de l'agent";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Agent status";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Status agenta";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Estado do agente";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Estado do Agente";

@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Display the switch logs.";
-		$apps[$x]['description']['en-gb'] = "Display the switch logs.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Zeigt die Switch-Logs an.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Logs du switch.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "Centale log tonen.";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Exibir os logs de switch.";

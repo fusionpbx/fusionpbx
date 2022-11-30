@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -40,9 +37,8 @@
 		echo "access denied";
 		exit;
 	}
-
-//get the variables
-	$filename = $_GET['filename'];
+	
+	$filename = base64_decode($_GET['filename']);
 	$type = $_GET['type']; //moh //rec
 
 //show the content
@@ -55,7 +51,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align='center'>
-			<b><?php echo escape($filename) ?></b>
+			<b>file: <?php echo $filename ?></b>
 		</td>
 	</tr>
 	<tr>
@@ -69,16 +65,16 @@
 		if ($file_ext == "wav") {
 			//HTML5 method
 			if ($browser_name == "Google Chrome" || $browser_name == "Mozilla Firefox") {
-				echo "<audio src=\"recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autoplay=\"true\" ></audio>";
+				echo "<audio src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"true\" ></audio>";
 			}
 			else {
-				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autoplay=\"autoplay\"></audio>";
-				echo "<embed src=\"recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".escape($filename)."\" enablejavascript=\"true\">\n";
+				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\"></audio>";
+				echo "<embed src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
 			}
 		}
 		if ($file_ext == "mp3") {
-			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\">\n";
-			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=recordings.php?a=download&type=".urlencode($type)."&filename=".urlencode($filename)."\" />\n";
+			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\">\n";
+			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" />\n";
 			echo "<param name=\"quality\" value=\"high\"/>\n";
 			echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
 			echo "</object>\n";

@@ -23,11 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 if (permission_exists('contact_add')) {
@@ -56,7 +52,7 @@ $_SESSION['contact_auth']['target'] = ($_SESSION['contact_auth']['target'] == ''
 if ($_SESSION['contact_auth']['source'] == 'google') {
 
 	if ($_REQUEST['error']) {
-		message::add(($text['message-'.$_REQUEST['error']] != '') ? $text['message-'.$_REQUEST['error']] : $_REQUEST['error'], 'negative');
+		messages::add(($text['message-'.$_REQUEST['error']] != '') ? $text['message-'.$_REQUEST['error']] : $_REQUEST['error'], 'negative');
 		header("Location: ".$_SESSION['contact_auth']['referer']);
 		unset($_SESSION['contact_auth']);
 		exit;
@@ -64,7 +60,7 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 
 	if (isset($_REQUEST['signout'])) {
 		unset($_SESSION['contact_auth']['token']);
-		message::add($text['message-google_signed_out']);
+		messages::add($text['message-google_signed_out']);
 		header("Location: https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=".(($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].PROJECT_PATH."/app/contacts/".$_SESSION['contact_auth']['referer']);
 		exit;
 	}
@@ -114,8 +110,7 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 
 }
 else {
-
-	message::add($text['message-access_denied'], 'negative');
+	messages::add($text['message-access_denied'], 'negative');
 	header("Location: ".$_SESSION['contact_auth']['referer']);
 	unset($_SESSION['contact_auth']);
 	exit;

@@ -24,14 +24,10 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('time_condition_view')) {
@@ -46,237 +42,228 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http post data
-	if (is_array($_POST['time_conditions'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$time_conditions = $_POST['time_conditions'];
+//handle enable toggle
+	$dialplan_uuid = check_str($_REQUEST['id']);
+	$dialplan_enabled = check_str($_REQUEST['enabled']);
+	if ($dialplan_uuid != '' && $dialplan_enabled != '') {
+		$sql = "update v_dialplans set ";
+		$sql .= "dialplan_enabled = '".$dialplan_enabled."' ";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+		messages::add($text['message-update']);
 	}
 
-//process the http post data by action
-	if ($action != '' && is_array($time_conditions) && @sizeof($time_conditions) != 0) {
-		switch ($action) {
-			case 'copy':
-				if (permission_exists('time_condition_add')) {
-					$obj = new time_conditions;
-					$obj->copy($time_conditions);
-				}
-				break;
-			case 'toggle':
-				if (permission_exists('time_condition_edit')) {
-					$obj = new time_conditions;
-					$obj->toggle($time_conditions);
-				}
-				break;
-			case 'delete':
-				if (permission_exists('time_condition_delete')) {
-					$obj = new time_conditions;
-					$obj->delete($time_conditions);
-				}
-				break;
-		}
+//set the http values as php variables
+	$search = check_str($_REQUEST["search"]);
+	$order_by = check_str($_REQUEST["order_by"]);
+	$order = check_str($_REQUEST["order"]);
+	$dialplan_context = check_str($_REQUEST["dialplan_context"]);
+	$app_uuid = check_str($_REQUEST["app_uuid"]);
 
-		header('Location: time_conditions.php'.($search != '' ? '?search='.urlencode($search) : null));
-		exit;
-	}
+//includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+	$document['title'] = $text['title-time_conditions'];
 
-//get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
-
-//add the search string
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= " 	lower(dialplan_context) like :search ";
-		$sql_search .= " 	or lower(dialplan_name) like :search ";
-		$sql_search .= " 	or lower(dialplan_number) like :search ";
-		$sql_search .= " 	or lower(dialplan_continue) like :search ";
-		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search ";
-		}
-		$sql_search .= " 	or lower(dialplan_enabled) like :search ";
-		$sql_search .= " 	or lower(dialplan_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
+//set the alternating styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //get the number of rows in the dialplan
-	$sql = "select count(dialplan_uuid) from v_dialplans ";
-	$sql .= "where true ";
-	if ($_GET['show'] != "all" || !permission_exists('time_condition_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
+	$sql = "select count(*) as num_rows from v_dialplans ";
+	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
-	$sql .= $sql_search;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
-
-//prepare to page data
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = $search ? "&search=".urlencode($search) : null;
-	if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
-		$param .= "&show=all";
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= " 	dialplan_context like '%".$search."%' ";
+		$sql .= " 	or dialplan_name like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_continue like '%".$search."%' ";
+		if (is_numeric($search)) {
+			$sql .= " 	or dialplan_order = '".$search."' ";
+		}
+		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
+		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= ") ";
 	}
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
+		}
+		else {
+			$num_rows = '0';
+		}
+	}
+	unset($prep_statement, $result);
+
+	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$param = "";
+	if (strlen($app_uuid) > 0) { $param = "&app_uuid=".$app_uuid; }
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the data
-	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
-	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by dialplan_order asc, dialplan_name asc ";
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$dialplans = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
-
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//includes
-	$document['title'] = $text['title-time_conditions'];
-	require_once "resources/header.php";
+	$sql = "select * from v_dialplans ";
+	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= " 	dialplan_context like '%".$search."%' ";
+		$sql .= " 	or dialplan_name like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_continue like '%".$search."%' ";
+		if (is_numeric($search)) {
+			$sql .= " 	or dialplan_order = '".$search."' ";
+		}
+		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
+		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; } else { $sql .= "order by dialplan_order asc, dialplan_name asc "; }
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-time_conditions']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	if (permission_exists('time_condition_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'time_condition_edit.php']);
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td align='left' valign='top'>\n";
+	echo "		<span class='title'>\n";
+	echo "			".$text['header-time_conditions']."\n";
+	echo "		</span>\n";
+	echo "		<br><br>\n";
+	echo "	</td>\n";
+	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
+	echo "		<form name='frm_search' method='get' action=''>\n";
+	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".escape($search)."'>";
+	if (strlen($app_uuid) > 0) {
+		echo "		<input type='hidden' class='txt' name='app_uuid' value='".escape($app_uuid)."'>";
 	}
-	if (permission_exists('time_condition_add') && $dialplans) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+	if (strlen($order_by) > 0) {
+		echo "		<input type='hidden' class='txt' name='order_by' value='".escape($order_by)."'>";
+		echo "		<input type='hidden' class='txt' name='order' value='".escape($order)."'>";
 	}
-	if (permission_exists('time_condition_edit') && $dialplans) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
-	if (permission_exists('time_condition_delete') && $dialplans) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('time_condition_all')) {
-		if ($_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
-		}
-	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'time_conditions.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
-	}
+	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "		</form>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "	<td colspan='2'>\n";
+	echo "		<span class='vexpl'>\n";
+	echo $text['description-time_conditions'];
+	echo "		</span>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br />";
 
-	if (permission_exists('time_condition_add') && $dialplans) {
-		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
+//show the content
+	echo "<form name='frm_delete' method='post' action='time_condition_delete.php'>\n";
+	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	if (permission_exists('dialplan_delete') && $result_count > 0) {
+		echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;' width='1'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
-	if (permission_exists('time_condition_edit') && $dialplans) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, $app_uuid, "style='text-align: center;'", (($search != '') ? "search=".$search : null));
+	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, $app_uuid, "style='text-align: center;'", (($search != '') ? "search=".$search : null));
+	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, $app_uuid, null, (($search != '') ? "search=".$search : null));
+	echo "<td class='list_control_icons'>";
+	if (permission_exists('time_condition_add')) {
+		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	if (permission_exists('time_condition_delete') && $dialplans) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','name'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+	if (permission_exists('time_condition_delete') && $result_count > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm_delete.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
-
-	echo $text['description-time_conditions']."\n";
-	echo "<br /><br />\n";
-
-	echo "<form id='form_list' method='post'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('time_condition_edit') || permission_exists('time_condition_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($dialplans ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
-	if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
-	}
-	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, null, null, ($search != '' ? "search=".$search : null));
-	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, null, null, ($search != '' ? "search=".$search : null));
-	if (permission_exists('time_condition_context')) {
-		echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, null, null, ($search != '' ? "search=".$search : null));
-	}
-	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
-	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
-	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", ($search != '' ? "search=".$search : null));
-	if (permission_exists('time_condition_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
-	}
+	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (is_array($dialplans) && @sizeof($dialplans) != 0) {
-		$x = 0;
-		foreach ($dialplans as $row) {
-			if (permission_exists('time_condition_edit')) {
-				$list_row_url = "time_condition_edit.php?id=".urlencode($row['dialplan_uuid']);
-			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('time_condition_add') || permission_exists('time_condition_edit') || permission_exists('time_condition_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='time_conditions[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='time_conditions[$x][uuid]' value='".escape($row['dialplan_uuid'])."' />\n";
-				echo "	</td>\n";
-			}
-			if ($_GET['show'] == "all" && permission_exists('time_condition_all')) {
-				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
-					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
-				}
-				else {
-					$domain = $text['label-global'];
-				}
-				echo "	<td>".escape($domain)."</td>\n";
-			}
-			echo "	<td>";
-			if (permission_exists('time_condition_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['dialplan_name'])."</a>\n";
-			}
-			else {
-				echo "	".escape($row['dialplan_name']);
-			}
-			echo "	</td>\n";
-			echo "	<td>".($row['dialplan_number'] != '' ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
-			if (permission_exists('time_condition_context')) {
-				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
-			}
-			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
-			if (permission_exists('time_condition_edit')) {
-				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
-			}
-			else {
-				echo "	<td class='center'>\n";
-				echo $text['label-'.$row['dialplan_enabled']];
-			}
-			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".$row['dialplan_description']."&nbsp;</td>\n";
-			if (permission_exists('time_condition_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
-			}
-			echo "</tr>\n";
-			$x++;
-		}
-	}
-	unset($dialplans);
+	if ($result_count > 0) {
+		foreach($result as $row) {
+			$app_uuid = $row['app_uuid'];
 
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
+			$tr_link = "href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."'";
+
+			echo "<tr ".$tr_link.">\n";
+			if (permission_exists("time_condition_delete")) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".escape($row['dialplan_uuid'])."' value='".$row['dialplan_uuid']."'></td>\n";
+				$dialplan_ids[] = 'checkbox_'.escape($row['dialplan_uuid']);
+			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('time_condition_edit')) {
+				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."'>".escape($row['dialplan_name'])."</a>";
+			}
+			else {
+				echo escape($row['dialplan_name']);
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".((strlen($row['dialplan_number']) > 0) ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['dialplan_context'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".escape($row['dialplan_order'])."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>";
+			echo "		<a href='?id=".$row['dialplan_uuid']."&enabled=".(($row['dialplan_enabled'] == 'true') ? 'false' : 'true').(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null).(($search != '') ? "&search=".$search : null).(($order_by != '') ? "&order_by=".escape($order_by)."&order=".escape($order) : null)."'>".ucwords(escape($row['dialplan_enabled']))."</a>\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".((strlen($row['dialplan_description']) > 0) ? $row['dialplan_description'] : "&nbsp;")."</td>\n";
+			echo "	<td class='list_control_icons'>\n";
+ 			if (permission_exists('time_condition_edit')) {
+ 				echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+ 			}
+			if (permission_exists('time_condition_delete')) {
+				echo "<a href=\"time_condition_delete.php?id[]=".escape($row['dialplan_uuid']).(($app_uuid != '') ? "&app_uuid=".escape($app_uuid) : null)."\" alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='8'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap>".$paging_controls."</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('time_condition_add')) {
+		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
+	if (permission_exists('time_condition_delete') && $result_count > 0) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.forms.frm_delete.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "</table>";
+	echo "<br><br>";
+	echo "</form>";
+
+	if (sizeof($dialplan_ids) > 0) {
+		echo "<script>\n";
+		echo "	function check(what) {\n";
+		foreach ($dialplan_ids as $checkbox_id) {
+			echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

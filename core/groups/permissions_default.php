@@ -26,11 +26,7 @@
 
 //check permisions
 	if (!$included) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
+		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('group_edit')) {
@@ -55,7 +51,7 @@
 //redirect the users
 	if (!$included) {
 		//show a message to the user
-		message::add($text['message-restore']);
+		messages::add($text['message-restore']);
 		header("Location: groups.php");
 		return;
 	}

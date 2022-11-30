@@ -17,65 +17,58 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/functions/object_to_array.php";
-	require_once "resources/functions/parse_message.php";
-
-//check permissions
-	if (permission_exists('fax_inbox_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+require_once "resources/functions/object_to_array.php";
+require_once "resources/functions/parse_message.php";
+if (permission_exists('fax_inbox_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get submitted id
-	$fax_uuid = $_GET["id"];
-
 //get fax server uuid, set connection parameters
-	if (is_uuid($fax_uuid)) {
+	if (strlen($_GET['id']) > 0) {
+		$fax_uuid = check_str($_GET["id"]);
 
-		if (permission_exists('fax_extension_view')) {
+		if (if_group("superadmin") || if_group("admin")) {
 			//show all fax extensions
 			$sql = "select * from v_fax ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and fax_uuid = :fax_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$parameters['fax_uuid'] = $fax_uuid;
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and fax_uuid = '$fax_uuid' ";
 		}
 		else {
 			//show only assigned fax extensions
 			$sql = "select * from v_fax as f, v_fax_users as u ";
 			$sql .= "where f.fax_uuid = u.fax_uuid ";
-			$sql .= "and f.domain_uuid = :domain_uuid ";
-			$sql .= "and f.fax_uuid = :fax_uuid ";
-			$sql .= "and u.user_uuid = :user_uuid ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$parameters['fax_uuid'] = $fax_uuid;
-			$parameters['user_uuid'] = $_SESSION['user_uuid'];
+			$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and f.fax_uuid = '$fax_uuid' ";
+			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 		}
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (count($result) == 0) {
+			if (!if_group("superadmin") && !if_group("admin")) {
+				echo "access denied";
+				exit;
+			}
+		}
+		foreach ($result as &$row) {
 			$fax_name = $row["fax_name"];
 			$fax_extension = $row["fax_extension"];
 			$fax_email_connection_type = $row["fax_email_connection_type"];
@@ -87,14 +80,9 @@
 			$fax_email_connection_password = $row["fax_email_connection_password"];
 			$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
+			break;
 		}
-		else {
-			if (!permission_exists('fax_extension_view')) {
-				echo "access denied";
-				exit;
-			}
-		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 
 		// make connection
 		$fax_email_connection = "{".$fax_email_connection_host.":".$fax_email_connection_port."/".$fax_email_connection_type;
@@ -102,7 +90,7 @@
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
 		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
-			message::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
+			messages::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
 			header("Location: fax.php");
 			exit;
 		}
@@ -115,7 +103,7 @@
 
 //message action
 	if ($_GET['email_id'] != '') {
-		$email_id = $_GET['email_id'];
+		$email_id = check_str($_GET['email_id']);
 
 		//download attachment
 		if (isset($_GET['download'])) {
@@ -143,7 +131,7 @@
 			}
 			else{
 				//redirect user
-				message::add($text['message-download_failed'], 'negative');
+				messages::add($text['message-download_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
@@ -160,21 +148,21 @@
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
-					message::add($text['message-delete']);
+					messages::add($text['message-delete']);
 					header("Location: ?id=".$fax_uuid);
 					exit;
 				}
 			}
 			else {
 				//redirect user
-				message::add($text['message-delete_failed'], 'negative');
+				messages::add($text['message-delete_failed'], 'negative');
 				header("Location: ?id=".$fax_uuid);
 				exit;
 			}
 		}
 		else {
 			//redirect user
-			message::add($text['message-delete_failed'], 'negative');
+			messages::add($text['message-delete_failed'], 'negative');
 			header("Location: ?id=".$fax_uuid);
 			exit;
 		}
@@ -187,7 +175,6 @@
 //show the header
 	require_once "resources/header.php";
 
-//set the row styles
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
@@ -218,8 +205,10 @@
 	}
 	echo "	</tr>";
 
-	if (is_array($emails) && @sizeof($emails) != 0) {
+	if ($emails) {
+
 		rsort($emails); // most recent on top
+
 		foreach ($emails as $email_id) {
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 			$message = parse_message($connection, $email_id, FT_UID);
@@ -238,7 +227,9 @@
 			}
 			echo "	</tr>\n";
 			$c = ($c) ? 0 : 1;
+
 		}
+
 	}
 	else {
 		echo "<tr valign='top'>\n";
@@ -249,10 +240,10 @@
 	echo "</table>";
 	echo "<br><br>";
 
-//close the connection
-	imap_close($connection);
+/* close the connection */
+imap_close($connection);
+
 
 //show the footer
 	require_once "resources/footer.php";
-
 ?>

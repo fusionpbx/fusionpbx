@@ -77,23 +77,23 @@
 <P270></P270>
 
 <!--  SIP Server, MaxLength 64 characters -->
-<P47>{$account.1.server_address}</P47>
+<P47>{$server_address_1}</P47>
 
 <!--  SIP User ID, MaxLength 64 characters -->
-<P35>{$account.1.user_id}</P35>
+<P35>{$user_id_1}</P35>
 
 <!--  Authenticate ID, MaxLength 64 characters -->
-<P36>{$account.1.user_id}</P36>
+<P36>{$user_id_1}</P36>
 
 <!--  Authenticate Password, MaxLength unlimited -->
-<P34>{$account.1.password}</P34>
+<P34>{$user_password_1}</P34>
 
 <!--  Voicemail UserID (User ID/extension for 3rd party voice mail system) -->
 <!--  MaxLength 64 characters -->
-<P33>{$voicemail_number}</P33>
+<P33>*97</P33>
 
 <!--  Name (Display name :John Doe), MaxLength 64 characters -->
-<P3>{$account.1.display_name}</P3>
+<P3>{$display_name_1}</P3>
 
 <!--  Tel URI support. 0 - disabled, 1 - User is phone, 2 - Tel URI. Default value is 0 -->
 <P63>0</P63>
@@ -129,7 +129,7 @@
 <P81>0</P81>
 
 <!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
-<P32>{$account.1.register_expires}</P32>
+<P32>3</P32>
 
 <!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P138>20</P138>
@@ -311,7 +311,12 @@
 <P66></P66>
 
 <!--  Dial Plan Maxlength: unlimited, default is allow all { x+ | *x+ | *xx*x+ } -->
+
+{if isset($grandstream_dial_plan) }
 <P290>{$grandstream_dial_plan}</P290>
+{else}
+<P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+{/if}
 
 <!--  Early Dial. 0 - No, 1 - Yes -->
 <P29>0</P29>
@@ -442,7 +447,7 @@
 <P411>0</P411>
 
 <!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
-<P412>{$account.2.register_expires}</P412>
+<P412>3</P412>
 
 <!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P471>20</P471>
@@ -754,7 +759,7 @@
 <P511>0</P511>
 
 <!--  Register Expiration (m)(in minutes. default 1 hour, max 45 days) -->
-<P512>{$account.3.register_expires}</P512>
+<P512>3</P512>
 
 <!--  Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
 <P571>20</P571>
@@ -1250,7 +1255,7 @@
 
 <!--  DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. -->
 <!--  When set to Yes(1), it will override the configured Time Zone setting if available. -->
-{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+<P143>1</P143>
 
 <!--  Time Zone -->
 
@@ -1372,22 +1377,15 @@
 <P1361>{$http_auth_password}</P1361>
 
 <!--  Firmware Server Path, MaxLength 128 -->
-{if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/gxv3140/{$firmware_version}</P192>
-{elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/gxv3140</P192>
+
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
 
 <!--  Config Server Path, MaxLength 128 -->
-{if $grandstream_config_server_path=="none"}
-<P237></P237>
-{elseif isset($grandstream_config_server_path)}
-<P237>{$grandstream_config_server_path}</P237>
-{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
-{/if}
 
 <!--  Firmware File Prefix, MaxLength 128 -->
 <P232></P232>
@@ -1403,10 +1401,10 @@
 
 <!--  DHCP Option 66 Override server. 0 - No, 1 - Yes. Default is  Yes. -->
 <!--  When set to Yes(1), it will override the configured provision path and method. -->
-{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+<P145>1</P145>
 
 <!--  DHCP Option 120 Override SIP Server.  0 - No, 1 - Yes. Default is  Yes. -->
-{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
+<P1411>1</P1411>
 
 <!--  Automatic Upgrade. 0 - No, 1 - Check every day, 2 - Check every week, 3 - Check at a Period Time. Default is 0. -->
 <P194>0</P194>
@@ -1501,18 +1499,10 @@
 
 
 <!--  Headset TX Gain (dB), Allowed value: -6, 0, 6 -->
-{if isset($grandstream_headset_tx_gain)}
-<P1301>{$grandstream_headset_tx_gain}</P1301>
-{else}
 <P1301>0</P1301>
-{/if}
 
 <!--  Headset RX Gain (dB), Allowed value: -6, 0, 6 -->
-{if isset($grandstream_headset_rx_gain)}
-<P1302>{$grandstream_headset_rx_gain}</P1302>
-{else}
 <P1302>0</P1302>
-{/if}
 
 <!--  Camera Zoom Mode -->
 <!--  value = 0   1.0:1 (wide and default) -->

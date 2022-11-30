@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage Tones";
-		$apps[$x]['description']['en-gb'] = "Manage Tones";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Töne verwalten";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "Gestione Toni";
-		$apps[$x]['description']['nl-nl'] = "Beheer geluiden";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
@@ -44,11 +43,5 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "playback:tone_stream://\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:playback tone_stream://\${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
-
-		$y=0;
-		$apps[$x]['permissions'][$y]['name'] = "tone_destinations";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 ?>

@@ -2,48 +2,41 @@
 /**
  * Smarty Resource Plugin
  *
- * @package    Smarty
+ * @package Smarty
  * @subpackage TemplateResources
- * @author     Rodney Rehm
+ * @author Rodney Rehm
  */
 
 /**
  * Smarty Resource Plugin
+ *
  * Base implementation for resource plugins that don't use the compiler
  *
- * @package    Smarty
+ * @package Smarty
  * @subpackage TemplateResources
  */
 abstract class Smarty_Resource_Uncompiled extends Smarty_Resource
 {
     /**
-     * Flag that it's an uncompiled resource
+     * Render and output the template (without using the compiler)
      *
-     * @var bool
+     * @param  Smarty_Template_Source   $source    source object
+     * @param  Smarty_Internal_Template $_template template object
+     * @throws SmartyException          on failure
      */
-    public $uncompiled = true;
-
-    /**
-     * Resource does implement populateCompiledFilepath() method
-     *
-     * @var bool
-     */
-    public $hasCompiledHandler = true;
+    abstract public function renderUncompiled(Smarty_Template_Source $source, Smarty_Internal_Template $_template);
 
     /**
      * populate compiled object with compiled filepath
      *
      * @param Smarty_Template_Compiled $compiled  compiled object
-     * @param Smarty_Internal_Template $_template template object
+     * @param Smarty_Internal_Template $_template template object (is ignored)
      */
     public function populateCompiledFilepath(Smarty_Template_Compiled $compiled, Smarty_Internal_Template $_template)
     {
-        $compiled->filepath = $_template->source->filepath;
-        $compiled->timestamp = $_template->source->timestamp;
-        $compiled->exists = $_template->source->exists;
-        if ($_template->smarty->merge_compiled_includes || $_template->source->handler->checkTimestamps()) {
-            $compiled->file_dependency[ $_template->source->uid ] =
-                array($compiled->filepath, $compiled->timestamp, $_template->source->type,);
-        }
+        $compiled->filepath = false;
+        $compiled->timestamp = false;
+        $compiled->exists = false;
     }
+
 }

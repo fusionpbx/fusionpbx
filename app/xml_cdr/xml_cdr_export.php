@@ -17,23 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_export')) {
+	if (permission_exists('xml_cdr_view')) {
 		//access granted
 	}
 	else {
@@ -47,17 +44,19 @@
 
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
 //get the format
-	$export_format = $_REQUEST['export_format'];
+	$export_format = check_str($_REQUEST['export_format']);
 
-//export the csv
-	if (permission_exists('xml_cdr_export_csv') && $export_format == 'csv') {
+//get the format
+	$showall = check_str($_REQUEST['showall']);
+
+//exprot the csv
+	if ($export_format == 'csv') {
 
 		//define file name
-			if ($_GET['show'] == 'all' && permission_exists('xml_cdr_all')) {
+			if ($_REQUEST['showall'] == 'true') {
 				$csv_filename = "cdr_".date("Ymd_His").".csv";
 			}
 			else {
@@ -70,7 +69,7 @@
 
 		//set the csv headers
 			$z = 0;
-			foreach ($result[0] as $key => $val) {
+			foreach($result[0] as $key => $val) {
 				if ($key != "xml" && $key != "json") {
 					if ($z == 0) {
 						echo '"'.$key.'"';
@@ -85,9 +84,9 @@
 
 		//show the csv data
 			$x=0;
-			while (true) {
+			while(true) {
 				$z = 0;
-				foreach ($result[0] as $key => $val) {
+				foreach($result[0] as $key => $val) {
 					if ($key != "xml" && $key != "json") {
 						if ($z == 0) {
 							echo '"'.$result[$x][$key].'"';
@@ -107,23 +106,23 @@
 	}
 
 //export as a PDF
-	if (permission_exists('xml_cdr_export_pdf') && $export_format == 'pdf') {
+	if ($export_format == 'pdf') {
 
 		//load pdf libraries
-		require_once "resources/tcpdf/tcpdf.php";
-		require_once "resources/fpdi/fpdi.php";
+		require_once("resources/tcpdf/tcpdf.php");
+		require_once("resources/fpdi/fpdi.php");
 
 		//determine page size
 		switch ($_SESSION['fax']['page_size']['text']) {
-			case 'a4':
+			case 'a4' :
 				$page_width = 11.7; //in
 				$page_height = 8.3; //in
 				break;
-			case 'legal':
+			case 'legal' :
 				$page_width = 14; //in
 				$page_height = 8.5; //in
 				break;
-			case 'letter':
+			case 'letter' :
 			default	:
 				$page_width = 11; //in
 				$page_height = 8.5; //in
@@ -187,7 +186,7 @@
 		$z = 0; // total counter
 		$p = 0; // per page counter
 		if (sizeof($result) > 0) {
-			foreach ($result as $cdr_num => $fields) {
+			foreach($result as $cdr_num => $fields) {
 				$data_body[$p] .= '<tr>';
 				$data_body[$p] .= '<td>'.$text['label-'.$fields['direction']].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
@@ -195,7 +194,7 @@
 				$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
 				$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
 				$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
-				$data_body[$p] .= '<td align="right">'.(($fields['tta'] >= 0) ? $fields['tta'].'s' : null).'</td>';
+				$data_body[$p] .= '<td align="right">'.(($fields['tta'] > 0) ? $fields['tta'].'s' : null).'</td>';
 				$seconds = ($fields['hangup_cause'] == "ORIGINATOR_CANCEL") ? $fields['duration'] : round(($fields['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 				$total['duration'] += $seconds;
 				$data_body[$p] .= '<td align="right">'.gmdate("G:i:s", $seconds).'</td>';

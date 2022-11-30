@@ -142,7 +142,7 @@
     <!--  P270 = -->
     <!--  SIP Server -->
     <!--  String -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$server_address_1}</P47>
     <!--  Secondary SIP Server -->
     <!--  String -->
     <P2312></P2312>
@@ -151,19 +151,19 @@
     <P48></P48>
     <!--  SIP User ID -->
     <!--  String -->
-    <P35>{$account.1.user_id}</P35>
+    <P35>{$user_id_1}</P35>
     <!--  Authenticate ID -->
     <!--  String -->
-    <P36>{$account.1.auth_id}</P36>
+    <P36>{$user_id_1}</P36>
     <!--  Authenticate Password -->
     <!--  String -->
-    <P34>{$account.1.password}</P34>
+    <P34>{$user_password_1}</P34>
     <!--  Display Name -->
     <!--  String -->
-    <P3>{$account.1.display_name}</P3>
+    <P3>{$display_name_1}</P3>
     <!--  Voice Mail UserID -->
     <!--  String -->
-    <P33>{$voicemail_number}</P33>
+    <P33>*97</P33>
     <!--  Account 1/Network Settings -->
     <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
@@ -201,7 +201,7 @@
     <!--  Register Expiration (in minutes). Default is 60. Max about 45 days -->
     <!--  Number: 1 - 64800 -->
     <!--  Mandatory -->
-    <P32>{$account.1.register_expires}</P32>
+    <P32>3</P32>
     <!--  Reregister Before Expiration (in seconds). Default is 0 second -->
     <!--  Number: 0 - 64800 -->
     <!--  Mandatory -->
@@ -290,9 +290,7 @@
     <!--  Feature Key Synchronization. 0 - Disabled, 1 - Enabled. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-{if isset($grandstream_feature_key_sync)}
-    <P2325>{$grandstream_feature_key_sync}</P2325>
-{/if}
+    <P2325>0</P2325>
     <!--  Line-Seize Timeout (in seconds). Default is 15 -->
     <!--  Number: 15 - 60 -->
     <!--  Mandatory -->
@@ -302,7 +300,7 @@
     <P134></P134>
     <!--  Conference URI -->
     <!--  String -->
-    <P2318>{if $nway_conference == 'true'}nway{$account.1.user_id}@{$account.1.server_address}{/if}</P2318>
+    <P2318></P2318>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2350></P2350>
@@ -483,7 +481,7 @@
     {if isset($grandstream_dial_plan) }
     <P290>{$grandstream_dial_plan}</P290>
     {else}
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
+   <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
     {/if}
     
     <!--  Delayed Call Forward Wait Time (in seconds). Default is 20 -->
@@ -504,28 +502,28 @@
     <P104>0</P104>
     <!--  Matching Incoming Caller ID. Matching Rule 1 -->
     <!--  String -->
-    <P1488>{$grandstream_distinctive_ringtone_name_1}</P1488>
+    <P1488></P1488>
     <!--  Matching Rule 1 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0. -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1489>{$grandstream_distinctive_ringtone_1}</P1489>
+    <P1489>0</P1489>
     <!--  Matching Incoming Caller ID. Matching Rule 2 -->
     <!--  String -->
-    <P1490>{$grandstream_distinctive_ringtone_name_2}</P1490>
+    <P1490></P1490>
     <!--  Matching Rule 2 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1491>{$grandstream_distinctive_ringtone_2}</P1491>
+    <P1491>0</P1491>
     <!--  Matching Incoming Caller ID. Matching Rule 3 -->
     <!--  String -->
-    <P1492>{$grandstream_distinctive_ringtone_name_3}</P1492>
+    <P1492></P1492>
     <!--  Matching Rule 3 Distinctive Ringtone -->
     <!--  0 - system ring tone, 1 - custom ring tone 1, 2 - custom ring tone 2, 3 - custom ring tone 3. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
     <!--  Mandatory -->
-    <P1493>{$grandstream_distinctive_ringtone_3}</P1493>
+    <P1493>0</P1493>
     <!--  Ring Timeout (in seconds). Default is 60 -->
     <!--  Number: 30 - 3600 -->
     <!--  Mandatory -->
@@ -579,7 +577,7 @@
     <!--  P417 =  -->
     <!--  SIP Server -->
     <!--  String -->
-    <P402>{$account.2.server_address}</P402>
+    <P402>{$server_address_2}</P402>
     <!--  Secondary SIP Server -->
     <!--  String -->
     <P2412></P2412>
@@ -588,19 +586,19 @@
     <P403></P403>
     <!--  SIP User ID -->
     <!--  String -->
-    <P404>{$account.2.user_id}</P404>
+    <P404>{$user_id_2}</P404>
     <!--  Authenticate ID -->
     <!--  String -->
-    <P405>{$account.2.user_id}</P405>
+    <P405>{$user_id_2}</P405>
     <!--  Authenticate password -->
     <!--  String -->
-    <P406>{$account.2.password}</P406>
+    <P406>{$user_password_2}</P406>
     <!--  Display Name -->
     <!--  String -->
-    <P407>{$account.2.display_name}</P407>
+    <P407>{$display_name_2}</P407>
     <!--  Voice Mail UserID -->
     <!--  String -->
-    <P426>{$voicemail_number}</P426>
+    <P426>*97</P426>
     <!--  Account 2/Network Settings -->
     <!--  DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV, 3 - Use Configured IP. Default is 0 -->
     <!--  Number: 0, 1, 2, 3 -->
@@ -638,7 +636,7 @@
     <!--  Register Expiration (in minutes). Default is 60. Max is 45 days -->
     <!--  Number: 1 - 64800 -->
     <!--  Mandatory -->
-    <P412>{$account.2.register_expires}</P412>
+    <P412>3</P412>
     <!--  Reregister before Expiration (in seconds). Default is 0 -->
     <!--  Number: 0 - 64800 -->
     <!--  Mandatory -->
@@ -736,7 +734,7 @@
     <P444></P444>
     <!--  Conference URI -->
     <!--  String -->
-    <P2418>{if $nway_conference == 'true'}nway{$account.2.user_id}@{$account.2.server_address}{/if}</P2418>
+    <P2418></P2418>
     <!--  Music On Hold URI -->
     <!--  String -->
     <P2450></P2450>
@@ -1000,7 +998,7 @@
     <!--  Internet Protocol. 0 - Prefer IPv4, 1 - Prefer IPv6. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    {if isset($grandstream_ipv_mode)}<P1415>{$grandstream_ipv_mode}</P1415>{else}<P1415>0</P1415>{/if}
+    <P1415>0</P1415>
     <!--  IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE. Default is 0 -->
     <!--  Number: 0, 1, 2 -->
     <!--  Mandatory -->
@@ -1173,25 +1171,16 @@
     <P212>2</P212>
     <!--  Firmware Server Path -->
     <!--  String -->
-
-    {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxp140x/{$firmware_version}</P192>
-    {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxp140x</P192>
+    
+    {if isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-
+    
     <!--  Config Server Path -->
     <!--  String -->
-    {if $grandstream_config_server_path=="none"}
-    <P237></P237>
-    {elseif isset($grandstream_config_server_path)}
-    <P237>{$grandstream_config_server_path}</P237>
-    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
-    {/if}
-    
     <!--  Firmware File Prefix -->
     <!--  String -->
     <P232></P232>
@@ -1208,12 +1197,12 @@
     <!--  When set to Yes(1), it will override the configured provision path and method -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <P145>1</P145>
     <!--  Allow DHCP Option 120 to Override SIP Server -->
     <!--  0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
+    <P1411>0</P1411>
     <!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
@@ -1330,7 +1319,7 @@
     <!--  This is a string of up to 256 characters that should contain a path to the XML file. It MUST be in the host/path format. -->
     <!--  For example: directory.grandstream.com/engineering -->
     <!--  String -->
-
+    
     {if isset($contact_grandstream)}
 <P331>{$grandstream_phonebook_xml_server_path}{$mac}/</P331>
 {elseif isset($grandstream_phonebook_xml_server_path)}
@@ -1338,7 +1327,7 @@
 {else}
 <P331></P331>
 {/if}
-
+    
     <!--  Phonebook Download Interval (in minutes) -->
     <!--  Valid value range is 5-720. Default is 0 for disabled -->
     <!--  Number: 0, 5-720;  -->
@@ -1481,11 +1470,7 @@
     <!--  Enable Idle Mute. 0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-{if isset($grandstream_idle_mute_function_old)}
-    <P1565>{$grandstream_idle_mute_function_old}</P1565>
-{else}
     <P1565>0</P1565>
-{/if}
     <!--  Disable Transfer. 0 - No, 1 - Yes. Defauls is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
@@ -1554,31 +1539,19 @@
     <!--  HEADSET Key Mode. 0 = Default Mode, 1 = Toggle Headset/Speaker. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    {if isset($grandstream_headset_key_mode)}
-    <P1312>{$grandstream_headset_key_mode}</P1312>
-{/if}
+    <P1312>0</P1312>
     <!--  Always Ring Speaker. 0 - No, 1 - Yes. Default is 0 -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-{if isset($grandstream_headset_ring)}
-    <P1439>{$grandstream_headset_ring}</P1439>
-{/if}
+    <P1439>0</P1439>
     <!--  Headset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!--  Number: 0, 1, 2 -->
     <!--  Mandatory -->
-{if isset($grandstream_headset_tx_gain)}
-    <P1301>{$grandstream_headset_tx_gain}</P1301>
-{else}
     <P1301>0</P1301>
-{/if}
-    <!-- # Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
-    <!-- # Number: 0, 1, 2 -->
-    <!-- # Mandatory -->
-{if isset($grandstream_headset_rx_gain)}
-    <P1302>{$grandstream_headset_rx_gain}</P1302>
-{else}
+    <!--  Headset RX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
+    <!--  Number: 0, 1, 2 -->
+    <!--  Mandatory -->
     <P1302>0</P1302>
-{/if}
     <!--  Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!--  Number: 0, 1, 2 -->
     <!--  Mandatory -->
@@ -1664,7 +1637,7 @@
     <!--  When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!--  Number: 0, 1 -->
     <!--  Mandatory -->
-    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    <P143>1</P143>
     <!--  Self Defined Time zone. Max length allowed is 64 characters -->
     <!--  String -->
     <!--  Mandatory -->

@@ -24,11 +24,8 @@
 	Matthew Vale <github@mafoo.org>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -42,21 +39,21 @@
 	}
 
 //set the variables
-	$cmd = $_GET['cmd'];
-	$rdr = $_GET['rdr'];
+	$cmd = check_str($_GET['cmd']);
+	$rdr = check_str($_GET['rdr']);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		//reloadxml
 			if ($cmd == "api reloadxml") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 
 		//reload mod_translate
 			if ($cmd == "api reload mod_translate") {
-				message::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
+				messages::add(rtrim(event_socket_request($fp, $cmd)), 'alert');
 				unset($cmd);
 			}
 

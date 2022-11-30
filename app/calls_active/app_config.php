@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Active channels on the system.";
-		$apps[$x]['description']['en-gb'] = "Active channels on the system.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Aktive Kanäle auf dem System.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,7 +19,7 @@
 		$apps[$x]['description']['fr-fr'] = "Channels actifs sur le système";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "Aktieve kanalen in het systeem";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "Canais ativos no sistema.";
 		$apps[$x]['description']['pt-pt'] = "Canais ativos no sistema.";

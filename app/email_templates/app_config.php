@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
-		$apps[$x]['description']['en-gb'] = '';
 
 	//permission details
 		$y = 0;
@@ -55,32 +54,26 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_language';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the language.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_category';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the category.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_subcategory';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the subcategory.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_subject';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the template subject.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_body';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the template body.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Set the type as html or text.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_enabled';
@@ -89,31 +82,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'template_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

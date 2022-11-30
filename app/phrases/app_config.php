@@ -2,6 +2,7 @@
 
 	//application details
 		$apps[$x]['name'] = "Phrases";
+		//5c6f597c-9b78-11e4-89d3-123b93f75cba
 		$apps[$x]['uuid'] = "5c6f597c-9b78-11e4-89d3-123b93f75cba";
 		$apps[$x]['category'] = "Switch";;
 		$apps[$x]['subcategory'] = "";
@@ -9,7 +10,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage phrases primarily used with an IVR.";
-		$apps[$x]['description']['en-gb'] = "Manage phrases primarily used with an IVR.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Phrasen verwalten. Diese werden hauptsächlich für Anrufzentralen (IVR) verwendet.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,7 +20,7 @@
 		$apps[$x]['description']['fr-fr'] = "Gestion des enregistrements principalement utilisés dans les IVR";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "Beheer de uitspraken die vooral bij een IVR gebruikt worden.";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gestor de gravações utilizadas principalmente com um IVR.";
@@ -62,26 +62,13 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "phrase_all";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "phrase_play";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "phrase_execute";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "phrase_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "phrase_destinations";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-
-	//cache details
-		$apps[$x]['cache']['key'] = "languages.\${phrase_language}";
 
 	//schema details
 		$y=0;
@@ -106,44 +93,18 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_language";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y++;
@@ -205,30 +166,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "phrase_detail_order";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

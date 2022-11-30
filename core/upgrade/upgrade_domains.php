@@ -26,21 +26,16 @@
 
 //check the permission
 	if(defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
+		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
+		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
+		$document_root = $matches[1];
+		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
 	}
 	else if (!$included) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
+		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('upgrade_apps') || if_group("superadmin")) {

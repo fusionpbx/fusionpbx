@@ -24,22 +24,16 @@ Contributor(s):
 Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (if_group('superadmin')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (if_group('superadmin')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
@@ -47,24 +41,20 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 // retrieve software uuid
 	$sql = "select software_uuid, software_url, software_version from v_software";
-	$database = new database;
-	$row = $database->select($sql, null, 'row');
-	if (is_array($row) && sizeof($row) != 0) {
-		$software_uuid = $row["software_uuid"];
-		$software_url = $row["software_url"];
-		$software_version = $row["software_version"];
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$software_uuid = $row["software_uuid"];
+			$software_url = $row["software_url"];
+			$software_version = $row["software_version"];
+			break; // limit to 1 row
+		}
 	}
-	unset($sql, $row);
+	unset($sql, $prep_statement);
 
 	if (count($_REQUEST) > 0) {
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: notification_edit.php');
-				exit;
-			}
 
 		// prepare demographic information **********************************************
 
@@ -86,13 +76,21 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 			// database name & version
 			switch ($db_type) {
-				case "pgsql" :	$sql = "select version();";			break;
-				case "mysql" :	$sql = "select version();";			break;
-				case "sqlite" :	$sql = "select sqlite_version();";	break;
+				case "pgsql" :	$db_ver_query = "select version() as db_ver;";			break;
+				case "mysql" :	$db_ver_query = "select version() as db_ver;";			break;
+				case "sqlite" :	$db_ver_query = "select sqlite_version() as db_ver;";	break;
 			}
-			$database = new database;
-			$db_ver = $database->select($sql, null, 'column');
-			unset($sql);
+			$prep_statement = $db->prepare($db_ver_query);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$database_version = $row["db_ver"];
+					break; // limit to 1 row
+				}
+			}
+			unset($db_ver_query, $prep_statement);
+			$db_ver = $database_version;
 
 			// operating system name & version
 			$os_platform = PHP_OS;
@@ -140,7 +138,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 			if ($response['result'] == 'submitted') {
 				// set message
-				message::add($text['message-demographics_submitted']);
+				messages::add($text['message-demographics_submitted']);
 			}
 
 			header("Location: notification_edit.php");
@@ -159,9 +157,16 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 		// get local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$database = new database;
-		$current_project_notifications = $database->select($sql, null, 'row');
-		unset($sql);
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$current_project_notifications = $row["project_notifications"];
+				break; // limit to 1 row
+			}
+		}
+		unset($sql, $prep_statement);
 
 		// check if remote record should be removed
 		if ($project_notifications == 'false') {
@@ -186,13 +191,12 @@ Mark J Crane <markjcrane@fusionpbx.com>
 				if ($response['result'] == 'deleted') {
 					// set local project notification participation flag to false
 					$sql = "update v_notifications set project_notifications = 'false'";
-					$database = new database;
-					$database->execute($sql);
+					$db->exec(check_sql($sql));
 					unset($sql);
 				}
 			}
 			// redirect
-			message::add($text['message-update']);
+			messages::add($text['message-update']);
 			header("Location: notification_edit.php");
 			exit;
 		}
@@ -204,7 +208,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 				($project_notification_method == 'email' && $project_notification_recipient == '')
 				) {
 					$_SESSION["postback"] = $_POST;
-					message::add($text['message-invalid_recipient'], 'negative');
+					messages::add($text['message-invalid_recipient'], 'negative');
 					header("Location: notification_edit.php");
 					exit;
 			}
@@ -246,8 +250,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 		if ($response['result'] == 'updated' || $response['result'] == 'inserted') {
 			// set local project notification participation flag to true
 			$sql = "update v_notifications set project_notifications = 'true'";
-			$database = new database;
-			$database->execute($sql);
+			$db->exec(check_sql($sql));
 			unset($sql);
 			// set message
 			if (
@@ -256,10 +259,10 @@ Mark J Crane <markjcrane@fusionpbx.com>
 				$project_events == 'false' &&
 				$project_news == 'false'
 				) {
-				message::add($text['message-update']." - ".$text['message-no_channels'], 'alert');
+				messages::add($text['message-update']." - ".$text['message-no_channels'], 'alert');
 			}
 			else {
-				message::add($text['message-update']);
+				messages::add($text['message-update']);
 			}
 			// redirect
 			header("Location: notification_edit.php");
@@ -273,12 +276,16 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 		// check local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
-		$database = new database;
-		$row = $database->select($sql, null, 'row');
-		if (is_array($row) && sizeof($row) != 0) {
-			$setting["project_notifications"] = $row["project_notifications"];
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$setting["project_notifications"] = $row["project_notifications"];
+				break; // limit to 1 row
+			}
 		}
-		unset($sql, $row);
+		unset($sql, $prep_statement);
 
 		// if participation enabled
 		if ($setting["project_notifications"] == 'true') {
@@ -310,15 +317,11 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
 require_once "resources/header.php";
 $document['title'] = $text['title-notifications'];
 
 // show the content
-	echo "<form method='post' name='frm' id='frm'>\n";
+	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap='nowrap'><b>".$text['header-notifications']."</b><br><br></td>\n";
@@ -444,7 +447,6 @@ $document['title'] = $text['title-notifications'];
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

@@ -2,7 +2,7 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Default Settings";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Default Settings";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "默认设置";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Standardeinstellungen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Standardeinstellungen";
@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Parametri di Default";
 	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Ustawienia domyślne";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações Padrão";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Configurações";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Predefinições";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Настройки по умолчанию";

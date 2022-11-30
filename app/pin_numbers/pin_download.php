@@ -1,58 +1,47 @@
 <?php
 /*
-	FusionPBX
-	Version: MPL 1.1
+        FusionPBX
+        Version: MPL 1.1
 
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
+        The contents of this file are subject to the Mozilla Public License Version
+        1.1 (the "License"); you may not use this file except in compliance with
+        the License. You may obtain a copy of the License at
+        http://www.mozilla.org/MPL/
 
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
+        Software distributed under the License is distributed on an "AS IS" basis,
+        WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+        for the specific language governing rights and limitations under the
+        License.
 
-	The Original Code is FusionPBX
+        The Original Code is FusionPBX
 
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
-	the Initial Developer. All Rights Reserved.
+        The Initial Developer of the Original Code is
+        Mark J Crane <markjcrane@fusionpbx.com>
+        Portions created by the Initial Developer are Copyright (C) 2008-2016
+        the Initial Developer. All Rights Reserved.
 
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
+        Contributor(s):
+        Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
+//includes
+        include "root.php";
+        require_once "resources/require.php";
+        require_once "resources/check_auth.php";
+        require_once "resources/paging.php";
 
 //check permissions
-	if (if_group("superadmin")) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+        if (if_group("superadmin")) {
+                //access granted
+        }
+        else {
+                echo "access denied";
+                exit;
+        }
 
 //add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//define available columns
-	$available_columns[] = 'pin_number_uuid';
-	$available_columns[] = 'domain_uuid';
-	$available_columns[] = 'pin_number';
-	$available_columns[] = 'accountcode';
-	$available_columns[] = 'enabled';
-	$available_columns[] = 'description';
+        $language = new text;
+        $text = $language->get();
 
 //define the functions
 	function array2csv(array &$array) {
@@ -86,87 +75,72 @@
 		header("Content-Transfer-Encoding: binary");
 	}
 
-//get the pin numbers from the database and send them as output
-	if (is_array($_REQUEST["column_group"]) && @sizeof($_REQUEST["column_group"]) != 0) {
+//get the pin numbers from the database ans send them as output
+	if (isset($_REQUEST["column_group"])) {
+		$columns = implode(",",$_REQUEST["column_group"]);
+		$sql = "select " . $columns . " from v_pin_numbers ";
+		$sql .= " where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$pin_numbers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		unset ($sql, $prep_statement);
+		//print_r($pin_numbers);
 
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: pin_numbers.php');
-				exit;
-			}
-
-		//validate submitted columns
-		foreach($_REQUEST["column_group"] as $column_name) {
-			if (in_array($column_name, $available_columns)) {
-				$selected_columns[] = $column_name;
-			}
-		}
-		if (is_array($selected_columns) && @sizeof($selected_columns) != 0) {
-			$sql = "select ".implode(', ', $selected_columns)." from v_pin_numbers ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$pin_numbers = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters, $selected_columns);
-
-			download_send_headers("data_export_".date("Y-m-d") . ".csv");
-			echo array2csv($pin_numbers);
-			exit;
-		}
+		download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+		echo array2csv($pin_numbers);
+		die();
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+//define the columns in the array
+        $columns[] = 'pin_number_uuid';
+        $columns[] = 'domain_uuid';
+        $columns[] = 'pin_number';
+        $columns[] = 'accountcode';
+        $columns[] = 'enabled';
+        $columns[] = 'description';
 
-//include the header
-	$document['title'] = $text['title-pin_numbers'];
-	require_once "resources/header.php";
+//set the row styles
+        $c = 0;
+        $row_style["0"] = "row_style0";
+        $row_style["1"] = "row_style1";
 
-//show the content
-	echo "<form method='post' name='frm' id='frm'>\n";
+//begin the page content
+        require_once "resources/header.php";
 
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-export']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+        echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
+        echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+        echo "<tr>\n";
+        echo "<tr>\n";
+        echo "	<th><input type=\"checkbox\" id=\"selecctall\"/></th>";
+	echo "	<th>Column Name</th>";
+        echo "	<th>Description</th>";
+        echo "</tr>";
+        echo "</tr>";
+        foreach ($columns as $value) {
+                echo "<tr>\n";
+                echo "  <td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
+		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>\n";
+                echo "	</td>\n";
+                echo "  <td valign='top' class='".$row_style[$c]."'>\n";
+		echo "		$value\n";
+                echo "	</td>\n";
+                echo "  <td valign='top' class='".$row_style[$c]."'></td>";
+                echo "</tr>";
+                if ($c==0) { $c=1; } else { $c=0; }
+        }
 
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
-	echo "	</th>\n";
-	echo "	<th>".$text['label-column_name']."</th>\n";
-	echo "</tr>\n";
+        echo "  <tr>\n";
+        echo "          <td colspan='3' align='right'>\n";
+        echo "                  <br>";
+        echo "                  <input type='submit' class='btn' value='".$text['button-export']."'>\n";
+        echo "          </td>\n";
+        echo "  </tr>";
 
-	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
-		$x = 0;
-		foreach ($available_columns as $column_name) {
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-			echo "	</td>\n";
-			echo "  <td onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$column_name."</td>\n";
-			echo "</tr>\n";
-			$x++;
-		}
-		unset($available_columns);
-	}
-
-	echo "</table>\n";
-	echo "<br><br>\n";
-
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
-	echo "</form>\n";
+        echo "</table>";
+        echo "<br><br>";
+        echo "</form>";
 
 //include the footer
-	require_once "resources/footer.php";
+        require_once "resources/footer.php";
 
 ?>

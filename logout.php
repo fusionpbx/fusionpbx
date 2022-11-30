@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 
 //destroy session
@@ -42,59 +39,59 @@
 				//convert to relative path
 					$referrer = substr($_SERVER['HTTP_REFERER'], strpos($_SERVER['HTTP_REFERER'], $_SERVER["HTTP_HOST"]) + strlen($_SERVER["HTTP_HOST"]));
 				//check if destination url already exists
-					$sql = "select count(*) from v_user_settings ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and user_uuid = :user_uuid ";
+					$sql = "select count(*) as num_rows from v_user_settings ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and user_uuid = '".$_SESSION["user_uuid"]."' ";
 					$sql .= "and user_setting_category = 'login' ";
 					$sql .= "and user_setting_subcategory = 'destination' ";
 					$sql .= "and user_setting_name = 'url' ";
-					$paramters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$paramters['user_uuid'] = $_SESSION['user_uuid'];
-					$database = new database;
-					$num_rows = $database->select($sql, $parameters, 'column');
-					$exists = ($num_rows > 0) ? true : false;
-					unset($sql, $parameters, $num_rows);
+					$prep_statement = $db->prepare($sql);
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						$exists = ($row['num_rows'] > 0) ? true : false;
+					}
+					unset($sql, $prep_statement, $row);
 
 				//if exists, update
 					if ($exists) {
 						$sql = "update v_user_settings set ";
-						$sql .= "user_setting_value = :user_setting_value ";
+						$sql .= "user_setting_value = '".$referrer."', ";
 						$sql .= "user_setting_enabled = 'true' ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and user_uuid = :user_uuid ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and user_uuid = '".$_SESSION["user_uuid"]."' ";
 						$sql .= "and user_setting_category = 'login' ";
 						$sql .= "and user_setting_subcategory = 'destination' ";
 						$sql .= "and user_setting_name = 'url' ";
-						$parameters['user_setting_value'] = $referrer;
-						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$parameters['user_uuid'] = $_SESSION["user_uuid"];
-						$database = new database;
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
+						$db->exec(check_sql($sql));
+						unset($sql);
 					}
 				//otherwise, insert
 					else {
-						//build insert array
-							$user_setting_uuid = uuid();
-							$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuid;
-							$array['user_settings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-							$array['user_settings'][0]['user_uuid'] = $_SESSION["user_uuid"];
-							$array['user_settings'][0]['user_setting_category'] = 'login';
-							$array['user_settings'][0]['user_setting_subcategory'] = 'destination';
-							$array['user_settings'][0]['user_setting_name'] = 'url';
-							$array['user_settings'][0]['user_setting_value'] = $referrer;
-							$array['user_settings'][0]['user_setting_enabled'] = 'true';
-						//grant temporary permissions
-							$p = new permissions;
-							$p->add('user_setting_add', 'temp');
-						//execute insert
-							$database = new database;
-							$database->app_name = 'logout';
-							$database->app_uuid = 'e9f24006-5da2-417f-94fb-7458348bae29';
-							$database->save($array);
-							unset($array);
-						//revoke temporary permissions
-							$p->delete('user_setting_add', 'temp');
+						$sql = "insert into v_user_settings ";
+						$sql .= "( ";
+						$sql .= "user_setting_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "user_uuid, ";
+						$sql .= "user_setting_category, ";
+						$sql .= "user_setting_subcategory, ";
+						$sql .= "user_setting_name, ";
+						$sql .= "user_setting_value, ";
+						$sql .= "user_setting_enabled ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$_SESSION['domain_uuid']."', ";
+						$sql .= "'".$_SESSION["user_uuid"]."', ";
+						$sql .= "'login', ";
+						$sql .= "'destination', ";
+						$sql .= "'url', ";
+						$sql .= "'".$referrer."', ";
+						$sql .= "'true' ";
+						$sql .= ") ";
+						$db->exec(check_sql($sql));
+						unset($sql);
 					}
 			}
 		}
@@ -102,6 +99,6 @@
 
 //redirect the user to the index page
 	header("Location: ".PROJECT_PATH."/login.php");
-	exit;
+	return;
 
 ?>

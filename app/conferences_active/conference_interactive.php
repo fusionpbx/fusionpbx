@@ -17,30 +17,23 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('conference_interactive_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('conference_interactive_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
@@ -51,13 +44,10 @@
 	$conference_display_name = str_replace("-", " ", $conference_name);
 	$conference_display_name = str_replace("_", " ", $conference_display_name);
 
-//include the header
-	$document['title'] = $text['label-interactive'];
+//show the header
 	require_once "resources/header.php";
 
-?>
-
-<script type="text/javascript">
+?><script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
 	f.xmlHttp = null;
@@ -87,33 +77,13 @@ function loadXmlHttp(url, id) {
 }
 
 loadXmlHttp.prototype.stateChanged=function () {
-	var url = new URL(this.xmlHttp.responseURL);
-	if (/login\.php$/.test(url.pathname)) {
-		// You are logged out. Stop refresh!
-		url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
-		window.location.href = url.href;
-		return;
-	}
-
-	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-		//this.el.innerHTML = this.xmlHttp.responseText;
-		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
-
-	//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-		$('.tr_hover tr,.list tr').each(function(i,e) {
-			$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
-				var href = $(this).closest('tr').attr('href');
-				var target = $(this).closest('tr').attr('target');
-				if (href) {
-					if (target) { window.open(href, target); }
-					else { window.location = href; }
-				}
-			});
-		});
+if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+	//this.el.innerHTML = this.xmlHttp.responseText;
+	document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
 }
 
 var requestTime = function() {
-	var url = 'conference_interactive_inc.php?c=<?php echo trim(escape($_REQUEST["c"])); ?>';
+	var url = 'conference_interactive_inc.php?c=<?php echo urlencode(trim($_REQUEST["c"])); ?>';
 	new loadXmlHttp(url, 'ajax_reponse');
 	setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1222);
 }
@@ -141,24 +111,22 @@ var record_count = 0;
 </script>
 
 <?php
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+echo "	<tr>\n";
+echo "	<td align='left'>";
+echo "		<b>".$text['label-interactive']."</b><br><br>\n";
+echo "		".$text['description-interactive']."\n";
+echo "	</td>\n";
+echo "	</tr>\n";
+echo "	<tr>\n";
+echo "	<td align=\"left\">\n";
+echo "		<br>\n";
+echo "		<div id=\"ajax_reponse\"></div>\n";
+echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
+echo "	</td>";
+echo "	</tr>";
+echo "</table>";
 
-//page header
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['label-interactive']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo $text['description-interactive']."\n";
-	echo "<br /><br />\n";
-
-//show the content
-	echo "<div id='ajax_reponse'></div>\n";
-	echo "<br /><br />\n";
-	echo "<div id='time_stamp' style='visibility: hidden;>".date('Y-m-d-s')."</div>\n";
-
-//include the footer
+//show the header
 	require_once "resources/footer.php";
-
 ?>

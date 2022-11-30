@@ -17,21 +17,17 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2022
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('destination_view')) {
@@ -46,265 +42,220 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
-	if (is_array($_POST['destinations'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$destinations = $_POST['destinations'];
-	}
-
-//process the http post data by action
-	if ($action != '' && is_array($destinations) && @sizeof($destinations) != 0) {
-		switch ($action) {
-			case 'toggle':
-				if (permission_exists('destination_edit')) {
-					$obj = new destinations;
-					$obj->toggle($destinations);
-				}
+//get the action
+	if (is_array($_POST["destinations"])) {
+		$destinations = $_POST["destinations"];
+		foreach($destinations as $row) {
+			if ($row['action'] == 'delete') {
+				$action = 'delete';
 				break;
-			case 'delete':
-				if (permission_exists('destination_delete')) {
-					$obj = new destinations;
-					$obj->delete($destinations);
-				}
-				break;
-		}
-
-		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
-		exit;
-	}
-
-//get the destination select list
-	$destination = new destinations;
-	$destination_array = $destination->all('dialplan');
-
-//add a function to return the action_name
-	function action_name($destination_array, $detail_action) {
-		if (is_array($destination_array)) {
-			foreach($destination_array as $group => $row) {
-				if (is_array($row)) {
-					foreach ($row as $key => $value) {
-						if ($value == $detail_action) {
-							//add multi-lingual support
-								if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
-									$language2 = new text;
-									$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/'.$group);
-								}
-							//return the group and destination name
-								return trim($text2['title-'.$group].' '.$key);
-						}
-					}
-				}
 			}
 		}
 	}
 
-//set the type
-	switch ($_REQUEST['type']) {
-		case 'inbound': $destination_type = 'inbound'; break;
-		case 'outbound': $destination_type = 'outbound'; break;
-		case 'local': $destination_type = 'local'; break;
-		default: $destination_type = 'inbound';
+//delete the destinations
+	if (permission_exists('destination_delete')) {
+		if ($action == "delete") {
+			//download
+				$obj = new destinations;
+				$obj->delete($destinations);
+			//delete message
+				messages::add($text['message-delete']);
+		}
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+
+//set the type
+	if ($_GET['type'] == 'inbound') {
+		$destination_type = 'inbound';
+	}
+	elseif ($_GET['type'] == 'outbound') {
+		$destination_type = 'outbound';
+	}
+	elseif ($_GET['type'] == 'local') {
+		$destination_type = 'local';
+	}
+	else {
+		$destination_type = 'inbound';
+	}
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = strtolower(check_str($_GET["search"]));
+	if (strlen($search) > 0) {
+		$sql_search = " (";
+		$sql_search .= "lower(destination_type) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_number) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_context) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_accountcode) like '%".$search."%' ";
+		if (permission_exists('outbound_caller_id_select')) {
+			$sql_search .= "or lower(destination_caller_id_name) like '%".$search."%' ";
+			$sql_search .= "or destination_caller_id_number like '%".$search."%' ";
+		}
+		$sql_search .= "or lower(destination_enabled) like '%".$search."%' ";
+		$sql_search .= "or lower(destination_description) like '%".$search."%' ";
+		$sql_search .= ") ";
+	}
+
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) from v_destinations ";
-	$sql .= "where destination_type = :destination_type ";
-	if ($_GET['show'] != "all" || !permission_exists('destination_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $domain_uuid;
+	$sql = "select count(destination_uuid) as num_rows from v_destinations ";
+	$sql .= "where destination_type = '".$destination_type."' ";
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+		//show all
+	} else {
+		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	}
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "lower(destination_type) like :search ";
-		$sql .= "or lower(destination_number) like :search ";
-		$sql .= "or lower(destination_context) like :search ";
-		$sql .= "or lower(destination_accountcode) like :search ";
-		if (permission_exists('outbound_caller_id_select')) {
-			$sql .= "or lower(destination_caller_id_name) like :search ";
-			$sql .= "or destination_caller_id_number like :search ";
+	if (isset($sql_search)) {
+			$sql .= "and ".$sql_search;
+	}
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
-		$sql .= "or lower(destination_enabled) like :search ";
-		$sql .= "or lower(destination_description) like :search ";
-		$sql .= "or lower(destination_data) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		else {
+			$num_rows = '0';
+		}
 	}
-	$parameters['destination_type'] = $destination_type;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".urlencode($search);
-	$param .= "&type=".$destination_type;
+	$param = "&search=".escape($search);
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 		$param .= "&show=all";
 	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = "select * from v_destinations ";
-	$sql .= "where destination_type = :destination_type ";
-	if ($_GET['show'] != "all" || !permission_exists('destination_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $domain_uuid;
+	$sql .= "where destination_type = '".$destination_type."' ";
+	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
+		//show all
+	} else {
+		$sql .= "and (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
 	}
-	if (strlen($search) > 0) {
-		$sql .= "and (";
-		$sql .= "lower(destination_type) like :search ";
-		$sql .= "or lower(destination_number) like :search ";
-		$sql .= "or lower(destination_context) like :search ";
-		$sql .= "or lower(destination_accountcode) like :search ";
-		if (permission_exists('outbound_caller_id_select')) {
-			$sql .= "or lower(destination_caller_id_name) like :search ";
-			$sql .= "or destination_caller_id_number like :search ";
-		}
-		$sql .= "or lower(destination_enabled) like :search ";
-		$sql .= "or lower(destination_description) like :search ";
-		$sql .= "or lower(destination_data) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (isset($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
-	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$destinations = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	$sql .= "and destination_type = '".$destination_type."' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$destinations = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-//include the header
-	$document['title'] = $text['title-destinations'];
-	require_once "resources/header.php";
+//define the checkbox_toggle function
+	echo "<script type=\"text/javascript\">\n";
+	echo "	function checkbox_toggle(item) {\n";
+	echo "		var inputs = document.getElementsByTagName(\"input\");\n";
+	echo "		for (var i = 0, max = inputs.length; i < max; i++) {\n";
+	echo "		    if (inputs[i].type === 'checkbox') {\n";
+	echo "		       	if (document.getElementById('checkbox_all').checked == true) {\n";
+	echo "				inputs[i].checked = true;\n";
+	echo "			}\n";
+	echo "				else {\n";
+	echo "					inputs[i].checked = false;\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-destinations']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-inbound'],'icon'=>'location-arrow fa-rotate-90','link'=>'?type=inbound'.($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
-	echo button::create(['type'=>'button','label'=>$text['button-outbound'],'icon'=>'location-arrow','link'=>'?type=outbound'.($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
-	echo button::create(['type'=>'button','label'=>$text['button-local'],'icon'=>'vector-square','link'=>'?type=local'.($_GET['show'] == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-destinations']."  (".$num_rows.")</b></td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+
+	echo "				<input type='button' class='btn' value='".$text['button-inbound']."' onclick=\"window.location='destinations.php?type=inbound';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-outbound']."' onclick=\"window.location='destinations.php?type=outbound';\">\n";
+	//echo "				<input type='button' class='btn' value='".$text['button-local']."' onclick=\"window.location='destinations.php?type=local';\">\n";
+	echo "				&nbsp;\n";
 	if (permission_exists('destination_import')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>'destination_imports.php']);
+		echo "				<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='/app/destination_imports/destination_imports.php'\" value='".$text['button-import']."'>\n";
 	}
-	if (permission_exists('destination_export')) {
-		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'destination_download.php']);
-	}
-	if (permission_exists('destination_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','style'=>'margin-left: 15px;','link'=>'destination_edit.php?type='.urlencode($destination_type)]);
-	}
-	if (permission_exists('destination_delete') && $destinations) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
+
 	if (permission_exists('destination_all')) {
 		if ($_GET['show'] == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type='.urlencode($destination_type).'&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+			echo "		<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?show=all&type=".urlencode($destination_type)."';\">\n";
 		}
 	}
-	echo "		<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
-	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'destinations.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
+
+	echo "				<input type='text' class='txt' style='width: 150px; margin-left: 15px;' name='search' id='search' value='".escape($search)."'>\n";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "			</td>\n";
 	echo "		</form>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' colspan='2' valign='top'>\n";
+	echo "			".$text['description-destinations']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
-	if (permission_exists('destination_delete') && $destinations) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
-	}
-
-	echo $text['description-destinations']."\n";
-	echo "<br /><br />\n";
-
-	echo "<form id='form_list' method='POST'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('destination_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($destinations ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
+	echo "<form method='post' action=''>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<th style='width:30px;'>\n";
+	echo "		<input type='checkbox' name='checkbox_all' id='checkbox_all' value='' onclick=\"checkbox_toggle();\">\n";
+	echo "	</th>\n";
 	if ($_GET['show'] == "all" && permission_exists('destination_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
 	}
-	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
-	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink'");
-	if (permission_exists('destination_trunk_prefix')) {
-		echo th_order_by('destination_trunk_prefix', '', $order_by, $order, $param, "class='shrink'");
-	}
-	if (permission_exists('destination_area_code')) {
-		echo th_order_by('destination_area_code', '', $order_by, $order, $param, "class='shrink'");
-	}
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
-	if (!$_GET['show'] == "all") {
-		echo  "<th>". $text['label-destination_actions']."</th>";
-	}
-	if (permission_exists("destination_context")) {
-		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
-	}
+	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param);
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param);
+	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
 	if (permission_exists('outbound_caller_id_select')) {
 		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, $param);
 		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order, $param);
 	}
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
-	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param, "class='hide-sm-dn'");
-	if (permission_exists('destination_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
+	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param);
+	echo "	<td class='list_control_icons'>";
+	if (permission_exists('destination_add')) {
+		echo "		<a href='destination_edit.php?type=$destination_type' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	echo "</tr>\n";
+	else {
+		echo "&nbsp;\n";
+	}
+	echo "	</td>\n";
+	echo "<tr>\n";
 
-	if (is_array($destinations) && @sizeof($destinations) != 0) {
+	if (is_array($destinations)) {
 		$x = 0;
 		foreach($destinations as $row) {
-
-			//prepare the destination actions
-			$destination_actions = json_decode($row['destination_actions'], true);
-			if (is_array($destination_actions)) {
-				foreach($destination_actions as $action) {
-					$destination_app = $action['destination_app'];
-					$destination_data = $action['destination_data'];
-				}
-			}
-
-			//create the row link
 			if (permission_exists('destination_edit')) {
-				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']);
+				$tr_link = "href='destination_edit.php?id=".urlencode($row['destination_uuid'])."'";
 			}
-
-			//show the data
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('destination_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='destinations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='destinations[$x][uuid]' value='".escape($row['destination_uuid'])."' />\n";
-				echo "	</td>\n";
-			}
+			echo "<tr ".$tr_link.">\n";
+			//echo "	<td valign='top' class=''>".$row['destination_uuid']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class=''>".$row['dialplan_uuid']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='align: center; padding: 3px 3px 0px 8px;'>\n";
+			echo "		<input type='checkbox' name=\"destinations[$x][checked]\" id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('chk_all_".$x."').checked = false; }\">\n";
+			echo "		<input type='hidden' name=\"destinations[$x][destination_uuid]\" value='".escape($row['destination_uuid'])."' />\n";
+			echo "	</td>\n";
 			if ($_GET['show'] == "all" && permission_exists('destination_all')) {
 				if (strlen($_SESSION['domains'][$row['domain_uuid']]['domain_name']) > 0) {
 					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
@@ -312,62 +263,60 @@
 				else {
 					$domain = $text['label-global'];
 				}
-				echo "	<td>".escape($domain)."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($domain)."</td>\n";
 			}
-			echo "	<td>".escape($row['destination_type'])."&nbsp;</td>\n";
-
-			echo "	<td>".escape($row['destination_prefix'])."&nbsp;</td>\n";
-			if (permission_exists('destination_trunk_prefix')) {
-				echo "	<td>".escape($row['destination_trunk_prefix'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_type'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape(format_phone($row['destination_number']))."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number_regex']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_context'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['fax_uuid'])."&nbsp;</td>\n";
+			if (permission_exists('outbound_caller_id_select')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_caller_id_name'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_caller_id_number'])."&nbsp;</td>\n";
 			}
-			if (permission_exists('destination_area_code')) {
-				echo "	<td>".escape($row['destination_area_code'])."&nbsp;</td>\n";
-			}
-
-			echo "	<td class='no-wrap'>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_cid_name_prefix'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_app'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_data'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_record'])."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_accountcode'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['destination_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row['destination_description'])."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('destination_edit')) {
-				echo "		<a href='".$list_row_url."'>".escape(format_phone($row['destination_number']))."</a>\n";
+				echo "<a href='destination_edit.php?id=".escape($row['destination_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			else {
-				echo "		".escape(format_phone($row['destination_number']));
+			if (permission_exists('destination_delete')) {
+				echo "<button type='submit' class='btn btn-default list_control_icon' name=\"destinations[$x][action]\" alt='".$text['button-delete']."' value='delete'><span class='glyphicon glyphicon-remove'></span></button>";
 			}
 			echo "	</td>\n";
-
-			if (!$_GET['show'] == "all") {
-				echo "	<td class='overflow' style='min-width: 125px;'>".action_name($destination_array, $destination_app.':'.$destination_data)."&nbsp;</td>\n";
-			}
-			if (permission_exists("destination_context")) {
-				echo "	<td>".escape($row['destination_context'])."&nbsp;</td>\n";
-			}
-			if (permission_exists('outbound_caller_id_select')) {
-				echo "	<td>".escape($row['destination_caller_id_name'])."&nbsp;</td>\n";
-				echo "	<td>".escape($row['destination_caller_id_number'])."&nbsp;</td>\n";
-			}
-			echo "	<td>".escape($text['label-'.$row['destination_enabled']])."&nbsp;</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['destination_description'])."&nbsp;</td>\n";
-			if (permission_exists('destination_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
-			}
 			echo "</tr>\n";
-
-			//unset the destination app and data
-			unset($destination_app, $destination_data);
-
-			//increment the id
 			$x++;
-		}
-		unset($destinations);
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $destinations, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='10' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('destination_add')) {
+		echo 		"<a href='destination_edit.php?type=".escape($destination_type)."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
-
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
+	else {
+		echo 		"&nbsp;";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
 	echo "</form>\n";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

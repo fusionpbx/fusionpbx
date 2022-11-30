@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "SIP Profiles";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "SIP Profiles";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "SIP Profile";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "SIP Profile";
@@ -12,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profiles SIP";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Profili SIP";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "SIP Profielen";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Profile SIP";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfis SIP";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Perfis SIP";

@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
-		$apps[$x]['description']['en-gb'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
 		$apps[$x]['description']['ar-eg'] = "";
 		$apps[$x]['description']['de-at'] = "Ausgehende Wählpläne haben eine oder mehrere Bedingungen welche mit den Atributen des Anrufes abgeglichen werden. Wenn die Bedingungen erfüllt sind, wird der Anruf über das Gateway geleitet.";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,9 +19,9 @@
 		$apps[$x]['description']['fr-fr'] = "Les routes sortantes acheminent un appel en fonction d'une ou plusieurs conditions. Quand les conditions sont remplies, l'appel est dirigés vers la passerelle correspondante.";
 		$apps[$x]['description']['he-il'] = "";
 		$apps[$x]['description']['it-it'] = "";
-		$apps[$x]['description']['nl-nl'] = "Uitgaande kiesplannen hebben een of meer voorwaarden die met de attributen van een oproep worden vergeleken. Als een oproep aan de voorwaarden voldoet dan wordt de oproep naar de gateway gestuurd.";
+		$apps[$x]['description']['nl-nl'] = "";
 		$apps[$x]['description']['pl-pl'] = "";
-		$apps[$x]['description']['pt-br'] = "Rotas de saída tem uma ou mais condições que são verificadas junto aos atributos da chamada. Quando uma chamada combina com as condições ela é roteada para o tronco.";
+		$apps[$x]['description']['pt-br'] = "";
 		$apps[$x]['description']['pt-pt'] = "Dialplans de saída tem uma ou mais condições que são compatíveis com os atributos de uma chamada. Quando uma chamada coincide com as condições da chamada é então encaminhado para o gateway.";
 		$apps[$x]['description']['ro-ro'] = "";
 		$apps[$x]['description']['ru-ru'] = "";
@@ -51,8 +50,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['description'] = "Add outbound routes for any gateways on any domain.";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "outbound_route_pin_numbers";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_toll_allow_lua";
 
 ?>

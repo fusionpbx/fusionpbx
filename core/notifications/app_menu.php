@@ -2,11 +2,9 @@
 
 	$y = 0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Notifications";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Notifications";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Benachrichtigungen";
 	$apps[$x]['menu'][$y]['title']['de-de'] = "Benachrichtigungen";
-	$apps[$x]['menu'][$y]['title']['el-gr'] = "Γνωστοποιήσεις";
 	$apps[$x]['menu'][$y]['title']['es-cl'] = "Notificaciones";
 	$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Notifications";

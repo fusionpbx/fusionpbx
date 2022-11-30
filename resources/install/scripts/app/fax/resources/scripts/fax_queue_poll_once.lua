@@ -1,0 +1,1 @@
+require "app.fax.resources.scripts.queue.next".poll_once()

@@ -26,46 +26,49 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('fax_active_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('fax_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //authorized referrer
-	if (stristr($_SERVER["HTTP_REFERER"], '/fax_active.php') === false) {
-		echo "access denied";
+	if(stristr($_SERVER["HTTP_REFERER"], '/fax_active.php') === false) {
+		echo " access denied";
 		exit;
 	}
 
 //http get variables set to php variables
-	$cmd = trim($_GET['cmd']);
-	$fax_uuid = trim($_GET['id']);
+	if (count($_GET)>0) {
+		$cmd = trim(check_str($_GET['cmd']));
+		$fax_uuid = trim(check_str($_GET['id']));
+	}
 
-//command
-	if ($cmd == 'delete' && is_uuid($fax_uuid)) {
-		$array['fax_tasks'][0]['fax_task_uuid'] = $fax_uuid;
+//authorized commands
+	if ($cmd == 'delete') {
+		//authorized;
+	} else {
+		//not found. this command is not authorized
+		echo "access denied";
+		exit;
+	}
 
-		$p = new permissions;
-		$p->add('fax_task_delete', 'temp');
-
-		$database = new database;
-		$database->app_name = 'fax';
-		$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-		$database->delete($array);
-		unset($array);
-
-		$p->delete('fax_task_delete', 'temp');
+//Command
+	if ($cmd == 'delete') {
+		if($fax_uuid){
+			$sql = <<<HERE
+delete from v_fax_tasks
+where fax_task_uuid='$fax_uuid'
+HERE;
+			$result = $db->exec($sql);
+			// if($result === false){
+			// 	var_dump($db->errorInfo());
+			// }
+		}
 	}
 ?>

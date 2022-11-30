@@ -61,18 +61,18 @@
  </Codec>
 <Line ID="1">
  <Enable LINE_ENABLE_1="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_1="{$account.1.user_id}"/>
+ <DirectoryNumber PHONE_NUMBER_1="{$user_id_1}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_1="{$account.1.auth_id}"/>
- <AuthPassword SIP_PASS_1="{$account.1.password}"/>
- <URI SIP_URI_1="{$account.1.user_id}"/>
+ <AuthUserName SIP_AUTHID_1="{$user_id_1}"/>
+ <AuthPassword SIP_PASS_1="{$user_password_1}"/>
+ <URI SIP_URI_1="{$user_id_1}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_1="{$account.1.display_name}"/>
+ <CallerIDName DISPLAY_NAME_1="{$displayname_1}"/>
  <CallWaitingEnable CW_ENABLE_1="Y"/>
  </CallingFeatures>
 <CallFeat>
- <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_1="{$voicemail_number}"/>
+ <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_1="*97"/>
  <X_P_IPTEL_DialPlanNotMatchEnable DIAL_PLAN_NOT_MATCH_ENABLE_1="N"/>
  <X_P_IPTEL_SharedCallEnable SHARED_CALL_ENABLE_1="N"/>
  <X_P_IPTEL_FwdDndSynchroEnable FWD_DND_SYNCHRO_ENABLE_1="N"/>
@@ -144,18 +144,18 @@
  </Line>
 <Line ID="2">
  <Enable LINE_ENABLE_2="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_2="{$account.2.user_id}"/>
+ <DirectoryNumber PHONE_NUMBER_2="{$user_id_2}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_2="{$account.2.auth_id}"/>
- <AuthPassword SIP_PASS_2="{$account.2.password}"/>
- <URI SIP_URI_2="{$account.2.user_id}"/>
+ <AuthUserName SIP_AUTHID_2="{$user_id_2}"/>
+ <AuthPassword SIP_PASS_2="{$user_password_2}"/>
+ <URI SIP_URI_2="{$user_id_2}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_2="{$account.2.display_name}"/>
+ <CallerIDName DISPLAY_NAME_2="{$display_name_2}"/>
  <CallWaitingEnable CW_ENABLE_2="Y"/>
  </CallingFeatures>
 <CallFeat>
- <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2="{$voicemail_number}"/>
+ <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2="*97"/>
  <X_P_IPTEL_DialPlanNotMatchEnable DIAL_PLAN_NOT_MATCH_ENABLE_2="N"/>
  <X_P_IPTEL_SharedCallEnable SHARED_CALL_ENABLE_2="N"/>
  <X_P_IPTEL_FwdDndSynchroEnable FWD_DND_SYNCHRO_ENABLE_2="N"/>
@@ -321,7 +321,7 @@
  <ProvisionEnable PROVISION_ENABLE="Y"/>
  <Option66Enable OPTION66_ENABLE="Y"/>
  <Option66Reboot OPTION66_REBOOT="Y"/>
- <StandardFileURL CFG_STANDARD_FILE_PATH="https://{$account.1.server_address}{$project_path}/app/provision"/>
+ <StandardFileURL CFG_STANDARD_FILE_PATH="https://{$server_address_1}{$project_path}/app/provision"/>
  <ProductFileURL CFG_PRODUCT_FILE_PATH=""/>
  <MasterFileURL CFG_MASTER_FILE_PATH=""/>
  <CyclicEnable CFG_CYCLIC="N"/>

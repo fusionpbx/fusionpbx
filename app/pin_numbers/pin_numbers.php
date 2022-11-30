@@ -17,23 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('pin_number_view')) {
 		//access granted
 	}
@@ -46,202 +42,146 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
-	if (is_array($_POST['pin_numbers'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$pin_numbers = $_POST['pin_numbers'];
-	}
-
-//process the http post data by action
-	if ($action != '' && is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-		switch ($action) {
-			case 'copy':
-				if (permission_exists('pin_number_add')) {
-					$obj = new pin_numbers;
-					$obj->copy($pin_numbers);
-				}
-				break;
-			case 'toggle':
-				if (permission_exists('pin_number_edit')) {
-					$obj = new pin_numbers;
-					$obj->toggle($pin_numbers);
-				}
-				break;
-			case 'delete':
-				if (permission_exists('pin_number_delete')) {
-					$obj = new pin_numbers;
-					$obj->delete($pin_numbers);
-				}
-				break;
-		}
-
-		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
-		exit;
-	}
-
-//get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//get variables used to control the order
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
 		$sql_search = "and (";
-		$sql_search .= "lower(pin_number) like :search ";
-		$sql_search .= "or lower(accountcode) like :search ";
-		$sql_search .= "or lower(enabled) like :search ";
-		$sql_search .= "or lower(description) like :search ";
+		$sql_search .= "pin_number like '%".$search."%'";
+		$sql_search .= "or accountcode like '%".$search."%'";
+		$sql_search .= "or enabled like '%".$search."%'";
+		$sql_search .= "or description like '%".$search."%'";
 		$sql_search .= ")";
-		$parameters['search'] = '%'.$search.'%';
 	}
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //prepare to page the results
-	$sql = "select count(*) from v_pin_numbers ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql = "select count(*) as num_rows from v_pin_numbers ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= $sql_search;
-	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+		}
+		else {
+				$num_rows = '0';
+		}
+	}
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".$search;
-	$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'pin_number', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$pin_numbers = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	$sql = "select * from v_pin_numbers ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= $sql_search;
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//include the header
-	$document['title'] = $text['title-pin_numbers'];
-	require_once "resources/header.php";
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-pin_numbers']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 15px;','link'=>'pin_download.php']);
-	if (permission_exists('pin_number_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'pin_number_edit.php']);
-	}
-	if (permission_exists('pin_number_add') && $pin_numbers) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-	}
-	if (permission_exists('pin_number_edit') && $pin_numbers) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
-	if (permission_exists('pin_number_delete') && $pin_numbers) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'pin_numbers.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
-	}
+     
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-pin_numbers']."</b></td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	echo "<input type='button' class='btn' style='margin-right: 15px;' value='".$text['button-export']."' onclick=\"window.location.href='pin_download.php'\">\n";
+	echo "			</td>\n";
 	echo "		</form>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' colspan='2'>\n";
+	echo "			".$text['title_description-pin_number']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
-	if (permission_exists('pin_number_add') && $pin_numbers) {
-		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
-	}
-	if (permission_exists('pin_number_edit') && $pin_numbers) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	}
-	if (permission_exists('pin_number_delete') && $pin_numbers) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
-	}
-
-	echo $text['title_description-pin_number']."\n";
-	echo "<br /><br />\n";
-
-	echo "<form id='form_list' method='post'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($pin_numbers ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
 	echo th_order_by('pin_number', $text['label-pin_number'], $order_by, $order);
 	echo th_order_by('accountcode', $text['label-accountcode'], $order_by, $order);
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('description', $text['label-description'], $order_by, $order);
+	echo "<td class='list_control_icons'>";
+	if (permission_exists('pin_number_add')) {
+		echo "<a href='pin_number_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	echo "</tr>\n";
+	else {
+		echo "&nbsp;\n";
+	}
+	echo "</td>\n";
+	echo "<tr>\n";
 
-	if (is_array($pin_numbers) && @sizeof($pin_numbers) != 0) {
-		$x = 0;
-		foreach ($pin_numbers as $row) {
+	if (is_array($result)) {
+		foreach($result as $row) {
 			if (permission_exists('pin_number_edit')) {
-				$list_row_url = "pin_number_edit.php?id=".urlencode($row['pin_number_uuid']);
+				$tr_link = "href='pin_number_edit.php?id=".escape($row['pin_number_uuid'])."'";
 			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('pin_number_add') || permission_exists('pin_number_edit') || permission_exists('pin_number_delete')) {
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='pin_numbers[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='pin_numbers[$x][uuid]' value='".escape($row['pin_number_uuid'])."' />\n";
-				echo "	</td>\n";
-			}
-			echo "	<td>";
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['pin_number']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['accountcode']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('pin_number_edit')) {
-				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['pin_number'])."</a>";
+				echo "<a href='pin_number_edit.php?id=".escape($row['pin_number_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			else {
-				echo escape($row['pin_number']);
+			if (permission_exists('pin_number_delete')) {
+				echo "<a href='pin_number_delete.php?id=".escape($row['pin_number_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
-			echo "	<td>".escape($row['accountcode'])."&nbsp;</td>\n";
-			if (permission_exists('pin_number_edit')) {
-				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
-			}
-			else {
-				echo "	<td class='center'>";
-				echo $text['label-'.$row['enabled']];
-			}
-			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('pin_number_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
-			}
 			echo "</tr>\n";
-			$x++;
-		}
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='5' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('pin_number_add')) {
+		echo 		"<a href='pin_number_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	unset($pin_numbers);
-
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
-
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
-	echo "</form>\n";
+	else {
+		echo 		"&nbsp;";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>
