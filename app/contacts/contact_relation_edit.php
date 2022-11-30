@@ -24,50 +24,43 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('contact_relation_edit') || permission_exists('contact_relation_add')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('contact_relation_edit') || permission_exists('contact_relation_add')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$contact_relation_uuid = $_REQUEST["id"];
+		$contact_relation_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
 	}
 
 //get the contact uuid
-	if (is_uuid($_GET["contact_uuid"])) {
-		$contact_uuid = $_GET["contact_uuid"];
+	if (strlen($_GET["contact_uuid"]) > 0) {
+		$contact_uuid = check_str($_GET["contact_uuid"]);
 	}
 
 //get http post variables and set them to php variables
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
-		$relation_label = $_POST["relation_label"];
-		$relation_label_custom = $_POST["relation_label_custom"];
-		$relation_contact_uuid = $_POST["relation_contact_uuid"];
-		$relation_reciprocal = $_POST["relation_reciprocal"];
-		$relation_reciprocal_label = $_POST["relation_reciprocal_label"];
-		$relation_reciprocal_label_custom = $_POST["relation_reciprocal_label_custom"];
+	if (count($_POST)>0) {
+		$relation_label = check_str($_POST["relation_label"]);
+		$relation_label_custom = check_str($_POST["relation_label_custom"]);
+		$relation_contact_uuid = check_str($_POST["relation_contact_uuid"]);
+		$relation_reciprocal = check_str($_POST["relation_reciprocal"]);
+		$relation_reciprocal_label = check_str($_POST["relation_reciprocal_label"]);
+		$relation_reciprocal_label_custom = check_str($_POST["relation_reciprocal_label_custom"]);
 
 		//use custom label(s), if set
 		$relation_label = ($relation_label_custom != '') ? $relation_label_custom : $relation_label;
@@ -75,19 +68,11 @@
 	}
 
 //process the form data
-	if (is_array($_POST) && @sizeof($_POST) != 0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//set the uuid
 			if ($action == "update") {
-				$contact_relation_uuid = $_POST["contact_relation_uuid"];
-			}
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: contacts.php');
-				exit;
+				$contact_relation_uuid = check_str($_POST["contact_relation_uuid"]);
 			}
 
 		//check for all required data
@@ -109,152 +94,98 @@
 			if ($_POST["persistformvar"] != "true") {
 
 				//update last modified
-					$array['contacts'][0]['contact_uuid'] = $contact_uuid;
-					$array['contacts'][0]['domain_uuid'] = $domain_uuid;
-					$array['contacts'][0]['last_mod_date'] = 'now()';
-					$array['contacts'][0]['last_mod_user'] = $_SESSION['username'];
+				$sql = "update v_contacts set ";
+				$sql .= "last_mod_date = now(), ";
+				$sql .= "last_mod_user = '".$_SESSION['username']."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and contact_uuid = '".$contact_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-					$p = new permissions;
-					$p->add('contact_edit', 'temp');
+				if ($action == "add") {
+					$contact_relation_uuid = uuid();
+					$sql = "insert into v_contact_relations ";
+					$sql .= "(";
+					$sql .= "contact_relation_uuid, ";
+					$sql .= "domain_uuid, ";
+					$sql .= "contact_uuid, ";
+					$sql .= "relation_label, ";
+					$sql .= "relation_contact_uuid ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$contact_relation_uuid."', ";
+					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					$sql .= "'".$contact_uuid."', ";
+					$sql .= "'".$relation_label."', ";
+					$sql .= "'".$relation_contact_uuid."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-					$database->save($array);
-					unset($array);
-
-					$p->delete('contact_edit', 'temp');
-
-				//add the relation
-					if ($action == "add" && permission_exists('contact_relation_add')) {
+					if ($relation_reciprocal) {
 						$contact_relation_uuid = uuid();
-						$array['contact_relations'][0]['contact_relation_uuid'] = $contact_relation_uuid;
-
-						if ($relation_reciprocal) {
-							$contact_relation_uuid = uuid();
-							$array['contact_relations'][1]['contact_relation_uuid'] = $contact_relation_uuid;
-							$array['contact_relations'][1]['domain_uuid'] = $_SESSION['domain_uuid'];
-							$array['contact_relations'][1]['contact_uuid'] = $relation_contact_uuid;
-							$array['contact_relations'][1]['relation_label'] = $relation_reciprocal_label;
-							$array['contact_relations'][1]['relation_contact_uuid'] = $contact_uuid;
-						}
-
-						message::add($text['message-add']);
+						$sql = "insert into v_contact_relations ";
+						$sql .= "(";
+						$sql .= "contact_relation_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "contact_uuid, ";
+						$sql .= "relation_label, ";
+						$sql .= "relation_contact_uuid ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".$contact_relation_uuid."', ";
+						$sql .= "'".$_SESSION['domain_uuid']."', ";
+						$sql .= "'".$relation_contact_uuid."', ";
+						$sql .= "'".$relation_reciprocal_label."', ";
+						$sql .= "'".$contact_uuid."' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 					}
 
-				//update the relation
-					if ($action == "update" && permission_exists('contact_relation_edit')) {
-						$array['contact_relations'][0]['contact_relation_uuid'] = $contact_relation_uuid;
+					messages::add($text['message-add']);
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "add")
 
-						message::add($text['message-update']);
-					}
+				if ($action == "update") {
+					$sql = "update v_contact_relations set ";
+					$sql .= "relation_label = '".$relation_label."', ";
+					$sql .= "relation_contact_uuid = '".$relation_contact_uuid."' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and contact_relation_uuid = '".$contact_relation_uuid."'";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-				//execute
-					if (is_array($array) && @sizeof($array) != 0) {
-						$array['contact_relations'][0]['contact_uuid'] = $contact_uuid;
-						$array['contact_relations'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-						$array['contact_relations'][0]['relation_label'] = $relation_label;
-						$array['contact_relations'][0]['relation_contact_uuid'] = $relation_contact_uuid;
-
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-						$database->save($array);
-						unset($array);
-					}
-
-				//redirect
-					header("Location: contact_edit.php?id=".escape($contact_uuid));
-					exit;
-
-			}
-	}
+					messages::add($text['message-update']);
+					header("Location: contact_edit.php?id=".$contact_uuid);
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (is_array($_GET) && @sizeof($_GET) != 0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$contact_relation_uuid = $_GET["id"];
 		$sql = "select * from v_contact_relations ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and contact_relation_uuid = :contact_relation_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['contact_relation_uuid'] = $contact_relation_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_relation_uuid = '".$contact_relation_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$relation_label = $row["relation_label"];
 			$relation_contact_uuid = $row["relation_contact_uuid"];
+			break; //limit to 1 row
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
-
-//get contact details and contact_name
-	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family, contact_nickname ";
-	$sql .= "from v_contacts ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and contact_uuid <> :contact_uuid ";
-	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['contact_uuid'] = $contact_relation_uuid;
-	$database = new database;
-	$contacts = $database->select($sql, $parameters, 'all');
-	if (is_array($contacts) && is_uuid($row['relation_contact_uuid'])) {
-		foreach($contacts as $field) {
-			if ($field['contact_uuid'] == $row['relation_contact_uuid']) {
-				$name = array();
-				if ($field['contact_organization'] != '') { $name[] = $field['contact_organization']; }
-				if ($field['contact_name_family'] != '') { $name[] = $field['contact_name_family']; }
-				if ($field['contact_name_given'] != '') { $name[] = $field['contact_name_given']; }
-				if ($field['contact_name_family'] == '' && $field['contact_name_given'] == '' && $field['contact_nickname'] != '') { $name[] = $field['contact_nickname']; }
-				$contact_name = implode(', ', $name);
-				break;
-			}
-		}
-	}
-
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
 
 //show the header
 	$document['title'] = $text['title-contact_relation'];
 	require_once "resources/header.php";
-
-?>
-
-<script type="text/javascript">
-	function get_contacts(element_id, id, search) {
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				//create a handle for the contact select object
-				select = document.getElementById(element_id);
-
-				//remove current options
-				while (select.options.length > 0) {
-					select.remove(0);
-				}
-
-				//add an empty row
-				//select.add(new Option('', ''));
-
-				//add new options from the json results
-				obj = JSON.parse(this.responseText);
-				for (var i=0; i < obj.length; i++) {
-					select.add(new Option(obj[i].name, obj[i].id));
-				}
-			}
-		};
-		if (search) {
-			xhttp.open("GET", "/app/contacts/contact_json.php?search="+search, true);
-		}
-		else {
-			xhttp.open("GET", "/app/contacts/contact_json.php", true);
-		}
-		xhttp.send();
-	}
-</script>
-
-<?php
 
 //javascript to toggle input/select boxes
 	echo "<script type='text/javascript'>";
@@ -263,24 +194,26 @@
 	echo "		document.getElementById(field).selectedIndex = 0;";
 	echo "		document.getElementById(field+'_custom').value = '';";
 	echo "		$('#'+field+'_custom').toggle();";
-	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').trigger('focus'); } else { $('#'+field).trigger('focus'); }";
+	echo "		if ($('#'+field+'_custom').is(':visible')) { $('#'+field+'_custom').focus(); } else { $('#'+field).focus(); }";
 	echo "	}";
 	echo "</script>";
 
 //show the content
-	echo "<form method='post' name='frm'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-contact_relation']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "<form method='post' name='frm' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left' valign='top' nowrap='nowrap'>";
+	echo "	<b>".$text['header-contact_relation']."</b>";
+	echo "</td>\n";
+	echo "<td align='right' valign='top'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=".escape($contact_uuid)."'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-contact_relation_label']."\n";
@@ -322,10 +255,32 @@
 	echo "	".$text['label-contact_relation_contact']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class=\"formfld\" type=\"text\" name=\"contact_search\" placeholder=\"search\" style=\"width: 80px;\" onkeyup=\"get_contacts('contact_select', 'contact_uuid', this.value);\" maxlength=\"255\" value=\"\">\n";
-	echo "	<select class='formfld' style=\"width: 150px;\" id=\"contact_select\" name=\"relation_contact_uuid\" >\n";
-	echo "		<option value='".escape($relation_contact_uuid)."'>".escape($contact_name)."</option>\n";
-	echo "	</select>\n";
+	$sql = "select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and contact_uuid <> '".$contact_uuid."' ";
+	$sql .= "order by contact_organization desc, contact_name_given asc, contact_name_family asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
+	echo "<select class='formfld' name='relation_contact_uuid' id='relation_contact_uuid'>\n";
+	echo "<option value=''></option>\n";
+	foreach($result as $row) {
+		$contact_name = $row['contact_name_given'].(($row['contact_name_given'] != '' && $row['contact_name_family'] != '') ? ' ' : null).$row['contact_name_family'];
+		if ($row['contact_organization'] != '') {
+			if ($contact_name != '') {
+				$contact_name = $row['contact_organization'].', '.$contact_name;
+			}
+			else {
+				$contact_name = $row['contact_organization'];
+			}
+		}
+		echo "<option value='".escape($row['contact_uuid'])."' ".(($row['contact_uuid'] == $relation_contact_uuid) ? "selected='selected'" : null).">".escape($contact_name)."</option>\n";
+	}
+	unset($sql, $result, $row_count);
+	echo "</select>\n";
+// 	echo "<br />\n";
+// 	echo $text['description-related_contact']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -364,21 +319,24 @@
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
-	}
-	else {
-		echo "</table>\n";
-	}
-	echo "<br><br>";
 
-	echo "<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	}
+
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br>\n";
+	echo "			<input type='hidden' name='contact_uuid' value='".escape($contact_uuid)."'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
+		echo "		<input type='hidden' name='contact_relation_uuid' value='".escape($contact_relation_uuid)."'>\n";
 	}
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>

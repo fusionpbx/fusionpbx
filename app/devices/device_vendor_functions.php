@@ -17,23 +17,19 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2019
+ Portions created by the Initial Developer are Copyright (C) 2016-2017
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files";
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('device_vendor_function_view')) {
 		//access granted
 	}
@@ -46,224 +42,177 @@
 	$language = new text;
 	$text = $language->get();
 
-//get the http post data
-	if (is_array($_POST['vendor_functions'])) {
-		$action = $_POST['action'];
-		$device_vendor_uuid = $_POST['device_vendor_uuid'];
-		$vendor_functions = $_POST['vendor_functions'];
-	}
-
-//process the http post data by action
-	if ($action != '' && is_array($vendor_functions) && @sizeof($vendor_functions) != 0) {
-		switch ($action) {
-			case 'toggle':
-				if (permission_exists('device_vendor_function_edit')) {
-					$obj = new device;
-					$obj->device_vendor_uuid = $device_vendor_uuid;
-					$obj->toggle_vendor_functions($vendor_functions);
-				}
-				break;
-			case 'delete':
-				if (permission_exists('device_vendor_function_delete')) {
-					$obj = new device;
-					$obj->device_vendor_uuid = $device_vendor_uuid;
-					$obj->delete_vendor_functions($vendor_functions);
-				}
-				break;
-		}
-
-		header('Location: device_vendor_edit.php?id='.urlencode($device_vendor_uuid));
-		exit;
-	}
-
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //add the search term
-	$search = $_GET["search"];
+	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql_where = "and (";
-		$sql_where .= "label like :search ";
-		$sql_where .= "or name like :search ";
-		$sql_where .= "or value like :search ";
-		$sql_where .= "or enabled like :search ";
-		$sql_where .= "or description like :search ";
-		$sql_where .= ")";
-		$parameters['search'] = '%'.$search.'%';
+		$sql_search = "and (";
+		$sql_search .= "label like '%".$search."%'";
+		$sql_search .= "or name like '%".$search."%'";
+		$sql_search .= "or value like '%".$search."%'";
+		$sql_search .= "or enabled like '%".$search."%'";
+		$sql_search .= "or description like '%".$search."%'";
+		$sql_search .= ")";
 	}
 
+//additional includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
+
 //prepare to page the results
-	$sql = "select count(*) from v_device_vendor_functions ";
-	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	$sql .= $sql_where;
-	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters, 'column');
+	$sql = "select count(*) as num_rows from v_device_vendor_functions ";
+	$sql .= "where device_vendor_uuid = '$device_vendor_uuid' ";
+	$sql .= $sql_search;
+	if (strlen($order_by) == 0) { $sql .= "order by name asc "; } else { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+		}
+		else {
+				$num_rows = '0';
+		}
+	}
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$param = "";
-	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-	}
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
-	$sql .= order_by($order_by, $order, 'name', 'asc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$vendor_functions = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+	$sql = "select * from v_device_vendor_functions ";
+	$sql .= "where device_vendor_uuid = '$device_vendor_uuid' ";
+	$sql .= $sql_search;
+	if (strlen($order_by) == 0) { $sql .= "order by name asc "; } else { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$vendor_functions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
-//create token
-	$object = new token;
-	$token = $object->create('/app/devices/device_vendor_functions.php');
+//alternate the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<form id='form_list' method='post' action='device_vendor_functions.php'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='device_vendor_uuid' value='".escape($device_vendor_uuid)."'>\n";
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-device_vendor_functions']."</b></td>\n";
+	//echo "		<form method='get' action=''>\n";
+	//echo "			<td width='50%' style='vertical-align: top; text-align: right; white-space: nowrap;'>\n";
+	//echo "				<input type='text' class='txt' style='width: 150px' name='search' id='search' value='".$search."'>\n";
+	//echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
+	//echo "			</td>\n";
+	//echo "		</form>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
-	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$text['title-device_vendor_functions']." (".$num_rows.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'device_vendors.php']);
-	if (permission_exists('device_vendor_function_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'device_vendor_function_edit.php?device_vendor_uuid='.urlencode($_GET['id'])]);
-	}
-	if (permission_exists('device_vendor_function_edit') && $vendor_functions) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
-	if (permission_exists('device_vendor_function_delete') && $vendor_functions) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
-	}
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	if (permission_exists('device_vendor_function_edit') && $vendor_functions) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	}
-	if (permission_exists('device_vendor_function_delete') && $vendor_functions) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
-	}
-
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
-		echo "	<th class='checkbox'>\n";
-		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".($vendor_functions ?: "style='visibility: hidden;'").">\n";
-		echo "	</th>\n";
-	}
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<th>".$text['label-label']."</th>\n";
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('value', $text['label-value'], $order_by, $order);
-	echo "<th class='hide-sm-dn'>".$text['label-groups']."</th>\n";
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('device_vendor_function_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
+	echo "<th>".$text['label-groups']."</th>\n";
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('description', $text['label-description'], $order_by, $order);
+	echo "<td class='list_control_icons'>";
+	if (permission_exists('device_vendor_function_add')) {
+		echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	echo "</tr>\n";
+	else {
+		echo "&nbsp;\n";
+	}
+	echo "</td>\n";
+	echo "<tr>\n";
 
-	if (is_array($vendor_functions) && @sizeof($vendor_functions) != 0) {
-		$x = 0;
-		foreach ($vendor_functions as $row) {
+	if (is_array($vendor_functions)) {
+		foreach($vendor_functions as $row) {
+
 			//get the groups that have been assigned to the vendor functions
 				$sql = "select ";
-				$sql .= "fg.*, g.domain_uuid as group_domain_uuid ";
+				$sql .= "	fg.*, g.domain_uuid as group_domain_uuid ";
 				$sql .= "from ";
-				$sql .= "v_device_vendor_function_groups as fg, ";
-				$sql .= "v_groups as g ";
+				$sql .= "	v_device_vendor_function_groups as fg, ";
+				$sql .= "	v_groups as g ";
 				$sql .= "where ";
-				$sql .= "fg.group_uuid = g.group_uuid ";
-				$sql .= "and fg.device_vendor_uuid = :device_vendor_uuid ";
-				$sql .= "and fg.device_vendor_function_uuid = :device_vendor_function_uuid ";
+				$sql .= "	fg.group_uuid = g.group_uuid ";
+				$sql .= "	and fg.device_vendor_uuid = :device_vendor_uuid ";
+				//$sql .= "	and fg.device_vendor_uuid = '$device_vendor_uuid' ";
+				$sql .= "	and fg.device_vendor_function_uuid = :device_vendor_function_uuid ";
+				//$sql .= "	and fg.device_vendor_function_uuid = '".$row['device_vendor_function_uuid']."' ";
 				$sql .= "order by ";
-				$sql .= "g.domain_uuid desc, ";
-				$sql .= "g.group_name asc ";
-				$parameters['device_vendor_uuid'] = $device_vendor_uuid;
-				$parameters['device_vendor_function_uuid'] = $row['device_vendor_function_uuid'];
-				$database = new database;
-				$vendor_function_groups = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
+				$sql .= "	g.domain_uuid desc, ";
+				$sql .= "	g.group_name asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->bindParam(':device_vendor_uuid', $device_vendor_uuid);
+				$prep_statement->bindParam(':device_vendor_function_uuid', $row['device_vendor_function_uuid']);
+				$prep_statement->execute();
+				$vendor_function_groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset($sql, $prep_statement);
 				unset($group_list);
 				foreach ($vendor_function_groups as &$sub_row) {
 					$group_list[] = escape($sub_row["group_name"]).(($sub_row['group_domain_uuid'] != '') ? "@".escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 				}
 				$group_list = isset($group_list) ? implode(', ', $group_list) : '';
 				unset ($vendor_function_groups);
+			//build the edit link
+				if (permission_exists('device_vendor_function_edit')) {
+					$tr_link = "href='device_vendor_function_edit.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."'";
+				}
 			//show the row of data
+				echo "<tr ".$tr_link.">\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.escape($row['name'])]."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['name'])." &nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['value'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($group_list)."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['enabled'])."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".escape($row['description'])."&nbsp;</td>\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('device_vendor_function_edit')) {
-					$list_row_url = "device_vendor_function_edit.php?device_vendor_uuid=".urlencode($row['device_vendor_uuid'])."&id=".urlencode($row['device_vendor_function_uuid']);
+					echo "<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
-				echo "<tr class='list-row' href='".$list_row_url."'>\n";
-				if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit') || permission_exists('device_vendor_function_delete')) {
-					echo "	<td class='checkbox'>\n";
-					echo "		<input type='checkbox' name='vendor_functions[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-					echo "		<input type='hidden' name='vendor_functions[$x][uuid]' value='".escape($row['device_vendor_function_uuid'])."' />\n";
-					echo "	</td>\n";
-				}
-				echo "	<td>\n";
-				if (permission_exists('device_vendor_function_edit')) {
-					echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['name'])."</a>\n";
-				}
-				else {
-					echo "	".escape($row['name']);
+				if (permission_exists('device_vendor_function_delete')) {
+					echo "<a href='device_vendor_function_delete.php?device_vendor_uuid=".escape($row['device_vendor_uuid'])."&id=".escape($row['device_vendor_function_uuid'])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
-				echo "	<td>".escape($row['value'])."&nbsp;</td>\n";
-				echo "	<td class='hide-sm-dn'>".escape($group_list)."&nbsp;</td>\n";
-				if (permission_exists('device_vendor_function_edit')) {
-					echo "	<td class='no-link center'>\n";
-					echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
-				}
-				else {
-					echo "	<td class='center'>\n";
-					echo $text['label-'.$row['enabled']];
-				}
-				echo "	</td>\n";
-				echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
-				if (permission_exists('device_vendor_function_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-					echo "	<td class='action-button'>\n";
-					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-					echo "	</td>\n";
-				}
 				echo "</tr>\n";
-				$x++;
-		}
-		unset($vendor_functions);
+			//toggle the value of the c variable
+				if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='7' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('device_vendor_function_add')) {
+		echo 		"<a href='device_vendor_function_edit.php?device_vendor_uuid=".escape($_GET['id'])."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
+	else {
+		echo 		"&nbsp;";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "<br /><br />";
 
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<div align='center'>".$paging_controls."</div>\n";
-
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
-
-//make sub action bar sticky
-	echo "<script>\n";
-
-	echo "	window.addEventListener('scroll', function(){\n";
-	echo "		action_bar_scroll('action_bar_sub', 260, heading_modify, heading_restore);\n";
-	echo "	}, false);\n";
-
-	echo "	function heading_modify() {\n";
-	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
-	echo "	}\n";
-
-	echo "	function heading_restore() {\n";
-	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
-	echo "	}\n";
-
-	echo "</script>\n";
+//include the footer
+	require_once "resources/footer.php";
 
 ?>

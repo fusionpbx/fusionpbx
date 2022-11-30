@@ -1,0 +1,84 @@
+--set the user_exists to true or false
+	if (context ~= "public") then
+		--set the default
+			record_ext = "wav";
+
+		--get record_ext
+			if (session:getVariable("record_ext")) then
+				record_ext = session:getVariable("record_ext");
+			end
+
+		--set the recording path
+			path = recordings_dir
+			if (domain_count > 1) then
+				path = path.."/"..domain_name;
+			end
+			path = path.."/archive/"..(os.date("%Y")).."/"..(os.date("%b")).."/"..(os.date("%d"));
+
+		--make sure the path exists
+			api:executeString("system mkdir -p "..path);
+
+		--check whether to record the to user
+			if (user_exists == "true") then
+				if (session:ready()) then
+					--get user_variable -> record
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var user_record";
+						user_record = trim(api:executeString(cmd));
+						--freeswitch.consoleLog("notice", "[app:dialplan] " .. cmd .. "\n");
+
+					--set the record_session variable
+						--uuid_record,<uuid> [start|stop|mask|unmask] <path> [<limit>],Record session audio,mod_commands
+						if (user_record == "all") then
+							record_session = true;
+						end
+						if (user_record == "inbound" and call_direction == "inbound") then
+							record_session = true;
+						end
+						if (user_record == "outbound" and call_direction == "outbound") then
+							record_session = true;
+						end
+						if (user_record == "local" and call_direction == "local") then
+							record_session = true;
+						end
+				end
+			end
+
+		--check whether to record the from user
+			if (not record_session) then
+				--get the from user
+					sip_from_user = session:getVariable("sip_from_user");
+					sip_from_uri = session:getVariable("sip_from_uri");
+					sip_from_host = session:getVariable("sip_from_host");
+
+				--get user exists true or false
+					cmd = "user_exists id ".. sip_from_user .." "..sip_from_host;
+					user_exists = trim(api:executeString(cmd));
+
+				--get user_variable -> record
+					cmd = "user_data ".. sip_from_user .."@"..sip_from_host.." var user_record";
+					freeswitch.consoleLog("notice", "[app:dialplan] " .. cmd .. "\n");
+					user_record = trim(api:executeString(cmd));
+
+				--set the record_session variable
+					--uuid_record,<uuid> [start|stop|mask|unmask] <path> [<limit>],Record session audio,mod_commands
+					if (user_record == "all") then
+						record_session = true;
+					end
+					if (user_record == "inbound" and call_direction == "inbound") then
+						record_session = true;
+					end
+					if (user_record == "outbound" and call_direction == "outbound") then
+						record_session = true;
+					end
+					if (user_record == "local" and call_direction == "local") then
+						record_session = true;
+					end
+			end
+
+		--record the session
+			if (record_session) then
+				cmd = "uuid_record "..uuid.." start "..path.."/"..uuid.."."..record_ext;
+				session:execute("set", "api_on_answer="..cmd);
+				--freeswitch.consoleLog("notice", "[app:dialplan] "..cmd.."\n");
+			end
+	end

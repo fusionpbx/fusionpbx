@@ -17,12 +17,13 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013 - 2019
+	Copyright (C) 2013 - 2016
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+include "root.php";
 
 //define the schema class
 if (!class_exists('schema')) {
@@ -33,7 +34,6 @@ if (!class_exists('schema')) {
 			public $apps;
 			public $db_type;
 			public $result;
-			public $data_types;
 
 		//class constructor
 			public function __construct() {
@@ -45,23 +45,11 @@ if (!class_exists('schema')) {
 					$this->db = $database->db;
 				}
 
-				//set the include path
-				$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-				set_include_path(parse_ini_file($conf[0])['document.root']);
-
-				//includes files
-				include "resources/require.php";
-
 				//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 				$x=0;
 				foreach ($config_list as &$config_path) {
-					try {
-					    include($config_path);
-					}
-					catch (Exception $e) {
-					    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-					}
+					include($config_path);
 					$x++;
 				}
 				$this->apps = $apps;
@@ -360,14 +348,8 @@ if (!class_exists('schema')) {
 			public function db_create_table ($apps, $db_type, $table) {
 				if (is_array($apps)) foreach ($apps as $x => &$app) {
 					if (is_array($app['db'])) foreach ($app['db'] as $y => $row) {
-						if (is_array($row['table']['name'])) {
-							$table_name = $row['table']['name']['text'];
-						}
-						else {
-							$table_name = $row['table']['name'];
-						}
-						if ($table_name == $table) {
-							$sql = "CREATE TABLE " . $table_name . " (\n";
+						if ($row['table']['name'] == $table) {
+							$sql = "CREATE TABLE " . $row['table']['name'] . " (\n";
 							$field_count = 0;
 							if (is_array($row['fields'])) foreach ($row['fields'] as $field) {
 								if ($field['deprecated'] == "true") {
@@ -393,7 +375,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= ");\n";
+							$sql .= ");\n\n";
 							return $sql;
 						}
 					}
@@ -464,7 +446,7 @@ if (!class_exists('schema')) {
 									$field_count++;
 								}
 							}
-							$sql .= " FROM tmp_".$table.";\n";
+							$sql .= " FROM tmp_".$table.";\n\n";
 							return $sql;
 						}
 					}
@@ -475,9 +457,8 @@ if (!class_exists('schema')) {
 			public function schema ($format = '') {
  
  				//set the global variable
-					global $db, $text, $output_format;
-
-					if ($format == '') $format = $output_format;
+					global $db, $upgrade_data_types, $text,$output_format;
+					if ($format=='') $format = $output_format;
 
 				//get the db variables
 					require_once "resources/classes/config.php";
@@ -493,12 +474,8 @@ if (!class_exists('schema')) {
 					$db_path = $config->db_path;
 					$db_port = $config->db_port;
 
-				//set the include path
-					$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-					set_include_path(parse_ini_file($conf[0])['document.root']);
-
-				//includes files
-					include "resources/require.php";
+				//get the PROJECT PATH
+					include "root.php";
 
 				//add multi-lingual support
 					if (!isset($text)) {
@@ -536,12 +513,7 @@ if (!class_exists('schema')) {
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 					$x=0;
 					foreach ($config_list as &$config_path) {
-						try {
-							include($config_path);
-						}
-						catch (Exception $e) {
-						    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-						}
+						include($config_path);
 						$x++;
 					}
 
@@ -567,7 +539,6 @@ if (!class_exists('schema')) {
 								}
 							}
 							if (strlen($table_name) > 0) {
-
 								//check if the table exists
 									if ($this->db_table_exists($db_type, $db_name, $table_name)) {
 										$apps[$x]['db'][$y]['exists'] = 'true';
@@ -587,7 +558,7 @@ if (!class_exists('schema')) {
 											else {
 												$field_name = $field['name'];
 											}
-											if (strlen($field_name) > 0) {
+											if (strlen(field_name) > 0) {
 												if ($this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
 													//found
 													$apps[$x]['db'][$y]['fields'][$z]['exists'] = 'true';
@@ -614,26 +585,19 @@ if (!class_exists('schema')) {
 						if (isset($app['db'])) foreach ($app['db'] as $y => &$row) {
 							if (is_array($row['table']['name'])) {
 								$table_name = $row['table']['name']['text'];
-								if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
-									$row['exists'] = "false"; //testing
-									if ($db_type == "pgsql") {
-										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-									}
-									if ($db_type == "mysql") {
-										$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
-									}
-									if ($db_type == "sqlite") {
-										$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
-									}
-								}
-								else {
-									if ($this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
-										$row['exists'] = "true";
-									}
-									else {
-										$row['exists'] = "false";
-										$sql_update .= $this->db_create_table($apps, $db_type, $row['table']['name']['text']);
-									}
+								if (!$this->db_table_exists($db_type, $db_name, $row['table']['name']['text'])) {
+									$row['exists'] = "true"; //testing
+									//if (db_table_exists($db_type, $db_name, $row['table']['name']['deprecated'])) {
+										if ($db_type == "pgsql") {
+											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+										}
+										if ($db_type == "mysql") {
+											$sql_update .= "RENAME TABLE ".$row['table']['name']['deprecated']." TO ".$row['table']['name']['text'].";\n";
+										}
+										if ($db_type == "sqlite") {
+											$sql_update .= "ALTER TABLE ".$row['table']['name']['deprecated']." RENAME TO ".$row['table']['name']['text'].";\n";
+										}
+									//}
 								}
 							}
 							else {
@@ -657,38 +621,40 @@ if (!class_exists('schema')) {
 												//get the field name
 													if (is_array($field['name'])) {
 														$field_name = $field['name']['text'];
-														if (!$this->db_column_exists ($db_type, $db_name, $table_name, $field_name)) {
-															$field['exists'] == "false";
-														}
 													}
 													else {
 														$field_name = $field['name'];
 													}
-
-												//add or rename fields
-													if (isset($field['name']['deprecated']) && $this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
-														if ($db_type == "pgsql") {
-															$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
-														}
-														if ($db_type == "mysql") {
-															$field_type = str_replace("AUTO_INCREMENT PRIMARY KEY", "", $field_type);
-															$sql_update .= "ALTER TABLE ".$table_name." CHANGE ".$field['name']['deprecated']." ".$field['name']['text']." ".$field_type.";\n";
-														}
-														if ($db_type == "sqlite") {
-															//a change has been made to the field name
-															$apps[$x]['db'][$y]['rebuild'] = 'true';
-														}
+												//find missing fields and add them
+													if ($field['deprecated'] == "true") {
+														//skip this row
 													}
 													else {
-														//find missing fields and add them
-														if ($field['exists'] == "false") {
-															$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field_name." ".$field_type.";\n";
+														if (!is_array($field['name'])) {
+															if ($field['exists'] == "false") {
+																$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']." ".$field_type.";\n";
+															}
 														}
 													}
-
+												//rename fields where the name has changed
+													if (is_array($field['name'])) {
+														if ($this->db_column_exists ($db_type, $db_name, $table_name, $field['name']['deprecated'])) {
+															if ($db_type == "pgsql") {
+																$sql_update .= "ALTER TABLE ".$table_name." RENAME COLUMN ".$field['name']['deprecated']." to ".$field['name']['text'].";\n";
+															}
+															if ($db_type == "mysql") {
+																$field_type = str_replace("AUTO_INCREMENT PRIMARY KEY", "", $field_type);
+																$sql_update .= "ALTER TABLE ".$table_name." CHANGE ".$field['name']['deprecated']." ".$field['name']['text']." ".$field_type.";\n";
+															}
+															if ($db_type == "sqlite") {
+																//a change has been made to the field name
+																$apps[$x]['db'][$y]['rebuild'] = 'true';
+															}
+														}
+													}
 												//change the data type if it has been changed
 													//if the data type in the app db array is different than the type in the database then change the data type
-													if ($this->data_types) {
+													if ($upgrade_data_types) {
 														$db_field_type = $this->db_column_data_type ($db_type, $db_name, $table_name, $field_name);
 														$field_type_array = explode("(", $field_type);
 														$field_type = $field_type_array[0];
@@ -700,24 +666,20 @@ if (!class_exists('schema')) {
 																	$sql_update .= "AS uuid);\n";
 																}
 																else {
-																	//field type has not changed
-																	if ($db_field_type == "integer" && strtolower($field_type) == "serial") { }
-																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") { }
-																	else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") { }
-																	else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") { }
-																	else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") { }
-																	else if ($db_field_type == "character" && strtolower($field_type) == "char") { }
-																	//field type has changed
+																	if ($db_field_type = "integer" && strtolower($field_type) == "serial") {
+																		//field type has not changed
+																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
+																		//field type has not changed
+																	} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
+																		//field type has not changed
+																	} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
+																		//field type has not changed
+																	} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
+																		//field type has not changed
+																	}
 																	else {
-																		switch ($field_type) {
-																			case 'numeric':	$using = $field_name."::numeric"; break;
-																			case 'timestamp':
-																			case 'datetime': $using = $field_name."::timestamp without time zone"; break;
-																			case 'timestamptz': $using = $field_name."::timestamp with time zone"; break;
-																			case 'boolean': $using = $field_name."::boolean"; break;
-																			default: unset($using);
-																		}
-																		$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type." ".($using ? "USING ".$using : null).";\n";
+																		//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db_type, $db_name, $table_name, $field_name)."<br>";
+																		$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
 																	}
 																}
 															}
@@ -726,7 +688,7 @@ if (!class_exists('schema')) {
 																if ($type[0] == $field_type) {
 																	//do nothing
 																}
-																else if ($field_type == "numeric" && $type[0] == "decimal") {
+																elseif ($field_type == "numeric" && $type[0] == "decimal") {
 																	//do nothing
 																}
 																else {
@@ -903,11 +865,11 @@ if (!class_exists('schema')) {
 									try {
 										$this->db->query(trim($sql));
 										if ($format == "text") {
-											$response .= "	$sql;\n";
+											$response .= "	$sql\n";
 										}
 									}
 									catch (PDOException $error) {
-										$response .= "	error: " . $error->getMessage() . "	sql: $sql\n";
+										$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
 									}
 								}
 							}

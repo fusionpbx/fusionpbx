@@ -55,16 +55,6 @@
 		<!-- Say -->
 		<load module="mod_say_en"/>
 		<load module="mod_say_zh"/>
-		<load module="mod_say_ru"/>
-		<load module="mod_say_fr"/>
-		<load module="mod_say_th"/>
-		<load module="mod_say_he"/>
-		<load module="mod_say_pt"/>
-		<load module="mod_say_de"/>
-		<load module="mod_say_it"/>
-		<load module="mod_say_nl"/>
-		<load module="mod_say_es"/>
-		<load module="mod_say_hu"/>
 
 		<!-- Speech Recognition / Text to Speech -->
 		<load module="mod_flite"/>

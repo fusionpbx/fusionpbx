@@ -59,30 +59,18 @@
 <!-- Total STUN response misses to restart DHCP (mininum=3 default=3) -->
 <P475>3</P475>
 
-
-<!-- Firmware Upgrade -->
-
+<!---------------------------------------------------------------------------------# -->
+<!-- Firmware Upgrade                                                              # -->
+<!---------------------------------------------------------------------------------# -->
 
 <!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
-{if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/dp715/{$firmware_version}</P192>
-{elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/dp715</P192>
-{else}
-<P192>{$domain_name}{$project_path}/app/provision</P192>
-{/if}
+<P192>{$domain_name}/firmware/gs</P192>
 
 <!-- Config Server Path -->
-{if $grandstream_config_server_path=="none"}
-<P237></P237>
-{elseif isset($grandstream_config_server_path)}
-<P237>{$grandstream_config_server_path}</P237>
-{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
-{/if}
 
 <!-- XML Config File Password -->
 <P1359></P1359>
@@ -107,7 +95,7 @@
 
 <!-- Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
 <!-- When set to Yes(1), it will override the configured provision path and method. -->
-{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+<P145>1</P145>
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
 <P194>0</P194>
@@ -168,9 +156,9 @@
 <!--CPE SSL Private Key -->
 <!--P8221= -->
 
-
-<!-- Call Progress Tones -->
-
+<!-----------------------------------------------# -->
+<!-- Call Progress Tones                         # -->
+<!-----------------------------------------------# -->
 
 <!-- Dial Tone -->
 <P4000>f1=350@-13,f2=440@-13,c=0/0;</P4000>
@@ -190,7 +178,7 @@
 <!-- Call Waiting tone -->
 <P4005>f1=440@-13,c=300/300-300/10000;</P4005>
 
-
+<!----------------------------------------------- -->
 
 <!-- Lock keypad update.  0 - No, 1 - Yes. (configuration update via keypad is disabled if set to Yes) -->
 <P88>0</P88>
@@ -267,7 +255,7 @@
 <P109>1</P109>
 
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P32>{$account.1.register_expires}</P32>
+<P32>1</P32>
 
 <!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <P138>20</P138>
@@ -352,7 +340,7 @@
 <P185>60</P185>
 
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-<P4330>300</P4330>
+<P4330>20</P4330>
 
 <!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared line -->
 <P4395>1</P4395>
@@ -373,12 +361,12 @@
 <P72>1</P72>
 
 <!-- Dial Plan -->
-  
+
 {if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
 {else}
-<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
-{/if}
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
+{/if}  
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
 <P99>1</P99>
@@ -425,9 +413,9 @@
 <!-- Enable 100rel. 0 - No, 1 - Yes -->
 <P272>0</P272>
 
-
-<!-- Codec/Voice Quality settings -->
-
+<!---------------------------------------------------------------------------------# -->
+<!-- Codec/Voice Quality settings                                                  # -->
+<!---------------------------------------------------------------------------------# -->
 
 <!-- Preferred Vocoder -->
 <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
@@ -524,7 +512,7 @@
 <P813>1</P813>
 
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<P732>{$account.2.register_expires}</P732>
+<P732>60</P732>
 
 <!-- SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
 <P471>20 </P471>
@@ -609,7 +597,7 @@
 <P816>60</P816>
 
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
-<P4331>300</P4331>
+<P4331>20</P4331>
 
 <!-- Hunting Group Type. 1 - Linear, 2 - Parallel, 3 - Shared Line -->
 <P4396>1</P4396>
@@ -677,9 +665,9 @@
 <!-- Enable 100rel. 0 - No, 1 - Yes -->
 <P435>0</P435>
 
-
-<!-- Codec/Voice Quality settings -->
-
+<!---------------------------------------------------------------------------------# -->
+<!-- Codec/Voice Quality settings                                                  # -->
+<!---------------------------------------------------------------------------------# -->
 
 <!-- Preferred Vocoder -->
 <!-- 0 - PCMU, 8 - PCMA, 4 - G.723, 18 - G.729, 2 - G.726-32, 98 - iLBC -->
@@ -735,11 +723,11 @@
 <!-- Symmetric RTP. 0 - No, 1 - Yes -->
 <P460>0</P460>
 
-
+<!--=========================================================================================== -->
 
 <!--Handsets -->
 
-
+<!--=========================================================================================== -->
 
 <!--============= -->
 <!-- Handset 1 -->
@@ -752,16 +740,16 @@
 <P4300>0</P4300>
 
 <!--SIP User ID -->
-<P4060>{$account.1.user_id}</P4060>
+<P4060>{$user_id_1}</P4060>
 
 <!--Authenticate ID -->
-<P4090>{$account.1.user_id}</P4090>
+<P4090>{$user_id_2}</P4090>
 
 <!--Authenticate Password -->
-<P4120>{$account.1.password}</P4120>
+<P4120>{$user_password_1}</P4120>
 
 <!--Name -->
-<P4180>{$account.1.display_name}</P4180>
+<P4180>{$displayname_1}</P4180>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4150>0</P4150>
@@ -778,16 +766,16 @@
 <P4301>0</P4301>
 
 <!--SIP User ID -->
-<P4061>{$account.2.user_id}</P4061>
+<P4061>{$user_id_2}</P4061>
 
 <!--Authenticate ID -->
-<P4091>{$account.2.user_id}</P4091>
+<P4091>{$user_id_2}</P4091>
 
 <!--Authenticate Password -->
-<P4121>{$account.2.password}</P4121>
+<P4121>{$user_password_2}</P4121>
 
 <!--Name -->
-<P4181>{$account.2.display_name}</P4181>
+<P4181>{$displayname_2}</P4181>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4151>0</P4151>
@@ -803,16 +791,16 @@
 <P4302>0</P4302>
 
 <!--SIP User ID -->
-<P4062>{$account.3.user_id}</P4062>
+<P4062>{$user_id_3}</P4062>
 
 <!--Authenticate ID -->
-<P4092>{$account.3.user_id}</P4092>
+<P4092>{$user_id_3}</P4092>
 
 <!--Authenticate Password -->
-<P4122>{$account.3.password}</P4122>
+<P4122>{$password_3}</P4122>
 
 <!--Name -->
-<P4182>{$account.3.display_name}</P4182>
+<P4182>{$displayname_3}</P4182>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4152>0</P4152>
@@ -828,16 +816,16 @@
 <P4303>0</P4303>
 
 <!--SIP User ID -->
-<P4063>{$account.4.user_id}</P4063>
+<P4063>{$user_id_4}</P4063>
 
 <!--Authenticate ID -->
-<P4093>{$account.4.user_id}</P4093>
+<P4093>{$user_id_4}</P4093>
 
 <!--Authenticate Password -->
-<P4123>{$account.4.password}</P4123>
+<P4123>{$user_password_4}</P4123>
 
 <!--Name -->
-<P4183>{$account.4.display_name}</P4183>
+<P4183>{$displayname_4}</P4183>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4153>0</P4153>
@@ -853,23 +841,23 @@
 <P4304>0</P4304>
 
 <!--SIP User ID -->
-<P4064>{$account.5.user_id}</P4064>
+<P4064>{$user_id_5}</P4064>
 
 <!--Authenticate ID -->
-<P4094>{$account.5.user_id}</P4094>
+<P4094>{$user_id_5}</P4094>
 
 <!--Authenticate Password -->
-<P4124>{$account.5.password}</P4124>
+<P4124>{$user_password_5}</P4124>
 
 <!--Name -->
-<P4184>{$account.5.display_name}</P4184>
+<P4184>{$displayname_5}</P4184>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4154>0</P4154>
 
-
-<!-- Basic Settings -->
-
+<!--############################################################################# -->
+<!--#  Basic Settings.                                                         ## -->
+<!--############################################################################# -->
 
 <!-- End User Password -->
 <!--P196=123 -->
@@ -883,9 +871,9 @@
 <!-- IP Address. 0 - DHCP, 2 - PPPoE, 1 - Static IP -->
 <P8>0</P8>
 
-
+<!------------------------------------------------- -->
 <!-- DHCP -->
-
+<!------------------------------------------------- -->
 
 <!-- DHCP Hostname, DHCP option 12. Max length allowed is 32 bytes. -->
 <P146></P146>
@@ -896,9 +884,9 @@
 <!-- DHCP Vendor Class ID, DHCP option 60. Max length allowed is 32 bytes. -->
 <P148>DP7XX</P148>
 
-
+<!------------------------------------------------- -->
 <!-- PPPoE -->
-
+<!------------------------------------------------- -->
 
 <!-- PPPoE account ID -->
 <!--P82= -->
@@ -915,9 +903,9 @@
 <!--P94=0 -->
 <!--P95=0 -->
 
-
+<!------------------------------------------------- -->
 <!-- Static IP -->
-
+<!------------------------------------------------- -->
 
 <!-- IP Address. Ignore if DHCP or PPPoE is used -->
 <!--P9=192 -->
@@ -949,7 +937,7 @@
 <!--P27=0 -->
 <!--P28=0 -->
 
-
+<!------------------------------------------------------------ -->
 <!--Time Zone. Offset in minutes to GMT -->
 <!-- <value="TZA+12"> GMT-12:00 (International Date Line West) -->
 <!-- <value="TZB+11"> GMT-11:00 (Midway Island, Samoa) -->
@@ -1016,7 +1004,7 @@
 <P246>MTZ+6MDT+5,M3.2.0,M11.1.0</P246>
 
 <!-- Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
-{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+<P143>0</P143>
 
 <!-- Language. 0 - English, 10 - Spanish IVR -->
 <P342>0</P342>

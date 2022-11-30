@@ -17,23 +17,21 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('device_export')) {
+	if (if_group("superadmin")) {
 		//access granted
 	}
 	else {
@@ -46,7 +44,8 @@
 	$text = $language->get();
 
 //define the functions
-	function array2csv(array &$array) {
+	function array2csv(array &$array)
+	{
 		if (count($array) == 0) {
 			return null;
 		}
@@ -77,173 +76,67 @@
 		header("Content-Transfer-Encoding: binary");
 	}
 
-//define possible columns in the array
-	$available_columns['devices'][] = 'device_uuid';
-	$available_columns['devices'][] = 'device_profile_uuid';
-	$available_columns['devices'][] = 'device_mac_address';
-	$available_columns['devices'][] = 'device_label';
-	$available_columns['devices'][] = 'device_vendor';
-	$available_columns['devices'][] = 'device_template';
-	$available_columns['devices'][] = 'device_enabled_date';
-	$available_columns['devices'][] = 'device_username';
-	$available_columns['devices'][] = 'device_password';
-	$available_columns['devices'][] = 'device_uuid_alternate';
-	$available_columns['devices'][] = 'device_provisioned_date';
-	$available_columns['devices'][] = 'device_provisioned_method';
-	$available_columns['devices'][] = 'device_provisioned_ip';
-	$available_columns['devices'][] = 'device_enabled';
-	$available_columns['devices'][] = 'device_description';
-
-	$available_columns['device_lines'][] = 'device_line_uuid';
-	$available_columns['device_lines'][] = 'device_uuid';
-	$available_columns['device_lines'][] = 'line_number';
-	$available_columns['device_lines'][] = 'server_address';
-	$available_columns['device_lines'][] = 'server_address_primary';
-	$available_columns['device_lines'][] = 'server_address_secondary';
-	$available_columns['device_lines'][] = 'outbound_proxy_primary';
-	$available_columns['device_lines'][] = 'outbound_proxy_secondary';
-	$available_columns['device_lines'][] = 'display_name';
-	$available_columns['device_lines'][] = 'user_id';
-	$available_columns['device_lines'][] = 'auth_id';
-	$available_columns['device_lines'][] = 'password';
-	$available_columns['device_lines'][] = 'sip_port';
-	$available_columns['device_lines'][] = 'sip_transport';
-	$available_columns['device_lines'][] = 'register_expires';
-	$available_columns['device_lines'][] = 'shared_line';
-	$available_columns['device_lines'][] = 'enabled';
-
 //get the devices and send them as output
-	$column_group = $_REQUEST["column_group"];
-	if (is_array($column_group) && @sizeof($column_group) != 0) {
+	if (isset($_REQUEST["column_group"])) {
+		$columns = implode(",",$_REQUEST["column_group"]);
+		$sql = "select " . $columns . " from v_devices ";
+		$sql .= " where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$devices = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		unset ($sql, $prep_statement);
+		//print_r($extensions);
 
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: device_download.php');
-				exit;
-			}
-
-		//validate table names
-			foreach($column_group as $table_name => $columns) {
-				if (!isset($available_columns[$table_name])) {
-					unset($column_group[$table_name]);
-				}
-			}
-
-		//validate columns
-			foreach($column_group as $table_name => $columns) {
-				foreach ($columns as $column_name) {
-					if (!in_array($column_name, $available_columns[$table_name])) {
-						unset($column_group[$table_name][$column_name]);
-					}
-				}
-			}
-
-		//iterate columns
-			if (is_array($column_group) && @sizeof($column_group) != 0) {
-
-				$column_names = implode(", ", $column_group['devices']);
-				$sql = "select ".$column_names." from v_devices ";
-				$sql .= " where domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$database = new database;
-				$devices = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters, $column_names);
-
-				foreach($column_group as $table_name => $columns) {
-					if ($table_name !== 'devices') {
-						$column_names = implode(", ", $columns);
-						$sql = "select ".$column_names." from v_".$table_name." ";
-						$sql .= " where domain_uuid = :domain_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$$table_name = $database->select($sql, $parameters, 'all');
-						$x = 0;
-						foreach($devices as $device) {
-							foreach($$table_name as $row) {
-								if ($device['device_uuid'] == $row['device_uuid']) {
-									foreach($row as $key => $value) {
-										$devices[$x][$key] = $value;
-									}
-									break;
-								}
-							}
-							$x++;
-						}
-						unset($sql, $parameters, $column_names);
-					}
-				}
-
-				if (is_array($devices) && @sizeof($devices) != 0) {
-					download_send_headers("device_export_".date("Y-m-d").".csv");
-					echo array2csv($devices);
-					exit;
-				}
-			}
-			unset($column_group);
+		download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+		echo array2csv($devices);
+		die();
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+//define the columns in the array
+	$columns[] = 'device_uuid';
+	$columns[] = 'domain_uuid';
+	$columns[] = 'device_mac_address';
+	$columns[] = 'device_label';
+	$columns[] = 'device_template';
+	$columns[] = 'device_description';
 
-//include the header
-	$document['title'] = $text['title-device_export'];
+//set the row style
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
+
+//begin the page content
 	require_once "resources/header.php";
 
-//show the content
-	echo "<form method='post' name='frm' id='frm'>\n";
+	echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<th><input type=\"checkbox\" id=\"selecctall\"/></th>\n";
+	echo "	<th>Column Name</th>\n";
+	echo "	<th>Description</th>\n";
+	echo "</tr>\n";
 
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-device_export']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'devices.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo $text['description-device_export'];
-	echo "<br /><br />\n";
-
-	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
-		$x = 0;
-		foreach ($available_columns as $table_name => $columns) {
-			$table_name_label = ucwords(str_replace(['-','_',],' ', $table_name));
-			echo "<div class='category'>\n";
-			echo "<b>".$table_name_label."</b>\n";
-			echo "<br>\n";
-			echo "<table class='list'>\n";
-			echo "<tr class='list-header'>\n";
-			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$table_name."' name='checkbox_all' onclick=\"list_all_toggle('".$table_name."');\" ".($available_columns ?: "style='visibility: hidden;'").">\n";
-			echo "	</th>\n";
-			echo "	<th>".$text['label-column_name']."</th>\n";
-			echo "</tr>\n";
-			foreach ($columns as $column_name) {
-				$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
-				echo "<tr class='list-row' href='".$list_row_url."'>\n";
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' class='checkbox_".$table_name."' name='column_group[".$table_name."][".$column_name."]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
-				echo "	</td>\n";
-				echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
-				echo "</tr>";
-				$x++;
-			}
-			echo "</table>\n";
-			echo "<br>\n";
-			echo "</div>\n";
-		}
+	foreach ($columns as $value) {
+		echo "<tr>\n";
+		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'>\n";
+		echo "		<input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
+		echo "	</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>$value</td>";
+		echo "	<td valign='top' class='".$row_style[$c]."'></td>";
+		echo "</tr>";
+		if ($c==0) { $c=1; } else { $c=0; }
 	}
-	
-	//test the validation
-	//echo "		<input type='hidden' name='column_group[devices][xxx]'  value=\"xxx\">\n";
-	//echo "		<input type='hidden' name='column_group[device_lines][yyy]' value=\"yyy\">\n";
-	//echo "		<input type='hidden' name='column_group[device_zzz][zzz]' value=\"zzz\">\n";
 
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='3' align='right'>\n";
+	echo "			<br>";
+	echo "			<input type='submit' class='btn' value='".$text['button-export']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+
+	echo "</table>";
+	echo "<br><br>";
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

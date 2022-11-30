@@ -17,29 +17,22 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2016
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('default_setting_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('voicemail_message_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
 	$language = new text;
@@ -53,36 +46,27 @@
 	$toggled = 0;
 	if (is_array($default_setting_uuids) && sizeof($default_setting_uuids) > 0) {
 		foreach ($default_setting_uuids as $default_setting_uuid) {
-			if (is_uuid($default_setting_uuid)) {
-				//get current status
-					$sql = "select default_setting_enabled from v_default_settings where default_setting_uuid = :default_setting_uuid ";
-					$parameters['default_setting_uuid'] = $default_setting_uuid;
-					$database = new database;
-					$default_setting_enabled = $database->select($sql, $parameters, 'column');
-					$new_status = ($default_setting_enabled == 'true') ? 'false' : 'true';
-					unset($sql, $parameters);
+			//get current status
+				$sql = "select default_setting_enabled from v_default_settings where default_setting_uuid = '".check_str($default_setting_uuid)."'";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+				$new_status = ($row['default_setting_enabled'] == 'true') ? 'false' : "true";
+				unset ($sql, $prep_statement, $row);
+			//set new status
+				$sql = "update v_default_settings set default_setting_enabled = '".$new_status."' where default_setting_uuid = '".check_str($default_setting_uuid)."'";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset ($sql, $prep_statement);
 
-				//set new status
-					$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuid;
-					$array['default_settings'][0]['default_setting_enabled'] = $new_status;
-					$database = new database;
-					$database->app_name = 'default_settings';
-					$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
-					$database->save($array);
-					$message = $database->message;
-					unset($array);
-
-				//increment toggle total
-					$toggled++;
-			}
-		}
-		if ($toggled > 0) {
-			$_SESSION["message"] = $text['message-toggled'].': '.$toggled;
+			$toggled++;
 		}
 	}
 
 //redirect the user
-	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
-	header("Location: default_settings.php".($search != '' ? '?search='.$search : null));
+	if ($toggled > 0) {
+		$_SESSION["message"] = $text['message-toggled'].': '.$toggled;
+	}
+	header("Location: default_settings.php".(($search != '') ? '?search='.$search : null));
 
 ?>

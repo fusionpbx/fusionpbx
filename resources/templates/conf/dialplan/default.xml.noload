@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+<context name="{v_domain}">
+	<X-PRE-PROCESS cmd="include" data="{v_domain}/*.xml"/>
+</context>
+</include>

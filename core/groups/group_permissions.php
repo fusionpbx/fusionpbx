@@ -17,23 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
-//check permissions
-	if (permission_exists('group_permission_view')) {
+//check permisions
+	if (permission_exists('group_permissions') || if_group("superadmin")) {
 		//access granted
 	}
 	else {
@@ -41,360 +38,453 @@
 		exit;
 	}
 
-//action add or update
-	if (is_uuid($_REQUEST["group_uuid"])) {
-		$group_uuid = $_REQUEST["group_uuid"];
-	}
-
-//get the group_name
-	if (is_uuid($group_uuid)) {
-		$sql = "select group_name from v_groups ";
-		$sql .= "where group_uuid = :group_uuid ";
-		$parameters['group_uuid'] = $group_uuid;
-		$database = new database;
-		$group_name = $database->select($sql, $parameters, 'column');
-		unset($sql, $parameters);
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//process permission reload
-	if ($_GET['action'] == 'reload' && is_uuid($_GET['group_uuid'])) {
-		if (is_array($_SESSION["groups"]) && @sizeof($_SESSION["groups"]) != 0) {
-			//clear current permissions
-				unset($_SESSION['permissions'], $_SESSION['user']['permissions']);
-			//get the permissions assigned to the groups that the current user is a member of, set the permissions in session variables
-				$x = 0;
-				$sql = "select distinct(permission_name) from v_group_permissions ";
-				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-				$sql .= "and permission_assigned = 'true' ";
-				foreach ($_SESSION["groups"] as $field) {
-					if (strlen($field['group_name']) > 0) {
-						$sql_where_or[] = "group_name = :group_name_".$x;
-						$parameters['group_name_'.$x] = $field['group_name'];
-						$x++;
-					}
-				}
-				if (is_array($sql_where_or) && @sizeof($sql_where_or) != 0) {
-					$sql .= "and (".implode(' or ', $sql_where_or).") ";
-				}
-				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
-				$result = $database->select($sql, $parameters, 'all');
-				if (is_array($result) && @sizeof($result) != 0) {
-					foreach ($result as $row) {
-						$_SESSION['permissions'][$row["permission_name"]] = true;
-						$_SESSION["user"]["permissions"][$row["permission_name"]] = true;
-					}
-				}
-				unset($sql, $parameters, $result, $row);
-			//set message and redirect
-				message::add($text['message-permissions_reloaded'],'positive');
-				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']));
-				exit;
-		}
-	}
-
-//get the view preference
-	$view = $_REQUEST['view'];
-
-//get the http post data
-	if (is_array($_POST['group_permissions'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$group_permissions = $_POST['group_permissions'];
-	}
-
-//add the search string
-	if (isset($_REQUEST["search"])) {
-		$search =  strtolower($_REQUEST["search"]);
-		$sql_search = " (";
-		$sql_search .= "	lower(p.permission_name) like :search \n";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
-//get the list
-	$sql = "select "; 
-	$sql .= "	distinct p.permission_name, \n";
-	$sql .= "	p.application_name, \n";
-	$sql .= "	g.permission_protected, \n"; 
-	$sql .= "	g.group_permission_uuid, \n"; 
-	$sql .= "	g.permission_assigned \n";
-	$sql .= "from v_permissions as p \n"; 
-	$sql .= "left join \n"; 
-	$sql .= "	v_group_permissions as g \n"; 
-	$sql .= "	on p.permission_name = g.permission_name \n"; 
-	$sql .= "	and group_name = :group_name \n"; 
-	$sql .= " 	and g.group_uuid = :group_uuid \n";
-	if (isset($sql_search)) {
-		$sql .= "where ".$sql_search;
-	}
-	$sql .= "	order by p.application_name, p.permission_name asc "; 
-	$parameters['group_name'] = $group_name;
-	$parameters['group_uuid'] = $group_uuid;
-	$database = new database;
-	$group_permissions = $database->select($sql, $parameters, 'all');
-
-//process the user data and save it to the database
-	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			$x = 0;
-			if (is_array($_POST['group_permissions'])) {
-				foreach($_POST['group_permissions'] as $row) {
-					//reset values
-						$action = "";
-						$save_permission = false;
-						$delete_permission = false;
-						$save_protected = false;
-						$delete_protected = false;
-						$persist = false;
-
-					//get the action save or delete
-						foreach($group_permissions as $field) {
-							if ($field['permission_name'] === $row['permission_name']) {
-								if ($field['permission_assigned'] == 'true') {
-									if ($row['checked'] == "true") {
-										$persist = true;
-									}
-									else {
-										$delete_permission = true;
-									}
-								}
-								else {
-									
-									if ($row['checked'] == "true") {
-										$save_permission = true;
-									}
-									else {
-										//do nothing
-									}
-								}
-
-								if ($field['permission_protected'] == 'true') {
-									if ($row['permission_protected'] == "true") {
-										$persist = true;
-									}
-									else {
-										$delete_protected = true;
-									}
-								}
-								else {
-									if ($row['permission_protected'] == "true") {
-										$save_protected = true;
-									}
-									else {
-										//do nothing
-									}
-								}
-
-								if ($save_permission || $save_protected) {
-									$action = "save";
-								}
-								elseif ($delete_permission || $delete_protected){
-									if ($persist) {
-										$action = "save";
-									}
-									else {
-										$action = "delete";
-									}
-								}
-								else {
-									$action = "";
-								}
-								$group_permission_uuid = $field['group_permission_uuid'];
-								break;
-							}
-						}
-					
-					//build the array;
-						if ($action == "save") {
-							if (strlen($group_permission_uuid) == 0) {
-								$group_permission_uuid = uuid();
-							}
-							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
-								$array['save']['group_permissions'][$x]['group_permission_uuid'] = $group_permission_uuid;
-								$array['save']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
-								$array['save']['group_permissions'][$x]['permission_protected'] = $row['permission_protected'] == 'true' ? "true" : 'false';
-								$array['save']['group_permissions'][$x]['permission_assigned'] = $row['checked'] != "true" ? "false" : "true";
-								$array['save']['group_permissions'][$x]['group_uuid'] = $group_uuid;
-								$array['save']['group_permissions'][$x]['group_name'] = $group_name;
-								$x++;
-							}
-						}
-
-						if ($action == "delete") {
-							if (isset($row['permission_name']) && strlen($row['permission_name']) > 0) {
-								$array['delete']['group_permissions'][$x]['permission_name'] = $row['permission_name'];
-								$array['delete']['group_permissions'][$x]['group_uuid'] = $group_uuid;
-								$array['delete']['group_permissions'][$x]['group_name'] = $group_name;
-							}
-							$x++;
-						}
-				}
-			}
-			
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
-				exit;
-			}
-
-		//save the save array
-			if (is_array($array['save']) && @sizeof($array['save']) != 0) {
-				$database = new database;
-				$database->app_name = 'groups';
-				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-				$database->save($array['save']);
-				$message = $database->message;
-			}
-
-		//delete the delete array
-			if (is_array($array['delete']) && @sizeof($array['delete']) != 0) {
-				if (permission_exists('group_permission_delete')) {
-					$database = new database;
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-					$database->delete($array['delete']);
-				}
-			}
-
-		//set the message
-			message::add($text['message-update']);
-
-		//redirect
-			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid));
-			exit;
-	}
-
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
 
 //include the header
 	$document['title'] = $text['title-group_permissions'];
 	require_once "resources/header.php";
 
-//show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-group_permissions']." (".escape($group_name).")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-sm-dn','link'=>'groups.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reload'],'link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload']);
-	if (permission_exists('group_member_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo 		"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	echo 		"<select class='txt' style='margin-left: 15px; margin-right: 0;' id='view' name='view' onchange=\"document.getElementById('form_search').submit();\">\n";
-	echo 		"	<option value=''>".$text['label-all']."</option>\n";
-	echo 		"	<option value='assigned' ".($view == 'assigned' ? "selected='selected'" : null).">".$text['label-assigned']."</option>\n";
-	echo 		"	<option value='unassigned' ".($view == 'unassigned' ? "selected='selected'" : null).">".$text['label-unassigned']."</option>\n";
-	echo 		"	<option value='protected' ".($view == 'protected' ? "selected='selected'" : null).">".$text['label-group_protected']."</option>\n";
-	echo 		"</select>\n";
-	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
-	if (permission_exists('group_permission_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-sm-dn','style'=>'margin-left: 15px;','onclick'=>"document.getElementById('form_list').submit();"]);
-	}
-	echo "		</form>\n";
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+//include paging
+	require_once "resources/paging.php";
 
-	echo $text['description-group_permissions']."\n";
+//get the list of installed apps from the core and mod directories
+	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+	$x=0;
+	foreach ($config_list as &$config_path) {
+		include($config_path);
+		$x++;
+	}
+
+//if there are no permissions listed in v_group_permissions then set the default permissions
+	$sql = "select count(*) as count from v_group_permissions ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$group_permission_count = $row["count"];
+		break; //limit to 1 row
+	}
+	unset ($prep_statement);
+	if ($group_permission_count == 0) {
+		//no permissions found add the defaults
+		foreach($apps as $app) {
+			foreach ($app['permissions'] as $row) {
+				foreach ($row['groups'] as $group) {
+					//add the record
+					$sql = "insert into v_group_permissions ";
+					$sql .= "(";
+					$sql .= "group_permission_uuid, ";
+					$sql .= "permission_name, ";
+					$sql .= "group_name ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'".$row['name']."', ";
+					$sql .= "'".$group."' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
+		}
+	}
+
+//get the group uuid, lookup domain uuid (if any) and name
+	$group_uuid = check_str($_REQUEST['group_uuid']);
+	$sql = "select domain_uuid, group_name from v_groups ";
+	$sql .= "where group_uuid = '".$group_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$domain_uuid = $row["domain_uuid"];
+		$group_name = $row["group_name"];
+		break; //limit to 1 row
+	}
+	unset ($prep_statement);
+
+//get the permissions assigned to this group
+	$sql = " select * from v_group_permissions ";
+	$sql .= "where group_name = '$group_name' ";
+	$sql .= "and domain_uuid ".(($domain_uuid != '') ? " = '".$domain_uuid."' " : " is null ");
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$permission_name = $row["permission_name"];
+		$permissions_db[$permission_name] = "true";
+	}
+
+//show the db checklist
+	//echo "<pre>";
+	//print_r($permissions_db);
+	//echo "</pre>";
+
+//list all the permissions in the database
+	foreach($apps as $app) {
+		if (isset($app['permissions'])) foreach ($app['permissions'] as $row) {
+			if ($permissions_db[$row['name']] == "true") {
+				$permissions_db_checklist[$row['name']] = "true";
+			}
+			else {
+				$permissions_db_checklist[$row['name']] = "false";
+			}
+		}
+	}
+
+//show the db checklist
+	//echo "<pre>";
+	//print_r($permissions_db_checklist);
+	//echo "</pre>";
+
+//process the http post
+	if (count($_POST)>0) {
+
+		foreach($_POST['permissions_form'] as $permission) {
+			$permissions_form[$permission] = "true";
+		}
+
+		//list all the permissions
+			foreach($apps as $app) {
+				foreach ($app['permissions'] as $row) {
+					if ($permissions_form[$row['name']] == "true") {
+						$permissions_form_checklist[$row['name']] = "true";
+					}
+					else {
+						$permissions_form_checklist[$row['name']] = "false";
+					}
+				}
+			}
+		//show the form db checklist
+			//echo "<pre>";
+			//print_r($permissions_form_checklist);
+			//echo "</pre>";
+
+		//list all the permissions
+			foreach($apps as $app) {
+				foreach ($app['permissions'] as $row) {
+					$permission = $row['name'];
+					if ($permissions_db_checklist[$permission] == "true" && $permissions_form_checklist[$permission] == "true") {
+						//matched do nothing
+					}
+					if ($permissions_db_checklist[$permission] == "false" && $permissions_form_checklist[$permission] == "false") {
+						//matched do nothing
+					}
+					if ($permissions_db_checklist[$permission] == "true" && $permissions_form_checklist[$permission] == "false") {
+						//delete the record
+							$sql = "delete from v_group_permissions ";
+							$sql .= "where group_name = '$group_name' ";
+							$sql .= "and permission_name = '$permission' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+						foreach($apps as $app) {
+							foreach ($app['permissions'] as $row) {
+								if ($row['name'] == $permission) {
+
+									$sql = "delete from v_menu_item_groups ";
+									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
+									$sql .= "and group_name = '$group_name' ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$db->exec(check_sql($sql));
+									unset($sql);
+
+									$sql = " select menu_item_parent_uuid from v_menu_items ";
+									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$prep_statement = $db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									foreach ($result as &$row) {
+										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
+									}
+									unset ($prep_statement);
+
+									$sql = " select * from v_menu_items as i, v_menu_item_groups as g  ";
+									$sql .= "where i.menu_item_uuid = g.menu_item_uuid ";
+									$sql .= "and i.menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$sql .= "and i.menu_item_parent_uuid = '$menu_item_parent_uuid' ";
+									$sql .= "and g.group_name = '$group_name' ";
+									$prep_statement = $db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									$result_count = count($result);
+									if ($result_count == 0) {
+										$sql = "delete from v_menu_item_groups ";
+										$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
+										$sql .= "and group_name = '$group_name' ";
+										$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+										$db->exec(check_sql($sql));
+										unset($sql);
+									}
+									unset ($prep_statement);
+								}
+							}
+						}
+						//set the permission to false in the permissions_db_checklist
+							$permissions_db_checklist[$permission] = "false";
+					}
+					if ($permissions_db_checklist[$permission] == "false" && $permissions_form_checklist[$permission] == "true") {
+						//add the record
+							$sql = "insert into v_group_permissions ";
+							$sql .= "(";
+							$sql .= "group_permission_uuid, ";
+							if ($domain_uuid != '') {
+								$sql .= "domain_uuid, ";
+							}
+							$sql .= "permission_name, ";
+							$sql .= "group_name ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							if ($domain_uuid != '') {
+								$sql .= "'".$domain_uuid."', ";
+							}
+							$sql .= "'$permission', ";
+							$sql .= "'$group_name' ";
+							$sql .= ")";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+						foreach($apps as $app) {
+							foreach ($app['permissions'] as $row) {
+								if ($row['name'] == $permission) {
+
+									$sql = "insert into v_menu_item_groups ";
+									$sql .= "(";
+									$sql .= "menu_uuid, ";
+									$sql .= "menu_item_uuid, ";
+									$sql .= "group_name ";
+									$sql .= ")";
+									$sql .= "values ";
+									$sql .= "(";
+									$sql .= "'b4750c3f-2a86-b00d-b7d0-345c14eca286', ";
+									$sql .= "'".$row['menu']['uuid']."', ";
+									$sql .= "'$group_name' ";
+									$sql .= ")";
+									$db->exec(check_sql($sql));
+									unset($sql);
+
+									$sql = " select menu_item_parent_uuid from v_menu_items ";
+									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$prep_statement = $db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									foreach ($result as &$row) {
+										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
+									}
+									unset ($prep_statement);
+
+									$sql = " select * from v_menu_item_groups ";
+									$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
+									$sql .= "and group_name = '$group_name' ";
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
+									$prep_statement = $db->prepare(check_sql($sql));
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									$result_count = count($result);
+									if ($result_count == 0) {
+										$sql = "insert into v_menu_item_groups ";
+										$sql .= "(";
+										$sql .= "menu_uuid, ";
+										$sql .= "menu_item_uuid, ";
+										$sql .= "group_name ";
+										$sql .= ")";
+										$sql .= "values ";
+										$sql .= "(";
+										$sql .= "'b4750c3f-2a86-b00d-b7d0-345c14eca286', ";
+										$sql .= "'$menu_item_parent_uuid', ";
+										$sql .= "'$group_name' ";
+										$sql .= ")";
+										$db->exec(check_sql($sql));
+										unset($sql);
+									}
+									unset ($prep_statement);
+								}
+							}
+						}
+						//set the permission to true in the permissions_db_checklist
+							$permissions_db_checklist[$permission] = "true";
+					}
+				}
+			}
+
+		messages::add($text['message-update']);
+		header("Location: groups.php");
+		return;
+	}
+
+//copy group javascript
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	function copy_group() {\n";
+	echo "		var new_group_name;\n";
+	echo "		var new_group_desc;\n";
+	echo "		new_group_name = prompt('".$text['message-new_group_name']."');\n";
+	echo "		if (new_group_name != null) {\n";
+	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
+	echo "			if (new_group_desc != null) {\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".escape($group_name)."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "\n";
+	echo "	$( document ).ready(function() {\n";
+	echo "		$('#group_permission_search').focus();\n";
+	echo "	});\n";
+	echo "</script>\n";
+
+//prevent enter key submit on search field
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	$(document).ready(function() {\n";
+	echo "		$('#group_permission_search').keydown(function(event){\n";
+	echo "			if (event.keyCode == 13) {\n";
+	echo "				event.preventDefault();\n";
+	echo "				return false;\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	});\n";
+	echo "</script>\n";
+
+//show the content
+	echo "<form method='post' name='frm' action=''>\n";
+	echo "<input type='hidden' name='domain_uuid' value='".escape($domain_uuid)."'>\n";
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\" valign='top'>";
+	echo "			<b>".$text['header-group_permissions'].escape($group_name)."</b>";
+	echo "			<br><br>";
+	echo "		</td>\n";
+	echo "		<td width='50%' align=\"right\" valign='top'>\n";
+	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "			<input type='text' id='group_permission_search' class='formfld' style='min-width: 150px; width:150px; max-width: 150px;' placeholder=\"".$text['label-search']."\" onkeyup='permission_search();'>\n";
+	echo "			<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align=\"left\" colspan='2'>\n";
+	echo "			".$text['description-group_permissions']."\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 	echo "<br /><br />\n";
 
-	echo "<form id='form_list' method='post'>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	echo "<input type='hidden' name='view' value=\"".escape($view)."\">\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-	echo "<table class='list' style='margin-bottom: 25px;'>\n";
-	if (is_array($group_permissions) && @sizeof($group_permissions) != 0) {
-		$x = 0;
-		foreach ($group_permissions as $row) {
-			$checked = ($row['permission_assigned'] === 'true') ? " checked=\"checked\"" : $checked = '';
-			$protected = ($row['permission_protected'] === 'true') ? " checked=\"checked\"" : '';
-			$application_name = strtolower(str_replace([' ','-'], '_', $row['application_name']));
-			$application_name_label = ucwords(str_replace(['_','-'], " ", $row['application_name']));
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-			//application heading
-			if ($previous_application_name !== $row['application_name']) {
-				echo "		<tr class='heading_".$application_name."'>";
-				echo "			<td align='left' colspan='999'>&nbsp;</td>\n";
-				echo "		</tr>";
-				echo "		<tr class='heading_".$application_name."'>";
-				echo "			<td align='left' colspan='999' nowrap='nowrap'><b>".escape($application_name_label)."</b></td>\n";
-				echo "		</tr>";
-				echo "		<tr class='list-header heading_".$application_name."'>\n";
-				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "		<th class='checkbox'>\n";
-					echo "			<input type='checkbox' id='checkbox_all_".$application_name."' name='checkbox_all' onclick=\"list_all_toggle('".$application_name."');\">\n";
-					echo "		</th>\n";
-				}
-				echo th_order_by('group_name', $text['label-group_name'], $order_by, $order);
-				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo th_order_by('group_permission_protected', $text['label-group_protected'], $order_by, $order, null, "style='text-align: right;'");
-					echo "		<th class='checkbox'>\n";
-					echo "			<input type='checkbox' id='checkbox_all_".$application_name."_protected' name='checkbox_protected_all' onclick=\"list_all_toggle('".$application_name."_protected');\">\n";
-					echo "		</th>\n";
-				}
-				echo "		</tr>\n";
-				$displayed_permissions[$application_name] = 0;
-			}
+	//list all the permissions
+		foreach($apps as $app_index => $app) {
+			//hide apps for which there are no permissions
+			if (!is_array($app['permissions']) || sizeof($app['permissions']) == 0) { continue; }
 
-			//application permission
-			if (!$view || ($view == 'assigned' && $checked) || ($view == 'unassigned' && !$checked) || ($view == 'protected' && $protected)) {
-				echo "<tr class='list-row'>\n";
-				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "	<td class='checkbox'>\n";
-					echo "		<input type='checkbox' name='group_permissions[$x][checked]' id='checkbox_".$x."' class='checkbox_".$application_name."' value='true' ".$checked." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."').checked = false; }\">\n";
-					echo "		<input type='hidden' name='group_permissions[$x][permission_uuid]' value='".escape($row['permission_uuid'])."' />\n";
-					echo "		<input type='hidden' name='group_permissions[$x][permission_name]' value='".escape($row['permission_name'])."' />\n";
-					echo "	</td>\n";
-				}
-				echo "	<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all_".$application_name."').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">";
-				echo "		".escape($row['permission_name']);
-				echo "	</td>\n";
-				if (permission_exists('group_permission_add') || permission_exists('group_permission_edit') || permission_exists('group_permission_delete')) {
-					echo "	<td>&nbsp;</td>\n";
-					echo "	<td class='checkbox'>\n";
-					echo "		<input type='checkbox' name='group_permissions[$x][permission_protected]' id='checkbox_protected_".$x."' class='checkbox_".$application_name."_protected' value='true' ".$protected." onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$application_name."_protected').checked = false; }\">\n";
-					echo "	</td>\n";
-				}
+			$app_name = $app['name'];
+			$description = $app['description']['en-us'];
+
+			//used to hide apps, even if permissions don't exist
+			$array_apps_unique[] = str_replace(' ','_',strtolower($app['name']));
+
+			echo "<div id='app_".str_replace(' ','_',strtolower($app['name']))."'>";
+			echo "<b>".$app_name."</b><br />\n";
+			if ($description != '') { echo $description."<br />\n"; }
+			echo "<br>";
+
+			echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "	<tr>\n";
+			echo "		<th style='text-align: center; padding: 0 7px;'><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
+			echo "		<th width='30%'>".$text['label-permission_permissions']."</th>\n";
+			echo "		<th width='70%'>".$text['label-permission_description']."</th>\n";
+			echo "	<tr>\n";
+
+			foreach ($app['permissions'] as $permission_index => $row) {
+				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
+				echo "<tr id='permission_".$row['name']."'>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".escape($row['name'])."'></td>\n";
+				echo "	<td valign='top' nowrap='nowrap' class='".$row_style[$c]."' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".escape($row['name'])."</td>\n";
+				echo "	<td valign='top' class='row_stylebg' onclick=\"(document.getElementById('perm_".$app_index."_".$permission_index."').checked) ? document.getElementById('perm_".$app_index."_".$permission_index."').checked = false : document.getElementById('perm_".$app_index."_".$permission_index."').checked = true;\">".escape($row['description'])."&nbsp;</td>\n";
 				echo "</tr>\n";
-				$displayed_permissions[$application_name]++;
+				$c = ($c == 0) ? 1 : 0;
+
+				//populate search/filter arrays
+				$array_apps[] = str_replace(' ','_',strtolower($app['name']));
+				$array_apps_original[] = $app['name'];
+				$array_permissions[] = $row['name'];
+				$array_descriptions[] = str_replace('"','\"',$row['description']);
+
+				$app_permissions[$app_index][] = "perm_".$app_index."_".$permission_index;
 			}
 
-			//set the previous application name
-			$previous_application_name = $row['application_name'];
-			$x++;
+			echo "	<tr>\n";
+			echo "		<td colspan='3' align='right' style='padding-top: 15px;'><input type='submit' name='submit' class='btn' value='".$text['button-save']."'></td>\n";
+			echo "	</tr>\n";
+			echo "</table>";
+			echo "</div>\n\n";
 
-		}
-		unset($group_permissions);
+		} //end foreach
+		echo "<br>";
+		unset($sql, $result, $row_count);
 
-		//hide application heading if no permissions displayed
-		if (is_array($displayed_permissions) && @sizeof($displayed_permissions) != 0) {
-			echo "<script>\n";
-			foreach ($displayed_permissions as $application_name => $permission_count) {
-				if (!$permission_count) {
-					echo "$('.heading_".$application_name."').hide();\n";
-				}
-			}
-			echo "</script>\n";
-		}
-
-	}
-
-	echo "</table>\n";
 	echo "</form>\n";
 
-//include the footer
+//check or uncheck all category checkboxes
+	echo "<script>\n";
+	echo "function check_toggle(app_index, toggle_state) {\n";
+	echo "	switch (app_index) {\n";
+	foreach ($app_permissions as $app_index => $app_permission_ids) {
+		echo "	case '".$app_index."':\n";
+		foreach ($app_permission_ids as $app_permission_id) {
+			echo "	document.getElementById('".$app_permission_id."').checked = toggle_state;\n";
+		}
+		echo "	break;\n";
+	}
+	echo "	}\n";
+	echo "}\n";
+	echo "</script>\n";
+
+//setting search script
+	echo "<script>\n";
+	echo "	var apps_unique = new Array(\"".implode('","', $array_apps_unique)."\");\n";
+	echo "	var apps = new Array(\"".implode('","', $array_apps)."\");\n";
+	echo "	var apps_original = new Array(\"".implode('","', $array_apps_original)."\");\n";
+	echo "	var permissions = new Array(\"".implode('","', $array_permissions)."\");\n";
+	echo "	var descriptions = new Array(\"".implode('","', $array_descriptions)."\");\n";
+	echo "\n";
+	echo "	function permission_search() {\n";
+	echo "		var criteria = $('#group_permission_search').val();\n";
+	echo "		if (criteria.length >= 2) {\n";
+	echo "			for (var x = 0; x < apps_unique.length; x++) {\n";
+	echo "				document.getElementById('app_'+apps_unique[x]).style.display = 'none';\n";
+	echo "			}\n";
+	echo "			for (var x = 0; x < permissions.length; x++) {\n";
+	echo "				if (\n";
+	echo "					apps_original[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+	echo "					permissions[x].toLowerCase().match(criteria.toLowerCase()) ||\n";
+	echo "					descriptions[x].toLowerCase().match(criteria.toLowerCase())\n";
+	echo "					) {\n";
+	echo "					document.getElementById('app_'+apps[x]).style.display = '';\n";
+	echo "					document.getElementById('permission_'+permissions[x]).style.display = '';\n";
+	echo "				}\n";
+	echo "				else {\n";
+	echo "					document.getElementById('permission_'+permissions[x]).style.display = 'none';\n";
+	echo "				}\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "		else {\n";
+	echo "			for (var x = 0; x < permissions.length; x++) {\n";
+	echo "				document.getElementById('app_'+apps[x]).style.display = '';\n";
+	echo "				document.getElementById('permission_'+permissions[x]).style.display = '';\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "\n";
+	echo "</script>\n";
+
+//show the footer
 	require_once "resources/footer.php";
 
 ?>

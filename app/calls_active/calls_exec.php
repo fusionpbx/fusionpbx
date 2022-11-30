@@ -1,39 +1,39 @@
 <?php
+/* $Id$ */
 /*
-	FusionPBX
-	Version: MPL 1.1
+	v_exec.php
+	Copyright (C) 2008 - 2019 Mark J Crane
+	All rights reserved.
 
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
 
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
 
-	The Original Code is FusionPBX
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
 
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
-	the Initial Developer. All Rights Reserved.
-
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes fileshp";
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_active_view')) {
+	if (permission_exists('call_active_view') || permission_exists('extension_active_view')) {
 		//access granted
 	}
 	else {
@@ -41,61 +41,26 @@
 		exit;
 	}
 
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
 //authorized referrer
-	if (stristr($_SERVER["HTTP_REFERER"], '/calls_active.php') === false) {
-		echo "access denied";
-		exit;
+	if(stristr($_SERVER["HTTP_REFERER"], '/calls_active_extensions.php') === false) {
+		if(stristr($_SERVER["HTTP_REFERER"], '/calls_active.php') === false) {
+			echo " access denied";
+			exit;
+		}
 	}
 
 //authorized commands
-	if ($_REQUEST['action'] == 'hangup' && permission_exists('call_active_hangup')) {
+	if ($_GET["command"] == 'hangup') {
+		if (is_uuid($_GET["uuid"])) {
+			//setup the event socket connection
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
-		//validate the token
-			$token = new token;
-			if (!$token->validate('/app/calls_active/calls_active_inc.php')) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: calls_active.php');
-				exit;
-			}
-
-		//verify submitted call uuids
-			if (is_array($_POST['calls']) && @sizeof($_POST['calls']) != 0) {
-				foreach ($_POST['calls'] as $call) {
-					if ($call['checked'] == 'true' && is_uuid($call['uuid'])) {
-						$calls[] = $call['uuid'];
-					}
-				}
-			}
-			if (is_uuid($_REQUEST['uuid'])) {
-				$calls[] = $_REQUEST['uuid'];
-			}
-
-		//iterate through calls
-			if (is_array($calls) && @sizeof($calls) != 0) {
-
-				//setup the event socket connection
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
-				//execute hangup command
-					foreach ($calls as $call_uuid) {
-						$switch_result = event_socket_request($fp, 'api uuid_kill '.$call_uuid);
-					}
-
-				//set message
-					message::add($text['message-calls_ended'].': '.@sizeof($calls),'positive');
-
-			}
-
-		//redirect
-			header('Location: calls_active.php');
-			exit;
-
+			//run the command
+			$switch_result = event_socket_request($fp, 'api uuid_kill '.$_GET["uuid"]);
+		}
 	}
 	else {
+		//not found. this command is not authorized
 		echo "access denied";
 		exit;
 	}

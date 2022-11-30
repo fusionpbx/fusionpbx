@@ -17,22 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_edit')) {
 		//access granted
 	}
@@ -46,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$music_on_hold_uuid = $_REQUEST["id"];
+		$music_on_hold_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -57,18 +54,18 @@
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		if (permission_exists('music_on_hold_domain')) {
-			$domain_uuid = $_POST["domain_uuid"];
+			$domain_uuid = check_str($_POST["domain_uuid"]);
 		}
-		$music_on_hold_name = $_POST["music_on_hold_name"];
-		$music_on_hold_path = $_POST["music_on_hold_path"];
-		$music_on_hold_rate = $_POST["music_on_hold_rate"];
-		$music_on_hold_shuffle = $_POST["music_on_hold_shuffle"];
-		$music_on_hold_channels = $_POST["music_on_hold_channels"];
-		$music_on_hold_interval = $_POST["music_on_hold_interval"];
-		$music_on_hold_timer_name = $_POST["music_on_hold_timer_name"];
-		$music_on_hold_chime_list = $_POST["music_on_hold_chime_list"];
-		$music_on_hold_chime_freq = $_POST["music_on_hold_chime_freq"];
-		$music_on_hold_chime_max = $_POST["music_on_hold_chime_max"];
+		$music_on_hold_name = check_str($_POST["music_on_hold_name"]);
+		$music_on_hold_path = check_str($_POST["music_on_hold_path"]);
+		$music_on_hold_rate = check_str($_POST["music_on_hold_rate"]);
+		$music_on_hold_shuffle = check_str($_POST["music_on_hold_shuffle"]);
+		$music_on_hold_channels = check_str($_POST["music_on_hold_channels"]);
+		$music_on_hold_interval = check_str($_POST["music_on_hold_interval"]);
+		$music_on_hold_timer_name = check_str($_POST["music_on_hold_timer_name"]);
+		$music_on_hold_chime_list = check_str($_POST["music_on_hold_chime_list"]);
+		$music_on_hold_chime_freq = check_str($_POST["music_on_hold_chime_freq"]);
+		$music_on_hold_chime_max = check_str($_POST["music_on_hold_chime_max"]);
 	}
 
 //add or update the data
@@ -76,15 +73,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$music_on_hold_uuid = $_POST["music_on_hold_uuid"];
-			}
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: music_on_hold.php');
-				exit;
+				$music_on_hold_uuid = check_str($_POST["music_on_hold_uuid"]);
 			}
 
 		//check for all required data
@@ -115,46 +104,49 @@
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('music_on_hold_add')) {
-					//begin insert array
-						$array['music_on_hold'][0]['music_on_hold_uuid'] = uuid();
-					//set message
-						message::add($text['message-add']);
-				}
-
-				if ($action == "update" && permission_exists('music_on_hold_edit')) {
-					//begin update array
-						$array['music_on_hold'][0]['music_on_hold_uuid'] = $music_on_hold_uuid;
-
-					//set message
-						message::add($text['message-update']);
-				}
-
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//add common array elements
+					//insert the new music on hold
+						$sql = "insert into v_music_on_hold ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "music_on_hold_uuid, ";
+						$sql .= "music_on_hold_name, ";
+						$sql .= "music_on_hold_path, ";
+						$sql .= "music_on_hold_rate, ";
+						$sql .= "music_on_hold_shuffle, ";
+						$sql .= "music_on_hold_channels, ";
+						$sql .= "music_on_hold_interval, ";
+						$sql .= "music_on_hold_timer_name, ";
+						$sql .= "music_on_hold_chime_list, ";
+						$sql .= "music_on_hold_chime_freq, ";
+						$sql .= "music_on_hold_chime_max ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
 						if (permission_exists('music_on_hold_domain')) {
-							$array['music_on_hold'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+							if (strlen($domain_uuid) == null) {
+								$sql .= "null, ";
+							}
+							else {
+								$sql .= "'".$domain_uuid."', ";
+							}
 						}
 						else {
-							$array['music_on_hold'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$sql .= "'".$_SESSION['domain_uuid']."', ";
 						}
-						$array['music_on_hold'][0]['music_on_hold_name'] = $music_on_hold_name;
-						$array['music_on_hold'][0]['music_on_hold_path'] = $music_on_hold_path;
-						$array['music_on_hold'][0]['music_on_hold_rate'] = strlen($music_on_hold_rate) != 0 ? $music_on_hold_rate : null;
-						$array['music_on_hold'][0]['music_on_hold_shuffle'] = $music_on_hold_shuffle;
-						$array['music_on_hold'][0]['music_on_hold_channels'] = strlen($music_on_hold_channels) != 0 ? $music_on_hold_channels : null;
-						$array['music_on_hold'][0]['music_on_hold_interval'] = strlen($music_on_hold_interval) != 0 ? $music_on_hold_interval : null;
-						$array['music_on_hold'][0]['music_on_hold_timer_name'] = $music_on_hold_timer_name;
-						$array['music_on_hold'][0]['music_on_hold_chime_list'] = $music_on_hold_chime_list;
-						$array['music_on_hold'][0]['music_on_hold_chime_freq'] = strlen($music_on_hold_chime_freq) != 0 ? $music_on_hold_chime_freq : null;
-						$array['music_on_hold'][0]['music_on_hold_chime_max'] = strlen($music_on_hold_chime_max) != 0 ? $music_on_hold_chime_max : null;
-
-					//execute
-						$database = new database;
-						$database->app_name = 'music_on_hold';
-						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
-						$database->save($array);
-						unset($array);
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$music_on_hold_name', ";
+						$sql .= "'$music_on_hold_path', ";
+						if (strlen($music_on_hold_rate) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_rate', "; }
+						$sql .= "'$music_on_hold_shuffle', ";
+						if (strlen($music_on_hold_channels) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_channels', "; }
+						if (strlen($music_on_hold_interval) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_interval', "; }
+						$sql .= "'$music_on_hold_timer_name', ";
+						$sql .= "'$music_on_hold_chime_list', ";
+						if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "null, "; } else { $sql .= "'$music_on_hold_chime_freq', "; }
+						if (strlen($music_on_hold_chime_max) == 0) { $sql .= "null "; } else { $sql .= "'$music_on_hold_chime_max' "; }
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
 					//clear the cache
 						$cache = new cache;
@@ -164,29 +156,69 @@
 						$music = new switch_music_on_hold;
 						$music->reload();
 
-					//redirect the user
+					//set the message and redirect the user
+						messages::add($text['message-add']);
 						header("Location: music_on_hold.php");
-						exit;
+						return;
+				} //if ($action == "add")
 
-				}
-			}
+				if ($action == "update" && permission_exists('music_on_hold_edit')) {
+					//update the stream settings
+						$sql = "update v_music_on_hold set ";
+						if (permission_exists('music_on_hold_domain')) {
+							if (strlen($domain_uuid) == null) {
+								$sql .= "domain_uuid = null, ";
+							}
+							else {
+								$sql .= "domain_uuid = '$domain_uuid', ";
+							}
+						}
+						else {
+							$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."', ";
+						}
+						$sql .= "music_on_hold_name = '$music_on_hold_name', ";
+						$sql .= "music_on_hold_path = '$music_on_hold_path', ";
+						if (strlen($music_on_hold_rate) == 0) { $sql .= "music_on_hold_rate = null, "; } else { $sql .= "music_on_hold_rate = '$music_on_hold_rate', "; }
+						$sql .= "music_on_hold_shuffle = '$music_on_hold_shuffle', ";
+						if (strlen($music_on_hold_channels) == 0) { $sql .= "music_on_hold_channels = null, "; } else { $sql .= "music_on_hold_channels = '$music_on_hold_channels', "; }
+						if (strlen($music_on_hold_interval) == 0) { $sql .= "music_on_hold_interval = null, "; } else { $sql .= "music_on_hold_interval = '$music_on_hold_interval', "; }
+						$sql .= "music_on_hold_timer_name = '$music_on_hold_timer_name', ";
+						$sql .= "music_on_hold_chime_list = '$music_on_hold_chime_list', ";
+						if (strlen($music_on_hold_chime_freq) == 0) { $sql .= "music_on_hold_chime_freq = null, "; } else { $sql .= "music_on_hold_chime_freq = '$music_on_hold_chime_freq', "; }
+						if (strlen($music_on_hold_chime_max) == 0) { $sql .= "music_on_hold_chime_max = null "; } else { $sql .= "music_on_hold_chime_max = '$music_on_hold_chime_max' "; }
+						$sql .= "where music_on_hold_uuid = '$music_on_hold_uuid' ";
+						$db->exec(check_sql($sql));
+						unset($sql);
 
-	}
+					//clear the cache
+						$cache = new cache;
+						$cache->delete("configuration:local_stream.conf");
+
+					//reload mod local stream
+						$music = new switch_music_on_hold;
+						$music->reload();
+
+					//set the message and redirect the user
+						messages::add($text['message-update']);
+						header("Location: music_on_hold.php");
+						return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
-		$music_on_hold_uuid = $_GET["id"];
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+		$music_on_hold_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_music_on_hold ";
 		$sql .= "where ( ";
-		$sql .= "	domain_uuid = :domain_uuid ";
+		$sql .= "	domain_uuid = '$domain_uuid' ";
 		$sql .= "	or domain_uuid is null ";
 		$sql .= ") ";
-		$sql .= "and music_on_hold_uuid = :music_on_hold_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['music_on_hold_uuid'] = $music_on_hold_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "and music_on_hold_uuid = '$music_on_hold_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			$music_on_hold_name = $row["music_on_hold_name"];
 			$music_on_hold_path = $row["music_on_hold_path"];
@@ -199,36 +231,28 @@
 			$music_on_hold_chime_freq = $row["music_on_hold_chime_freq"];
 			$music_on_hold_chime_max = $row["music_on_hold_chime_max"];
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//include the header
-	$document['title'] = $text['title-music_on_hold'];
+//show the header
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-music_on_hold']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'music_on_hold.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-music_on_hold']."</b><br><br></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='music_on_hold.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='music_on_hold_name' maxlength='255' value=\"".escape($music_on_hold_name)."\">\n";
 	echo "<br />\n";
 	echo $text['description-music_on_hold_name']."\n";
@@ -368,11 +392,11 @@
 		*/
 	//recordings
 		$tmp_selected = false;
-		$sql = "select recording_name, recording_filename from v_recordings where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$recordings = $database->select($sql, $parameters, 'all');
-		if (is_array($recordings) && @sizeof($recordings) != 0) {
+		$sql = "select * from v_recordings where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$recordings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (count($recordings) > 0) {
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as &$row) {
 				$recording_name = $row["recording_name"];
@@ -391,14 +415,12 @@
 			}
 			echo "</optgroup>\n";
 		}
-		unset($sql, $parameters, $recordings, $row);
-
 	//phrases
-		$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
-		$result = $database->select($sql, $parameters, 'all');
-		if (is_array($result) && @sizeof($result) != 0) {
+		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (count($result) > 0) {
 			echo "<optgroup label='Phrases'>\n";
 			foreach ($result as &$row) {
 				if ($music_on_hold_chime_list == "phrase:".$row["phrase_uuid"]) {
@@ -409,13 +431,13 @@
 					echo "	<option value='phrase:".escape($row["phrase_uuid"])."'>".escape($row["phrase_name"])."</option>\n";
 				}
 			}
+			unset ($prep_statement);
 			echo "</optgroup>\n";
 		}
-		unset($sql, $parameters, $result, $row);
 	//sounds
 		$file = new file;
 		$sound_files = $file->sounds();
-		if (is_array($sound_files) && @sizeof($sound_files) != 0) {
+		if (is_array($sound_files)) {
 			echo "<optgroup label='Sounds'>\n";
 			foreach ($sound_files as $value) {
 				if (strlen($value) > 0) {
@@ -433,7 +455,6 @@
 			}
 			echo "</optgroup>\n";
 		}
-		unset($sound_files, $value);
 	//select
 		if (if_group("superadmin")) {
 			if (!$tmp_selected && strlen($music_on_hold_chime_list) > 0) {
@@ -500,15 +521,17 @@
 		echo "</tr>\n";
 	}
 
-	echo "</table>";
-	echo "<br /><br />";
-
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
+		echo "				<input type='hidden' name='music_on_hold_uuid' value='".escape($music_on_hold_uuid)."'>\n";
 	}
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+	echo "</table>";
 	echo "</form>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

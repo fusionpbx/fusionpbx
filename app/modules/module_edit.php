@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -46,9 +43,9 @@
 	$text = $language->get();
 
 //determin the action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$module_uuid = $_REQUEST["id"];
+		$module_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -56,13 +53,13 @@
 
 //set the http post variables to php variables
 	if (count($_POST)>0) {
-		$module_label = $_POST["module_label"];
-		$module_name = $_POST["module_name"];
-		$module_description = $_POST["module_description"];
-		$module_category = $_POST["module_category"];
-		$module_order = $_POST["module_order"];
-		$module_enabled = $_POST["module_enabled"];
-		$module_default_enabled = $_POST["module_default_enabled"];
+		$module_label = check_str($_POST["module_label"]);
+		$module_name = check_str($_POST["module_name"]);
+		$module_description = check_str($_POST["module_description"]);
+		$module_category = check_str($_POST["module_category"]);
+		$module_order = check_str($_POST["module_order"]);
+		$module_enabled = check_str($_POST["module_enabled"]);
+		$module_default_enabled = check_str($_POST["module_default_enabled"]);
 	}
 
 //process the data
@@ -70,15 +67,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$module_uuid = $_POST["module_uuid"];
-			}
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: modules.php');
-				exit;
+				$module_uuid = check_str($_POST["module_uuid"]);
 			}
 
 		//check for all required data
@@ -106,52 +95,71 @@
 			if ($_POST["persistformvar"] != "true") {
 				if ($action == "add" && permission_exists('module_add')) {
 					$module_uuid = uuid();
-					$array['modules'][0]['module_uuid'] = $module_uuid;
+					$sql = "insert into v_modules ";
+					$sql .= "(";
+					$sql .= "module_uuid, ";
+					$sql .= "module_label, ";
+					$sql .= "module_name, ";
+					$sql .= "module_description, ";
+					$sql .= "module_category, ";
+					$sql .= "module_order, ";
+					$sql .= "module_enabled, ";
+					$sql .= "module_default_enabled ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$module_uuid', ";
+					$sql .= "'$module_label', ";
+					$sql .= "'$module_name', ";
+					$sql .= "'$module_description', ";
+					$sql .= "'$module_category', ";
+					$sql .= "'$module_order', ";
+					$sql .= "'$module_enabled', ";
+					$sql .= "'$module_default_enabled' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-					message::add($text['message-add']);
-				}
-
-				if ($action == "update" && permission_exists('module_edit')) {
-					$array['modules'][0]['module_uuid'] = $module_uuid;
-
-					message::add($text['message-update']);
-				}
-
-				//add common array elements and execute
-				if (is_array($array) && @sizeof($array) != 0) {
-					$array['modules'][0]['module_label'] = $module_label;
-					$array['modules'][0]['module_name'] = $module_name;
-					$array['modules'][0]['module_description'] = $module_description;
-					$array['modules'][0]['module_category'] = $module_category;
-					$array['modules'][0]['module_order'] = $module_order;
-					$array['modules'][0]['module_enabled'] = $module_enabled;
-					$array['modules'][0]['module_default_enabled'] = $module_default_enabled;
-
-					$database = new database;
-					$database->app_name = 'modules';
-					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
-					$database->save($array);
-					unset($array);
-
-					$module = new modules;
+					$module = new modules;;
 					$module->xml();
 
+					messages::add($text['message-add']);
 					header("Location: modules.php");
-					exit;
-				}
-			}
+					return;
+				} //if ($action == "add")
 
-	}
+				if ($action == "update" && permission_exists('module_edit')) {
+					$sql = "update v_modules set ";
+					$sql .= "module_label = '$module_label', ";
+					$sql .= "module_name = '$module_name', ";
+					$sql .= "module_description = '$module_description', ";
+					$sql .= "module_category = '$module_category', ";
+					$sql .= "module_order = '$module_order', ";
+					$sql .= "module_enabled = '$module_enabled', ";
+					$sql .= "module_default_enabled = '$module_default_enabled' ";
+					$sql .= "where module_uuid = '$module_uuid' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$module = new modules;;
+					$module->xml();
+
+					messages::add($text['message-update']);
+					header("Location: modules.php");
+					return;
+				} //if ($action == "update")
+			} //if ($_POST["persistformvar"] != "true")
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
-		$sql .= "where module_uuid = :module_uuid ";
-		$parameters['module_uuid'] = $module_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "where module_uuid = '$module_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$module_label = $row["module_label"];
 			$module_name = $row["module_name"];
 			$module_description = $row["module_description"];
@@ -160,49 +168,43 @@
 			$module_enabled = $row["module_enabled"];
 			$module_default_enabled = $row["module_default_enabled"];
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
 //show the header
+	require_once "resources/header.php";
 	if ($action == "add") {
 		$document['title'] = $text['title-module_add'];
 	}
 	if ($action == "update") {
 		$document['title'] = $text['title-module_edit'];
 	}
-	require_once "resources/header.php";
 
 //show the content
-	echo "<form method='post' name='frm' id='frm'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'>";
-	if ($action == "add") {
-		echo "<b>".$text['header-module_add']."</b>";
-	}
-	if ($action == "update") {
-		echo "<b>".$text['header-module_edit']."</b>";
-	}
-	echo "	</div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'modules.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','id'=>'btn_save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
+	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
+	if ($action == "add") {
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-module_add']."</b></td>\n";
+	}
+	if ($action == "update") {
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-module_edit']."</b></td>\n";
+	}
+	echo "<td width='70%' align='right'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='modules.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-label']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' align='left'>\n";
+	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_label' maxlength='255' value=\"".escape($module_label)."\">\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -212,6 +214,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_name' maxlength='255' value=\"".escape($module_name)."\">\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -221,6 +225,8 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_order' maxlength='255' value=\"".escape($module_order)."\">\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -229,11 +235,10 @@
 	echo "    ".$text['label-module_category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_modules';
-	$field_name = 'module_category';
-	$sql_where_optional = '';
-	$field_current_value = $module_category;
-	echo html_select_other($table_name, $field_name, $sql_where_optional, $field_current_value);
+	$table_name = 'v_modules'; $field_name = 'module_category'; $sql_where_optional = ''; $field_current_value = $module_category;
+	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -256,6 +261,8 @@
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -278,6 +285,8 @@
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -287,17 +296,22 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='module_description' maxlength='255' value=\"".escape($module_description)."\">\n";
+	echo "<br />\n";
+	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	if ($action == "update") {
+		echo "		<input type='hidden' name='module_uuid' value='".escape($module_uuid)."'>\n";
+	}
+	echo "			<br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
 	echo "</table>";
 	echo "<br><br>";
-
-	if ($action == "update") {
-		echo "<input type='hidden' name='module_uuid' value='".escape($module_uuid)."'>\n";
-	}
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
 	echo "</form>";
 
 //include the footer

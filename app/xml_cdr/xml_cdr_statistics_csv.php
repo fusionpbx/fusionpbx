@@ -23,23 +23,16 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
-	if (permission_exists('xml_cdr_statistics')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (permission_exists('xml_cdr_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //include the xml cdr statistics backend
 	require_once "xml_cdr_statistics_inc.php";
@@ -50,7 +43,7 @@
 
 //show the column names on the first line
 	$z = 0;
-	foreach ($stats[1] as $key => $val) {
+	foreach($stats[1] as $key => $val) {
 		if ($z == 0) {
 			echo '"'.$key.'"';
 		}
@@ -63,9 +56,9 @@
 
 //add the values to the csv
 	$x = 0;
-	foreach ($stats as $row) {
+	foreach($stats as $row) {
 		$z = 0;
-		foreach ($row as $key => $val) {
+		foreach($row as $key => $val) {
 			if ($z == 0) {
 				echo '"'.$stats[$x][$key].'"';
 			}
@@ -77,5 +70,4 @@
 		echo "\n";
 		$x++;
 	}
-
 ?>

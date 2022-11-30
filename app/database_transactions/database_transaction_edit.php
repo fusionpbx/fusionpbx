@@ -17,22 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('database_transaction_add') || permission_exists('database_transaction_edit')) {
 		//access granted
 	}
@@ -45,30 +42,33 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the variables
-	if (is_uuid($_GET["id"])) {
-		$database_transaction_uuid = $_GET["id"];
-		$search = $_GET['search'];
-		$page = $_GET['page'];
+//action add or update
+	if (isset($_REQUEST["id"])) {
+		$database_transaction_uuid = check_str($_REQUEST["id"]);
 	}
 
 //pre-populate the form
-	if (count($_GET) > 0 && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+		$database_transaction_uuid = check_str($_GET["id"]);
 
 		$sql = "select ";
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
 		$sql .= "t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date, ";
 		$sql .= "t.transaction_old, t.transaction_new, t.transaction_result ";
 		$sql .= "from v_database_transactions as t, v_domains as d, v_users as u ";
-		$sql .= "where t.domain_uuid = :domain_uuid ";
-		$sql .= "and t.database_transaction_uuid = :database_transaction_uuid ";
+		$sql .= "where t.domain_uuid = '$domain_uuid' ";
+		$sql .= "and t.database_transaction_uuid = '$database_transaction_uuid' ";
 		$sql .= "and t.user_uuid = u.user_uuid ";
 		$sql .= "and t.domain_uuid = d.domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['database_transaction_uuid'] = $database_transaction_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+
+		//$sql = "select *, u.username from v_database_transactions as t, v_users as u ";
+		//$sql .= "where domain_uuid = '$domain_uuid' ";
+		//$sql .= "t.user_uuid = u.user_uuid ";
+		//$sql .= "and database_transaction_uuid = '$database_transaction_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$user_uuid = $row["user_uuid"];
 			$app_name = $row["app_name"];
 			$app_uuid = $row["app_uuid"];
@@ -82,25 +82,8 @@
 			$transaction_new = $row["transaction_new"];
 			$transaction_result = $row["transaction_result"];
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
-
-//undo the transaction
-	if ($_GET['action'] == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
-		//get the array
-			$array = json_decode($transaction_old, true);
-
-		//save to the data
-			$database = new database;
-			$database->app_name = $app_name;
-			$database->app_uuid = $app_uuid;
-			$database->save($array);
-			$message = $database->message;
-
-		//redirect the user
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: database_transactions.php?".($search != '' ? "&search=".urlencode($search) : null).($page != '' ? "&page=".urlencode($page) : null));
-	} 
 
 //get the type if not provided
 	if (strlen($transaction_type) == 0) {
@@ -112,24 +95,20 @@
 		}
 	}
 
-//include the header
-	$document['title'] = $text['title-database_transaction'];
+//show the header
 	require_once "resources/header.php";
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-database_transaction']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'database_transactions.php?'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
-	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.($search != '' ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
-	}
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' width='20%' nowrap='nowrap' valign='top'><b>".$text['title-database_transaction']."</b><br><br></td>\n";
+	echo "		<td width='80%' align='right' valign='top'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='database_transactions.php'\" value='".$text['button-back']."'>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
 	echo "<table width='400'  border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<td valign='top'>\n";
 	echo "	<table>\n";
 	echo "		<tr>\n";
@@ -137,7 +116,7 @@
 	echo "				".$text['label-app_name']."\n";
 	echo "			</th>\n";
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				".escape($app_name)."\n";
+	echo "				".$app_name."\n";
 	echo "			</td>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
@@ -197,13 +176,13 @@
 	echo "</table>\n";
 
 	if ($_REQUEST["debug"] == "true") {
-		echo "<table width='50%'  border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table width='350px'  border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<th valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-transaction_old']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_old' style='width: 100%; height: 80px;'>".escape($transaction_old)."</textarea>\n";
+		echo "	<textarea name='transaction_old' style='width: 265px; height: 80px;'>".escape($transaction_old)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -212,7 +191,7 @@
 		echo "	".$text['label-transaction_new']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_new' style='width: 100%; height: 80px;'>".escape($transaction_new)."</textarea>\n";
+		echo "	<textarea name='transaction_new' style='width: 265px; height: 80px;'>".escape($transaction_new)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	
@@ -221,7 +200,7 @@
 		echo "	".$text['label-transaction_result']."\n";
 		echo "</th>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='transaction_result' style='width: 100%; height: 80px;'>".escape($transaction_result)."</textarea>\n";
+		echo "	<textarea name='transaction_result' style='width: 265px; height: 80px;'>".escape($transaction_result)."</textarea>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>";
@@ -232,7 +211,7 @@
 	function array_difference($array1, $array2) {
 		$array = array();
 		if (is_array($array1)) {
-			foreach ($array1 as $key => $value) {
+			foreach($array1 as $key => $value) {
 				if (is_array($array2[$key])) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
@@ -242,7 +221,7 @@
 			}
 		}
 		if (is_array($array2)) {
-			foreach ($array2 as $key => $value) {
+			foreach($array2 as $key => $value) {
 				if (is_array($value)) {
 					$array[$key] = array_difference($array1[$key], $array2[$key]);
 				}
@@ -291,10 +270,10 @@
 						$_SESSION['previous_name'] = $_SESSION['name'];
 						$_SESSION['previous_row'] = $_SESSION['row'];
 					//show the results
-						echo "<tr class='list-row' style='color: $color;'>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".escape($key)."</td>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".escape($old)."</td>\n";
-						echo "	<td class=\"vtable\" style='color: $color;'>".escape($new)."</td>";
+						echo "<tr style='color: $color;'>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".$key."</td>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".$old."</td>\n";
+						echo "	<td class=\"vtable\" style='color: $color;'>".$new."</td>";
 						echo "</tr>\n";
 					//echo "</table>\n";
 				}
@@ -316,14 +295,14 @@
 		//multiple dimensional array into a 2 dimensional array
 		if (is_array($after)) {
 			$x = 0;
-			foreach ($after as $key => $value) {
+			foreach($after as $key => $value) {
 				$id = 0;
-				foreach ($value as $row) {
+				foreach($value as $row) {
 					$sub_id = 0;
-					foreach ($row as $sub_key => $val) {
+					foreach($row as $sub_key => $val) {
 						if (is_array($val)) {
-							foreach ($val as $sub_row) {
-								foreach ($sub_row as $k => $v) {
+							foreach($val as $sub_row) {
+								foreach($sub_row as $k => $v) {
 									$array[$x]['schema'] = $sub_key;
 									$array[$x]['row'] = $sub_id;
 									$array[$x]['name'] = $k;
@@ -345,27 +324,28 @@
 				}
 			}
 		}
-		echo "<br />\n";
-		echo "<table width='100%'>\n";
-		if (is_array($array)) {
-			foreach ($array as $row) {
-				if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
-					echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
-					echo "<tr>\n";
-					echo "	<th>".escape($row['schema'])."</th>\n";
-					echo "	<th>value</th>\n";
-					echo "</tr>\n";
-				}
-				echo "<tr class='list-row'>\n";
-				echo "	<td class=\"vtable\" style='color: #000000;'>".escape($row['name'])."</td>\n";
-				echo "	<td class=\"vtable\" style='color: #ff0000;'>".escape($row['value'])."</td>\n";
+
+		echo "<table border='0'>\n";
+		foreach($array as $row) {
+			if ($row['schema'] !== $previous_schema || $row['row'] !== $previous_row) {
+				echo "<tr><td colspan='4'>&nbsp;</td></tr>\n";
+				echo "<tr>\n";
+				echo "	<th>".$row['schema']."</th>\n";
+				echo "	<th>value</th>\n";
 				echo "</tr>\n";
-	
-				$previous_schema = $row['schema'];
-				$previous_row = $row['row'];
 			}
-			echo "</table>\n";
+			echo "<tr>\n";
+			//echo "	<td>".$row['schema']."</td>\n";
+			//echo "	<td>".$row['row']."</td>\n";
+			echo "	<td class=\"vtable\" style='color: #000000;'>".$row['name']."</td>\n";
+			echo "	<td class=\"vtable\" style='color: #ff0000;'>".$row['value']."</td>\n";
+			echo "</tr>\n";
+
+			$previous_schema = $row['schema'];
+			$previous_row = $row['row'];
 		}
+		echo "</table>\n";
+
 		/*
 		if (is_array($after)) {
 			//create the table header
@@ -401,8 +381,7 @@
 				$_SESSION['table_header'] = $table_header;
 			
 			//show the difference
-				echo "<br />\n";
-				echo "<table width='100%'>\n";
+				echo "<table border='0'>\n";
 				show_difference($array);
 				echo "</table>\n";
 		}
@@ -410,30 +389,16 @@
 
 //show the delete
 	if ($transaction_type == "delete") {
-		echo "<br /><br />\n";
-		echo "<table width='100%'>\n";
-		if (is_array($before)) {
-			foreach ($before as $table_name => $rows) {
-				echo "	<tr>\n";
-				echo "		<th>".escape($table_name)."</th><th>&nbsp;</th>\n";
-				echo "	</tr>\n";
-				foreach ($rows as $row) {
-					foreach ($row as $key => $value) {
-						echo "	<tr class='list-row'>\n";
-						echo "		<td>".escape($key)."</td><td>".escape($value)."</td>\n";
-						echo "	</tr>\n";
-					}
-					echo "	<tr>\n";
-					echo "		<td colspan='3'><br /><br /></td>\n";
-					echo "	</tr>\n";
-				}
-			}
-		}
+		//echo "<h3>Record Deleted</h3><br />\n";
+		echo "<br />\n";
+		echo "<pre>\n";
+		print_r($before);
+		echo "</pre>\n";
 	}
-	echo "</table>\n";
 
 //add a few lines at the end
-	echo "<br /><br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
 
 //include the footer
 	require_once "resources/footer.php";

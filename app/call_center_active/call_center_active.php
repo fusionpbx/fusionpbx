@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -54,8 +51,8 @@
 	unset($_SESSION['agents']);
 
 //get the header
-	$document['title'] = $text['title-call_center_queue_activity'];
 	require_once "resources/header.php";
+	$document['title'] = $text['title-call_center_queue_activity'];
 
 //add the ajax
 	?><script type="text/javascript">
@@ -88,33 +85,13 @@
 	}
 
 	loadXmlHttp.prototype.stateChanged=function () {
-		var url = new URL(this.xmlHttp.responseURL);
-        if (/login\.php$/.test(url.pathname)) {
-			// You are logged out. Stop refresh!
-			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
-			window.location.href = url.href;
-			return;
-		}
-
-		if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
-			//this.el.innerHTML = this.xmlHttp.responseText;
-			document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
-
-		//link table rows (except the last - the list_control_icons cell) on a table with a class of 'tr_hover', according to the href attribute of the <tr> tag
-			$('.tr_hover tr,.list tr').each(function(i,e) {
-				$(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void,.list-row > .no-link,.list-row > .checkbox,.list-row > .button,.list-row > .action-button)').on('click', function() {
-					var href = $(this).closest('tr').attr('href');
-					var target = $(this).closest('tr').attr('target');
-					if (href) {
-						if (target) { window.open(href, target); }
-						else { window.location = href; }
-					}
-				});
-			});
+	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+		//this.el.innerHTML = this.xmlHttp.responseText;
+		document.getElementById('ajax_response').innerHTML = this.xmlHttp.responseText;
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>&name=<?php echo urlencode($name); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 		if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }
@@ -129,14 +106,14 @@
 		window.attachEvent('onload', requestTime);
 	}
 
-	function send_command(url) {
+	function send_cmd(url) {
 		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp=new XMLHttpRequest();
 		}
 		else {// code for IE6, IE5
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 		}
-		xmlhttp.open("GET", url, false);
+		xmlhttp.open("GET",url,false);
 		xmlhttp.send(null);
 		//document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
 	}
@@ -146,7 +123,7 @@
 <?php
 
 //show the response
-	echo "<div id='ajax_response'></div>\n";
+	echo "	<div id='ajax_response'></div>\n";
 	echo "<br><br>";
 
 //include the footer

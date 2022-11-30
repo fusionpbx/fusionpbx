@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Inbound Routes";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Inbound Routes";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Eingehendes Routing";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -13,9 +12,9 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Routes Entrantes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Rotte di Ingresso";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Inkomende routes";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy przychodzące";
-	$apps[$x]['menu'][$y]['title']['pt-br'] = "Rotas de Entrada";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Rotas de Entrada";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Маршрутизация входящих";

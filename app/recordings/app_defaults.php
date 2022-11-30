@@ -26,9 +26,7 @@
 
 //if the recordings directory doesn't exist then create it
 	if (is_array($_SESSION['switch']['recordings']) && strlen($_SESSION['switch']['recordings']['dir']."/".$domain_name) > 0) {
-		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) {
-			mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name, 0770, true);
-		}
+		if (!is_readable($_SESSION['switch']['recordings']['dir']."/".$domain_name)) { event_socket_mkdir($_SESSION['switch']['recordings']['dir']."/".$domain_name,02770,true); }
 	}
 
 //process one time
@@ -38,12 +36,11 @@
 			if (is_array($_SESSION['recordings']['storage_type']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
 				//get recordings without base64 in db
 					$sql = "select recording_uuid, domain_uuid, recording_filename ";
-					$sql .= "from v_recordings ";
-					$sql .= "where recording_base64 is null ";
-					$sql .= "or recording_base64 = '' ";
-					$database = new database;
-					$result = $database->select($sql, null, 'all');
-					if (is_array($result) && @sizeof($result) != 0) {
+					$sql .= "from v_recordings where recording_base64 is null or recording_base64 = '' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (is_array($result)) {
 						foreach ($result as &$row) {
 							$recording_uuid = $row['recording_uuid'];
 							$recording_domain_uuid = $row['domain_uuid'];
@@ -52,38 +49,30 @@
 								$recording_directory = $_SESSION['switch']['recordings']['dir'].'/'.$domain_name;
 							//encode recording file (if exists)
 								if (file_exists($recording_directory.'/'.$recording_filename)) {
-									//build array
-										$recording_base64 = base64_encode(file_get_contents($recording_directory.'/'.$recording_filename));
-										$array['recordings'][0]['recording_uuid'] = $recording_uuid;
-										$array['recordings'][0]['domain_uuid'] = $recording_domain_uuid;
-										$array['recordings'][0]['recording_base64'] = $recording_base64;
-									//grant temporary permissions
-										$p = new permissions;
-										$p->add('recording_edit', 'temp');
+									$recording_base64 = base64_encode(file_get_contents($recording_directory.'/'.$recording_filename));
 									//update recording record with base64
-										$database = new database;
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
-										$database->save($array, false);
-										unset($array);
-									//revoke temporary permissions
-										$p->delete('recording_edit', 'temp');
+										$sql = "update v_recordings set ";
+										$sql .= "recording_base64 = '".$recording_base64."' ";
+										$sql .= "where domain_uuid = '".$recording_domain_uuid."' ";
+										$sql .= "and recording_uuid = '".$recording_uuid."' ";
+										$db->exec(check_sql($sql));
+										unset($sql);
 									//remove local recording file
 										@unlink($recording_directory.'/'.$recording_filename);
 								}
 						}
 					}
-					unset($sql, $result, $row);
+					unset($sql, $prep_statement, $result, $row);
 			}
 		//if not base64, decode to local files, remove base64 data from db
 			else if (is_array($_SESSION['recordings']['storage_type']) && $_SESSION['recordings']['storage_type']['text'] != 'base64') {
 				//get recordings with base64 in db
 					$sql = "select recording_uuid, domain_uuid, recording_filename, recording_base64 ";
-					$sql .= "from v_recordings ";
-					$sql .= "where recording_base64 is not null ";
-					$database = new database;
-					$result = $database->select($sql, null, 'all');
-					if (is_array($result) && @sizeof($result) != 0) {
+					$sql .= "from v_recordings where recording_base64 is not null ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (count($result) > 0) {
 						foreach ($result as &$row) {
 							$recording_uuid = $row['recording_uuid'];
 							$recording_domain_uuid = $row['domain_uuid'];
@@ -98,24 +87,15 @@
 							//decode base64, save to local file
 								$recording_decoded = base64_decode($recording_base64);
 								file_put_contents($recording_directory.'/'.$recording_filename, $recording_decoded);
-							//build array
-								$array['recordings'][0]['recording_uuid'] = $recording_uuid;
-								$array['recordings'][0]['domain_uuid'] = $recording_domain_uuid;
-								$array['recordings'][0]['recording_base64'] = null;
-							//grant temporary permissions
-								$p = new permissions;
-								$p->add('recording_edit', 'temp');
-							//update recording record
-								$database = new database;
-								$database->app_name = 'recordings';
-								$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
-								$database->save($array, false);
-								unset($array);
-							//revoke temporary permissions
-								$p->delete('recording_edit', 'temp');
+								$sql = "update v_recordings ";
+								$sql .= "set recording_base64 = null ";
+								$sql .= "where domain_uuid = '".$recording_domain_uuid."' ";
+								$sql .= "and recording_uuid = '".$recording_uuid."' ";
+								$db->exec(check_sql($sql));
+								unset($sql);
 						}
 					}
-					unset($sql, $result, $row);
+					unset($sql, $prep_statement, $result, $row);
 			}
 	}
 

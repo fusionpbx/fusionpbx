@@ -17,202 +17,171 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
-
-//check permissions
-	if (permission_exists('extension_export')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+include "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+require_once "resources/paging.php";
+if (if_group("superadmin")) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //add multi-lingual support
-	$language = new text;
-	$text = $language->get();
+$language = new text;
+$text = $language->get();
 
-//define available columns
-	$available_columns[] = 'extension_uuid';
-	$available_columns[] = 'domain_uuid';
-	$available_columns[] = 'extension';
-	$available_columns[] = 'number_alias';
-	$available_columns[] = 'password';
-	$available_columns[] = 'accountcode';
-	$available_columns[] = 'effective_caller_id_name';
-	$available_columns[] = 'effective_caller_id_number';
-	$available_columns[] = 'outbound_caller_id_name';
-	$available_columns[] = 'outbound_caller_id_number';
-	$available_columns[] = 'emergency_caller_id_name';
-	$available_columns[] = 'emergency_caller_id_number';
-	$available_columns[] = 'directory_first_name';
-	$available_columns[] = 'directory_last_name';
-	$available_columns[] = 'directory_visible';
-	$available_columns[] = 'directory_exten_visible';
-	$available_columns[] = 'limit_max';
-	$available_columns[] = 'limit_destination';
-	$available_columns[] = 'missed_call_app';
-	$available_columns[] = 'missed_call_data';
-	$available_columns[] = 'user_context';
-	$available_columns[] = 'toll_allow';
-	$available_columns[] = 'call_timeout';
-	$available_columns[] = 'call_group';
-	$available_columns[] = 'call_screen_enabled';
-	$available_columns[] = 'user_record';
-	$available_columns[] = 'hold_music';
-	$available_columns[] = 'auth_acl';
-	$available_columns[] = 'cidr';
-	$available_columns[] = 'sip_force_contact';
-	$available_columns[] = 'nibble_account';
-	$available_columns[] = 'sip_force_expires';
-	$available_columns[] = 'mwi_account';
-	$available_columns[] = 'sip_bypass_media';
-	$available_columns[] = 'unique_id';
-	$available_columns[] = 'dial_string';
-	$available_columns[] = 'dial_user';
-	$available_columns[] = 'dial_domain';
-	$available_columns[] = 'do_not_disturb';
-	$available_columns[] = 'forward_all_destination';
-	$available_columns[] = 'forward_all_enabled';
-	$available_columns[] = 'forward_busy_destination';
-	$available_columns[] = 'forward_busy_enabled';
-	$available_columns[] = 'forward_no_answer_destination';
-	$available_columns[] = 'forward_no_answer_enabled';
-	$available_columns[] = 'follow_me_uuid';
-	$available_columns[] = 'enabled';
-	$available_columns[] = 'description';
-	$available_columns[] = 'absolute_codec_string';
-	$available_columns[] = 'forward_user_not_registered_destination';
-	$available_columns[] = 'forward_user_not_registered_enabled';
+function array2csv(array &$array)
+{
+   if (count($array) == 0) {
+     return null;
+   }
+   ob_start();
+   $df = fopen("php://output", 'w');
+   fputcsv($df, array_keys(reset($array)));
+   foreach ($array as $row) {
+      fputcsv($df, $row);
+   }
+   fclose($df);
+   return ob_get_clean();
+}
 
-//define the functions
-	function array2csv(array &$array) {
-		if (count($array) == 0) {
-			return null;
-		}
-		ob_start();
-		$df = fopen("php://output", 'w');
-		fputcsv($df, array_keys(reset($array)));
-		foreach ($array as $row) {
-			fputcsv($df, $row);
-		}
-		fclose($df);
-		return ob_get_clean();
-	}
+function download_send_headers($filename) {
+    // disable caching
+    $now = gmdate("D, d M Y H:i:s");
+    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+    header("Last-Modified: {$now} GMT");
 
-	function download_send_headers($filename) {
-		// disable caching
-		$now = gmdate("D, d M Y H:i:s");
-		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-		header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-		header("Last-Modified: {$now} GMT");
+    // force download
+    header("Content-Type: application/force-download");
+    header("Content-Type: application/octet-stream");
+    header("Content-Type: application/download");
 
-		// force download
-		header("Content-Type: application/force-download");
-		header("Content-Type: application/octet-stream");
-		header("Content-Type: application/download");
+    // disposition / encoding on response body
+    header("Content-Disposition: attachment;filename={$filename}");
+    header("Content-Transfer-Encoding: binary");
+}
 
-		// disposition / encoding on response body
-		header("Content-Disposition: attachment;filename={$filename}");
-		header("Content-Transfer-Encoding: binary");
-	}
+if (isset($_REQUEST["column_group"])) {
 
-//get the extensions from the database and send them as output
-	if (is_array($_REQUEST["column_group"]) && @sizeof($_REQUEST["column_group"]) != 0) {
+	$columns = implode(",",$_REQUEST["column_group"]);
+	$sql = "select " . $columns . " from v_extensions ";
+	$sql .= " where domain_uuid = '".$domain_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$extensions = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	unset ($sql, $prep_statement);
+//	print_r($extensions);
 
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: extension_download.php');
-				exit;
-			}
+	download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+	echo array2csv($extensions);
+	die();
 
-		//validate submitted columns
-		foreach ($_REQUEST["column_group"] as $column_name) {
-			if (in_array($column_name, $available_columns)) {
-				$selected_columns[] = $column_name;
-			}
-		}
-		if (is_array($selected_columns) && @sizeof($selected_columns) != 0) {
-			$sql = "select ".implode(', ', $selected_columns)." from v_extensions ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
-			$extensions = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters, $selected_columns);
+}
 
-			download_send_headers("extension_export_".date("Y-m-d").".csv");
-			echo array2csv($extensions);
-			exit;
-		}
-	}
+$columns[] = 'extension_uuid';
+$columns[] = 'domain_uuid';
+$columns[] = 'extension';
+$columns[] = 'number_alias';
+$columns[] = 'password';
+$columns[] = 'accountcode';
+$columns[] = 'effective_caller_id_name';
+$columns[] = 'effective_caller_id_number';
+$columns[] = 'outbound_caller_id_name';
+$columns[] = 'outbound_caller_id_number';
+$columns[] = 'emergency_caller_id_name';
+$columns[] = 'emergency_caller_id_number';
+$columns[] = 'directory_full_name';
+$columns[] = 'directory_visible';
+$columns[] = 'directory_exten_visible';
+$columns[] = 'limit_max';
+$columns[] = 'limit_destination';
+$columns[] = 'missed_call_app';
+$columns[] = 'missed_call_data';
+$columns[] = 'user_context';
+$columns[] = 'toll_allow';
+$columns[] = 'call_timeout';
+$columns[] = 'call_group';
+$columns[] = 'call_screen_enabled';
+$columns[] = 'user_record';
+$columns[] = 'hold_music';
+$columns[] = 'auth_acl';
+$columns[] = 'cidr';
+$columns[] = 'sip_force_contact';
+$columns[] = 'nibble_account';
+$columns[] = 'sip_force_expires';
+$columns[] = 'mwi_account';
+$columns[] = 'sip_bypass_media';
+$columns[] = 'unique_id';
+$columns[] = 'dial_string';
+$columns[] = 'dial_user';
+$columns[] = 'dial_domain';
+$columns[] = 'do_not_disturb';
+$columns[] = 'forward_all_destination';
+$columns[] = 'forward_all_enabled';
+$columns[] = 'forward_busy_destination';
+$columns[] = 'forward_busy_enabled';
+$columns[] = 'forward_no_answer_destination';
+$columns[] = 'forward_no_answer_enabled';
+$columns[] = 'follow_me_uuid';
+$columns[] = 'enabled';
+$columns[] = 'description';
+$columns[] = 'forward_caller_id_uuid';
+$columns[] = 'absolute_codec_string';
+$columns[] = 'forward_user_not_registered_destination';
+$columns[] = 'forward_user_not_registered_enabled';
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
+$c = 0;
+$row_style["0"] = "row_style0";
+$row_style["1"] = "row_style1";
 
-//include the header
-	$document['title'] = $text['title-extension_export'];
+//begin the page content
 	require_once "resources/header.php";
 
-//show the content
-	echo "<form method='post' name='frm' id='frm'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-extension_export']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'extensions.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo $text['description-extension_export'];
-	echo "<br /><br />\n";
-	
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	echo "	<th class='checkbox'>\n";
-	echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".($available_columns ?: "style='visibility: hidden;'").">\n";
-	echo "	</th>\n";
-	echo "	<th>".$text['label-column_name']."</th>\n";
-	echo "</tr>\n";
-
-	if (is_array($available_columns) && @sizeof($available_columns) != 0) {
-		$x = 0;
-		foreach ($available_columns as $column_name) {
-			$list_row_onclick = "if (!this.checked) { document.getElementById('checkbox_all').checked = false; }";
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			echo "	<td class='checkbox'>\n";
-			echo "		<input type='checkbox' name='column_group[]' id='checkbox_".$x."' value=\"".$column_name."\" onclick=\"".$list_row_onclick."\">\n";
-			echo "	</td>\n";
-			echo "	<td onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick."\">".$column_name."</td>";
-			echo "</tr>";
-			$x++;
-		}
+	echo "<form method='post' name='frm' action='' autocomplete='off'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+		echo "<tr>\n";
+		echo "<th><input type=\"checkbox\" id=\"selecctall\"/>";
+		echo "</th>";
+		echo "<th> Column Name";
+		echo "</th>";
+		echo "<th> Description";
+		echo "</th>";
+		echo "</tr>";
+	echo "</tr>";
+	foreach ($columns as $value) {
+		echo "<tr>\n";
+		echo "	<td width = '20px' valign='top' class='".$row_style[$c]."'><input class=\"checkbox1\" type=\"checkbox\" name=\"column_group[]\" value=\"$value\"/>";
+		echo "</td>";
+		echo "	<td valign='top' class='".$row_style[$c]."'> $value";
+		echo "</td>";
+		echo "	<td valign='top' class='".$row_style[$c]."'>";
+		echo "</td>";
+		echo "</tr>";
+		if ($c==0) { $c=1; } else { $c=0; }
 	}
 
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='3' align='right'>\n";
+	echo "			<br>";
+	echo "			<input type='submit' class='btn' value='".$text['button-export']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+
+	echo "</table>";
+	echo "<br><br>";
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
-
 ?>

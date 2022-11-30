@@ -17,18 +17,15 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -48,42 +45,43 @@
 	}
 
 //get the http values and set them as variables
-	$domain_uuid = $_POST["domain_uuid"];
-	$group_uuid = $_POST["group_uuid"];
-	$group_name = $_POST["group_name"];
-	$user_uuid = $_POST["user_uuid"];
-
-//validate the token
-	$token = new token;
-	if (!$token->validate('/core/groups/group_members.php')) {
-		message::add($text['message-invalid_token'],'negative');
-		header('Location: groups.php');
-		exit;
-	}
+	$domain_uuid = check_str($_POST["domain_uuid"]);
+	$group_uuid = check_str($_POST["group_uuid"]);
+	$group_name = check_str($_POST["group_name"]);
+	$user_uuid = check_str($_POST["user_uuid"]);
 
 //add the user to the group
 	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {
-		$array['user_groups'][0]['user_group_uuid'] = uuid();
-		$array['user_groups'][0]['domain_uuid'] = $domain_uuid;
-		$array['user_groups'][0]['group_uuid'] = $group_uuid;
-		$array['user_groups'][0]['group_name'] = $group_name;
-		$array['user_groups'][0]['user_uuid'] = $user_uuid;
-
-		$p = new permissions;
-		$p->add('user_group_add', 'temp');
-
-		$database = new database;
-		$database->app_name = 'groups';
-		$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-		$database->save($array);
-		unset($array);
-
-		$p->delete('user_group_add', 'temp');
-
-		message::add($text['message-update']);
+		$sql = "insert into v_group_users ";
+		$sql .= "(";
+		$sql .= "group_user_uuid, ";
+		$sql .= "domain_uuid, ";
+		$sql .= "group_uuid, ";
+		$sql .= "group_name, ";
+		$sql .= "user_uuid ";
+		$sql .= ")";
+		$sql .= "values ";
+		$sql .= "(";
+		$sql .= "'".uuid()."', ";
+		$sql .= "'".$domain_uuid."', ";
+		$sql .= "'".$group_uuid."', ";
+		$sql .= "'".$group_name."', ";
+		$sql .= "'".$user_uuid."' ";
+		$sql .= ")";
+		if (!$db->exec($sql)) {
+			$info = $db->errorInfo();
+			echo "<pre>".print_r($info, true)."</pre>";
+			exit;
+		}
+		else {
+			//log the success
+			//$log_type = 'group'; $log_status='add'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." added to group: ".$group_name;
+			//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
+		}
 	}
 
 //redirect the user
-	header("Location: group_members.php?group_uuid=".urlencode($group_uuid)."&group_name=".urlencode($group_name));
+	messages::add($text['message-update']);
+	header("Location: groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name);
 
 ?>

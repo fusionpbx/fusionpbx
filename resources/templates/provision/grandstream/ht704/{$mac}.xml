@@ -68,22 +68,14 @@
 <P212>2</P212>
 
 <!-- Firmware Server Path -->
-{if isset($grandstream_firmware_path) && isset($firmware_version)}
-<P192>{$grandstream_firmware_path}/ht704/{$firmware_version}</P192>
-{elseif isset($grandstream_firmware_path)}
-<P192>{$grandstream_firmware_path}/ht704</P192>
+{if isset($grandstream_firmware_path)}
+<P192>{$grandstream_firmware_path}</P192>
 {else}
 <P192>{$domain_name}{$project_path}/app/provision</P192>
 {/if}
 
 <!-- Config Server Path -->
-{if $grandstream_config_server_path=="none"}
-<P237></P237>
-{elseif isset($grandstream_config_server_path)}
-<P237>{$grandstream_config_server_path}</P237>
-{elseif isset($domain_name)}
 <P237>{$domain_name}{$project_path}/app/provision</P237>
-{/if}
 
 <!-- XML Config File Password -->
 <!-- String-->
@@ -117,7 +109,7 @@
 <!-- When set to Yes(1), it will override the configured provision path and method.-->
 <!-- Number: 0, 1-->
 <!-- Mandatory-->
-{if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+<P145>1</P145>
 
 <!-- Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No.-->
 <!-- Number: 0, 1, 2, 3-->
@@ -337,7 +329,7 @@
 
 <!-- Primary SIP Server-->
 <!-- Server address-->
-<P47>{$account.1.server_address}</P47>
+<P47>{$server_address_1}</P47>
 
 <!-- Failover SIP Server-->
 <!-- Server address-->
@@ -355,7 +347,7 @@
 <!-- Allow DHCP Option 120( override SIP server )  0 - No, 1 - Yes.-->
 <!-- Number: 0, 1-->
 <!-- Mandatory-->
-{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}
+<P1411>0</P1411>
 
 <!-- SIP Transport 0 - UDP, 1 - TCP, 2 - TLS-->
 <!-- Number: 0, 1, 2-->
@@ -368,8 +360,8 @@
 
 <!-- NAT Traversal. 0 - NAT No, 1 - STUN, 2 - Keep-alive, 3 - UPnP, 4 - Auto, 5 - VPN. Default value is 2 -->
 <!-- Number: 0, 1, 2, 3, 4, 5 -->
-{if isset($grandstream_nat_traversal)}
-<P52>{$grandstream_nat_traversal}</P52>
+{if isset($grandstream_nat_traversal_1)}
+<P52>{$grandstream_nat_traversal_1}</P52>
 {else}
 <P52>0</P52>
 {/if}
@@ -402,7 +394,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days)-->
 <!-- Number: 1 to 64800-->
 <!-- Mandatory-->
-<P32>{$account.1.register_expires}</P32>
+<P32>3</P32>
 
 <!-- Reregister before Expiration (in seconds. Default 0 second)-->
 <!-- Number: 1 to 64800-->
@@ -629,7 +621,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4330>300</P4330>
+<P4330>20</P4330>
 
 <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
 <!-- Number: 0, 1 -->
@@ -662,11 +654,11 @@
 
 <!-- Dial Plan -->
 <!-- String -->
-
+  
 {if isset($grandstream_dial_plan) }
 <P4200>{$grandstream_dial_plan}</P4200>
 {else}
-<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
+<P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P4200>
 {/if}
 
 <!-- SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
@@ -818,11 +810,7 @@
 <!-- FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-{if isset($grandstream_fax_mode)}
-<P228>1</P228>
-{else}
 <P228>0</P228>
-{/if}
 
 <!-- Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
 <!-- Number: 0, 1 -->
@@ -1014,7 +1002,7 @@
 
 <!-- Primary SIP Server -->
 <!-- Server address -->
-<P747>{$account.2.server_address}</P747>
+<P747>{$server_address_2}</P747>
 
 <!-- Failover SIP Server -->
 <!-- Server address -->
@@ -1067,7 +1055,7 @@
 <!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
 <!-- Number: 1 to 64800 -->
 <!-- Mandatory -->
-<P732>{$account.2.register_expires}</P732>
+<P732>3</P732>
 
 <!-- Reregister before Expiration (in seconds. Default 0 second) -->
 <!-- Number: 1 to 64800 -->
@@ -1290,7 +1278,7 @@
 <!-- Hunting Group Ring Timeout. (5-300, default is 20 seconds) -->
 <!-- Number: 5 to 300 -->
 <!-- Mandatory -->
-<P4331>300</P4331>
+<P4331>20</P4331>
 
 <!-- Hunting Group Type. 0 - Circular, 1 - Linear -->
 <!-- Number: 0, 1 -->
@@ -1664,16 +1652,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4060>{$account.1.user_id}</P4060>
+<P4060>{$user_id_1}</P4060>
 
 <!-- String -->
-<P4090>{$account.1.user_id}</P4090>
+<P4090>{$user_id_1}</P4090>
 
 <!-- String -->
-<P4120>{$account.1.password}</P4120>
+<P4120>{$user_password_1}</P4120>
 
 <!-- String -->
-<P4180>{$account.1.display_name}</P4180>
+<P4180>{$display_name_1}</P4180>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4150>0</P4150>
@@ -1689,16 +1677,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4061>{$account.2.user_id}</P4061>
+<P4061>{$user_id_2}</P4061>
 
 <!-- String -->
-<P4091>{$account.2.user_id}</P4091>
+<P4091>{$user_id_2}</P4091>
 
 <!-- String -->
-<P4121>{$account.2.password}</P4121>
+<P4121>{$user_password_2}</P4121>
 
 <!-- String -->
-<P4181>{$account.2.display_name}</P4181>
+<P4181>{$display_name_2}</P4181>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4151>0</P4151>
@@ -1714,16 +1702,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4062>{$account.3.user_id}</P4062>
+<P4062>{$user_id_3}</P4062>
 
 <!-- String -->
-<P4092>{$account.3.user_id}</P4092>
+<P4092>{$user_id_3}</P4092>
 
 <!-- String -->
-<P4122>{$account.3.password}</P4122>
+<P4122>{$user_password_3}</P4122>
 
 <!-- String -->
-<P4182>{$account.3.display_name}</P4182>
+<P4182>{$display_name_3}</P4182>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4152>0</P4152>
@@ -1739,16 +1727,16 @@
 <!-- Enable Port (0 - No, 1 - Yes) -->
 
 <!-- String -->
-<P4063>{$account.4.user_id}</P4063>
+<P4063>{$user_id_4}</P4063>
 
 <!-- String -->
-<P4093>{$account.4.user_id}</P4093>
+<P4093>{$user_id_4}</P4093>
 
 <!-- String -->
-<P4123>{$account.4.password}</P4123>
+<P4123>{$user_password_3}</P4123>
 
 <!-- String -->
-<P4183>{$account.4.display_name}</P4183>
+<P4183>{$display_name_4}</P4183>
 
 <!-- Number: 0, 1, 2, 3 -->
 <P4153>1</P4153>
@@ -1997,7 +1985,7 @@
 <!-- Allow DHCP server to set Time Zone. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
 <!-- Mandatory -->
-{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+<P143>0</P143>
 
 <!-- Language. 0 - English, 4 - Chinese, 10 - Spanish IVR -->
 <!-- Number: 0, 4, 10 -->

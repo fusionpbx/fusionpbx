@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Dialplan";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Wählplan";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -13,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Piano Numerazioni";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Dialplan";
@@ -24,14 +23,13 @@
 	$apps[$x]['menu'][$y]['uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['icon'] = "fa-exchange-alt";
+	$apps[$x]['menu'][$y]['icon'] = "glyphicon-transfer";
 	$apps[$x]['menu'][$y]['path'] = "";
 	$apps[$x]['menu'][$y]['order'] = "15";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Dialplan Manager";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Dialplan Manager";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Wählplan Einstellungen";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -42,7 +40,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Gestion du Plan de Numérotation";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Kiesplan beheer";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Menadżer dialplanu";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Gerenciador de Dialplan";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestor de Dialplan";

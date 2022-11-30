@@ -24,11 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -43,19 +40,7 @@
 
 //get the variables
 	$cmd = $_GET['cmd'];
-
-//pre-populate the form
-	if (is_array($_GET) && is_uuid($_GET["id"]) && $_POST["persistformvar"] != "true") {
-		$call_center_queue_uuid = $_GET["id"];
-		$sql = "select queue_extension from v_call_center_queues ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
-		$database = new database;
-		$queue_extension = $database->select($sql, $parameters, 'column');
-		unset($sql, $parameters);
-	}
+	$queue = $_GET['queue'];
 
 //validate the variables
 	switch ($cmd) {
@@ -72,17 +57,22 @@
 			unset($cmd);
 	}
 
+//only allow a uuid for the queue name
+	if (!is_uuid($queue)) {
+		unset($queue);
+	}
+
 //connect to event socket
-	if (isset($queue_extension) && isset($cmd)) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$response = event_socket_request($fp, 'api reloadxml');
-			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue_extension."@".$_SESSION["domain_name"]);
-			fclose($fp);
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$response = event_socket_request($fp, 'api reloadxml');
+		if (isset($cmd) && isset($queue)) {
+			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue);
 		}
-		else {
-			$response = '';
-		}
+		fclose($fp);
+	}
+	else {
+		$response = '';
 	}
 
 //send the redirect

@@ -46,19 +46,19 @@
     <!-- Account Active. 0 - No, 1 - Yes -->
     <P271>1</P271>
     <!-- Account Name, MaxLength 64 characters -->
-    <P270>{$account.1.display_name}</P270>
+    <P270>{$display_name_1}</P270>
     <!-- SIP Server, MaxLength 64 characters -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$server_address_1}</P47>
     <!-- SIP User ID, MaxLength 64 characters -->
-    <P35>{$account.1.user_id}</P35>
+    <P35>{$user_id_1}</P35>
     <!-- Authenticate ID, MaxLength 64 characters -->
-    <P36>{$account.1.user_id}</P36>
+    <P36>{$user_id_1}</P36>
     <!-- Authenticate Password, MaxLength unlimited -->
-    <P34>{$account.1.password}</P34>
+    <P34>{$user_password_1}</P34>
     <!-- Voicemail UserID (User ID/extension for 3rd Party voice mail system), MaxLength 64 characters -->
-    <P33>{$voicemail_number}</P33>
+    <P33>*97</P33>
     <!-- Name (DisPlay name :John Doe), MaxLength 64 characters -->
-    <P3>{$account.1.display_name}</P3>
+    <P3>{$display_name_1}</P3>
     <!-- Tel URI suPPort. 0 - disabled, 1 - User is Phone, 2 - Tel URI. Default value is 0 -->
     <P63>0</P63>
     <!--  Account1 Network Settings     -->
@@ -78,7 +78,7 @@
     <!-- Unregister On Reboot. 0 - No, 1 - Yes. -->
     <P81>0</P81>
     <!-- Register ExPiration (m)(in minutes. default 1 hour, max 45 days) -->
-    <P32>{$account.1.register_expires}</P32>
+    <P32>3</P32>
     <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
     <P138>20</P138>
     <!-- Local SIP Port (default 5060, Allowed value: 5-65535) -->
@@ -208,7 +208,13 @@
     <!-- Dial Plan Prefix, MaxLength 32 -->
     <P66></P66>
     <!-- Dial Plan Maxlength = unlimited, default is allow all  -->
-    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P290>
+    
+    {if isset($grandstream_dial_plan) }
+    <P290>{$grandstream_dial_plan}</P290>
+    {else}
+    <P290>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P290>
+    {/if}
+    
     <!-- Early Dial. 0 - No, 1 - Yes -->
     <P29>0</P29>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes -->
@@ -222,9 +228,7 @@
     <!-- SPecial Feature.  100-Standard, 108-CBCOM, 109-RNK, 113-China Mobile, 114-ZTE IMS, 115-Mobotix, 116-ZTE NGN, 117-Huawei IMS. -->
     <P198>100</P198>
     <!-- Feature Key Synchronization.   0 - Disable (default),  1 - Broadsoft. -->
-{if isset($grandstream_feature_key_sync)}
-    <P2325>{$grandstream_feature_key_sync}</P2325>
-{/if}
+    <P2325>0</P2325>
     <!-- Enable Call Features. 0 - No, 1 - Yes. -->
     <P191>1</P191>
     <!-- Delayed Call Forward Wait Time (s). Default is 20 seconds, maxlength = 5 -->
@@ -267,7 +271,7 @@
     <!-- Authenticate Password, MaxLength: unlimited -->
     <P506></P506>
     <!-- Voicemail UserID (User ID/extension for 3rd Party voice mail system, MaxLength 64 characters) -->
-    <P526>{$voicemail_number}</P526>
+    <P526>*97</P526>
     <!-- Name (DisPlay name :John Doe, MaxLength 64 characters) -->
     <P507></P507>
     <!-- Tel URL SuPPort. 0 - disabled, 1 - User is Phone, 2 - Tel URI. Default value is 0 -->
@@ -289,7 +293,7 @@
     <!-- Unregister On Reboot. 0 - No, 1 - Yes. -->
     <P511>0</P511>
     <!-- Register ExPiration (m)(in minutes. default 1 hour, max 45 days) -->
-    <P512>{$account.3.register_expires}</P512>
+    <P512>3</P512>
     <!-- Wait Time Retry Registration (s)(in seconds. Between 1-3600, default is 20) -->
     <P571>20</P571>
     <!-- Local SIP Port (default 5064, Allowed value: 5-65535) -->
@@ -488,9 +492,7 @@
     <!--P281 -->
     <!--  Advanced Settings/ Call Features -->
     <!-- Always Ring SPeaker.  0 - No, 1 - Yes.  Default is 0. -->
-{if isset($grandstream_headset_ring)}
-    <P1439>{$grandstream_headset_ring}</P1439>
-{/if}
+    <P1439>0</P1439>
     <!-- Disable Call-Waiting. 0 - No, 1 - Yes -->
     <P91>0</P91>
     <!-- Disable Call-Waiting Tone. 0 - No (default), 1 - Yes -->
@@ -647,7 +649,7 @@
     <P144>1</P144>
     <!-- DHCP OPtion 2 to Override Time Zone setting. 0 - No, 1 - Yes. -->
     <!-- When set to Yes(1), it will override the configured Time Zone setting if available. -->
-    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    <P143>1</P143>
     <!-- Time Zone -->
     <!-- Australia -->
     <!--   Melbourne,Canberra,Sydney EST-10EDT-11,M10.5.0/02:00:00,M3.5.0/03:00:00 -->
@@ -740,7 +742,7 @@
     <P7070>1</P7070>
     <!-- Lock KeyPad UPdate. 0 - No, 1 - Yes -->
     <P88>0</P88>
-
+    
     <!-- XML Config File Password -->
     <!-- String; between ascii values 33 and 126 -->
     <!-- Mandatory -->
@@ -753,28 +755,19 @@
     <!--  HTTP/HTTPS Password -->
     <!--  String; between ascii values 33 and 126 -->
     <P1361>{$http_auth_password}</P1361>
-
-    <!-- Upgrade Via: (0 - TFTP,1 - HTTP and 2 - HTTPS) -->
+    
+    <!-- UPgrade Via: (0 - TFTP,1 - HTTP and 2 - HTTPS) -->
     <P212>2</P212>
-
     <!-- Firmware Server Path, MaxLength 128 -->
-    {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxv3175v2/{$firmware_version}</P192>
-    {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxv3175v2</P192>
+    
+    {if isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
-
-    <!-- Config Server Path, MaxLength 128 -->
-    {if $grandstream_config_server_path=="none"}
-    <P237></P237>
-    {elseif isset($grandstream_config_server_path)}
-    <P237>{$grandstream_config_server_path}</P237>
-    {elseif isset($domain_name)}
-    <P237>{$domain_name}{$project_path}/app/provision</P237>
-    {/if}
     
+    <!-- Config Server Path, MaxLength 128 -->
+    <P237>{$domain_name}{$project_path}/app/provision</P237>
     <!-- Firmware File Prefix, MaxLength 128 -->
     <P232></P232>
     <!-- Firmware File Postfix, MaxLength 128 -->
@@ -791,9 +784,9 @@
     <P235></P235>
     <!-- DHCP OPtion 66 Override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- When set to Yes(1), it will override the configured Provision Path and method. -->
-    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <P145>1</P145>
     <!-- DHCP OPtion 120 Override SIP Server. 0 - No, 1 - Yes. Default is Yes. -->
-    {if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}{if isset($grandstream_dhcp_option_override_sip_server)}<P1411>{$grandstream_dhcp_option_override_sip_server}</P1411>{else}<P1411>0</P1411>{/if}{/if}
+    <P1411>1</P1411>
     <!-- 3CX Auto Provision. 0 - No, 1 - Yes. Default is No. -->
     <P1414>0</P1414>
     <!-- Automatic UPgrade. 0 - No, 1 - Check every day, 2 - Check every week, 3 - Check at a Period Time. Default is 0. -->
@@ -869,17 +862,10 @@
     <!--P7052 = -->
     <!--  Maintenance/ Device Manager -->
     <!-- Headset TX Gain (dB), Allowed value: -6, 0, 6 -->
-{if isset($grandstream_headset_tx_gain)}
-    <P1301>{$grandstream_headset_tx_gain}</P1301>
-{else}
     <P1301>0</P1301>
-{/if}
     <!-- Headset RX Gain (dB), Allowed value: -6, 0, 6 -->
-{if isset($grandstream_headset_rx_gain)}
-    <P1302>{$grandstream_headset_rx_gain}</P1302>
-{else}
     <P1302>0</P1302>
-{/if}    <!-- Handset TX gain, 0 ?0dB, 1 ?-6dB, 2 - 6 dB, 3 - -3dB, 4 ?3dB -->
+    <!-- Handset TX gain, 0 ?0dB, 1 ?-6dB, 2 - 6 dB, 3 - -3dB, 4 ?3dB -->
     <P1464>0</P1464>
     <!-- Camera ExPosure:   Allowed value: 0 - 19 -->
     <P915>12</P915>

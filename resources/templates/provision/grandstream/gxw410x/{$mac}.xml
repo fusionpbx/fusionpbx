@@ -30,23 +30,13 @@
     <!--  Firmware Upgrade -->
     <!--  Firmware Upgrade. 0 - TFTP Upgrade,  1 - HTTP Upgrade. -->
     <P212>1</P212>
-    <!-- Firmware Server Path -->
-    {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/gxw410x/{$firmware_version}</P192>
-    {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/gxw410x</P192>
+    {if isset($grandstream_firmware_path)}
+    <P192>{$grandstream_firmware_path}</P192>
     {else}
     <P192>{$domain_name}{$project_path}/app/provision</P192>
     {/if}
     <!--  Config Server Path -->
-    {if $grandstream_config_server_path=="none"}
-    <P237></P237>
-    {elseif isset($grandstream_config_server_path)}
-    <P237>{$grandstream_config_server_path}</P237>
-    {elseif isset($domain_name)}
     <P237>{$domain_name}{$project_path}/app/provision</P237>
-    {/if}
-    
     <!--  Firmware File Prefix -->
     <P232></P232>
     <!--  Firmware File Postfix -->
@@ -57,7 +47,7 @@
     <P235></P235>
     <!--  Allow DHCP Option 66 to override server. 0 - No, 1 - Yes. Default is Yes. -->
     <!--  When set to Yes(1), it will override the configured provision path and method. -->
-    {if isset($grandstream_dhcp_option_override)}<P145>{$grandstream_dhcp_option_override}</P145>{else}<P145>1</P145>{/if}
+    <P145>1</P145>
     <!--  Automatic Upgrade. 0 - No, 1 - Yes. Default is No. -->
     <P194>0</P194>
     <!--  Check for new firmware every () minutes, unit is in minute, minimnu 60 minutes, default is 7 days. -->
@@ -92,7 +82,7 @@
     <!--  Profile Name -->
     <P270></P270>
     <!--  SIP Server: max. length = 96 -->
-    <P47>{$account.1.server_address}</P47>
+    <P47>{$server_address_1}</P47>
     <!--  Outbound Proxy -->
     <P48></P48>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -104,7 +94,7 @@
     <!--  Unregister On Reboot. 0 - no, 1 - yes -->
     <P81>0</P81>
     <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-    <P32>{$account.1.register_expires}</P32>
+    <P32>3</P32>
     <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
     <P138>20</P138>
     <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
@@ -165,7 +155,7 @@
     <!--  Profile Name -->
     <P417></P417>
     <!--  SIP Server -->
-    <P402>{$account.2.server_address}</P402>
+    <P402>{$server_address_2}</P402>
     <!--  Outbound Proxy Server -->
     <P403></P403>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -177,7 +167,7 @@
     <!--  Unregister on Reboot. 0 - no, 1 - yes -->
     <P411>0</P411>
     <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-    <P412>{$account.2.register_expires}</P412>
+    <P412>3</P412>
     <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
     <P471>20</P471>
     <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
@@ -237,7 +227,7 @@
     <!--  Profile Name -->
     <P517></P517>
     <!--  SIP Server -->
-    <P502>{$account.3.server_address}</P502>
+    <P502>{$server_address_3}</P502>
     <!--  Outbound Proxy Server -->
     <P503></P503>
     <!--  Use DNS SRV. 0 - No, 1 - Yes. -->
@@ -249,7 +239,7 @@
     <!--  Unregister on Reboot. 0 - no, 1 - yes -->
     <P511>0</P511>
     <!--  Register Expiration (in minutes. default 1 hour, max 45 days) -->
-    <P512>{$account.3.register_expires}</P512>
+    <P512>3</P512>
     <!--  Registration Failure Retry Wait Time (in seconds. Between 1-3600, default is 20) -->
     <P571>20</P571>
     <!--  SIP Transport. 1 - UDP, 2 - TCP , (default is UDP) -->
@@ -433,30 +423,30 @@
     <!--  FXO Port 1 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3030></P3030>
-    <P3060>{$account.1.user_id}</P3060>
-    <P3090>{$account.1.user_id}</P3090>
-    <P3120>{$account.1.password}</P3120>
+    <P3060>{$user_id_1}</P3060>
+    <P3090>{$user_id_1}</P3090>
+    <P3120>{$user_password_1}</P3120>
     <P3150>3000</P3150>
     <!--  FXO Port 2 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3031></P3031>
-    <P3061>{$account.2.user_id}</P3061>
-    <P3091>{$account.2.user_id}</P3091>
-    <P3121>{$account.2.password}</P3121>
+    <P3061>{$user_id_2}</P3061>
+    <P3091>{$user_id_2}</P3091>
+    <P3121>{$user_password_2}</P3121>
     <P3151>3000</P3151>
     <!--  FXO Port 3 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3032></P3032>
-    <P3062>{$account.3.user_id}</P3062>
-    <P3092>{$account.3.user_id}</P3092>
-    <P3122>{$account.3.password}</P3122>
+    <P3062>{$user_id_3}</P3062>
+    <P3092>{$user_id_3}</P3092>
+    <P3122>{$user_password_3}</P3122>
     <P3152>3000</P3152>
     <!--  FXO Port 4 -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
     <P3033></P3033>
-    <P3063>{$account.4.user_id}</P3063>
-    <P3093>{$account.4.user_id}</P3093>
-    <P3123>{$account.4.password}</P3123>
+    <P3063>{$user_id_4}</P3063>
+    <P3093>{$user_id_4}</P3093>
+    <P3123>{$user_password_4}</P3123>
     <P3153>3000</P3153>
     <!--  FXO Port 5 (Uncomment the following P-values if using GXW4108) -->
     <!--  Channel(s), SIP USER ID, Authenticate ID, Password, Profile ID (3000 - Profile 1, 3001 - Profile 2, 3003 - Profile 3) -->
@@ -567,7 +557,7 @@
     {if isset($grandstream_dial_plan) }
     <P3331>{$grandstream_dial_plan}</P3331>
     {else}
-    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P3331>
+    <P3331>{literal}{x+|*x+|*++|\p\a\r\k\+*x+| \f\l\o\w\+*x+}{/literal}</P3331>
     {/if}
     
     <!--  Hookflash Duration (X10ms). Default 60. -->
@@ -648,7 +638,7 @@
     <P64>420</P64>
     <!--  Allow DHCP Option 2 to override Time Zone setting. 0 - No, 1 - Yes. -->
     <!--  When set to Yes(1), it will override the configured Time Zone setting if available. -->
-    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
+    <P143>0</P143>
     <!--  Daylight Savings Time. 0 - no, 1 - yes -->
     <P75>0</P75>
     <!--  Optional Rule: -->

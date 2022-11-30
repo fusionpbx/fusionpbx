@@ -23,55 +23,64 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
+if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get contact uuid
-	$domain_uuid = $_REQUEST['domain_uuid'];
-	$contact_uuid = $_REQUEST['contact_uuid'];
+	$domain_uuid = check_str($_REQUEST['domain_uuid']);
+	$contact_uuid = check_str($_REQUEST['contact_uuid']);
 
 //get posted variables & set time status
-	if (is_array($_POST) && @sizeof($_POST) != 0) {
-		$contact_time_uuid = $_POST['contact_time_uuid'];
-		$contact_uuid = $_POST['contact_uuid'];
-		$time_action = $_POST['time_action'];
-		$time_description = $_POST['time_description'];
+	if (sizeof($_POST) > 0) {
+		$contact_time_uuid = check_str($_POST['contact_time_uuid']);
+		$contact_uuid = check_str($_POST['contact_uuid']);
+		$time_action = check_str($_POST['time_action']);
+		$time_description = check_str($_POST['time_description']);
 
 		if ($time_description == 'Description...') { unset($time_description); }
 
 		if ($time_action == 'start') {
 			$contact_time_uuid = uuid();
-			$array['contact_times'][0]['domain_uuid'] = $domain_uuid;
-			$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
-			$array['contact_times'][0]['contact_uuid'] = $contact_uuid;
-			$array['contact_times'][0]['user_uuid'] = $_SESSION["user"]["user_uuid"];
-			$array['contact_times'][0]['time_start'] = date("Y-m-d H:i:s");
-			$array['contact_times'][0]['time_description'] = $time_description;
+			$sql = "insert into v_contact_times ";
+			$sql .= "( ";
+			$sql .= "domain_uuid, ";
+			$sql .= "contact_time_uuid, ";
+			$sql .= "contact_uuid, ";
+			$sql .= "user_uuid, ";
+			$sql .= "time_start, ";
+			$sql .= "time_description ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "( ";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$contact_time_uuid."', ";
+			$sql .= "'".$contact_uuid."', ";
+			$sql .= "'".$_SESSION["user"]["user_uuid"]."', ";
+			$sql .= "'".date("Y-m-d H:i:s")."', ";
+			$sql .= "'".$time_description."' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
 		}
 		if ($time_action == 'stop') {
-			$array['contact_times'][0]['contact_time_uuid'] = $contact_time_uuid;
-			$array['contact_times'][0]['time_stop'] = date("Y-m-d H:i:s");
-			$array['contact_times'][0]['time_description'] = $time_description;
+			$sql = "update v_contact_times ";
+			$sql .= "set ";
+			$sql .= "time_stop = '".date("Y-m-d H:i:s")."', ";
+			$sql .= "time_description = '".$time_description."' ";
+			$sql .= "where ";
+			$sql .= "contact_time_uuid = '".$contact_time_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$sql .= "and user_uuid = '".$_SESSION["user"]["user_uuid"]."' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 		}
-
-		if (is_array($array) && @sizeof($array) != 0) {
-			$database = new database;
-			$database->app_name = 'contacts';
-			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
-			$database->save($array);
-			unset($array);
-		}
-
 		header("Location: contact_timer.php?domain_uuid=".$domain_uuid."&contact_uuid=".$contact_uuid);
 	}
 
@@ -82,46 +91,43 @@
 	$sql .= "contact_name_family, ";
 	$sql .= "contact_nickname ";
 	$sql .= "from v_contacts ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and contact_uuid = :contact_uuid ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
-	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
-		$contact_organization = $row["contact_organization"];
-		$contact_name_given = $row["contact_name_given"];
-		$contact_name_family = $row["contact_name_family"];
-		$contact_nickname = $row["contact_nickname"];
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and contact_uuid = '".$contact_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+	if (sizeof($result) > 0) {
+		$contact_organization = $result["contact_organization"];
+		$contact_name_given = $result["contact_name_given"];
+		$contact_name_family = $result["contact_name_family"];
+		$contact_nickname = $result["contact_nickname"];
 	}
 	else {
 		exit;
 	}
-	unset($sql, $parameters, $row);
+	unset ($sql, $prep_statement, $result);
 
 //determine timer state and action
 	$sql = "select ";
 	$sql .= "contact_time_uuid, ";
 	$sql .= "time_description ";
 	$sql .= "from v_contact_times ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and user_uuid = :user_uuid ";
-	$sql .= "and contact_uuid = :contact_uuid ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+	$sql .= "and contact_uuid = '".$contact_uuid."' ";
 	$sql .= "and time_start is not null ";
 	$sql .= "and time_stop is null ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
-	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && @sizeof($row) != 0) {
-		$contact_time_uuid = $row["contact_time_uuid"];
-		$time_description = $row["time_description"];
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+	if (sizeof($result) > 0) {
+		$contact_time_uuid = $result["contact_time_uuid"];
+		$time_description = $result["time_description"];
 	}
-	unset($sql, $parameters, $row);
+	unset ($sql, $prep_statement, $result);
 
-	$timer_state = is_uuid($contact_time_uuid) ? 'running' : 'stopped';
-	$timer_action = $timer_state == 'running' ? 'stop' : 'start';
+	$timer_state = ($contact_time_uuid != '') ? 'running' : 'stopped';
+	$timer_action = ($timer_state == 'running') ? 'stop' : 'start';
 
 //determine contact name to display
 	if ($contact_nickname != '') {
@@ -136,18 +142,9 @@
 	if ($contact_organization != '') {
 		$contact .= ($contact != '') ? ', '.$contact_organization : $contact_organization;
 	}
-
-//get the browser version
-	$user_agent = http_user_agent();
-	$browser_version =  $user_agent['version'];
-	$browser_name =  $user_agent['name'];
-	$browser_version_array = explode('.', $browser_version);
-
-//set the doctype
-	echo ($browser_name != "Internet Explorer") ? "<!DOCTYPE html>\n" : "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-
 ?>
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
 <head>
 	<title><?php echo $text['label-time_timer']; ?>: <?php echo $contact; ?></title>
 	<style>
@@ -300,8 +297,7 @@
 
 	</style>
 
-	<script language='JavaScript' type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-3.6.1.min.js'></script>
-	<script src='https://code.jquery.com/jquery-migrate-3.1.0.js'></script>
+	<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			//ajax for refresh
@@ -338,16 +334,17 @@
 	<br><br>
 	<div id='ajax_reponse' class='timer_<?php echo escape($timer_state);?>'>00:00:00</div>
 	<br>
-	<form name='frm' id='frm' method='post'>
+	<form name='frm' id='frm' method='post' action=''>
 	<input type='hidden' name='domain_uuid' value="<?php echo escape($domain_uuid); ?>">
 	<input type='hidden' name='contact_time_uuid' value="<?php echo escape($contact_time_uuid); ?>">
 	<input type='hidden' name='contact_uuid' value="<?php echo escape($contact_uuid); ?>">
 	<input type='hidden' name='time_action' value="<?php echo escape($timer_action); ?>">
 	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>
 		<tr>
-			<td class='vncell' style='text-align: center; border: none; padding: 0 !important; padding-top: 10px !important;'>
-				<?php echo $text['label-description']; ?><br>
-				<textarea name='time_description' id='timer_description' class='formfld' style='width: calc(100% - 30px); height: 50px; margin: 5px 10px 10px;'><?php echo escape($time_description); ?></textarea>
+			<td class='vncell' style='text-align: center; padding: 10px;'>
+				<?php echo $text['label-description']; ?>
+				<textarea name='time_description' id='timer_description' class='formfld' style='width: 100%; height: 50px; margin-top: 5px;'><?php echo escape($time_description); ?></textarea>
+				<? if ($timer_state == 'stopped') { ?><script>document.getElementById('timer_description').focus();</script><? } ?>
 			</td>
 		</tr>
 	</table>
@@ -360,6 +357,5 @@
 	<?php } ?>
 	</center>
 	</form>
-	<?php if ($timer_state == 'stopped') { ?><script>$('#timer_description').trigger('focus');</script><?php } ?>
 </body>
 </html>

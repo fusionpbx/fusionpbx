@@ -23,11 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 if (permission_exists('call_broadcast_send')) {
@@ -43,26 +39,21 @@ else {
 	$text = $language->get();
 
 //get the html values and set them as variables
-	$uuid = trim($_GET["id"]);
-
-	if (is_uuid($uuid)) {
-		//show the result
-			if (count($_GET) > 0) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$cmd = "sched_del ".$uuid;
-					$result = event_socket_request($fp, 'api '.$cmd);
-					message::add(htmlentities($result));
-				}
-			}
-
-		//redirect
-			header('Location: call_broadcast_edit.php?id='.$uuid);
-			exit;
+	if (count($_GET)>0) {
+		$uuid = trim($_GET["id"]);
 	}
 
-//default redirect
-	header('Location: call_broadcasts.php');
-	exit;
+//show the header
+	header('Location: call_broadcast_edit.php?id='.$uuid);
+
+//show the result
+	if (count($_GET) > 0) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$cmd = "sched_del ".$uuid;
+			$result = event_socket_request($fp, 'api '.$cmd);
+			messages::add(htmlentities($result));
+		}
+	}
 
 ?>

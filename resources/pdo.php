@@ -25,11 +25,8 @@
  Raymond Chandler <intralanman@gmail.com>
  */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/functions.php";
 
 //set defaults
@@ -56,12 +53,6 @@
 	}
 	if (isset($dbfilename)) {
 		$db_name = $dbfilename;
-	}
-	if (isset($dbsecure)) {
-		$db_secure = $dbsecure;
-	}
-	if (isset($dbcertauthority)) {
-		$db_cert_authority = $dbcertauthority;
 	}
 
 if (!function_exists('get_db_field_names')) {
@@ -249,32 +240,13 @@ if ($db_type == "mysql") {
 if ($db_type == "pgsql") {
 	//database connection
 	try {
-		if (!isset($db_secure)) {
-			$db_secure = false;
-		}
 		if (strlen($db_host) > 0) {
 			if (strlen($db_port) == 0) { $db_port = "5432"; }
-			if ($db_secure == true) {
-				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password sslmode=verify-ca sslrootcert=$db_cert_authority");
-			}
-			else {
-				$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password");
-			}
+			$db = new PDO("pgsql:host=$db_host port=$db_port dbname=$db_name user=$db_username password=$db_password");
 		}
 		else {
 			$db = new PDO("pgsql:dbname=$db_name user=$db_username password=$db_password");
 		}
-	}
-	catch (PDOException $error) {
-		print "error: " . $error->getMessage() . "<br/>";
-		die();
-	}
-} //end if db_type pgsql
-
-if ($db_type == "odbc") {
-	//database connection
-	try {
-		$db = new PDO("odbc:".$db_name);
 	}
 	catch (PDOException $error) {
 		print "error: " . $error->getMessage() . "<br/>";
@@ -315,20 +287,18 @@ if ($db_type == "odbc") {
 				unset($result);
 			}
 
-			if (is_array($domains)) {
+			if (is_array($domains)) { 
 				foreach($domains as $row) {
-					if (!isset($_SESSION['username'])) {
-						if (count($domains) == 1) {
+					if (count($domains) == 1) {
+						$_SESSION["domain_uuid"] = $row["domain_uuid"];
+						$_SESSION["domain_name"] = $row['domain_name'];
+					}
+					else {
+						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
 							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION["domain_name"] = $row['domain_name'];
+							$_SESSION["domain_name"] = $row["domain_name"];
 						}
-						else {
-							if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION["domain_name"] = $row["domain_name"];
-							}
-						}
-					}	
+					}
 					$_SESSION['domains'][$row['domain_uuid']] = $row;
 				}
 				unset($domains, $prep_statement);
@@ -348,8 +318,10 @@ if ($db_type == "odbc") {
 	}
 
 //set the setting arrays
-	if (!isset($_SESSION['domain']['menu'])) {
+	if (!isset($_SESSION['domain']['menu'])){
+		require "resources/classes/domains.php";
 		$domain = new domains();
+		$domain->db = $db;
 		$domain->set();
 	}
 
@@ -359,6 +331,37 @@ if ($db_type == "odbc") {
 	}
 	else {
 		$domain_uuid = uuid();
+	}
+
+//check the domain cidr range 
+	if (isset($_SESSION['domain']["cidr"]) && !defined('STDIN')) {
+		$found = false;
+		foreach($_SESSION['domain']["cidr"] as $cidr) {
+			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
+				$found = true;
+				break;
+			}
+		}
+		if (!$found) {
+			echo "access denied";
+			exit;
+		}
+	}
+
+//check the api cidr range
+	if (isset($_SESSION['api']["cidr"])) {
+		$found = false;
+		foreach($_SESSION['api']["cidr"] as $cidr) {
+			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
+				$found = true;
+				break;
+			}
+		}
+		if (!$found) {
+			unset ($_REQUEST['key']);
+			unset ($_POST['key']);
+			unset ($_GET['key']);
+		}
 	}
 
 ?>

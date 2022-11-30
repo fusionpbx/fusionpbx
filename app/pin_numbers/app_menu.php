@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = 'PIN Numbers';
-	$apps[$x]['menu'][$y]['title']['en-gb'] = 'PIN Numbers';
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = 'PIN Nummern';
 	$apps[$x]['menu'][$y]['title']['de-de'] = 'PIN Nummern';
@@ -12,7 +11,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Numeri PIN";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "PIN codes";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "";

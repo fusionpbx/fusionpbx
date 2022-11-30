@@ -17,22 +17,15 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2014
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
 */
-
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-
-//check permissions
+require_once "root.php";
+require_once "resources/require.php";
+require_once "resources/check_auth.php";
 if (permission_exists('default_setting_view')) {
 	//access granted
 }
@@ -42,30 +35,17 @@ else {
 }
 
 //add multi-lingual support
-$language = new text;
-$text = $language->get();
+	$language = new text;
+	$text = $language->get();
 
-//set the variables
-$search = $_REQUEST['search'];
-$domain_uuid = $_GET['id'];
+$search = check_str($_REQUEST['search']);
 
-//reload default settings
 require "resources/classes/domains.php";
 $domain = new domains();
 $domain->db = $db;
 $domain->set();
 
-//add a message
-message::add($text['message-settings_reloaded']);
-
-//redirect the browser
-if (is_uuid($domain_uuid)) {
-	$location = PROJECT_PATH.'/core/domains/domain_edit.php?id='.$domain_uuid;
-}
-else {
-	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
-	$location = 'default_settings.php'.($search != '' ? "?search=".$search : null);
-}
-header("Location: ".$location);
+messages::add($text['message-settings_reloaded']);
+header("Location: default_settings.php".(($search != '') ? "?search=".$search : null));
 
 ?>

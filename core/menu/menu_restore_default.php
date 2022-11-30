@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,11 +26,7 @@
 
 //check permissions
 	if (!$included) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
-
-		//includes files
+		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('menu_restore')) {
@@ -48,30 +44,30 @@
 
 //get the http value and set as a php variable
 	if (!$included) {
-		$menu_uuid = $_REQUEST["menu_uuid"];
-		$menu_language = $_REQUEST["menu_language"];
+		$menu_uuid = check_str($_REQUEST["menu_uuid"]);
+		$menu_language = check_str($_REQUEST["menu_language"]);
 	}
 
 //menu restore default
 	require_once "resources/classes/menu.php";
 	$menu = new menu;
+	$menu->db = $db;
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
-	$menu->delete_unprotected();
+	$menu->delete();
 	$menu->restore();
-	unset($menu);
 
-//get the menu array and save it to the session
-	$menu = new menu;
-	$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];
-	$_SESSION['menu']['array'] = $menu->menu_array();
-	unset($menu);
+//unset the menu session variable
+	$_SESSION["menu"] = "";
+
+//unset the default template
+	$_SESSION["template_content"] = '';
 
 //redirect
 	if (!$included) {
 		//show a message to the user
-		message::add($text['message-restore']);
-		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
+		messages::add($text['message-restore']);
+		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".$menu_uuid);
 		return;
 	}
 

@@ -28,6 +28,7 @@
 	if ($domains_processed == 1) {
 		require_once "resources/classes/menu.php";
 		$o = new menu;
+		$o->db = $db;
 		$o->menu_default();
 		unset($o);
 	} //if

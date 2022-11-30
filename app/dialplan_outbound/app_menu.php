@@ -2,7 +2,6 @@
 
 	$y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Outbound Routes";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Outbound Routes";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Ausgehendes Routing";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -13,7 +12,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Routes Sortantes";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Rotte di Uscita";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Uitgaande routering";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Trasy wyjściowe";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Rotas de Saída";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,11 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -92,7 +89,7 @@
 		echo "		".$text['label-version']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
-		echo "		".software::version()."\n";
+		echo "		".software_version()."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 
@@ -170,13 +167,6 @@
 				echo "</tr>\n";
 			}
 		}
-
-		echo "<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "	".$text['label-php']." ".$text['label-version']."\n";
-		echo "	</td>\n";
-		echo "	<td class=\"row_style1\">".phpversion()."</td>\n";
-		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "	<th class='th' colspan='2' align='left' style='padding-top:2em'>".$text['title-os-info']."</th>\n";
@@ -310,36 +300,6 @@
 				echo "</tr>\n";
 				echo "</table>\n";
 				echo "<br /><br />";
-			}
-		}
-		
-		//Windows
-		if (stristr(PHP_OS, 'WIN')) {
-			echo "<!--\n";
-			// connect to WMI
-			$wmi = new COM('WinMgmts:root/cimv2');
-			// Query this Computer for Total Physical RAM
-			$res = $wmi->ExecQuery('Select TotalPhysicalMemory from Win32_ComputerSystem');
-			// Fetch the first item from the results
-			$system = $res->ItemIndex(0);
-			$shell_result = round($system->TotalPhysicalMemory / 1024 /1024, 0);
-			echo "-->\n";
-			if (strlen($shell_result) > 0) {
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left'>".$text['Physical Memory']."</th>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "		".$text['label-mem']." \n";
-				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">\n";
-				echo "		$shell_result mb\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				echo "</table>\n";
-				echo "<br /><br />";
-
 			}
 		}
 	}

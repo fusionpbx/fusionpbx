@@ -1,0 +1,9 @@
+--set the user_exists to true or false
+	if (context ~= "public") then
+		if (user_exists == nil) then
+			--get user exists true or false
+				cmd = "user_exists id ".. destination_number .." "..domain_name;
+				user_exists = trim(api:executeString(cmd));
+				--freeswitch.consoleLog("notice", "[app:dialplan] "..cmd.." user_exists: "..user_exists.."\n");
+		end
+	end

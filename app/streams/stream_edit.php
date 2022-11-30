@@ -17,19 +17,16 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('stream_add') || permission_exists('stream_edit')) {
 		//access granted
 	}
@@ -43,10 +40,10 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$stream_uuid = $_REQUEST["id"];
-		$id = $_REQUEST["id"];
+		$stream_uuid = check_str($_REQUEST["id"]);
+		$id = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -54,12 +51,11 @@
 
 //get http post variables and set them to php variables
 	if (is_array($_POST)) {
-		$domain_uuid = $_POST['domain_uuid'];
-		$stream_uuid = $_POST["stream_uuid"];
-		$stream_name = $_POST["stream_name"];
-		$stream_location = $_POST["stream_location"];
-		$stream_enabled = $_POST["stream_enabled"];
-		$stream_description = $_POST["stream_description"];
+		$stream_uuid = check_str($_POST["stream_uuid"]);
+		$stream_name = check_str($_POST["stream_name"]);
+		$stream_location = check_str($_POST["stream_location"]);
+		$stream_enabled = check_str($_POST["stream_enabled"]);
+		$stream_description = check_str($_POST["stream_description"]);
 	}
 
 //process the user data and save it to the database
@@ -67,15 +63,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$stream_uuid = $_POST["stream_uuid"];
-			}
-
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: streams.php');
-				exit;
+				$stream_uuid = check_str($_POST["stream_uuid"]);
 			}
 
 		//check for all required data
@@ -100,28 +88,33 @@
 
 		//set the domain_uuid
 			if (!permission_exists('stream_all')) {
-				$domain_uuid = $_SESSION["domain_uuid"];
+				$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
 			}
 
 		//add the stream_uuid
 			if (strlen($_POST["stream_uuid"]) == 0) {
 				$stream_uuid = uuid();
+				$_POST["stream_uuid"] = $stream_uuid;
 			}
 
 		//prepare the array
-			$array['streams'][0]['stream_uuid'] = $stream_uuid;
-			$array['streams'][0]['domain_uuid'] = $domain_uuid;
-			$array['streams'][0]['stream_name'] = $stream_name;
-			$array['streams'][0]['stream_location'] = $stream_location;
-			$array['streams'][0]['stream_enabled'] = $stream_enabled;
-			$array['streams'][0]['stream_description'] = $stream_description;
+			$array['streams'][0] = $_POST;
 
 		//save to the data
 			$database = new database;
 			$database->app_name = 'streams';
-			$database->app_uuid = 'ffde6287-aa18-41fc-9a38-076d292e0a38';
+			$database->app_uuid = null;
+			if (strlen($stream_uuid) > 0) {
+				$database->uuid($stream_uuid);
+			}
 			$database->save($array);
 			$message = $database->message;
+
+		//debug info
+			//echo "<pre>";
+			//print_r($message);
+			//echo "</pre>";
+			//exit;
 
 		//redirect the user
 			if (isset($action)) {
@@ -134,54 +127,47 @@
 				header('Location: stream_edit.php?id='.$stream_uuid);
 				return;
 			}
-	}
+	} //(is_array($_POST) && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
-		$stream_uuid = $_GET["id"];
+		$stream_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_streams ";
-		$sql .= "where stream_uuid = :stream_uuid ";
-		$parameters['stream_uuid'] = $stream_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "where stream_uuid = '".$stream_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			$stream_name = $row["stream_name"];
 			$stream_location = $row["stream_location"];
 			$stream_enabled = $row["stream_enabled"];
 			$stream_description = $row["stream_description"];
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//include the header
-	$document['title'] = $text['title-stream'];
+//show the header
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-stream']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'streams.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-stream']."</b><br><br></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='streams.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-stream_name']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_name' maxlength='255' value=\"".escape($stream_name)."\">\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='stream_name' maxlength='255' value=\"$stream_name\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_name']."\n";
 	echo "</td>\n";
@@ -192,7 +178,7 @@
 	echo "	".$text['label-stream_location']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_location' style='min-width: 250px; width: 50%;' maxlength='255' value=\"".escape($stream_location)."\">\n";
+	echo "	<input class='formfld' type='text' name='stream_location' maxlength='255' value=\"$stream_location\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_location']."\n";
 	echo "</td>\n";
@@ -204,6 +190,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	echo "	<select class='formfld' name='stream_enabled'>\n";
+	echo "		<option value=''></option>\n";
 	if ($stream_enabled == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -236,10 +223,10 @@
 	}
 	foreach ($_SESSION['domains'] as $row) {
 		if ($row['domain_uuid'] == $domain_uuid) {
-			echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
 		}
 		else {
-			echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -253,19 +240,21 @@
 	echo "	".$text['label-stream_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='stream_description' maxlength='255' value=\"".escape($stream_description)."\">\n";
+	echo "	<input class='formfld' type='text' name='stream_description' maxlength='255' value=\"$stream_description\">\n";
 	echo "<br />\n";
 	echo $text['description-stream_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	echo "				<input type='hidden' name='stream_uuid' value='$stream_uuid'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
 	echo "</table>";
-	echo "<br /><br />";
-
-	echo "<input type='hidden' name='stream_uuid' value='".escape($stream_uuid)."'>\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
 	echo "</form>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

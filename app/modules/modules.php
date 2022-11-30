@@ -17,21 +17,17 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2018
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
-	require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('module_view')) {
@@ -46,55 +42,56 @@
 	$language = new text;
 	$text = $language->get();
 
-//get posted data
-	if (is_array($_POST['modules'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$modules = $_POST['modules'];
-	}
+//get includes and the title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-modules'];
+	require_once "resources/paging.php";
 
-//process the http post data by action
-	if ($action != '' && is_array($modules) && @sizeof($modules) != 0) {
-		switch ($action) {
-			case 'start':
-				$obj = new modules;
-				$obj->start($modules);
-				break;
-			case 'stop':
-				$obj = new modules;
-				$obj->stop($modules);
-				break;
-			case 'toggle':
-				if (permission_exists('module_edit')) {
-					$obj = new modules;
-					$obj->toggle($modules);
-				}
-				break;
-			case 'delete':
-				if (permission_exists('module_delete')) {
-					$obj = new modules;
-					$obj->delete($modules);
-				}
-				break;
-		}
+//get the http values ans set as variables
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
-		header('Location: modules.php'.($search != '' ? '?search='.urlencode($search) : null));
-		exit;
-	}
-
-//connect to event socket
+//start or stop a module
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (strlen($_GET["a"]) > 0) {
+		if ($_GET["a"] == "stop") {
+			$module_name = $_GET["m"];
+			if ($fp) {
+				$cmd = "api unload $module_name";
+				$response = trim(event_socket_request($fp, $cmd));
+				$msg = "<strong>".$text['label-unload_module'].":</strong> <pre>".$response."</pre>";
+			}
+		}
+		if ($_GET["a"] == "start") {
+			$module_name = $_GET["m"];
+			if ($fp) {
+				$cmd = "api load $module_name";
+				$response = trim(event_socket_request($fp, $cmd));
+				$msg = "<strong>".$text['label-load_module'].":</strong> <pre>".$response."</pre>";
+			}
+		}
+	}
 
 //check connection status
 	$esl_alive = false;
-	if ($fp) {
+	if($fp){
 		$esl_alive = true;
 		fclose($fp);
 	}
 
-//warn if switch not running
-	if (!$fp) {
-		message::add($text['error-event-socket'], 'negative', 5000);
+//Warning if FS not start
+	if(!$esl_alive){
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
+		echo "<div align='center'>\n";
+		echo "<table width='40%'>\n";
+		echo "<tr>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
 	}
 
 //use the module class to get the list of modules from the db and add any missing modules
@@ -102,180 +99,155 @@
 	$module->db = $db;
 	$module->dir = $_SESSION['switch']['mod']['dir'];
 	$module->get_modules();
-	$modules = $module->modules;
-	$module_count = count($modules);
+	$result = $module->modules;
+	$module_count = count($result);
 	$module->synch();
 	$module->xml();
 	$msg = $module->msg;
 
 //show the msg
 	if ($msg) {
-		message::add($msg, 'negative', 5000);
+		echo "<div align='center'>\n";
+		echo "<table width='40%'>\n";
+		echo "<tr>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='row_style1'>$msg</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
 	}
-
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//get includes and the title
-	$document['title'] = $text['title-modules'];
-	require_once "resources/header.php";
 
 //show the content
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-modules']." (".$module_count.")</b></div>\n";
-	echo "	<div class='actions'>\n";
-	if (permission_exists('module_edit') && $modules && $fp) {
-		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$_SESSION['theme']['button_icon_stop'],'onclick'=>"modal_open('modal-stop','btn_stop');"]);
-		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$_SESSION['theme']['button_icon_start'],'onclick'=>"modal_open('modal-start','btn_start');"]);
-	}
-	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'style'=>'margin-right: 15px;','link'=>'modules.php']);
-	if (permission_exists('module_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'module_edit.php']);
-	}
-	if (permission_exists('module_edit') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
-	if (permission_exists('module_delete') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'><tr>\n";
+	echo "<td align='left' nowrap><b>".$text['header-modules']."</b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td align='left'>".$text['description-modules']."</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
 
-	if (permission_exists('module_edit') && $modules && $fp) {
-		echo modal::create(['id'=>'modal-stop','type'=>'general','message'=>$text['confirm-stop_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
-		echo modal::create(['id'=>'modal-start','type'=>'general','message'=>$text['confirm-start_modules'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
-	}
-	if (permission_exists('module_edit') && $modules) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	}
-	if (permission_exists('module_delete') && $modules) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
-	}
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-	echo $text['description-modules']."\n";
-	echo "<br /><br />\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	$tmp_module_header = "\n";
+	$tmp_module_header .= "<tr>\n";
+	$tmp_module_header .= "<th>".$text['label-label']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-status']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-action']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-enabled']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-description']."</th>\n";
+	$tmp_module_header .= "<td class='list_control_icons'>";
+	$tmp_module_header .= "<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	$tmp_module_header .= "</td>\n";
+	$tmp_module_header .= "<tr>\n";
 
-	echo "<form id='form_list' method='post'>\n";
-	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-
-	echo "<table class='list'>\n";
-	function write_header($modifier) {
-		global $fp, $text, $modules;
-		$modifier = str_replace('/', '', $modifier);
-		$modifier = str_replace('  ', ' ', $modifier);
-		$modifier = str_replace(' ', '_', $modifier);
-		$modifier = strtolower(trim($modifier));
-		echo "\n";
-		echo "<tr class='list-header'>\n";
-		if (permission_exists('module_edit') || permission_exists('module_delete')) {
-			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".($modules ?: "style='visibility: hidden;'").">\n";
-			echo "	</th>\n";
-		}
-		echo "<th>".$text['label-label']."</th>\n";
-		echo "<th class='hide-xs'>".$text['label-status']."</th>\n";
-		if ($fp) {
-			echo "<th class='center'>".$text['label-action']."</th>\n";
-		}
-		echo "<th class='center'>".$text['label-enabled']."</th>\n";
-		echo "<th class='hide-sm-dn' style='min-width: 40%;'>".$text['label-description']."</th>\n";
-		if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-			echo "<td class='action-button'>&nbsp;</td>\n";
-		}
-		echo "</tr>\n";
-	}
-	if (is_array($modules) && @sizeof($modules) != 0) {
-		$previous_category = '';
-		foreach ($modules as $x => $row) {
-			//write category and column headings
-				if ($previous_category != $row["module_category"]) {
+	if ($module_count > 0) {
+		$prev_module_category = '';
+		foreach($result as $row) {
+			if ($prev_module_category != $row["module_category"]) {
+				$c=0;
+				if (strlen($prev_module_category) > 0) {
 					echo "<tr>\n";
-					echo "<td colspan='7' class='no-link'>\n";
-					echo ($previous_category != '' ? '<br />' : null)."<b>".$row["module_category"]."</b>";
+					echo "<td colspan='6'>\n";
+					echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+					echo "	<tr>\n";
+					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
+					echo "		<td width='33.3%' align='right'>\n";
+					if (permission_exists('module_add')) {
+						echo "			<a href='module_edit.php' alt='add'>$v_link_label_add</a>\n";
+					}
+					echo "		</td>\n";
+					echo "	</tr>\n";
+					echo "	</table>\n";
 					echo "</td>\n";
 					echo "</tr>\n";
-					write_header($row["module_category"]);
 				}
-			if (permission_exists('module_edit')) {
-				$list_row_url = "module_edit.php?id=".urlencode($row['module_uuid']);
+				echo "<tr><td colspan='4' align='left'>\n";
+				echo "	<br />\n";
+				echo "	<br />\n";
+				echo "	<b>".$row["module_category"]."</b>&nbsp;</td></tr>\n";
+				echo $tmp_module_header;
 			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('module_edit') || permission_exists('module_delete')) {
-				$modifier = strtolower(trim($row["module_category"]));
-				$modifier = str_replace('/', '', $modifier);
-				$modifier = str_replace('  ', ' ', $modifier);
-				$modifier = str_replace(' ', '_', $modifier);
-				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='modules[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
-				echo "		<input type='hidden' name='modules[$x][uuid]' value='".escape($row['module_uuid'])."' />\n";
-				echo "	</td>\n";
-			}
-			echo "   <td>";
+
+			$tr_link = (permission_exists('module_edit')) ? "href='module_edit.php?id=".escape($row["module_uuid"])."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('module_edit')) {
-				echo "<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['module_label'])."</a>";
+				echo "<a href='module_edit.php?id=".escape($row["module_uuid"])."'>".escape($row["module_label"])."</a>";
 			}
 			else {
-				echo escape($row['module_label']);
+				echo $row["module_label"];
 			}
 			echo "	</td>\n";
-			if ($fp) {
+			if($esl_alive) {
 				if ($module->active($row["module_name"])) {
-					echo "	<td class='hide-xs'>".$text['label-running']."</td>\n";
-					if (permission_exists('module_edit')) {
-						echo "	<td class='no-link center'>";
-						echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
-						echo "	</td>\n";
-					}
+					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".escape($row["module_name"])."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 				}
 				else {
-					echo "	<td class='hide-xs'>\n";
-					echo $row['module_enabled'] == 'true' ? "<strong style='color: red;'>".$text['label-stopped']."</strong>" : $text['label-stopped']." ".escape($notice);
-					echo "	</td>\n";
-					if (permission_exists('module_edit')) {
-						echo "	<td class='no-link center'>";
-						echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-start'],'title'=>$text['button-start'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('start'); list_form_submit('form_list')"]);
-						echo "	</td>\n";
+					if ($row['module_enabled']=="true") {
+						echo "   <td valign='top' class='".$row_style[$c]."'><b>".$text['label-stopped']."</b></td>\n";
 					}
+					else {
+						echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".escape($notice)."</td>\n";
+					}
+					echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".escape($row["module_name"])."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
 				}
 			}
 			else{
-				echo "   <td class='hide-xs'>".$text['label-unknown']."</td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-unknown']."</td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-none']."</td>\n";
 			}
+			echo "   <td valign='top' class='".$row_style[$c]."'>";
+			if ($row["module_enabled"] == "true") {
+				echo $text['option-true'];
+			}
+			else if ($row["module_enabled"] == "false") {
+				echo $text['option-false'];
+			}
+			echo "</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".escape($row["module_description"])."&nbsp;</td>\n";
+			echo "   <td class='list_control_icons'>";
 			if (permission_exists('module_edit')) {
-				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['module_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo "<a href='module_edit.php?id=".escape($row["module_uuid"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			else {
-				echo "	<td class='center'>";
-				echo $text['label-'.$row['module_enabled']];
+			if (permission_exists('module_delete')) {
+				echo "<a href='module_delete.php?id=".escape($row["module_uuid"])."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
-			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row["module_description"])."&nbsp;</td>\n";
-			if (permission_exists('module_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
-				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
-				echo "	</td>\n";
-			}
+			echo "</td>\n";
 			echo "</tr>\n";
 
-			$previous_category = $row["module_category"];
+			$prev_module_category = $row["module_category"];
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $modules, $row_count);
+	} //end if results
 
-			$x++;
-		}
+	echo "<tr>\n";
+	echo "<td colspan='6'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('module_add')) {
+		echo "<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	unset($modules);
+	echo "</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-	echo "</table>\n";
-	echo "<br />\n";
+	echo "</table>";
+	echo "<br><br>";
 
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
-	echo "</form>\n";
-
-//include the footer
+//show the footer
 	require_once "resources/footer.php";
 
 ?>

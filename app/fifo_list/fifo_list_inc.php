@@ -24,11 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -130,7 +127,7 @@
 					}
 			}
 
-			$c = $c ? 0 : 1;
+			if ($c==0) { $c=1; } else { $c=0; }
 		}
 		echo "</table>\n";
 	}

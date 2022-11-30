@@ -17,23 +17,20 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016-2017
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permisions
-	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
+	require_once "resources/check_auth.php";
+	if (permission_exists('call_recording_view')) {
 		//access granted
 	}
 	else {
@@ -42,11 +39,7 @@
 	}
 
 //download
-	if (is_uuid($_GET['id'])) {
-		$obj = new call_recordings;
-		$obj->recording_uuid = $_GET['id'];
-		$obj->binary = isset($_GET['binary']) ? true : false;
-		$obj->download();
-	}
+	$obj = new call_recordings;
+	$obj->download();
 
 ?>

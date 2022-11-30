@@ -9,7 +9,6 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
-		$apps[$x]['description']['en-gb'] = '';
 
 	//permission details
 		$y = 0;
@@ -32,10 +31,6 @@
 		$apps[$x]['permissions'][$y]['name'] = 'bridge_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'bridge_destinations';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
 
 	//destination details
 		$y = 0;
@@ -45,11 +40,9 @@
 		//$apps[$x]['destinations'][$y]['sql'] = "select bridge_name, bridge_destination, bridge_description from v_bridges ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and bridge_enabled = 'true'";
 		$apps[$x]['destinations'][$y]['order_by'] = "bridge_name asc";
-		$apps[$x]['destinations'][$y]['field']['bridge_uuid'] = "bridge_uuid";
 		$apps[$x]['destinations'][$y]['field']['name'] = "bridge_name";
-		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
 		$apps[$x]['destinations'][$y]['field']['destination'] = "bridge_destination";
-		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "\${destination}";
+		$apps[$x]['destinations'][$y]['field']['description'] = "bridge_description";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "bridge:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:bridge \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name} \${description} ";
@@ -76,12 +69,10 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_destination';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the destination.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_enabled';
@@ -90,31 +81,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'bridge_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description. ';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_date";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "update_user";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 ?>

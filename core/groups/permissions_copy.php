@@ -24,16 +24,13 @@
 	Sérgio Reis <uc@wavecom.pt>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	include "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_permission_add')) {
+	if (permission_exists('extension_add')) {
 		//access granted
 	}
 	else {
@@ -49,88 +46,76 @@
 	require_once "resources/paging.php";
 
 //set the http get/post variable(s) to a php variable
-	if (is_uuid($_REQUEST["id"]) && isset($_REQUEST["new_group_name"])) {
+	if (isset($_REQUEST["group_name"]) && isset($_REQUEST["new_group_name"])) {
 
 		//get HTTP values and set as variables
-			$group_uuid = $_REQUEST["id"];
-			$new_group_name = $_REQUEST["new_group_name"];
-			$new_group_desc = $_REQUEST["new_group_desc"];
+			$group_name = check_str($_REQUEST["group_name"]);
+			$new_group_name = check_str($_REQUEST["new_group_name"]);
+			$new_group_desc = check_str($_REQUEST["new_group_desc"]);
 
-		//get the source groups data
+		//get the groups data
 			$sql = "select * from v_groups ";
-			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			$sql .= "and group_uuid = :group_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['group_uuid'] = $group_uuid;
-			$database = new database;
-			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && sizeof($row) != 0) {
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "or domain_uuid is null ";
+			$sql .= "and group_name = '".$group_name."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
 				$domain_uuid = $row["domain_uuid"];
 				$group_name = $row["group_name"];
 			}
-			unset($sql, $parameters, $row);
+			unset ($prep_statement);
 
-		//create new target group
-			$new_group_uuid = uuid();
-			$array['groups'][0]['group_uuid'] = $new_group_uuid;
-			if (is_uuid($domain_uuid)) {
-				$array['groups'][0]['domain_uuid'] = $domain_uuid;
-			}
-			$array['groups'][0]['group_name'] = $new_group_name;
-			$array['groups'][0]['group_description'] = $new_group_desc;
-			$database = new database;
-			$database->app_name = 'groups';
-			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-			$database->save($array);
-			unset($array);
+		//create new group
+			$group_uuid = uuid();
+			$sql = "insert into v_groups ";
+			$sql .= "( ";
+			$sql .= "group_uuid, ";
+			$sql .= "group_name, ";
+			$sql .= "group_description ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "( ";
+			$sql .= "'".$group_uuid."', ";
+			$sql .= "'".$new_group_name."', ";
+			$sql .= "'".$new_group_desc."' ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
-		//get the source group permissions data
+		//get the group permissions data
 			$sql = "select * from v_group_permissions ";
-			$sql .= "where group_name = :group_name ";
-			if (is_uuid($domain_uuid)) {
-				$sql .= "and domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $domain_uuid;
-			}
-			else {
-				$sql .= "and domain_uuid is null ";
-			}
-			$parameters['group_name'] = $group_name;
-			$database = new database;
-			$result = $database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
+			$sql .= "where group_name = '".$group_name."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$domain_uuid = $row["domain_uuid"];
+				$permission_name = $row["permission_name"];
+				$group_name = $row["group_name"];
 
-			if (is_array($result) && sizeof($result) != 0) {
-				foreach ($result as $x => &$row) {
-					//define group permissions values
-						$domain_uuid = $row["domain_uuid"];
-						$permission_name = $row["permission_name"];
-						$group_name = $row["group_name"];
-					//build insert array
-						$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
-						if (is_uuid($domain_uuid)) {
-							$array['group_permissions'][$x]['domain_uuid'] = $domain_uuid;
-						}
-						$array['group_permissions'][$x]['permission_name'] = $permission_name;
-						$array['group_permissions'][$x]['group_name'] = $new_group_name;
-						$array['group_permissions'][$x]['group_uuid'] = $new_group_uuid;
-				}
-				if (is_array($array) && sizeof($array) != 0) {
-					//grant temporary permissions
-						$p = new permissions;
-						$p->add('group_permission_add', 'temp');
-					//execute insert
-						$database = new database;
-						$database->app_name = 'groups';
-						$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-						$database->save($array);
-						unset($array);
-					//revoke temporary permissions
-						$p->delete('group_permission_add', 'temp');
-					//set message
-						message::add($text['message-copy']);
-				}
+				//copy the group permissions
+				$group_permission_uuid = uuid();
+				$sql = "insert into v_group_permissions ";
+				$sql .= "( ";
+				$sql .= "group_permission_uuid, ";
+				$sql .= "permission_name, ";
+				$sql .= "group_name ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "( ";
+				$sql .= "'".$group_permission_uuid."', ";
+				$sql .= "'".$permission_name."', ";
+				$sql .= "'".$new_group_name."' ";
+				$sql .= ") ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 			}
-			unset($result, $row);
+			unset ($prep_statement);
+
+		//redirect the user
+			messages::add($text['message-copy']);
 	}
 
 //redirect

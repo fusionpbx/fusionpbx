@@ -17,22 +17,19 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2020
+	Portions created by the Initial Developer are Copyright (C) 2016
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
 
 //check permissions
+	require_once "resources/check_auth.php";
 	if (permission_exists('pin_number_add') || permission_exists('pin_number_edit')) {
 		//access granted
 	}
@@ -46,9 +43,9 @@
 	$text = $language->get();
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$pin_number_uuid = $_REQUEST["id"];
+		$pin_number_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -56,26 +53,18 @@
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$pin_number = $_POST["pin_number"];
-		$accountcode = $_POST["accountcode"];
-		$enabled = $_POST["enabled"];
-		$description = $_POST["description"];
+		$pin_number = check_str($_POST["pin_number"]);
+		$accountcode = check_str($_POST["accountcode"]);
+		$enabled = check_str($_POST["enabled"]);
+		$description = check_str($_POST["description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$pin_number_uuid = $_POST["pin_number_uuid"];
+		$pin_number_uuid = check_str($_POST["pin_number_uuid"]);
 	}
-
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: pin_numbers.php');
-			exit;
-		}
 
 	//check for all required data
 		if (strlen($pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
@@ -98,81 +87,83 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('pin_number_add')) {
-				//begin array
-					$pin_number_uuid = uuid();
-					$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
-				//set message
-					message::add($text['message-add']);
-			}
+				$sql = "insert into v_pin_numbers ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "pin_number_uuid, ";
+				$sql .= "pin_number, ";
+				$sql .= "accountcode, ";
+				$sql .= "enabled, ";
+				$sql .= "description ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'$pin_number', ";
+				$sql .= "'$accountcode', ";
+				$sql .= "'$enabled', ";
+				$sql .= "'$description' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				messages::add($text['message-add']);
+				header("Location: pin_numbers.php");
+				return;
+
+			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('pin_number_edit')) {
-				//begin array
-					$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
-				//set message
-					message::add($text['message-update']);
-			}
+				$sql = "update v_pin_numbers set ";
+				$sql .= "pin_number = '$pin_number', ";
+				$sql .= "accountcode = '$accountcode', ";
+				$sql .= "enabled = '$enabled', ";
+				$sql .= "description = '$description' ";
+				$sql .= "where pin_number_uuid = '$pin_number_uuid'";
+				$sql .= "and domain_uuid = '$domain_uuid' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			if (is_array($array) && @sizeof($array) != 0) {
-				//add common array items
-					$array['pin_numbers'][0]['domain_uuid'] = $domain_uuid;
-					$array['pin_numbers'][0]['pin_number'] = $pin_number;
-					$array['pin_numbers'][0]['accountcode'] = $accountcode;
-					$array['pin_numbers'][0]['enabled'] = $enabled;
-					$array['pin_numbers'][0]['description'] = $description;
-				//save data
-					$database = new database;
-					$database->app_name = 'pin_numbers';
-					$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
-					$database->save($array);
-					unset($array);
-				//redirect
-					header("Location: pin_numbers.php");
-					exit;
-			}
-		}
+				messages::add($text['message-update']);
+				header("Location: pin_numbers.php");
+				return;
 
-}
+			} //if ($action == "update")
+		} //if ($_POST["persistformvar"] != "true")
+} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$pin_number_uuid = $_GET["id"];
+		$pin_number_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_pin_numbers ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and pin_number_uuid = :pin_number_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$parameters['pin_number_uuid'] = $pin_number_uuid;
-		$database = new database;
-		$row = $database->select($sql, $parameters, 'row');
-		if (is_array($row) && @sizeof($row) != 0) {
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and pin_number_uuid = '$pin_number_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
 			$pin_number = $row["pin_number"];
 			$accountcode = $row["accountcode"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 		}
-		unset($sql, $parameters, $row);
+		unset ($prep_statement);
 	}
 
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
 //show the header
-	$document['title'] = $text['title-pin_number'];
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-pin_number']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-pin_number']."</b><br><br></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='pin_numbers.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -202,8 +193,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	<option value=''></option>\n";
+	if ($enabled == "true") {
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($enabled == "false") {
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
@@ -220,16 +222,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	echo "</table>";
-	echo "<br /><br />";
-
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "<input type='hidden' name='pin_number_uuid' value='".escape($pin_number_uuid)."'>\n";
+		echo "				<input type='hidden' name='pin_number_uuid' value='".escape($pin_number_uuid)."'>\n";
 	}
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+	echo "</table>";
 	echo "</form>";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
