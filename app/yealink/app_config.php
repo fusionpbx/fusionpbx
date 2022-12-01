@@ -204,7 +204,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_missed_call_power_led_flash_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0-Disabled:power indicator LED is off, 1-Enabled:power indicator LED is solid red";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "fb13e647-ca3f-4da6-901c-584b8cde4055";
