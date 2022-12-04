@@ -610,6 +610,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "record_length";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "leg";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "char(1)";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
