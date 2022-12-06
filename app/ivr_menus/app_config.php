@@ -205,6 +205,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e04151d4-f055-4cc8-a97c-84dac6add3fa";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ivr_menu";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "answer";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Add answer to IVR Menu dialplan.";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";
