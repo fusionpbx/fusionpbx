@@ -738,7 +738,7 @@ if (!class_exists('xml_cdr')) {
 							//add to the xml cdr table
 							$this->array[$key]['record_path'] = $record_path;
 							$this->array[$key]['record_name'] = $record_name;
-							$this->array[$key]['record_length'] = record_length;
+							$this->array[$key]['record_length'] = $record_length;
 						}
 
 					//add to the call recordings table
