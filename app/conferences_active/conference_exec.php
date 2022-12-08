@@ -27,7 +27,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -80,12 +80,12 @@
 
 //validate the name
 	if (!is_uuid($name)) {
-		$sql = "select conference_name ";
+		$sql = "select conference_extension ";
 		$sql .= "from v_conferences ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and conference_name = :conference_name ";
+		$sql .= "and conference_extension = :conference_extension ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$parameters['conference_name'] = $name;
+		$parameters['conference_extension'] = $name;
 		$database = new database;
 		$name = $database->select($sql, $parameters, 'column');
 		unset ($parameters, $sql);
@@ -177,6 +177,8 @@
 		}
 		unset($uuid);
 	}
+
+
 
 //execute the command
 	if (count($_GET) > 0) {
