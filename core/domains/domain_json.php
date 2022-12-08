@@ -70,8 +70,8 @@
 		$sql .= "and domain_enabled = 'true' \n";
 		if (isset($search)) {
 			$sql .= "	and ( ";
-			$sql .= "		domain_name like :search ";
-			$sql .= "		or domain_description like :search ";
+			$sql .= "		lower(domain_name) like :search ";
+			$sql .= "		or lower(domain_description) like :search ";
 			$sql .= "	) ";
 			$parameters['search'] = '%'.$search.'%';
 		}
