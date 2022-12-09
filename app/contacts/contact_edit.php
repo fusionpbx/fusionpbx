@@ -317,6 +317,7 @@
 			if (is_array($contact_phones)) {
 				foreach ($contact_phones as $row) {
 					if (strlen($row['phone_number']) > 0) {
+						//add the speed dial
 						$array['contacts'][0]['contact_phones'][$y]['domain_uuid'] = $_SESSION['domain_uuid'];
 						$array['contacts'][0]['contact_phones'][$y]['contact_uuid'] = $contact_uuid;
 						$array['contacts'][0]['contact_phones'][$y]['contact_phone_uuid'] = $row["contact_phone_uuid"];
@@ -331,6 +332,14 @@
 						$array['contacts'][0]['contact_phones'][$y]['phone_extension'] = $row["phone_extension"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_primary'] = $row["phone_primary"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_description'] = $row["phone_description"];
+
+						//clear the cache
+						if ($row["phone_speed_dial"] != '') {
+							$cache = new cache;
+							$cache->delete("app.dialplan.speed_dial.".$row["phone_speed_dial"]."@".$_SESSION['domain_name']);
+						}
+
+						//increment the row id
 						$y++;
 					}
 				}
