@@ -45,7 +45,7 @@
 	destination = argv[2];
 
 -- search in cache first
-	local key = "app:dialplan:outbound:speed_dial:" .. user .. ":" .. destination .. "@" .. domain_name
+	local key = "app:dialplan:speed_dial:" .. destination .. "@" .. domain_name
 	local value = cache.get(key)
 
 -- decode value from cache
