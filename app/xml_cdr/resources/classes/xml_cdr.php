@@ -1272,60 +1272,88 @@ if (!class_exists('xml_cdr')) {
 		 * download the recordings
 		 */
 		public function download($uuid) {
-			if (permission_exists('xml_cdr_view')) {
-
-				//get call recording from database
-					if (is_uuid($uuid)) {
-						$sql = "select record_name, record_path from v_xml_cdr ";
-						$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-						//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
-						$parameters['xml_cdr_uuid'] = $uuid;
-						//$parameters['domain_uuid'] = $domain_uuid;
-						$database = new database;
-						$row = $database->select($sql, $parameters, 'row');
-						if (is_array($row)) {
-							$record_name = $row['record_name'];
-							$record_path = $row['record_path'];
-						}
-						unset ($sql, $parameters, $row);
-					}
-
-				//build full path
-					$record_file = $record_path.'/'.$record_name;
-
-				//download the file
-					if (file_exists($record_file)) {
-						//content-range
-						if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
-							$this->range_download($record_file);
-						}
-						ob_clean();
-						$fd = fopen($record_file, "rb");
-						if ($_GET['t'] == "bin") {
-							header("Content-Type: application/force-download");
-							header("Content-Type: application/octet-stream");
-							header("Content-Type: application/download");
-							header("Content-Description: File Transfer");
-						}
-						else {
-							$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
-							switch ($file_ext) {
-								case "wav" : header("Content-Type: audio/x-wav"); break;
-								case "mp3" : header("Content-Type: audio/mpeg"); break;
-								case "ogg" : header("Content-Type: audio/ogg"); break;
-							}
-						}
-						$record_name = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
-						header('Content-Disposition: attachment; filename="'.$record_name.'"');
-						header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						if ($_GET['t'] == "bin") {
-							header("Content-Length: ".filesize($record_file));
-						}
-						ob_clean();
-						fpassthru($fd);
-					}
+			if (!permission_exists('xml_cdr_view')) {
+				return;
 			}
+
+			if (!is_uuid($uuid)) {
+				return;
+			}
+
+			//set the time zone
+			if (isset($_SESSION['domain']['time_zone']['name'])) {
+				$time_zone = $_SESSION['domain']['time_zone']['name'];
+			}
+			else {
+				$time_zone = date_default_timezone_get();
+			}
+
+			$friendly_name = $_SESSION["cdr"]["recording_download_friendly_name"]["boolean"];
+			$date_format = $_SESSION["cdr"]["recording_download_name_date_format"]["text"] ?: "YYYY-MM-DD_HHMISS";
+			$date_format = "YYYY-MM-DD_HHMISS";
+
+			//get call recording from database
+			$sql = "select record_name, record_path, to_char(timezone(:time_zone, start_stamp), :date_format) as start_stamp, source_number, destination_number from v_xml_cdr ";
+			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+			//$sql .= "and domain_uuid = '".$domain_uuid."' \n";
+			$parameters['xml_cdr_uuid'] = $uuid;
+			//$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['time_zone'] = $time_zone;
+			$parameters['date_format'] = $date_format;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row)) {
+				$record_name = $row['record_name'];
+				$record_path = $row['record_path'];
+				$start_stamp = $row['start_stamp'];
+				$source_number = $row['source_number'];
+				$destination_number = $row['destination_number'];
+			}
+			unset ($sql, $parameters, $row);
+
+			//build full path
+			$record_file = $record_path.'/'.$record_name;
+
+			//check if the file exists
+			if (!file_exists($record_file)) {
+				return;
+			}
+			//content-range
+			if (isset($_SERVER['HTTP_RANGE']) && $_GET['t'] != "bin")  {
+				$this->range_download($record_file);
+			}
+			ob_clean();
+			$fd = fopen($record_file, "rb");
+			if ($_GET['t'] == "bin") {
+				header("Content-Type: application/force-download");
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+				header("Content-Description: File Transfer");
+			}
+			else {
+				$file_ext = pathinfo($record_name, PATHINFO_EXTENSION);
+				switch ($file_ext) {
+					case "wav" : header("Content-Type: audio/x-wav"); break;
+					case "mp3" : header("Content-Type: audio/mpeg"); break;
+					case "ogg" : header("Content-Type: audio/ogg"); break;
+				}
+			}
+
+			$download_filename = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $record_name);
+
+			if ($friendly_name == "true") {
+				$download_filename =  $start_stamp . "_" . $source_number . "-" . $destination_number;
+			}
+
+			header('Content-Disposition: attachment; filename="'.$download_filename.'"');
+			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+			if ($_GET['t'] == "bin") {
+				header("Content-Length: ".filesize($record_file));
+			}
+			ob_clean();
+			fpassthru($fd);
+
 		} //end download method
 
 		/*
