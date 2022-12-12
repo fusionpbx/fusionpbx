@@ -83,6 +83,9 @@
 		if (not cache_updated) then
 			goto continue
 		end
+	
+	--update the server_list
+		server_list = settings:get('cache', 'remote_servers', 'array')
 
 	--check that there is work to do
 		if (server_list == nil) then
