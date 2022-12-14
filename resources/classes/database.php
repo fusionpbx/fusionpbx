@@ -133,7 +133,7 @@
 			 * @var array Two dimensional array of key value pairs
 			 * @see $order_by
 			 */
-			private $where; //array
+			public $where; //array
 
 			/**
 			 * Order By clause(s) of an SQL statement.
@@ -152,7 +152,7 @@
 			 * @var array Two dimensional array of key value pairs
 			 * @see $where
 			 */
-			private $order_by; //array
+			public $order_by; //array
 
 			/**
 			 * Ascending or Descending order.
