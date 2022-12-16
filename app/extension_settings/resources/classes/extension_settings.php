@@ -158,13 +158,14 @@ if (!class_exists('extension_settings')) {
 								}
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
+								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle, extension_uuid from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
+									$extension_uuid = $rows[0]['extension_uuid'];
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
 									}
@@ -191,6 +192,16 @@ if (!class_exists('extension_settings')) {
 									$database->app_uuid = $this->app_uuid;
 									$database->save($array);
 									unset($array);
+									
+								//clear the cache	
+									$sql = "select extension, number_alias, user_context from v_extensions ";
+									$sql .= "where extension_uuid = :extension_uuid ";
+									$parameters['extension_uuid'] = $extension_uuid;
+									$database = new database;
+									$extension = $database->select($sql, $parameters, 'row');
+									$cache = new cache;
+									$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
+									$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
 
 								//set message
 									message::add($text['message-toggle']);

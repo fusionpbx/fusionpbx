@@ -393,7 +393,7 @@
 			--directory[x] = row;
 		--variables
 			effective_caller_id_name = row.effective_caller_id_name;
-			if (row.directory_first_name) then
+			if (row.directory_first_name ~= nil) and (row.directory_first_name ~= "") then
 				first_name = row.directory_first_name;
 				last_name = row.directory_last_name;
 			else

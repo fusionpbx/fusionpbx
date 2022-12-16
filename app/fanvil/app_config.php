@@ -751,5 +751,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set Fanvil LCD energy saving. 0=Sleep, 1=Normal, 2=Disable";
 		$y++;
-
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a055ed05-74a2-4f58-9831-6c2676571929";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_app_icon_display";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0,0,0,0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable App Icon on the phone display. enabled 1,1,1,1 ( Default), disable 0,0,0,0 (call log, messages, voicemail, DND)";
+		$y++;
 ?>

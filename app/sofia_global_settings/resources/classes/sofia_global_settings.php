@@ -95,7 +95,7 @@ if (!class_exists('sofia_global_settings')) {
 							$x = 0;
 							foreach ($records as $record) {
 								//add to the array
-									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+									if ($record['checked'] == 'true' && is_uuid($record['sofia_global_setting_uuid'])) {
 										$array[$this->table][$x]['sofia_global_setting_uuid'] = $record['sofia_global_setting_uuid'];
 									}
 

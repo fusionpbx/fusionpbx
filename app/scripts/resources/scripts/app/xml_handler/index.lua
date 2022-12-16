@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2022 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,8 @@
 	user_context = params:getHeader("variable_user_context");
 	call_context = params:getHeader("Caller-Context");
 	destination_number = params:getHeader("Caller-Destination-Number");
+	sip_to_user = params:getHeader("variable_sip_to_user");
+	sip_req_user = params:getHeader("variable_sip_req_user");
 	caller_id_number = params:getHeader("Caller-Caller-ID-Number");
 	hunt_context = params:getHeader("Hunt-Context");
 	if (hunt_context ~= nil) then

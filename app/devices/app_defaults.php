@@ -16,7 +16,7 @@
 	The Original Code is FusionPBX
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,13 +26,34 @@
 if ($domains_processed == 1) {
 
 	//set all lines to enabled (true) where null or empty string
-		$sql = "update v_device_lines set ";
-		$sql .= "enabled = 'true' ";
-		$sql .= "where enabled is null ";
-		$sql .= "or enabled = '' ";
+		$sql = "select device_line_uuid from v_device_lines ";
+		$sql .= "where enabled is null or enabled = '' ";
 		$database = new database;
-		$database->execute($sql);
-		unset($sql);
+		$device_lines = $database->select($sql, null, 'all');
+		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+			$sql = "update v_device_lines set ";
+			$sql .= "enabled = 'true' ";
+			$sql .= "where enabled is null ";
+			$sql .= "or enabled = '' ";
+			$database = new database;
+			$database->execute($sql);
+			unset($sql);
+		}
+		unset($sql, $device_lines);
+
+	//set label to user_id if the label is null
+		$sql = "select device_line_uuid from v_device_lines ";
+		$sql .= "where label is null ";
+		$database = new database;
+		$device_lines = $database->select($sql, null, 'all');
+		if (is_array($device_lines) && @sizeof($device_lines) != 0) {
+			foreach($device_lines as $row) {
+				$sql = "update v_device_lines ";
+				$sql .= "set label = user_id ";
+				$sql .= "where label is null ";
+				$database->execute($sql);
+			}
+		}
 
 	//set the device key vendor
 		$sql = "select * from v_device_keys as k, v_devices as d ";
@@ -74,20 +95,22 @@ if ($domains_processed == 1) {
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
-			foreach ($device_profile_keys as $index => &$row) {
-				$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
-				$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
-				$array['device_profile_keys'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
-				$array['device_profile_keys'][$index]['profile_key_id'] = $row["device_key_id"];
-				$array['device_profile_keys'][$index]['profile_key_category'] = $row["device_key_category"];
-				$array['device_profile_keys'][$index]['profile_key_vendor'] = $row["device_key_vendor"];
-				$array['device_profile_keys'][$index]['profile_key_type'] = $row["device_key_type"];
-				$array['device_profile_keys'][$index]['profile_key_line'] = $row["device_key_line"];
-				$array['device_profile_keys'][$index]['profile_key_value'] = $row["device_key_value"];
-				$array['device_profile_keys'][$index]['profile_key_extension'] = $row["device_key_extension"];
-				$array['device_profile_keys'][$index]['profile_key_protected'] = $row["device_key_protected"];
-				$array['device_profile_keys'][$index]['profile_key_label'] = $row["device_key_label"];
-				$array['device_profile_keys'][$index]['profile_key_icon'] = $row["device_key_icon"];
+			if (is_array($device_profile_keys) && @sizeof($device_profile_keys)) {
+				foreach ($device_profile_keys as $index => &$row) {
+					$array['device_profile_keys'][$index]['device_profile_key_uuid'] = $row["device_key_uuid"];
+					$array['device_profile_keys'][$index]['domain_uuid'] = $row["domain_uuid"];
+					$array['device_profile_keys'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
+					$array['device_profile_keys'][$index]['profile_key_id'] = $row["device_key_id"];
+					$array['device_profile_keys'][$index]['profile_key_category'] = $row["device_key_category"];
+					$array['device_profile_keys'][$index]['profile_key_vendor'] = $row["device_key_vendor"];
+					$array['device_profile_keys'][$index]['profile_key_type'] = $row["device_key_type"];
+					$array['device_profile_keys'][$index]['profile_key_line'] = $row["device_key_line"];
+					$array['device_profile_keys'][$index]['profile_key_value'] = $row["device_key_value"];
+					$array['device_profile_keys'][$index]['profile_key_extension'] = $row["device_key_extension"];
+					$array['device_profile_keys'][$index]['profile_key_protected'] = $row["device_key_protected"];
+					$array['device_profile_keys'][$index]['profile_key_label'] = $row["device_key_label"];
+					$array['device_profile_keys'][$index]['profile_key_icon'] = $row["device_key_icon"];
+				}
 			}
 
 			//save the array
@@ -119,14 +142,16 @@ if ($domains_processed == 1) {
 			$device_profile_keys = $database->select($sql, null, 'all');
 
 			//loop through the device_keys to build the data array
-			foreach ($device_profile_keys as $index => &$row) {
-				$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
-				$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
-				$array['device_profile_settings'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
-				$array['device_profile_settings'][$index]['profile_setting_name'] = $row["device_setting_subcategory"];
-				$array['device_profile_settings'][$index]['profile_setting_value'] = $row["device_setting_value"];
-				$array['device_profile_settings'][$index]['profile_setting_enabled'] = $row["device_setting_enabled"];
-				$array['device_profile_settings'][$index]['profile_setting_description'] = $row["device_setting_description"];
+			if (is_array($device_profile_keys) && @sizeof($device_profile_keys)) {
+				foreach ($device_profile_keys as $index => &$row) {
+					$array['device_profile_settings'][$index]['device_profile_setting_uuid'] = $row["device_setting_uuid"];
+					$array['device_profile_settings'][$index]['domain_uuid'] = $row["domain_uuid"];
+					$array['device_profile_settings'][$index]['device_profile_uuid'] = $row["device_profile_uuid"];
+					$array['device_profile_settings'][$index]['profile_setting_name'] = $row["device_setting_subcategory"];
+					$array['device_profile_settings'][$index]['profile_setting_value'] = $row["device_setting_value"];
+					$array['device_profile_settings'][$index]['profile_setting_enabled'] = $row["device_setting_enabled"];
+					$array['device_profile_settings'][$index]['profile_setting_description'] = $row["device_setting_description"];
+				}
 			}
 
 			//save the array
@@ -231,7 +256,11 @@ if ($domains_processed == 1) {
 
 		}
 		unset($num_rows);
-
+	
+	//where the device lines label is null set the value to the display name to maintain the original behavior
+		$sql = "update v_device_lines set label = display_name where label is null;\n";
+		$database->execute($sql);
+		unset($sql);
 }
 
 ?>

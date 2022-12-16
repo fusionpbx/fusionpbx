@@ -13,7 +13,7 @@
 		$text['title-user_logs']['he-il'] = '';
 		$text['title-user_logs']['it-it'] = '';
 		$text['title-user_logs']['nl-nl'] = '';
-		$text['title-user_logs']['pl-pl'] = '';
+		$text['title-user_logs']['pl-pl'] = 'Logi Użytkownika';
 		$text['title-user_logs']['pt-br'] = '';
 		$text['title-user_logs']['pt-pt'] = '';
 		$text['title-user_logs']['ro-ro'] = '';
@@ -33,7 +33,7 @@
 		$text['title-user_log']['he-il'] = '';
 		$text['title-user_log']['it-it'] = '';
 		$text['title-user_log']['nl-nl'] = '';
-		$text['title-user_log']['pl-pl'] = '';
+		$text['title-user_log']['pl-pl'] = 'Log Użytkownika';
 		$text['title-user_log']['pt-br'] = '';
 		$text['title-user_log']['pt-pt'] = '';
 		$text['title-user_log']['ro-ro'] = '';
@@ -53,7 +53,7 @@
 		$text['title_description-user_logs']['he-il'] = '';
 		$text['title_description-user_logs']['it-it'] = '';
 		$text['title_description-user_logs']['nl-nl'] = '';
-		$text['title_description-user_logs']['pl-pl'] = '';
+		$text['title_description-user_logs']['pl-pl'] = 'Pokazuje próby uwierzytelnienia z wynikiem, sygnaturą czasową, adresem zdalnym i szczegółami użytkownika.';
 		$text['title_description-user_logs']['pt-br'] = '';
 		$text['title_description-user_logs']['pt-pt'] = '';
 		$text['title_description-user_logs']['ro-ro'] = '';
@@ -73,7 +73,7 @@
 		$text['label-timestamp']['he-il'] = '';
 		$text['label-timestamp']['it-it'] = '';
 		$text['label-timestamp']['nl-nl'] = '';
-		$text['label-timestamp']['pl-pl'] = '';
+		$text['label-timestamp']['pl-pl'] = 'Znacznik czasu';
 		$text['label-timestamp']['pt-br'] = '';
 		$text['label-timestamp']['pt-pt'] = '';
 		$text['label-timestamp']['ro-ro'] = '';
@@ -93,7 +93,7 @@
 		$text['description-timestamp']['he-il'] = '';
 		$text['description-timestamp']['it-it'] = '';
 		$text['description-timestamp']['nl-nl'] = '';
-		$text['description-timestamp']['pl-pl'] = '';
+		$text['description-timestamp']['pl-pl'] = 'Ustaw datę.';
 		$text['description-timestamp']['pt-br'] = '';
 		$text['description-timestamp']['pt-pt'] = '';
 		$text['description-timestamp']['ro-ro'] = '';
@@ -113,7 +113,7 @@
 		$text['label-user_uuid']['he-il'] = '';
 		$text['label-user_uuid']['it-it'] = '';
 		$text['label-user_uuid']['nl-nl'] = '';
-		$text['label-user_uuid']['pl-pl'] = '';
+		$text['label-user_uuid']['pl-pl'] = 'Użytkownik';
 		$text['label-user_uuid']['pt-br'] = '';
 		$text['label-user_uuid']['pt-pt'] = '';
 		$text['label-user_uuid']['ro-ro'] = '';
@@ -133,7 +133,7 @@
 		$text['description-user_uuid']['he-il'] = '';
 		$text['description-user_uuid']['it-it'] = '';
 		$text['description-user_uuid']['nl-nl'] = '';
-		$text['description-user_uuid']['pl-pl'] = '';
+		$text['description-user_uuid']['pl-pl'] = 'Wybierz użytkownika.';
 		$text['description-user_uuid']['pt-br'] = '';
 		$text['description-user_uuid']['pt-pt'] = '';
 		$text['description-user_uuid']['ro-ro'] = '';
@@ -153,7 +153,7 @@
 		$text['label-username']['he-il'] = '';
 		$text['label-username']['it-it'] = '';
 		$text['label-username']['nl-nl'] = '';
-		$text['label-username']['pl-pl'] = '';
+		$text['label-username']['pl-pl'] = 'Użytkownik';
 		$text['label-username']['pt-br'] = '';
 		$text['label-username']['pt-pt'] = '';
 		$text['label-username']['ro-ro'] = '';
@@ -173,7 +173,7 @@
 		$text['description-username']['he-il'] = '';
 		$text['description-username']['it-it'] = '';
 		$text['description-username']['nl-nl'] = '';
-		$text['description-username']['pl-pl'] = '';
+		$text['description-username']['pl-pl'] = 'Wprowadź użytkownika.';
 		$text['description-username']['pt-br'] = '';
 		$text['description-username']['pt-pt'] = '';
 		$text['description-username']['ro-ro'] = '';
@@ -193,7 +193,7 @@
 		$text['label-type']['he-il'] = '';
 		$text['label-type']['it-it'] = '';
 		$text['label-type']['nl-nl'] = '';
-		$text['label-type']['pl-pl'] = '';
+		$text['label-type']['pl-pl'] = 'Typ';
 		$text['label-type']['pt-br'] = '';
 		$text['label-type']['pt-pt'] = '';
 		$text['label-type']['ro-ro'] = '';
@@ -213,7 +213,7 @@
 		$text['description-type']['he-il'] = '';
 		$text['description-type']['it-it'] = '';
 		$text['description-type']['nl-nl'] = '';
-		$text['description-type']['pl-pl'] = '';
+		$text['description-type']['pl-pl'] = 'Wprowadź typ.';
 		$text['description-type']['pt-br'] = '';
 		$text['description-type']['pt-pt'] = '';
 		$text['description-type']['ro-ro'] = '';
@@ -233,7 +233,7 @@
 		$text['label-result']['he-il'] = '';
 		$text['label-result']['it-it'] = '';
 		$text['label-result']['nl-nl'] = '';
-		$text['label-result']['pl-pl'] = '';
+		$text['label-result']['pl-pl'] = 'Rezultat';
 		$text['label-result']['pt-br'] = '';
 		$text['label-result']['pt-pt'] = '';
 		$text['label-result']['ro-ro'] = '';
@@ -253,7 +253,7 @@
 		$text['description-result']['he-il'] = '';
 		$text['description-result']['it-it'] = '';
 		$text['description-result']['nl-nl'] = '';
-		$text['description-result']['pl-pl'] = '';
+		$text['description-result']['pl-pl'] = 'Wyprowadź rezultat.';
 		$text['description-result']['pt-br'] = '';
 		$text['description-result']['pt-pt'] = '';
 		$text['description-result']['ro-ro'] = '';
@@ -272,7 +272,7 @@
 		$text['label-success']['he-il'] = '';
 		$text['label-success']['it-it'] = '';
 		$text['label-success']['nl-nl'] = '';
-		$text['label-success']['pl-pl'] = '';
+		$text['label-success']['pl-pl'] = 'sukces';
 		$text['label-success']['pt-br'] = '';
 		$text['label-success']['pt-pt'] = '';
 		$text['label-success']['ro-ro'] = '';
@@ -291,7 +291,7 @@
 		$text['label-failure']['he-il'] = '';
 		$text['label-failure']['it-it'] = '';
 		$text['label-failure']['nl-nl'] = '';
-		$text['label-failure']['pl-pl'] = '';
+		$text['label-failure']['pl-pl'] = 'niepowodzenie';
 		$text['label-failure']['pt-br'] = '';
 		$text['label-failure']['pt-pt'] = '';
 		$text['label-failure']['ro-ro'] = '';
@@ -311,7 +311,7 @@
 		$text['label-remote_address']['he-il'] = '';
 		$text['label-remote_address']['it-it'] = '';
 		$text['label-remote_address']['nl-nl'] = '';
-		$text['label-remote_address']['pl-pl'] = '';
+		$text['label-remote_address']['pl-pl'] = 'Adres Zdalny';
 		$text['label-remote_address']['pt-br'] = '';
 		$text['label-remote_address']['pt-pt'] = '';
 		$text['label-remote_address']['ro-ro'] = '';
@@ -331,7 +331,7 @@
 		$text['description-remote_address']['he-il'] = '';
 		$text['description-remote_address']['it-it'] = '';
 		$text['description-remote_address']['nl-nl'] = '';
-		$text['description-remote_address']['pl-pl'] = '';
+		$text['description-remote_address']['pl-pl'] = 'Wprowadź adres IP.';
 		$text['description-remote_address']['pt-br'] = '';
 		$text['description-remote_address']['pt-pt'] = '';
 		$text['description-remote_address']['ro-ro'] = '';
@@ -351,7 +351,7 @@
 		$text['label-user_agent']['he-il'] = '';
 		$text['label-user_agent']['it-it'] = '';
 		$text['label-user_agent']['nl-nl'] = '';
-		$text['label-user_agent']['pl-pl'] = '';
+		$text['label-user_agent']['pl-pl'] = 'User Agent';
 		$text['label-user_agent']['pt-br'] = '';
 		$text['label-user_agent']['pt-pt'] = '';
 		$text['label-user_agent']['ro-ro'] = '';
@@ -371,7 +371,7 @@
 		$text['description-user_agent']['he-il'] = '';
 		$text['description-user_agent']['it-it'] = '';
 		$text['description-user_agent']['nl-nl'] = '';
-		$text['description-user_agent']['pl-pl'] = '';
+		$text['description-user_agent']['pl-pl'] = 'Wprowadź User Agent';
 		$text['description-user_agent']['pt-br'] = '';
 		$text['description-user_agent']['pt-pt'] = '';
 		$text['description-user_agent']['ro-ro'] = '';
@@ -391,7 +391,7 @@
 		$text['label-location']['he-il'] = '';
 		$text['label-location']['it-it'] = '';
 		$text['label-location']['nl-nl'] = '';
-		$text['label-location']['pl-pl'] = '';
+		$text['label-location']['pl-pl'] = 'Lokalizacja';
 		$text['label-location']['pt-br'] = '';
 		$text['label-location']['pt-pt'] = '';
 		$text['label-location']['ro-ro'] = '';
@@ -411,7 +411,7 @@
 		$text['description-location']['he-il'] = '';
 		$text['description-location']['it-it'] = '';
 		$text['description-location']['nl-nl'] = '';
-		$text['description-location']['pl-pl'] = '';
+		$text['description-location']['pl-pl'] = 'Wprowadź lokalizację';
 		$text['description-location']['pt-br'] = '';
 		$text['description-location']['pt-pt'] = '';
 		$text['description-location']['ro-ro'] = '';

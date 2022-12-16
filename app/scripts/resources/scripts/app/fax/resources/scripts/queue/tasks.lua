@@ -255,7 +255,7 @@ local function send_mail_task(task, message, call_uuid, file)
     ["X-FusionPBX-Email-Type"]  = 'email2fax';
   }
 
-  return send_mail(mail_x_headers, task.reply_address, message, file)
+  return send_mail(mail_x_headers, nil, task.reply_address, message, file)
 end
 
 local function read_file(name, mode)

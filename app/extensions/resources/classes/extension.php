@@ -436,7 +436,7 @@ if (!class_exists('extension')) {
 								$xml .= "  </user>\n";
 
 								if (!is_readable($_SESSION['switch']['extensions']['dir']."/".$row['user_context'])) {
-									event_socket_mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context']);
+									mkdir($_SESSION['switch']['extensions']['dir']."/".$row['user_context'], 0770, false);
 								}
 								if (strlen($extension) > 0) {
 									$fout = fopen($_SESSION['switch']['extensions']['dir']."/".$row['user_context']."/v_".$extension.".xml","w");

@@ -8,7 +8,7 @@ local settings = Settings.new(db, domain_name, domain_uuid)
 local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
 
 if (email_queue_enabled == 'true') then
-	function send_mail(headers, email_address, email_message, email_file)
+	function send_mail(headers, email_from, email_address, email_message, email_file)
 
 		--include json library
 		local json
@@ -22,6 +22,13 @@ if (email_queue_enabled == 'true') then
 		local call_uuid = headers["X-FusionPBX-Call-UUID"];
 		local local_after_email = headers["X-FusionPBX-local_after_email"] or '';
 
+		if (call_uuid ~= nil) then
+			email_uuid = call_uuid;
+		else
+			api = freeswitch.API();
+			email_uuid = api:executeString("create_uuid");
+		end
+
 		if (local_after_email == 'false') then
 			email_action_after = 'delete';
 		else
@@ -31,8 +38,10 @@ if (email_queue_enabled == 'true') then
 		local db = dbh or Database.new('system');
 		local settings = Settings.new(db, domain_name, domain_uuid);
 
-		local email_from = settings:get('email', 'smtp_from', 'text');
-		local from_name = settings:get('email', 'smtp_from_name', 'text');
+		if (email_from == nil or email_from == "") then
+			email_from = settings:get('email', 'smtp_from', 'text');
+			from_name = settings:get('email', 'smtp_from_name', 'text');
+		end
 
 		if (email_from == nil or email_from == "") then
 			email_from = address;
@@ -83,7 +92,7 @@ if (email_queue_enabled == 'true') then
 			email_subject = email_subject;
 			email_body = email_body;
 			email_status = email_status;
-			email_uuid = call_uuid;
+			email_uuid = email_uuid;
 			email_action_after = email_action_after;
 		}
 		db:query(sql, params);
@@ -157,7 +166,7 @@ else
 		local sendmail = require "sendmail"
 		local uuid = require "uuid"
 
-		function send_mail(headers, address, message, file)
+		function send_mail(headers, from, address, message, file)
 			local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 			local domain_name = headers["X-FusionPBX-Domain-Name"]
 			local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
@@ -227,7 +236,7 @@ else
 	end
 
 	if freeswitch then
-		function send_mail(headers, address, message, file)
+		function send_mail(headers, from, address, message, file)
 			local domain_uuid = headers["X-FusionPBX-Domain-UUID"]
 			local domain_name = headers["X-FusionPBX-Domain-Name"]
 			local email_type = headers["X-FusionPBX-Email-Type"] or 'info'
@@ -240,15 +249,22 @@ else
 			end
 			xheaders = xheaders:sub(1,-2) .. '}'
 
-			local from = settings:get('email', 'smtp_from', 'text')
-			local from_name = settings:get('email', 'smtp_from_name', 'text')
+			if (from == nil or from == "") then
+				from = settings:get('email', 'smtp_from', 'text')
+				from_name = settings:get('email', 'smtp_from_name', 'text')
+			end
 			if from == nil or from == "" then
 				from = address
 			elseif from_name ~= nil and from_name ~= "" then
 				from = from_name .. "<" .. from .. ">"
 			end
+
 			local subject = message[1]
 			local body = message[2] or ''
+			
+			--debug info
+			--freeswitch.consoleLog("notice", "[voicemail] from: " .. from .. "\n");
+			--freeswitch.consoleLog("notice", "[voicemail] subject: " .. subject .. "\n");
 
 			local mail_headers =
 				"To: ".. address .. "\n" ..
@@ -257,10 +273,11 @@ else
 				"X-Headers: " .. xheaders
 
 			if file then
-				freeswitch.email(address, from, mail_headers, body, file)
+				ok = freeswitch.email(address, from, mail_headers, body, file)
 			else
-				freeswitch.email(address, from, mail_headers, body)
+				ok = freeswitch.email(address, from, mail_headers, body)
 			end
+			return ok
 		end
 	end
 

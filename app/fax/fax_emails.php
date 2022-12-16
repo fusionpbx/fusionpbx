@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2015
+	Portions created by the Initial Developer are Copyright (C) 2015 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,11 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
-include "root.php";
+//set the include path
+$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 require_once "resources/require.php";
 require_once "resources/functions/object_to_array.php";
 require_once "resources/functions/parse_message.php";
@@ -64,10 +68,6 @@ if (is_array($result) && @sizeof($result) != 0) {
 	$event_socket['password'] = $row['event_socket_password'];
 	unset($sql, $row);
 
-	$fax_send_mode_default = $_SESSION['fax']['send_mode']['text'];
-	if(strlen($fax_send_mode_default) == 0){
-		$fax_send_mode_default = 'direct';
-	}
 	$fax_cover_font_default = $_SESSION['fax']['cover_font']['text'];
 
 	$fax_allowed_extension_default = arr_to_map($_SESSION['fax']['allowed_extension']);
@@ -97,16 +97,12 @@ if (is_array($result) && @sizeof($result) != 0) {
 		$fax_email_outbound_authorized_senders = strtolower($row["fax_email_outbound_authorized_senders"]);
 		$fax_send_greeting = $row["fax_send_greeting"];
 		$fax_accountcode = $row["accountcode"];
+		$fax_toll_allow = $row["fax_toll_allow"];
 
 		//load default settings, then domain settings over top
 		unset($_SESSION);
 		$_SESSION = $default_settings;
 		load_domain_settings($domain_uuid);
-
-		$fax_send_mode = $_SESSION['fax']['send_mode']['text'];
-		if(strlen($fax_send_mode) == 0){
-			$fax_send_mode = $fax_send_mode_default;
-		}
 
 		$fax_cover_font = $_SESSION['fax']['cover_font']['text'];
 		if(strlen($fax_cover_font) == 0){
@@ -114,7 +110,7 @@ if (is_array($result) && @sizeof($result) != 0) {
 		}
 
 		$fax_allowed_extension = arr_to_map($_SESSION['fax']['allowed_extension']);
-		if($fax_allowed_extension == false){
+		if($fax_allowed_extension == false) {
 			$fax_allowed_extension = $fax_allowed_extension_default;
 		}
 
@@ -163,17 +159,29 @@ if (is_array($result) && @sizeof($result) != 0) {
 
 			sort($emails); // oldest first
 			foreach ($emails as $email_id) {
+				//get email meta data
 				$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
+				//print_r($metadata);
 
 				//format from address
-				$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
-				$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
-
+				//$tmp = object_to_array(imap_rfc822_parse_adrlist($metadata[0]['from'], null));
+				//$metadata[0]['from'] = strtolower($tmp[0]['mailbox']."@".$tmp[0]['host']);
+				//$sender_email = $metadata[0]['from'];
+	
+				//get the sender email address	
+				if (strstr($metadata[0]['from'], '<') && strstr($metadata[0]['from'], '>')) {
+					$sender_email = preg_match('/^.*<(.+)>/', $metadata[0]['from'], $matches) ? strtolower($matches[1]) : '';
+				}
+				else {
+					$sender_email = strtolower($metadata[0]['from']);
+				}
+ 
 				//check sender
-				$sender_email = $metadata[0]['from'];
 				$sender_domain = explode('@', $sender_email)[1];
 				$sender_authorized = in_array($sender_email, $authorized_senders) || in_array($sender_domain, $authorized_senders) ? true : false;
 				if ($sender_authorized) {
+					//debug info
+					//echo "authorized\n";
 
 					//add multi-lingual support
 					$language = new text;

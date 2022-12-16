@@ -119,7 +119,7 @@ if (!class_exists('contacts')) {
 									$p = new permissions;
 									$database = new database;
 									foreach ($this->tables as $table) {
-										$p->add($database->singular($table).'_delete', 'temp');
+										$p->add(database::singular($table).'_delete', 'temp');
 									}
 
 								//execute delete
@@ -132,7 +132,7 @@ if (!class_exists('contacts')) {
 								//revoke temp permissions
 									$database = new database;
 									foreach ($this->tables as $table) {
-										$p->delete($database->singular($table).'_delete', 'temp');
+										$p->delete(database::singular($table).'_delete', 'temp');
 									}
 
 								//set message
@@ -163,11 +163,11 @@ if (!class_exists('contacts')) {
 						$x = 0;
 						foreach ($records as $property_name => $properties) {
 							$database = new database;
-							if (permission_exists($database->singular($property_name).'_delete')) {
+							if (permission_exists(database::singular($property_name).'_delete')) {
 								if (is_array($properties) && @sizeof($properties) != 0) {
 									foreach ($properties as $property) {
 										if ($property['checked'] == 'true' && is_uuid($property['uuid'])) {
-											$array[$property_name][$x][$database->singular($property_name).'_uuid'] = $property['uuid'];
+											$array[$property_name][$x][database::singular($property_name).'_uuid'] = $property['uuid'];
 											$array[$property_name][$x]['contact_uuid'] = $this->contact_uuid;
 											$array[$property_name][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 											$x++;

@@ -24,7 +24,7 @@
 	$apps[$x]['menu'][$y]['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
 	$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][$y]['category'] = "internal";
-	$apps[$x]['menu'][$y]['path'] = "/app/calls/calls.php";
+	$apps[$x]['menu'][$y]['path'] = "/app/call_forward/call_forward.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "user";

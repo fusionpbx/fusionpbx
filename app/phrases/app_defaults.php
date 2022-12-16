@@ -28,13 +28,13 @@ if ($domains_processed == 1) {
 
 	//create phrases folder and add include line in xml for each language found
 		/*
-		if (strlen($_SESSION['switch']['phrases']['dir']) > 0) {
-			if (is_readable($_SESSION['switch']['phrases']['dir'])) {
-				$conf_lang_folders = glob($_SESSION['switch']['phrases']['dir']."/*");
+		if (strlen($_SESSION['switch']['languages']['dir']) > 0) {
+			if (is_readable($_SESSION['switch']['languages']['dir'])) {
+				$conf_lang_folders = glob($_SESSION['switch']['languages']['dir']."/*");
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
-						event_socket_mkdir($conf_lang_folder."/phrases/");
+						mkdir($conf_lang_folder."/phrases/", 0770, false);
 					}
 					//parse language, open xml file
 					$conf_lang = substr($conf_lang_folder, -2);
@@ -90,7 +90,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('phrase_detail_edit', 'temp');
@@ -128,7 +128,7 @@ if ($domains_processed == 1) {
 					$database = new database;
 					$database->app_name = 'phrases';
 					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
-					$database->save($array);
+					$database->save($array, false);
 					unset($array);
 
 					$p->delete('phrase_detail_edit', 'temp');

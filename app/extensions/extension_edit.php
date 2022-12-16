@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2021
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,8 +25,11 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -110,6 +113,7 @@
 			$voicemail_password = $_POST["voicemail_password"];
 			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
+			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$user_context = $_POST["user_context"];
@@ -143,9 +147,6 @@
 			$voicemail_id = $extension;
 			if (permission_exists('number_alias') && strlen($number_alias) > 0) {
 				$voicemail_id = $number_alias;
-			}
-			if (!is_numeric($voicemail_id)) {
-				$voicemail_id = null;
 			}
 
 			$cidrs = preg_split("/[\s,]+/", $cidr);
@@ -230,6 +231,7 @@
 		//set the variables
 			$extension_uuid = $_REQUEST["id"];
 			$user_uuid = $_REQUEST["delete_uuid"];
+
 		//delete the group from the users
 			$array['extension_users'][0]['extension_uuid'] = $extension_uuid;
 			$array['extension_users'][0]['user_uuid'] = $user_uuid;
@@ -536,6 +538,55 @@
 													$device_vendor = device::get_vendor($device_mac_address);	
 												}
 
+												//determine the name
+												if (strlen($effective_caller_id_name) > 0) {
+													$name = $effective_caller_id_name;
+												}
+												elseif (strlen($directory_first_name) > 0 && strlen($directory_last_name) > 0) {
+													$name = $directory_first_name.' '.$directory_last_name;
+												}
+												elseif (strlen($directory_first_name) > 0) {
+													$name = $directory_first_name;
+												}
+												elseif (strlen($directory_first_name) > 0) {
+													$name = $directory_first_name.' '.$directory_last_name;
+												}
+												else {
+													$name = '';
+												}
+
+												//get the dislplay label
+												if ($_SESSION['provision']['line_label']['text'] == 'auto') {
+													$line_label = $extension;
+												}
+												else {
+													$line_label = $_SESSION['provision']['line_label']['text'];
+													$line_label = str_replace("\${name}", $name, $line_label);
+													$line_label = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_label);
+													$line_label = str_replace("\${first_name}", $directory_first_name, $line_label);
+													$line_label = str_replace("\${last_name}", $directory_last_name, $line_label);
+													$line_label = str_replace("\${user_id}", $extension, $line_label);
+													$line_label = str_replace("\${auth_id}", $extension, $line_label);
+													$line_label = str_replace("\${extension}", $extension, $line_label);
+													$line_label = str_replace("\${description}", $description, $line_label);
+												}
+
+												//get the dislplay name
+												if ($_SESSION['provision']['line_display_name']['text'] == 'auto') {
+													$line_display_name = $name;
+												}
+												else {
+													$line_display_name = $_SESSION['provision']['line_display_name']['text'];
+													$line_display_name = str_replace("\${name}", $name, $line_display_name);
+													$line_display_name = str_replace("\${effective_caller_id_name}", $effective_caller_id_name, $line_display_name);
+													$line_display_name = str_replace("\${first_name}", $directory_first_name, $line_display_name);
+													$line_display_name = str_replace("\${last_name}", $directory_last_name, $line_display_name);
+													$line_display_name = str_replace("\${user_id}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${auth_id}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${extension}", $extension, $line_display_name);
+													$line_display_name = str_replace("\${description}", $description, $line_display_name);
+												}
+
 												//send a message to the user the device is not unique
 												if (!$device_unique) {
 													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
@@ -561,7 +612,8 @@
 													$array["devices"][$j]["device_lines"][0]["outbound_proxy_secondary"] = $_SESSION['provision']['outbound_proxy_secondary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_primary"] = $_SESSION['provision']['server_address_primary']['text'];
 													$array["devices"][$j]["device_lines"][0]["server_address_secondary"] = $_SESSION['provision']['server_address_secondary']['text'];
-													$array["devices"][$j]["device_lines"][0]["display_name"] = strlen($effective_caller_id_name) > 0 ? $effective_caller_id_name : $extension;
+													$array["devices"][$j]["device_lines"][0]["label"] = $line_label;
+													$array["devices"][$j]["device_lines"][0]["display_name"] = $line_display_name;
 													$array["devices"][$j]["device_lines"][0]["user_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["auth_id"] = $extension;
 													$array["devices"][$j]["device_lines"][0]["password"] = $password;
@@ -587,7 +639,7 @@
 										$voicemail_password = generate_password($_SESSION['voicemail']['password_length']['numeric'], 1);
 									}
 
-								// build voicemail
+								//add  the voicemail to the array
 									if ($voicemail_id !== NULL) {
 										//get the voicemail_uuid
 											$sql = "select voicemail_uuid from v_voicemails ";
@@ -606,9 +658,13 @@
 											if (!is_uuid($voicemail_uuid)) {
 												$voicemail_uuid = uuid();
 												$voicemail_tutorial = 'true';
+												//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
+												if (!permission_exists('voicemail_transcription_enabled') && isset($_SESSION['voicemail']['transcription_enabled_default']['boolean'])) {
+													$voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean'];
+												}
 											}
 
-										//add the voicemail
+										//add the voicemail to the array
 											$array["voicemails"][$i]["domain_uuid"] = $domain_uuid;
 											$array["voicemails"][$i]["voicemail_uuid"] = $voicemail_uuid;
 											$array["voicemails"][$i]["voicemail_id"] = $voicemail_id;
@@ -618,14 +674,22 @@
 											//$array["voicemails"][$i]["voicemail_alternate_greet_id"] = $alternate_greet_id;
 											$array["voicemails"][$i]["voicemail_mail_to"] = $voicemail_mail_to;
 											//$array["voicemails"][$i]["voicemail_attach_file"] = $voicemail_attach_file;
-											$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
+											if (permission_exists('voicemail_file')) {
+												$array["voicemails"][$i]["voicemail_file"] = $voicemail_file;
+											}
 											if (permission_exists('voicemail_local_after_email')) {
 												$array["voicemails"][$i]["voicemail_local_after_email"] = $voicemail_local_after_email;
 											}
+											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $voicemail_transcription_enabled;
+											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
 											$array["voicemails"][$i]["voicemail_enabled"] = $voicemail_enabled;
 											$array["voicemails"][$i]["voicemail_description"] = $description;
-											$array["voicemails"][$i]["voicemail_tutorial"] = $voicemail_tutorial;
-											$array["voicemails"][$i]["voicemail_transcription_enabled"] = $_SESSION['voicemail']['transcription_enabled_default']['boolean'] ?: false;
+
+										//make sure the voicemail directory exists
+											if (!file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id)) {
+												mkdir($_SESSION['switch']['voicemail']['dir']."/default/".$_SESSION['domain_name']."/".$voicemail_id, 0770, true);
+											}
+
 									}
 							}
 
@@ -808,23 +872,23 @@
 
 	//get the voicemail data
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
-			//get the voicemails
-				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$sql .= "and voicemail_id = :voicemail_id ";
-				$parameters['domain_uuid'] = $domain_uuid;
-				$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
-				$database = new database;
-				$row = $database->select($sql, $parameters, 'row');
-				if (is_array($row) && @sizeof($row) != 0) {
-					$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
-					$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
-					$voicemail_file = $row["voicemail_file"];
-					$voicemail_local_after_email = $row["voicemail_local_after_email"];
-					$voicemail_enabled = $row["voicemail_enabled"];
-					$voicemail_tutorial = $row["voicemail_tutorial"];
-				}
-				unset($sql, $parameters, $row);
+			$sql = "select * from v_voicemails ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
+			$database = new database;
+			$row = $database->select($sql, $parameters, 'row');
+			if (is_array($row) && @sizeof($row) != 0) {
+				$voicemail_password = str_replace("#", "", $row["voicemail_password"]);
+				$voicemail_mail_to = str_replace(" ", "", $row["voicemail_mail_to"]);
+				$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+				$voicemail_tutorial = $row["voicemail_tutorial"];
+				$voicemail_file = $row["voicemail_file"];
+				$voicemail_local_after_email = $row["voicemail_local_after_email"];
+				$voicemail_enabled = $row["voicemail_enabled"];
+			}
+			unset($sql, $parameters, $row);
 		}
 
 	}
@@ -937,6 +1001,7 @@
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 	if (strlen($call_screen_enabled) == 0) { $call_screen_enabled = 'false'; }
 	if (strlen($user_record) == 0) { $user_record = $_SESSION['extension']['user_record_default']['text']; }
+	if (strlen($voicemail_transcription_enabled) == 0) { $voicemail_transcription_enabled = $_SESSION['voicemail']['transcription_enabled_default']['boolean']; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = $_SESSION['voicemail']['enabled_default']['boolean']; }
 
 //create token
@@ -1006,7 +1071,7 @@
 			unset($button_margin);
 		}
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../calls/call_edit.php?id='.urlencode($extension_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-call_forward'],'icon'=>'project-diagram','style'=>$button_margin,'link'=>'../call_forward/call_forward_edit.php?id='.urlencode($extension_uuid)]);
 			unset($button_margin);
 		}
 		if (permission_exists('extension_setting_view')) {
@@ -1479,7 +1544,9 @@
 		if (permission_exists('emergency_caller_id_select')) {
 			if (count($emergency_destinations) > 0) {
 				echo "	<select name='emergency_caller_id_number' id='emergency_caller_id_number' class='formfld'>\n";
-				//echo "	<option value=''></option>\n"; Don't allow no selection when validating emergency numbers this way
+				if (permission_exists('emergency_caller_id_select_empty')) {
+					echo "		<option value=''></option>\n";
+				}
 				foreach ($emergency_destinations as &$row) {
 					$tmp = $row["destination_caller_id_number"];
 					if(strlen($tmp) == 0){
@@ -1654,20 +1721,38 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "    ".$text['label-voicemail_file']."\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
-		echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
-		echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
-		echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-voicemail_file']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		if (permission_exists('voicemail_transcription_enabled')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-voicemail_transcription_enabled']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' name='voicemail_transcription_enabled' id='voicemail_transcription_enabled'>\n";
+			echo "    	<option value='true' ".(($voicemail_transcription_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+			echo "    	<option value='false' ".(($voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			echo "	</select>\n";
+			echo "<br />\n";
+			echo $text['description-voicemail_transcription_enabled']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if (permission_exists('voicemail_file')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-voicemail_file']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
+			echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
+			echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
+			echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-voicemail_file']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		if (permission_exists('voicemail_local_after_email')) {
 			echo "<tr>\n";

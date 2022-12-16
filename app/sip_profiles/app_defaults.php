@@ -125,7 +125,7 @@
 							$database = new database;
 							$database->app_name = 'sip_profiles';
 							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 
 						//revoke temporary permissions
@@ -201,7 +201,7 @@
 							$database = new database;
 							$database->app_name = 'sip_profiles';
 							$database->app_uuid = '159a8da8-0e8c-a26b-6d5b-19c532b6d470';
-							$database->save($array);
+							$database->save($array, false);
 							unset($array);
 
 						//revoke temporary permissions

@@ -37,7 +37,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "USA-7";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "http://wiki.snom.com/Settings/timezone";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "https://service.snom.com/display/wiki/timezone";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945982a-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -230,5 +230,29 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "off";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enables/Disables sending Supported:100Rel and by this whether early-dialogs by PRACK will be offered. valid values: on,off";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c85c9b44-c56e-4aac-aa88-98663771645a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_language";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "English";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the default display-language on snom-phones. See https://service.snom.com/display/wiki/language";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "974bad52-b793-4901-ae7d-8bfb561970f5";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_ntp_server";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0.pool.ntp.org";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the ntp server on snom-phones.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ad42166c-af84-46bb-b4f4-8d18eceaf65d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_tone_scheme";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "USA";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Sets the tone scheme on snom-phones. See https://service.snom.com/display/wiki/tone_scheme";
 
 ?>

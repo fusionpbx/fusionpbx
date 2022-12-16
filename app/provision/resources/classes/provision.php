@@ -24,7 +24,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
-include "root.php";
 
 //define the provision class
 	class provision {
@@ -186,7 +185,8 @@ include "root.php";
 			}
 		}
 
-		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $is_group) {
+		private function contact_append(&$contacts, &$line, $domain_uuid, $device_user_uuid, $category) {
+
 			$sql = "select c.contact_uuid, c.contact_organization, c.contact_name_given, c.contact_name_family, ";
 			$sql .= "c.contact_type, c.contact_category, p.phone_label,";
 			$sql .= "p.phone_number, p.phone_extension, p.phone_primary ";
@@ -194,7 +194,7 @@ include "root.php";
 			$sql .= "where c.contact_uuid = p.contact_uuid ";
 			$sql .= "and p.phone_type_voice = '1' ";
 			$sql .= "and c.domain_uuid = :domain_uuid ";
-			if ($is_group) {
+			if ($category == 'groups') {
 				$sql .= "and c.contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_groups ";
 				$sql .= "	where group_uuid in ( ";
@@ -202,55 +202,57 @@ include "root.php";
 				$sql .= "		where user_uuid = :device_user_uuid ";
 				$sql .= "		and domain_uuid = :domain_uuid ";
 				$sql .= "	)) ";
+				$parameters['device_user_uuid'] = $device_user_uuid;
 			}
-			else {
+			if ($category == 'users') {
 				$sql .= "and c.contact_uuid in ( ";
 				$sql .= "	select contact_uuid from v_contact_users ";
 				$sql .= "	where user_uuid = :device_user_uuid ";
 				$sql .= "	and domain_uuid = :domain_uuid ";
 				$sql .= ") ";
+				$parameters['device_user_uuid'] = $device_user_uuid;
 			}
-			$parameters['device_user_uuid'] = $device_user_uuid;
 			$parameters['domain_uuid'] = $domain_uuid;
 			$database = new database;
-			$user_contacts = $database->select($sql, $parameters, 'all');
-			if (is_array($user_contacts)) {
-				foreach ($user_contacts as &$row) {
+			$database_contacts = $database->select($sql, $parameters, 'all');
+			if (is_array($database_contacts)) {
+				$x = 0;
+				foreach ($database_contacts as &$row) {
 					$uuid = $row['contact_uuid'];
 					$phone_label = strtolower($row['phone_label']);
 					$contact_category = strtolower($row['contact_category']);
 
 					$contact = array();
 					$contacts[] = &$contact;
-					$contact['category']             = $is_group ? 'groups' : 'users';
-					$contact['contact_uuid']         = $row['contact_uuid'];
-					$contact['contact_type']         = $row['contact_type'];
-					$contact['contact_category']     = $row['contact_category'];
-					$contact['contact_organization'] = $row['contact_organization'];
-					$contact['contact_name_given']   = $row['contact_name_given'];
-					$contact['contact_name_family']  = $row['contact_name_family'];
-					$contact['numbers']              = array();
+					$contact['category']				= ($category == 'all') ? 'groups' : $category;
+					$contact['contact_uuid']			= $row['contact_uuid'];
+					$contact['contact_type']			= $row['contact_type'];
+					$contact['contact_category']		= $row['contact_category'];
+					$contact['contact_organization']	= $row['contact_organization'];
+					$contact['contact_name_given']		= $row['contact_name_given'];
+					$contact['contact_name_family']		= $row['contact_name_family'];
 
+					$contact['numbers']					= array();
 					$numbers = &$contact['numbers'];
 
 					if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-						$contact['phone_label']		= $phone_label;
-						$contact['phone_number']	= $row['phone_number'];
-						$contact['phone_extension']	= $row['phone_extension'];
+						$contact['phone_label']			= $phone_label;
+						$contact['phone_number']		= $row['phone_number'];
+						$contact['phone_extension']		= $row['phone_extension'];
 					}
 
-					$numbers[] = array(
-						line_number			=> $line['line_number'],
-						phone_label			=> $phone_label,
-						phone_number		=> $row['phone_number'],
-						phone_extension		=> $row['phone_extension'],
-						phone_primary		=> $row['phone_primary'],
-					);
+					$numbers[$x]['line_number']			= $line['line_number'];
+					$numbers[$x]['phone_label']			= $phone_label;
+					$numbers[$x]['phone_number']		= $row['phone_number'];
+					$numbers[$x]['phone_extension']		= $row['phone_extension'];
+					$numbers[$x]['phone_primary']		= $row['phone_primary'];
 
 					$contact['phone_number_' . $phone_label] = $row['phone_number'];
 					unset($contact, $numbers, $uuid, $phone_label);
+					$x++;
 				}
 				unset($parameters);
+
 			}
 		}
 
@@ -300,7 +302,11 @@ include "root.php";
 						elseif (isset($val['boolean'])) { $value = $val['boolean']; }
 						elseif (isset($val['numeric'])) { $value = $val['numeric']; }
 						elseif (is_array($val) && !is_uuid($val['uuid'])) { $value = $val; }
-						if (isset($value)) { $provision[$key] = $value; }
+						if (isset($value)) {
+							$value = str_replace('${domain_name}', $domain_name, $value);
+							$value = str_replace('${mac_address}', $mac, $value);
+							$provision[$key] = $value;
+						}
 						unset($value);
 					}
 				}
@@ -345,7 +351,7 @@ include "root.php";
 									$sql .= "where domain_uuid = :domain_uuid and device_mac_address = :device_mac_address ";
 									$parameters['domain_uuid'] = $domain_uuid;
 									$parameters['device_mac_address'] = strtolower($mac);
-									$parameters['device_provisioned_date'] = date("Y-m-d H:i:s");
+									$parameters['device_provisioned_date'] = 'now()';
 									$parameters['device_provisioned_method'] = (isset($_SERVER["HTTPS"]) ? 'https' : 'http');
 									$parameters['device_provisioned_ip'] = $_SERVER['REMOTE_ADDR'];
 									$parameters['device_provisioned_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -356,15 +362,16 @@ include "root.php";
 								//set the variables from values in the database
 									$device_uuid = $row["device_uuid"];
 									$device_label = $row["device_label"];
-									if (strlen($row["device_vendor"]) > 0) {
-										$device_vendor = strtolower($row["device_vendor"]);
-									}
+									$device_template = $row["device_template"];
+									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_user_uuid = $row["device_user_uuid"];
 									$device_model = $row["device_model"];
 									$device_firmware_version = $row["device_firmware_version"];
+									if (strlen($row["device_vendor"]) > 0) {
+										$device_vendor = strtolower($row["device_vendor"]);
+									}
+									$device_location = $row["device_location"];
 									$device_enabled = $row["device_enabled"];
-									$device_template = $row["device_template"];
-									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
 							}
 							unset($row);
@@ -380,12 +387,13 @@ include "root.php";
 								$row = $database->select($sql, $parameters, 'row');
 								if (is_array($row) && sizeof($row) != 0) {
 									$device_label = $row["device_label"];
-									$device_vendor = strtolower($row["device_vendor"]);
-									$device_model = $row["device_model"];
-									$device_firmware_version = $row["device_firmware_version"];
-									$device_enabled = $row["device_enabled"];
 									$device_template = $row["device_template"];
 									$device_profile_uuid = $row["device_profile_uuid"];
+									$device_model = $row["device_model"];
+									$device_firmware_version = $row["device_firmware_version"];
+									$device_vendor = strtolower($row["device_vendor"]);
+									$device_location = strtolower($row["device_location"]);
+									$device_enabled = $row["device_enabled"];
 									$device_description = $row["device_description"];
 								}
 								unset($row, $parameters);
@@ -435,6 +443,7 @@ include "root.php";
 							$templates['Yealink SIP-T29G'] = 'yealink/t29g';
 							$templates['yealink SIP-T29P'] = 'yealink/t29p';
 							$templates['Yealink SIP-T32G'] = 'yealink/t32g';
+							$templates['Yealink SIP-T33G'] = 'yealink/t33g';
 							$templates['Yealink SIP-T38G'] = 'yealink/t38g';
 							$templates['Yealink SIP-T40P'] = 'yealink/t40p';
 							$templates['Yealink SIP-T41G'] = 'yealink/t41g';
@@ -589,11 +598,13 @@ include "root.php";
 								if (is_array($row) && sizeof($row) != 0) {
 									if ($row["device_enabled"] == "true") {
 										$device_label = $row["device_label"];
+										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_firmware_version = $row["device_firmware_version"];
 										$device_user_uuid = $row["device_user_uuid"];
+										$device_location = strtolower($row["device_location"]);
+										$device_vendor = strtolower($row["device_vendor"]);
 										$device_enabled = $row["device_enabled"];
 										//keep the original template
-										$device_profile_uuid = $row["device_profile_uuid"];
 										$device_description = $row["device_description"];
 									}
 								}
@@ -880,16 +891,22 @@ include "root.php";
 					$view->assign("user", $lines);
 
 				//get the list of contact directly assigned to the user
-					if (is_uuid($device_user_uuid) && is_uuid($domain_uuid)) {
-						//get the contacts assigned to the groups and add to the contacts array
-							if ($_SESSION['provision']['contact_groups']['boolean'] == "true") {
-								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, true);
-							}
-
-						//get the contacts assigned to the user and add to the contacts array
-							if ($_SESSION['provision']['contact_users']['boolean'] == "true") {
-								$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, false);
-							}
+					if (is_uuid($domain_uuid)) {
+						if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+							//get the contacts assigned to the groups and add to the contacts array
+								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_groups']['boolean'] == "true") {
+									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'groups');
+								}
+	
+							//get the contacts assigned to the user and add to the contacts array
+								if (is_uuid($device_user_uuid) && $_SESSION['provision']['contact_users']['boolean'] == "true") {
+									$this->contact_append($contacts, $line, $domain_uuid, $device_user_uuid, 'users');
+								}
+						}
+						else {
+							//show all contacts for the domain
+								$this->contact_append($contacts, $line, $domain_uuid, null, 'all');
+						}
 					}
 
 				//get the extensions and add them to the contacts array
@@ -1124,6 +1141,8 @@ include "root.php";
 					$view->assign("user_id",$user_id);
 					$view->assign("password",$password);
 					$view->assign("template",$device_template);
+					$view->assign("location",$device_location);
+					$view->assign("device_location",$device_location);
 					$view->assign("microtime",microtime(true));
 
 				//personal ldap password
@@ -1193,7 +1212,7 @@ include "root.php";
 					else {
 						//make sure the file exists
 						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
-							echo "file not found ".$template_dir."/".$device_template ."/".$file;
+							$this->http_error('404');
 							if ($_SESSION['provision']['debug']['boolean'] == 'true') {
 								echo ":$template_dir/$device_template/$file<br/>";
 								echo "template_dir: $template_dir<br/>";

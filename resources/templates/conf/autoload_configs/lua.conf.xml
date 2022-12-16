@@ -48,6 +48,12 @@
     <!-- FusionPBX: Support BLF for Call Forward -->
     <!--<param name="startup-script" value="blf_subscribe.lua forward"/>-->
 
+    <!-- FusionPBX: Support BLF for Call Center Agents -->
+    <!--<param name="startup-script" value="blf_subscribe.lua agent"/>-->
+
+    <!-- FusionPBX: Support BLF for Voicemail -->
+    <!--<param name="startup-script" value="blf_subscribe.lua voicemail"/>-->
+
     <!-- FusionPBX: Support MWI indicator-->
     <!-- There 2 way to handle this
       1 - Monitor - ignore SUBSCRIBE and just send NOTIFY each X seconds

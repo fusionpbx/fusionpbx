@@ -181,4 +181,17 @@
    </input>
   </macro>
 
+  <macro name="voicemail_post_forward_action">
+    <input pattern="^(1):(2)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-delete_message.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-save_message.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
+  </macro>
+
 </include>

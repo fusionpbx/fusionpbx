@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -45,7 +48,6 @@
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
 		$cdr_id = $_REQUEST["cdr_id"];
-		$missed = $_REQUEST["missed"];
 		$direction = $_REQUEST["direction"];
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
@@ -242,6 +244,7 @@
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.duration, \n";
 	$sql .= "c.billmsec, \n";
+	$sql .= "c.missed_call, \n";
 	$sql .= "c.record_path, \n";
 	$sql .= "c.record_name, \n";
 	$sql .= "c.xml_cdr_uuid, \n";
@@ -286,7 +289,7 @@
 	$sql .= "left join v_extensions as e on e.extension_uuid = c.extension_uuid \n";
 	$sql .= "inner join v_domains as d on d.domain_uuid = c.domain_uuid \n";
 	if ($_REQUEST['show'] == "all" && permission_exists('xml_cdr_all')) {
-		$sql .= "where true ";
+		$sql .= "where true \n";
 	}
 	else {
 		$sql .= "where c.domain_uuid = :domain_uuid \n";
@@ -294,14 +297,11 @@
 	}
 	if (!permission_exists('xml_cdr_domain')) { //only show the user their calls
 		if (is_array($extension_uuids) && @sizeof($extension_uuids)) {
-			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') ";
+			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') \n";
 		}
 		else {
-			$sql .= "and false ";
+			$sql .= "and false \n";
 		}
-	}
-	if ($missed == true) {
-		$sql .= "and missed_call = 1 \n";
 	}
 	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql .= "and start_epoch between :start_epoch and :stop_epoch \n";
@@ -393,153 +393,150 @@
 	}
 
 	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) {
-		$sql .= "and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz ";
+		$sql .= "and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
 		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
 		$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($start_stamp_begin) > 0) {
-			$sql .= "and start_stamp >= :start_stamp_begin ";
+			$sql .= "and start_stamp >= :start_stamp_begin \n";
 			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($start_stamp_end) > 0) {
-			$sql .= "and start_stamp <= :start_stamp_end ";
+			$sql .= "and start_stamp <= :start_stamp_end \n";
 			$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) {
-		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz ";
+		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz \n";
 		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;
 		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($answer_stamp_begin) > 0) {
-			$sql .= "and answer_stamp >= :answer_stamp_begin ";
+			$sql .= "and answer_stamp >= :answer_stamp_begin \n";
 			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;;
 		}
 		if (strlen($answer_stamp_end) > 0) {
-			$sql .= "and answer_stamp <= :answer_stamp_end "; 
+			$sql .= "and answer_stamp <= :answer_stamp_end \n";
 			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) {
-		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz ";
+		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz \n";
 		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
 		$parameters['end_stamp_end'] = $end_stamp_end.':59.999 '.$time_zone;
 	}
 	else {
 		if (strlen($end_stamp_begin) > 0) {
-			$sql .= "and end_stamp >= :end_stamp_begin ";
+			$sql .= "and end_stamp >= :end_stamp_begin \n";
 			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
 		}
 		if (strlen($end_stamp_end) > 0) {
-			$sql .= "and end_stamp <= :end_stamp_end ";
+			$sql .= "and end_stamp <= :end_stamp_end \n";
 			$parameters['end_stamp'] = $end_stamp_end.':59.999 '.$time_zone;
 		}
 	}
 	if (is_numeric($duration_min)) {
-		$sql .= "and duration >= :duration_min ";
+		$sql .= "and duration >= :duration_min \n";
 		$parameters['duration_min'] = $duration_min;
 	}
 	if (is_numeric($duration_max)) {
-		$sql .= "and duration <= :duration_max ";
+		$sql .= "and duration <= :duration_max \n";
 		$parameters['duration_max'] = $duration_max;
 	}
 	if (strlen($billsec) > 0) {
-		$sql .= "and billsec like :billsec ";
+		$sql .= "and billsec like :billsec \n";
 		$parameters['billsec'] = '%'.$billsec.'%';
 	}
 	if (strlen($hangup_cause) > 0) {
-		$sql .= "and hangup_cause like :hangup_cause ";
+		$sql .= "and hangup_cause like :hangup_cause \n";
 		$parameters['hangup_cause'] = '%'.$hangup_cause.'%';
 	}
-	elseif (!permission_exists('xml_cdr_lose_race') && !permission_exists('xml_cdr_enterprise_leg')) {
-		$sql .= "and hangup_cause != 'LOSE_RACE' ";
+
+	//exclude ring group legs that were not answered
+	if (!permission_exists('xml_cdr_lose_race')) {
+		$sql .= "and hangup_cause != 'LOSE_RACE' \n";
 	}
-	//exclude enterprise ring group legs
-	if (!permission_exists('xml_cdr_enterprise_leg')) {
-		$sql .= "and originating_leg_uuid IS NULL ";
-	}
+
 	if (strlen($call_result) > 0) {
 		switch ($call_result) {
 			case 'answered':
-				$sql .= "and (answer_stamp is not null and bridge_uuid is not null) ";
+				$sql .= "and (answer_stamp is not null and bridge_uuid is not null) \n";
 				break;
 			case 'voicemail':
-				$sql .= "and (answer_stamp is not null and bridge_uuid is null) ";
+				$sql .= "and (answer_stamp is not null and bridge_uuid is null) \n";
 				break;
 			case 'missed':
-				$sql .= "and missed_call = '1' ";
+				$sql .= "and missed_call = true \n";
 				break;
 			case 'cancelled':
 				if ($direction == 'inbound' || $direction == 'local' || $call_result == 'missed') {
-					$sql .= "
-						and ((
-							answer_stamp is null 
-							and bridge_uuid is null 
-							and sip_hangup_disposition <> 'send_refuse'
-						)
-						or (
-							answer_stamp is not null 
-							and bridge_uuid is null 
-							and voicemail_message = false
-						))";
+					$sql .= "and (( \n";
+					$sql .= "		answer_stamp is null \n";
+					$sql .= "		and bridge_uuid is null \n";
+					$sql .= "		and sip_hangup_disposition <> 'send_refuse' \n";
+					$sql .= "	) \n";
+					$sql .= "	or ( \n";
+					$sql .= "		answer_stamp is not null \n";
+					$sql .= "		and bridge_uuid is null \n";
+					$sql .= "		and voicemail_message = false \n";
+					$sql .= "	)) \n";
 				}
 				else if ($direction == 'outbound') {
 					$sql .= "and (answer_stamp is null and bridge_uuid is not null) ";
 				}
 				else {
-					$sql .= "
-						and ((
-							(direction = 'inbound' or direction = 'local')
-							and answer_stamp is null
-							and bridge_uuid is null
-							and sip_hangup_disposition <> 'send_refuse'
-						)
-						or (
-							direction = 'outbound'
-							and answer_stamp is null
-							and bridge_uuid is not null
-						)
-						or (
-							(direction = 'inbound' or direction = 'local')
-							and answer_stamp is not null
-							and bridge_uuid is null
-							and voicemail_message = false
-						))";
+					$sql .= "	and (( \n";
+					$sql .= "		(direction = 'inbound' or direction = 'local') \n";
+					$sql .= "		and answer_stamp is null \n";
+					$sql .= "		and bridge_uuid is null \n";
+					$sql .= "		and sip_hangup_disposition <> 'send_refuse' \n";
+					$sql .= "	) \n";
+					$sql .= "	or ( \n";
+					$sql .= "		direction = 'outbound' \n";
+					$sql .= "		and answer_stamp is null \n";
+					$sql .= "		and bridge_uuid is not null \n";
+					$sql .= "	) \n";
+					$sql .= "	or ( \n";
+					$sql .= "		(direction = 'inbound' or direction = 'local') \n";
+					$sql .= "		and answer_stamp is not null \n";
+					$sql .= "		and bridge_uuid is null \n";
+					$sql .= "		and voicemail_message = false \n";
+					$sql .= "	)) \n";
 				}
 				break;
 			default: 
-				$sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) ";
+				$sql .= "and (answer_stamp is null and bridge_uuid is null and duration = 0) \n";
 				//$sql .= "and (answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse') ";
 		}
 	}
 	if (strlen($xml_cdr_uuid) > 0) {
-		$sql .= "and xml_cdr_uuid = :xml_cdr_uuid ";
+		$sql .= "and xml_cdr_uuid = :xml_cdr_uuid \n";
 		$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
 	}
 	if (strlen($bleg_uuid) > 0) {
-		$sql .= "and bleg_uuid = :bleg_uuid ";
+		$sql .= "and bleg_uuid = :bleg_uuid \n";
 		$parameters['bleg_uuid'] = $bleg_uuid;
 	}
 	if (strlen($accountcode) > 0) {
-		$sql .= "and c.accountcode = :accountcode ";
+		$sql .= "and c.accountcode = :accountcode \n";
 		$parameters['accountcode'] = $accountcode;
 	}
 	if (strlen($read_codec) > 0) {
-		$sql .= "and read_codec like :read_codec ";
+		$sql .= "and read_codec like :read_codec \n";
 		$parameters['read_codec'] = '%'.$read_codec.'%';
 	}
 	if (strlen($write_codec) > 0) {
-		$sql .= "and write_codec like :write_codec ";
+		$sql .= "and write_codec like :write_codec \n";
 		$parameters['write_codec'] = '%'.$write_codec.'%';
 	}
 	if (strlen($remote_media_ip) > 0) {
-		$sql .= "and remote_media_ip like :remote_media_ip ";
+		$sql .= "and remote_media_ip like :remote_media_ip \n";
 		$parameters['remote_media_ip'] = $remote_media_ip;
 	}
 	if (strlen($network_addr) > 0) {
-		$sql .= "and network_addr like :network_addr ";
+		$sql .= "and network_addr like :network_addr \n";
 		$parameters['network_addr'] = '%'.$network_addr.'%';
 	}
 	//if (strlen($mos_comparison) > 0 && strlen($mos_score) > 0 ) {
@@ -548,28 +545,28 @@
 	//	$parameters['mos_score'] = $mos_score;
 	//}
 	if (strlen($leg) > 0) {
-		$sql .= "and leg = :leg ";
+		$sql .= "and leg = :leg \n";
 		$parameters['leg'] = $leg;
 	}
 	if (is_numeric($tta_min)) {
-		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min ";
+		$sql .= "and (c.answer_epoch - c.start_epoch) >= :tta_min \n";
 		$parameters['tta_min'] = $tta_min;
 	}
 	if (is_numeric($tta_max)) {
-		$sql .= "and (c.answer_epoch - c.start_epoch) <= :tta_max ";
+		$sql .= "and (c.answer_epoch - c.start_epoch) <= :tta_max \n";
 		$parameters['tta_max'] = $tta_max;
 	}
 	if ($recording == 'true' || $recording == 'false') {
 		if ($recording == 'true') {
-			$sql .= "and c.record_path is not null and c.record_name is not null ";
+			$sql .= "and c.record_path is not null and c.record_name is not null \n";
 		}
 		if ($recording == 'false') {
-			$sql .= "and (c.record_path is null or c.record_name is null) ";
+			$sql .= "and (c.record_path is null or c.record_name is null) \n";
 		}
 	}
 	//show agent originated legs only to those with the permission
 	if (!permission_exists('xml_cdr_cc_agent_leg')) {
-		$sql .= "and (cc_side is null or cc_side != 'agent') ";
+		$sql .= "and (cc_side is null or cc_side != 'agent') \n";
 	}
 	//end where
 	if (strlen($order_by) > 0) {

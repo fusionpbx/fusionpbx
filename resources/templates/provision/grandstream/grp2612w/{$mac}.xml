@@ -220,7 +220,15 @@
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P130>{$tp}</P130>
 
 
@@ -1181,7 +1189,15 @@
 {if $account.2.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.2.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.2.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.2.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.2.sip_transport == 'dns srv'}	
+    {if isset($grandstream_dnssrv_transport)}	
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}	
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}	
+        {else}{$tp=1}	
+        {/if}	
+	{else}{$tp=1}	
+	{/if}	
+{/if}
     <P448>{$tp}</P448>
 
     <!-- # SIP Listening Mode.  -->
@@ -2728,7 +2744,7 @@
     <!-- # Configuration Via Keypad Menu. 0 - Unrestricted, 1 - Basic settings only, 2 - Constraint mode, 3 - Locked Mode. Default is 0 -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-    <P1357>2</P1357>
+    {if isset($grandstream_configuration_via_keypad)}<P1357>{$grandstream_configuration_via_keypad}</P1357>{else}<P1357>0</P1357>{/if}
 
     <!-- # Validate Server Certificates. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -3629,7 +3645,11 @@
     <!-- # Disable Active MPK Page. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P6764>1</P6764>
+{if isset($grandstream_disable_active_mpk_page)}
+    <P6764>{$grandstream_disable_active_mpk_page}</P6764>
+{else}
+    <P6764>0</P6764>
+{/if}
 
     <!-- # Enable Active VPK Page. 0 - No, 1 - Yes. Default is 0 -->
     <!-- # Number: 0, 1 -->
@@ -3648,7 +3668,11 @@
     <!-- # Mute Key Functions While Idle. 0 - DND, 1 - Idle Mute, 2 - Disabled. Default is 0 -->
     <!-- # Number: 0,1,2 -->
     <!-- # Mandatory -->
-    <P1565>2</P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
     <!-- # # Enable Auto Unmute. 0 - No, 1 - Yes. Default is 1 -->
     <P8488>0</P8488>
@@ -4178,7 +4202,7 @@
     <!-- # When set to Yes(1), it will override the configured Time Zone setting if available  -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P143>1</P143>
+    {if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
     <!-- # Self Defined Time zone. Max length allowed is 64 characters -->
     <!-- # String -->
@@ -4475,7 +4499,11 @@
     <!-- # Show Keys Label. 1 - Show, 2 - Hide, 0 - Toggle. Default is 0 -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P8386>1</P8386>
+    {if isset($grandstream_show_key_labels)}
+        <P8386>{$grandstream_show_key_labels}</P8386>
+    {else}
+        <P8386>1</P8386>
+    {/if}
 
 
     <!-- ############################################################################## -->

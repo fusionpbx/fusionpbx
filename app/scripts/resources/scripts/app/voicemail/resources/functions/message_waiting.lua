@@ -58,6 +58,7 @@
 					local account = value.."@"..domain_name;
 				--send the message waiting notifications
 					mwi_notify(account, new_messages, saved_messages);
+					blf_notify(tonumber(new_messages) > 0, "voicemail+" .. voicemail_id .. "@" .. domain_name)
 				--send information to the console
 					if (debug["info"]) then
 						if new_messages == "0" then

@@ -151,10 +151,14 @@
 <!--  String; between ascii values 33 and 126 -->
 <P1361>{$http_auth_password}</P1361>
 
-<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
+<!-- Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade. -->
 <!-- Number: 0 to 2 -->
 <!-- Mandatory -->
+{if isset($grandstream_firmware_upgrade_protocol) }
+<P212>{$grandstream_firmware_upgrade_protocol}</P212>
+{else}
 <P212>2</P212>
+{/if}
 
 <!-- Firmware Server Path -->
 {if isset($grandstream_firmware_path) && isset($firmware_version)}
@@ -598,7 +602,15 @@
 {if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
 {if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
 {if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+{if $account.1.sip_transport == 'dns srv'}
+    {if isset($grandstream_dnssrv_transport)}
+        {if $grandstream_dnssrv_transport == 'udp'}{$tp=0}
+        {elseif $grandstream_dnssrv_transport == 'tls'}{$tp=2}
+        {else}{$tp=1}
+        {/if}
+	{else}{$tp=1}
+	{/if}
+{/if}
 <P130>{$tp}</P130>
 
 <!-- SIP Registration. 0 - no, 1 - yes -->
@@ -1045,7 +1057,11 @@
 <!-- Enable Call Features.  0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
 <!-- Mandatory -->
+{if isset($grandstream_enable_call_features) }
+<P191>{$grandstream_enable_call_features}</P191>
+{else}
 <P191>1</P191>
+{/if}
 
 <!-- Disable Call Waiting. 0 - no, 1 - yes -->
 <!-- Number: 0,1 -->
@@ -3896,12 +3912,12 @@
 <P21641>5060</P21641>
 
 <!-- FXS 35 -->
-<P21002>{$account.34.user_id}</P21002>
-<P21066>{$account.34.user_id}</P21066>
-<P21130>{$account.34.password}</P21130>
-<P21194>{$account.34.display_name}</P21194>
+<P21002>{$account.35.user_id}</P21002>
+<P21066>{$account.35.user_id}</P21066>
+<P21130>{$account.35.password}</P21130>
+<P21194>{$account.35.display_name}</P21194>
 <P21258>0</P21258>
-{if !isset($account.34.user_id) && $grandstream_fxs_enabled == 0}
+{if !isset($account.35.user_id) && $grandstream_fxs_enabled == 0}
 <P21386>0</P21386>
 {else}
 <P21386>1</P21386>
@@ -3993,7 +4009,7 @@
 <!-- FXS 40 -->
 <P21007>{$account.40.user_id}</P21007>
 <P21071>{$account.40.user_id}</P21071>
-<P21145>{$account.40.password}</P21145>
+<P21135>{$account.40.password}</P21135>
 <P21199>{$account.40.display_name}</P21199>
 <P21263>0</P21263>
 {if !isset($account.40.user_id) && $grandstream_fxs_enabled == 0}
@@ -4012,7 +4028,7 @@
 <!-- FXS 41 -->
 <P21008>{$account.41.user_id}</P21008>
 <P21072>{$account.41.user_id}</P21072>
-<P21146>{$account.41.password}</P21146>
+<P21136>{$account.41.password}</P21136>
 <P21200>{$account.41.display_name}</P21200>
 <P21264>0</P21264>
 {if !isset($account.41.user_id) && $grandstream_fxs_enabled == 0}
@@ -4031,7 +4047,7 @@
 <!-- FXS 42 -->
 <P21009>{$account.42.user_id}</P21009>
 <P21073>{$account.42.user_id}</P21073>
-<P21147>{$account.42.password}</P21147>
+<P21137>{$account.42.password}</P21137>
 <P21201>{$account.42.display_name}</P21201>
 <P21265>0</P21265>
 {if !isset($account.42.user_id) && $grandstream_fxs_enabled == 0}
@@ -4050,7 +4066,7 @@
 <!-- FXS 43 -->
 <P21010>{$account.43.user_id}</P21010>
 <P21074>{$account.43.user_id}</P21074>
-<P21148>{$account.43.password}</P21148>
+<P21138>{$account.43.password}</P21138>
 <P21202>{$account.43.display_name}</P21202>
 <P21266>0</P21266>
 {if !isset($account.43.user_id) && $grandstream_fxs_enabled == 0}

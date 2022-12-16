@@ -93,7 +93,7 @@ if ($domains_processed == 1) {
 			$database = new database;
 			$database->app_name = 'groups';
 			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
-			$database->save($array);
+			$database->save($array, false);
 			unset($array);
 		}
 
@@ -102,7 +102,8 @@ if ($domains_processed == 1) {
 		$sql .= "SET group_uuid = ( ";
 		$sql .= "	SELECT group_uuid FROM v_groups as g  ";
 		$sql .= "	WHERE g.group_name = p.group_name  ";
-		$sql .= ");";
+		$sql .= ") ";
+		$sql .= "WHERE group_uuid is null; ";
 		$parameters = null;
 		$database = new database;
 		$database->execute($sql, $parameters);

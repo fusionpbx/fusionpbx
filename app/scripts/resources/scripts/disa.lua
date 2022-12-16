@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010-2019
+--	Copyright (C) 2010-2022
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -47,8 +47,6 @@
 		sound_extension = session:getVariable("sound_extension");
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		caller_id_name = session:getVariable("caller_id_name");
-		caller_id_number = session:getVariable("caller_id_number");
 		predefined_destination = session:getVariable("predefined_destination");
 		fallback_destination = session:getVariable("fallback_destination");
 		digit_min_length = session:getVariable("digit_min_length");
@@ -150,31 +148,35 @@
 		end
 	end
 
---set the caller id name and number
+--set the caller id name and number for external calls
 	if (session:ready()) then
 		cmd = "user_exists id ".. destination_number .." "..context;
 		user_exists = trim(api:executeString(cmd));
-		if (user_exists == "true") then
-			if (caller_id_name) then
-				--caller id name provided do nothing
+		if (user_exists == "false") then
+			--get the outbound caller id variables
+			outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
+			outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
+
+			--get the outbound caller ID information if it is set otherwise keep the original caller id
+			if (outbound_caller_id_name) then
+				caller_id_name = session:getVariable("outbound_caller_id_name");
 			else
-			        caller_id_number = session:getVariable("effective_caller_id_number");
+				caller_id_name = session:getVariable("caller_id_name");
+			end
+			if (outbound_caller_id_number) then
+				caller_id_number = session:getVariable("outbound_caller_id_number");
+			else
+				caller_id_number = session:getVariable("caller_id_number");
+			end
+
+			--set the outbound and effective caller ID information
+			if (caller_id_name) then
+				session:execute("set", "outbound_caller_id_name="..caller_id_name);
+				session:execute("set", "effective_caller_id_name="..caller_id_name);
 			end
 			if (caller_id_number) then
-				--caller id number provided do nothing
-			else
-				caller_id_number = session:getVariable("effective_caller_id_number");
-			end
-		else
-			if (caller_id_name) then
-				--caller id name provided do nothing
-			else
-				caller_id_number = session:getVariable("outbound_caller_id_number");
-			end
-			if (caller_id_number) then
-				--caller id number provided do nothing
-			else
-				caller_id_number = session:getVariable("outbound_caller_id_number");
+				session:execute("set", "outbound_caller_id_number="..caller_id_number);
+				session:execute("set", "effective_caller_id_number="..caller_id_number);
 			end
 		end
 	end
@@ -193,20 +195,6 @@
 
 --send the destination
 	if (session:ready()) then
-		if (user_exists == true) then
-			--local call
-			session:execute("transfer", destination_number .. " XML " .. context);
-		else
-			--external call
-			if (caller_id_name) then
-				session:execute("set", "outbound_caller_id_name="..caller_id_name);
-				session:execute("set", "effective_caller_id_name="..caller_id_name);
-			end
-			if (caller_id_number) then
-				session:execute("set", "outbound_caller_id_number="..caller_id_number);
-				session:execute("set", "effective_caller_id_number="..caller_id_number);
-			end
-                        session:execute("set","disa_outbound=true");
-			session:execute("transfer", destination_number .. " XML " .. context);
-		end
+		session:execute("set","disa_outbound=true");
+		session:execute("transfer", destination_number .. " XML " .. context);
 	end

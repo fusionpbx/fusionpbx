@@ -47,6 +47,11 @@
 					dtmf_digits = '';
 					if (string.len(greeting_id) > 0 and greeting_id ~= "default") then
 
+						--greeting set to none, return without a greeting
+							if (greeting_id == "0") then
+								return true;
+							end
+
 						--sleep
 							session:execute("playback","silence_stream://200");
 
@@ -95,7 +100,11 @@
 								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "", ".*", max_timeout);
 								--session:execute("playback",storage_path.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							else
-								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", "",".*", max_timeout);
+								greeting_ext = 'wav';
+								if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".mp3")) then
+									greeting_ext = "mp3";
+								end
+								dtmf_digits = session:playAndGetDigits(0, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id.."."..greeting_ext, "",".*", max_timeout);
 								--session:execute("playback",voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 							end
 

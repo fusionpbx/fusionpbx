@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,48 +28,49 @@
 	if ($domains_processed == 1) {
 
 		//get the list of domains
-			$sql = "select * from v_domains ";
-			$database = new database;
-			$domains = $database->select($sql, null, 'all');
-			unset($sql);
+		$sql = "select * from v_domains ";
+		$database = new database;
+		$domains = $database->select($sql, null, 'all');
+		unset($sql);
 
 		//dialplan class
-			$dialplan = new dialplan;
-			$dialplan->import($domains);
+		$dialplan = new dialplan;
+		$dialplan->import($domains);
 
 		//update the dialplan order
-			$database = new database;
-			$sql = "update v_dialplans set dialplan_order = '870' where dialplan_order = '980' and dialplan_name = 'cidlookup';\n";
-			$database->execute($sql);
-			$sql = "update v_dialplans set dialplan_order = '880' where dialplan_order = '990' and dialplan_name = 'call_screen';\n";
-			$database->execute($sql);
-			$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
-			$database->execute($sql);
-			unset($sql);
+		$database = new database;
+		$sql = "update v_dialplans set dialplan_order = '870' where dialplan_order = '980' and dialplan_name = 'cidlookup';\n";
+		$database->execute($sql);
+		$sql = "update v_dialplans set dialplan_order = '880' where dialplan_order = '990' and dialplan_name = 'call_screen';\n";
+		$database->execute($sql);
+		$sql = "update v_dialplans set dialplan_order = '890' where dialplan_order = '999' and dialplan_name = 'local_extension';\n";
+		$database->execute($sql);
+		unset($sql);
 
 		//set empty strings to null
-			$database = new database;
-			$sql = "update v_device_lines set outbound_proxy_primary = null where outbound_proxy_primary = '';\n";
-			$database->execute($sql);
-			$sql = "update v_device_lines set outbound_proxy_secondary = null where outbound_proxy_secondary = '';\n";
-			$database->execute($sql);
-			unset($sql);
+		$database = new database;
+		$sql = "update v_device_lines set outbound_proxy_primary = null where outbound_proxy_primary = '';\n";
+		$database->execute($sql);
+		$sql = "update v_device_lines set outbound_proxy_secondary = null where outbound_proxy_secondary = '';\n";
+		$database->execute($sql);
+		unset($sql);
 
 		//change recording_slots to recording_id
-			$database = new database;
-			$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=true' ";
-			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
-			$sql .= "and dialplan_detail_data = 'recording_slots=true'; \n";
-			$database->execute($sql);
-			$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=false' ";
-			$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
-			$sql .= "and dialplan_detail_data = 'recording_slots=false'; \n";
-			$database->execute($sql);
-			unset($sql);
+		$database = new database;
+		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=true' ";
+		$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+		$sql .= "and dialplan_detail_data = 'recording_slots=true'; \n";
+		$database->execute($sql);
+		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id=false' ";
+		$sql .= "where dialplan_uuid in (select dialplan_uuid from v_dialplans where app_uuid = '430737df-5385-42d1-b933-22600d3fb79e') ";
+		$sql .= "and dialplan_detail_data = 'recording_slots=false'; \n";
+		$database->execute($sql);
+		unset($sql);
 	}
 
-//add xml for each dialplan where the dialplan xml is empty
+//additional dialplan upgrade commands 
 	if ($domains_processed == 1) {
+		//add xml for each dialplan where the dialplan xml is empty
 		$sql = "select domain_name ";
 		$sql .= "from v_domains \n";
 		$database = new database;
@@ -90,16 +91,28 @@
 		$dialplans->destination = "database";
 		$dialplans->is_empty = "dialplan_xml";
 		$array = $dialplans->xml();
-	}
 
-//delete the follow me bridge dialplan
-	if ($domains_processed == 1) {
+		//delete the follow me bridge dialplan
 		$database = new database;
 		$sql = "delete from v_dialplan_details where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
 		$database->execute($sql);
 		$sql = "delete from v_dialplans where dialplan_uuid = '8ed73d1f-698f-466c-8a7a-1cf4cd229f7f' ";
 		$database->execute($sql);
 		unset($sql);
+
+		//change dialplan context ${domain_name} to global
+		$sql = "update v_dialplans set dialplan_context = 'global' ";
+		$sql .= "where dialplan_context = '\${domain_name}';\n";
+		$database->execute($sql);
+		unset($sql);
+
+		//update recordings dialplan change recording_id=true to recording_id
+		$sql = "update v_dialplans set dialplan_xml = replace(dialplan_xml, 'recording_id=true','recording_id=') where dialplan_xml like '%recording_id=true%'\n";
+		$database->execute($sql);
+		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
+		$database->execute($sql);
+		unset($sql);
+
 	}
 
 //add not found dialplan to inbound routes
@@ -140,7 +153,7 @@
 				$database = new database;
 				$database->app_name = 'dialplans';
 				$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
-				$database->save($array);
+				$database->save($array, false);
 				unset($array);
 
 				$p->delete('dialplan_add', 'temp');

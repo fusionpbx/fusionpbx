@@ -65,10 +65,11 @@
 			end
 
 		--prepare the headers
-			headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
-			headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
-			headers = headers..'"X-FusionPBX-Call-UUID":"'..uuid..'",';
-			headers = headers..'"X-FusionPBX-Email-Type":"emergency_call"}';
+		    local headers = {}
+		    headers["X-FusionPBX-Domain-UUID"] = domain_uuid;
+		    headers["X-FusionPBX-Domain-Name"] = domain_name;
+		    headers["X-FusionPBX-Call-UUID"]   = uuid;
+		    headers["X-FusionPBX-Email-Type"]  = 'emergency_call';
 
 		--remove quotes from caller id name and number
 			caller_id_name = caller_id_name:gsub("'", "&#39;");
@@ -103,12 +104,12 @@
 			body = trim(body);
 
 		--send the email
-			cmd = "luarun email.lua "..to_email.." "..from_email.." "..headers.." '"..subject.."' '"..body.."'";
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[emergency call] cmd: " .. cmd .. "\n");
-			end
-			api = freeswitch.API();
-			result = api:executeString(cmd);
+			send_mail(headers,
+				from_email,
+				to_email,
+				{subject, body}
+				);
+
 	end
 
 --handle originate_disposition

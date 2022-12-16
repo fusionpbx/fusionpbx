@@ -145,7 +145,7 @@ if (!class_exists('switch_recordings')) {
 								//delete recording files
 									if (is_array($filenames) && @sizeof($filenames) != 0) {
 										foreach ($filenames as $filename) {
-											if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
+											if (isset($filename) && strlen($filename) > 0 && file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename)) {
 												@unlink($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$filename);
 											}
 										}

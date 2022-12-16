@@ -1,0 +1,390 @@
+<PANASIPPhoneConfig>
+    <Device>
+        <System>
+            <LoginAcc>
+                <ADMIN_ID perm="!RW" access="A">{if isset($admin_name)}{$admin_name}{else}admin{/if}</ADMIN_ID>
+                <ADMIN_PASS perm="!RW" access="A">{if isset($admin_password)}{$admin_password}{else}adminpass{/if}</ADMIN_PASS>
+                <USER_ID perm="!RW" access="AU">{if isset($user_name)}{$user_name}{else}user{/if}</USER_ID>
+                <USER_PASS perm="RW" access="AU">{if isset($user_password)}{$user_password}{else}userpass{/if}</USER_PASS>
+            </LoginAcc>
+            <SysTime>
+                <TIME_ZONE perm="!RW" access="A">-480</TIME_ZONE>
+                <DST_ENABLE perm="!RW" access="A">Y</DST_ENABLE>
+                <DST_START_MONTH perm="!RW" access="A">3</DST_START_MONTH>
+                <DST_START_ORDINAL_DAY perm="!RW" access="A">2</DST_START_ORDINAL_DAY>
+                <DST_START_DAY_OF_WEEK perm="!RW" access="A">0</DST_START_DAY_OF_WEEK>
+                <DST_START_TIME perm="!RW" access="A">120</DST_START_TIME>
+                <DST_STOP_MONTH perm="!RW" access="A">11</DST_STOP_MONTH>
+                <DST_STOP_ORDINAL_DAY perm="!RW" access="A">1</DST_STOP_ORDINAL_DAY>
+                <DST_STOP_DAY_OF_WEEK perm="!RW" access="A">0</DST_STOP_DAY_OF_WEEK>
+                <DST_STOP_TIME perm="!RW" access="A">120</DST_STOP_TIME>
+            </SysTime>
+            <Syslog>
+                <SYSLOG_SERVER_ENABLE perm="!RW" access="A">N</SYSLOG_SERVER_ENABLE>
+                <SYSLOG_ADDR perm="!RW" access="A"></SYSLOG_ADDR>
+                <SYSLOG_PORT perm="!RW" access="A">514</SYSLOG_PORT>
+                <SYSLOG_SEVERITY perm="!RW" access="A">3</SYSLOG_SEVERITY>
+            </Syslog>
+            <FwUpdt>
+                <FIRM_UPGRADE_ENABLE perm="!RW" access="A">Y</FIRM_UPGRADE_ENABLE>
+                <FIRM_VERSION perm="!RW" access="A">03.210</FIRM_VERSION>
+                <FIRM_FILE_PATH perm="!RW" access="A"></FIRM_FILE_PATH>
+                <FIRM_UPGRADE_AUTO perm="!RW" access="A">Y</FIRM_UPGRADE_AUTO>
+            </FwUpdt>
+            <Prov>
+                <PROVISION_ENABLE perm="RW" access="A">Y</PROVISION_ENABLE>
+                <OPTION160_ENABLE perm="RW" access="A">Y</OPTION160_ENABLE>
+                <OPTION159_ENABLE perm="RW" access="A">Y</OPTION159_ENABLE>
+                <OPTION66_ENABLE perm="RW" access="A">Y</OPTION66_ENABLE>
+                <SIPPNP_ENABLE perm="RW" access="A">Y</SIPPNP_ENABLE>
+                <CFG_FILE_KEY perm="!RW" access="A"></CFG_FILE_KEY>
+                <CFG_FILE_KEY_LENGTH perm="!RW" access="A">128</CFG_FILE_KEY_LENGTH>
+                <CFG_CYCLIC perm="!RW" access="A">N</CFG_CYCLIC>
+                <CFG_CYCLIC_INTVL perm="!RW" access="A">10080</CFG_CYCLIC_INTVL>
+                <CFG_RTRY_INTVL perm="!RW" access="A">30</CFG_RTRY_INTVL>
+                <CFG_RESYNC_TIME perm="!RW" access="A"></CFG_RESYNC_TIME>
+                <CFG_RESYNC_FROM_SIP perm="!RW" access="A">check-sync</CFG_RESYNC_FROM_SIP>
+                <USR_PROV_SVR_URL perm="RW" access="A">https://{$domain_name}/app/provision/{literal}{mac}{/literal}.xml</USR_PROV_SVR_URL>
+                <USR_PROV_SVR_AUTH_ID perm="RW" access="A"></USR_PROV_SVR_AUTH_ID>
+                <USR_PROV_SVR_AUTH_PASSWORD perm="RW" access="A"></USR_PROV_SVR_AUTH_PASSWORD>
+            </Prov>
+        </System>
+        <Network>
+            <EthernetPort>
+                <PC_PORT_ENABLE perm="RW" access="AU">Y</PC_PORT_ENABLE>
+                <PORT_MIRROR_ENABLE perm="RW" access="AU">N</PORT_MIRROR_ENABLE>
+                <LAN_PORT_SPEED_DUPLEX perm="RW" access="A">0</LAN_PORT_SPEED_DUPLEX>
+                <PC_PORT_SPEED_DUPLEX perm="RW" access="AU">0</PC_PORT_SPEED_DUPLEX>
+            </EthernetPort>
+            <CDP>
+                <CDP_ENABLE perm="RW" access="A">Y</CDP_ENABLE>
+            </CDP>
+            <LLDP>
+                <LLDP_ENABLE perm="RW" access="A">Y</LLDP_ENABLE>
+            </LLDP>
+            <IPv6>
+                <ALLOW_AUTO_CFG perm="!RW" access="A">N</ALLOW_AUTO_CFG>
+                <IP_ADDR_MODE perm="!RW" access="A">0</IP_ADDR_MODE>
+                <IP_MODE_PREF_SIGNAL perm="!RW" access="A">0</IP_MODE_PREF_SIGNAL>
+                <IP_MODE_PREF_MEDIA perm="!RW" access="A">0</IP_MODE_PREF_MEDIA>
+                <IPV6_PRIVACY perm="!RW" access="A">N</IPV6_PRIVACY>
+            </IPv6>
+            <NTP>
+                <NTP_MODE perm="!RW" access="A">2</NTP_MODE>
+                <NTP_ADDR perm="RW" access="AU">{$ntp_server_primary}</NTP_ADDR>
+                <TIME_SYNC_INTVL perm="!RW" access="A">60</TIME_SYNC_INTVL>
+                <TIME_QUERY_INTVL perm="!RW" access="A">43200</TIME_QUERY_INTVL>
+                <IGNORE_LEAP_INDICATOR perm="!RW" access="AU">N</IGNORE_LEAP_INDICATOR>
+            </NTP>
+            <HTTP>
+                <HTTP_VER perm="RW" access="A">1</HTTP_VER>
+                <HTTP_USER_AGENT perm="RW" access="A">Panasonic_{MODEL}/{fwver} ({mac})</HTTP_USER_AGENT>
+                <HTTP_AUTH_ID perm="RW" access="AU">{$http_auth_username}</HTTP_AUTH_ID>
+                <HTTP_AUTH_PASSWORD perm="RW" access="AU">{$http_auth_password}</HTTP_AUTH_PASSWORD>
+                <HTTP_ENABLE_PROXY perm="RW" access="AU">N</HTTP_ENABLE_PROXY>
+                <HTTP_PROXY_SVR_ADDR perm="RW" access="AU"></HTTP_PROXY_SVR_ADDR>
+                <HTTP_PROXY_SVR_PORT perm="RW" access="AU">8080</HTTP_PROXY_SVR_PORT>
+                <WEB_LANGUAGE perm="RW" access="AU">0</WEB_LANGUAGE>
+                <WEB_SERVER_PORT perm="RW" access="A">80</WEB_SERVER_PORT>
+                <WEB_SERVER_CLOSE_TIMER perm="RW" access="A">30</WEB_SERVER_CLOSE_TIMER>
+            </HTTP>
+            <STUN>
+                <STUN_SERV_ADDR perm="RW" access="A">{$stun_server}</STUN_SERV_ADDR>
+                <STUN_SERV_PORT perm="RW" access="A">{if isset($stun_port)}{$stun_port}{else}3478{/if}</STUN_SERV_PORT>
+                <STUN_REFRESH_INTVL perm="RW" access="A">0</STUN_REFRESH_INTVL>
+            </STUN>
+            <SSH>
+                <SSH_ACCESS_DISABLE perm="RW" access="A">Y</SSH_ACCESS_DISABLE>
+            </SSH>
+            <LDAP>
+                <LDAP_ENABLE perm="RW" access="AU">N</LDAP_ENABLE>
+                <LDAP_SERVER perm="RW" access="AU"></LDAP_SERVER>
+                <LDAP_PORT perm="RW" access="AU">389</LDAP_PORT>
+                <LDAP_SEARCH_BASE_DN perm="RW" access="AU"></LDAP_SEARCH_BASE_DN>
+                <LDAP_USER_DN perm="RW" access="AU"></LDAP_USER_DN>
+                <LDAP_PASSWORD perm="RW" access="AU"></LDAP_PASSWORD>
+            </LDAP>
+        </Network>
+        <Phone>
+            <CallCtrl>
+                <FIRSTDIGIT_TIM perm="!RW" access="A">30</FIRSTDIGIT_TIM>
+                <INTDIGIT_TIM perm="!RW" access="A">5</INTDIGIT_TIM>
+                <MACRODIGIT_TIM perm="!RW" access="A">5</MACRODIGIT_TIM>
+                <HOLD_RECALL_TIM perm="!RW" access="A">0</HOLD_RECALL_TIM>
+                <AUTO_ANS_RING_TIM perm="!RW" access="A">5</AUTO_ANS_RING_TIM>
+                <ONHOOK_TRANSFER_ENABLE perm="!RW" access="A">Y</ONHOOK_TRANSFER_ENABLE>
+                <KEY_PAD_TONE perm="!RW" access="A">3</KEY_PAD_TONE>
+                <DND_HARD_KEY_ENABLE perm="!RW" access="A">Y</DND_HARD_KEY_ENABLE>
+                <BUSY_ON_CALL_END perm="!RW" access="A">N</BUSY_ON_CALL_END>
+            </CallCtrl>
+            <Telephone>
+                <RECORDING_ENABLE perm="!RW" access="A">N</RECORDING_ENABLE>
+                <NUMBER_MATCHING_LOWER_DIGIT perm="!RW" access="A">7</NUMBER_MATCHING_LOWER_DIGIT>
+                <DISPLAY_DATE_PATTERN perm="!RW" access="A">0</DISPLAY_DATE_PATTERN>
+                <DISPLAY_TIME_PATTERN perm="!RW" access="A">0</DISPLAY_TIME_PATTERN>
+                <DEFAULT_LINE perm="RW" access="AU">1</DEFAULT_LINE>
+                <DEFAULT_LANGUAGE perm="RW" access="AU">en-US</DEFAULT_LANGUAGE>
+                <POUND_KEY_DELIMITER_ENABLE perm="!RW" access="A">Y</POUND_KEY_DELIMITER_ENABLE>
+                <MIXED_PHONE_FB_VIEW_ENABLE perm="!RW" access="A">N</MIXED_PHONE_FB_VIEW_ENABLE>
+                <HIDE_AUTO_ANSWER_SK perm="!RW" access="AU">N</HIDE_AUTO_ANSWER_SK>
+                <HIDE_MONITOR_SK perm="!RW" access="AU">N</HIDE_MONITOR_SK>
+                <HIDE_RECALL_SK perm="!RW" access="AU">N</HIDE_RECALL_SK>
+                <CHANGE_FOCUS_BASE_CALL_STATUS perm="!RW" access="AU">N</CHANGE_FOCUS_BASE_CALL_STATUS>
+                <BLF_DATA_FROM_FLEX_KEY perm="!RW" access="A">Y</BLF_DATA_FROM_FLEX_KEY>
+                <SIGNALING_AUTO_ANS_ENABLE perm="RW" access="AU">N</SIGNALING_AUTO_ANS_ENABLE>
+                <DISP_BOTH_LINE_NAME_NUMBER perm="!RW" access="AU">N</DISP_BOTH_LINE_NAME_NUMBER>
+                <MAKECALL_PRESS_INACTIVE_FFKEY perm="!RW" access="AU">N</MAKECALL_PRESS_INACTIVE_FFKEY>
+                <SEND_TOVMAIL_ENABLE perm="!RW" access="AU">N</SEND_TOVMAIL_ENABLE>
+                <SEND_TOVMAIL_CODE perm="RW" access="AU">*99</SEND_TOVMAIL_CODE>
+                <HIDE_RESET_OPTION_IN_SETTINGS perm="RW" access="AU">N</HIDE_RESET_OPTION_IN_SETTINGS>
+                <DIAGNOSE_MANUALLY_ENABLE perm="RW" access="AU">N</DIAGNOSE_MANUALLY_ENABLE>
+                <DISP_BLF_CALL_INFO_ENABLE perm="RW" access="AU">Y</DISP_BLF_CALL_INFO_ENABLE>
+                <PROTECT_SETTING_BY_PSW_ENABLE perm="RW" access="AU">N</PROTECT_SETTING_BY_PSW_ENABLE>
+            </Telephone>
+            <Tone>
+                <DIAL_TONE1_FRQ perm="!RW" access="A">350,440</DIAL_TONE1_FRQ>
+                <DIAL_TONE1_GAIN perm="!RW" access="A">0</DIAL_TONE1_GAIN>
+                <DIAL_TONE1_RPT perm="!RW" access="A">N</DIAL_TONE1_RPT>
+                <DIAL_TONE1_TIMING perm="!RW" access="A">60,0</DIAL_TONE1_TIMING>
+                <DIAL_TONE2_FRQ perm="!RW" access="A">350,440</DIAL_TONE2_FRQ>
+                <DIAL_TONE2_GAIN perm="!RW" access="A">0</DIAL_TONE2_GAIN>
+                <DIAL_TONE2_RPT perm="!RW" access="A">N</DIAL_TONE2_RPT>
+                <DIAL_TONE2_TIMING perm="!RW" access="A">60,0</DIAL_TONE2_TIMING>
+                <BUSY_TONE_FRQ perm="!RW" access="A">480,620</BUSY_TONE_FRQ>
+                <BUSY_TONE_GAIN perm="!RW" access="A">0</BUSY_TONE_GAIN>
+                <BUSY_TONE_RPT perm="!RW" access="A">Y</BUSY_TONE_RPT>
+                <BUSY_TONE_TIMING perm="!RW" access="A">60,500,440</BUSY_TONE_TIMING>
+                <RINGBACK_TONE_FRQ perm="!RW" access="A">440,480</RINGBACK_TONE_FRQ>
+                <RINGBACK_TONE_GAIN perm="!RW" access="A">0</RINGBACK_TONE_GAIN>
+                <RINGBACK_TONE_RPT perm="!RW" access="A">Y</RINGBACK_TONE_RPT>
+                <RINGBACK_TONE_TIMING perm="!RW" access="A">60,2000,3940</RINGBACK_TONE_TIMING>
+                <DIAL_TONE4_FRQ perm="!RW" access="A">350,440</DIAL_TONE4_FRQ>
+                <DIAL_TONE4_GAIN perm="!RW" access="A">0</DIAL_TONE4_GAIN>
+                <DIAL_TONE4_RPT perm="!RW" access="A">N</DIAL_TONE4_RPT>
+                <DIAL_TONE4_TIMING perm="!RW" access="A">560,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,0</DIAL_TONE4_TIMING>
+                <REORDER_TONE_FRQ perm="!RW" access="A">480,620</REORDER_TONE_FRQ>
+                <REORDER_TONE_GAIN perm="!RW" access="A">0</REORDER_TONE_GAIN>
+                <REORDER_TONE_RPT perm="!RW" access="A">Y</REORDER_TONE_RPT>
+                <REORDER_TONE_TIMING perm="!RW" access="A">60,250,190</REORDER_TONE_TIMING>
+                <HOLD_TONE_FRQ perm="!RW" access="A">425</HOLD_TONE_FRQ>
+                <HOLD_TONE_GAIN perm="!RW" access="A">0</HOLD_TONE_GAIN>
+                <HOLD_TONE_RPT perm="!RW" access="A">Y</HOLD_TONE_RPT>
+                <HOLD_TONE_TIMING perm="!RW" access="A">500,190,190,190,2890</HOLD_TONE_TIMING>
+                <HOLD_ALARM_FRQ perm="!RW" access="A">425</HOLD_ALARM_FRQ>
+                <HOLD_ALARM_GAIN perm="!RW" access="A">0</HOLD_ALARM_GAIN>
+                <HOLD_ALARM_RPT perm="!RW" access="A">Y</HOLD_ALARM_RPT>
+                <HOLD_ALARM_TIMING perm="!RW" access="A">120,14880</HOLD_ALARM_TIMING>
+                <CW_TONE1_FRQ perm="!RW" access="A">425</CW_TONE1_FRQ>
+                <CW_TONE1_GAIN perm="!RW" access="A">0</CW_TONE1_GAIN>
+                <CW_TONE1_RPT perm="!RW" access="A">Y</CW_TONE1_RPT>
+                <CW_TONE1_TIMING perm="!RW" access="A">120,120,120,120,120,14400</CW_TONE1_TIMING>
+                <BELL_CORE_PATTERN1_TIMING perm="!RW" access="A">2000,4000</BELL_CORE_PATTERN1_TIMING>
+                <BELL_CORE_PATTERN2_TIMING perm="!RW" access="A">800,400,800,4000</BELL_CORE_PATTERN2_TIMING>
+                <BELL_CORE_PATTERN3_TIMING perm="!RW" access="A">400,200,400,200,800,4000</BELL_CORE_PATTERN3_TIMING>
+                <BELL_CORE_PATTERN4_TIMING perm="!RW" access="A">300,200,1000,200,300,4000</BELL_CORE_PATTERN4_TIMING>
+                <BELL_CORE_PATTERN5_TIMING perm="!RW" access="A">500</BELL_CORE_PATTERN5_TIMING>
+            </Tone>
+            <HotLine>
+                <HOT_LINE_ENABLE perm="RW" access="AU">N</HOT_LINE_ENABLE>
+                <HOT_LINE_NUMBER perm="RW" access="AU"></HOT_LINE_NUMBER>
+                <HOT_LINE_DELAY_TIME perm="RW" access="AU">5</HOT_LINE_DELAY_TIME>
+            </HotLine>
+        </Phone>
+        <Lines>
+            <Codec>
+            </Codec>
+            <Voip>
+                <RTP_PORT_MIN perm="!RW" access="A">16000</RTP_PORT_MIN>
+                <RTP_PORT_MAX perm="!RW" access="A">20000</RTP_PORT_MAX>
+                <OUTBANDDTMF_VOL perm="!RW" access="A">-10</OUTBANDDTMF_VOL>
+                <INBANDDTMF_VOL perm="!RW" access="A">-10</INBANDDTMF_VOL>
+            </Voip>
+            <CallCtrl>
+                <RETURN_VOL_SET_DEFAULT_ENABLE perm="RW" access="AU"></RETURN_VOL_SET_DEFAULT_ENABLE>
+            </CallCtrl>
+		{foreach $lines as $row}
+            <Line idx="{$row.line_number}">
+                <Voip>
+                    <CODEC_ENABLE_G722 perm="!RW" access="A">Y</CODEC_ENABLE_G722>
+                    <CODEC_ENABLE_PCMU perm="!RW" access="A">Y</CODEC_ENABLE_PCMU>
+                    <CODEC_PRIORITY_G722 perm="!RW" access="A">1</CODEC_PRIORITY_G722>
+                    <CODEC_PRIORITY_PCMU perm="!RW" access="A">2</CODEC_PRIORITY_PCMU>
+                    <DSCP_RTP perm="RW" access="A">46</DSCP_RTP>
+                    <DSCP_RTCP perm="RW" access="A">46</DSCP_RTCP>
+                    <RTCP_INTVL perm="!RW" access="A">5</RTCP_INTVL>
+                    <MAX_DELAY perm="!RW" access="A">20</MAX_DELAY>
+                    <MIN_DELAY perm="!RW" access="A">2</MIN_DELAY>
+                    <NOM_DELAY perm="!RW" access="A">2</NOM_DELAY>
+                    <RTCP_ENABLE perm="!RW" access="A">Y</RTCP_ENABLE>
+                    <RTCPXR_ENABLE perm="!RW" access="A">N</RTCPXR_ENABLE>
+                    <RTP_CLOSE_ENABLE perm="!RW" access="A">N</RTP_CLOSE_ENABLE>
+                    <DTMF_MODE perm="!RW" access="A">1</DTMF_MODE>
+                    <TELEVENT_PAYLOAD perm="!RW" access="A">101</TELEVENT_PAYLOAD>
+                    <RFC2543_HOLD_ENABLE perm="!RW" access="A">Y</RFC2543_HOLD_ENABLE>
+                    <VQM_PUBLISH perm="!RW" access="A">N</VQM_PUBLISH>
+                    <MAX_CONNECTION perm="!RW" access="A">6</MAX_CONNECTION>
+                    <RTCPXR_IN_SDP_ENABLE perm="!RW" access="A">N</RTCPXR_IN_SDP_ENABLE>
+                    <DTMF_RELAY perm="!RW" access="A">N</DTMF_RELAY>
+                    <VAD_ENABLE perm="RW" access="AU">N</VAD_ENABLE>
+                    <CNG_ENABLE perm="RW" access="AU">N</CNG_ENABLE>
+                </Voip>
+                <CallCtrl>
+                    <XFER_WHEN_END_LOCAL_CONF perm="RW" access="A">N</XFER_WHEN_END_LOCAL_CONF>
+                    <CONFERENCE_SERVER_URI perm="!RW" access="A">conference@{$domain_name}</CONFERENCE_SERVER_URI>
+                    <DISPLAY_NAME perm="RW" access="AU">{$account.1.display_name}</DISPLAY_NAME>
+                    <VM_NUMBER perm="!RW" access="A">*97</VM_NUMBER>
+                    <DIAL_PLAN perm="!RW" access="A">[2-9]11|0T|011xxx.T|[0-1][2-9]xxxxxxxxx|[2-9]xxxxxxxxx|[2-9]xxxT</DIAL_PLAN>
+                    <DIAL_PLAN_NOT_MATCH_ENABLE perm="RW" access="A">Y</DIAL_PLAN_NOT_MATCH_ENABLE>
+                    <SHARED_CALL_ENABLE perm="!RW" access="A">No</SHARED_CALL_ENABLE>
+                    <CALLPARK_SUBSCRIBE_ENABLE perm="!RW" access="A">N</CALLPARK_SUBSCRIBE_ENABLE>
+                    <RESOURCELIST_URI perm="!RW" access="A"></RESOURCELIST_URI>
+                    <AUTO_KEY_ASSIGNMENT perm="RW" access="AU">Yes</AUTO_KEY_ASSIGNMENT>
+                    <CW_ENABLE perm="RW" access="AU">Y</CW_ENABLE>
+                    <BLOCK_ANONYMOUS_CALL perm="RW" access="AU">N</BLOCK_ANONYMOUS_CALL>
+                    <DND_ENABLE perm="RW" access="AU">N</DND_ENABLE>
+                    <FWD_UNCONDITIONAL_ENABLE perm="RW" access="AU">N</FWD_UNCONDITIONAL_ENABLE>
+                    <FWD_UNCONDITIONAL_NUMBER perm="RW" access="AU"></FWD_UNCONDITIONAL_NUMBER>
+                    <FWD_BUSY_ENABLE perm="RW" access="AU">N</FWD_BUSY_ENABLE>
+                    <FWD_BUSY_NUMBER perm="RW" access="AU"></FWD_BUSY_NUMBER>
+                    <FWD_NO_ANSWER_ENABLE perm="RW" access="AU">N</FWD_NO_ANSWER_ENABLE>
+                    <FWD_NO_ANSWER_NUMBER perm="RW" access="AU"></FWD_NO_ANSWER_NUMBER>
+                    <FWD_NO_ANSWER_TIMEOUT perm="RW" access="AU">3</FWD_NO_ANSWER_TIMEOUT>
+                    <PARK_ENABLE perm="!RW" access="A">N</PARK_ENABLE>
+                    <PARK_CODE perm="!RW" access="A">*68</PARK_CODE>
+                    <PARK_RETRIEVE_ENABLE perm="!RW" access="A">N</PARK_RETRIEVE_ENABLE>
+                    <PARK_RETRIEVE_CODE perm="!RW" access="A">*88</PARK_RETRIEVE_CODE>
+                    <PICKUP_ENABLE perm="!RW" access="A">N</PICKUP_ENABLE>
+                    <PICKUP_CODE perm="!RW" access="A">*97</PICKUP_CODE>
+                    <GPICKUP_ENABLE perm="!RW" access="A">N</GPICKUP_ENABLE>
+                    <GPICKUP_CODE perm="!RW" access="A">*98</GPICKUP_CODE>
+                    <DPICKUP_ENABLE perm="!RW" access="A">N</DPICKUP_ENABLE>
+                    <DPICKUP_CODE perm="!RW" access="A">*97</DPICKUP_CODE>
+                    <TALK_PACKAGE perm="!RW" access="A">Y</TALK_PACKAGE>
+                    <HOLD_PACKAGE perm="!RW" access="A">Y</HOLD_PACKAGE>
+                    <FEATURE_KEY_SYNCHRO_ENABLE perm="!RW" access="A">Y</FEATURE_KEY_SYNCHRO_ENABLE>
+                    <ACD_ENABLE perm="!RW" access="A">N</ACD_ENABLE>
+                    <ACD_CCSTATUS_ENABLE perm="!RW" access="A">N</ACD_CCSTATUS_ENABLE>
+                    <ACD_REASONCODE_ACTIVE1 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE1>
+                    <ACD_REASONCODE_NAME1 perm="RW" access="AU"></ACD_REASONCODE_NAME1>
+                    <ACD_REASONCODE_VALUE1 perm="RW" access="AU"></ACD_REASONCODE_VALUE1>
+                    <ACD_REASONCODE_ACTIVE2 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE2>
+                    <ACD_REASONCODE_NAME2 perm="RW" access="AU"></ACD_REASONCODE_NAME2>
+                    <ACD_REASONCODE_VALUE2 perm="RW" access="AU"></ACD_REASONCODE_VALUE2>
+                    <ACD_REASONCODE_ACTIVE3 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE3>
+                    <ACD_REASONCODE_NAME3 perm="RW" access="AU"></ACD_REASONCODE_NAME3>
+                    <ACD_REASONCODE_VALUE3 perm="RW" access="AU"></ACD_REASONCODE_VALUE3>
+                    <ACD_REASONCODE_ACTIVE4 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE4>
+                    <ACD_REASONCODE_NAME4 perm="RW" access="AU"></ACD_REASONCODE_NAME4>
+                    <ACD_REASONCODE_VALUE4 perm="RW" access="AU"></ACD_REASONCODE_VALUE4>
+                    <ACD_REASONCODE_ACTIVE5 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE5>
+                    <ACD_REASONCODE_NAME5 perm="RW" access="AU"></ACD_REASONCODE_NAME5>
+                    <ACD_REASONCODE_VALUE5 perm="RW" access="AU"></ACD_REASONCODE_VALUE5>
+                    <ACD_REASONCODE_ACTIVE6 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE6>
+                    <ACD_REASONCODE_NAME6 perm="RW" access="AU"></ACD_REASONCODE_NAME6>
+                    <ACD_REASONCODE_VALUE6 perm="RW" access="AU"></ACD_REASONCODE_VALUE6>
+                    <ACD_REASONCODE_ACTIVE7 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE7>
+                    <ACD_REASONCODE_NAME7 perm="RW" access="AU"></ACD_REASONCODE_NAME7>
+                    <ACD_REASONCODE_VALUE7 perm="RW" access="AU"></ACD_REASONCODE_VALUE7>
+                    <ACD_REASONCODE_ACTIVE8 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE8>
+                    <ACD_REASONCODE_NAME8 perm="RW" access="AU"></ACD_REASONCODE_NAME8>
+                    <ACD_REASONCODE_VALUE8 perm="RW" access="AU"></ACD_REASONCODE_VALUE8>
+                    <ACD_REASONCODE_ACTIVE9 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE9>
+                    <ACD_REASONCODE_NAME9 perm="RW" access="AU"></ACD_REASONCODE_NAME9>
+                    <ACD_REASONCODE_VALUE9 perm="RW" access="AU"></ACD_REASONCODE_VALUE9>
+                    <ACD_REASONCODE_ACTIVE10 perm="RW" access="AU">N</ACD_REASONCODE_ACTIVE10>
+                    <ACD_REASONCODE_NAME10 perm="RW" access="AU"></ACD_REASONCODE_NAME10>
+                    <ACD_REASONCODE_VALUE10 perm="RW" access="AU"></ACD_REASONCODE_VALUE10>
+                    <HOTELING_ENABLE perm="!RW" access="A">N</HOTELING_ENABLE>
+                </CallCtrl>
+                <Sip>
+                    <PHONE_NUMBER perm="!RW" access="A">{$row.user_id}</PHONE_NUMBER>
+                    <SIP_URI perm="!RW" access="A">{$row.user_id}</SIP_URI>
+                    <LINE_ENABLE perm="RW" access="A">{if isset($row.password)}Yes{else}No{/if}</LINE_ENABLE>
+                    <SIP_AUTHID perm="!RW" access="A">{$row.auth_id}</SIP_AUTHID>
+                    <SIP_PASS perm="!RW" access="A">{$row.password}</SIP_PASS>
+                    <SIP_SRC_PORT perm="!RW" access="A">5071</SIP_SRC_PORT>
+                    <SIP_PRXY_ADDR perm="!RW" access="A">{$row.server_address}</SIP_PRXY_ADDR>
+                    <SIP_PRXY_PORT perm="!RW" access="A">{$row.sip_port}</SIP_PRXY_PORT>
+                    <SIP_RGSTR_ADDR perm="!RW" access="A">{$row.server_address}</SIP_RGSTR_ADDR>
+                    <SIP_RGSTR_PORT perm="!RW" access="A">{$row.sip_port}</SIP_RGSTR_PORT>
+                    <SIP_SVCDOMAIN perm="!RW" access="A">{$row.server_address}</SIP_SVCDOMAIN>
+                    <REG_EXPIRE_TIME perm="!RW" access="A">{$row.register_expires}</REG_EXPIRE_TIME>
+                    <REG_INTERVAL_RATE perm="!RW" access="A">50</REG_INTERVAL_RATE>
+                    <DSCP_SIP perm="RW" access="A">46</DSCP_SIP>
+                    <SIP_TIMER_T1 perm="!RW" access="A">500</SIP_TIMER_T1>
+                    <SIP_TIMER_T2 perm="!RW" access="A">4</SIP_TIMER_T2>
+                    <SIP_TIMER_T4 perm="!RW" access="A">0</SIP_TIMER_T4>
+                    <SIP_DNSSRV_ENA perm="!RW" access="A">N</SIP_DNSSRV_ENA>
+                    <SIP_UDP_SRV_PREFIX perm="!RW" access="A">_sip._udp.</SIP_UDP_SRV_PREFIX>
+                    <SIP_TCP_SRV_PREFIX perm="!RW" access="A">_sip._tcp.</SIP_TCP_SRV_PREFIX>
+                    <SIP_100REL_ENABLE perm="!RW" access="A">Y</SIP_100REL_ENABLE>
+                    <PORT_PUNCH_INTVL perm="!RW" access="A">0</PORT_PUNCH_INTVL>
+                    <SIP_ADD_RPORT perm="!RW" access="A">Y</SIP_ADD_RPORT>
+                    <SIP_RTP_KA_INTVL perm="!RW" access="A">0</SIP_RTP_KA_INTVL>
+                    <REG_RTX_INTVL perm="!RW" access="A">10</REG_RTX_INTVL>
+                    <SIP_OUTPROXY_ADDR perm="!RW" access="A">{$row.outbound_proxy_primary}</SIP_OUTPROXY_ADDR>
+                    <SIP_OUTPROXY_PORT perm="!RW" access="A">{$row.sip_port}</SIP_OUTPROXY_PORT>
+
+                    {if $row.sip_transport == 'udp'}<SIP_TRANSPORT perm="!RW" access="A">0</SIP_TRANSPORT>{/if}
+                    {if $row.sip_transport == 'tcp'}<SIP_TRANSPORT perm="!RW" access="A">1</SIP_TRANSPORT>{/if}
+                    {if $row.sip_transport == 'tls'}<SIP_TRANSPORT perm="!RW" access="A">2</SIP_TRANSPORT>{/if}
+
+                    <SIP_DETECT_SSAF perm="!RW" access="A">Y</SIP_DETECT_SSAF>
+                    <SIP_TIMER_B perm="!RW" access="A">32000</SIP_TIMER_B>
+                    <SIP_TIMER_D perm="!RW" access="A">5000</SIP_TIMER_D>
+                    <SIP_TIMER_F perm="!RW" access="A">32000</SIP_TIMER_F>
+                    <SIP_TIMER_H perm="!RW" access="A">32000</SIP_TIMER_H>
+                    <SIP_TIMER_J perm="!RW" access="A">5000</SIP_TIMER_J>
+                    <SIP_ADD_TRANSPORT_UDP perm="!RW" access="A">N</SIP_ADD_TRANSPORT_UDP>
+                    <SIP_RESPONSE_CODE_DND perm="!RW" access="A">486</SIP_RESPONSE_CODE_DND>
+                    <SIP_RESPONSE_CODE_CALL_REJECT perm="!RW" access="A">486</SIP_RESPONSE_CODE_CALL_REJECT>
+                    <SIP_403_REG_SUB_RTX perm="!RW" access="A">Y</SIP_403_REG_SUB_RTX>
+                    <SIP_DUAL_STACK_SDP_MODE perm="!RW" access="A">0</SIP_DUAL_STACK_SDP_MODE>
+                    <SIP_FOVR_NORSP perm="!RW" access="A">Y</SIP_FOVR_NORSP>
+                    <SIP_FOVR_MAX perm="!RW" access="A">2</SIP_FOVR_MAX>
+                    <SIP_FOVR_MODE perm="!RW" access="A">N</SIP_FOVR_MODE>
+                    <AUTH_INCOMING_INVITE perm="!RW" access="A">N</AUTH_INCOMING_INVITE>
+                    <SIP_INVITE_EXPIRE perm="!RW" access="A">0</SIP_INVITE_EXPIRE>
+                    <SIP_RINGIN_TIMER perm="!RW" access="A">0</SIP_RINGIN_TIMER>
+                    <SIP_SUBS_EXPIRE perm="!RW" access="A">3600</SIP_SUBS_EXPIRE>
+                    <SUB_RTX_INTVL perm="!RW" access="A">10</SUB_RTX_INTVL>
+                    <SIP_PRSNC_ADDR perm="!RW" access="A">{$row.server_address}</SIP_PRSNC_ADDR>
+                    <SIP_PRSNC_PORT perm="!RW" access="A">{$row.sip_port}</SIP_PRSNC_PORT>
+                    <SIP_REQURI_FOLLOW_DNSSRV_ANS perm="!RW" access="AU">N</SIP_REQURI_FOLLOW_DNSSRV_ANS>
+                    <SIP_SUB_ROUTE_POLICY perm="!RW" access="AU">0</SIP_SUB_ROUTE_POLICY>
+                    <SIP_REQURI_PORT perm="!RW" access="AU">Y</SIP_REQURI_PORT>
+                    <DELAY_RING_TIME perm="RW" access="AU">0</DELAY_RING_TIME>
+                    <SUB_INTERVAL_RATE perm="RW" access="AU"></SUB_INTERVAL_RATE>
+                </Sip>
+            </Line>
+        {/foreach}
+        </Lines>
+        <Diagnostic>
+            <LogGeneral>
+                <LOG_TERMINAL_DISP_ENABLE perm="!RW" access="AU">Y</LOG_TERMINAL_DISP_ENABLE>
+                <LOG_TO_FILE_ENABLE perm="!RW" access="AU">Y</LOG_TO_FILE_ENABLE>
+                <LOG_FILE_SIZE perm="!RW" access="AU">5</LOG_FILE_SIZE>
+            </LogGeneral>
+            <LogLevel>
+                <LOG_LEVEL_IPPS perm="!RW" access="AU">448</LOG_LEVEL_IPPS>
+                <LOG_LEVEL_PCU perm="!RW" access="AU">448</LOG_LEVEL_PCU>
+                <LOG_LEVEL_MCU perm="!RW" access="AU">448</LOG_LEVEL_MCU>
+                <LOG_LEVEL_MMI perm="!RW" access="AU">448</LOG_LEVEL_MMI>
+            </LogLevel>
+            <LogDisplay>
+                <SYSTEM_AUTO_RECOVERY_ENABLE perm="RW" access="AU">Y</SYSTEM_AUTO_RECOVERY_ENABLE>
+            </LogDisplay>
+        </Diagnostic>
+        <Services>
+            <XmlApp>
+                <XMLAPP_ENABLE perm="RW" access="AU">N</XMLAPP_ENABLE>
+                <XMLAPP_USERID perm="!RW" access="AU"></XMLAPP_USERID>
+                <XMLAPP_USERPASS perm="RW" access="AU"></XMLAPP_USERPASS>
+                <XMLAPP_SERVICEURL perm="!RW" access="A"></XMLAPP_SERVICEURL>
+                <XMLAPP_LOGO_URL perm="RW" access="A"></XMLAPP_LOGO_URL>
+                <XMLAPP_WALLPAPER_URL perm="RW" access="A"></XMLAPP_WALLPAPER_URL>
+                <XMLAPP_SSL_VERSION perm="!RW" access="AU">0</XMLAPP_SSL_VERSION>
+            </XmlApp>
+        </Services>
+    </Device>
+</PANASIPPhoneConfig>

@@ -53,6 +53,11 @@
 					local Database = require "resources.functions.database";
 					local dbh = Database.new('system');
 
+				--prepare to get the settings
+					local Settings = require "resources.functions.lazy_settings"
+					local settings = Settings.new(dbh, domain_name, domain_uuid)
+					local from_address = settings:get('email', 'smtp_from', 'text');
+
 				--get the templates
 					local sql = "SELECT * FROM v_email_templates ";
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -75,7 +80,7 @@
 					headers["X-FusionPBX-Domain-Name"] = domain_name;
 					headers["X-FusionPBX-Call-UUID"]   = uuid;
 					headers["X-FusionPBX-Email-Type"]  = 'missed';
-			
+
 				--remove quotes from caller id name and number
 					caller_id_name = caller_id_name:gsub("'", "&#39;");
 					caller_id_name = caller_id_name:gsub([["]], "&#34;");
@@ -104,6 +109,7 @@
 
 				--send the emails
 					send_mail(headers,
+						from_address,
 						missed_call_data,
 						{subject, body}
 					);

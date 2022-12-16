@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2022
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -98,9 +98,14 @@ if (!class_exists('gateways')) {
 						//get necessary gateway details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, gateway, profile, enabled from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -115,17 +120,26 @@ if (!class_exists('gateways')) {
 
 						if (is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
+							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 							if ($fp) {
 								//start gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
 										if ($gateway['enabled'] == 'true') {
-											$cmd = 'api sofia profile '.$gateway['profile'].' rescan';
-											$responses[$gateway_uuid]['gateway'] = $gateway['name'];
-											$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+											//start gateways
+											foreach ($gateways as $gateway_uuid => $gateway) {
+												if ($gateway['enabled'] == 'true') {
+													$cmd = 'api sofia profile '.$gateway['profile'].' startgw '.$gateway_uuid;
+													$responses[$gateway_uuid]['gateway'] = $gateway['name'];
+													$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
+												}
+											}
+											//old method used to start gateways
+											//$cmd = 'api sofia profile '.$gateway['profile'].' rescan';
+											//$responses[$gateway_uuid]['gateway'] = $gateway['name'];
+											//$responses[$gateway_uuid]['message'] = trim(event_socket_request($fp, $cmd));
 										}
 									}
+
 								//set message
 									if (is_array($responses) && @sizeof($responses) != 0) {
 										$message = $text['message-gateway_started'];
@@ -172,9 +186,14 @@ if (!class_exists('gateways')) {
 						//get necessary gateway details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, gateway, profile, enabled from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -189,8 +208,7 @@ if (!class_exists('gateways')) {
 
 						if (is_array($gateways) && @sizeof($gateways) != 0) {
 							//create the event socket connection
-								$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
+							$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 							if ($fp) {
 								//stop gateways
 									foreach ($gateways as $gateway_uuid => $gateway) {
@@ -246,9 +264,14 @@ if (!class_exists('gateways')) {
 						//get necessary gateway details
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, gateway, profile from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -379,9 +402,14 @@ if (!class_exists('gateways')) {
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as state, gateway, profile from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
@@ -507,9 +535,14 @@ if (!class_exists('gateways')) {
 						//create insert array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								if (permission_exists('gateway_all')) {
+									$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+								}
+								else {
+									$sql .= "where (domain_uuid = :domain_uuid) ";
+									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								}
 								$database = new database;
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {

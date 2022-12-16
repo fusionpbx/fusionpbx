@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -280,12 +283,12 @@
 		$sql_where_ands[] = "leg = :leg";
 		$parameters['leg'] = $leg;
 	}
-	//Exclude enterprise ring group legs
+	//Exclude enterprise ring group and follow me originated legs
 	if (!permission_exists('xml_cdr_enterprise_leg')) {
 		$sql_where_ands[] .= "originating_leg_uuid IS NULL";
 	}
 	//If you can't see lose_race, don't run stats on it
-	elseif (!permission_exists('xml_cdr_lose_race')) {
+	if (!permission_exists('xml_cdr_lose_race')) {
 		$sql_where_ands[] = "hangup_cause != 'LOSE_RACE'";
 	}
 	

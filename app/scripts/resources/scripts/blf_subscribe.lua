@@ -7,6 +7,9 @@ else
 	service_name = proto
 end
 
+--make sure the scripts/run dir exists
+mkdir(scripts_dir .. "/run");
+
 require "resources.functions.config"
 require "resources.functions.split"
 require "resources.functions.trim";
@@ -15,6 +18,30 @@ local log = require "resources.functions.log"[service_name]
 local presence_in = require "resources.functions.presence_in"
 local Database = require "resources.functions.database"
 local BasicEventService = require "resources.functions.basic_event_service"
+
+local find_voicemail do
+
+	local find_voicemail_sql = [[select t1.voicemail_message_uuid
+	from v_voicemail_messages t1
+	inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
+	inner join v_voicemails t3 on t1.voicemail_uuid = t3.voicemail_uuid
+	where t2.domain_name = :domain_name 
+	and t3.voicemail_id = :extension 
+	and (t1.message_status is null or message_status = '')]]
+	
+	function find_voicemail(user)
+		local ext, domain_name = split_first(user, '@', true)
+		log.notice("ext: " .. ext);
+		log.notice("domain_name: " .. domain_name);
+		if not domain_name then return end
+		local dbh = Database.new('system')
+		if not dbh then return end
+		local voicemail = dbh:first_row(find_voicemail_sql, {domain_name = domain_name, extension = ext})
+		dbh:release()
+		return voicemail
+	end
+	
+end
 
 local find_call_flow do
 
@@ -112,6 +139,24 @@ end
 end
 
 local protocols = {}
+
+protocols.voicemail = function(event)
+	local from, to = event:getHeader('from'), event:getHeader('to')
+	local expires = tonumber(event:getHeader('expires'))
+	if expires and expires > 0 then
+		local proto, user = split_first(to, '+', true)
+		local voicemail_status = find_voicemail(user)
+		if voicemail_status then
+			log.noticef("Find VOICEMAIL: %s status: %s", to, tostring(voicemail_status))
+			presence_in.turn_lamp(true, to)
+		else
+			log.warningf("Can not find VOICEMAIL: %s", to)
+			presence_in.turn_lamp(false, to)
+		end
+	else
+		log.noticef("%s UNSUBSCRIBE from %s", from, to)
+	end
+end
 
 protocols.flow = function(event)
 	local from, to = event:getHeader('from'), event:getHeader('to')

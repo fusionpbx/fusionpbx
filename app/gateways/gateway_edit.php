@@ -17,15 +17,18 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -96,6 +99,7 @@
 		$ping = $_POST["ping"];
 		$ping_min = $_POST["ping_min"];
 		$ping_max = $_POST["ping_max"];
+		$contact_in_ping = $_POST["contact_in_ping"];
 		$channels = $_POST["channels"];
 		$caller_id_in_from = $_POST["caller_id_in_from"];
 		$supress_cng = $_POST["supress_cng"];
@@ -182,6 +186,7 @@
 					$array['gateways'][$x]["ping"] = $ping;
 					$array['gateways'][$x]["ping_min"] = $ping_min;
 					$array['gateways'][$x]["ping_max"] = $ping_max;
+					$array['gateways'][$x]["contact_in_ping"] = $contact_in_ping;
 					$array['gateways'][$x]["channels"] = $channels;
 					$array['gateways'][$x]["caller_id_in_from"] = $caller_id_in_from;
 					$array['gateways'][$x]["supress_cng"] = $supress_cng;
@@ -285,6 +290,7 @@
 			$ping = $row["ping"];
 			$ping_min = $row["ping_min"];
 			$ping_max = $row["ping_max"];
+			$contact_in_ping = $row["contact_in_ping"];
 			$channels = $row["channels"];
 			$caller_id_in_from = $row["caller_id_in_from"];
 			$supress_cng = $row["supress_cng"];
@@ -731,6 +737,31 @@
 	echo "    <input class='formfld' type='number' name='ping_max' maxlength='255' min='1' max='65535' step='1' value=\"".escape($ping_max)."\">\n";
 	echo "<br />\n";
 	echo $text['description-ping_max']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-contact_in_ping']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='contact_in_ping'>\n";
+	echo "    <option value=''></option>\n";
+	if ($contact_in_ping == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($contact_in_ping == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-contact_in_ping']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

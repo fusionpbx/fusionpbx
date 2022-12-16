@@ -4088,7 +4088,11 @@
 
 <!-- Disable Active MPK. 0 - No, 1 - Yes. Default value is 0. -->
 <!-- Number: 0, 1 -->
-<P6764>0</P6764>
+{if isset($grandstream_disable_active_mpk_page)}
+    <P6764>{$grandstream_disable_active_mpk_page}</P6764>
+{else}
+    <P6764>0</P6764>
+{/if}
 
 <!-- Escape '#' as %23 in SIP URI. 0 - No, 1 - Yes -->
 <!-- Number: 0, 1 -->
@@ -4105,7 +4109,11 @@
 
 <!-- Mute Key Function While Idle. 0 - DND, 1 - Idle Mute, 2 -  Permanent Mute. Default value is 0 -->
 <!-- Number: 0,1,2 -->
-<P1565>0  </P1565>
+{if isset($grandstream_idle_mute_function)}
+    <P1565>{$grandstream_idle_mute_function}</P1565>
+{else}
+    <P1565>0</P1565>
+{/if}
 
 <!-- Auto Unhold When Press the Line Key. 0 - No, 1 - Yes. Default value is 0. -->
 <!-- Number: 0, 1 -->
@@ -4644,7 +4652,7 @@
 <!-- DHCP Option 2 to Override Time Zone setting. 0 - No, 1 - Yes. Default value is 0 -->
 <!-- When set to Yes (1), it will override the configured Time Zone setting if available -->
 <!-- Number: 0, 1 -->
-<P143>0</P143>
+{if isset($grandstream_dhcp_time_zone)}<P143>{$grandstream_dhcp_time_zone}</P143>{else}<P143>0</P143>{/if}
 
 <!-- Time Zone -->
 <!-- Web GUI Option       			   							    P Value            							 -->

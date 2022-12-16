@@ -24,6 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
+	require_once "resources/require.php";
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get(null,'core/user_settings');
@@ -251,7 +258,11 @@
 		$_SESSION['login']['destination']['url'] = (strlen($destination_query) > 0) ? $destination_path.'?'.$destination_query : $destination_path;
 	}
 	else {
-		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/dashboard/";
+	}
+
+	if (strlen($_REQUEST['path']) > 0) {
+		$_SESSION['redirect_path'] = $_REQUEST['path'];
 	}
 
 //add the header

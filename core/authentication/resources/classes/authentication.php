@@ -53,6 +53,34 @@ class authentication {
 				$this->get_domain();
 			}
 
+		//automatically block multiple authentication failures
+			if (!isset($_SESSION['users']['max_retry']['numeric'])) {
+				$_SESSION['users']['max_retry']['numeric'] = 5;
+			}
+			if (!isset($_SESSION['users']['find_time']['numeric'])) {
+				$_SESSION['users']['find_time']['numeric'] = 3600;
+			}
+			$sql = "select count(user_log_uuid) \n";
+			$sql .= "from v_user_logs \n";
+			$sql .= "where result = 'failure' \n";
+			$sql .= "and floor(extract(epoch from now()) - extract(epoch from timestamp)) < :find_time \n";
+			$sql .= "and type = 'login' \n";
+			$sql .= "and remote_address = :remote_address \n";
+			$sql .= "and username = :username \n";
+			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
+			$parameters['find_time'] = $_SESSION['users']['find_time']['numeric'];
+			$parameters['username'] = $this->username;
+			$database = new database;
+			$auth_tries = $database->select($sql, $parameters, 'column');
+			if ($_SESSION['users']['max_retry']['numeric'] <= $auth_tries) {
+				$result["plugin"] = "database";
+				$result["domain_name"] = $this->domain_name;
+				$result["username"] = $this->username;
+				$result["domain_uuid"] = $this->domain_uuid;
+				$result["authorized"] = "false";
+				return $result;
+			}
+
 		//set the database as the default plugin
 			if (!isset($_SESSION['authentication']['methods'])) {
 				$_SESSION['authentication']['methods'][] = 'database';

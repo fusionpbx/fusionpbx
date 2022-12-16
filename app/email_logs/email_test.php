@@ -1,26 +1,34 @@
 <?php
-/*
-	FusionPBX
-	Version: MPL 1.1
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
-	The Original Code is FusionPBX
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
-	the Initial Developer. All Rights Reserved.
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-*/
+/*-
+ * Copyright (c) 2008-2022 Mark J Crane <markjcrane@fusionpbx.com>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
-//includes
-	require_once "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -34,23 +42,21 @@
 	$language = new text;
 	$text = $language->get();
 
-//send email
+//validate the token
+	$token = new token;
+	if (!$token->validate('/app/email_logs/email_logs.php')) {
+		//message::add($text['message-invalid_token'],'negative');
+		echo "<script>display_message('".$text['message-invalid_token']."', 'negative');</script>";
+		echo "<center>\n";
+		echo 	$text['message-invalid_token'];
+		echo "	<br><br>\n";
+		echo "	<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
+		echo "</center>\n";
+		exit;
+	}
 
-	//validate the token
-		$token = new token;
-		if (!$token->validate('/app/email_logs/email_logs.php')) {
-			//message::add($text['message-invalid_token'],'negative');
-			echo "<script>display_message('".$text['message-invalid_token']."', 'negative');</script>";
-			echo "<center>\n";
-			echo 	$text['message-invalid_token'];
-			echo "	<br><br>\n";
-			echo "	<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
-			echo "</center>\n";
-			exit;
-		}
 
-	$recipient = check_str($_POST['to']);
-
+//show the content
 	echo "<b>".$text['header-settings']."</b>\n";
 	echo "<br><br>\n";
 	ksort($_SESSION['email']);
@@ -71,22 +77,44 @@
 	echo "<b>".$text['header-connection']."</b>\n";
 	echo "<br><br>\n";
 
-	$eml_body = "<b>Test Message</b><br /><br />\n";
-	$eml_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
-	$eml_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+//prepare the email
+	$email_recipient = check_str($_POST['to']);
 
-	ob_start();
-	$sent = !send_email($recipient, 'Test Message', $eml_body, $eml_error, null, null, 3, 3) ? false : true;
-	$response = ob_get_clean();
+	$email_body = "<b>Test Message</b><br /><br />\n";
+	$email_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
+	$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
 
-	echo $response;
+	//$email_attachments[0]['type'] = 'file';
+	//$email_attachments[0]['name'] = 'logo.png';
+	//$email_attachments[0]['value'] = $_SERVER["PROJECT_ROOT"]."/themes/default/images/logo.png";
 
+	$email_from_address = $_SESSION['email']['smtp_from']['text'];
+	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
+
+//send email
+	//ob_start();
+	//$sent = !send_email($email_recipient, 'Test Message', $email_body, $email_error, null, null, 3, 3, $email_attachments) ? false : true;
+	//$email_response = ob_get_clean();
+
+//send email
+	$email = new email;
+	$email->recipients = $email_recipient;
+	$email->subject = 'Test Message';
+	$email->body = $email_body;
+	$email->from_address = $email_from_address;
+	$email->from_name = $email_from_name;
+	$email->attachments = $email_attachments;
+	$email->debug_level = 3;
+	$email->method = 'direct';
+	$sent = $email->send();
+	//$email_error = $email->email_error;
+
+//show additional information
 	echo "<br><br>\n";
 
 	echo "<b>".$text['header-result']."</b>\n";
 	echo "<br><br>\n";
-	echo $sent ? "Message Sent Successfully<br>Receipient: <a href='mailto:".$recipient."'>".$recipient."</a>" : "Message Failed...<br>".$eml_error;
-
+	echo $sent ? "Message Sent Successfully<br>Receipient: <a href='mailto:".$email_recipient."'>".$email_recipient."</a>" : "Message Failed...<br>".$email_error;
 
 	echo "<br>\n";
 	echo "<center>\n";

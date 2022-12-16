@@ -1,0 +1,32 @@
+; Author: Mark J Crane <markjcrane@fusionpbx.com>
+; cp /var/www/fusionpbx/app/email_queue/resources/service/debian.service /etc/systemd/system/email_queue.service
+; systemctl enable email_queue
+; systemctl start email_queue
+; systemctl daemon-reload
+
+[Unit]
+Description=FusionPBX Email Queue
+Wants=network-online.target
+Requires=network.target local-fs.target
+;Requires=network.target local-fs.target postgresql.service
+After=network.target network-online.target local-fs.target
+;After=network.target network-online.target local-fs.target postgresql.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+;Type=forking
+PIDFile=/var/run/fusionpbx/email_queue.pid
+WorkingDirectory=/var/www/fusionpbx
+;Environment="USER=www-data"
+;Environment="GROUP=www-data"
+;EnvironmentFile=-/etc/default/fusionpbx
+ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
+;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/email_queue/resources/service/email_queue.php
+TimeoutSec=55s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Also=

@@ -24,8 +24,11 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes
-	include "root.php";
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
+
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
@@ -131,10 +134,10 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'module_edit.php']);
 	}
 	if (permission_exists('module_edit') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('module_delete') && $modules) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -169,7 +172,7 @@
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('module_edit') || permission_exists('module_delete')) {
 			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."');\" ".($modules ?: "style='visibility: hidden;'").">\n";
+			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".($modules ?: "style='visibility: hidden;'").">\n";
 			echo "	</th>\n";
 		}
 		echo "<th>".$text['label-label']."</th>\n";
@@ -206,7 +209,7 @@
 				$modifier = str_replace('  ', ' ', $modifier);
 				$modifier = str_replace(' ', '_', $modifier);
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='modules[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='modules[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='modules[$x][uuid]' value='".escape($row['module_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
