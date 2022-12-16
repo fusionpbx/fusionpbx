@@ -91,7 +91,7 @@
 	}
 
 //sanitize the menu link
-	$menu_item_link = preg_replace('#[^a-zA-Z0-9_\-\.\&\=\?\/]#', '', $menu_item_link);
+	$menu_item_link = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_link);
 
 //when a HTTP POST is available then process it
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
