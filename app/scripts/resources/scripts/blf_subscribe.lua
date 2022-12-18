@@ -7,12 +7,13 @@ else
 	service_name = proto
 end
 
---make sure the scripts/run dir exists
-mkdir(scripts_dir .. "/run");
-
 require "resources.functions.config"
 require "resources.functions.split"
 require "resources.functions.trim";
+require "resources.functions.mkdir";
+
+--make sure the scripts/run dir exists
+mkdir(scripts_dir .. "/run");
 
 local log = require "resources.functions.log"[service_name]
 local presence_in = require "resources.functions.presence_in"
