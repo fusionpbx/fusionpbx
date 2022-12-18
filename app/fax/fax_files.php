@@ -118,28 +118,34 @@
 
 //download the fax
 	if ($_GET['a'] == "download") {
-		//test to see if it is in the inbox or sent directory.
+
+		//sanitize the values that are used in the file name and path
+		$fax_extension = preg_replace('/[^0-9]/', '', $_GET['ext']);
+		$fax_filename = preg_replace('/[\/\\\&\%\#]/', '', $_GET['filename']);
+
+		//check if the file is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
-			if (file_exists($fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'])) {
-				$tmp_faxdownload_file = $fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'];
+			if (file_exists($fax_dir.'/'.$fax_extension.'/inbox/'.$fax_filename)) {
+				$download_filename = $fax_dir.'/'.$fax_extension.'/inbox/'.$fax_filename;
 			}
 		}
 		else if ($_GET['type'] == "fax_sent") {
-			if  (file_exists($fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'])) {
-				$tmp_faxdownload_file = $fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'];
+			if (file_exists($fax_dir.'/'.$fax_extension.'/sent/'.$_GET['filename'])) {
+				$download_filename = $fax_dir.'/'.$fax_extension.'/sent/'.$fax_filename;
 			}
 		}
-		//let's see if we found it
-		if (strlen($tmp_faxdownload_file) > 0) {
-			$fd = fopen($tmp_faxdownload_file, "rb");
+
+		//add the headers and stream the file
+		if (strlen($download_filename) > 0) {
+			$fd = fopen($download_filename, "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Description: File Transfer");
-				header('Content-Disposition: attachment; filename="'.$_GET['filename'].'"');
+				header('Content-Disposition: attachment; filename="'.$fax_filename.'"');
 			}
 			else {
-				$file_ext = substr($_GET['filename'], -3);
+				$file_ext = substr($fax_filename, -3);
 				if ($file_ext == "tif") {
 					header("Content-Type: image/tiff");
 				}
@@ -156,7 +162,7 @@
 			header('Accept-Ranges: bytes');
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-			header("Content-Length: ".filesize($tmp_faxdownload_file));
+			header("Content-Length: ".filesize($download_filename));
 			fpassthru($fd);
 		}
 		else {
