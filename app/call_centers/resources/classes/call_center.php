@@ -482,6 +482,86 @@
 				}
 			}
 
+			public function delete_callbacks($records) {
+				if (permission_exists('call_center_callback_delete')) {
+	
+					//add multi-lingual support
+						$language = new text;
+						$text = $language->get();
+	
+					//validate the token
+						$token = new token;
+						if (!$token->validate($_SERVER['PHP_SELF'])) {
+							message::add($text['message-invalid_token'],'negative');
+							header('Location: '.$this->list_page);
+							exit;
+						}
+
+						//assign private variables
+					$this->permission_prefix = 'call_center_callback_';
+					$this->list_page = 'call_center_callback.php';
+					$this->table = 'call_center_callback_profile';
+					$this->uuid_prefix = 'call_center_queue_callback_';
+	
+					//delete multiple records
+						if (is_array($records) && @sizeof($records) != 0) {
+	
+							//filter out unchecked, build where clause for below
+								foreach($records as $x => $record) {
+									if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+										$uuids[] = "'".$record['uuid']."'";
+									}
+								}
+	
+							//get necessary call block details
+								if (is_array($uuids) && @sizeof($uuids) != 0) {
+									$sql = "select call_center_callback_profile_uuid as uuid, profile_name from v_call_center_callback_profile ";
+									$sql .= "where domain_uuid = :domain_uuid ";
+									$sql .= "and call_center_callback_profile_uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$database = new database;
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows) && @sizeof($rows) != 0) {
+										foreach ($rows as $row) {
+											$callback_profile_names[$row['uuid']] = $row['profile_name'];
+										}
+									}
+									unset($sql, $parameters, $rows, $row);
+								}
+	
+							//build the delete array
+								$x = 0;
+								foreach ($callback_profile_names as $callback_profile_uuid => $callback_profile_name) {
+									$array[$this->table][$x]['call_center_callback_profile_uuid'] = $callback_profile_uuid;
+									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$x++;
+								}
+	
+							//delete the checked rows
+								if (is_array($array) && @sizeof($array) != 0) {
+
+									//grant temporary permissions
+										$p = new permissions;
+										$p->add('call_center_callback_profile_delete', 'temp');
+	
+									//execute delete
+										$database = new database;
+										$database->app_name = $this->app_name;
+										$database->app_uuid = $this->app_uuid;
+										$database->delete($array);
+										unset($array);
+
+									//revoke temporary permissions
+										$p->delete('call_center_callback_profile_delete', 'temp');
+	
+									//set message
+										message::add($text['message-delete']);
+								}
+								unset($records);
+						}
+				}
+			}
+
 
 			/**
 			* copy records

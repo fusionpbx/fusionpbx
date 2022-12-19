@@ -64,5 +64,8 @@
 
     <!-- Subscribe to events -->
     <!--<hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
+
+    <!-- Run Service for Queue Callback -->
+    <!--<param name="startup-script" value="app/call_centers/resources/scripts/callback.lua service"/>-->
   </settings>
 </configuration>

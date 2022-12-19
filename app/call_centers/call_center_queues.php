@@ -136,6 +136,9 @@
 	if (permission_exists('call_center_imports')) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'link'=>PROJECT_PATH.'/app/call_center_imports/call_center_imports.php?import_type=call_center_queues']);
 	}
+	if (permission_exists('call_center_callback_view')) {
+		echo button::create(['type'=>'button','label'=>'Callback Profiles','icon'=>'phone-alt','link'=>'call_center_callback.php']);
+	}
 	if (permission_exists('call_center_agent_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-agents'],'icon'=>'users','link'=>'call_center_agents.php']);
 	}
