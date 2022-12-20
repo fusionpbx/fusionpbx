@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,6 +59,16 @@
 	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
 	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
 
+//build the query string
+	$query_string = '';
+	if ($search != '') {
+		$query_string .= 'search='.urlencode($search);
+	}
+	if ($default_setting_category != '') {
+		if ($query_string == '') { $query_string = ''; } else { $query_string .= '&'; }
+		$query_string .= 'default_setting_category='.urlencode($default_setting_category);
+	}
+
 //process the http post data by action
 	if ($action != '' && is_array($default_settings) && @sizeof($default_settings) != 0) {
 		switch ($action) {
@@ -82,8 +92,7 @@
 				}
 				break;
 		}
-
-		header('Location: default_settings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: default_settings.php?'.($query_string != '' ? $query_string : null));
 		exit;
 	}
 
@@ -259,7 +268,7 @@
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$_SESSION['theme']['button_icon_all'],'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($search != '' ? '?search='.urlencode($search) : null),'style'=>'margin-right: 15px;']);
 	if (permission_exists('default_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'default_setting_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'default_setting_edit.php?'.$query_string]);
 	}
 	if (permission_exists('default_setting_add') && $default_settings) {
 		if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
@@ -393,7 +402,7 @@
 				echo "</tr>\n";
 			}
 			if (permission_exists('default_setting_edit')) {
-				$list_row_url = "default_setting_edit.php?id=".urlencode($row['default_setting_uuid']);
+				$list_row_url = "default_setting_edit.php?id=".urlencode($row['default_setting_uuid']).'&'.$query_string;
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('default_setting_add') || permission_exists('default_setting_edit') || permission_exists('default_setting_delete')) {
