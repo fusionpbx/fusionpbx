@@ -211,17 +211,17 @@
 			 * Stores the application name making the request.
 			 * @var string App name making database request.
 			 * @see $app_uuid
-			 * @access private
+			 * @access public
 			 */
-			private $app_name;
+			public $app_name;
 
 			/**
 			 * Stores the application UUID making the request.
 			 * @var string
 			 * @see $app_name
-			 * @access private
+			 * @access public
 			 */
-			private $app_uuid;
+			public $app_uuid;
 
 			/**
 			 * <p>Stores the domain UUID making the request.</p>
@@ -243,9 +243,7 @@
 			 * Called when the object is created
 			 */
 			public function __construct() {
-//				$this->domain_uuid is still null
-//				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
-				if (isset($_SESSION['domain_uuid'])) {
+				if (!isset($this->domain_uuid) && isset($_SESSION['domain_uuid'])) {
 					$this->domain_uuid = $_SESSION['domain_uuid'];
 				}
 			}
