@@ -98,11 +98,6 @@
 				return;
 			}
 
-		//set the domain_uuid
-			if (!permission_exists('stream_all')) {
-				$domain_uuid = $_SESSION["domain_uuid"];
-			}
-
 		//add the stream_uuid
 			if (strlen($_POST["stream_uuid"]) == 0) {
 				$stream_uuid = uuid();
@@ -110,7 +105,12 @@
 
 		//prepare the array
 			$array['streams'][0]['stream_uuid'] = $stream_uuid;
-			$array['streams'][0]['domain_uuid'] = $domain_uuid;
+			if (permission_exists('stream_all')) {
+				$array['streams'][0]['domain_uuid'] = $domain_uuid;
+			}
+			elseif ($action == 'add') {
+				$array['streams'][0]['domain_uuid'] = $_SESSION["domain_uuid"];
+			}
 			$array['streams'][0]['stream_name'] = $stream_name;
 			$array['streams'][0]['stream_location'] = $stream_location;
 			$array['streams'][0]['stream_enabled'] = $stream_enabled;
@@ -131,7 +131,7 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: stream_edit.php?id='.$stream_uuid);
+				header('Location: stream_edit.php?id='.urlencode($stream_uuid));
 				return;
 			}
 	}
@@ -152,6 +152,12 @@
 			$stream_description = $row["stream_description"];
 		}
 		unset($sql, $parameters, $row);
+	}
+
+//need stream_all permission to edit a global stream
+	if (!permission_exists('stream_all') && $domain_uuid == null) {
+		header('Location: streams.php');
+		return;
 	}
 
 //create token
@@ -222,31 +228,33 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-domain_uuid']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='domain_uuid'>\n";
-	if (strlen($domain_uuid) == 0) {
-		echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
-	}
-	else {
-		echo "		<option value=''>".$text['label-global']."</option>\n";
-	}
-	foreach ($_SESSION['domains'] as $row) {
-		if ($row['domain_uuid'] == $domain_uuid) {
-			echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+	if (permission_exists('stream_all')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain_uuid']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' style='position: relative;' align='left'>\n";
+		echo "	<select class='formfld' name='domain_uuid'>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "		<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
-			echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+			echo "		<option value=''>".$text['label-global']."</option>\n";
 		}
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "		<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+			}
+			else {
+				echo "		<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+			}
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_uuid']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-domain_uuid']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
