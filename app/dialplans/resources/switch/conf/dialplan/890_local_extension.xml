@@ -16,7 +16,7 @@
 			<action application="set" data="called_party_call_group=${user_data(${dialed_extension}@${domain_name} var call_group)}"/>
 			<!--<action application="export" data="nolocal:sip_secure_media=${user_data(${dialed_extension}@${domain_name} var sip_secure_media)}"/>-->
 			<action application="hash" data="insert/${domain_name}-last_dial/${called_party_call_group}/${uuid}"/>
-			<action application="set" data="fail_on_single_reject=true"/>
+			<action application="set" data="fail_on_single_reject=^^:CALL_REJECTED:NORMAL_CLEARING:USER_BUSY"/>
 			<action application="set" data="api_hangup_hook=lua app.lua hangup"/>
 			<action application="export" data="domain_name=${domain_name}"/>
 			<!-- standard method -->
