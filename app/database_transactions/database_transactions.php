@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016 - 2021
+	Portions created by the Initial Developer are Copyright (C) 2016 - 2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -52,23 +52,13 @@
 
 //add the user filter and search term
 	$user_uuid = $_GET['user_uuid'];
-	$search = strtolower($_GET["search"]);
-	if ($search != '') {
-		$sql_search = "and (";
-		$sql_search .= "	lower(t.app_name) like :search ";
-		$sql_search .= "	or lower(t.transaction_code) like :search ";
-		$sql_search .= "	or lower(t.transaction_address) like :search ";
-		$sql_search .= "	or lower(t.transaction_type) like :search ";
-		$sql_search .= "	or cast(t.transaction_date as text) like :search ";
-		$sql_search .= "	or lower(t.transaction_old) like :search ";
-		$sql_search .= "	or lower(t.transaction_new) like :search ";
-		$sql_search .= "	or lower(u.username) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (isset($_GET["search"]) && $_GET["search"] != '') {
+		$search = strtolower($_GET["search"]);
 	}
 
 //prepare to page the results
-	$sql = "select count(t.database_transaction_uuid) from v_database_transactions as t ";
+	$sql = "select count(t.database_transaction_uuid) ";
+	$sql .= "from v_database_transactions as t ";
 	$sql .= "left outer join v_domains as d using (domain_uuid) ";
 	$sql .= "left outer join v_users as u using (user_uuid) ";
 	$sql .= "where t.domain_uuid = :domain_uuid ";
@@ -76,10 +66,23 @@
 		$sql .= "and t.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $user_uuid;
 	}
-	$sql .= $sql_search;
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(t.app_name) like :search ";
+		$sql .= "	or lower(t.transaction_code) like :search ";
+		$sql .= "	or lower(t.transaction_address) like :search ";
+		$sql .= "	or lower(t.transaction_type) like :search ";
+		$sql .= "	or cast(t.transaction_date as text) like :search ";
+		$sql .= "	or lower(t.transaction_old) like :search ";
+		$sql .= "	or lower(t.transaction_new) like :search ";
+		$sql .= "	or lower(u.username) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	};
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -91,7 +94,31 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(t.database_transaction_uuid)','t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, t.transaction_code, t.transaction_address, t.transaction_type, t.transaction_date', $sql);
+	$sql = "select t.database_transaction_uuid, d.domain_name, u.username, ";
+	$sql .= "t.user_uuid, t.app_name, t.app_uuid, t.transaction_code, ";
+	$sql .= "t.transaction_address, t.transaction_type, t.transaction_date ";
+	$sql .= "from v_database_transactions as t ";
+	$sql .= "left outer join v_domains as d using (domain_uuid) ";
+	$sql .= "left outer join v_users as u using (user_uuid) ";
+	$sql .= "where t.domain_uuid = :domain_uuid ";
+	if (is_uuid($user_uuid)) {
+		$sql .= "and t.user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $user_uuid;
+	}
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(t.app_name) like :search ";
+		$sql .= "	or lower(t.transaction_code) like :search ";
+		$sql .= "	or lower(t.transaction_address) like :search ";
+		$sql .= "	or lower(t.transaction_type) like :search ";
+		$sql .= "	or cast(t.transaction_date as text) like :search ";
+		$sql .= "	or lower(t.transaction_old) like :search ";
+		$sql .= "	or lower(t.transaction_new) like :search ";
+		$sql .= "	or lower(u.username) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$sql .= order_by($order_by, $order, 't.transaction_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
