@@ -82,26 +82,36 @@
 	$order = $_GET["order"];
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= "lower(stream_name) like :search ";
-		$sql_search .= "or lower(stream_location) like :search ";
-		$sql_search .= "or lower(stream_enabled) like :search ";
-		$sql_search .= "or lower(stream_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (isset($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
 	}
 
 //prepare to page the results
-	$sql = "select count(stream_uuid) from v_streams where true ";
-	$sql .= $sql_search;
-	if (!($_GET['show'] == "all" && permission_exists('stream_all'))) {
+	$sql = "select count(stream_uuid) from v_streams ";
+	$sql .= "where true ";
+	if (isset($search) && $search != '') {
+		$sql = "and (";
+		$sql .= "lower(stream_name) like :search ";
+		$sql .= "or lower(stream_location) like :search ";
+		$sql .= "or lower(stream_enabled) like :search ";
+		$sql .= "or lower(stream_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	if (permission_exists('stream_all') && $_GET['show'] == "all") {
+		//show all
+	}
+	elseif (permission_exists('stream_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
@@ -114,7 +124,28 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(stream_uuid)', '*', $sql);
+	$sql = "select * from v_streams ";
+	$sql .= "where true ";
+	if (isset($search) && $search != '') {
+		$sql = "and (";
+		$sql .= "	lower(stream_name) like :search ";
+		$sql .= "	or lower(stream_location) like :search ";
+		$sql .= "	or lower(stream_enabled) like :search ";
+		$sql .= "	or lower(stream_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+	if (permission_exists('stream_all') && $_GET['show'] == "all") {
+		//show all
+	}
+	elseif (permission_exists('stream_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$sql .= order_by($order_by, $order, 'stream_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$database = new database;
