@@ -354,6 +354,7 @@
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";
 			}
 			if ($queue_greeting_path != '') {
+				$dialplan_xml .= "		<action application=\"sleep\" data=\"1000\"/>\n";
 				$greeting_array = explode(':', $queue_greeting_path);
 				if (count($greeting_array) == 1) {
 					$dialplan_xml .= "		<action application=\"playback\" data=\"".$queue_greeting_path."\"/>\n";
