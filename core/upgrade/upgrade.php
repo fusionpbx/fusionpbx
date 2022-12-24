@@ -286,4 +286,22 @@
 			}
 	}
 
+//upgrade optional apps
+	if ($upgrade_type == 'apps') {
+
+		$app_list = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+
+		if (!is_array($app_list)) {
+			exit;
+		}
+		$updates = array();
+		foreach ($app_list as $app) {
+			$path = $_SERVER["PROJECT_ROOT"] . "/app/" . $app;
+			$git_result = git_pull($path);
+			foreach ($git_result['message'] as $response_line) {
+				echo $app_name . ": " . $response_line . "\n";
+			}
+		}
+	}
+
 ?>
