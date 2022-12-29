@@ -105,16 +105,10 @@
 	//$database = new database;
 	//$num_rows = $database->select($sql, $parameters, 'column');
 
-//prepare to page the results
+//prepare some of the paging values
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = "&search=".urlencode($search);
-	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
-		$param .= "&show=all";
-	}
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -147,6 +141,22 @@
 	$database = new database;
 	$call_recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//count the results
+	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
+
+//limit the number of results
+	if ($_SESSION['cdr']['limit']['numeric'] > 0) {
+		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	}
+
+//prepare to page the results
+	$param = "&search=".urlencode($search);
+	if ($_GET['show'] == "all" && permission_exists('call_recording_all')) {
+		$param .= "&show=all";
+	}
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
 
 //create token
 	$object = new token;
@@ -273,7 +283,7 @@
 				echo "	</td>\n";
 			}
 			echo "	<td class='right overflow hide-sm-dn shrink'>".($row['call_recording_length'] <= 59 ? '0:' : null).escape(str_pad($row['call_recording_length'], 2, '0', STR_PAD_LEFT))."</td>\n";
-			echo "	<td class='center overflow'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
+			echo "	<td class='center no-wrap'>".escape($row['call_recording_date_formatted'])." <span class='hide-sm-dn'>".escape($row['call_recording_time_formatted'])."</span></td>\n";
 			echo "	<td class='left hide-sm-dn shrink'>".($row['call_direction'] != '' ? escape($text['label-'.$row['call_direction']]) : null)."</td>\n";
 			if (permission_exists('xml_cdr_details')) {
 				echo "	<td class='action-button'>\n";
