@@ -199,7 +199,8 @@
 			end
 			if string.find(agent_name, 'agent+', nil, true) ~= 1 then
 				presence_in.turn_lamp( blf_status,
-					'agent+'..agent_name.."@"..domain_name
+					'agent+'..agent_name.."@"..domain_name,
+					uuid
 				);
 			end			
 	end
