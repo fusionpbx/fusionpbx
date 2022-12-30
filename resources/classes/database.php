@@ -2009,6 +2009,9 @@
 				//set the message id
 					$m = 0;
 
+				//build the json string from the array
+					$new_json = json_encode($array, JSON_PRETTY_PRINT);
+
 				//debug sql
 					//$this->debug["sql"] = true;
 
@@ -2777,8 +2780,7 @@
 								$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
 								$statement->bindParam(':transaction_old', $old_json);
 							}
-							if (is_array($array)) {
-								$new_json = json_encode($array, JSON_PRETTY_PRINT);
+							if (isset($new_json)) {
 								$statement->bindParam(':transaction_new', $new_json);
 							}
 							$message = json_encode($this->message, JSON_PRETTY_PRINT);
@@ -2956,13 +2958,13 @@
 														$field_name = trim($field['name']);
 													}
 												//build the array
-													$array[$i]['table'] = $row['table']['name'];
-													$array[$i]['field'] = $field_name;
-													$array[$i]['key']['type'] = $field['key']['type'];
-													$array[$i]['key']['table'] = $field['key']['reference']['table'];
-													$array[$i]['key']['field'] = $field['key']['reference']['field'];
+													$relations[$i]['table'] = $row['table']['name'];
+													$relations[$i]['field'] = $field_name;
+													$relations[$i]['key']['type'] = $field['key']['type'];
+													$relations[$i]['key']['table'] = $field['key']['reference']['table'];
+													$relations[$i]['key']['field'] = $field['key']['reference']['field'];
 													if (isset($field['key']['reference']['action'])) {
-														$array[$i]['key']['action'] = $field['key']['reference']['action'];
+														$relations[$i]['key']['action'] = $field['key']['reference']['action'];
 													}
 												//increment the value
 													$i++;
@@ -2976,8 +2978,8 @@
 					}
 
 				//return the array
-					if (is_array($array)) {
-						return $array;
+					if (is_array($relations)) {
+						return $relations;
 					} else {
 						return false;
 					}
