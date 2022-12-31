@@ -322,7 +322,7 @@
 			echo "<th>".$text['label-name']."</th>\n";
 			echo "<th>".$text['label-number']."</th>\n";
 			echo "<th>".$text['label-status']."</th>\n";
-			if ((if_group("admin") || if_group("superadmin"))) {
+			if (permission_exists('call_center_active_options')) {
 				echo "<th>".$text['label-options']."</th>\n";
 			}
 			echo "<th>".$text['label-agent']."</th>\n";
@@ -370,11 +370,12 @@
 					echo "<td>".escape($caller_name)."&nbsp;</td>\n";
 					echo "<td>".escape($caller_number)."&nbsp;</td>\n";
 					echo "<td>".escape($state)."</td>\n";
-					if (if_group("admin") || if_group("superadmin")) {
+					if (permission_exists('call_center_active_options')) {
 						echo "<td>";
 						if ($state != "Abandoned") {
 							$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".escape($q_caller_number)."}user/".escape($_SESSION['user']['extension'][0]['user'])."@".escape($_SESSION['domain_name'])." %26eavesdrop(".escape($session_uuid).")";
 							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-eavesdrop'],'onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=eavesdrop&caller_id_number=".urlencode($caller_number)."&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
+							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-transfer'],'style'=>'margin-left: 15px;','onclick'=>"if (confirm('".$text['message-confirm']."')) { send_command('call_center_exec.php?command=uuid_pickup&uuid=".urlencode($session_uuid)."'); } else { this.blur(); return false; }"]);
 						}
 						else {
 							echo "&nbsp;";
