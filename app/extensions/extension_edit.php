@@ -488,7 +488,7 @@
 									if (permission_exists('extension_hold_music')) {
 										$array["extensions"][$i]["hold_music"] = $hold_music;
 									}
-										if (permission_exists("extension_advanced")) {
+									if (permission_exists("extension_advanced")) {
 										$array["extensions"][$i]["auth_acl"] = $auth_acl;
 										if (permission_exists("extension_cidr")) {
 											$array["extensions"][$i]["cidr"] = $cidr;
