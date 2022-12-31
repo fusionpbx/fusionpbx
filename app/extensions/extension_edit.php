@@ -488,27 +488,29 @@
 									if (permission_exists('extension_hold_music')) {
 										$array["extensions"][$i]["hold_music"] = $hold_music;
 									}
-									$array["extensions"][$i]["auth_acl"] = $auth_acl;
-									if (permission_exists("extension_cidr")) {
-										$array["extensions"][$i]["cidr"] = $cidr;
-									}
-									$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
-									$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
-									if (permission_exists('extension_nibble_account')) {
-										if (strlen($nibble_account) > 0) {
-											$array["extensions"][$i]["nibble_account"] = $nibble_account;
+									if (permission_exists("extension_advanced")) {
+										$array["extensions"][$i]["auth_acl"] = $auth_acl;
+										if (permission_exists("extension_cidr")) {
+											$array["extensions"][$i]["cidr"] = $cidr;
 										}
-									}
-									$array["extensions"][$i]["mwi_account"] = $mwi_account;
-									$array["extensions"][$i]["sip_bypass_media"] = $sip_bypass_media;
-									if (permission_exists('extension_absolute_codec_string')) {
-										$array["extensions"][$i]["absolute_codec_string"] = $absolute_codec_string;
-									}
-									if (permission_exists('extension_force_ping')) {
-										$array["extensions"][$i]["force_ping"] = $force_ping;
-									}
-									if (permission_exists('extension_dial_string')) {
-										$array["extensions"][$i]["dial_string"] = $dial_string;
+										$array["extensions"][$i]["sip_force_contact"] = $sip_force_contact;
+										$array["extensions"][$i]["sip_force_expires"] = $sip_force_expires;
+										if (permission_exists('extension_nibble_account')) {
+											if (strlen($nibble_account) > 0) {
+												$array["extensions"][$i]["nibble_account"] = $nibble_account;
+											}
+										}
+										$array["extensions"][$i]["mwi_account"] = $mwi_account;
+										$array["extensions"][$i]["sip_bypass_media"] = $sip_bypass_media;
+										if (permission_exists('extension_absolute_codec_string')) {
+											$array["extensions"][$i]["absolute_codec_string"] = $absolute_codec_string;
+										}
+										if (permission_exists('extension_force_ping')) {
+											$array["extensions"][$i]["force_ping"] = $force_ping;
+										}
+										if (permission_exists('extension_dial_string')) {
+											$array["extensions"][$i]["dial_string"] = $dial_string;
+										}
 									}
 									if (permission_exists('extension_enabled')) {
 										$array["extensions"][$i]["enabled"] = $enabled;
