@@ -13,7 +13,7 @@
 	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Courriels";
 	$apps[$x]['menu'][$y]['title']['he-il'] = "";
 	$apps[$x]['menu'][$y]['title']['it-it'] = "Emails";
-	$apps[$x]['menu'][$y]['title']['nl-nl'] = "E-mails";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Email log";
 	$apps[$x]['menu'][$y]['title']['pl-pl'] = "E-maile";
 	$apps[$x]['menu'][$y]['title']['pt-br'] = "Emails";
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Emails";
