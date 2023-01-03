@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2022
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -197,7 +197,8 @@
 	}
 
 //prepare to page the results
-	$sql = "select count(fax_file_uuid) from v_fax_files ";
+	$sql = "select count(fax_file_uuid) ";
+	$sql .= "from v_fax_files ";
 	$sql .= "where fax_uuid = :fax_uuid ";
 	$sql .= "and domain_uuid = :domain_uuid ";
 	if ($_REQUEST['box'] == 'inbox') {
@@ -220,15 +221,42 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	if (isset($_SESSION['domain']['time_zone']['name'])) {
+		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	}
+	else {
+		$time_zone = date_default_timezone_get();
+	}
+	$parameters['time_zone'] = $time_zone;
+
+//set the time format options: 12h, 24h
+	if (isset($_SESSION['domain']['time_format']['text'])) {
+		if ($_SESSION['domain']['time_format']['text'] == '12h') {
+			$time_format = 'HH12:MI:SS am';
+		}
+		elseif ($_SESSION['domain']['time_format']['text'] == '24h') {
+			$time_format = 'HH24:MI:SS';
+		}
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
-	$sql = "select * from v_fax_files ";
-	$sql .= "where fax_uuid = :fax_uuid ";
-	$sql .= "and domain_uuid = :domain_uuid ";
+	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode \n";
+	$sql .= "fax_destination, fax_file_type, fax_file_path, fax_caller_id_name \n";
+	$sql .= "fax_caller_id_number, fax_epoch, fax_base64, fax_date, \n";
+	$sql .= "to_char(timezone(:time_zone, fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, fax_date), '".$time_format."') as fax_time_formatted \n";
+	$sql .= "from v_fax_files \n";
+	$sql .= "where fax_uuid = :fax_uuid \n";
+	$sql .= "and domain_uuid = :domain_uuid \n";
 	if ($_REQUEST['box'] == 'inbox') {
-		$sql .= "and fax_mode = 'rx' ";
+		$sql .= "and fax_mode = 'rx' \n";
 	}
 	if ($_REQUEST['box'] == 'sent') {
-		$sql .= "and fax_mode = 'tx' ";
+		$sql .= "and fax_mode = 'tx' \n";
 	}
 	$parameters['fax_uuid'] = $fax_uuid;
 	$parameters['domain_uuid'] = $domain_uuid;
@@ -412,8 +440,7 @@
 				}
 			}
 			echo "  </td>\n";
-			$fax_date = ($_SESSION['domain']['time_format']['text'] == '12h') ? date("F d Y H:i", $row['fax_epoch']) : date("F d Y H:i", $row['fax_epoch']);
-			echo "	<td>".$fax_date."&nbsp;</td>\n";
+			echo "	<td>".$row['fax_date_formatted']." ".$row['fax_time_formatted']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			$x++;
 		}
@@ -425,7 +452,6 @@
 	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-
 
 //include the footer
 	require_once "resources/footer.php";
