@@ -293,12 +293,12 @@
 			var system_counts_chart_context = document.getElementById('system_counts_chart').getContext('2d');
 
 			const system_counts_chart_data = {
-				labels: ['<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>', '<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>'],
+				labels: ['<?php echo $text['label-active']; ?>: <?php echo $domain_active; ?>', '<?php echo $text['label-inactive']; ?>: <?php echo $domain_inactive; ?>'],
 				datasets: [{
 					data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
 					backgroundColor: [
-						'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>', 
-						'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>'
+						'<?php echo $_SESSION['dashboard']['system_counts_chart_main_background_color']['text']; ?>',
+						'<?php echo $_SESSION['dashboard']['system_counts_chart_sub_background_color']['text']; ?>'
 					],
 					borderColor: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_color']['text']; ?>',
 					borderWidth: '<?php echo $_SESSION['dashboard']['system_counts_chart_border_width']['text']; ?>',
