@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2023
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -129,11 +129,14 @@ if (!class_exists('registrations')) {
 										$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?: '';
 										$registrations[$id]['agent'] = $row['agent'] ?: '';
 										$registrations[$id]['host'] = $row['host'] ?: '';
+										$registrations[$id]['network-ip'] = $row['network-ip'] ?: '';
 										$registrations[$id]['network-port'] = $row['network-port'] ?: '';
+										$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?: '';
 										$registrations[$id]['sip-auth-realm'] = $row['sip-auth-realm'] ?: '';
 										$registrations[$id]['mwi-account'] = $row['mwi-account'] ?: '';
 										$registrations[$id]['status'] = $row['status'] ?: '';
 										$registrations[$id]['ping-time'] = $row['ping-time'] ?: '';
+										$registrations[$id]['ping-status'] = $row['ping-status'] ?: '';
 										$registrations[$id]['sip_profile_name'] = $field['sip_profile_name'];
 
 									//get network-ip to url or blank
