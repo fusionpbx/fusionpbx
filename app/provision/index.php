@@ -45,6 +45,7 @@
 	$mac = $_REQUEST['mac'];
 	$file = $_REQUEST['file'];
 	$ext = $_REQUEST['ext'];
+	$pretty = $_REQUEST['pretty'];
 	//if (strlen($_REQUEST['template']) > 0) {
 	//	$device_template = $_REQUEST['template'];
 	//}
@@ -435,6 +436,20 @@
 	$prov->file = $file;
 	$file_contents = $prov->render();
 
+	$dom = new DOMDocument;
+	$dom->preserveWhiteSpace = false;
+	$dom->formatOutput = false;
+	$isXML = $dom->loadXML($file_contents, LIBXML_NOERROR|LIBXML_ERR_FATAL|LIBXML_ERR_NONE);
+	// Remove all comments and whitespace if valid XML, $pretty is empty, and enabled in settings
+	if ($isXML === true && empty($pretty) && $provision["minify_xml"] == "true") {
+		$xpath = new DOMXPath($dom);
+		// Iterate backwards over the XML file
+		for ($els = $xpath->query('//comment()'), $i = $els->length - 1; $i >= 0; $i--) {
+			$els->item($i)->parentNode->removeChild($els->item($i));
+		}
+		$file_contents = $dom->saveXML();
+	}
+
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
 	if ($_REQUEST['content_type'] == 'application/octet-stream') {
@@ -470,14 +485,12 @@
 			header("Content-Length: ".strlen($file_contents));
 		}
 		else {
-			$result = simplexml_load_string ($file_contents, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE);
-			if (false == $result){
-				header("Content-Type: text/plain");
-				header("Content-Length: ".strval(strlen($file_contents)));
-			}
-			else {
+			if ($isXML === true) {
 				header("Content-Type: text/xml; charset=utf-8");
 				header("Content-Length: ".strlen($file_contents));
+			} else {
+				header("Content-Type: text/plain");
+				header("Content-Length: ".strval(strlen($file_contents)));
 			}
 		}
 	}
