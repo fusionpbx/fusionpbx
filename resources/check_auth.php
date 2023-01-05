@@ -37,7 +37,12 @@
 	}
 
 //start the session
-	if (!isset($_SESSION)) { session_start(); }
+	if (!isset($_SESSION)) { 
+		if(version_compare(phpversion(), '7.3', '>=')) {
+			session_set_cookie_params(["samesite" => "strict"]);
+		}
+		session_start(); 
+	}
 
 //define variables
 	if (!isset($_SESSION['template_content'])) { $_SESSION["template_content"] = null; }

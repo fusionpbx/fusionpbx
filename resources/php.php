@@ -28,6 +28,9 @@
 	//start the session
 		if (function_exists('session_start')) { 
 			if (!isset($_SESSION)) {
+				if(version_compare(phpversion(), '7.3', '>=')) {
+					session_set_cookie_params(["samesite" => "strict"]);
+				}
 				session_start();
 			}
 		}

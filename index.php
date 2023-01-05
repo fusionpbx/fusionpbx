@@ -30,7 +30,12 @@
 
 //start the session
 	ini_set("session.cookie_httponly", True);
-	if (!isset($_SESSION)) { session_start(); }
+	if (!isset($_SESSION)) { 
+		if(version_compare(phpversion(), '7.3', '>=')) {
+			session_set_cookie_params(["samesite" => "strict"]);
+		}
+		session_start(); 
+	}
 
 //if config.conf file does not exist then redirect to the install page
 	if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
