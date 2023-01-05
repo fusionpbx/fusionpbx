@@ -465,6 +465,27 @@ $text['label-voicemail_mail_to']['ru-ru'] = "Почта для";
 $text['label-voicemail_mail_to']['sv-se'] = "E-post Till";
 $text['label-voicemail_mail_to']['uk-ua'] = "Надсилати на";
 
+$text['label-voicemail_auto_mail']['en-us'] = "Auto send mail";
+$text['label-voicemail_auto_mail']['en-gb'] = "Auto send mail";
+$text['label-voicemail_auto_mail']['ar-eg'] = "";
+$text['label-voicemail_auto_mail']['de-at'] = "";
+$text['label-voicemail_auto_mail']['de-ch'] = "";
+$text['label-voicemail_auto_mail']['de-de'] = "";
+$text['label-voicemail_auto_mail']['es-cl'] = "";
+$text['label-voicemail_auto_mail']['es-mx'] = "";
+$text['label-voicemail_auto_mail']['fr-ca'] = "";
+$text['label-voicemail_auto_mail']['fr-fr'] = "";
+$text['label-voicemail_auto_mail']['he-il'] = "";
+$text['label-voicemail_auto_mail']['it-it'] = "";
+$text['label-voicemail_auto_mail']['nl-nl'] = "";
+$text['label-voicemail_auto_mail']['pl-pl'] = "";
+$text['label-voicemail_auto_mail']['pt-br'] = "";
+$text['label-voicemail_auto_mail']['pt-pt'] = "";
+$text['label-voicemail_auto_mail']['ro-ro'] = "";
+$text['label-voicemail_auto_mail']['ru-ru'] = "";
+$text['label-voicemail_auto_mail']['sv-se'] = "";
+$text['label-voicemail_auto_mail']['uk-ua'] = "";
+
 $text['label-voicemail_local_after_email']['en-us'] = "Keep Local";
 $text['label-voicemail_local_after_email']['en-gb'] = "Keep Local";
 $text['label-voicemail_local_after_email']['ar-eg'] = "";
