@@ -57,7 +57,7 @@
 //add half doughnut chart
 	?>
 	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
-		<div style='margin: 0 auto;'><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
+		<div><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
 	</div>
 
 	<script>
