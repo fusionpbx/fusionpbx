@@ -85,48 +85,42 @@
 //add doughnut chart
 	?>
 	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
-		<div style='width: 175px; height: 175px;'><canvas id='recent_calls_chart'></canvas></div>
+		<canvas id='recent_calls_chart' width='175px' height='175px'></canvas>
 	</div>
 
 	<script>
-		var recent_calls_chart_context = document.getElementById('recent_calls_chart').getContext('2d');
-
-		const recent_calls_chart_data = {
-			datasets: [{
-				data: ['<?php echo $num_rows; ?>', 0.00001],
-				backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
-				'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
-				borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
-				borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
-				cutout: chart_cutout
-			}]
-		};
-
-		const recent_calls_chart_config = {
-			type: 'doughnut',
-			data: recent_calls_chart_data,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					chart_counter: {
-						chart_text: '<?php echo $num_rows; ?>'
-					},
-					legend: {
-						display: false
-					},
-					title: {
-						display: true,
-						text: '<?php echo $text['label-recent_calls']; ?>'
-					}
-				}
-			},
-			plugins: [chart_counter],
-		};
-
 		const recent_calls_chart = new Chart(
-			recent_calls_chart_context,
-			recent_calls_chart_config
+			document.getElementById('recent_calls_chart').getContext('2d'),
+			{
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: ['<?php echo $num_rows; ?>', 0.00001],
+						backgroundColor: ['<?php echo $_SESSION['dashboard']['recent_calls_chart_main_background_color']['text']; ?>',
+						'<?php echo $_SESSION['dashboard']['missed_calls_chart_sub_background_color']['text']; ?>'],
+						borderColor: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['recent_calls_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						chart_counter: {
+							chart_text: '<?php echo $num_rows; ?>'
+						},
+						legend: {
+							display: false
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-recent_calls']; ?>'
+						}
+					}
+				},
+				plugins: [chart_counter],
+			}
 		);
 	</script>
 	<?php
