@@ -87,7 +87,7 @@
 	</div>
 
 	<script>
-		var missed_calls_chart = new Chart(
+		const missed_calls_chart = new Chart(
 			document.getElementById('missed_calls_chart').getContext('2d'),
 			{
 				type: 'doughnut',
