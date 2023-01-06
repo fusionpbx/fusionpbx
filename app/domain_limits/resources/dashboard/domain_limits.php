@@ -71,43 +71,37 @@
 			</div>
 
 			<script>
-				var domain_limits_chart_context = document.getElementById('domain_limits_chart').getContext('2d');
-
-				const domain_limits_chart_data = {
-					datasets: [{
-						data:['<?php echo $hud_stat; ?>', 0.00001],
-						borderColor: 'rgba(0,0,0,0)',
-						backgroundColor: ['#2a9df4', '#d4d4d4'],
-						cutout: chart_cutout
-					}]
-				};
-	
-				const domain_limits_chart_config = {
-					type: 'doughnut',
-					data: domain_limits_chart_data,
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							chart_counter: {
-								chart_text: '<?php echo $hud_stat; ?>',
-							},
-							legend: {
-								display: false
-							},
-							title: {
-								display: true,
-								text: '<?php echo $text['label-domain_limits']; ?>',
-								fontFamily: chart_text_font
-							}
-						}
-					},
-					plugins: [chart_counter],
-				};
-	
 				const domain_limits_chart = new Chart(
-					domain_limits_chart_context,
-					domain_limits_chart_config
+					document.getElementById('domain_limits_chart').getContext('2d'),
+					{
+						type: 'doughnut',
+						data: {
+							datasets: [{
+								data:['<?php echo $hud_stat; ?>', 0.00001],
+								borderColor: 'rgba(0,0,0,0)',
+								backgroundColor: ['#2a9df4', '#d4d4d4'],
+								cutout: chart_cutout
+							}]
+						},
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							plugins: {
+								chart_counter: {
+									chart_text: '<?php echo $hud_stat; ?>',
+								},
+								legend: {
+									display: false
+								},
+								title: {
+									display: true,
+									text: '<?php echo $text['label-domain_limits']; ?>',
+									fontFamily: chart_text_font
+								}
+							}
+						},
+						plugins: [chart_counter],
+					}
 				);
 			</script>
 			<?php

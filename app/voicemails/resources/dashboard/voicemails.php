@@ -60,52 +60,45 @@
 //add doughnut chart
 	?>
 	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px;'>
-		<div style='width: 175px; height: 175px;'><canvas id='new_messages_chart'></canvas></div>
+		<canvas id='new_messages_chart' width='175px' height='175px'></canvas>
 	</div>
 
-
 	<script>
-		var new_messages_chart_context = document.getElementById('new_messages_chart').getContext('2d');
-
-		const new_messages_chart_data = {
-			datasets: [{
-				data: ['<?php echo $messages['new']; ?>', 0.00001],
-				backgroundColor: [
-					'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>', 
-					'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
-				],
-				borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
-				borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
-				cutout: chart_cutout
-			}]
-		};
- 
-		const new_messages_chart_config = {
-			type: 'doughnut',
-			data: new_messages_chart_data,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					chart_counter: {
-						chart_text: '<?php echo $messages['new']; ?>',
-					},
-					legend: {
-						display: false
-					},
-					title: {
-						display: true,
-						text: '<?php echo $text['label-new_messages']; ?>',
-						fontFamily: chart_text_font
-					}
-				}
-			},
-			plugins: [chart_counter],
-		};
-
 		const new_messages_chart = new Chart(
-			new_messages_chart_context,
-			new_messages_chart_config
+			document.getElementById('new_messages_chart').getContext('2d'),
+			{
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: ['<?php echo $messages['new']; ?>', 0.00001],
+						backgroundColor: [
+							'<?php echo $_SESSION['dashboard']['new_messages_chart_main_background_color']['text']; ?>', 
+							'<?php echo $_SESSION['dashboard']['new_messages_chart_sub_background_color']['text']; ?>'
+						],
+						borderColor: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['new_messages_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						chart_counter: {
+							chart_text: '<?php echo $messages['new']; ?>',
+						},
+						legend: {
+							display: false
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-new_messages']; ?>',
+							fontFamily: chart_text_font
+						}
+					}
+				},
+				plugins: [chart_counter],
+			}
 		);
 	</script>
 	<?php

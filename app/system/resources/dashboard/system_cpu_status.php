@@ -57,12 +57,10 @@
 //add half doughnut chart
 	?>
 	<div style='display: flex; flex-wrap: wrap; justify-content: center; padding-bottom: 20px'>
-		<div style='width: 175px; height: 175px; margin: 0 auto;'><canvas id='system_cpu_status_chart'></canvas></div>
+		<div><canvas id='system_cpu_status_chart' width='175px' height='175px' ></canvas></div>
 	</div>
 
 	<script>
-		var system_cpu_status_chart_context = document.getElementById('system_cpu_status_chart').getContext('2d');
-
 		var system_cpu_status_chart_background_color;
 		if ('<?php echo $percent_cpu; ?>' <= 60) {
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][0]; ?>';
@@ -72,50 +70,46 @@
 			system_cpu_status_chart_background_color = '<?php echo $_SESSION['dashboard']['cpu_usage_chart_main_background_color'][2]; ?>';
 		}
 
-		const system_cpu_status_chart_data = {
-			datasets: [{
-				data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
-				backgroundColor: [
-					system_cpu_status_chart_background_color,
-					'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
-				],
-				borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
-				borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
-				cutout: chart_cutout
-			}]
-		};
-
-		const system_cpu_status_chart_config = {
-			type: 'doughnut',
-			data: system_cpu_status_chart_data,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				circumference: 180,
-				rotation: 270,
-				plugins: {
-					chart_counter_2: {
-						chart_text: '<?php echo $percent_cpu; ?>'
-					},
-					legend: {
-						display: false,
-					},
-					tooltip: {
-						yAlign: 'bottom',
-						displayColors: false,
-					},
-					title: {
-						display: true,
-						text: '<?php echo $text['label-cpu_usage']; ?>'
-					}
-				}
-			},
-			plugins: [chart_counter_2],
-		};
-
 		const system_cpu_status_chart = new Chart(
-			system_cpu_status_chart_context,
-			system_cpu_status_chart_config
+			document.getElementById('system_cpu_status_chart').getContext('2d'),
+			{
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: ['<?php echo $percent_cpu; ?>', 100 - '<?php echo $percent_cpu; ?>'],
+						backgroundColor: [
+							system_cpu_status_chart_background_color,
+							'<?php echo $_SESSION['dashboard']['cpu_usage_chart_sub_background_color']['text']; ?>'
+						],
+						borderColor: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_color']['text']; ?>',
+						borderWidth: '<?php echo $_SESSION['dashboard']['cpu_usage_chart_border_width']['text']; ?>',
+						cutout: chart_cutout
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					circumference: 180,
+					rotation: 270,
+					plugins: {
+						chart_counter_2: {
+							chart_text: '<?php echo $percent_cpu; ?>'
+						},
+						legend: {
+							display: false,
+						},
+						tooltip: {
+							yAlign: 'bottom',
+							displayColors: false,
+						},
+						title: {
+							display: true,
+							text: '<?php echo $text['label-cpu_usage']; ?>'
+						}
+					}
+				},
+				plugins: [chart_counter_2],
+			}
 		);
 	</script>
 
