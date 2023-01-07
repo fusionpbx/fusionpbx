@@ -1448,7 +1448,7 @@ if (!class_exists('xml_cdr')) {
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 									//get the call recordings
-										$sql = "select * from v_call_recordings ";
+										$sql = "select * from view_call_recordings ";
 										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
 										$parameters['xml_cdr_uuid'] = $record['uuid'];
 										$database = new database;
