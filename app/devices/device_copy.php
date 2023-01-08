@@ -49,6 +49,7 @@
 	if (is_uuid($_REQUEST["id"]) && isset($_REQUEST["mac"])) {
 		$device_uuid = $_REQUEST["id"];
 		$device_mac_address = $_REQUEST["mac"];
+		$device_mac_address = strtolower($device_mac_address);
 		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 	}
 
