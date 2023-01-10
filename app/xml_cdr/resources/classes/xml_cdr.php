@@ -1425,75 +1425,79 @@ if (!class_exists('xml_cdr')) {
 		 * delete records
 		 */
 		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-						$records_deleted = 0;
-
-						//loop through records
-							foreach($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-
-									//get the call recordings
-										$sql = "select * from view_call_recordings ";
-										$sql .= "where call_recording_uuid = :xml_cdr_uuid ";
-										$parameters['xml_cdr_uuid'] = $record['uuid'];
-										$database = new database;
-										$row = $database->select($sql, $parameters, 'row');
-										unset($sql, $parameters);
-
-									//delete the call recording (file)
-										$call_recording_path = realpath($row['call_recording_path']);
-										$call_recording_name = $row['call_recording_name'];
-										if (file_exists($call_recording_path.'/'.$call_recording_name)) {
-											@unlink($call_recording_path.'/'.$call_recording_name);
-										}
-
-									//build the delete array
-										$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-										$array['call_recordings'][$x]['call_recording_uuid'] = $record['uuid'];
-
-									//increment counter
-										$records_deleted++;
-								}
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = new permissions;
-									$p->add('call_recording_delete', 'temp');
-
-								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('call_recording_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete'].": ".$records_deleted);
-							}
-							unset($records);
-					}
+			if (!permission_exists($this->permission_prefix.'delete')) {
+				return;
 			}
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: '.$this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (!is_array($records) || @sizeof($records) == 0) {
+				return;
+			}
+			$records_deleted = 0;
+
+			//loop through records
+			foreach($records as $x => $record) {
+				if ($record['checked'] != 'true' || !is_uuid($record['uuid'])) {
+					continue;
+				}
+
+				//get the call recordings
+				$sql = "select xml_cdr_uuid, record_name, record_path from v_xml_cdr ";
+				$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+				$sql .= "and record_name is not null";
+				$parameters['xml_cdr_uuid'] = $record['uuid'];
+				$database = new database;
+				$row = $database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+
+				//delete the call recording (file)
+				$call_recording_path = realpath($row['record_path']);
+				$call_recording_name = $row['record_name'];
+				if (file_exists($call_recording_path.'/'.$call_recording_name)) {
+					@unlink($call_recording_path.'/'.$call_recording_name);
+				}
+
+				//build the delete array
+				$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+
+				//increment counter
+				$records_deleted++;
+			}
+
+			if (!is_array($array) || @sizeof($array) == 0) {
+				return;
+			}
+
+			//grant temporary permissions
+			$p = new permissions;
+			$p->add('call_recording_delete', 'temp');
+
+			//execute delete
+			$database = new database;
+			$database->app_name = $this->app_name;
+			$database->app_uuid = $this->app_uuid;
+			$database->delete($array);
+			unset($array);
+
+			//revoke temporary permissions
+			$p->delete('call_recording_delete', 'temp');
+
+			//set message
+			message::add($text['message-delete'].": ".$records_deleted);
+
+			unset($records);
 		} //method
 
 	} //class
