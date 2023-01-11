@@ -244,8 +244,8 @@
 	}
 
 //get the list
-	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode \n";
-	$sql .= "fax_destination, fax_file_type, fax_file_path, fax_caller_id_name \n";
+	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode, \n";
+	$sql .= "fax_destination, fax_file_type, fax_file_path, fax_caller_id_name, \n";
 	$sql .= "fax_caller_id_number, fax_epoch, fax_base64, fax_date, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), '".$time_format."') as fax_time_formatted \n";
