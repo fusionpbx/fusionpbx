@@ -50,6 +50,7 @@
 	$sql .=	"	) \n";
 	$sql .=	"	and (missed_call = true or bridge_uuid is null) ";
 	$sql .=	"	and hangup_cause <> 'LOSE_RACE' ";
+	$sql .= "	and (cc_side is null or cc_side != 'agent') ";
 	if (is_array($assigned_extensions) && sizeof($assigned_extensions) != 0) {
 		$x = 0;
 		foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
