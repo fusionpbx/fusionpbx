@@ -179,9 +179,9 @@
 	end
 
 --set ring ready
-	if (session:ready()) then
-		session:execute("ring_ready", "");
-	end
+--	if (session:ready()) then
+--		session:execute("ring_ready", "");
+--	end
 
 --define additional variables
 	external = "false";

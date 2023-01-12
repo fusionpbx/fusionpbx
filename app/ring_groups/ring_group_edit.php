@@ -383,10 +383,14 @@
 				$y++;
 			}
 
+			$ring_ready = $_SESSION['ring_group']['ring_ready']['boolean'];
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$ring_group_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".$ring_group_extension."$\">\n";
-			$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+			if ($ring_ready == "true") {
+				$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
+			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".$ring_group_uuid."\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
