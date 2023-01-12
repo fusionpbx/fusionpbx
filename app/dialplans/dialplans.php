@@ -34,13 +34,13 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('dialplan_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+        if (permission_exists('dialplan_view') || permission_exists('inbound_route_view') || permission_exists('outbound_route_view')) {
+                //access granted
+        }
+        else {
+                echo "access denied";
+                exit;
+        }
 
 //add multi-lingual support
 	$language = new text;
