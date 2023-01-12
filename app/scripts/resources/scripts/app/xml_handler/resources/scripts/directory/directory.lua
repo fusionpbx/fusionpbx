@@ -83,6 +83,11 @@
 		--   true - send call to FS where ext reged
 		--   false - send call directly to ext
 			local USE_FS_PATH = xml_handler and xml_handler["fs_path"]
+			if (USE_FS_PATH == 'true') then
+				USE_FS_PATH = true;
+			else
+				USE_FS_PATH = false;
+			end
 
 		-- Make sance only for extensions with number_alias
 		--  false - you should register with AuthID=UserID=Extension (default)
@@ -267,7 +272,7 @@
 								--freeswitch.consoleLog("notice", "[xml_handler][directory] database_hostname is " .. database_hostname .. "\n");
 
 							--hostname was not found set USE_FS_PATH to false to prevent a database_hostname concatenation error
-								if (database_hostname == nil) then
+								if (database_hostname == nil and USE_FS_PATH) then
 									USE_FS_PATH = false;
 								end
 
