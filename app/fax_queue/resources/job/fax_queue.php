@@ -139,12 +139,12 @@
 	unset($parameters);
 
 //change the working directory
-	chdir($document_root);
+	chdir($_SERVER['DOCUMENT_ROOT']);
 
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
-			$command = exec('which php')." ".$document_root."/app/fax_queue/resources/job/fax_send.php ";
+			$command = exec('which php')." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
 				//run process inline to see debug info
