@@ -1,10 +1,10 @@
 <?php
 
-//check the permission
+//add the document root to the include path
 	if (defined('STDIN')) {
-		//set the include path
-		$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-		set_include_path(parse_ini_file($conf[0])['document.root']);
+		$config_glob = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+		$conf = parse_ini_file($config_glob[0]);
+		set_include_path($conf['document.root']);
 	}
 	else {
 		exit;
