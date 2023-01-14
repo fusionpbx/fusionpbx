@@ -3,9 +3,9 @@
 	//application details
 		$apps[$x]['name'] = 'FAX Queue';
 		$apps[$x]['uuid'] = '3656287f-4b22-4cf1-91f6-00386bf488f4';
-		$apps[$x]['category'] = '';
-		$apps[$x]['subcategory'] = '';
-		$apps[$x]['version'] = '';
+		$apps[$x]['category'] = 'Switch';
+		$apps[$x]['subcategory'] = 'FAX';
+		$apps[$x]['version'] = '1.1';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -15,18 +15,20 @@
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_domain';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'fax_queue_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
