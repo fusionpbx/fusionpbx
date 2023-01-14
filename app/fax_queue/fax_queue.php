@@ -100,11 +100,23 @@
 	$sql = "select count(fax_queue_uuid) ";
 	$sql .= "from v_fax_queue ";
 	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
+		//show faxes for all domains
 		$sql .= "where true ";
 	}
-	else {
-		$sql .= "where domain_uuid = :domain_uuid ";
+	elseif (permission_exists('fax_queue_domain')) {
+		//show faxes for one domain
+		$sql .= "where q.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		//show only assigned fax extensions
+		$sql = trim($sql);
+		$sql .= ", v_fax as f, v_fax_users as u ";
+		$sql .= "where f.fax_uuid = u.fax_uuid ";
+		$sql .= "and q.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	if (isset($search)) {
 		$sql .= "and (";
@@ -163,11 +175,23 @@
 	$sql .= "q.fax_command ";
 	$sql .= "from v_fax_queue as q, v_domains as d ";
 	if ($_GET['show'] == "all" && permission_exists('fax_queue_all')) {
+		//show faxes for all domains
 		$sql .= "where true ";
 	}
-	else {
+	elseif (permission_exists('fax_queue_domain')) {
+		//show faxes for one domain
 		$sql .= "where q.domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	else {
+		//show only assigned fax extensions
+		$sql = trim($sql);
+		$sql .= ", v_fax as f, v_fax_users as u ";
+		$sql .= "where f.fax_uuid = u.fax_uuid ";
+		$sql .= "and q.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= "and q.domain_uuid = d.domain_uuid ";
 	if (isset($_GET["search"])) {
