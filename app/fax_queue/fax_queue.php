@@ -44,10 +44,13 @@
 	$text = $language->get();
 
 //get the http post data
-	if (is_array($_POST['fax_queue'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
-		$fax_queue = $_POST['fax_queue'];
+	if (isset($_REQUEST['action'])) {
+		$action = $_REQUEST['action'];
+	}
+
+//add the search
+	if (isset($_REQUEST["search"])) {
+		$search = strtolower($_REQUEST["search"]);
 	}
 
 //process the http post data by action
@@ -91,10 +94,7 @@
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//add the search
-	if (isset($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
+
 
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
