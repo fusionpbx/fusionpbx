@@ -296,11 +296,15 @@
 				echo "		<a href='fax_files.php?order_by=fax_date&order=desc&id=".urlencode($row['fax_uuid'])."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('fax_log_view')) {
-				echo "		<a href='fax_logs.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>";
+				echo "		<a href='fax_logs.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
-				echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>";
+				echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>&nbsp;&nbsp;";
 			}
+			if (permission_exists('fax_queue_view')) {
+				echo "		<a href='/app/fax_queue/fax_queue.php'>".$text['label-queue']."</a>&nbsp;&nbsp;";
+			}
+
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['fax_description'])."&nbsp;</td>\n";
 			if (permission_exists('fax_extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
