@@ -2710,8 +2710,8 @@ $text['description-caller_id_name_prefix']['ru-ru'] = "Установите пр
 $text['description-caller_id_name_prefix']['sv-se'] = "Ange ett prefix för Caller ID namn.";
 $text['description-caller_id_name_prefix']['uk-ua'] = "";
 
-$text['description-caller_announce_sound']['en-us'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
-$text['description-caller_announce_sound']['en-gb'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
+$text['description-caller_announce_sound']['en-us'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
+$text['description-caller_announce_sound']['en-gb'] = "A sound to play for a caller at specific intervals, as defined (in seconds) by the Announce Frequency. Needs the full path to the wav file.";
 $text['description-caller_announce_sound']['ar-eg'] = "";
 $text['description-caller_announce_sound']['de-at'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei."; //copied from de-de
 $text['description-caller_announce_sound']['de-ch'] = "Eine Datei, die regelmäßig dem Anrufer vorgespielt werden soll. Benötigt den kompletten Pfad zur wav Datei."; //copied from de-de
