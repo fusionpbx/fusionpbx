@@ -245,6 +245,46 @@
 		$text['description-dashboard_column_span']['sv-se'] = '';
 		$text['description-dashboard_column_span']['uk-ua'] = '';
 
+		$text['label-dashboard_details_state']['en-us'] = 'Details State';
+		$text['label-dashboard_details_state']['ar-eg'] = '';
+		$text['label-dashboard_details_state']['de-at'] = '';
+		$text['label-dashboard_details_state']['de-ch'] = '';
+		$text['label-dashboard_details_state']['de-de'] = '';
+		$text['label-dashboard_details_state']['es-cl'] = '';
+		$text['label-dashboard_details_state']['es-mx'] = '';
+		$text['label-dashboard_details_state']['fr-ca'] = "";
+		$text['label-dashboard_details_state']['fr-fr'] = "";
+		$text['label-dashboard_details_state']['he-il'] = '';
+		$text['label-dashboard_details_state']['it-it'] = '';
+		$text['label-dashboard_details_state']['nl-nl'] = '';
+		$text['label-dashboard_details_state']['pl-pl'] = '';
+		$text['label-dashboard_details_state']['pt-br'] = '';
+		$text['label-dashboard_details_state']['pt-pt'] = '';
+		$text['label-dashboard_details_state']['ro-ro'] = '';
+		$text['label-dashboard_details_state']['ru-ru'] = '';
+		$text['label-dashboard_details_state']['sv-se'] = '';
+		$text['label-dashboard_details_state']['uk-ua'] = '';
+
+		$text['description-dashboard_details_state']['en-us'] = 'Set the default state of the widget details.';
+		$text['description-dashboard_details_state']['ar-eg'] = '';
+		$text['description-dashboard_details_state']['de-at'] = '';
+		$text['description-dashboard_details_state']['de-ch'] = '';
+		$text['description-dashboard_details_state']['de-de'] = '';
+		$text['description-dashboard_details_state']['es-cl'] = '';
+		$text['description-dashboard_details_state']['es-mx'] = '';
+		$text['description-dashboard_details_state']['fr-ca'] = "";
+		$text['description-dashboard_details_state']['fr-fr'] = "";
+		$text['description-dashboard_details_state']['he-il'] = '';
+		$text['description-dashboard_details_state']['it-it'] = '';
+		$text['description-dashboard_details_state']['nl-nl'] = '';
+		$text['description-dashboard_details_state']['pl-pl'] = '';
+		$text['description-dashboard_details_state']['pt-br'] = '';
+		$text['description-dashboard_details_state']['pt-pt'] = '';
+		$text['description-dashboard_details_state']['ro-ro'] = '';
+		$text['description-dashboard_details_state']['ru-ru'] = '';
+		$text['description-dashboard_details_state']['sv-se'] = '';
+		$text['description-dashboard_details_state']['uk-ua'] = '';
+
 		$text['label-dashboard_order']['en-us'] = 'Order';
 		$text['label-dashboard_order']['ar-eg'] = '';
 		$text['label-dashboard_order']['de-at'] = '';
