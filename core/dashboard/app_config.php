@@ -77,6 +77,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the dashboard column span.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_details_state';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'expanded';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Set the default state of the widget details.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'dashboard_order';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
