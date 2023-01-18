@@ -191,6 +191,7 @@
 	}
 	echo th_order_by('broadcast_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('broadcast_concurrent_limit', $text['label-concurrent-limit'], $order_by, $order);
+	echo th_order_by('broadcast_start_time', $text['label-start_time'], $order_by, $order);
 	echo th_order_by('broadcast_description', $text['label-description'], $order_by, $order);
 	if (permission_exists('call_broadcast_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -228,6 +229,12 @@
 			}
 			echo "	</td>\n";
 			echo "	<td>".escape($row['broadcast_concurrent_limit'])."</td>\n";
+			//determine start date and time
+			$broadcast_start_reference = $row['update_date'] ?: $row['insert_date'];
+			if ($row['broadcast_start_time'] && $broadcast_start_reference) {
+				$broadcast_start_time = date('Y-m-d H:i', strtotime($broadcast_start_reference) + $row['broadcast_start_time']);
+			}
+			echo "	<td>".escape($broadcast_start_time)."</td>\n";
 			echo "	<td class='description overflow hide-xs'>".escape($row['broadcast_description'])."</td>\n";
 			if (permission_exists('call_broadcast_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
