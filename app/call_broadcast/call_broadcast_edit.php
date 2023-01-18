@@ -227,7 +227,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				//common array items
 					$array['call_broadcasts'][0]['domain_uuid'] = $domain_uuid;
 					$array['call_broadcasts'][0]['broadcast_name'] = $broadcast_name;
-					$array['call_broadcasts'][0]['broadcast_start_time'] = $broadcast_start_time;
+					$array['call_broadcasts'][0]['broadcast_start_time'] = strtotime($broadcast_start_time) - strtotime('now') >= 0 ? strtotime($broadcast_start_time) - strtotime('now') : null;
 					$array['call_broadcasts'][0]['broadcast_timeout'] = strlen($broadcast_timeout) != 0 ? $broadcast_timeout : null;
 					$array['call_broadcasts'][0]['broadcast_concurrent_limit'] = strlen($broadcast_concurrent_limit) != 0 ? $broadcast_concurrent_limit : null;
 					$array['call_broadcasts'][0]['broadcast_caller_id_name'] = $broadcast_caller_id_name;
@@ -280,6 +280,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_accountcode = $row["broadcast_accountcode"];
 			$broadcast_description = $row["broadcast_description"];
 			$broadcast_toll_allow = $row["broadcast_toll_allow"];
+			$insert_date = $row["insert_date"];
+			$update_date = $row["update_date"];
+
+			//determine start date and time based on insert or update date and 'start time' delay (in seconds)
+			$broadcast_start_reference = $update_date ?: $insert_date;
+			if ($broadcast_start_time && $broadcast_start_reference) {
+				$broadcast_start_time = date('Y-m-d H:i', strtotime($broadcast_start_reference) + $broadcast_start_time);
+			}
+
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -333,8 +342,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-start_time']."\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='broadcast_start_time' value=\"".escape($broadcast_start_time)."\">\n";
+		echo "<td class='vtable' align='left' style='position: relative;'>\n";
+		echo "	<input class='formfld datetimepicker-future' type='text' id='broadcast_start_time' name='broadcast_start_time' value=\"".escape($broadcast_start_time)."\" data-toggle='datetimepicker' data-target='#broadcast_start_time' onblur=\"$(this).datetimepicker('hide');\">\n";
 		echo "<br />\n";
 		echo "".$text['description-start_time']."\n";
 		echo "</td>\n";

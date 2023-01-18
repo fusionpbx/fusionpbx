@@ -601,6 +601,7 @@
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
 					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
 					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
 			});
 			{/literal}
