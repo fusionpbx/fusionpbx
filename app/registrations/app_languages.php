@@ -652,4 +652,46 @@ $text['confirm-reboot']['ru-ru'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['sv-se'] = "Do you really want to REBOOT these?";
 $text['confirm-reboot']['uk-ua'] = "Do you really want to REBOOT these?";
 
+$text['label-w_username']['en-us'] = "Web Username";
+$text['label-w_username']['en-gb'] = "Web Username";
+$text['label-w_username']['ar-eg'] = "اسم مستخدم المتصفح";
+$text['label-w_username']['de-at'] = "Benutzer"; //copied from de-de
+$text['label-w_username']['de-ch'] = "Benutzer"; //copied from de-de
+$text['label-w_username']['de-de'] = "Benutzer";
+$text['label-w_username']['es-cl'] = "Usuario";
+$text['label-w_username']['es-mx'] = "Usuario"; //copied from es-cl
+$text['label-w_username']['fr-ca'] = "Utilisateurs"; //copied from fr-fr
+$text['label-w_username']['fr-fr'] = "Utilisateurs";
+$text['label-w_username']['he-il'] = "";
+$text['label-w_username']['it-it'] = "Utente";
+$text['label-w_username']['nl-nl'] = "Gebruiker";
+$text['label-w_username']['pl-pl'] = "Użytkownik";
+$text['label-w_username']['pt-br'] = "Usuário";
+$text['label-w_username']['pt-pt'] = "Utilizador";
+$text['label-w_username']['ro-ro'] = "";
+$text['label-w_username']['ru-ru'] = "Пользователь";
+$text['label-w_username']['sv-se'] = "Användare";
+$text['label-w_username']['uk-ua'] = "Користувач";
+
+$text['label-w_password']['en-us'] = "Web Password";
+$text['label-w_password']['en-gb'] = "Web Password";
+$text['label-w_password']['ar-eg'] = "كلمة مرور المتصفح";
+$text['label-w_password']['de-at'] = "Benutzer"; //copied from de-de
+$text['label-w_password']['de-ch'] = "Benutzer"; //copied from de-de
+$text['label-w_password']['de-de'] = "Benutzer";
+$text['label-w_password']['es-cl'] = "Usuario";
+$text['label-w_password']['es-mx'] = "Usuario"; //copied from es-cl
+$text['label-w_password']['fr-ca'] = "Utilisateurs"; //copied from fr-fr
+$text['label-w_password']['fr-fr'] = "Utilisateurs";
+$text['label-w_password']['he-il'] = "";
+$text['label-w_password']['it-it'] = "Utente";
+$text['label-w_password']['nl-nl'] = "Gebruiker";
+$text['label-w_password']['pl-pl'] = "Użytkownik";
+$text['label-w_password']['pt-br'] = "Usuário";
+$text['label-w_password']['pt-pt'] = "Utilizador";
+$text['label-w_password']['ro-ro'] = "";
+$text['label-w_password']['ru-ru'] = "Пользователь";
+$text['label-w_password']['sv-se'] = "Användare";
+$text['label-w_password']['uk-ua'] = "Користувач";
+
 ?>
