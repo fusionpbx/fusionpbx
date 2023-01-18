@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017 - 2022
+	Portions created by the Initial Developer are Copyright (C) 2017 - 2023
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1053,6 +1053,15 @@ if (!class_exists('destinations')) {
 											$array['dialplans'][$x]['dialplan_uuid'] = $row["dialplan_uuid"];
 											$destination_contexts[] = $row['destination_context'];
 										}
+										
+									//update the previous details
+										$sql = "update v_available_destinations ";
+										$sql .= "set destination_used = 'not use', domain_uuid = null ";
+										$sql .= "where destination_number = :destination_number ";
+										$parameters['destination_number'] = $row['destination_number'];
+										$database = new database;
+										$database->execute($sql, $parameters, 'row');
+										unset($sql, $parameters);
 
 								}
 							}
