@@ -138,6 +138,8 @@
 			$dial_string = $_POST["dial_string"];
 			$enabled = $_POST["enabled"];
 			$description = $_POST["description"];
+			$w_username = $_POST["w_username"];
+			$w_password = $_POST["w_password"];
 
 			//outbound caller id number - only allow numeric and +
 			if (strlen($outbound_caller_id_number) > 0) {
@@ -516,6 +518,8 @@
 										$array["extensions"][$i]["enabled"] = $enabled;
 									}
 									$array["extensions"][$i]["description"] = $description;
+									$array["extensions"][$i]["w_username"] = $w_username;
+									$array["extensions"][$i]["w_password"] = $w_password;
 
 								//assign the user to the extension
 									if (is_uuid($user_uuid)) {
@@ -864,6 +868,8 @@
 			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
+			$w_username = $row["w_username"];
+			$w_password = $row["w_password"];
 		}
 		unset($sql, $parameters, $row);
 
@@ -2189,14 +2195,36 @@
 		echo $text['description-enabled']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-	}
+
+		}
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo " ".$text['label-w_username']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo " <input type='text' class='formfld' name='w_username' value=\"".$w_username."\">\n";
+		echo "<br />\n";
+		echo $text['description-w_username']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo " ".$text['label-w_password']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo " <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
+		echo " <input class='formfld' type='password' name='w_password' id='w_password' autocomplete='new-password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".escape($w_password)."\">\n";
+		echo " <br />\n";
+		echo $text['description-w_password']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input type='text' class='formfld' name='description' value=\"".$description."\">\n";
+	echo "    <textarea style='height: 200px;' class='formfld' name='description' height='150px' rows='10' cols='100' >$description</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
