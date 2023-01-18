@@ -347,6 +347,10 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
+	echo "<br />\n";
+	echo "https://".$_SESSION['domain_name']."/app/provision";
+	echo "<br /><br />\n";
+
 	echo $text['description-devices']."\n";
 	echo "<br /><br />\n";
 
