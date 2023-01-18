@@ -769,7 +769,7 @@
 				switch (condition_var) {
 
 					case 'year': //years
-						for (y = <?php echo date('Y')?>; y <= <?php echo (date('Y') + 10)?>; y++) {
+						for (y = <?php echo (date('Y') - 5) ?>; y <= <?php echo (date('Y') + 10)?>; y++) {
 							sel_start.options[sel_start.options.length] = new Option(y, y);
 							sel_stop.options[sel_stop.options.length] = new Option(y, y);
 						}

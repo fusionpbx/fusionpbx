@@ -848,7 +848,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','style'=>$button_margin,'onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 			unset($button_margin);
 		}
-		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id)."@".urlencode($server_address)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
+		echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>$button_margin,'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync"."&user=".urlencode($user_id)."&domain=".urlencode($server_address)."&agent=".urlencode($device_vendor)]);
 		unset($button_margin);
 		if (permission_exists("device_files")) {
 			//get the template directory

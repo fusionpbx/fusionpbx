@@ -1074,20 +1074,20 @@
 						//div.classList.add("domains_list_item_inactive");
 						//var item_description_class = 'domain_inactive_list_item_description';
 					}
-					
+
+					//set link on domain div in list
+					div.setAttribute('onclick',"window.location.href='{$domains_app_path}?domain_uuid=" + obj[i].domain_uuid + "&domain_change=true';");
+
+					//define domain link text and description (if any)
 					link_label = obj[i].domain_name;
 					if (obj[i].domain_description != null) {
-						link_label += ' - ' + obj[i].domain_description;
+						link_label += " <span class='domain_list_item_description' title=\"" + obj[i].domain_description + "\">" + obj[i].domain_description + "</span>";
 					}
 					var a_tag = document.createElement('a');
-					a_tag.setAttribute('href','{$domains_app_path}?domain_uuid='+obj[i].domain_uuid+'&domain_change=true');
-					a_tag.innerText = link_label;
+					a_tag.setAttribute('href','manage:'+obj[i].domain_name);
+					a_tag.setAttribute('onclick','event.preventDefault();');
+					a_tag.innerHTML = link_label;
 					div.appendChild(a_tag);
-
-					//div.innerHTML = '<a href="{$domains_app_path}?domain_uuid='+obj[i].domain_uuid+'&domain_change=true">'+obj[i].domain_name+'</a> ';
-					//if (obj[i].domain_description != null) {
-					//	div.innerHTML += '<span class="domain_list_item_description" title="'+obj[i].domain_description+'"> - '+obj[i].domain_description+'</span>';
-					//}
 
 					document.getElementById(element_id).appendChild(div);
 				}

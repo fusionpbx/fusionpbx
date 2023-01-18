@@ -34,13 +34,13 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('dialplan_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
+        if (permission_exists('dialplan_view') || permission_exists('inbound_route_view') || permission_exists('outbound_route_view')) {
+                //access granted
+        }
+        else {
+                echo "access denied";
+                exit;
+        }
 
 //add multi-lingual support
 	$language = new text;
@@ -120,21 +120,8 @@
 	}
 
 //add the search term
-	$search = strtolower($_GET["search"]);
-	if (strlen($search) > 0) {
-		$sql_search = "and (";
-		$sql_search .= " 	lower(dialplan_context) like :search ";
-		$sql_search .= " 	or lower(dialplan_name) like :search ";
-		$sql_search .= " 	or lower(dialplan_number) like :search ";
-		$sql_search .= " 	or lower(dialplan_continue) like :search ";
-		$sql_search .= " 	or lower(dialplan_enabled) like :search ";
-		$sql_search .= " 	or lower(dialplan_description) like :search ";
-		if (is_numeric($search)) {
-			$sql_search .= " 	or dialplan_order = :search_numeric ";
-			$parameters['search_numeric'] = $search;
-		}
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (isset($_GET["search"])) {
+		$search = strtolower($_GET["search"]);
 	}
 
 //get the number of rows in the dialplan
@@ -162,7 +149,21 @@
 		}
 		$parameters['app_uuid'] = $app_uuid;
 	}
-	$sql .= $sql_search;
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= " 	lower(dialplan_context) like :search ";
+		$sql .= " 	or lower(dialplan_name) like :search ";
+		$sql .= " 	or lower(dialplan_number) like :search ";
+		$sql .= " 	or lower(dialplan_continue) like :search ";
+		$sql .= " 	or lower(dialplan_enabled) like :search ";
+		$sql .= " 	or lower(dialplan_description) like :search ";
+		if (is_numeric($search)) {
+			$sql_search .= " 	or dialplan_order = :search_numeric ";
+			$parameters['search_numeric'] = $search;
+		}
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
@@ -184,7 +185,45 @@
 	$offset = $rows_per_page * $page;
 
 //get the list of dialplans
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select * from v_dialplans ";
+	if ($_GET['show'] == "all" && permission_exists('dialplan_all')) {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!is_uuid($app_uuid)) {
+		//hide inbound routes
+			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
+			$sql .= "and dialplan_context <> 'public' ";
+		//hide outbound routes
+			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+	}
+	else {
+		if ($app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+			$sql .= "and (app_uuid = :app_uuid or dialplan_context = 'public') ";
+		}
+		else {
+			$sql .= "and app_uuid = :app_uuid ";
+		}
+		$parameters['app_uuid'] = $app_uuid;
+	}
+	if (isset($search)) {
+		$sql .= "and (";
+		$sql .= " 	lower(dialplan_context) like :search ";
+		$sql .= " 	or lower(dialplan_name) like :search ";
+		$sql .= " 	or lower(dialplan_number) like :search ";
+		$sql .= " 	or lower(dialplan_continue) like :search ";
+		$sql .= " 	or lower(dialplan_enabled) like :search ";
+		$sql .= " 	or lower(dialplan_description) like :search ";
+		if (is_numeric($search)) {
+			$sql_search .= " 	or dialplan_order = :search_numeric ";
+			$parameters['search_numeric'] = $search;
+		}
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	if ($order_by != '') {
 		if ($order_by == 'dialplan_name' || $order_by == 'dialplan_description') {
 			$sql .= 'order by lower('.$order_by.') '.$order.' ';
