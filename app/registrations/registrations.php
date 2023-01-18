@@ -183,6 +183,8 @@
 	echo "	<th class='hide-sm-dn'>".$text['label-ip']."</th>\n";
 	echo "	<th class='hide-sm-dn'>".$text['label-port']."</th>\n";
 	echo "	<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
+	echo " 	<th class='hide-sm-dn'>".$text['label-w_username']."</th>\n";
+	echo " 	<th class='hide-sm-dn'>".$text['label-w_password']."</th>\n";
 	echo "	<th class='pct-35' style='width: 35%;'>".$text['label-status']."</th>\n";
 	echo "	<th class='hide-md-dn'>".$text['label-ping']."</th>\n";
 	echo "	<th class='hide-md-dn'>".$text['label-sip_profile_name']."</th>\n";
@@ -197,6 +199,7 @@
 
 				//prepare the user variable
 				$user = explode('@', $row['user']);
+				$extension = $user[0];
 				if ($user[1] == $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name']) {
 					$user = "<span class='hide-sm-dn'>".escape($row['user'])."</span><span class='hide-md-up cursor-help' title='".escape($row['user'])."'>".escape($user[0])."</span>";
 				}
@@ -215,6 +218,22 @@
 				$patterns[] = '/\s+/';
 				$status = preg_replace($patterns, ' ', $row['status']);
 
+				//username && password
+				{
+					$sql = "select domain_uuid, w_username, w_password from v_extensions ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and extension = :extension ";
+					$parameters['extension'] = $extension;
+					$parameters['domain_uuid'] = $domain_uuid;
+					$database = new database;
+					$web['webinfo'] = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters, $selected_columns);
+				}
+				foreach ($web['webinfo'] as $row2) {
+					$w_username = $row2['w_username'];
+					$w_password = $row2['w_password'];
+				}
+
 				//show the content
 				echo "<tr class='list-row' href='#'>\n";
 				echo "	<td class='checkbox'>\n";
@@ -229,9 +248,11 @@
 				echo "	<td class='' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape(explode('"',$row['contact'])[1])."</td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
-				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
+				echo "	<td class='hide-sm-dn no-link'><a href='http://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['host'])."</td>\n";
+				echo " <td class='hide-sm-dn'>".escape($row2['w_username'])."</td>\n";
+				echo " <td class='hide-sm-dn'>".escape($row2['w_password'])."</td>\n";
 				echo "	<td class='' title=\"".escape($row['status'])."\"><span class='cursor-help'>".escape($status)."</span></td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
 				echo "	<td class='hide-md-dn'>".escape($row['sip_profile_name'])."</td>\n";
