@@ -111,6 +111,8 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 		$sql_search .= "or lower(user_context) like :search ";
 		$sql_search .= "or lower(enabled) like :search ";
 		$sql_search .= "or lower(description) like :search ";
+		$sql_search .= "or lower(w_username) like :search ";
+		$sql_search .= "or lower(w_password) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -272,6 +274,8 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 		echo "<th>".$text['label-is_registered']."</th>\n";
  	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('w_username', $text['label-w_username'], $order_by, $order, null, "class='center'");
+	echo th_order_by('w_password', $text['label-w_password'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
 	if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -344,7 +348,9 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 				echo $text['label-'.$row['enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
+			echo " <td class='center'>".escape($row['w_username'])."</td>\n";
+			echo " <td class='center'>".escape($row['w_password'])."</td>\n";
+			echo "	<td class='description overflow hide-sm-dn' width='20%'>".escape($row['description'])."</td>\n";
 			if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
