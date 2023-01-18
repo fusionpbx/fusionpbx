@@ -43,7 +43,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 
-	/*destination details
+	//destination details
 		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "available_destinations";
