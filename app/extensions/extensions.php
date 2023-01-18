@@ -350,7 +350,7 @@ if (is_numeric($_SESSION['limit']['extensions']['numeric'])) {
 			echo "	</td>\n";
 			echo " <td class='center'>".escape($row['w_username'])."</td>\n";
 			echo " <td class='center'>".escape($row['w_password'])."</td>\n";
-			echo "	<td class='description overflow hide-sm-dn' width='20%'>".escape($row['description'])."</td>\n";
+			echo " <td width='40%' class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
 			if (permission_exists('extension_edit') && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
