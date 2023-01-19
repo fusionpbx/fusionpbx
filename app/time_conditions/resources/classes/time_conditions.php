@@ -311,6 +311,7 @@
 
 									//grant temporary permissions
 										$p = new permissions;
+										$p->add('dialplan_add', 'temp');
 										$p->add('dialplan_detail_add', 'temp');
 
 									//save the array
@@ -321,6 +322,7 @@
 										unset($array);
 
 									//revoke temporary permissions
+										$p->delete('dialplan_add', 'temp');
 										$p->delete('dialplan_detail_add', 'temp');
 
 									//clear the cache
