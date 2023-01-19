@@ -43,12 +43,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 
-	/*destination details
+	//destination details
 		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "available_destinations";
 		$apps[$x]['destinations'][$y]['name'] = "available_destinations";
-		$apps[$x]['destinations'][$y]['sql'] = "select destination_trunk_name, destination_number, destination_description from v_available_destinations ";
+		//$apps[$x]['destinations'][$y]['sql'] = "select destination_trunk_name, destination_number, destination_description from v_available_destinations ";
 		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and destination_enabled = 'true'";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
 		$apps[$x]['destinations'][$y]['field']['available_destination_uuid'] = "available_destination_uuid";
@@ -59,7 +59,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "available_destinations:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:available_destinations \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_trunk_name} \${destination_number} \${destination_description}";
-		$y++;*/
+		$y++;
 
 	//Available Destinations
 		$y = 0;
@@ -98,6 +98,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
-		$z++;
-
 ?>
