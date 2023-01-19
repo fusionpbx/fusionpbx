@@ -88,12 +88,34 @@ if (!class_exists('available_destinations')) {
 				//delete multiple records
 					if (is_array($records) && @sizeof($records) != 0) {
 
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									//$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-								}
+						//build delete array
+                                                                                $array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
+
+                                                                        //get the dialplan uuid and context
+                                                                                $sql = "select dialplan_uuid, destination_context, destination_number from v_destinations ";
+                                                                                $sql .= "where destination_uuid = :destination_uuid ";
+                                                                                $parameters['destination_uuid'] = $record['uuid'];
+                                                                                $database = new database;
+                                                                                $row = $database->select($sql, $parameters, 'row');
+                                                                                unset($sql, $parameters);
+
+                                                                        //include dialplan in array
+                                                                                if (is_uuid($row['dialplan_uuid'])) {
+                                                                                        $array['dialplan_details'][$x]['dialplan_uuid'] = $row["dialplan_uuid"];
+                                                                                        $array['dialplans'][$x]['dialplan_uuid'] = $row["dialplan_uuid"];
+                                                                                        $destination_contexts[] = $row['destination_context'];
+                                                                                }
+
+                                                                        //update the previous details
+                                                                                $sql = "update v_available_destinations ";
+                                                                                $sql .= "set destination_used = 'not use', domain_uuid = null ";
+                                                                                $sql .= "where destination_number = :destination_number ";
+                                                                                $parameters['destination_number'] = $row['destination_number'];
+                                                                                $database = new database;
+                                                                                $database->execute($sql, $parameters, 'row');
+                                                                                unset($sql, $parameters);
+
+                                                                }
 							}
 
 						//delete the checked rows
