@@ -21,16 +21,16 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//includes
-	require_once "root.php";
-																																																																																																																																	 
+//set the include path
+	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
+	set_include_path(parse_ini_file($conf[0])['document.root']);
 
-				
+//includes files
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('available_destination_add') && !permission_exists('available_destination_edit')) {
+	if (!permission_exists('bridge_add') && !permission_exists('bridge_edit')) {
 		echo "access denied";
 		exit;
 	}
