@@ -21,11 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
+//includes
+	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 
@@ -307,8 +304,7 @@
 	echo "	".$text['label-destination_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	//echo "	<input class='formfld' type='text' name='destination_description' maxlength='255' value=\"".escape($destination_description)."\">\n";
-	echo "<textarea style='height: 200px;' class='formfld' name='destination_description' height='150px' rows='10' cols='100' >$destination_description</textarea>\n";
+	echo "	<input class='formfld' type='text' name='destination_description' maxlength='255' value=\"".escape($destination_description)."\">\n";
 	echo "<br />\n";
 	echo $text['description-destination_description']."\n";
 	echo "</td>\n";

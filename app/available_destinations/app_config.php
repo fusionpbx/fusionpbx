@@ -43,7 +43,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 
-	//destination details
+	/*destination details
 		$y = 0;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "available_destinations";
@@ -59,7 +59,7 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "available_destinations:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:available_destinations \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_trunk_name} \${destination_number} \${destination_description}";
-		$y++;
+		$y++;*/
 
 	//Available Destinations
 		$y = 0;
